@@ -1,0 +1,25 @@
+﻿@using Datiss.Budget.Areas.Identity
+@using Datiss.Budget.Common.IdentityToolkit
+@using Datiss.Budget.Common.PersianToolkit
+@using Datiss.Budget.Entities.Identity
+@using Datiss.Budget.Services.Contracts.Identity
+@using Datiss.Budget.Services.Identity
+@using Datiss.Budget.ViewModels.Identity
+@using Datiss.Budget.ViewModels.Identity.Emails
+@using Datiss.Budget.ViewModels.Identity.Settings
+@using Microsoft.AspNetCore.Routing
+@using Microsoft.Extensions.Options
+@using System.Globalization
+@using System.Threading.Tasks
+@using System.Net
+@using DNTPersianUtils.Core
+@using Datiss.Budget.DataLayer.Context
+@using Datiss.Budget.Entities.AuditableEntity
+@using Datiss.Budget
+
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, DNTCaptcha.Core
+@addTagHelper *, DNTBreadCrumb.Core
+@addTagHelper *, cloudscribe.Web.Pagination
+@addTagHelper *, Datiss.Budget

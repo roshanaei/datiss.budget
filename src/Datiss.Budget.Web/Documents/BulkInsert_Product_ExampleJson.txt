@@ -1,0 +1,81 @@
+[
+	{
+		"Name":"",
+		"BrandId":2,
+		"ShortDescription":"",
+		"FullDescription":"",
+		"ShowOnHomepage":false,
+		"MetaKeywords":"",
+		"MetaDescription":"",
+		"MetaTitle":"",
+		"AllowCustomerReviews":false,
+		"Sku":"",
+		"ManufacturerPartNumber":"",
+		"Gtin":"",
+		"IsRental":false,
+		"RentalPriceLength":0,
+		"RentalPricePeriodId":0,
+		"IsFreeShipping":false,
+		"ShippingDescription":"",
+		"BackorderDescription":"",
+		"PriceRange":"",
+		"MinPrice":0,
+		"MarkAsNew":false,
+		"MarkAsNewStartDateTime":"2017-09-08T19:01:55.714942",
+		"MarkAsNewEndDateTime":"2017-09-08T19:01:55.714942",
+		"HasDiscountsApplied":false,
+		"Weight":0,
+		"Length":0,
+		"Width":0,
+		"Height":0,
+		"DisplayOrder":0,
+		"Published":false,
+		"CreatedOnUtc":"2017-09-08T19:01:55.714942",
+		"UpdatedOnUtc":"2017-09-15T19:01:55.714942",
+		"Categories": [
+			{
+				"CategoryId": 1,
+				"DisplayOrder": 11,
+				"IsFeaturedProduct":false
+			},{
+				"CategoryId": 2,
+				"DisplayOrder": 22,
+				"IsFeaturedProduct":true
+			}
+		],
+		"Specs": [
+			{
+				"SpecId": 1,
+				"DisplayOrder": 11,
+				"Value":"ss1"
+			},{
+				"SpecId": 2,
+				"DisplayOrder": 22,
+				"Value":"ss2"
+			}
+		]
+		"Vendors": [
+			{
+				"VendorId": 1,
+				"Price": 11,
+				"OldPrice": 11,
+				"DiscountPercent": 11,
+				"Url": "",
+				"Warranty": "",
+				"CreatedDateTime": "2017-09-08T19:01:55.714942",
+				"ModifiedDateTime": "2017-09-08T19:01:55.714942",
+				"IsAvaillable":true
+			},{
+				"VendorId": 2,
+				"Price": 11,
+				"OldPrice": 11,
+				"DiscountPercent": 11,
+				"Url": "",
+				"Warranty": "",
+				"CreatedDateTime": "2017-09-08T19:01:55.714942",
+				"ModifiedDateTime": "2017-09-08T19:01:55.714942",
+				"IsAvaillable":true
+			}
+		]
+	}
+]

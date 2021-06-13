@@ -1,0 +1,16 @@
+[
+	{
+		"Name":"",
+		"DisplayOrder":2,
+		"CategoryId":1,
+		"Options": [
+			{
+				"SpecId": 1,
+				"Option": "test"
+			},{
+				"SpecId": 2,
+				"Option": "test"
+			}
+		]
+	}
+]

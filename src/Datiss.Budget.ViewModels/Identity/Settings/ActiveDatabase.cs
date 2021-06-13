@@ -1,0 +1,10 @@
+﻿namespace Datiss.Budget.ViewModels.Identity.Settings
+{
+    public enum ActiveDatabase
+    {
+        LocalDb,
+        SqlServer,
+        InMemoryDatabase,
+        SQLite
+    }
+}
