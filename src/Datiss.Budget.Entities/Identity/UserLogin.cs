@@ -9,6 +9,18 @@ namespace Datiss.Budget.Entities.Identity
     /// </summary>
     public class UserLogin : IdentityUserLogin<int>, IAuditableEntity
     {
+        public UserLogin() { }
+
+        #region Properties
+
+        public string IpAddress { get; set; }
+
+        public string UserAgent { get; set; }
+
+        public string HostName { get; set; }
+
+        #endregion
+
         public virtual User User { get; set; }
     }
 }

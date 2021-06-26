@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Datiss.Budget.Entities.AuditableEntity;
 using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Entities.Identity;
 
 namespace Datiss.Budget.Entities
 {
@@ -15,9 +16,11 @@ namespace Datiss.Budget.Entities
             WaterInstallFees = new HashSet<WaterInstallFee>();
         }
 
+        #region Properties
+
         public int Id { get; set; }
 
-        public virtual Organization Parent { get; set; }
+        
         public int? ParentId { get; set; }
 
         public string Title { get; set; }
@@ -26,9 +29,18 @@ namespace Datiss.Budget.Entities
 
         public bool IsVillage { get; set; }
 
+        #endregion
 
-        public virtual ICollection<Organization> Childrens { get; set; }
-        public virtual ICollection<WaterInstallFee> WaterInstallFees { get; set; }
+        #region Navigations
 
+        public Organization Parent { get; set; }
+
+        public ICollection<Organization> Childrens { get; set; }
+        
+        public ICollection<WaterInstallFee> WaterInstallFees { get; set; }
+        
+        public ICollection<User> Users { get; set; }
+
+        #endregion
     }
 }

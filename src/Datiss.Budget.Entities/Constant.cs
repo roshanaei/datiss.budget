@@ -15,17 +15,26 @@ namespace Datiss.Budget.Entities
             WaterInstallFees = new HashSet<WaterInstallFee>();
         }
 
+        #region Properties
+
         public int Id { get; set; }
 
         public virtual Constant Parent { get; set; }
         public int? ParentId { get; set; }
 
-
         public string Title { get; set; }
+
+        public string ConstantKey { get; set; }
 
         public int DisplayOrder { get; set; }
 
-        public virtual ICollection<Constant> Childrens { get; set; }
-        public virtual ICollection<WaterInstallFee> WaterInstallFees { get; set; }
+        #endregion
+
+        #region Navigations
+
+        public ICollection<Constant> Childrens { get; set; }
+        public ICollection<WaterInstallFee> WaterInstallFees { get; set; }
+
+        #endregion
     }
 }

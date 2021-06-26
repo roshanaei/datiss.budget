@@ -12,6 +12,18 @@ namespace Datiss.Budget.DataLayer.Mappings
                    .WithMany(user => user.Logins)
                    .HasForeignKey(userLogin => userLogin.UserId);
 
+            builder.Property(x => x.IpAddress)
+                .HasMaxLength(50)
+                .IsUnicode();
+
+            builder.Property(x => x.HostName)
+                .HasMaxLength(200)
+                .IsUnicode();
+
+            builder.Property(x => x.UserAgent)
+                .HasMaxLength(255)
+                .IsUnicode();
+
             builder.ToTable("AppUserLogins");
         }
     }

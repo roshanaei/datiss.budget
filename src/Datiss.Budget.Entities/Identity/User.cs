@@ -20,6 +20,8 @@ namespace Datiss.Budget.Entities.Identity
             UserTokens = new HashSet<UserToken>();
         }
 
+        #region Properties
+
         [StringLength(450)]
         public string FirstName { get; set; }
 
@@ -51,14 +53,24 @@ namespace Datiss.Budget.Entities.Identity
 
         public bool IsActive { get; set; } = true;
 
-        public virtual ICollection<UserUsedPassword> UserUsedPasswords { get; set; }
+        public int? OrganizationId { get; set; }
 
-        public virtual ICollection<UserToken> UserTokens { get; set; }
+        #endregion
 
-        public virtual ICollection<UserRole> Roles { get; set; }
+        #region Navigations
 
-        public virtual ICollection<UserLogin> Logins { get; set; }
+        public Organization Organization { get; set; }
 
-        public virtual ICollection<UserClaim> Claims { get; set; }
+        public ICollection<UserUsedPassword> UserUsedPasswords { get; set; }
+
+        public ICollection<UserToken> UserTokens { get; set; }
+
+        public ICollection<UserRole> Roles { get; set; }
+
+        public ICollection<UserLogin> Logins { get; set; }
+
+        public ICollection<UserClaim> Claims { get; set; }
+
+        #endregion
     }
 }

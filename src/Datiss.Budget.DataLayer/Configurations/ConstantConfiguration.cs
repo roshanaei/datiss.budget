@@ -9,17 +9,24 @@ namespace Datiss.Budget.DataLayer.Mappings
     {
         public void Configure(EntityTypeBuilder<Constant> builder)
         {
+            builder.ToTable("Constants");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Id).HasColumnName("ConstantId");
 
-            builder.Property(x => x.Title).HasMaxLength(400).IsRequired();
+            builder.Property(x => x.Title)
+                .HasMaxLength(400)
+                .IsUnicode()
+                .IsRequired();
+
+            builder.Property(x => x.ConstantKey)
+                .HasMaxLength(50)
+                .IsUnicode()
+                .IsRequired();
 
             builder.HasOne(x => x.Parent)
                     .WithMany(x => x.Childrens)
                     .HasForeignKey(x => x.ParentId)
                     .OnDelete(DeleteBehavior.Restrict);
-
-            builder.ToTable("Constants");
         }
     }
 
