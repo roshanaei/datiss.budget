@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Datiss.Budget.Common.EFCoreToolkit;
+using Datiss.Budget.Entities.DWH;
 
 namespace Datiss.Budget.DataLayer.Context
 {

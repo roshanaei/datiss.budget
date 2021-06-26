@@ -19,6 +19,182 @@ namespace Datiss.Budget.DataLayer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
 
+            modelBuilder.Entity("Datiss.Budget.Entities.Constant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ConstantId")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("ConstantKey")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CreatedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ModifiedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ModifiedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("ModifiedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("Constants");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.WaterInstallFee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("WaterInstallFeeId")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("CreatedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DWaterTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ModifiedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ModifiedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("ModifiedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WInstllFee")
+                        .HasColumnType("int");
+
+                    b.Property<int>("YearId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DWaterTypeId");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("YearId");
+
+                    b.ToTable("WaterInstallFees");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.FinanceYear", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("FinanceYearId")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("CreatedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ModifiedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("ModifiedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FinanceYears");
+                });
+
             modelBuilder.Entity("Datiss.Budget.Entities.Identity.AppDataProtectionKey", b =>
                 {
                     b.Property<int>("Id")
@@ -276,7 +452,9 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasMaxLength(450)
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsActive")
@@ -286,7 +464,9 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasMaxLength(450)
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("LastVisitDateTime")
@@ -323,6 +503,9 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int?>("OrganizationId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -355,6 +538,8 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("AppUsers");
                 });
@@ -432,6 +617,16 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<DateTime?>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("HostName")
+                        .HasMaxLength(200)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("IpAddress")
+                        .HasMaxLength(50)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("ModifiedByBrowserName")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
@@ -448,6 +643,11 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserAgent")
+                        .HasMaxLength(255)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -599,6 +799,101 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.ToTable("AppUserUsedPasswords");
                 });
 
+            modelBuilder.Entity("Datiss.Budget.Entities.Organization", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("OrganizationId")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("CreatedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsVillage")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ModifiedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("ModifiedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("Organizations");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Constant", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Constant", "Parent")
+                        .WithMany("Childrens")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.WaterInstallFee", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Constant", "DWaterType")
+                        .WithMany("WaterInstallFees")
+                        .HasForeignKey("DWaterTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
+                        .WithMany("WaterInstallFees")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
+                        .WithMany("WaterInstallFees")
+                        .HasForeignKey("YearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DWaterType");
+
+                    b.Navigation("FinanceYear");
+
+                    b.Navigation("Organization");
+                });
+
             modelBuilder.Entity("Datiss.Budget.Entities.Identity.RoleClaim", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Identity.Role", "Role")
@@ -608,6 +903,16 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Identity.User", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
+                        .WithMany("Users")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.Identity.UserClaim", b =>
@@ -673,6 +978,28 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Datiss.Budget.Entities.Organization", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Parent")
+                        .WithMany("Childrens")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Constant", b =>
+                {
+                    b.Navigation("Childrens");
+
+                    b.Navigation("WaterInstallFees");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.FinanceYear", b =>
+                {
+                    b.Navigation("WaterInstallFees");
+                });
+
             modelBuilder.Entity("Datiss.Budget.Entities.Identity.Role", b =>
                 {
                     b.Navigation("Claims");
@@ -691,6 +1018,15 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("UserTokens");
 
                     b.Navigation("UserUsedPasswords");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Organization", b =>
+                {
+                    b.Navigation("Childrens");
+
+                    b.Navigation("Users");
+
+                    b.Navigation("WaterInstallFees");
                 });
 #pragma warning restore 612, 618
         }
