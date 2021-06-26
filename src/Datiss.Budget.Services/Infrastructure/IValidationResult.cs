@@ -35,5 +35,11 @@ namespace Datiss.Budget.Services.Infrastructure
         {
             _errors.Add(key, errorMessage);
         }
+
+        public static ValidationResult Success() {
+            return new ValidationResult {
+                IsValid = true
+            };
+        }
     }
 }
