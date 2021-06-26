@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Datiss.Budget.Entities.AuditableEntity;
+using Datiss.Budget.Entities.DWH;
+
+namespace Datiss.Budget.Entities
+{
+    public class FinanceYear : IAuditableEntity
+    {
+        public FinanceYear()
+        {
+            WaterInstallFees = new HashSet<WaterInstallFee>();
+        }
+
+        public int Id { get; set; }
+
+        public string Title { get; set; }
+
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
+
+        public int Year { get; set; }
+
+        public ICollection<WaterInstallFee> WaterInstallFees { get; set; }
+    }
+}

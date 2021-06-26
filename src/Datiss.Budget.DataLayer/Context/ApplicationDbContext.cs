@@ -185,6 +185,13 @@ namespace Datiss.Budget.DataLayer.Context
 
         #endregion
 
+
+        public virtual DbSet<FinanceYear> FinanceYears { set; get; }
+        public virtual DbSet<Constant> Constants { set; get; }
+        public virtual DbSet<Organization> Organizations { set; get; }
+        public virtual DbSet<WaterInstallFee> WaterInstallFees { set; get; }
+
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // it should be placed here, otherwise it will rewrite the following settings!
