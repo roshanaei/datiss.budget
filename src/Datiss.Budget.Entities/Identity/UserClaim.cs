@@ -9,6 +9,11 @@ namespace Datiss.Budget.Entities.Identity
     /// </summary>
     public class UserClaim : IdentityUserClaim<int>, IAuditableEntity
     {
+        public UserClaim() { }
+
+        #region Properties
         public virtual User User { get; set; }
+
+        #endregion
     }
 }

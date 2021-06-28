@@ -9,6 +9,12 @@ namespace Datiss.Budget.Entities.Identity
     /// </summary>
     public class RoleClaim : IdentityRoleClaim<int>, IAuditableEntity
     {
+        public RoleClaim() { }
+        
+        #region Properties
+
         public virtual Role Role { get; set; }
+
+        #endregion
     }
 }

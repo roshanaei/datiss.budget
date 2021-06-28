@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Datiss.Budget.Entities.AuditableEntity;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Entities.Identity;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Entities
 {
@@ -29,6 +30,7 @@ namespace Datiss.Budget.Entities
 
         public bool IsVillage { get; set; }
 
+        public EntityStatus Status { get; set; }
         #endregion
 
         #region Navigations

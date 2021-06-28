@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Datiss.Budget.Entities.AuditableEntity;
 using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Entities
 {
@@ -25,6 +26,8 @@ namespace Datiss.Budget.Entities
         public DateTime EndDate { get; set; }
 
         public int Year { get; set; }
+
+        public EntityStatus Status { get; set; }
 
         #endregion
 

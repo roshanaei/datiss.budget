@@ -10,9 +10,9 @@ namespace Datiss.Budget.Entities.Identity
     /// </summary>
     public class Role : IdentityRole<int>, IAuditableEntity
     {
-        public Role()
-        {
-        }
+        public Role() {}
+
+        #region Properties
 
         public Role(string name)
             : this()
@@ -27,9 +27,12 @@ namespace Datiss.Budget.Entities.Identity
         }
 
         public string Description { get; set; }
+        #endregion
 
-        public virtual ICollection<UserRole> Users { get; set; }
+        #region Navigations
+        public  ICollection<UserRole> Users { get; set; }
 
-        public virtual ICollection<RoleClaim> Claims { get; set; }
+        public  ICollection<RoleClaim> Claims { get; set; }
+        #endregion
     }
 }
