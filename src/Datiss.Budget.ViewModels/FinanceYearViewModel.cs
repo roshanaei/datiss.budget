@@ -17,7 +17,7 @@ namespace Datiss.Budget.ViewModels
 
         public int Year { get; set; }
 
-        public Entitystatus Status { get; set; }
+        public bool Enabled { get; set; }
     }
 
     public class UpdateFinanceYearViewModel : AddFinanceYearViewModel

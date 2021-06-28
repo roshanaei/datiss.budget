@@ -7,12 +7,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
+using Datiss.Budget.Services.Contracts;
 
 namespace Datiss.Budget.Services
 {
-    public class ConstantService
+    public class ConstantService: IConstantService
     {
         private readonly IUnitOfWork _uow;
 
@@ -41,6 +43,10 @@ namespace Datiss.Budget.Services
                 Title = model.Title
             };
 
+            entity.Status = model.Enabled 
+                ? EntityStatus.Enabled 
+                : EntityStatus.Disbaled;
+
             await _dbSet.AddAsync(entity);
             await _uow.SaveChangesAsync();
 
@@ -61,8 +67,20 @@ namespace Datiss.Budget.Services
             entity.Title = model.Title;
             entity.ConstantKey = model.ConstantKey;
             entity.DisplayOrder = model.DisplayOrder;
+            entity.Status = model.Enabled
+                ? EntityStatus.Enabled
+                : EntityStatus.Disbaled;
 
             await _uow.SaveChangesAsync();
+
+            return ValidationResult.Success();
+        }
+
+        public async Task<ValidationResult> SoftDeleteAsync(int id) {
+            var entity = await _dbSet.FindAsync(id);
+            entity.CheckArgumentIsNull(nameof(entity));
+
+            entity.Status = EntityStatus.Deleted;
 
             return ValidationResult.Success();
         }

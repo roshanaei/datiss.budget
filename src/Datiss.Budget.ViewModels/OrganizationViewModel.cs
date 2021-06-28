@@ -17,7 +17,7 @@ namespace Datiss.Budget.ViewModels
 
         public bool IsVillage { get; set; }
 
-        public Entitystatus Status { get; set; }
+        public bool Enabled { get; set; }
     }
 
     public class UpdateOrganizationViewModel : AddOrganizationViewModel
