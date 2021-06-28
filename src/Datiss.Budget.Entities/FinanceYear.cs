@@ -14,6 +14,8 @@ namespace Datiss.Budget.Entities
             WaterInstallFees = new HashSet<WaterInstallFee>();
         }
 
+        #region Properties
+
         public int Id { get; set; }
 
         public string Title { get; set; }
@@ -24,6 +26,12 @@ namespace Datiss.Budget.Entities
 
         public int Year { get; set; }
 
+        #endregion
+
+        #region Navigation
+
         public ICollection<WaterInstallFee> WaterInstallFees { get; set; }
+
+        #endregion
     }
 }
