@@ -11,9 +11,9 @@ namespace Datiss.Budget.Entities.Identity
     {
         public RoleClaim() { }
         
-        #region Properties
+        #region Navigations
 
-        public virtual Role Role { get; set; }
+        public Role Role { get; set; }
 
         #endregion
     }

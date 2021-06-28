@@ -20,8 +20,6 @@ namespace Datiss.Budget.Entities
 
         public int Id { get; set; }
 
-        public virtual Constant Parent { get; set; }
-
         public int? ParentId { get; set; }
 
         public string Title { get; set; }
@@ -35,7 +33,7 @@ namespace Datiss.Budget.Entities
         #endregion
 
         #region Navigations
-
+        public Constant Parent { get; set; }
         public ICollection<Constant> Childrens { get; set; }
         public ICollection<WaterInstallFee> WaterInstallFees { get; set; }
 

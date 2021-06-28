@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Entities.Identity
 {
@@ -54,6 +55,8 @@ namespace Datiss.Budget.Entities.Identity
         public bool IsActive { get; set; } = true;
 
         public int? OrganizationId { get; set; }
+
+        public EntityStatus Status { get; set; }
 
         #endregion
 

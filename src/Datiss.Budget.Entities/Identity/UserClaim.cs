@@ -12,7 +12,7 @@ namespace Datiss.Budget.Entities.Identity
         public UserClaim() { }
 
         #region Properties
-        public virtual User User { get; set; }
+        public User User { get; set; }
 
         #endregion
     }
