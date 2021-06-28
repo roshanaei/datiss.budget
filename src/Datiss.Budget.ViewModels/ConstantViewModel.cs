@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -17,7 +18,7 @@ namespace Datiss.Budget.ViewModels
 
         public int DisplayOrder { get; set; }
 
-        public Entitystatus Status { get; set; }
+        public EntityStatus Status { get; set; }
     }
 
     public class UpdateConstantViewModel: AddConstantViewModel
