@@ -126,6 +126,8 @@ namespace Datiss.Budget.Services.Identity
 
             adminUser = new User
             {
+                FirstName = adminUserSeed.FirstName,
+                LastName = adminUserSeed.LastName,
                 UserName = name,
                 Email = email,
                 EmailConfirmed = true,

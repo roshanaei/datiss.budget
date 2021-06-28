@@ -28,6 +28,7 @@ namespace Datiss.Budget
 
             // Adds all of the ASP.NET Core Identity related services and configurations at once.
             services.AddCustomIdentityServices();
+            services.AddDatissBudgetServices();
 
             services
                 .AddMvc(options => options.UseYeKeModelBinder())
