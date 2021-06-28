@@ -9,6 +9,8 @@ namespace Datiss.Budget.Entities.Identity
     /// </summary>
     public class UserToken : IdentityUserToken<int>, IAuditableEntity
     {
+        public UserToken() { }
+
         public virtual User User { get; set; }
     }
 }

@@ -9,6 +9,8 @@ namespace Datiss.Budget.Entities.Identity
     /// </summary>
     public class UserRole : IdentityUserRole<int>, IAuditableEntity
     {
+        public UserRole() { }
+
         public virtual User User { get; set; }
 
         public virtual Role Role { get; set; }

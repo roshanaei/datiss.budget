@@ -5,6 +5,9 @@ namespace Datiss.Budget.Entities.Identity
 {
     public class AppLogItem : IAuditableEntity
     {
+        public AppLogItem() { }
+
+        #region properties
         public int Id { set; get; }
 
         public DateTime? CreatedDateTime { get; set; }
@@ -20,5 +23,6 @@ namespace Datiss.Budget.Entities.Identity
         public string Message { get; set; }
 
         public string StateJson { get; set; }
+        #endregion
     }
 }

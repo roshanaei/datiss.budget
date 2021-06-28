@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Datiss.Budget.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -15,6 +17,8 @@ namespace Datiss.Budget.ViewModels
         public string ConstantKey { get; set; }
 
         public int DisplayOrder { get; set; }
+
+        public EntityStatus Status { get; set; }
     }
 
     public class UpdateConstantViewModel: AddConstantViewModel

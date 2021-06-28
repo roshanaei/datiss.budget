@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Datiss.Budget.Entities.AuditableEntity;
 using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Entities
 {
@@ -20,11 +21,14 @@ namespace Datiss.Budget.Entities
         public int Id { get; set; }
 
         public virtual Constant Parent { get; set; }
+
         public int? ParentId { get; set; }
 
         public string Title { get; set; }
 
         public string ConstantKey { get; set; }
+
+        public EntityStatus Status { get; set; }
 
         public int DisplayOrder { get; set; }
 
