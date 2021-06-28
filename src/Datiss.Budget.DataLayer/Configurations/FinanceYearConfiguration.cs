@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Entities;
+using Datiss.Budget.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,7 +23,8 @@ namespace Datiss.Budget.DataLayer.Mappings
             builder.Property(x => x.Year).IsRequired();
             builder.Property(x => x.StartDate).IsRequired();
             builder.Property(x => x.EndDate).IsRequired();
-            
+            builder.Property(x => x.Status)
+                .HasDefaultValue(EntityStatus.Enabled);
         }
     }
 

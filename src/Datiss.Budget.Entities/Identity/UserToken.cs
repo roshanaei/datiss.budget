@@ -11,6 +11,6 @@ namespace Datiss.Budget.Entities.Identity
     {
         public UserToken() { }
 
-        public virtual User User { get; set; }
+        public User User { get; set; }
     }
 }

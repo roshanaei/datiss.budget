@@ -12,7 +12,7 @@ namespace Datiss.Budget.Entities.Identity
 
         public string HashedPassword { get; set; }
 
-        public virtual User User { get; set; }
+        public User User { get; set; }
 
         public int UserId { get; set; }
 
