@@ -11,6 +11,7 @@ using Datiss.Budget.Enum;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Services.Models;
 
 namespace Datiss.Budget.Services
 {
@@ -83,6 +84,15 @@ namespace Datiss.Budget.Services
             entity.Status = EntityStatus.Deleted;
 
             return ValidationResult.Success();
+        }
+
+        public async Task<IEnumerable<DropDownItem>> GetParentsAsync() {
+            return _dbSet
+                .Where(x => x.ParentId == null)
+                .Select(x => new DropDownItem {
+                    Id = x.Id,
+                    Title = x.Title
+                });
         }
 
         #region Private Methods
