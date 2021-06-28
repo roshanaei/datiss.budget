@@ -86,14 +86,13 @@ namespace Datiss.Budget.Services
             return ValidationResult.Success();
         }
 
-        public async Task<IEnumerable<DropDownItem>> GetParentsAsync() {
-            return _dbSet
+        public async Task<IEnumerable<DropDownItem>> GetParentsAsync() 
+            => await _dbSet
                 .Where(x => x.ParentId == null)
                 .Select(x => new DropDownItem {
                     Id = x.Id,
                     Title = x.Title
-                });
-        }
+                }).ToListAsync();
 
         #region Private Methods
 
