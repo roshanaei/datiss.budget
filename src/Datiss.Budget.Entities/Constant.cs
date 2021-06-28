@@ -20,11 +20,14 @@ namespace Datiss.Budget.Entities
         public int Id { get; set; }
 
         public virtual Constant Parent { get; set; }
+
         public int? ParentId { get; set; }
 
         public string Title { get; set; }
 
         public string ConstantKey { get; set; }
+
+        public Entitystatus Status { get; set; }
 
         public int DisplayOrder { get; set; }
 

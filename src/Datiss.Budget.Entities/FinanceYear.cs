@@ -26,6 +26,8 @@ namespace Datiss.Budget.Entities
 
         public int Year { get; set; }
 
+        public Entitystatus Status { get; set; }
+
         #endregion
 
         #region Navigation

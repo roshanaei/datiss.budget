@@ -29,6 +29,7 @@ namespace Datiss.Budget.Entities
 
         public bool IsVillage { get; set; }
 
+        public Entitystatus Status { get; set; }
         #endregion
 
         #region Navigations
