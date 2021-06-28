@@ -21,6 +21,6 @@ namespace Datiss.Budget.Entities.Identity
 
         #endregion
 
-        public virtual User User { get; set; }
+        public User User { get; set; }
     }
 }

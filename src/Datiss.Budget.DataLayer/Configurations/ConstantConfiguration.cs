@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Entities;
+using Datiss.Budget.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,6 +23,9 @@ namespace Datiss.Budget.DataLayer.Mappings
                 .HasMaxLength(50)
                 .IsUnicode()
                 .IsRequired();
+
+            builder.Property(x => x.Status)
+                .HasDefaultValue(EntityStatus.Enabled);
 
             builder.HasOne(x => x.Parent)
                     .WithMany(x => x.Childrens)

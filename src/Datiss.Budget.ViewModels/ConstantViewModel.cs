@@ -18,7 +18,7 @@ namespace Datiss.Budget.ViewModels
 
         public int DisplayOrder { get; set; }
 
-        public EntityStatus Status { get; set; }
+        public bool Enabled { get; set; }
     }
 
     public class UpdateConstantViewModel: AddConstantViewModel
