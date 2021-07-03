@@ -29,7 +29,8 @@ namespace Datiss.Budget.Services
         }
 
         private IQueryable<Constant> Query() 
-           => _dbSet.Where(_ => _.Status != EntityStatus.Deleted);
+           => _dbSet.AsNoTracking()
+                    .Where(_ => _.Status != EntityStatus.Deleted);
         
         public async Task<ValidationResult> AddAsync(AddConstantViewModel model) {
             model.CheckArgumentIsNull(nameof(model));

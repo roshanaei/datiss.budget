@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Datiss.Budget.ViewModels;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
+using Datiss.Budget.Services.Models;
 
 namespace Datiss.Budget.Services
 {
@@ -24,6 +25,9 @@ namespace Datiss.Budget.Services
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<WaterInstallFee>();
         }
+
+        private IQueryable<WaterInstallFee> Query()
+            => _dbSet.AsNoTracking();
 
         public async Task<ValidationResult> AddAsync(AddWaterInstallFeeViewModel model)
         {
@@ -70,8 +74,62 @@ namespace Datiss.Budget.Services
 
         }
 
+        public async Task<PagedResult<WaterInstallFeeViewModel>> GetListAsync(WaterInstallFeeFilter filter) 
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+            var result = new PagedResult<WaterInstallFeeViewModel>();
+
+            var query = Query();
+
+            if (filter.YearId.HasValue)
+                query = query.Where(x => x.YearId == filter.YearId.Value);
+
+            if (filter.OrganizationId.HasValue)
+                query = query.Where(x => x.OrganizationId == filter.OrganizationId.Value);
+
+            if (filter.DWaterTypeId.HasValue)
+                query = query.Where(x => x.DWaterTypeId == filter.DWaterTypeId.Value);
+
+            if(filter.WInstallFee.HasValue) {
+                switch(filter.FeeMode) {
+                    case WaterInstallFeeFilterMode.Exact:
+                        query = query.Where(x => x.WInstllFee == filter.WInstallFee.Value);
+                        break;
+                    case WaterInstallFeeFilterMode.GreaterThan:
+                        query = query.Where(x => x.WInstllFee >= filter.WInstallFee.Value);
+                        break;
+                    case WaterInstallFeeFilterMode.LessThan:
+                        query = query.Where(x => x.WInstllFee <= filter.WInstallFee.Value);
+                        break;
+                }
+            }
+
+            result.TotalCount = await query.CountAsync();
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
 
 
+        }
 
+        private IQueryable<WaterInstallFee> setOrder(IQueryable<WaterInstallFee> query, string orderBy = "Id", bool desc = false) 
+        {
+            orderBy = orderBy.ToLower();
+            switch(orderBy) {
+                case "year":
+                    return desc
+                        ? query.OrderByDescending(x => x.FinanceYear.Year)
+                        : query.OrderBy(x => x.FinanceYear.Year);
+
+                case "organization":
+                    return desc
+                        ? query.OrderByDescending(x => x.Organization.Title)
+                        : query.OrderBy(x => x.Organization.Title);
+
+                default:
+                    return desc
+                        ? query.OrderByDescending(x => x.Id)
+                        : query.OrderBy(x => x.Id);
+            }
+        }
     }
 }
