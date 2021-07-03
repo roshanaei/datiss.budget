@@ -16,10 +16,13 @@ namespace Datiss.Budget.IocConfig
 {
     public static class AddCustomServicesExtensions
     {
+
         public static IServiceCollection AddCustomServices(this IServiceCollection services)
         {
-            #region DNT
+            
+          #region DNT
 
+            
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPrincipal>(provider => provider.GetRequiredService<IHttpContextAccessor>()?.HttpContext?.User ?? ClaimsPrincipal.Current);
 

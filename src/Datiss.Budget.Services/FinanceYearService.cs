@@ -1,14 +1,17 @@
-﻿using Datiss.Budget.DataLayer.Context;
-using Datiss.Budget.Entities;
-using Datiss.Budget.ViewModels;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Enum;
+using Datiss.Budget.DataLayer.Context;
+using Datiss.Budget.Entities;
+using Datiss.Budget.ViewModels;
 using Datiss.Budget.Services.Infrastructure;
+using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Services.Models;
 
 namespace Datiss.Budget.Services
 {
@@ -57,6 +60,19 @@ namespace Datiss.Budget.Services
 
             return ValidationResult.Success();
         }
+
+        public async Task<ValidationResult> SoftDeleteAsync(int id){
+            var entity = await _dbSet.FindAsync(id);
+            entity.CheckArgumentIsNull(nameof(entity));
+
+            entity.Status = EntityStatus.Deleted;
+
+            await _uow.SaveChangesAsync();
+
+            return ValidationResult.Success();
+
+        }
+
 
     }
 }
