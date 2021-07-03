@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace Datiss.Budget.ViewModels
         public bool IsVillage { get; set; }
 
         public bool Enabled { get; set; }
+
+        public IEnumerable<SelectListItem> ParentList { get; set; }
     }
 
     public class UpdateOrganizationViewModel : AddOrganizationViewModel
