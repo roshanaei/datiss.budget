@@ -14,5 +14,7 @@ namespace Datiss.Budget.Services.Contracts
         
         Task<ValidationResult> UpdateAsync(UpdateFinanceYearViewModel model);
 
+        Task<ValidationResult> SoftDeleteAsync(int id);
+
     }
 }
