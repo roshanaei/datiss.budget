@@ -67,6 +67,8 @@ namespace Datiss.Budget.Services
 
             entity.Status = EntityStatus.Deleted;
 
+            await _uow.SaveChangesAsync();
+
             return ValidationResult.Success();
 
         }

@@ -27,8 +27,10 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpGet]
         public  async Task<IActionResult> New()
-        {           
-            return View();
+        {
+
+            var model = new AddFinanceYearViewModel();
+            return View(model);
         }
      
     }
