@@ -10,5 +10,6 @@ namespace Datiss.Budget.Services.Models
     {
         public int Id { get; set; }
         public string Title { get; set; }
+        public bool Selected { get; set; }
     }
 }

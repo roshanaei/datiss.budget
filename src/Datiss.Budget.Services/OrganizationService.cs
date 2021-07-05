@@ -28,6 +28,10 @@ namespace Datiss.Budget.Services
             _dbSet = _uow.Set<Organization>();
         }
 
+        private IQueryable<Organization> Query()
+            => _dbSet.AsNoTracking()
+                        .Where(x => x.Status != EntityStatus.Deleted);
+
         public async Task<ValidationResult> AddAsync(AddOrganizationViewModel model)
         {
             model.CheckArgumentIsNull(nameof(model));
@@ -89,6 +93,27 @@ namespace Datiss.Budget.Services
                     Title = x.Title
                 }).ToListAsync();
 
+
+        private async Task<IEnumerable<Organization>> getByParnetIdAsync(int? parentId) {
+            var firstLevel = await Query()
+                .Where(x => x.ParentId == parentId).ToListAsync();
+
+            foreach (var item in firstLevel) {
+                foreach (var child in item.Childrens) {
+                    firstLevel.AddRange(await getByParnetIdAsync(child.Id));
+                }
+            }
+
+            return firstLevel;
+        }
+
+        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync(int? parentId) 
+            => (await getByParnetIdAsync(parentId))
+                .Select(x => new DropDownItem {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Selected = x.Id == parentId
+                }).ToList();
 
     }
 }
