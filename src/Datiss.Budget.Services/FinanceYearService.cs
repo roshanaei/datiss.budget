@@ -12,6 +12,7 @@ using Datiss.Budget.ViewModels;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
+using System.Globalization;
 
 namespace Datiss.Budget.Services
 {
@@ -26,6 +27,10 @@ namespace Datiss.Budget.Services
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<FinanceYear>();
         }
+
+        private IQueryable<FinanceYear> Query()
+            => _dbSet.AsNoTracking()
+                        .Where(x=> x.Status != EntityStatus.Deleted);
 
         public async Task<ValidationResult> AddAsync(AddFinanceYearViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
@@ -69,6 +74,11 @@ namespace Datiss.Budget.Services
 
         }
 
-
+        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync() 
+            => await Query().Select(x => new DropDownItem {
+                Id = x.Id,
+                Title = x.Year.ToString()
+            }).ToListAsync();
+        
     }
 }

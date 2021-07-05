@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Datiss.Budget.Services.Infrastructure;
+using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
 
 namespace Datiss.Budget.Services.Contracts
@@ -16,5 +17,6 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<ValidationResult> SoftDeleteAsync(int id);
 
+        Task<IEnumerable<DropDownItem>> GetDropDownDataAsync();
     }
 }
