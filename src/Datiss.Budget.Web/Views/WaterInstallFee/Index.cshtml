@@ -1,8 +1,15 @@
 ﻿@model WaterInstallFeeIndexViewModel
 
 <div>
-    <form asp-controller="WaterInstallFee" asp-action="Index" asp-antiforgery="true">
-        <label asp-for="Filter.YearId">Year</label> : <
+    <form method="post" asp-controller="WaterInstallFee" asp-action="Index" asp-antiforgery="true">
+        <label asp-for="Filter.YearId">Year</label> :
+        <select asp-for="Filter.YearId" asp-items="Model.Filter.YearSource">
+        </select>
+
+        <label asp-for="Filter.OrganizationId">Organizzation:</label>
+        <select asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource"></select>
+
+        <button type="submit">Filter</button>
     </form>
 </div>
 
@@ -27,7 +34,7 @@
     </tbody>
     <tfoot>
         <p>
-            Total count : @Model.TotalCount - Page @Model.PageNumber of @Model.PagesCount
+            Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
         </p>
     </tfoot>
 </table>

@@ -95,16 +95,22 @@ namespace Datiss.Budget.Services
 
 
         private async Task<IEnumerable<Organization>> getByParnetIdAsync(int? parentId) {
+            
             var firstLevel = await Query()
+                .Include(x=> x.Childrens)
                 .Where(x => x.ParentId == parentId).ToListAsync();
+
+            var result = new List<Organization>();
+            result.AddRange(firstLevel);
 
             foreach (var item in firstLevel) {
                 foreach (var child in item.Childrens) {
-                    firstLevel.AddRange(await getByParnetIdAsync(child.Id));
+                    result.Add(child);
+                    result.AddRange(await getByParnetIdAsync(child.Id));
                 }
             }
 
-            return firstLevel;
+            return result;
         }
 
         public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync(int? parentId) 

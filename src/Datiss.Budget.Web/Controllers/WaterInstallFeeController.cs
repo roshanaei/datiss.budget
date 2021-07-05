@@ -16,11 +16,17 @@ namespace Datiss.Budget.Web.Controllers
     {
 
         private readonly IWaterInstallFeeService _waterInstallFeeService;
+        private readonly IOrganizationService _organizationService;
+        private readonly IFinanceYearService _financeYearService;
 
-        public WaterInstallFeeController(IWaterInstallFeeService waterInstallFeeService) 
+        public WaterInstallFeeController(
+            IWaterInstallFeeService waterInstallFeeService,
+            IOrganizationService organizationService,
+            IFinanceYearService financeYearService) 
         {
             _waterInstallFeeService = waterInstallFeeService ?? throw new ArgumentNullException(nameof(waterInstallFeeService));
-
+            _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
+            _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
         }
 
         [HttpGet("{page}")]
@@ -33,7 +39,12 @@ namespace Datiss.Budget.Web.Controllers
 
             var result = await _waterInstallFeeService.GetListAsync(filterInput);
 
-            return View(result);
+            var model = new WaterInstallFeeIndexViewModel();
+            model.SetFinanceYearFilterSource(await _financeYearService.GetDropDownDataAsync());
+            model.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync(null));
+            model.Model = result;
+
+            return View(model);
         }
 
         [HttpPost]
