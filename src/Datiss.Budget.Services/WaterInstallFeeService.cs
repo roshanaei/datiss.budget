@@ -77,7 +77,10 @@ namespace Datiss.Budget.Services
         public async Task<PagedResult<WaterInstallFeeViewModel>> GetListAsync(WaterInstallFeeFilter filter) 
         {
             filter.CheckArgumentIsNull(nameof(filter));
-            var result = new PagedResult<WaterInstallFeeViewModel>();
+            var result = new PagedResult<WaterInstallFeeViewModel> {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
 
             var query = Query();
 
@@ -108,10 +111,31 @@ namespace Datiss.Budget.Services
 
             query = setOrder(query, filter.OrderBy, filter.OrderDesc);
 
+            query = query
+                .Skip(filter.StartIndex)
+                .Take(filter.PageSize);
 
+            result.Items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.DWaterType)
+                                    .Select(x => new WaterInstallFeeViewModel {
+                                        DWaterTypeDisplay = x.DWaterType.Title,
+                                        DWaterTypeId = x.DWaterTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        WInstallFee = x.WInstllFee,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
+                                    }).ToListAsync();
+
+            return await Task.FromResult(result);
         }
 
-        private IQueryable<WaterInstallFee> setOrder(IQueryable<WaterInstallFee> query, string orderBy = "Id", bool desc = false) 
+        private IQueryable<WaterInstallFee> setOrder(
+            IQueryable<WaterInstallFee> query, 
+            string orderBy = "id", 
+            bool desc = false) 
         {
             orderBy = orderBy.ToLower();
             switch(orderBy) {
@@ -124,6 +148,11 @@ namespace Datiss.Budget.Services
                     return desc
                         ? query.OrderByDescending(x => x.Organization.Title)
                         : query.OrderBy(x => x.Organization.Title);
+
+                case "dwatertype":
+                    return desc
+                        ? query.OrderByDescending(x => x.DWaterType.DisplayOrder)
+                        : query.OrderBy(x => x.DWaterType.DisplayOrder);
 
                 default:
                     return desc

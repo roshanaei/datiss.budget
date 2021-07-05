@@ -11,6 +11,9 @@ namespace Datiss.Budget.Services.Models
         public string Search { get; set; }
         public string OrderBy { get; set; }
         public bool OrderDesc { get; set; }
+        public int PageSize { get; set; } = 10;
+        public int PageNumber { get; set; } = 1;
+        public int StartIndex => (PageNumber * PageSize) - PageSize;
     }
 
     public enum WaterInstallFeeFilterMode
