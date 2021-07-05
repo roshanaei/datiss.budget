@@ -13,5 +13,7 @@ namespace Datiss.Budget.Services.Contracts
         Task<ValidationResult> UpdateAsync(UpdateWaterInstallFeeViewModel model);
 
         Task<ValidationResult> HardDeleteAsync(int Id);
+
+        Task<PagedResult<WaterInstallFeeViewModel>> GetListAsync(WaterInstallFeeFilter filter);
     }
 }
