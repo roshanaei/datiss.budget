@@ -4,87 +4,184 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>@pageTitle</title>
-    <link href="~/css/site.min.css" rel="stylesheet" asp-append-version="true" />
+    <title>سیستم جامع بودجه</title>
+    <link rel="shortcut icon"
+          type="image/x-icon"
+          href="../assets/img/ico/favicon.ico" />
+    <link rel="shortcut icon"
+          type="image/png"
+          href="../assets/img/ico/favicon-32.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700,900%7CMontserrat:300,400,500,600,700,800,900"
+          rel="stylesheet" />
+    <!-- BEGIN VENDOR CSS-->
+    <!-- font icons-->
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/fonts/feather/style.min.css" />
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/fonts/simple-line-icons/style.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/fonts/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/vendors/css/perfect-scrollbar.min.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/vendors/css/prism.min.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/vendors/css/switchery.min.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/vendors/css/chartist.min.css" />
+    <!-- END VENDOR CSS-->
+    <!-- BEGIN APEX CSS-->
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/css-rtl/bootstrap.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/css-rtl/table.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/css-rtl/bootstrap-extended.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/css-rtl/colors.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/css-rtl/components.css" />
+    <link rel="stylesheet" href="../assets/css-rtl/plugins/switchery.css" />
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/css-rtl/custom-rtl.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/css-rtl/custom-fonts.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="../assets/css-rtl/pages/dashboard.css" />
 </head>
-<body>
-    <div class="navbar bg-dark navbar-dark navbar-expand-sm fixed-top">
-        <div class="container">
-            <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand d-none d-sm-inline-block">DNT Identity</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#myToggle" aria-controls="myToggle" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="myToggle">
-                <div class="navbar-nav ml-2">
-                    <a class="nav-item nav-link" asp-area="" asp-controller="Home" asp-action="Index">
-                        <span class="fas fa-home" aria-hidden="true"></span>
-                        خانه
-                    </a>
-                </div>
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <partial name="_UserMenu" />
-                    <partial name="_ReportsMenu" />
-                    if (User.IsInRole(ConstantRoles.Admin))
-                    {
-                        <partial name="_AdminMenu" />
-                    }
-                }
-                else
-                {
-                    <div class="navbar-nav">
-                        <a class="nav-item nav-link" asp-area="@AreaConstants.IdentityArea" asp-controller="Login" asp-action="Index">
-                            <span class="fas fa-sign-in-alt" aria-hidden="true"></span>
-                            ورود
-                        </a>
-                        <a class="nav-item nav-link" asp-area="@AreaConstants.IdentityArea" asp-controller="Register" asp-action="Index">
-                            <span class="fas fa-plug" aria-hidden="true"></span>
-                            ثبت نام
-                        </a>
+<body class="vertical-layout vertical-menu 2-columns navbar-sticky"
+      data-menu="vertical-menu"
+      data-col="2-columns">
+
+
+    <div class="wrapper">
+
+        <div class="main-panel">
+            <!-- BEGIN : Main Content-->
+            <div class="main-content">
+                <div class="content-wrapper">
+                    <div class="row" style="display:contents">
+                        <div class="col-lg-12 col-md-12 col-12">
+                            <div id="Breadcrumb1">
+                                <breadcrumb asp-homepage-title="خانه"
+                                            asp-homepage-url="@Url.Action("Index", "Home", values: new { area = AreaConstants.IdentityArea })"
+                                            asp-homepage-glyphicon="ft-home" style="background-color: #fff;"></breadcrumb>
+                            </div>
+                        </div>
                     </div>
-                }
+                    @RenderBody()
+                </div>
             </div>
+
+            <!-- END : End Main Content-->
+            <!-- BEGIN : Footer-->
+            <footer class="footer footer-static footer-light">
+                <div class="container">
+                    <div class="text-center footer-text">
+                        <span class="copyright-text">
+                            <span style="color:DarkRed" aria-hidden="true"></span>
+                            <a href="http://www.datiss.net/" target="_blank">Datiss.net</a>
+                            <img src="~/images/favicon/footer-favicon.ico" width="16" height="16" />
+                        </span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End : Footer-->
+
         </div>
     </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 mt-5 pt-5">
-                <breadcrumb asp-homepage-title="خانه"
-                            asp-bootstrap-version="V4"
-                            asp-homepage-url="@Url.Action("Index", "Home", values: new { area = "" })"
-                            asp-homepage-glyphicon="fas fa-home"></breadcrumb>
+
+    <!-- main menu-->
+    <!--.main-menu(class="#{menuColor} #{menuOpenType}", class=(menuShadow == true ? 'menu-shadow' : ''))-->
+    <div class="app-sidebar menu-fixed" data-background-color="purple-bliss" data-image="../assets/img/sidebar-bg/01.jpg" data-scroll-to-active="true">
+        <!-- main menu header-->
+        <!-- Sidebar Header starts-->
+        <div class="sidebar-header">
+            <div class="logo clearfix">
+                <a class="logo-text float-left">
+                    <div class="logo-img"><img src="~/images/logo/DATISS.png" alt="" height="30"></div><span class="text my-font-bold">سیستم جامع بودجه</span>
+                </a><a class="nav-toggle d-none d-lg-none d-xl-block" id="sidebarToggle" href="javascript:;"><i class="toggle-icon ft-toggle-right" data-toggle="expanded"></i></a><a class="nav-close d-block d-lg-block d-xl-none" id="sidebarClose" href="@Url.Action("Index", "Home", values: new { area = AreaConstants.IdentityArea }, protocol: this.Context.Request.Scheme)" @*href="/"*@><i class="ft-x"></i></a>
             </div>
         </div>
+        <!-- Sidebar Header Ends-->
+        <!-- main menu content-->
+        <div class="sidebar-content main-menu-content">
+            <div class="nav-container">
+                <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+
+
+
+                    <li class=" nav-item">
+                        <a href="~/help.pdf" target="_blank"><i class="ft-help-circle"></i><span data-i18n="راهنمای سامانه" class="menu-title my-font">راهنمای سامانه</span></a>
+                    </li>
+
+                    <!-- مدیریت نرم افزار-->
+
+                    <li class="nav-item AppConfigCollapse"><a href="#"><span data-i18n="مدیریت نرم افزار" class="menu-title my-font">مدیریت نرم افزار</span></a></li>
+
+                     تنظیمات نرم افزار
+                    <li class="has-sub nav-item">
+            <a href="#"><i class="ft-refresh-cw"></i><span data-i18n="تنظیمات نرم افزار" class="menu-title my-font">تنظیمات نرم افزار</span></a>
+            <ul class="menu-content" id="AppLogCollapse" parent="AppConfigCollapse">
+                <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString()=="SystemLog" ? "active" : "")">
+                    <a class="menu-item" asp-area="@AreaConstants.IdentityArea" asp-controller="SystemLog" asp-action="Index">
+                        <i class="ft-arrow-right submenu-icon"></i><span class="menu-item" data-i18n="گزارش رخ‌ دادهای سیستم">
+                            گزارش رخ‌ دادهای سیستم
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+
+                </ul>
+            </div>
+        </div>
+        <!-- main menu content-->
+
+        <!-- / main menu header-->
+
+        <div class="sidebar-background"></div>
+        <!-- main menu footer-->
+        <!-- include includes/menu-footer-->
+        <!-- main menu footer-->
     </div>
-    <div class="container mb-5">
-        <div class="row">
-            <div class="col-md-9 order-md-9">
-                @RenderBody()
-            </div>
-            <div class="col-md-3 order-md-3">
-                <partial name="_SidebarMenu" />
-            </div>
-        </div>
-    </div>
-    <footer id="footer" dir="ltr" class="navbar bg-light navbar-light navbar-expand-sm fixed-bottom">
-        <div class="container">
-            <div class="text-center footer-text">
-                <span class="copyright-text">
-                    <span class="fas fa-heart" style="color:DarkRed" aria-hidden="true"></span>
-                    <a href="http://www.dotnettips.info/" target="_blank">DNT, 2017</a>
-                </span>
-            </div>
-        </div>
-    </footer>
-    <script src="~/js/site.min.js" type="text/javascript" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- / main menu-->
+    <!-- ////////////////////////////////////////////////////////////////////////////-->
+
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+    <script src="../assets/vendors/js/vendors.min.js"></script>
+    <script src="../assets/vendors/js/switchery.min.js"></script>
+
+    <script src="../assets/vendors/js/chartist.min.js"></script>
+    <script src="../assets/js/core/app-menu.js"></script>
+    <script src="../assets/js/core/app.js"></script>
+    <script src="../assets/js/scroll-top.js"></script>
+    <script src="../assets/js/dashboard.js"></script>
+    <script src="../assets/js/table.js"></script>
+
 </body>
 
 </html>
