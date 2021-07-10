@@ -1,47 +1,50 @@
 ﻿@model ForgotPasswordViewModel
 @{
     ViewData["Title"] = "بازیابی کلمه‌ی عبور فراموش شده";
+    Layout = "_LayoutLogin";
 }
 
-<div class="card mt-5">
-    <div class="card-header">
-        <h5 class="card-title">@ViewData["Title"]</h5>
+<!--Forgot Password Starts-->
+<section id="forgot-password" class="auth-height">
+    <div class="row full-height-vh m-0 d-flex align-items-center justify-content-center">
+        <div class="col-md-7 col-12">
+            <div class="card overflow-hidden">
+                <div class="card-content">
+                    <div class="card-body auth-img">
+                        <div class="row m-0">
+                            <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center text-center auth-img-bg py-2">
+                                <img src="~/assets/img/gallery/forgot.png" alt="" class="img-fluid" width="260" height="230">
+                            </div>
+                            <div class="col-lg-6 col-12 px-4 py-3">
+                                <form asp-area="@AreaConstants.IdentityArea" asp-controller="ForgotPassword" asp-action="Index" method="post"
+                                      autocomplete="off">
+
+
+                                    @{ await Html.RenderPartialAsync("_CustomValidationSummary").ConfigureAwait(false); }
+                                    <h4 class="mb-2 card-title my-font-bold"> @ViewData["Title"]</h4>
+                                    <p></p>
+                                    <div class="row">
+                                        <div class="col-md-12 col-12">
+                                            <div class="form-group">
+                                                <label asp-for="Email"></label><i class="ft-star danger my-font-bold"></i>
+                                                <input asp-for="Email" class="form-control mb-3 my-font ltr "placeholder=" ایمیل" />
+                                                <span asp-validation-for="Email" class="danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between flex-sm-row flex-column">
+                                        <a asp-area="@AreaConstants.IdentityArea" asp-action="Index" asp-controller="Login" class=" btn btn-secondary bg-light-secondary mb-1 my-font">انصراف</a>
+                                        <button type="submit" class="btn btn-info bg-light-info mb-1 my-font">ارسال</button>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-        <form asp-controller="ForgotPassword" asp-action="Index" method="post">
-            <partial name="_CustomValidationSummary" />
-            <div class="form-group row">
-                <label asp-for="Email" class="col-md-2 col-form-label text-md-left"></label>
-                <div class="col-md-10">
-                    <input dir="ltr" asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label text-md-left">
-                    کد امنیتی
-                </label>
-                <div class="col col-md-10">
-                    <dnt-captcha asp-captcha-generator-max="30"
-                                 asp-captcha-generator-min="1"
-                                 asp-captcha-generator-language="Persian"
-                                 asp-captcha-generator-display-mode="SumOfTwoNumbers"
-                                 asp-font-name="Tahoma"
-                                 asp-font-size="20"
-                                 asp-refresh-button-class="fas fa-redo btn-sm"
-                                 asp-fore-color="#333333"
-                                 asp-back-color="#ccc"
-                                 asp-text-box-class="text-box form-control"
-                                 asp-text-box-template="<div class='input-group'><span class='input-group-prepend'><span class='input-group-text'><i class='fas fa-lock'></i></span></span>{0}</div>"
-                                 asp-validation-message-class="text-danger"
-                                 />
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="offset-md-2 col-md-10">
-                    <button type="submit" class="btn btn-info col-md-2">ارسال</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+</section>
+<!--Forgot Password Ends-->
