@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -17,8 +18,12 @@ namespace Datiss.Budget.ViewModels
 
         public int DWaterTypeId { get; set; }
 
+        [Required(ErrorMessage = "*")]
+        [Range(0, int.MaxValue, ErrorMessage = "Please dorost vared kon")]
         public int WInstllFee { get; set; }
 
+        public IEnumerable<SelectListItem> DWaterTypeSource { get; set; }
+        
     }
 
     public class UpdateWaterInstallFeeViewModel : AddWaterInstallFeeViewModel

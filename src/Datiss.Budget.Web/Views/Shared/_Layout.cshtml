@@ -7,10 +7,10 @@
     <title>سیستم جامع بودجه</title>
     <link rel="shortcut icon"
           type="image/x-icon"
-          href="../assets/img/ico/favicon.ico" />
+          href="~/assets/img/ico/favicon.ico" />
     <link rel="shortcut icon"
           type="image/png"
-          href="../assets/img/ico/favicon-32.png" />
+          href="~/assets/img/ico/favicon-32.png" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -20,26 +20,26 @@
     <!-- font icons-->
     <link rel="stylesheet"
           type="text/css"
-          href="../assets/fonts/feather/style.min.css" />
+          href="~/assets/fonts/feather/style.min.css" />
 
     <link rel="stylesheet"
           type="text/css"
-          href="../assets/fonts/simple-line-icons/style.css" />
+          href="~/assets/fonts/simple-line-icons/style.css" />
     <link rel="stylesheet"
           type="text/css"
-          href="../assets/fonts/font-awesome/css/font-awesome.min.css" />
+          href="~/assets/fonts/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet"
           type="text/css"
-          href="../assets/vendors/css/perfect-scrollbar.min.css" />
+          href="~/assets/vendors/css/perfect-scrollbar.min.css" />
     <link rel="stylesheet"
           type="text/css"
           href="../assets/vendors/css/prism.min.css" />
     <link rel="stylesheet"
           type="text/css"
-          href="../assets/vendors/css/switchery.min.css" />
+          href="~/assets/vendors/css/switchery.min.css" />
     <link rel="stylesheet"
           type="text/css"
-          href="../assets/vendors/css/chartist.min.css" />
+          href="~/assets/vendors/css/chartist.min.css" />
     <!-- END VENDOR CSS-->
     <!-- BEGIN APEX CSS-->
     <link rel="stylesheet"
@@ -47,27 +47,30 @@
           href="../assets/css-rtl/bootstrap.css" />
     <link rel="stylesheet"
           type="text/css"
-          href="../assets/css-rtl/table.css" />
+          href="~/assets/css-rtl/table.css" />
     <link rel="stylesheet"
           type="text/css"
-          href="../assets/css-rtl/bootstrap-extended.css" />
+          href="~/assets/css-rtl/bootstrap-extended.css" />
     <link rel="stylesheet"
           type="text/css"
-          href="../assets/css-rtl/colors.css" />
+          href="~/assets/css-rtl/colors.css" />
     <link rel="stylesheet"
           type="text/css"
-          href="../assets/css-rtl/components.css" />
-    <link rel="stylesheet" href="../assets/css-rtl/plugins/switchery.css" />
+          href="~/assets/css-rtl/components.css" />
+    <link rel="stylesheet" href="~/assets/css-rtl/plugins/switchery.css" />
 
     <link rel="stylesheet"
           type="text/css"
-          href="../assets/css-rtl/custom-rtl.css" />
+          href="~/assets/css-rtl/custom-rtl.css" />
     <link rel="stylesheet"
           type="text/css"
-          href="../assets/css-rtl/custom-fonts.css" />
+          href="~/assets/css-rtl/custom-fonts.css" />
     <link rel="stylesheet"
           type="text/css"
-          href="../assets/css-rtl/pages/dashboard.css" />
+          href="~/assets/css-rtl/pages/dashboard.css" />
+
+    @RenderSection("headSection", required: false)
+
 </head>
 <body class="vertical-layout vertical-menu 2-columns navbar-sticky"
       data-menu="vertical-menu"
@@ -113,7 +116,7 @@
 
     <!-- main menu-->
     <!--.main-menu(class="#{menuColor} #{menuOpenType}", class=(menuShadow == true ? 'menu-shadow' : ''))-->
-    <div class="app-sidebar menu-fixed" data-background-color="purple-bliss" data-image="../assets/img/sidebar-bg/01.jpg" data-scroll-to-active="true">
+    <div class="app-sidebar menu-fixed" data-background-color="purple-bliss" data-image="~/assets/img/sidebar-bg/01.jpg" data-scroll-to-active="true">
         <!-- main menu header-->
         <!-- Sidebar Header starts-->
         <div class="sidebar-header">
@@ -139,26 +142,25 @@
 
                     <li class="nav-item AppConfigCollapse"><a href="#"><span data-i18n="مدیریت نرم افزار" class="menu-title my-font">مدیریت نرم افزار</span></a></li>
 
-                     تنظیمات نرم افزار
+                    تنظیمات نرم افزار
                     <li class="has-sub nav-item">
-            <a href="#"><i class="ft-refresh-cw"></i><span data-i18n="تنظیمات نرم افزار" class="menu-title my-font">تنظیمات نرم افزار</span></a>
-            <ul class="menu-content" id="AppLogCollapse" parent="AppConfigCollapse">
-                <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString()=="SystemLog" ? "active" : "")">
-                    <a class="menu-item" asp-area="@AreaConstants.IdentityArea" asp-controller="SystemLog" asp-action="Index">
-                        <i class="ft-arrow-right submenu-icon"></i><span class="menu-item" data-i18n="گزارش رخ‌ دادهای سیستم">
-                            گزارش رخ‌ دادهای سیستم
-                        </span>
-                    </a>
-                </li>
-            </ul>
-        </li>
+                        <a href="#"><i class="ft-refresh-cw"></i><span data-i18n="تنظیمات نرم افزار" class="menu-title my-font">تنظیمات نرم افزار</span></a>
+                        <ul class="menu-content" id="AppLogCollapse" parent="AppConfigCollapse">
+                            <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString()=="SystemLog" ? "active" : "")">
+                                <a class="menu-item" asp-area="@AreaConstants.IdentityArea" asp-controller="SystemLog" asp-action="Index">
+                                    <i class="ft-arrow-right submenu-icon"></i><span class="menu-item" data-i18n="گزارش رخ‌ دادهای سیستم">
+                                        گزارش رخ‌ دادهای سیستم
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
 
                 </ul>
             </div>
         </div>
         <!-- main menu content-->
-
         <!-- / main menu header-->
 
         <div class="sidebar-background"></div>
@@ -172,15 +174,17 @@
 
     <div class="sidenav-overlay"></div>
     <div class="drag-target"></div>
-    <script src="../assets/vendors/js/vendors.min.js"></script>
-    <script src="../assets/vendors/js/switchery.min.js"></script>
+    <script src="~/assets/vendors/js/vendors.min.js"></script>
+    <script src="~/assets/vendors/js/switchery.min.js"></script>
 
-    <script src="../assets/vendors/js/chartist.min.js"></script>
-    <script src="../assets/js/core/app-menu.js"></script>
-    <script src="../assets/js/core/app.js"></script>
-    <script src="../assets/js/scroll-top.js"></script>
-    <script src="../assets/js/dashboard.js"></script>
-    <script src="../assets/js/table.js"></script>
+    <script src="~/assets/vendors/js/chartist.min.js"></script>
+    <script src="~/assets/js/core/app-menu.js"></script>
+    <script src="~/assets/js/core/app.js"></script>
+    <script src="~/assets/js/scroll-top.js"></script>
+    <script src="~/assets/js/dashboard.js"></script>
+    <script src="~/assets/js/table.js"></script>
+    
+    @RenderSection("footSection", required: false)
 
 </body>
 

@@ -1,0 +1,18 @@
+﻿@model AddWaterInstallFeeViewModel
+
+ <div>
+     <form asp-controller="WaterInstallFee" asp-action="Create" asp-antiforgery="true">
+         <label asp-for="YearId"></label>
+         <input asp-for="YearId" disabled />
+
+         <label asp-for="OrganizationId"></label>
+         <input asp-for="OrganizationId" disabled />
+
+         <label asp-for="DWaterTypeId"></label>
+         <select asp-for="DWaterTypeId" asp-items="Model.DWaterTypeSource"></select>
+
+         <label asp-for="WInstllFee"></label>
+         <input asp-for="WInstllFee" type="number" />
+     </form>
+
+ </div>

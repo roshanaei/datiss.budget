@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Datiss.Budget.ViewModels;
 using Datiss.Budget.Services.Models;
 
-
 namespace Datiss.Budget.ViewModels
 {
     public class WaterInstallFeeIndexViewModel
