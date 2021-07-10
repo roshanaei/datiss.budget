@@ -29,7 +29,7 @@ namespace Datiss.Budget.Services
         private IQueryable<WaterInstallFee> Query()
             => _dbSet.AsNoTracking();
 
-        public async Task<ValidationResult> AddAsync(AddWaterInstallFeeViewModel model)
+        public async Task<ValidationResult> AddAsync(CreateWaterInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
             var entity = new WaterInstallFee
@@ -38,7 +38,6 @@ namespace Datiss.Budget.Services
                 OrganizationId = model.OrganizationId,
                 DWaterTypeId = model.DWaterTypeId,
                 WInstllFee = model.WInstllFee
-
             };
 
             await _dbSet.AddAsync(entity);
@@ -137,6 +136,9 @@ namespace Datiss.Budget.Services
             string orderBy = "id", 
             bool desc = false) 
         {
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "id";
+
             orderBy = orderBy.ToLower();
             switch(orderBy) {
                 case "year":

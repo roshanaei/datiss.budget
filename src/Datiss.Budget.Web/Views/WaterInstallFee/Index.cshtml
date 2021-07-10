@@ -3,14 +3,20 @@
 <div>
     <form method="post" asp-controller="WaterInstallFee" asp-action="Index" asp-antiforgery="true">
         <label asp-for="Filter.YearId">Year</label> :
-        <select asp-for="Filter.YearId" asp-items="Model.Filter.YearSource">
-        </select>
+        <select id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()"></select>
 
         <label asp-for="Filter.OrganizationId">Organizzation:</label>
-        <select asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource"></select>
+        <select id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()"></select>
+
+        <input asp-for="Filter.OrderBy" type="hidden" />
+        <input asp-for="Filter.OrderDesc" type="hidden" />
 
         <button type="submit">Filter</button>
     </form>
+</div>
+
+<div style="padding-top: 50px">
+    <a id="createLink">Create</a>
 </div>
 
 <table>
@@ -38,3 +44,41 @@
         </p>
     </tfoot>
 </table>
+
+@section footSection {
+    <script>
+
+        function loadCreateLink() {
+            var a = document.getElementById("createLink");
+            var organizationId = document.getElementById('organizationId').value;
+
+            var yearId = document.getElementById('yearId').value;
+
+            var url = 'waterinstallfee/create'
+
+            a.href = url + "/" + organizationId + "/" + yearId;
+        }
+
+        loadCreateLink();
+    </script>
+
+    <script type="text/javascript">
+        //$(document).ready(function () {
+        //    alert('loaded');
+        //});
+
+
+        alert('ok');
+        function loadCreateLink() {
+            var a = document.getElementById("createLink");
+            var organizationId = document.getElementById('organizationId').value;
+            alert(organizationId);
+            var yearId = document.getElementById('yearId').value;
+            alert(yearId);
+            var url = @Url.Action("Create", "WaterInstallFee");
+            alert(url);
+            a.href = url + "/" + organizationId + "/" + yearId;
+        }
+
+    </script>
+} 

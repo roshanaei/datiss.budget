@@ -100,6 +100,16 @@ namespace Datiss.Budget.Services
                     Title = x.Title
                 }).ToListAsync();
 
+        public async Task<IEnumerable<DropDownItem>> GetByConstantKeyAsync(string key)
+            => await _dbSet
+                        .Include(x=> x.Parent)
+                        .Where(x => x.Parent.ConstantKey.ToUpper() == key.ToUpper())
+                        .OrderBy(x=> x.DisplayOrder)
+                        .Select(x => new DropDownItem {
+                            Id = x.Id,
+                            Title = x.Title
+                        }).ToListAsync();
+
         #region Private Methods
 
         private async Task<bool> ExistByKeyAsync(string contantKey, int? id = null)
