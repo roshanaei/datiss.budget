@@ -1,0 +1,63 @@
+﻿    <!-- main menu-->
+<!--.main-menu(class="#{menuColor} #{menuOpenType}", class=(menuShadow == true ? 'menu-shadow' : ''))-->
+<div class="app-sidebar menu-fixed" data-background-color="purple-bliss" data-image="../assets/img/sidebar-bg/01.jpg" data-scroll-to-active="true">
+    <!-- main menu header-->
+    <!-- Sidebar Header starts-->
+    <div class="sidebar-header">
+        <div class="logo clearfix">
+            <a class="logo-text float-left">
+                <div class="logo-img"><img src="~/images/logo/DATISS.png" alt="" height="30"></div><span class="text my-font-bold">سیستم جامع بودجه</span>
+            </a><a class="nav-toggle d-none d-lg-none d-xl-block" id="sidebarToggle" href="javascript:;"><i class="toggle-icon ft-toggle-right" data-toggle="expanded"></i></a><a class="nav-close d-block d-lg-block d-xl-none" id="sidebarClose" href="@Url.Action("Index", "Home", values: new { area = AreaConstants.IdentityArea }, protocol: this.Context.Request.Scheme)" @*href="/"*@><i class="ft-x"></i></a>
+        </div>
+    </div>
+    <!-- Sidebar Header Ends-->
+    <!-- / main menu header-->
+    <!-- main menu content-->
+    <div class="sidebar-content main-menu-content">
+        <div class="nav-container">
+            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+            </ul>
+        </div>
+    </div>
+    <!-- main menu content-->
+    <!-- main menu content-->
+    <div class="sidebar-content main-menu-content">
+        <div class="nav-container">
+            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+
+
+
+                <li class=" nav-item">
+                    <a href="~/help.pdf" target="_blank"><i class="ft-help-circle"></i><span data-i18n="راهنمای سامانه" class="menu-title my-font">راهنمای سامانه</span></a>
+                </li>
+
+                <!-- مدیریت نرم افزار-->
+
+                <li class="nav-item AppConfigCollapse"><a href="#"><span data-i18n="مدیریت نرم افزار" class="menu-title my-font">مدیریت نرم افزار</span></a></li>
+
+                <!-- تنظیمات نرم افزار-->
+                <!--<li class="has-sub nav-item">
+                    <a href="#"><i class="ft-refresh-cw"></i><span data-i18n="تنظیمات نرم افزار" class="menu-title my-font">تنظیمات نرم افزار</span></a>
+                    <ul class="menu-content" id="AppLogCollapse" parent="AppConfigCollapse">
+                        <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString()=="SystemLog" ? "active" : "")">
+                            <a class="menu-item" asp-area="@AreaConstants.IdentityArea" asp-controller="SystemLog" asp-action="Index">
+                                <i class="ft-arrow-right submenu-icon"></i><span class="menu-item" data-i18n="گزارش رخ‌ دادهای سیستم">
+                                    گزارش رخ‌ دادهای سیستم
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>-->
+
+
+            </ul>
+        </div>
+    </div>
+    <!-- main menu content-->
+    <div class="sidebar-background"></div>
+    <!-- main menu footer-->
+    <!-- include includes/menu-footer-->
+    <!-- main menu footer-->
+</div>
+
+<!-- / main menu-->
