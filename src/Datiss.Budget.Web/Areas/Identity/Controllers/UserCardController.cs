@@ -13,6 +13,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
     [AllowAnonymous]
     [Area(AreaConstants.IdentityArea)]
     [BreadCrumb(Title = "برگه‌ی کاربری", UseDefaultRouteUrl = true, Order = 0)]
+    [Route("[area]/[controller]/[action]")]
     public class UserCardController : Controller
     {
         private readonly IApplicationUserManager _userManager;

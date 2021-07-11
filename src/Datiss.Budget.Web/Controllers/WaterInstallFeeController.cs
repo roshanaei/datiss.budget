@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace Datiss.Budget.Web.Controllers
 {
     [Authorize]
-    //[Route("[controller]/[action]")]
+    [Route("[controller]")]
     public class WaterInstallFeeController : Controller
     {
 
@@ -34,7 +34,7 @@ namespace Datiss.Budget.Web.Controllers
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
         }
 
-        [HttpGet("{organizationId}/{yearId}")]
+        [HttpGet("create/{organizationId}/{yearId}")]
         public async Task<IActionResult> Create([FromRoute] int organizationId, [FromRoute] int yearId) {
             var model = new AddWaterInstallFeeViewModel {
                 OrganizationId = organizationId,
@@ -50,7 +50,7 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(AddWaterInstallFeeViewModel model) 
         {
             if(!ModelState.IsValid) {
@@ -72,7 +72,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
 
-        [HttpGet("{page}")]
+        [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1) 
         {
             var filterInput = new WaterInstallFeeFilter {

@@ -17,6 +17,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
     [Authorize(Roles = ConstantRoles.Admin)]
     [Area(AreaConstants.IdentityArea)]
     [BreadCrumb(Title = "مدیریت نقش‌های پویا", UseDefaultRouteUrl = true, Order = 0)]
+    [Route("[area]")]
     public class DynamicRoleClaimsManagerController : Controller
     {
         private readonly IMvcActionsDiscoveryService _mvcActionsDiscoveryService;
@@ -31,6 +32,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
         }
 
         [BreadCrumb(Title = "ایندکس", Order = 1)]
+        [Route("manage/claims")]
         public async Task<IActionResult> Index(int? id)
         {
             this.AddBreadCrumb(new BreadCrumb
@@ -59,7 +61,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
             });
         }
 
-        [AjaxOnly, HttpPost, ValidateAntiForgeryToken]
+        [AjaxOnly, HttpPost("manage/claims"), ValidateAntiForgeryToken]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Index(DynamicRoleClaimsManagerViewModel model)
         {

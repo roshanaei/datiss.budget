@@ -7,6 +7,7 @@ using System.Text;
 namespace Datiss.Budget.Controllers
 {
     [BreadCrumb(Title = "خطا", UseDefaultRouteUrl = true, Order = 0, GlyphIcon = "fas fa-warning")]
+    [Route("[controller]/[action]")]
     public class ErrorController : Controller
     {
         private readonly ILogger<ErrorController> _logger;

@@ -62,23 +62,4 @@
         loadCreateLink();
     </script>
 
-    <script type="text/javascript">
-        //$(document).ready(function () {
-        //    alert('loaded');
-        //});
-
-
-        alert('ok');
-        function loadCreateLink() {
-            var a = document.getElementById("createLink");
-            var organizationId = document.getElementById('organizationId').value;
-            alert(organizationId);
-            var yearId = document.getElementById('yearId').value;
-            alert(yearId);
-            var url = @Url.Action("Create", "WaterInstallFee");
-            alert(url);
-            a.href = url + "/" + organizationId + "/" + yearId;
-        }
-
-    </script>
 } 

@@ -20,6 +20,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
     [Authorize(Roles = ConstantRoles.Admin)]
     [Area(AreaConstants.IdentityArea)]
     [BreadCrumb(Title = "تغییر کلمه‌ی عبور كاربر توسط مدير سيستم", UseDefaultRouteUrl = true, Order = 0)]
+    [Route("[area]")]
     public class ChangeUserPasswordController : Controller
     {
         private readonly IEmailSender _emailSender;
@@ -46,6 +47,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
         }
 
         [BreadCrumb(Title = "ایندکس", Order = 1)]
+        [Route("user/password/change")]
         public async Task<IActionResult> Index(int? id)
         {
             if (!id.HasValue)
@@ -69,7 +71,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
         /// <summary>
         /// For [Remote] validation
         /// </summary>
-        [AjaxOnly, HttpPost, ValidateAntiForgeryToken]
+        [AjaxOnly, HttpPost("user/password/validate"), ValidateAntiForgeryToken]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> ValidatePassword(string newPassword, int userId)
         {
@@ -79,7 +81,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
             return Json(result.Succeeded ? "true" : result.DumpErrors(useHtmlNewLine: true));
         }
 
-        [HttpPost]
+        [HttpPost("user/password/change")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(ChangeUserPasswordViewModel model)
         {

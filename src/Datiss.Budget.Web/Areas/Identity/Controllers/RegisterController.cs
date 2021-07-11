@@ -21,6 +21,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
     [Area(AreaConstants.IdentityArea)]
     [AllowAnonymous]
     [BreadCrumb(Title = "ثبت نام", UseDefaultRouteUrl = true, Order = 0)]
+    [Route("[area]/[controller]/[action]")]
     public class RegisterController : Controller
     {
         private readonly IEmailSender _emailSender;
