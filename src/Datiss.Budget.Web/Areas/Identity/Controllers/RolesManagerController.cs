@@ -15,6 +15,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
     [Authorize(Roles = ConstantRoles.Admin)]
     [Area(AreaConstants.IdentityArea)]
     [BreadCrumb(Title = "مدیریت نقش‌ها", UseDefaultRouteUrl = true, Order = 0)]
+    [Route("[area]/[controller]/[action]")]
     public class RolesManagerController : Controller
     {
         private const string RoleNotFound = "نقش درخواستی یافت نشد.";

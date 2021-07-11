@@ -16,6 +16,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
     [Area(AreaConstants.IdentityArea)]
     [AllowAnonymous]
     [BreadCrumb(Title = "ورود به سیستم", UseDefaultRouteUrl = true, Order = 0)]
+    [Route("[area]")]
     public class LoginController : Controller
     {
         private readonly ILogger<LoginController> _logger;
@@ -37,13 +38,14 @@ namespace Datiss.Budget.Areas.Identity.Controllers
 
         [BreadCrumb(Title = "ایندکس", Order = 1)]
         [NoBrowserCache]
+        [HttpGet("login")]
         public IActionResult Index(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
-        [HttpPost]
+        [HttpPost("login")]
         //[ValidateAntiForgeryToken]
         //[ValidateDNTCaptcha(CaptchaGeneratorLanguage = Language.Persian,
         //                    CaptchaGeneratorDisplayMode = DisplayMode.SumOfTwoNumbers)]
@@ -115,6 +117,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
             return View(model);
         }
 
+        [Route("logoff")]
         public async Task<IActionResult> LogOff()
         {
             var user = User.Identity.IsAuthenticated ? await _userManager.FindByNameAsync(User.Identity.Name) : null;

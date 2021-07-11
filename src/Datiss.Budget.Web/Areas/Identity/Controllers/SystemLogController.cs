@@ -12,6 +12,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
     [Authorize(Roles = ConstantRoles.Admin)]
     [Area(AreaConstants.IdentityArea)]
     [BreadCrumb(Title = "لاگ سیستم", UseDefaultRouteUrl = true, Order = 0)]
+    [Route("[area]/[controller]/[action]")]
     public class SystemLogController : Controller
     {
         private readonly IAppLogItemsService _appLogItemsService;

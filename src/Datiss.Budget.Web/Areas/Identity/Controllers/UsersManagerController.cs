@@ -15,6 +15,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
     [Authorize(Roles = ConstantRoles.Admin)]
     [Area(AreaConstants.IdentityArea)]
     [BreadCrumb(Title = "مدیریت کاربران", UseDefaultRouteUrl = true, Order = 0)]
+    [Route("[area]/[controller]/[action]")]
     public class UsersManagerController : Controller
     {
         private const int DefaultPageSize = 7;

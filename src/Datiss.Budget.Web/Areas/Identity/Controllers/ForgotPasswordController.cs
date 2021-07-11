@@ -20,6 +20,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
     [Area(AreaConstants.IdentityArea)]
     [AllowAnonymous]
     [BreadCrumb(Title = "بازیابی کلمه‌ی عبور", UseDefaultRouteUrl = true, Order = 0)]
+    [Route("[area]")]
     public class ForgotPasswordController : Controller
     {
         private readonly IEmailSender _emailSender;
@@ -40,12 +41,14 @@ namespace Datiss.Budget.Areas.Identity.Controllers
         }
 
         [BreadCrumb(Title = "تائید کلمه‌ی عبور فراموش شده", Order = 1)]
+        [Route("forgot/confirm")]
         public IActionResult ForgotPasswordConfirmation()
         {
             return View();
         }
 
         [BreadCrumb(Title = "ایندکس", Order = 1)]
+        [Route("forgot")]
         public IActionResult Index()
         {
             return View();
@@ -54,7 +57,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
         /// <summary>
         /// For [Remote] validation
         /// </summary>
-        [AjaxOnly, HttpPost, ValidateAntiForgeryToken]
+        [AjaxOnly, HttpPost("forgot/validate"), ValidateAntiForgeryToken]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> ValidatePassword(string password, string email)
         {
@@ -103,12 +106,13 @@ namespace Datiss.Budget.Areas.Identity.Controllers
         }
 
         [BreadCrumb(Title = "تغییر کلمه‌ی عبور", Order = 1)]
+        [HttpGet("forgot/reset")]
         public IActionResult ResetPassword(string code = null)
         {
             return code == null ? View("Error") : View();
         }
 
-        [HttpPost]
+        [HttpPost("forgot/reset")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
@@ -139,6 +143,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
         }
 
         [BreadCrumb(Title = "تائیدیه تغییر کلمه‌ی عبور", Order = 1)]
+        [Route("forgot/reset/confirm")]
         public IActionResult ResetPasswordConfirmation()
         {
             return View();

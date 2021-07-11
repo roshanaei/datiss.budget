@@ -23,6 +23,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
     [Authorize]
     [Area(AreaConstants.IdentityArea)]
     [BreadCrumb(Title = "مشخصات کاربری", UseDefaultRouteUrl = true, Order = 0)]
+    [Route("[area]/[controller]/[action]")]
     public class UserProfileController : Controller
     {
         private readonly IEmailSender _emailSender;

@@ -47,10 +47,10 @@ namespace Datiss.Budget
 
             var mvc = services.AddControllersWithViews();
 
-            if(Env.IsDevelopment()) {
+            if (Env.IsDevelopment()) {
                 mvc.AddRazorRuntimeCompilation();
             }
-            
+
             services.AddRazorPages();
         }
 
@@ -79,7 +79,7 @@ namespace Datiss.Budget
 
                 endpoints.MapControllerRoute(
                     name: "areaRoute",
-                    pattern: "{area:exists}/{controller=Account}/{action=Index}/{id?}");
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
                 endpoints.MapControllerRoute(
                     name: "default",

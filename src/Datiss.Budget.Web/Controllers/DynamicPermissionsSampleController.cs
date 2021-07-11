@@ -13,6 +13,7 @@ namespace Datiss.Budget.Controllers
     [Authorize(Policy = ConstantPolicies.DynamicPermission)]
     [BreadCrumb(UseDefaultRouteUrl = true, Order = 0)]
     [DisplayName("کنترلر نمونه با سطح دسترسی پویا")]
+    [Route("[controller]/[action]")]
     public class DynamicPermissionsSampleController : Controller
     {
         [DisplayName("ایندکس")]

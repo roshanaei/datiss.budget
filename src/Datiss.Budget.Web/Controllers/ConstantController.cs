@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Datiss.Budget.Web.Controllers
 {
+    [Authorize]
+    [Route("[controller]/[action]")]
     public class ConstantController : Controller
     {
 
