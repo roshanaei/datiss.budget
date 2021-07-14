@@ -15,6 +15,8 @@ namespace Datiss.Budget.Services.Models
         public int DWaterTypeId { get; set; }
 
         public int WInstllFee { get; set; }
+
+        public string DWaterTypeTitle { get; set; }
     }
 
 

@@ -61,6 +61,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات تکراری است..
+        /// </summary>
+        public static string DuplicateData {
+            get {
+                return ResourceManager.GetString("DuplicateData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ایمیل ({0}) تکراری است..
         /// </summary>
         public static string DuplicateEmails {
@@ -84,6 +93,15 @@ namespace Datiss.Budget.Resources {
         public static string DuplicateNames {
             get {
                 return ResourceManager.GetString("DuplicateNames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_DWaterType {
+            get {
+                return ResourceManager.GetString("Logic_DWaterType", resourceCulture);
             }
         }
         

@@ -34,8 +34,8 @@ namespace Datiss.Budget.Web.Controllers
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
         }
 
-        [HttpGet("create/{organizationId}/{yearId}")]
-        public async Task<IActionResult> Create([FromRoute] int organizationId, [FromRoute] int yearId) {
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Create(int organizationId, int yearId) {
             var model = new AddWaterInstallFeeViewModel {
                 OrganizationId = organizationId,
                 YearId = yearId
@@ -50,10 +50,17 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-        [HttpPost("create")]
+        [HttpPost("[action]")]
         public async Task<IActionResult> Create(AddWaterInstallFeeViewModel model) 
         {
-            if(!ModelState.IsValid) {
+            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
+            model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+
+            if (!ModelState.IsValid) {
+
                 return View(model);
             }
 
@@ -61,16 +68,61 @@ namespace Datiss.Budget.Web.Controllers
                 DWaterTypeId = model.DWaterTypeId,
                 OrganizationId = model.OrganizationId,
                 WInstllFee = model.WInstllFee,
-                YearId = model.YearId
+                YearId = model.YearId,
+                DWaterTypeTitle = model.DWaterTypeTitle
             });
 
-            if(!result.IsValid) {
+            if(! result.IsValid) {
+                model._HasError = true;
+                model._ErrorMessage = result.Message;
+
                 return View(model);
             }
 
             return RedirectToAction("Index");
         }
 
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> Edit(int id) {
+            var entity = await _waterInstallFeeService.GetByIdAsync(id);
+
+            if(entity == null) {
+                return RedirectToAction("Index");
+            }
+
+            var model = entity.Adapt<UpdateWaterInstallFeeViewModel>();
+            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
+            model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+
+            return View(model);
+        }
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Edit(int id, UpdateWaterInstallFeeViewModel model) {
+            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
+            model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+
+            if (!ModelState.IsValid) {
+                return View(model);
+            }
+
+            var result = await _waterInstallFeeService.UpdateAsync(model);
+
+            if(!result.IsValid) {
+                model._HasError = true;
+                model._ErrorMessage = result.Message;
+
+                return View(model);
+            }
+
+            return RedirectToAction("Index", new { page = model._CurrentPage });
+        }
 
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1) 
@@ -94,11 +146,25 @@ namespace Datiss.Budget.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(WaterInstallFeeFilterViewModel model) 
         {
-            var filterInput = model.Adapt<WaterInstallFeeFilter>();
+            if(Request.Form["btnFilter"].Count() > 0) {
+                var filterInput = model.Adapt<WaterInstallFeeFilter>();
 
-            var result = await _waterInstallFeeService.GetListAsync(filterInput);
+                var result = await _waterInstallFeeService.GetListAsync(filterInput);
 
-            return View(result);
+                return View(result);
+            }
+            
+            if(Request.Form["btnCreate"].Count() > 0) {
+                int yearId = int.Parse(Request.Form["Filter.YearId"].ToString());
+                int orgId = int.Parse(Request.Form["Filter.OrganizationId"].ToString());
+
+                return RedirectToAction("Create", new {
+                    organizationId = orgId,
+                    yearId = yearId
+                });
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

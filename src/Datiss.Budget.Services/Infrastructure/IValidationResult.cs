@@ -41,5 +41,12 @@ namespace Datiss.Budget.Services.Infrastructure
                 IsValid = true
             };
         }
+
+        public static ValidationResult Failed(string message) {
+            return new ValidationResult {
+                IsValid = false,
+                Message = message
+            };
+        }
     }
 }
