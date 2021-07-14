@@ -11,7 +11,8 @@
         <input asp-for="Filter.OrderBy" type="hidden" />
         <input asp-for="Filter.OrderDesc" type="hidden" />
 
-        <button type="submit">Filter</button>
+        <button type="submit" name="btnFilter">Filter</button>
+        <button type="submit" name="btnCreate">Create</button>
     </form>
 </div>
 
@@ -26,6 +27,7 @@
             <th>Organization</th>
             <th>DWaterType</th>
             <th>Fee</th>
+            <th>Edit</th>
         </tr>
     </thead>
     <tbody>
@@ -35,6 +37,9 @@
                 <td>@item.OrganizationDisplay </td>
                 <td>@item.DWaterTypeDisplay </td>
                 <td>@item.WInstallFee.ToString() </td>
+                <td>
+                    <a asp-controller="WaterInstallFee" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                </td>
             </tr>
         }
     </tbody>

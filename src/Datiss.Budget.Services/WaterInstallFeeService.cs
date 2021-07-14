@@ -11,6 +11,7 @@ using Datiss.Budget.ViewModels;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.Resources;
 
 namespace Datiss.Budget.Services
 {
@@ -29,6 +30,11 @@ namespace Datiss.Budget.Services
         private IQueryable<WaterInstallFee> Query()
             => _dbSet.AsNoTracking();
 
+        public async Task<WaterInstallFee> GetByIdAsync(int id) {
+            var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
+            return await Task.FromResult(entity);
+        }
+
         public async Task<ValidationResult> AddAsync(CreateWaterInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
@@ -40,26 +46,39 @@ namespace Datiss.Budget.Services
                 WInstllFee = model.WInstllFee
             };
 
-            await _dbSet.AddAsync(entity);
-            await _uow.SaveChangesAsync();
+            if(await checkLogicAsync(model.YearId, model.OrganizationId, model.DWaterTypeId)) {
+                await _dbSet.AddAsync(entity);
+                await _uow.SaveChangesAsync();
 
-            return ValidationResult.Success();
+                return ValidationResult.Success();
+            }
 
+            return ValidationResult.Failed(
+                string.Format(ServiceMessages.Logic_DWaterType, 
+                                model.DWaterTypeTitle)
+                );
         }
 
         public async Task<ValidationResult> UpdateAsync(UpdateWaterInstallFeeViewModel model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var entity = await _dbSet.FindAsync(model.Id);
-            entity.OrganizationId = model.OrganizationId;
-            entity.YearId = model.YearId;
-            entity.DWaterTypeId = model.DWaterTypeId;
-            entity.WInstllFee = model.WInstllFee;
+            if(await checkLogicAsync(model.YearId, model.OrganizationId, model.DWaterTypeId, model.Id)) {
+                var entity = await _dbSet.FindAsync(model.Id);
+                entity.OrganizationId = model.OrganizationId;
+                entity.YearId = model.YearId;
+                entity.DWaterTypeId = model.DWaterTypeId;
+                entity.WInstllFee = model.WInstllFee;
 
-            await _uow.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
 
-            return ValidationResult.Success();
+                return ValidationResult.Success();
+            }
+
+            return ValidationResult.Failed(
+                string.Format(ServiceMessages.Logic_DWaterType,
+                                model.DWaterTypeTitle)
+                );
         }
 
         public async Task<ValidationResult> HardDeleteAsync(int Id)
@@ -119,6 +138,7 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.Organization)
                                     .Include(x => x.DWaterType)
                                     .Select(x => new WaterInstallFeeViewModel {
+                                        Id = x.Id,
                                         DWaterTypeDisplay = x.DWaterType.Title,
                                         DWaterTypeId = x.DWaterTypeId,
                                         OrganizationDisplay = x.Organization.Title,
@@ -132,15 +152,14 @@ namespace Datiss.Budget.Services
         }
 
         private IQueryable<WaterInstallFee> setOrder(
-            IQueryable<WaterInstallFee> query, 
-            string orderBy = "id", 
-            bool desc = false) 
-        {
+            IQueryable<WaterInstallFee> query,
+            string orderBy = "id",
+            bool desc = false) {
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "id";
 
             orderBy = orderBy.ToLower();
-            switch(orderBy) {
+            switch (orderBy) {
                 case "year":
                     return desc
                         ? query.OrderByDescending(x => x.FinanceYear.Year)
@@ -162,5 +181,26 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.Id);
             }
         }
+
+        #region Logics
+
+        private async Task<bool> checkLogicAsync(
+            int yearId,
+            int organizationId,
+            int dwaterTypeId,
+            int? id = null) { 
+            var result = id == null 
+                ? await Query().AnyAsync(x => x.YearId == yearId &&
+                                                x.OrganizationId == organizationId &&
+                                                x.DWaterTypeId == dwaterTypeId)
+
+                : await Query().AnyAsync(x => x.YearId == yearId &&
+                                            x.OrganizationId == organizationId &&
+                                            x.DWaterTypeId == dwaterTypeId &&
+                                            x.Id != id);
+            return !result;
+        }
+
+        #endregion
     }
 }

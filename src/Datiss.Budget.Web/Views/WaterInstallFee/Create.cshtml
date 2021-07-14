@@ -3,16 +3,25 @@
  <div>
      <form asp-controller="WaterInstallFee" asp-action="Create" asp-antiforgery="true">
          <label asp-for="YearId"></label>
-         <input asp-for="YearId" disabled />
+         <input asp-for="YearId" type="hidden" />
 
          <label asp-for="OrganizationId"></label>
-         <input asp-for="OrganizationId" disabled />
+         <input asp-for="OrganizationId" type="hidden" />
 
          <label asp-for="DWaterTypeId"></label>
          <select asp-for="DWaterTypeId" asp-items="Model.DWaterTypeSource"></select>
 
          <label asp-for="WInstllFee"></label>
          <input asp-for="WInstllFee" type="number" />
+
+         <br />
+         <button type="submit">Send</button>
      </form>
+
+     @if(Model._HasError) {
+         <p style="color: red">
+             @Model._ErrorMessage
+         </p>
+     }
 
  </div>

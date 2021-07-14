@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class AddWaterInstallFeeViewModel
+    public class AddWaterInstallFeeViewModel: BaseViewModel
     {
 
         public int YearId { get; set; }
@@ -23,6 +23,15 @@ namespace Datiss.Budget.ViewModels
         public int WInstllFee { get; set; }
 
         public IEnumerable<SelectListItem> DWaterTypeSource { get; set; }
+
+        public string DWaterTypeTitle {
+            get {
+                if (DWaterTypeSource == null || !DWaterTypeSource.Any())
+                    return string.Empty;
+
+                return DWaterTypeSource.FirstOrDefault(x => x.Value.ToString() == DWaterTypeId.ToString()).Text;
+            }
+        }
         
     }
 
@@ -34,6 +43,7 @@ namespace Datiss.Budget.ViewModels
 
     public class WaterInstallFeeViewModel
     {
+        public int Id { get; set; }
         public int YearId { get; set; }
         public int Year { get; set; }
         public int OrganizationId { get; set; }
