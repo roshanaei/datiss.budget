@@ -104,7 +104,15 @@ namespace Datiss.Budget.Resources {
                 return ResourceManager.GetString("Logic_DWaterType", resourceCulture);
             }
         }
-        
+
+        public static string Logic_DWasteType
+        {
+            get
+            {
+                return ResourceManager.GetString("Logic_DWasteType", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to به دلیل وجود داده وابسته امکان حذف نمی باشد..
         /// </summary>

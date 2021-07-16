@@ -36,7 +36,7 @@ namespace Datiss.Budget.Entities
         public Constant Parent { get; set; }
         public ICollection<Constant> Childrens { get; set; }
         public ICollection<WaterInstallFee> WaterInstallFees { get; set; }
-
+        public ICollection<WasteInstallFee> WasteInstallFees { get; set; }
         #endregion
     }
 }

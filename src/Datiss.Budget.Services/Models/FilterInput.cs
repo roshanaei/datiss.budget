@@ -23,6 +23,13 @@ namespace Datiss.Budget.Services.Models
         GreaterThan = 2
     }
 
+    public enum WasteInstallFeeFilterMode
+    {
+        Exact = 0,
+        LessThan = 1,
+        GreaterThan = 2
+    }
+
     public class WaterInstallFeeFilter: FilterInput
     {
         public int? YearId { get; set; }
@@ -30,5 +37,14 @@ namespace Datiss.Budget.Services.Models
         public int? DWaterTypeId { get; set; }
         public int? WInstallFee { get; set; }
         public WaterInstallFeeFilterMode FeeMode { get; set; }
+    }
+
+    public class WasteInstallFeeFilter : FilterInput
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? DWasteTypeId { get; set; }
+        public int? WInstallFee { get; set; }
+        public WasteInstallFeeFilterMode FeeMode { get; set; }
     }
 }
