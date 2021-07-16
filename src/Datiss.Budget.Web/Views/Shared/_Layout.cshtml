@@ -5,69 +5,32 @@
 <html>
 <head>
     <title>سیستم جامع بودجه - @ViewData["Title"]</title>
-    <link rel="shortcut icon"
-          type="image/x-icon"
-          href="~/assets/img/ico/favicon.ico" />
-    <link rel="shortcut icon"
-          type="image/png"
-          href="~/assets/img/ico/favicon-32.png" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/ico/favicon.ico" />
+    <link rel="shortcut icon" type="image/png"    href="~/assets/img/ico/favicon-32.png" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700,900%7CMontserrat:300,400,500,600,700,800,900"
-          rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700,900%7CMontserrat:300,400,500,600,700,800,900"  rel="stylesheet" />
     <!-- BEGIN VENDOR CSS-->
     <!-- font icons-->
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/fonts/feather/style.min.css" />
-
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/fonts/simple-line-icons/style.css" />
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/fonts/font-awesome/css/font-awesome.min.css" />
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/vendors/css/perfect-scrollbar.min.css" />
-    <link rel="stylesheet"
-          type="text/css"
-          href="../assets/vendors/css/prism.min.css" />
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/vendors/css/switchery.min.css" />
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/vendors/css/chartist.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/fonts/feather/style.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/fonts/simple-line-icons/style.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/fonts/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/perfect-scrollbar.min.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/vendors/css/prism.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/switchery.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/chartist.min.css" />
     <!-- END VENDOR CSS-->
     <!-- BEGIN APEX CSS-->
-    <link rel="stylesheet"
-          type="text/css"
-          href="../assets/css-rtl/bootstrap.css" />
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/css-rtl/table.css" />
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/css-rtl/bootstrap-extended.css" />
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/css-rtl/colors.css" />
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/css-rtl/components.css" />
+    <link rel="stylesheet" type="text/css" href="../assets/css-rtl/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/table.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/bootstrap-extended.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/colors.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/components.css" />
     <link rel="stylesheet" href="~/assets/css-rtl/plugins/switchery.css" />
-
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/css-rtl/custom-rtl.css" />
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/css-rtl/custom-fonts.css" />
-    <link rel="stylesheet"
-          type="text/css"
-          href="~/assets/css-rtl/pages/dashboard.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/custom-rtl.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/custom-fonts.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/pages/dashboard.css" />
 
     @RenderSection("headSection", required: false)
 
@@ -76,7 +39,7 @@
       data-menu="vertical-menu"
       data-col="2-columns">
 
-
+    @{ await Html.RenderPartialAsync("_Navbar").ConfigureAwait(false); }
     <div class="wrapper">
 
         <div class="main-panel">
@@ -103,7 +66,7 @@
                     <div class="text-center footer-text">
                         <span class="copyright-text">
                             <span style="color:DarkRed" aria-hidden="true"></span>
-                            <a href="http://www.datiss.net/" target="_blank" >Datiss.net</a>
+                            <a href="http://www.datiss.net/" target="_blank">Datiss.net</a>
                             <img src="~/images/favicon/footer-favicon.ico" width="16" height="16" />
                             <br />
                             <span class="d-none d-inline-block  my-font">Copyright @DateTime.Now.Year, All Rights Reserved</span>
@@ -126,7 +89,7 @@
             <div class="logo clearfix">
                 <a class="logo-text float-left">
                     <div class="logo-img"><img src="~/images/logo/DATISS.png" alt="" height="30"></div>
-                    <span class="text my-font-bold">سیستم جامع بودجه</span>
+                    <span class="text my-font-bold">سیستم بودجه</span>
                 </a>
                 <a class="nav-toggle d-none d-lg-none d-xl-block" id="sidebarToggle" href="javascript:;">
                     <i class="toggle-icon ft-toggle-right" data-toggle="expanded"></i>
@@ -237,7 +200,7 @@
                                     </li>
                                 </ul>
                             </li>
-                           
+
                         </ul>
                     </li>
                     <!-- کنترل بودجه-->
@@ -303,7 +266,7 @@
     <script src="~/assets/js/scroll-top.js"></script>
     <script src="~/assets/js/dashboard.js"></script>
     <script src="~/assets/js/table.js"></script>
-    
+
     @RenderSection("footSection", required: false)
 
 </body>
