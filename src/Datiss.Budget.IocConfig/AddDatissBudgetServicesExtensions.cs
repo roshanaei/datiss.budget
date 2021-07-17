@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Datiss.Budget.Security;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -13,6 +14,8 @@ namespace Microsoft.Extensions.DependencyInjection
     {
 
         public static IServiceCollection AddDatissBudgetServices(this IServiceCollection services) {
+            services.AddScoped<IUserContext, UserContext>();
+
             services.AddScoped<IConstantService, ConstantService>();
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IFinanceYearService, FinanceYearService>();
