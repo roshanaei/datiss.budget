@@ -81,15 +81,13 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<ValidationResult> HardDeleteAsync(int Id)
+        public async Task HardDeleteAsync(int Id)
         {
             var entity = await _dbSet.FindAsync(Id);
             entity.CheckArgumentIsNull(nameof(entity));
 
-            //_dbSet.Remove(entity);
-
-            return ValidationResult.Success();
-
+            _dbSet.Remove(entity);
+            await _uow.SaveChangesAsync();
         }
 
         public async Task<PagedResult<WasteInstallFeeViewModel>> GetListAsync(WasteInstallFeeFilter filter) 
@@ -113,13 +111,13 @@ namespace Datiss.Budget.Services
 
             if(filter.WInstallFee.HasValue) {
                 switch(filter.FeeMode) {
-                    case WasteInstallFeeFilterMode.Exact:
+                    case InstallFeeFilterMode.Exact:
                         query = query.Where(x => x.WInstllFee == filter.WInstallFee.Value);
                         break;
-                    case WasteInstallFeeFilterMode.GreaterThan:
+                    case InstallFeeFilterMode.GreaterThan:
                         query = query.Where(x => x.WInstllFee >= filter.WInstallFee.Value);
                         break;
-                    case WasteInstallFeeFilterMode.LessThan:
+                    case InstallFeeFilterMode.LessThan:
                         query = query.Where(x => x.WInstllFee <= filter.WInstallFee.Value);
                         break;
                 }

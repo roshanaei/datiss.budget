@@ -17,7 +17,7 @@ namespace Datiss.Budget.Web.Controllers
     public class WasteInstallFeeController : Controller
     {
 
-        private readonly IWasteInstallFeeService _waterInstallFeeService;
+        private readonly IWasteInstallFeeService _wasteInstallFeeService;
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
@@ -28,7 +28,7 @@ namespace Datiss.Budget.Web.Controllers
             IFinanceYearService financeYearService,
             IConstantService constantService) 
         {
-            _waterInstallFeeService = waterInstallFeeService ?? throw new ArgumentNullException(nameof(waterInstallFeeService));
+            _wasteInstallFeeService = waterInstallFeeService ?? throw new ArgumentNullException(nameof(waterInstallFeeService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
@@ -64,7 +64,7 @@ namespace Datiss.Budget.Web.Controllers
                 return View(model);
             }
 
-            var result = await _waterInstallFeeService.AddAsync(new CreateWasteInstallFeeDTO {
+            var result = await _wasteInstallFeeService.AddAsync(new CreateWasteInstallFeeDTO {
                 DWasteTypeId = model.DWasteTypeId,
                 OrganizationId = model.OrganizationId,
                 WInstllFee = model.WInstllFee,
@@ -84,7 +84,7 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> Edit(int id) {
-            var entity = await _waterInstallFeeService.GetByIdAsync(id);
+            var entity = await _wasteInstallFeeService.GetByIdAsync(id);
 
             if(entity == null) {
                 return RedirectToAction("Index");
@@ -101,6 +101,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]/{id}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, UpdateWasteInstallFeeViewModel model) {
             var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
             model.DWasteTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
@@ -112,7 +113,7 @@ namespace Datiss.Budget.Web.Controllers
                 return View(model);
             }
 
-            var result = await _waterInstallFeeService.UpdateAsync(model);
+            var result = await _wasteInstallFeeService.UpdateAsync(model);
 
             if(!result.IsValid) {
                 model._HasError = true;
@@ -132,7 +133,7 @@ namespace Datiss.Budget.Web.Controllers
                 PageNumber = page
             };
 
-            var result = await _waterInstallFeeService.GetListAsync(filterInput);
+            var result = await _wasteInstallFeeService.GetListAsync(filterInput);
 
             var model = new WasteInstallFeeIndexViewModel();
             model.SetFinanceYearFilterSource(await _financeYearService.GetDropDownDataAsync());
@@ -149,7 +150,7 @@ namespace Datiss.Budget.Web.Controllers
             if(Request.Form["btnFilter"].Count() > 0) {
                 var filterInput = model.Adapt<WasteInstallFeeFilter>();
 
-                var result = await _waterInstallFeeService.GetListAsync(filterInput);
+                var result = await _wasteInstallFeeService.GetListAsync(filterInput);
 
                 return View(result);
             }

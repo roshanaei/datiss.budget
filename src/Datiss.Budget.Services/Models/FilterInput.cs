@@ -16,19 +16,13 @@ namespace Datiss.Budget.Services.Models
         public int StartIndex => (PageNumber * PageSize) - PageSize;
     }
 
-    public enum WaterInstallFeeFilterMode
+    public enum InstallFeeFilterMode
     {
         Exact = 0,
         LessThan = 1,
         GreaterThan = 2
     }
 
-    public enum WasteInstallFeeFilterMode
-    {
-        Exact = 0,
-        LessThan = 1,
-        GreaterThan = 2
-    }
 
     public class WaterInstallFeeFilter: FilterInput
     {
@@ -36,7 +30,7 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
         public int? DWaterTypeId { get; set; }
         public int? WInstallFee { get; set; }
-        public WaterInstallFeeFilterMode FeeMode { get; set; }
+        public InstallFeeFilterMode FeeMode { get; set; }
     }
 
     public class WasteInstallFeeFilter : FilterInput
@@ -45,6 +39,6 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
         public int? DWasteTypeId { get; set; }
         public int? WInstallFee { get; set; }
-        public WasteInstallFeeFilterMode FeeMode { get; set; }
+        public InstallFeeFilterMode FeeMode { get; set; }
     }
 }

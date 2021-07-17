@@ -113,13 +113,13 @@ namespace Datiss.Budget.Services
 
             if(filter.WInstallFee.HasValue) {
                 switch(filter.FeeMode) {
-                    case WaterInstallFeeFilterMode.Exact:
+                    case InstallFeeFilterMode.Exact:
                         query = query.Where(x => x.WInstllFee == filter.WInstallFee.Value);
                         break;
-                    case WaterInstallFeeFilterMode.GreaterThan:
+                    case InstallFeeFilterMode.GreaterThan:
                         query = query.Where(x => x.WInstllFee >= filter.WInstallFee.Value);
                         break;
-                    case WaterInstallFeeFilterMode.LessThan:
+                    case InstallFeeFilterMode.LessThan:
                         query = query.Where(x => x.WInstllFee <= filter.WInstallFee.Value);
                         break;
                 }
