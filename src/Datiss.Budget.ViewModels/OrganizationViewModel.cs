@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -16,9 +17,11 @@ namespace Datiss.Budget.ViewModels
 
         public int DisplayOrder { get; set; }
 
-        public bool IsVillage { get; set; }
+        public OrganizationType Type { get; set; }
 
         public bool Enabled { get; set; }
+
+        public bool SewageStatus { get; set; }
 
         public IEnumerable<SelectListItem> ParentList { get; set; }
     }

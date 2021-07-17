@@ -38,10 +38,11 @@ namespace Datiss.Budget.Services
 
             var entity = new Organization
             {
-                IsVillage = model.IsVillage,
+                Type = model.Type,
                 DisplayOrder = model.DisplayOrder,
                 ParentId = model.ParentId,
-                Title = model.Title
+                Title = model.Title,
+                SewageStatus = model.SewageStatus
             };
 
             entity.Status = model.Enabled
@@ -61,8 +62,9 @@ namespace Datiss.Budget.Services
             var entity = await _dbSet.FindAsync(model.Id);
             entity.ParentId = model.ParentId;
             entity.Title = model.Title;
-            entity.IsVillage = model.IsVillage;
+            entity.Type = model.Type;
             entity.DisplayOrder = model.DisplayOrder;
+            entity.SewageStatus = model.SewageStatus;
             entity.Status = model.Enabled
                 ? EntityStatus.Enabled
                 : EntityStatus.Disbaled;
