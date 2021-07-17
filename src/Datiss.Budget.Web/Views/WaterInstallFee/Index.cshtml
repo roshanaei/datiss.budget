@@ -14,54 +14,39 @@
                 </div>
                 <div class="card-content">
                     <div class="card-body">
+                        <!--Filters-->
+                        <div class="">
+                            <form method="post" asp-controller="WaterInstallFee" asp-action="Index" asp-antiforgery="true">
+                                <fieldset class="form-group">
+                                    <label asp-for="Filter.YearId" class="my-font">
+                                        سال:
+                                        <select class="form-control form-control-sm d-inline-block width-200" id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()">
+                                        </select>
+                                    </label>
+                                    <label asp-for="Filter.OrganizationId" class="my-font">
+                                        سازمان:
+                                        <select class="form-control form-control-sm d-inline-block width-200" id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()">
+                                        </select>
+                                    </label>
+                                    <input asp-for="Filter.OrderBy" type="hidden" />
+                                    <input asp-for="Filter.OrderDesc" type="hidden" />
+                                </fieldset>
+                                <fieldset>
+                                    <button type="submit" name="btnFilter" class="btn btn-primary bg-light-primary mr-1 mb-1 my-font">فیلتر</button>
+                                    <button type="submit" name="btnCreate" class="btn btn-info bg-light-info mb-1 my-font">جدید</button>
+                                </fieldset>
+                            </form>
+                        </div>
+                        <!--SearchBox-->
                         <fieldset class="form-group">
                             <label for="ngx-filter-ref" class="my-font">
                                 جستجو:
                                 <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
                             </label>
                         </fieldset>
-                        <fieldset class="form-group">
-                            <label for="Filter.YearId" class="my-font">
-                                سال:
-                                <select class="form-control form-control-sm d-inline-block width-200" id="Filter.YearId" placeholder="انتخاب کنید...">
-                                </select>
-                            </label>
-                            <label for="Filter.OrganizationId" class="my-font">
-                                سازمان:
-                                <select class="form-control form-control-sm d-inline-block width-200" id="Filter.OrganizationId" placeholder="انتخاب کنید...">
-                                </select>
-                            </label>
-                        </fieldset>
-
-                        <div class="col-12 d-flex flex-sm-row flex-column justify-content-end mt-3 mt-sm-2">
-                            <button type="submit" name="btnFilter" class="btn btn-primary bg-light-primary mr-1 mb-1 my-font">فیلتر</button>
-                            <button type="submit" name="btnCreate" class="btn btn-info bg-light-info mb-1 my-font">جدید</button>
-                        </div>
-                        <div>
-                            <form method="post" asp-controller="WaterInstallFee" asp-action="Index" asp-antiforgery="true">
-                                <label asp-for="Filter.YearId">Year</label> :
-                                <select id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()"></select>
-
-                                <label asp-for="Filter.OrganizationId">Organizzation:</label>
-                                <select id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()"></select>
-
-                                <input asp-for="Filter.OrderBy" type="hidden" />
-                                <input asp-for="Filter.OrderDesc" type="hidden" />
-
-                                <button type="submit" name="btnFilter">Filter</button>
-                                <button type="submit" name="btnCreate">Create</button>
-                            </form>
-                        </div>
-
-                        <div style="padding-top: 50px">
-                            <a id="createLink">Create</a>
-                        </div>
-
-
-
 
                         <div class="table-responsive">
-                            <table id="" class="table table-hover table-bordered m-0 my-font">
+                            <table id="" class=" table table-hover table-bordered m-0 my-font">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>سال</th>
@@ -85,11 +70,29 @@
                                         </tr>
                                     }
                                 </tbody>
-                               
                             </table>
-
-
                         </div>
+
+
+                        @*<div>
+            <form method="post" asp-controller="WaterInstallFee" asp-action="Index" asp-antiforgery="true">
+                <label asp-for="Filter.YearId">Year</label> :
+                <select id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()"></select>
+
+                <label asp-for="Filter.OrganizationId">Organizzation:</label>
+                <select id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()"></select>
+
+                <input asp-for="Filter.OrderBy" type="hidden" />
+                <input asp-for="Filter.OrderDesc" type="hidden" />
+
+                <button type="submit" name="btnFilter">Filter</button>
+                <button type="submit" name="btnCreate">Create</button>
+            </form>
+                </div>*@
+
+                        @*<div style="padding-top: 50px">
+                        <a id="createLink">Create</a>
+                </div>*@
                         <table>
                             <thead>
                                 <tr>
