@@ -133,7 +133,7 @@ namespace Datiss.Budget.Web.Controllers
             };
 
             var result = await _waterInstallFeeService.GetListAsync(filterInput);
-
+            
             var model = new WaterInstallFeeIndexViewModel();
             model.SetFinanceYearFilterSource(await _financeYearService.GetDropDownDataAsync());
             model.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync(null));
