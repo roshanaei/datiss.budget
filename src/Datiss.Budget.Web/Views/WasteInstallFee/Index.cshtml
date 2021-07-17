@@ -1,0 +1,70 @@
+﻿@model WasteInstallFeeIndexViewModel
+
+<div>
+    <form method="post" asp-controller="WasteInstallFee" asp-action="Index" asp-antiforgery="true">
+        <label asp-for="Filter.YearId">Year</label> :
+        <select id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()"></select>
+
+        <label asp-for="Filter.OrganizationId">Organizzation:</label>
+        <select id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()"></select>
+
+        <input asp-for="Filter.OrderBy" type="hidden" />
+        <input asp-for="Filter.OrderDesc" type="hidden" />
+
+        <button type="submit" name="btnFilter">Filter</button>
+        <button type="submit" name="btnCreate">Create</button>
+    </form>
+</div>
+
+<div style="padding-top: 50px">
+    <a id="createLink">Create</a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Year</th>
+            <th>Organization</th>
+            <th>DWasteType</th>
+            <th>Fee</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.Model.Items) {
+            <tr>
+                <td>@item.Year.ToString()</td>
+                <td>@item.OrganizationDisplay </td>
+                <td>@item.DWasteTypeDisplay </td>
+                <td>@item.WInstallFee.ToString() </td>
+                <td>
+                    <a asp-controller="WasteInstallFee" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <p>
+            Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
+        </p>
+    </tfoot>
+</table>
+
+@section footSection {
+    <script>
+
+        function loadCreateLink() {
+            var a = document.getElementById("createLink");
+            var organizationId = document.getElementById('organizationId').value;
+
+            var yearId = document.getElementById('yearId').value;
+
+            var url = 'waterinstallfee/create'
+
+            a.href = url + "/" + organizationId + "/" + yearId;
+        }
+
+        loadCreateLink();
+    </script>
+
+} 

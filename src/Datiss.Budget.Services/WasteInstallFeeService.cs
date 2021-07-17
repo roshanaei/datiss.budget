@@ -15,38 +15,38 @@ using Datiss.Budget.Resources;
 
 namespace Datiss.Budget.Services
 {
-    public class WaterInstallFeeService : IWaterInstallFeeService
+    public class WasteInstallFeeService : IWasteInstallFeeService
     {
         private readonly IUnitOfWork _uow;
         
-        private DbSet<WaterInstallFee> _dbSet;
+        private DbSet<WasteInstallFee> _dbSet;
 
-        public WaterInstallFeeService(IUnitOfWork uow)
+        public WasteInstallFeeService(IUnitOfWork uow)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _dbSet = _uow.Set<WaterInstallFee>();
+            _dbSet = _uow.Set<WasteInstallFee>();
         }
 
-        private IQueryable<WaterInstallFee> Query()
+        private IQueryable<WasteInstallFee> Query()
             => _dbSet.AsNoTracking();
 
-        public async Task<WaterInstallFee> GetByIdAsync(int id) {
+        public async Task<WasteInstallFee> GetByIdAsync(int id) {
             var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult> AddAsync(CreateWaterInstallFeeDTO model)
+        public async Task<ValidationResult> AddAsync(CreateWasteInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
-            var entity = new WaterInstallFee
+            var entity = new WasteInstallFee
             {
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
-                DWaterTypeId = model.DWaterTypeId,
+                DWasteTypeId = model.DWasteTypeId,
                 WInstllFee = model.WInstllFee
             };
 
-            if(await checkLogicAsync(model.YearId, model.OrganizationId, model.DWaterTypeId)) {
+            if(await checkLogicAsync(model.YearId, model.OrganizationId, model.DWasteTypeId)) {
                 await _dbSet.AddAsync(entity);
                 await _uow.SaveChangesAsync();
 
@@ -54,20 +54,20 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult.Failed(
-                string.Format(ServiceMessages.Logic_DWaterType, 
-                                model.DWaterTypeTitle)
+                string.Format(ServiceMessages.Logic_DWasteType, 
+                                model.DWasteTypeTitle)
                 );
         }
 
-        public async Task<ValidationResult> UpdateAsync(UpdateWaterInstallFeeViewModel model)
+        public async Task<ValidationResult> UpdateAsync(UpdateWasteInstallFeeViewModel model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            if(await checkLogicAsync(model.YearId, model.OrganizationId, model.DWaterTypeId, model.Id)) {
+            if(await checkLogicAsync(model.YearId, model.OrganizationId, model.DWasteTypeId, model.Id)) {
                 var entity = await _dbSet.FindAsync(model.Id);
                 entity.OrganizationId = model.OrganizationId;
                 entity.YearId = model.YearId;
-                entity.DWaterTypeId = model.DWaterTypeId;
+                entity.DWasteTypeId = model.DWasteTypeId;
                 entity.WInstllFee = model.WInstllFee;
 
                 await _uow.SaveChangesAsync();
@@ -76,26 +76,24 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult.Failed(
-                string.Format(ServiceMessages.Logic_DWaterType,
-                                model.DWaterTypeTitle)
+                string.Format(ServiceMessages.Logic_DWasteType,
+                                model.DWasteTypeTitle)
                 );
         }
 
-        public async Task<ValidationResult> HardDeleteAsync(int Id)
+        public async Task HardDeleteAsync(int Id)
         {
             var entity = await _dbSet.FindAsync(Id);
             entity.CheckArgumentIsNull(nameof(entity));
 
-            //_dbSet.Remove(entity);
-
-            return ValidationResult.Success();
-
+            _dbSet.Remove(entity);
+            await _uow.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<WaterInstallFeeViewModel>> GetListAsync(WaterInstallFeeFilter filter) 
+        public async Task<PagedResult<WasteInstallFeeViewModel>> GetListAsync(WasteInstallFeeFilter filter) 
         {
             filter.CheckArgumentIsNull(nameof(filter));
-            var result = new PagedResult<WaterInstallFeeViewModel> {
+            var result = new PagedResult<WasteInstallFeeViewModel> {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
             };
@@ -108,8 +106,8 @@ namespace Datiss.Budget.Services
             if (filter.OrganizationId.HasValue)
                 query = query.Where(x => x.OrganizationId == filter.OrganizationId.Value);
 
-            if (filter.DWaterTypeId.HasValue)
-                query = query.Where(x => x.DWaterTypeId == filter.DWaterTypeId.Value);
+            if (filter.DWasteTypeId.HasValue)
+                query = query.Where(x => x.DWasteTypeId == filter.DWasteTypeId.Value);
 
             if(filter.WInstallFee.HasValue) {
                 switch(filter.FeeMode) {
@@ -136,11 +134,11 @@ namespace Datiss.Budget.Services
             result.Items = await query
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
-                                    .Include(x => x.DWaterType)
-                                    .Select(x => new WaterInstallFeeViewModel {
+                                    .Include(x => x.DWasteType)
+                                    .Select(x => new WasteInstallFeeViewModel {
                                         Id = x.Id,
-                                        DWaterTypeDisplay = x.DWaterType.Title,
-                                        DWaterTypeId = x.DWaterTypeId,
+                                        DWasteTypeDisplay = x.DWasteType.Title,
+                                        DWasteTypeId = x.DWasteTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
                                         WInstallFee = x.WInstllFee,
@@ -151,8 +149,8 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        private IQueryable<WaterInstallFee> setOrder(
-            IQueryable<WaterInstallFee> query,
+        private IQueryable<WasteInstallFee> setOrder(
+            IQueryable<WasteInstallFee> query,
             string orderBy = "id",
             bool desc = false) {
             if (string.IsNullOrWhiteSpace(orderBy))
@@ -172,8 +170,8 @@ namespace Datiss.Budget.Services
 
                 case "dwatertype":
                     return desc
-                        ? query.OrderByDescending(x => x.DWaterType.DisplayOrder)
-                        : query.OrderBy(x => x.DWaterType.DisplayOrder);
+                        ? query.OrderByDescending(x => x.DWasteType.DisplayOrder)
+                        : query.OrderBy(x => x.DWasteType.DisplayOrder);
 
                 default:
                     return desc
@@ -192,11 +190,11 @@ namespace Datiss.Budget.Services
             var result = id == null 
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&
-                                                x.DWaterTypeId == dwaterTypeId)
+                                                x.DWasteTypeId == dwaterTypeId)
 
                 : await Query().AnyAsync(x => x.YearId == yearId &&
                                             x.OrganizationId == organizationId &&
-                                            x.DWaterTypeId == dwaterTypeId &&
+                                            x.DWasteTypeId == dwaterTypeId &&
                                             x.Id != id);
             return !result;
         }

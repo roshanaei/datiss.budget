@@ -43,6 +43,8 @@ namespace Datiss.Budget.Entities
         
         public ICollection<User> Users { get; set; }
 
+        public ICollection<WasteInstallFee> WasteInstallFees { get; set; }
+
         #endregion
     }
 }

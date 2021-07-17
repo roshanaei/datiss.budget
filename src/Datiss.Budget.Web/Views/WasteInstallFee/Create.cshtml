@@ -1,0 +1,27 @@
+﻿@model AddWasteInstallFeeViewModel
+
+ <div>
+     <form asp-controller="WasteInstallFee" asp-action="Create" asp-antiforgery="true">
+         <label asp-for="YearId"></label>
+         <input asp-for="YearId" type="hidden" />
+
+         <label asp-for="OrganizationId"></label>
+         <input asp-for="OrganizationId" type="hidden" />
+
+         <label asp-for="DWasteTypeId"></label>
+         <select asp-for="DWasteTypeId" asp-items="Model.DWasteTypeSource"></select>
+
+         <label asp-for="WInstllFee"></label>
+         <input asp-for="WInstllFee" type="number" />
+
+         <br />
+         <button type="submit">Send</button>
+     </form>
+
+     @if(Model._HasError) {
+         <p style="color: red">
+             @Model._ErrorMessage
+         </p>
+     }
+
+ </div>
