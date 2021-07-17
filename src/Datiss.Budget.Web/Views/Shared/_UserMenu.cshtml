@@ -1,7 +1,7 @@
 ﻿@inject IUsersPhotoService PhotoService
-
+@inject IUserContext userContext
 @{
-    var displayName = User.Identity.GetUserDisplayName();
+    var displayName = userContext.DisplayName;
     var photoUrl = PhotoService.GetCurrentUserPhotoUrl();
 }
 
