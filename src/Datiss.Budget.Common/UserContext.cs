@@ -11,7 +11,7 @@ namespace Datiss.Budget.Security
         int UserId { get; }
         string DisplayName { get; }
         int? OrganizationId { get; }
-
+        string OrganizationTitle { get; }
     }
 
     public class UserContext : IUserContext
@@ -34,12 +34,15 @@ namespace Datiss.Budget.Security
 
         public string DisplayName { get; protected set; }
 
-        public int? OrganizationId { get; set; }
+        public int? OrganizationId { get; protected set; }
+
+        public string OrganizationTitle { get; protected set; }
 
         private void loadData(HttpContext httpContext) {
             UserId = Principal.Identity.GetUserId();
             DisplayName = Principal.Identity.GetUserDisplayName();
             OrganizationId = Principal.Identity.GetOrganizationId();
+            OrganizationTitle = Principal.Identity.GetOrganizationTitle();
         }
     }
 }

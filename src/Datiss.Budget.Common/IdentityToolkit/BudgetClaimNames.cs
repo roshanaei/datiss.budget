@@ -9,5 +9,7 @@ namespace Datiss.Budget.Common.IdentityToolkit
     public static class BudgetClaimNames
     {
         public static string OrganizationId = "OrganizationId";
+
+        public static string OrganizationTitle = "OrganizationTitle";
     }
 }

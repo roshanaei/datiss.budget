@@ -1,4 +1,5 @@
-﻿
+﻿@inject IUserContext userContext
+
 <nav class="navbar navbar-expand-lg navbar-light header-navbar navbar-fixed">
     <div class="container-fluid navbar-wrapper">
         <div class="navbar-header d-flex">
@@ -23,10 +24,9 @@
                         <a class="nav-link dropdown-toggle user-dropdown d-flex align-items-end p-1" id="profile" data-toggle="dropdown" data-placement="bottom">
                             <div class="user d-md-flex d-none mr-2">
                                 <span class="my-font text-right">
-                                    مدیر سیستم
-
+                                    @userContext.DisplayName                                    
                                 </span>
-                                <span class=" my-font text-right font-small-3">Admin</span>
+                                <span class=" my-font text-right font-small-3">@userContext.o</span>
                             </div>
 
                             <img class="mr-3 avatar" src="~/avatars/1.png" height="35" width="35">

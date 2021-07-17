@@ -92,7 +92,9 @@ namespace Datiss.Budget.Common.IdentityToolkit
             // TODO : Check security Issue with this claim
             return int.Parse(claim_value);
         }
-           
+
+        public static string GetOrganizationTitle(this IIdentity identity)
+            => identity?.GetUserClaimValue(BudgetClaimNames.OrganizationTitle);
                     
     }
 }
