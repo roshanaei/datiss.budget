@@ -21,14 +21,15 @@ namespace Datiss.Budget.Entities
 
         public int Id { get; set; }
 
-        
         public int? ParentId { get; set; }
 
         public string Title { get; set; }
 
         public int DisplayOrder { get; set; }
 
-        public bool IsVillage { get; set; }
+        public OrganizationType Type { get; set; }
+
+        public bool SewageStatus { get; set; }
 
         public EntityStatus Status { get; set; }
         #endregion

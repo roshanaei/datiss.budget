@@ -82,11 +82,18 @@ namespace Datiss.Budget.Areas.Identity.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, $"{model.Username} logged in.");
+                    if (returnUrl == "/Identity")
+                        returnUrl = null;
                     if (Url.IsLocalUrl(returnUrl))
                     {
                         return Redirect(returnUrl);
                     }
-                    return RedirectToAction(nameof(HomeController.Index), "Home");
+                    //var url = Url.RouteUrl("default", new {
+                    //    controller = "Home",
+                    //    action = "Index",
+                    //    area = ""
+                    //});
+                    return RedirectToAction("Index", "Home", new { area = "" });
                 }
 
                 if (result.RequiresTwoFactor)
