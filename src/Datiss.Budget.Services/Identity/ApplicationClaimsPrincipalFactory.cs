@@ -6,6 +6,9 @@ using System;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Datiss.Budget.Common.IdentityToolkit;
+using Datiss.Budget.DataLayer.Context;
+using Datiss.Budget.Entities;
 
 namespace Datiss.Budget.Services.Identity
 {
@@ -20,13 +23,16 @@ namespace Datiss.Budget.Services.Identity
         private readonly IOptions<IdentityOptions> _optionsAccessor;
         private readonly IApplicationRoleManager _roleManager;
         private readonly IApplicationUserManager _userManager;
+        private readonly IUnitOfWork _uow;
 
         public ApplicationClaimsPrincipalFactory(
+            IUnitOfWork uow,
             IApplicationUserManager userManager,
             IApplicationRoleManager roleManager,
             IOptions<IdentityOptions> optionsAccessor)
             : base((UserManager<User>)userManager, (RoleManager<Role>)roleManager, optionsAccessor)
         {
+            _uow = uow;
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
             _optionsAccessor = optionsAccessor ?? throw new ArgumentNullException(nameof(optionsAccessor));
@@ -34,6 +40,10 @@ namespace Datiss.Budget.Services.Identity
 
         public override async Task<ClaimsPrincipal> CreateAsync(User user)
         {
+            var org = await _uow.Set<Organization>().FindAsync(user.OrganizationId);
+            if (org != null)
+                user.Organization = org;
+
             var principal = await base.CreateAsync(user); // adds all `Options.ClaimsIdentity.RoleClaimType -> Role Claims` automatically + `Options.ClaimsIdentity.UserIdClaimType -> userId` & `Options.ClaimsIdentity.UserNameClaimType -> userName`
             addCustomClaims(user, principal);
             return principal;
@@ -47,6 +57,16 @@ namespace Datiss.Budget.Services.Identity
                 new Claim(ClaimTypes.GivenName, user.FirstName ?? string.Empty),
                 new Claim(ClaimTypes.Surname, user.LastName ?? string.Empty),
                 new Claim(PhotoFileName, user.PhotoFileName ?? string.Empty, ClaimValueTypes.String),
+
+                new Claim(BudgetClaimNames.OrganizationId,
+                                user.OrganizationId.HasValue
+                                    ? user.OrganizationId.ToString()
+                                    : null),
+
+                new Claim(BudgetClaimNames.OrganizationTitle,
+                                user.OrganizationId.HasValue
+                                    ? user.Organization.Title
+                                    : string.Empty)
             });
         }
     }

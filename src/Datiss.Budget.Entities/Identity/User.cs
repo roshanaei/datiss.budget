@@ -62,7 +62,7 @@ namespace Datiss.Budget.Entities.Identity
 
         #region Navigations
 
-        public Organization Organization { get; set; }
+        public virtual Organization Organization { get; set; }
 
         public ICollection<UserUsedPassword> UserUsedPasswords { get; set; }
 
