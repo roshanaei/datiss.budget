@@ -37,6 +37,7 @@ namespace Datiss.Budget.Entities
         public ICollection<Constant> Childrens { get; set; }
         public ICollection<WaterInstallFee> WaterInstallFees { get; set; }
         public ICollection<WasteInstallFee> WasteInstallFees { get; set; }
+        public ICollection<SalesSplitW_Y> SalesSplitW_Ys { get; set; }
         #endregion
     }
 }
