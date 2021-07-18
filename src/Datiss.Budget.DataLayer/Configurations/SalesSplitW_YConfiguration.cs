@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Datiss.Budget.DataLayer.Mappings
 {
-    public class SalesSplitW_YConfiguration :IEntityTypeConfiguration<SalesSplitW_Y>
+    public class SalesSplitW_YConfiguration :IEntityTypeConfiguration<SalesSplitWater>
     {
-        public void Configure(EntityTypeBuilder<SalesSplitW_Y> builder) 
+        public void Configure(EntityTypeBuilder<SalesSplitWater> builder) 
         {
-            builder.ToTable("SalesSplitW_Ys");
+            builder.ToTable("SalesSplitW_Y");
 
             builder.HasKey(x => x.Id);
 
@@ -35,12 +35,12 @@ namespace Datiss.Budget.DataLayer.Mappings
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.UserType)
-                    .WithMany(x => x.SalesSplitW_Ys)
+                    .WithMany(x => x.UserTypeSalesSplitW)
                     .HasForeignKey(x => x.UserTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.WPipeDiameter)
-                    .WithMany(x => x.SalesSplitW_Ys)
+                    .WithMany(x => x.WaterPipeDiameterSalesSplitW)
                     .HasForeignKey(x => x.WPipeDiameterId)
                     .OnDelete(DeleteBehavior.Restrict);
         }
