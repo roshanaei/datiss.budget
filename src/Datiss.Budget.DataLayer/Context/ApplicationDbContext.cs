@@ -192,7 +192,7 @@ namespace Datiss.Budget.DataLayer.Context
         public virtual DbSet<Organization> Organizations { set; get; }
         public virtual DbSet<WaterInstallFee> WaterInstallFees { set; get; }
         public virtual DbSet<WasteInstallFee> WasteInstallFees { set; get; }
-        public virtual DbSet<SalesSplitWater> SalesSplitW_Ys { set; get; }
+        public virtual DbSet<WaterSalesSplit> SalesSplitW_Ys { set; get; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

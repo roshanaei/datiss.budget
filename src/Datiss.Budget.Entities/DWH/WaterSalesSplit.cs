@@ -2,9 +2,9 @@
 
 namespace Datiss.Budget.Entities.DWH
 {
-    public class SalesSplitWater :IAuditableEntity
+    public class WaterSalesSplit :IAuditableEntity
     {
-        public SalesSplitWater() { }
+        public WaterSalesSplit() { }
 
         #region properties
 
