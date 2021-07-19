@@ -21,6 +21,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IFinanceYearService, FinanceYearService>();
             services.AddScoped<IWaterInstallFeeService, WaterInstallFeeService>();
             services.AddScoped<IWasteInstallFeeService, WasteInstallFeeService>();
+            services.AddScoped<IWaterSalesSplitService, WaterSalesSplitService>();
 
             return services;
         }
