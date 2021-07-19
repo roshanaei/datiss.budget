@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Datiss.Budget.Security;
+using Datiss.Budget.Services.Excel;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -14,6 +15,8 @@ namespace Microsoft.Extensions.DependencyInjection
     {
 
         public static IServiceCollection AddDatissBudgetServices(this IServiceCollection services) {
+            services.AddSingleton<IExcelService, ExcelService>();
+            
             services.AddScoped<IUserContext, UserContext>();
 
             services.AddScoped<IConstantService, ConstantService>();
@@ -22,7 +25,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IWaterInstallFeeService, WaterInstallFeeService>();
             services.AddScoped<IWasteInstallFeeService, WasteInstallFeeService>();
             services.AddScoped<IWaterSalesSplitService, WaterSalesSplitService>();
-
+            
             return services;
         }
     }

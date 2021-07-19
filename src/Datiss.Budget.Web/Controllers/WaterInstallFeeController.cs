@@ -9,10 +9,12 @@ using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Datiss.Budget.Services.Identity;
+using Datiss.Budget.Services.Contracts.Identity;
 
 namespace Datiss.Budget.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = ConstantPolicies.DynamicPermission)]
     [Route("[controller]")]
     public class WaterInstallFeeController : Controller
     {
@@ -21,17 +23,20 @@ namespace Datiss.Budget.Web.Controllers
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
+        private readonly ISecurityTrimmingService _securityTrimmingService;
 
         public WaterInstallFeeController(
             IWaterInstallFeeService waterInstallFeeService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
-            IConstantService constantService) 
+            IConstantService constantService,
+            ISecurityTrimmingService securityTrimmingService) 
         {
             _waterInstallFeeService = waterInstallFeeService ?? throw new ArgumentNullException(nameof(waterInstallFeeService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
+            _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
 
         [HttpGet("[action]")]
@@ -127,6 +132,8 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1) 
         {
+            var access = _securityTrimmingService.CanCurrentUserAccess("", "WaterInstallFee", "Index");
+
             var filterInput = new WaterInstallFeeFilter {
                 OrderBy = "dwatertype",
                 PageNumber = page
