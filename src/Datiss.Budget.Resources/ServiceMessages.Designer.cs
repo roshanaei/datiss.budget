@@ -99,20 +99,30 @@ namespace Datiss.Budget.Resources {
         /// <summary>
         ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
         /// </summary>
+        public static string Logic_DWasteType {
+            get {
+                return ResourceManager.GetString("Logic_DWasteType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
+        /// </summary>
         public static string Logic_DWaterType {
             get {
                 return ResourceManager.GetString("Logic_DWaterType", resourceCulture);
             }
         }
-
-        public static string Logic_DWasteType
-        {
-            get
-            {
-                return ResourceManager.GetString("Logic_DWasteType", resourceCulture);
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است.
+        /// </summary>
+        public static string Logic_WaterSalesSplit {
+            get {
+                return ResourceManager.GetString("Logic_WaterSalesSplit", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to به دلیل وجود داده وابسته امکان حذف نمی باشد..
         /// </summary>

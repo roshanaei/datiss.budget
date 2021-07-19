@@ -34,7 +34,10 @@ namespace Datiss.Budget.Entities
         #region Navigation
 
         public ICollection<WaterInstallFee> WaterInstallFees { get; set; }
+
         public ICollection<WasteInstallFee> WasteInstallFees { get; set; }
+
+        public ICollection<WaterSalesSplit> WaterSalesSplits { get; set; }
 
         #endregion
     }

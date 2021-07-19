@@ -61,7 +61,7 @@ namespace Datiss.Budget.Services.Identity
                 new Claim(BudgetClaimNames.OrganizationId,
                                 user.OrganizationId.HasValue
                                     ? user.OrganizationId.ToString()
-                                    : null),
+                                    : string.Empty),
 
                 new Claim(BudgetClaimNames.OrganizationTitle,
                                 user.OrganizationId.HasValue

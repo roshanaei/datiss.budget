@@ -81,14 +81,15 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<ValidationResult> HardDeleteAsync(int Id)
+        public async Task HardDeleteAsync(int Id)
         {
             var entity = await _dbSet.FindAsync(Id);
+
             entity.CheckArgumentIsNull(nameof(entity));
 
-            //_dbSet.Remove(entity);
+            _dbSet.Remove(entity);
 
-            return ValidationResult.Success();
+            await _uow.SaveChangesAsync();
 
         }
 

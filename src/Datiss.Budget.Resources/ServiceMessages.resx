@@ -129,8 +129,14 @@
   <data name="DuplicateNames" xml:space="preserve">
     <value>عنوان ({0}) تکراری است.</value>
   </data>
+  <data name="Logic_DWasteType" xml:space="preserve">
+    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
+  </data>
   <data name="Logic_DWaterType" xml:space="preserve">
     <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
+  </data>
+  <data name="Logic_WaterSalesSplit" xml:space="preserve">
+    <value>اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است</value>
   </data>
   <data name="RelationDataSoftDeleted" xml:space="preserve">
     <value>به دلیل وجود داده وابسته امکان حذف نمی باشد.</value>
