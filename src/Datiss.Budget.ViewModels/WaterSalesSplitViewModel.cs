@@ -77,6 +77,7 @@ namespace Datiss.Budget.ViewModels
 
     public class WaterSalesSplitFilterViewModel : FilterViewModel
     {
+
         public int? UserTypeId { get; set; }
 
         public int? WPipeDiameterId { get; set; }

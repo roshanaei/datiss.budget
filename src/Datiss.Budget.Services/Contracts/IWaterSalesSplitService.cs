@@ -7,10 +7,18 @@ using Datiss.Budget.Entities.DWH;
 
 namespace Datiss.Budget.Services.Contracts
 {
-    public interface WaterSalesSplitService : IWaterSalesSplitService
+    public interface  IWaterSalesSplitService
     {
 
-   
+        Task<WaterSalesSplit> GetByIdAsync(int id);
+
+        Task<ValidationResult> AddAsync(CreateWaterSalesSplitDTO model);
+
+        Task<ValidationResult> UpdateAsync(UpdateWaterSalesSplitViewModel model);
+
+        Task<ValidationResult> HardDeleteAsync(int Id);
+
+        Task<PagedResult<WaterSalesSplitViewModel>> GetListAsync(WaterSalesSplitFilter filter);
 
     }
     

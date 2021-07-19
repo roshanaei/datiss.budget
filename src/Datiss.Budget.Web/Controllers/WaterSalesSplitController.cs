@@ -189,7 +189,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             if (Request.Form["btnFilter"].Count() > 0)
             {
-                var filterInput = model.Adapt<WaterInstallFeeFilter>();
+                var filterInput = model.Adapt<WaterSalesSplitFilter>();
 
                 var result = await _waterSalesSplitService.GetListAsync(filterInput);
 
