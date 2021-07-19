@@ -41,4 +41,16 @@ namespace Datiss.Budget.Services.Models
         public int? WInstallFee { get; set; }
         public InstallFeeFilterMode FeeMode { get; set; }
     }
+
+    public class WaterSalesSplitFilter : FilterInput
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
+        public int? WPipeDiameterId { get; set; }
+        public int? NumberSales { get; set; }
+        public int? UnitSales { get; set; }
+        public InstallFeeFilterMode NumberMode { get; set; }
+        public InstallFeeFilterMode UnitMode { get; set; }
+    }
 }
