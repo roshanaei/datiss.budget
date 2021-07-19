@@ -44,6 +44,8 @@ namespace Datiss.Budget.Services.Models
 
     public class WaterSalesSplitFilter : FilterInput
     {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
         public int? UserTypeId { get; set; }
         public int? WPipeDiameterId { get; set; }
         public int? NumberSales { get; set; }

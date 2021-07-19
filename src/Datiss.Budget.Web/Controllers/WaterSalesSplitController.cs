@@ -130,7 +130,7 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-
+        [HttpPost("[action]/{id}")]
         public async Task<IActionResult> Edit(int id, UpdateWaterSalesSplitViewModel model)
         {
             var userTypeSource = await _constantService.GetByConstantKeyAsync("usertype");

@@ -20,11 +20,11 @@ namespace Datiss.Budget.ViewModels
         public int WPipeDiameterId { get; set; }
 
         [Required(ErrorMessage ="*")]
-        [Range(0,int.MaxValue,ErrorMessage ="Please Dorost Vared Kon")]
+        [Range(0,int.MaxValue,ErrorMessage ="تعداد انشعاب باید بصورتی عددی وارد شود")]
         public int NumberSales { get; set; }
 
         [Required(ErrorMessage ="*")]
-        [Range(0,int.MaxValue,ErrorMessage ="Please Dorost Vared Kon")]
+        [Range(0,int.MaxValue,ErrorMessage ="آحاد انشعاب باید بصورت عددی وارد شود")]
         public int UnitSales { get; set; }
 
         public IEnumerable<SelectListItem> UserTypeSource { get; set; }
@@ -77,6 +77,9 @@ namespace Datiss.Budget.ViewModels
 
     public class WaterSalesSplitFilterViewModel : FilterViewModel
     {
+        public int YearId { get; set; }
+
+        public int OrganizationId { get; set; }
 
         public int? UserTypeId { get; set; }
 

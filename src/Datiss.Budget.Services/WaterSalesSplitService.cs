@@ -89,15 +89,13 @@ namespace Datiss.Budget.Services
                                 model.UserTypeTitle, model.WPipeDiameterTitle)
                );
         }
-        public async Task<ValidationResult> HardDeleteAsync(int Id)
+        public async Task HardDeleteAsync(int Id)
         {
             var entity = await _dbSet.FindAsync(Id);
             entity.CheckArgumentIsNull(nameof(entity));
 
-            //_dbSet.Remove(entity);
-
-            return ValidationResult.Success();
-
+            _dbSet.Remove(entity);
+            await _uow.SaveChangesAsync();
 
         }
          public async Task<PagedResult<WaterSalesSplitViewModel>> GetListAsync(WaterSalesSplitFilter filter)

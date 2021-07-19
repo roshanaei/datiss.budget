@@ -25,7 +25,7 @@ namespace Datiss.Budget.DataLayer.Mappings
 
 
             builder.HasOne(x => x.FinanceYear)
-                    .WithMany(x => x.SalesSplitW_Ys)
+                    .WithMany(x => x.WaterSalesSplits)
                     .HasForeignKey(x => x.YearId)
                     .OnDelete(DeleteBehavior.Restrict);
 
