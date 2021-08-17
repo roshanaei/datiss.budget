@@ -22,7 +22,7 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.UserTypeId).IsRequired();
 
-            builder.Property(x => x.WsPipeDiameter).IsRequired();
+            builder.Property(x => x.WsPipeDiameterId).IsRequired();
 
             builder.HasOne(x => x.FinanceYear)
                 .WithMany(x => x.WasteSalesSplits)
