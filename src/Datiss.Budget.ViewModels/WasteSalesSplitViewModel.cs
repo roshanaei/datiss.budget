@@ -52,7 +52,7 @@ namespace Datiss.Budget.ViewModels
         }
     }
 
-    public class UpdateWasteSalesSplitViewModel :AddWasteInstallFeeViewModel
+    public class UpdateWasteSalesSplitViewModel :AddWasteSalesSplitViewModel
     {
         public int Id { get; set; }
     }
@@ -82,7 +82,7 @@ namespace Datiss.Budget.ViewModels
         public int UnitSales { get; set; }
     }
 
-    public class WasteSalessplitfilterViewModel : FilterViewModel
+    public class WasteSalesSplitFilterViewModel : FilterViewModel
     {
         public int YearId { get; set; }
 
