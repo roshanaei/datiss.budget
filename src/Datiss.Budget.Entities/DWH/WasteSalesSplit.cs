@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Datiss.Budget.Entities.AuditableEntity;
 
 namespace Datiss.Budget.Entities.DWH
 {
-    public  class WasteSalesSplit
+    public  class WasteSalesSplit:IAuditableEntity
     {
         public WasteSalesSplit() { }
 
