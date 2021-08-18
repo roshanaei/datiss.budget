@@ -39,6 +39,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<WaterSalesSplit> WaterSalesSplits { get; set; }
 
+        public ICollection<BranchFeeAmount> BranchFeeAmounts { get; set; }
         #endregion
     }
 }
