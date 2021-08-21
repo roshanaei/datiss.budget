@@ -14,6 +14,10 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.Id).HasColumnName("Id");
 
+            builder.Property(x => x.UrbanAdjustmentFactor).HasColumnType("decimal(18,6)");
+
+            builder.Property(x => x.WasteRateInWater).HasColumnType("decimal(18,6)");
+
             builder.HasOne(x => x.FinanceYear).WithMany(x => x.BranchFeeAmounts)
                     .HasForeignKey(x => x.YearId)
                     .OnDelete(DeleteBehavior.Restrict);
