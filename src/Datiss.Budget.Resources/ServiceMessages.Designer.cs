@@ -97,6 +97,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است.
+        /// </summary>
+        public static string Logic_BranchFeeAmount {
+            get {
+                return ResourceManager.GetString("Logic_BranchFeeAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
         /// </summary>
         public static string Logic_DWasteType {

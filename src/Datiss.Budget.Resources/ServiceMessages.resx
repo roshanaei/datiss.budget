@@ -129,6 +129,9 @@
   <data name="DuplicateNames" xml:space="preserve">
     <value>عنوان ({0}) تکراری است.</value>
   </data>
+  <data name="Logic_BranchFeeAmount" xml:space="preserve">
+    <value>اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است</value>
+  </data>
   <data name="Logic_DWasteType" xml:space="preserve">
     <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
   </data>
