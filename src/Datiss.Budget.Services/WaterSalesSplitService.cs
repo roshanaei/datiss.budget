@@ -110,10 +110,10 @@ namespace Datiss.Budget.Services
             var query = Query();
 
             if (filter.UserTypeId.HasValue)
-                query = query.Where(x => x.YearId == filter.UserTypeId.Value);
+                query = query.Where(x => x.UserTypeId == filter.UserTypeId.Value);
 
             if (filter.WPipeDiameterId.HasValue)
-                query = query.Where(x => x.OrganizationId == filter.WPipeDiameterId.Value);
+                query = query.Where(x => x.WPipeDiameterId == filter.WPipeDiameterId.Value);
 
             if (filter.NumberSales.HasValue)
             {

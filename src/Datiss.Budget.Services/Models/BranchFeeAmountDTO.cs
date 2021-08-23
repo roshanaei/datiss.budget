@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Models
 {
-    class CreateBranchFeeAmountDTO
+    public class CreateBranchFeeAmountDTO
     {
         public int YearId { get; set; }
 
         public int OrganizationId { get; set; }
+
         public decimal UrbanAdjustmentFactor { get; set; }
 
         public decimal WasteRateInWater { get; set; }

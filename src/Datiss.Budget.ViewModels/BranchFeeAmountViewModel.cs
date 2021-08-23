@@ -88,7 +88,8 @@ namespace Datiss.Budget.ViewModels
     {
         public int? YearId { get; set; }
 
-        public int? OrganizationId { get; set; }
+        public int? OrganizationId { get; set; } 
+
         public string OrganizationDisplay { get; set; }
 
         public decimal? UrbanAdjustmentFactor { get; set; }
