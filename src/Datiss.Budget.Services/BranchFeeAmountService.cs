@@ -15,7 +15,7 @@ using Datiss.Budget.Resources;
 
 namespace Datiss.Budget.Services
 {
-    class BranchFeeAmountService : IBranchFeeAmountService
+    public class BranchFeeAmountService : IBranchFeeAmountService
     {
         private readonly IUnitOfWork _uow;
 
@@ -264,41 +264,37 @@ namespace Datiss.Budget.Services
                         ? query.OrderByDescending(x => x.WaterPartnershipAmountNDomestic)
                         : query.OrderBy(x => x.WaterPartnershipAmountNDomestic);
 
-                case "WaterPartnershipAmountNDomestic":
-                    return desc
-                        ? query.OrderByDescending(x => x.WaterPartnershipAmountNDomestic)
-                        : query.OrderBy(x => x.WaterPartnershipAmountNDomestic);
 
-                case "WastePartnershipAmountDomestic":
+                case "wastePartnershipAmountDomestic":
                     return desc
                         ? query.OrderByDescending(x => x.WastePartnershipAmountDomestic)
                         : query.OrderBy(x => x.WastePartnershipAmountDomestic);
 
-                case "WastePartnershipAmountNDomestic":
+                case "wastePartnershipAmountNDomestic":
                     return desc
                         ? query.OrderByDescending(x => x.WastePartnershipAmountNDomestic)
                         : query.OrderBy(x => x.WastePartnershipAmountNDomestic);
 
-                case "FixCostNote11H":
+                case "fixCostNote11H":
                     return desc
                         ? query.OrderByDescending(x => x.FixCostNote11H)
                         : query.OrderBy(x => x.FixCostNote11H);
 
-                case " FixCostNote11NH ":
+                case "fixCostNote11NH ":
                     return desc
                         ? query.OrderByDescending(x => x.FixCostNote11NH)
                         : query.OrderBy(x => x.FixCostNote11NH);
 
-                case "FixCostNote11HWs":
+                case "fixCostNote11HWs":
                     return desc
                         ? query.OrderByDescending(x => x.FixCostNote11HWs)
                         : query.OrderBy(x => x.FixCostNote11HWs);
 
-                case "FixCostNote11NHWs":
+                case "fixCostNote11NHWs":
                     return desc
                         ? query.OrderByDescending(x => x.FixCostNote11NHWs)
                         : query.OrderBy(x => x.FixCostNote11NHWs);
-                case "WsTubingCost":
+                case "wsTubingCost":
                     return desc
                         ? query.OrderByDescending(x => x.WsTubingCost)
                         : query.OrderBy(x => x.WsTubingCost);
