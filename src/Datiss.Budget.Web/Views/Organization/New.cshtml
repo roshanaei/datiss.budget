@@ -1,15 +1,15 @@
 ﻿@model AddOrganizationViewModel
 
-<form asp-action="New" asp-controller="Organization" method="post" asp-antiforgery="true">
-    <label asp-for="ParentId">انتخاب سطح پدر</label>
-    <select asp-for="ParentId" asp-items="Model.ParentList"></select>
-    <br />
-    <label>عنوان</label>
-    <input type="text" asp-for="Title" required />
-    <br />
-    <label asp-for="DisplayOrder">شماره ترتیب</label>
-    <input type="number" asp-for="DisplayOrder" />
+    <form asp-action="New" asp-controller="Organization" method="post" asp-antiforgery="true">
+        <label asp-for="ParentId">انتخاب سطح پدر</label>
+        <select asp-for="ParentId" asp-items="Model.ParentList"></select>
+        <br />
+        <label>عنوان</label>
+        <input type="text" asp-for="Title" required />
+        <br />
+        <label asp-for="DisplayOrder">شماره ترتیب</label>
+        <input type="number" asp-for="DisplayOrder" />
 
-    <br />
-    <button type="submit">ارسال</button>
-</form>
+        <br />
+        <button type="submit">ارسال</button>
+    </form>

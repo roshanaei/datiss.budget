@@ -1078,11 +1078,10 @@ input:focus ~ .bg-primary
     background-color: transparent;
 }
 
-.bg-light-primary
-{
+.bg-light-primary {
     color: #007bff !important;
-    border-color: #efdeff; 
-    background-color: #efdeff !important;
+    border-color: #d5f1fd;
+    background-color: #d5f1fd !important;
 }
 
 .btn.bg-light-primary:hover
@@ -5576,6 +5575,7 @@ input:focus ~ .bg-info
     border-color: #2f8be6; 
     background-color: #2f8be6 !important;
 }
+
 
 .btn-info:active
 {
