@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Datiss.Budget.Web.Controllers
 {
     [Authorize]
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     public class FinanceYearController : Controller
     {
         private readonly IFinanceYearService _financeYearService;
