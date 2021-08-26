@@ -138,6 +138,9 @@
   <data name="Logic_DWaterType" xml:space="preserve">
     <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
   </data>
+  <data name="Logic_WasteSalesSplit" xml:space="preserve">
+    <value>اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است</value>
+  </data>
   <data name="Logic_WaterSalesSplit" xml:space="preserve">
     <value>اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است</value>
   </data>

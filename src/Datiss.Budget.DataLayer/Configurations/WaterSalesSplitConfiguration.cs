@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Datiss.Budget.DataLayer.Mappings
 {
-    public class SalesSplitW_YConfiguration :IEntityTypeConfiguration<WaterSalesSplit>
+    public class WaterSalesSplitConfiguration : IEntityTypeConfiguration<WaterSalesSplit>
     {
         public void Configure(EntityTypeBuilder<WaterSalesSplit> builder) 
         {
@@ -30,7 +30,7 @@ namespace Datiss.Budget.DataLayer.Mappings
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.Organization)
-                    .WithMany(x => x.SalesSplitW_Ys)
+                    .WithMany(x => x.WaterSalesSplits)
                     .HasForeignKey(x => x.OrganizationId)
                     .OnDelete(DeleteBehavior.Restrict);
 

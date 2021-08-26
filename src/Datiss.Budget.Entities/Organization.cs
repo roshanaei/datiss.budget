@@ -46,7 +46,9 @@ namespace Datiss.Budget.Entities
 
         public ICollection<WasteInstallFee> WasteInstallFees { get; set; }
 
-        public ICollection<WaterSalesSplit> SalesSplitW_Ys { get; set; }
+        public ICollection<WaterSalesSplit> WaterSalesSplits {get; set; }
+
+        public ICollection<WasteSalesSplit> WasteSalesSplits { get; set; }
 
         public ICollection<BranchFeeAmount> BranchFeeAmounts { get; set; }
 
