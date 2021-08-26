@@ -9,7 +9,7 @@ using Datiss.Budget.ViewModels.Base;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class AddWaterSalesSplitViewModel : BaseViewModel
+    public class AddWasteSalesSplitViewModel:BaseViewModel
     {
         public int YearId { get; set; }
 
@@ -17,10 +17,10 @@ namespace Datiss.Budget.ViewModels
 
         public int UserTypeId { get; set; }
 
-        public int WPipeDiameterId { get; set; }
+        public int WsPipeDiameterId { get; set; }
 
         [Required(ErrorMessage ="*")]
-        [Range(0,int.MaxValue,ErrorMessage ="تعداد انشعاب باید بصورتی عددی وارد شود")]
+        [Range(0,int.MaxValue,ErrorMessage ="تعداد انشعاب باید به صورت عددی وارد شود")]
         public int NumberSales { get; set; }
 
         [Required(ErrorMessage ="*")]
@@ -35,55 +35,62 @@ namespace Datiss.Budget.ViewModels
             {
                 if (UserTypeSource == null || !UserTypeSource.Any())
                     return string.Empty;
-                return UserTypeSource.FirstOrDefault(x => x.Value.ToString() == UserTypeId.ToString()).Text;
+                return UserTypeSource.FirstOrDefault(x => x.Value.ToString() == UserTypeSource.ToString()).Text;
             }
         }
 
-        public IEnumerable<SelectListItem> WPipeDiameterTypeSourse { get; set; }
+        public IEnumerable<SelectListItem> WsPipeDiameterTypeSource { get; set; }
 
-        public string WPipeDiameterTitle
+        public string WsPipeDiameterTitle
         {
             get
             {
-                if (WPipeDiameterTypeSourse == null || !WPipeDiameterTypeSourse.Any())
+                if (WsPipeDiameterTypeSource == null || WsPipeDiameterTypeSource.Any())
                     return string.Empty;
-                return WPipeDiameterTypeSourse.FirstOrDefault(x => x.Value.ToString() == WPipeDiameterId.ToString()).Text;
+                return WsPipeDiameterTypeSource.FirstOrDefault(x => x.Value.ToString() == WsPipeDiameterId.ToString()).Text;
             }
         }
-
-
     }
 
-    public class UpdateWaterSalesSplitViewModel :AddWaterSalesSplitViewModel
-       {
-        public int Id { get; set; }
-       }
-
-
-    public class WaterSalesSplitViewModel
+    public class UpdateWasteSalesSplitViewModel :AddWasteSalesSplitViewModel
     {
         public int Id { get; set; }
+    }
+     
+    public class WasteSalesSplitViewModel
+    {
+        public int Id { get; set; }
+
         public int YearId { get; set; }
+
         public int Year { get; set; }
+
         public int OrganizationId { get; set; }
+
         public string OrganizationDisplay { get; set; }
+
         public int UserTypeId { get; set; }
+
         public string UserTypeDisplay { get; set; }
-        public int  WPipeDiameterId { get; set; }
-        public string WPipeDiameterDisplay { get; set; }
+
+        public int WsPipeDiameterId { get; set; }
+
+        public string WspipeDiameterDisplay { get; set; }
+
         public int NumberSales { get; set; }
+
         public int UnitSales { get; set; }
     }
 
-    public class WaterSalesSplitFilterViewModel : FilterViewModel
+    public class WasteSalesSplitFilterViewModel : FilterViewModel
     {
         public int YearId { get; set; }
 
         public int OrganizationId { get; set; }
-
+        
         public int? UserTypeId { get; set; }
 
-        public int? WPipeDiameterId { get; set; }
+        public int? WsPipeDiameterId { get; set; }
 
         public int? NumberSales { get; set; }
 
@@ -92,6 +99,5 @@ namespace Datiss.Budget.ViewModels
         public IEnumerable<SelectListItem> YearSource { get; set; }
 
         public IEnumerable<SelectListItem> OrganizationSource { get; set; }
-
     }
 }
