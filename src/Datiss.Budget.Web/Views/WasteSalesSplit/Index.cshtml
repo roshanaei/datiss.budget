@@ -1,0 +1,94 @@
+﻿@model WasteSalesSplitIndexViewModel
+
+@{ ViewData["Title"] = "فروش انشعاب فاضلاب"; }
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title my-font">@ViewData["Title"]</h4>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+
+                        <div>
+                            <form method="post" asp-controller="WasteSalesSplit" asp-action="Index" asp-antiforgery="true">
+                                <label asp-for="Filter.YearId">Year</label> :
+                                <select id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()"></select>
+
+                                <label asp-for="Filter.OrganizationId">Organizzation:</label>
+                                <select id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()"></select>
+
+                                <input asp-for="Filter.OrderBy" type="hidden" />
+                                <input asp-for="Filter.OrderDesc" type="hidden" />
+
+                                <button type="submit" name="btnFilter">Filter</button>
+                                <button type="submit" name="btnCreate">Create</button>
+                            </form>
+                        </div>
+
+
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Organization</th>
+                                    <th>Usertype</th>
+                                    <th>WsPipeDiameter</th>
+                                    <th>Fee</th>
+                                    <th>Fee</th>
+                                    <th>Edit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Model.Items)
+                                {
+                                    <tr>
+                                        <td>@item.Year.ToString()</td>
+                                        <td>@item.OrganizationDisplay </td>
+                                        <td>@item.UserTypeDisplay </td>
+                                        <td>@item.WspipeDiameterDisplay.ToString() </td>
+                                        <td>@item.NumberSales.ToString()</td>
+                                        <td>@item.UnitSales.ToString()</td>
+                                        <td>
+                                            <a asp-controller="WasteSalesSplit" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <p>
+                                    Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
+                                </p>
+                            </tfoot>
+                        </table>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section footSection {
+    <script>
+
+        function loadCreateLink() {
+            var a = document.getElementById("createLink");
+            var organizationId = document.getElementById('organizationId').value;
+
+            var yearId = document.getElementById('yearId').value;
+
+            var url = 'WasteSalesSplit/create'
+
+            a.href = url + "/" + organizationId + "/" + yearId;
+        }
+
+        loadCreateLink();
+    </script>
+
+}
