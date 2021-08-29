@@ -50,6 +50,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<WasteSalesSplit> WasteSalesSplits { get; set; }
 
+        public ICollection<BranchFeeAmount> BranchFeeAmounts { get; set; }
+
         #endregion
     }
 }
