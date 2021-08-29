@@ -155,7 +155,8 @@ namespace Datiss.Budget.DataLayer.Migrations
                     ParentId = table.Column<int>(type: "int", nullable: true),
                     Title = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: false),
                     DisplayOrder = table.Column<int>(type: "int", nullable: false),
-                    IsVillage = table.Column<bool>(type: "bit", nullable: false),
+                    OrgType = table.Column<int>(type: "int", nullable: false),
+                    SewageStatus = table.Column<bool>(type: "bit", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     CreatedByBrowserName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     CreatedByIp = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
@@ -257,6 +258,148 @@ namespace Datiss.Budget.DataLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SalesSplitW_Y",
+                columns: table => new
+                {
+                    SalesSplitWYID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    YearId = table.Column<int>(type: "int", nullable: false),
+                    OrganizationId = table.Column<int>(type: "int", nullable: false),
+                    UserTypeId = table.Column<int>(type: "int", nullable: false),
+                    WPipeDiameterId = table.Column<int>(type: "int", nullable: false),
+                    NumberSales = table.Column<int>(type: "int", nullable: false),
+                    UnitSales = table.Column<int>(type: "int", nullable: false),
+                    CreatedByBrowserName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedByIp = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    CreatedByUserId = table.Column<int>(type: "int", nullable: true),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedByBrowserName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    ModifiedByIp = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    ModifiedByUserId = table.Column<int>(type: "int", nullable: true),
+                    ModifiedDateTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SalesSplitW_Y", x => x.SalesSplitWYID);
+                    table.ForeignKey(
+                        name: "FK_SalesSplitW_Y_Constants_UserTypeId",
+                        column: x => x.UserTypeId,
+                        principalTable: "Constants",
+                        principalColumn: "ConstantId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SalesSplitW_Y_Constants_WPipeDiameterId",
+                        column: x => x.WPipeDiameterId,
+                        principalTable: "Constants",
+                        principalColumn: "ConstantId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SalesSplitW_Y_FinanceYears_YearId",
+                        column: x => x.YearId,
+                        principalTable: "FinanceYears",
+                        principalColumn: "FinanceYearId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SalesSplitW_Y_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "OrganizationId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SalesSplitWs_Y",
+                columns: table => new
+                {
+                    SalesSplitWsYID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    YearId = table.Column<int>(type: "int", nullable: false),
+                    OrganizationId = table.Column<int>(type: "int", nullable: false),
+                    UserTypeId = table.Column<int>(type: "int", nullable: false),
+                    WsPipeDiameterId = table.Column<int>(type: "int", nullable: false),
+                    NumberSales = table.Column<int>(type: "int", nullable: false),
+                    UnitSales = table.Column<int>(type: "int", nullable: false),
+                    CreatedByBrowserName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedByIp = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    CreatedByUserId = table.Column<int>(type: "int", nullable: true),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedByBrowserName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    ModifiedByIp = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    ModifiedByUserId = table.Column<int>(type: "int", nullable: true),
+                    ModifiedDateTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SalesSplitWs_Y", x => x.SalesSplitWsYID);
+                    table.ForeignKey(
+                        name: "FK_SalesSplitWs_Y_Constants_UserTypeId",
+                        column: x => x.UserTypeId,
+                        principalTable: "Constants",
+                        principalColumn: "ConstantId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SalesSplitWs_Y_Constants_WsPipeDiameterId",
+                        column: x => x.WsPipeDiameterId,
+                        principalTable: "Constants",
+                        principalColumn: "ConstantId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SalesSplitWs_Y_FinanceYears_YearId",
+                        column: x => x.YearId,
+                        principalTable: "FinanceYears",
+                        principalColumn: "FinanceYearId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SalesSplitWs_Y_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "OrganizationId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WasteInstallFees",
+                columns: table => new
+                {
+                    WasteInstallFeeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    YearId = table.Column<int>(type: "int", nullable: false),
+                    OrganizationId = table.Column<int>(type: "int", nullable: false),
+                    DWasteTypeId = table.Column<int>(type: "int", nullable: false),
+                    WInstllFee = table.Column<int>(type: "int", nullable: false),
+                    CreatedByBrowserName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedByIp = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    CreatedByUserId = table.Column<int>(type: "int", nullable: true),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedByBrowserName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    ModifiedByIp = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    ModifiedByUserId = table.Column<int>(type: "int", nullable: true),
+                    ModifiedDateTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WasteInstallFees", x => x.WasteInstallFeeId);
+                    table.ForeignKey(
+                        name: "FK_WasteInstallFees_Constants_DWasteTypeId",
+                        column: x => x.DWasteTypeId,
+                        principalTable: "Constants",
+                        principalColumn: "ConstantId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WasteInstallFees_FinanceYears_YearId",
+                        column: x => x.YearId,
+                        principalTable: "FinanceYears",
+                        principalColumn: "FinanceYearId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WasteInstallFees_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "OrganizationId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "WaterInstallFees",
                 columns: table => new
                 {
@@ -292,6 +435,53 @@ namespace Datiss.Budget.DataLayer.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_WaterInstallFees_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "OrganizationId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WaterWasteBranchingAmount",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    YearId = table.Column<int>(type: "int", nullable: false),
+                    OrganizationId = table.Column<int>(type: "int", nullable: false),
+                    UrbanAdjustmentFactor = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    WasteRateInWater = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    WaterBranchingPerHousing = table.Column<int>(type: "int", nullable: false),
+                    TubingCost = table.Column<int>(type: "int", nullable: false),
+                    WaterPartnershipAmountDomestic = table.Column<int>(type: "int", nullable: false),
+                    WaterPartnershipAmountNDomestic = table.Column<int>(type: "int", nullable: false),
+                    WastePartnershipAmountDomestic = table.Column<int>(type: "int", nullable: false),
+                    WastePartnershipAmountNDomestic = table.Column<int>(type: "int", nullable: false),
+                    FixCostNote11H = table.Column<int>(type: "int", nullable: false),
+                    FixCostNote11NH = table.Column<int>(type: "int", nullable: false),
+                    FixCostNote11HWs = table.Column<int>(type: "int", nullable: false),
+                    FixCostNote11NHWs = table.Column<int>(type: "int", nullable: false),
+                    WsTubingCost = table.Column<int>(type: "int", nullable: false),
+                    CreatedByBrowserName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedByIp = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    CreatedByUserId = table.Column<int>(type: "int", nullable: true),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedByBrowserName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    ModifiedByIp = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    ModifiedByUserId = table.Column<int>(type: "int", nullable: true),
+                    ModifiedDateTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WaterWasteBranchingAmount", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WaterWasteBranchingAmount_FinanceYears_YearId",
+                        column: x => x.YearId,
+                        principalTable: "FinanceYears",
+                        principalColumn: "FinanceYearId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WaterWasteBranchingAmount_Organizations_OrganizationId",
                         column: x => x.OrganizationId,
                         principalTable: "Organizations",
                         principalColumn: "OrganizationId",
@@ -519,6 +709,61 @@ namespace Datiss.Budget.DataLayer.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SalesSplitW_Y_OrganizationId",
+                table: "SalesSplitW_Y",
+                column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SalesSplitW_Y_UserTypeId",
+                table: "SalesSplitW_Y",
+                column: "UserTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SalesSplitW_Y_WPipeDiameterId",
+                table: "SalesSplitW_Y",
+                column: "WPipeDiameterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SalesSplitW_Y_YearId",
+                table: "SalesSplitW_Y",
+                column: "YearId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SalesSplitWs_Y_OrganizationId",
+                table: "SalesSplitWs_Y",
+                column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SalesSplitWs_Y_UserTypeId",
+                table: "SalesSplitWs_Y",
+                column: "UserTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SalesSplitWs_Y_WsPipeDiameterId",
+                table: "SalesSplitWs_Y",
+                column: "WsPipeDiameterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SalesSplitWs_Y_YearId",
+                table: "SalesSplitWs_Y",
+                column: "YearId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WasteInstallFees_DWasteTypeId",
+                table: "WasteInstallFees",
+                column: "DWasteTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WasteInstallFees_OrganizationId",
+                table: "WasteInstallFees",
+                column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WasteInstallFees_YearId",
+                table: "WasteInstallFees",
+                column: "YearId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_WaterInstallFees_DWaterTypeId",
                 table: "WaterInstallFees",
                 column: "DWaterTypeId");
@@ -531,6 +776,16 @@ namespace Datiss.Budget.DataLayer.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_WaterInstallFees_YearId",
                 table: "WaterInstallFees",
+                column: "YearId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WaterWasteBranchingAmount_OrganizationId",
+                table: "WaterWasteBranchingAmount",
+                column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WaterWasteBranchingAmount_YearId",
+                table: "WaterWasteBranchingAmount",
                 column: "YearId");
         }
 
@@ -565,7 +820,19 @@ namespace Datiss.Budget.DataLayer.Migrations
                 name: "AppUserUsedPasswords");
 
             migrationBuilder.DropTable(
+                name: "SalesSplitW_Y");
+
+            migrationBuilder.DropTable(
+                name: "SalesSplitWs_Y");
+
+            migrationBuilder.DropTable(
+                name: "WasteInstallFees");
+
+            migrationBuilder.DropTable(
                 name: "WaterInstallFees");
+
+            migrationBuilder.DropTable(
+                name: "WaterWasteBranchingAmount");
 
             migrationBuilder.DropTable(
                 name: "AppRoles");

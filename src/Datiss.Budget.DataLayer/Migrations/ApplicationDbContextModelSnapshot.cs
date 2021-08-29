@@ -85,12 +85,101 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.ToTable("Constants");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.WasteInstallFee", b =>
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.BranchFeeAmount", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("Id")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("CreatedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FixCostNote11H")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FixCostNote11HWs")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FixCostNote11NH")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FixCostNote11NHWs")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ModifiedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ModifiedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("ModifiedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TubingCost")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UrbanAdjustmentFactor")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<int>("WastePartnershipAmountDomestic")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WastePartnershipAmountNDomestic")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("WasteRateInWater")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<int>("WaterBranchingPerHousing")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WaterPartnershipAmountDomestic")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WaterPartnershipAmountNDomestic")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WsTubingCost")
+                        .HasColumnType("int");
+
+                    b.Property<int>("YearId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("YearId");
+
+                    b.ToTable("WaterWasteBranchingAmount");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.WasteInstallFee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
                         .HasColumnName("WasteInstallFeeId")
                         .UseIdentityColumn();
 
@@ -167,18 +256,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<DateTime?>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FixCostNote11H")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FixCostNote11HWs")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FixCostNote11NH")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FixCostNote11NHWs")
-                        .HasColumnType("int");
-
                     b.Property<string>("ModifiedByBrowserName")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
@@ -193,34 +270,18 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<DateTime?>("ModifiedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("NumberSales")
+                        .HasColumnType("int");
+
                     b.Property<int>("OrganizationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TubingCost")
+                    b.Property<int>("UnitSales")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("UrbanAdjustmentFactor")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<int>("WastePartnershipAmountDomestic")
+                    b.Property<int>("UserTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("WastePartnershipAmountNDomestic")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("WasteRateInWater")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<int>("WaterBranchingPerHousing")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WaterPartnershipAmountDomestic")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WaterPartnershipAmountNDomestic")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WsTubingCost");
                     b.Property<int>("WsPipeDiameterId")
                         .HasColumnType("int");
 
@@ -231,10 +292,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.HasIndex("YearId");
-
-                    b.ToTable("WaterWasteBranchingAmount");
-
                     b.HasIndex("UserTypeId");
 
                     b.HasIndex("WsPipeDiameterId");
@@ -242,7 +299,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("SalesSplitWs_Y");
-
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.WaterInstallFee", b =>
@@ -302,73 +358,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("WaterInstallFees");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.WaterSalesSplit", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("SalesSplitWYID")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("NumberSales")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UnitSales")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WPipeDiameterId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("UserTypeId");
-
-                    b.HasIndex("WPipeDiameterId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("SalesSplitW_Y");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.WaterSalesSplit", b =>
@@ -1185,338 +1174,310 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("Parent");
                 });
 
-
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.BranchFeeAmount", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                        .WithMany("BranchFeeAmounts");
-                    modelBuilder.Entity("Datiss.Budget.Entities.DWH.WasteInstallFee", b =>
-                        {
-                            b.HasOne("Datiss.Budget.Entities.Constant", "DWasteType")
-                                .WithMany("WasteInstallFees")
-                                .HasForeignKey("DWasteTypeId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                                .WithMany("WasteInstallFees")
-                                .HasForeignKey("OrganizationId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                                .WithMany("WasteInstallFees")
-                                .HasForeignKey("YearId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.Navigation("DWasteType");
-
-                            b.Navigation("FinanceYear");
-
-                            b.Navigation("Organization");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.DWH.WasteSalesSplit", b =>
-                        {
-                            b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                                .WithMany("WasteSalesSplits")
-                                .HasForeignKey("OrganizationId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                                .WithMany("BranchFeeAmounts");
-
-
-
-                            b.HasOne("Datiss.Budget.Entities.Constant", "UserType")
-                                .WithMany("UserTypeWasteSalesSplit")
-                                .HasForeignKey("UserTypeId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.Constant", "WsPipeDiameter")
-                                .WithMany("PipeDiameterWasteSalesSplit")
-                                .HasForeignKey("WsPipeDiameterId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                                .WithMany("WasteSalesSplits")
-                                .HasForeignKey("YearId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.Navigation("FinanceYear");
-
-                            b.Navigation("Organization");
-
-                            b.Navigation("UserType");
-
-                            b.Navigation("WsPipeDiameter");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.DWH.WaterInstallFee", b =>
-                        {
-                            b.HasOne("Datiss.Budget.Entities.Constant", "DWaterType")
-                                .WithMany("WaterInstallFees")
-                                .HasForeignKey("DWaterTypeId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                                .WithMany("WaterInstallFees")
-                                .HasForeignKey("OrganizationId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                                .WithMany("WaterInstallFees")
-                                .HasForeignKey("YearId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.Navigation("DWaterType");
-
-                            b.Navigation("FinanceYear");
-
-                            b.Navigation("Organization");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.DWH.WaterSalesSplit", b =>
-                        {
-                            b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                                .WithMany("WaterSalesSplits")
-                                .HasForeignKey("OrganizationId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.Constant", "UserType")
-                                .WithMany("UserTypeWaterSalesSplit")
-                                .HasForeignKey("UserTypeId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.Constant", "WPipeDiameter")
-                                .WithMany("PipeDiameterWaterSalesSplit")
-                                .HasForeignKey("WPipeDiameterId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                                .WithMany("WaterSalesSplits")
-                                .HasForeignKey("YearId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.Navigation("FinanceYear");
-
-                            b.Navigation("Organization");
-
-                            b.Navigation("UserType");
-
-                            b.Navigation("WPipeDiameter");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.DWH.WaterSalesSplit", b =>
-                        {
-                            b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                                .WithMany("SalesSplitW_Ys")
-                                .HasForeignKey("OrganizationId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.Constant", "UserType")
-                                .WithMany("UserTypeWaterSalesSplit")
-                                .HasForeignKey("UserTypeId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.Constant", "WPipeDiameter")
-                                .WithMany("PipeDiameterWaterSalesSplit")
-                                .HasForeignKey("WPipeDiameterId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                                .WithMany("WaterSalesSplits")
-                                .HasForeignKey("YearId")
-                                .OnDelete(DeleteBehavior.Restrict)
-                                .IsRequired();
-
-                            b.Navigation("FinanceYear");
-
-                            b.Navigation("Organization");
-
-                            b.Navigation("UserType");
-
-                            b.Navigation("WPipeDiameter");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.Identity.RoleClaim", b =>
-                        {
-                            b.HasOne("Datiss.Budget.Entities.Identity.Role", "Role")
-                                .WithMany("Claims")
-                                .HasForeignKey("RoleId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b.Navigation("Role");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.Identity.User", b =>
-                        {
-                            b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                                .WithMany("Users")
-                                .HasForeignKey("OrganizationId")
-                                .OnDelete(DeleteBehavior.Restrict);
-
-                            b.Navigation("Organization");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.Identity.UserClaim", b =>
-                        {
-                            b.HasOne("Datiss.Budget.Entities.Identity.User", "User")
-                                .WithMany("Claims")
-                                .HasForeignKey("UserId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b.Navigation("User");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.Identity.UserLogin", b =>
-                        {
-                            b.HasOne("Datiss.Budget.Entities.Identity.User", "User")
-                                .WithMany("Logins")
-                                .HasForeignKey("UserId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b.Navigation("User");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.Identity.UserRole", b =>
-                        {
-                            b.HasOne("Datiss.Budget.Entities.Identity.Role", "Role")
-                                .WithMany("Users")
-                                .HasForeignKey("RoleId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b.HasOne("Datiss.Budget.Entities.Identity.User", "User")
-                                .WithMany("Roles")
-                                .HasForeignKey("UserId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b.Navigation("Role");
-
-                            b.Navigation("User");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.Identity.UserToken", b =>
-                        {
-                            b.HasOne("Datiss.Budget.Entities.Identity.User", "User")
-                                .WithMany("UserTokens")
-                                .HasForeignKey("UserId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b.Navigation("User");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.Identity.UserUsedPassword", b =>
-                        {
-                            b.HasOne("Datiss.Budget.Entities.Identity.User", "User")
-                                .WithMany("UserUsedPasswords")
-                                .HasForeignKey("UserId")
-                                .OnDelete(DeleteBehavior.Cascade)
-                                .IsRequired();
-
-                            b.Navigation("User");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.Organization", b =>
-                        {
-                            b.HasOne("Datiss.Budget.Entities.Organization", "Parent")
-                                .WithMany("Childrens")
-                                .HasForeignKey("ParentId")
-                                .OnDelete(DeleteBehavior.Restrict);
-
-                            b.Navigation("Parent");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.Constant", b =>
-                        {
-                            b.Navigation("Childrens");
-
-                            b.Navigation("PipeDiameterWaterSalesSplit");
-
-                            b.Navigation("PipeDiameterWasteSalesSplit");
-
-                            b.Navigation("PipeDiameterWaterSalesSplit");
-
-                            b.Navigation("UserTypeWasteSalesSplit");
-
-                            b.Navigation("UserTypeWaterSalesSplit");
-
-                            b.Navigation("WasteInstallFees");
-
-                            b.Navigation("WaterInstallFees");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.FinanceYear", b =>
-                        {
-                            b.Navigation("BranchFeeAmounts");
-                            b.Navigation("WasteInstallFees");
-
-                            b.Navigation("WasteSalesSplits");
-
-                            b.Navigation("WaterInstallFees");
-
-                            b.Navigation("WaterSalesSplits");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.Identity.Role", b =>
-                        {
-                            b.Navigation("Claims");
-
-                            b.Navigation("Users");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.Identity.User", b =>
-                        {
-                            b.Navigation("Claims");
-
-                            b.Navigation("Logins");
-
-                            b.Navigation("Roles");
-
-                            b.Navigation("UserTokens");
-
-                            b.Navigation("UserUsedPasswords");
-                        });
-
-                    modelBuilder.Entity("Datiss.Budget.Entities.Organization", b =>
-                        {
-                            b.Navigation("BranchFeeAmounts");
-
-                            b.Navigation("Childrens");
-
-                            b.Navigation("Users");
-
-                            b.Navigation("WasteInstallFees");
-
-                            b.Navigation("WasteSalesSplits");
-
-                            b.Navigation("WaterInstallFees");
-
-                            b.Navigation("WaterSalesSplits");
-                        });
-#pragma warning restore 612, 618
+                        .WithMany("BranchFeeAmounts")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
+                        .WithMany("BranchFeeAmounts")
+                        .HasForeignKey("YearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FinanceYear");
+
+                    b.Navigation("Organization");
                 });
-    }
+
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.WasteInstallFee", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Constant", "DWasteType")
+                        .WithMany("WasteInstallFees")
+                        .HasForeignKey("DWasteTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
+                        .WithMany("WasteInstallFees")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
+                        .WithMany("WasteInstallFees")
+                        .HasForeignKey("YearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DWasteType");
+
+                    b.Navigation("FinanceYear");
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.WasteSalesSplit", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
+                        .WithMany("WasteSalesSplits")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Constant", "UserType")
+                        .WithMany("UserTypeWasteSalesSplit")
+                        .HasForeignKey("UserTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Constant", "WsPipeDiameter")
+                        .WithMany("PipeDiameterWasteSalesSplit")
+                        .HasForeignKey("WsPipeDiameterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
+                        .WithMany("WasteSalesSplits")
+                        .HasForeignKey("YearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FinanceYear");
+
+                    b.Navigation("Organization");
+
+                    b.Navigation("UserType");
+
+                    b.Navigation("WsPipeDiameter");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.WaterInstallFee", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Constant", "DWaterType")
+                        .WithMany("WaterInstallFees")
+                        .HasForeignKey("DWaterTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
+                        .WithMany("WaterInstallFees")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
+                        .WithMany("WaterInstallFees")
+                        .HasForeignKey("YearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DWaterType");
+
+                    b.Navigation("FinanceYear");
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.WaterSalesSplit", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
+                        .WithMany("WaterSalesSplits")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Constant", "UserType")
+                        .WithMany("UserTypeWaterSalesSplit")
+                        .HasForeignKey("UserTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Constant", "WPipeDiameter")
+                        .WithMany("PipeDiameterWaterSalesSplit")
+                        .HasForeignKey("WPipeDiameterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
+                        .WithMany("WaterSalesSplits")
+                        .HasForeignKey("YearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FinanceYear");
+
+                    b.Navigation("Organization");
+
+                    b.Navigation("UserType");
+
+                    b.Navigation("WPipeDiameter");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Identity.RoleClaim", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Identity.Role", "Role")
+                        .WithMany("Claims")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Identity.User", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
+                        .WithMany("Users")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Identity.UserClaim", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Identity.User", "User")
+                        .WithMany("Claims")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Identity.UserLogin", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Identity.User", "User")
+                        .WithMany("Logins")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Identity.UserRole", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Identity.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Identity.User", "User")
+                        .WithMany("Roles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Identity.UserToken", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Identity.User", "User")
+                        .WithMany("UserTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Identity.UserUsedPassword", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Identity.User", "User")
+                        .WithMany("UserUsedPasswords")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Organization", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Parent")
+                        .WithMany("Childrens")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Constant", b =>
+                {
+                    b.Navigation("Childrens");
+
+                    b.Navigation("PipeDiameterWasteSalesSplit");
+
+                    b.Navigation("PipeDiameterWaterSalesSplit");
+
+                    b.Navigation("UserTypeWasteSalesSplit");
+
+                    b.Navigation("UserTypeWaterSalesSplit");
+
+                    b.Navigation("WasteInstallFees");
+
+                    b.Navigation("WaterInstallFees");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.FinanceYear", b =>
+                {
+                    b.Navigation("BranchFeeAmounts");
+
+                    b.Navigation("WasteInstallFees");
+
+                    b.Navigation("WasteSalesSplits");
+
+                    b.Navigation("WaterInstallFees");
+
+                    b.Navigation("WaterSalesSplits");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Identity.Role", b =>
+                {
+                    b.Navigation("Claims");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Identity.User", b =>
+                {
+                    b.Navigation("Claims");
+
+                    b.Navigation("Logins");
+
+                    b.Navigation("Roles");
+
+                    b.Navigation("UserTokens");
+
+                    b.Navigation("UserUsedPasswords");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.Organization", b =>
+                {
+                    b.Navigation("BranchFeeAmounts");
+
+                    b.Navigation("Childrens");
+
+                    b.Navigation("Users");
+
+                    b.Navigation("WasteInstallFees");
+
+                    b.Navigation("WasteSalesSplits");
+
+                    b.Navigation("WaterInstallFees");
+
+                    b.Navigation("WaterSalesSplits");
+                });
+#pragma warning restore 612, 618
+        }
     }
 }

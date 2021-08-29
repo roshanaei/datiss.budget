@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210818083346_AddBranchFeeAmount")]
-    partial class AddBranchFeeAmount
+    [Migration("20210829092215_InitDb")]
+    partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -234,6 +234,73 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("WasteInstallFees");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.WasteSalesSplit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("SalesSplitWsYID")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("CreatedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ModifiedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("ModifiedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("NumberSales")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitSales")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WsPipeDiameterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("YearId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("UserTypeId");
+
+                    b.HasIndex("WsPipeDiameterId");
+
+                    b.HasIndex("YearId");
+
+                    b.ToTable("SalesSplitWs_Y");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.WaterInstallFee", b =>
@@ -1155,6 +1222,41 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("Organization");
                 });
 
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.WasteSalesSplit", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
+                        .WithMany("WasteSalesSplits")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Constant", "UserType")
+                        .WithMany("UserTypeWasteSalesSplit")
+                        .HasForeignKey("UserTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Constant", "WsPipeDiameter")
+                        .WithMany("PipeDiameterWasteSalesSplit")
+                        .HasForeignKey("WsPipeDiameterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
+                        .WithMany("WasteSalesSplits")
+                        .HasForeignKey("YearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FinanceYear");
+
+                    b.Navigation("Organization");
+
+                    b.Navigation("UserType");
+
+                    b.Navigation("WsPipeDiameter");
+                });
+
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.WaterInstallFee", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Constant", "DWaterType")
@@ -1185,7 +1287,7 @@ namespace Datiss.Budget.DataLayer.Migrations
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.WaterSalesSplit", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                        .WithMany("SalesSplitW_Ys")
+                        .WithMany("WaterSalesSplits")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1315,7 +1417,11 @@ namespace Datiss.Budget.DataLayer.Migrations
                 {
                     b.Navigation("Childrens");
 
+                    b.Navigation("PipeDiameterWasteSalesSplit");
+
                     b.Navigation("PipeDiameterWaterSalesSplit");
+
+                    b.Navigation("UserTypeWasteSalesSplit");
 
                     b.Navigation("UserTypeWaterSalesSplit");
 
@@ -1329,6 +1435,8 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("BranchFeeAmounts");
 
                     b.Navigation("WasteInstallFees");
+
+                    b.Navigation("WasteSalesSplits");
 
                     b.Navigation("WaterInstallFees");
 
@@ -1361,13 +1469,15 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("Childrens");
 
-                    b.Navigation("SalesSplitW_Ys");
-
                     b.Navigation("Users");
 
                     b.Navigation("WasteInstallFees");
 
+                    b.Navigation("WasteSalesSplits");
+
                     b.Navigation("WaterInstallFees");
+
+                    b.Navigation("WaterSalesSplits");
                 });
 #pragma warning restore 612, 618
         }
