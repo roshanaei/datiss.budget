@@ -19,7 +19,7 @@ namespace Datiss.Budget.ViewModels
         public int DWaterTypeId { get; set; }
 
         [Required(ErrorMessage = "*")]
-        [Range(0, int.MaxValue, ErrorMessage = "Please dorost vared kon")]
+        [Range(0, int.MaxValue, ErrorMessage = "لطفاً مبلغ را بصورت صحیح وارد نمایید.")]
         public int WInstllFee { get; set; }
 
         public IEnumerable<SelectListItem> DWaterTypeSource { get; set; }
