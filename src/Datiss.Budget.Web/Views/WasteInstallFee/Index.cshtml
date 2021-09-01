@@ -1,96 +1,129 @@
 ﻿@model WasteInstallFeeIndexViewModel
-
 @{ ViewData["Title"] = "تعرفه نصب انشعاب فاضلاب"; }
+
+
+
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            @*<i class="ft-settings mr-1"></i>*@
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
+
 <section>
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title my-font">@ViewData["Title"]</h4>
+                <!--Alert-->
+                <div class="alert bg-light-warning alert-dismissible m-2" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                    </button>
+                    <span class="my-font">این یه پیغام جدید است!</span>
                 </div>
                 <div class="card-content">
                     <div class="card-body">
-
-                        <div>
-                            <form method="post" asp-controller="WasteInstallFee" asp-action="Index" asp-antiforgery="true">
-                                <label asp-for="Filter.YearId">Year</label> :
-                                <select id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()"></select>
-
-                                <label asp-for="Filter.OrganizationId">Organizzation:</label>
-                                <select id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()"></select>
-
+                        <!--Filters-->
+                        <form method="post" asp-controller="WasteInstallFee" asp-action="Index" asp-antiforgery="true">
+                            <fieldset class="form-group">
+                                <label asp-for="Filter.YearId" class="my-font">
+                                    سال:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
+                                    سازمان:
+                                    <select class="form-control form-control-sm d-inline-block width-300" id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
                                 <input asp-for="Filter.OrderBy" type="hidden" />
                                 <input asp-for="Filter.OrderDesc" type="hidden" />
-
-                                <button type="submit" name="btnFilter">Filter</button>
-                                <button type="submit" name="btnCreate">Create</button>
-                            </form>
+                            </fieldset>
+                            <fieldset>
+                                <div class="rowACJE">
+                                    <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 mb-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+                                    </button>
+                                    <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success mb-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </form>
+                        <hr />
+                        <!--SearchBox-->
+                        <fieldset class="form-group">
+                            <label for="ngx-filter-ref" class="my-font">
+                                جستجو:
+                                <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
+                            </label>
+                        </fieldset>
+                        <!--DataTable-->
+                        <div class="table-responsive">
+                            <table id="" class=" table table-hover table-bordered m-0 my-font">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>سال</th>
+                                        <th>سازمان</th>
+                                        <th>کاربری</th>
+                                        <th>قیمت</th>
+                                        <th>مدیریت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Model.Items)
+                                    {
+                                        <tr>
+                                            <td>@item.Year.ToString()</td>
+                                            <td>@item.OrganizationDisplay </td>
+                                            <td>@item.DWasteTypeDisplay </td>
+                                            <td>@item.WInstallFee.ToString() </td>
+                                            <td>
+                                                <a asp-controller="WasteInstallFee" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="rowACJSB" style="margin-top:20px">
+                                <!--Tools-->
+                                <div class="rowACJS">
+                                    <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnCreate" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                                    </button>
+                                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="submit" name="btnFilter" class="btn btn-warning bg-light-warning mr-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                                    </button>
+                                    <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="submit" name="btnCreate" class="btn btn-danger  bg-light-danger mr-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+                                    </button>
+                                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="submit" name="btnReport" class="btn btn-info bg-light-info mr-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                                    </button>
+                                </div>
+                                <!--Pagination-->
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item"><a class="page-link" href="javascript:;" aria-label="Previous">«</a></li>
+                                        <li class="page-item"><a class="page-link" href="javascript:;">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="javascript:;">2</a></li>
+                                        <li class="page-item active"><a class="page-link" href="javascript:;">3</a></li>
+                                        <li class="page-item"><a class="page-link" href="javascript:;">4</a></li>
+                                        <li class="page-item"><a class="page-link" href="javascript:;">5</a></li>
+                                        <li class="page-item"><a class="page-link" href="javascript:;" aria-label="Next">»</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
-
-
-                        <div id="WasteInstallFeeTable">
-                        </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-
-
-
-<div>
-    <form method="post" asp-controller="WasteInstallFee" asp-action="Index" asp-antiforgery="true">
-        <label asp-for="Filter.YearId">Year</label> :
-        <select id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()"></select>
-
-        <label asp-for="Filter.OrganizationId">Organizzation:</label>
-        <select id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()"></select>
-
-        <input asp-for="Filter.OrderBy" type="hidden" />
-        <input asp-for="Filter.OrderDesc" type="hidden" />
-
-        <button type="submit" name="btnFilter">Filter</button>
-        <button type="submit" name="btnCreate">Create</button>
-    </form>
-</div>
-
-<div style="padding-top: 50px">
-    <a id="createLink">Create</a>
-</div>
-
-<table>
-    <thead>
-        <tr>
-            <th>Year</th>
-            <th>Organization</th>
-            <th>DWasteType</th>
-            <th>Fee</th>
-            <th>Edit</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Model.Items)
-        {
-            <tr>
-                <td>@item.Year.ToString()</td>
-                <td>@item.OrganizationDisplay </td>
-                <td>@item.DWasteTypeDisplay </td>
-                <td>@item.WInstallFee.ToString() </td>
-                <td>
-                    <a asp-controller="WasteInstallFee" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-    <tfoot>
-        <p>
-            Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
-        </p>
-    </tfoot>
-</table>
 
 @section footSection {
     <script>
@@ -101,7 +134,7 @@
 
             var yearId = document.getElementById('yearId').value;
 
-            var url = 'wasteinstallfee/create'
+            var url = 'waterinstallfee/create'
 
             a.href = url + "/" + organizationId + "/" + yearId;
         }
@@ -109,4 +142,4 @@
         loadCreateLink();
     </script>
 
-} 
+}
