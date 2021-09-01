@@ -35,31 +35,35 @@
                 <div class="card-content">
                     <div class="card-body">
                         <!--Filters-->
-
-
-                        <fieldset class="form-group">
-                            <label asp-for="Filter.YearId" class="my-font">
-                                سال:
-                                <select class="form-control form-control-sm d-inline-block width-100" id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()">
-                                </select>
-                            </label>
-                            <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
-                                سازمان:
-                                <select class="form-control form-control-sm d-inline-block width-300" id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()">
-                                </select>
-                            </label>
-                            <input asp-for="Filter.OrderBy" type="hidden" />
-                            <input asp-for="Filter.OrderDesc" type="hidden" />
-                        </fieldset>
-                        <fieldset>
-                            <div class="rowACJE">
-                                <button type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 mb-1 my-font">فیلتر</button>
-                                <button type="submit" name="btnCreate" class="btn btn-success bg-light-success mb-1 my-font">جدید</button>
-                            </div>
-                        </fieldset>
+                        <form method="post" asp-controller="WasteInstallFee" asp-action="Index" asp-antiforgery="true">
+                            <fieldset class="form-group">
+                                <label asp-for="Filter.YearId" class="my-font">
+                                    سال:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
+                                    سازمان:
+                                    <select class="form-control form-control-sm d-inline-block width-300" id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                <input asp-for="Filter.OrderBy" type="hidden" />
+                                <input asp-for="Filter.OrderDesc" type="hidden" />
+                            </fieldset>
+                            <fieldset>
+                                <div class="rowACJE">
+                                    <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 mb-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+                                    </button>
+                                    <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success mb-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                    </button>
+                                </div>
+                            </fieldset>
+                            </form>
                         <hr />
 
-                        
+
                     </div>
                             <!--SearchBox-->
                             <fieldset class="form-group">
@@ -97,12 +101,16 @@
                                 </table>
                                 <div class="rowACJSB" style="margin-top:20px">
                                     <div class="rowACJS">
-                                        <button type="submit" name="btnCreate" class="btn btn-secondary bg-light-secondary mr-1 my-font"><i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i></button>
-                                        <button type="submit" name="btnFilter" class="btn btn-warning bg-light-warning mr-1 my-font"><i _ngcontent-dpj-c129="" class="fa fa-copy"></i></button>
-                                        <button type="submit" name="btnCreate" class="btn btn-danger  bg-light-danger mr-1 my-font">
+                                        <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnCreate" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                                        </button>
+                                        <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="submit" name="btnFilter" class="btn btn-warning bg-light-warning mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                                        </button>
+                                        <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="submit" name="btnCreate" class="btn btn-danger  bg-light-danger mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
                                         </button>
-                                        <button type="submit" name="btnReport" class="btn btn-info bg-light-info mr-1 my-font">
+                                        <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="submit" name="btnReport" class="btn btn-info bg-light-info mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
                                         </button>
                                     </div>
@@ -171,6 +179,44 @@
                                 </tfoot>
                             </table>
 </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title my-font">@ViewData["Title"]</h4>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+
+                        <div>
+                            <form method="post" asp-controller="WasteInstallFee" asp-action="Index" asp-antiforgery="true">
+                                <label asp-for="Filter.YearId">Year</label> :
+                                <select id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()"></select>
+
+                                <label asp-for="Filter.OrganizationId">Organizzation:</label>
+                                <select id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()"></select>
+
+                                <input asp-for="Filter.OrderBy" type="hidden" />
+                                <input asp-for="Filter.OrderDesc" type="hidden" />
+
+                                <button type="submit" name="btnFilter">Filter</button>
+                                <button type="submit" name="btnCreate">Create</button>
+                            </form>
+                        </div>
+
+
+                        <div id="WasteInstallFeeTable">
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
