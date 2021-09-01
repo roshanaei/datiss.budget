@@ -9173,9 +9173,8 @@ a.close.disabled
 a.bg-primary:hover,
 a.bg-primary:focus,
 button.bg-primary:hover,
-button.bg-primary:focus
-{
-    background-color: #7727ff !important;
+button.bg-primary:focus {
+    background-color: #1871ca !important;
 }
 
 .bg-secondary
