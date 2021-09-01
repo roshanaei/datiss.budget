@@ -52,6 +52,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<BranchFeeAmount> BranchFeeAmounts { get; set; }
 
+        public ICollection<AverageContractedCapacityNHUses> AverageContractedCapacityNHUses { get; set; }
+
         #endregion
     }
 }

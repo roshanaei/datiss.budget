@@ -46,6 +46,8 @@ namespace Datiss.Budget.Entities
         public ICollection<WasteSalesSplit> UserTypeWasteSalesSplit { get; set; }
         public ICollection<WasteSalesSplit> PipeDiameterWasteSalesSplit { get; set; }
 
+        public ICollection<AverageContractedCapacityNHUses> AverageContractedCapacityNHUses { get; set; }
+
         #endregion
     }
 }
