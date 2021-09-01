@@ -196,8 +196,11 @@ namespace Datiss.Budget.DataLayer.Context
         public virtual DbSet<BranchFeeAmount> BranchFeeAmounts { get; set; }
         public virtual DbSet<WasteSalesSplit> WasteSalesSplits { get; set; }
         public virtual DbSet<TablesFiledTitle> TablesFiledTitles { get; set; }
+        public virtual DbSet<AverageContractedCapacityNHUses> AverageContractedCapacityNHUses { get; set; }
 
-        
+
+
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

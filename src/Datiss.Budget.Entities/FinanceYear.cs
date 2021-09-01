@@ -43,6 +43,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<WasteSalesSplit> WasteSalesSplits { get; set; }
 
+        public ICollection<AverageContractedCapacityNHUses> AverageContractedCapacityNHUses { get; set; }
 
         #endregion
     }
