@@ -9,30 +9,26 @@ using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Datiss.Budget.Services.Identity;
-using Datiss.Budget.Services.Contracts.Identity;
 
 namespace Datiss.Budget.Web.Controllers
 {
-    [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+    [Authorize]
     [Route("[controller]")]
     public class BranchFeeAmountController : Controller
     {
         private readonly IBranchFeeAmountService _branchFeeAmountService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
-        private readonly ISecurityTrimmingService _securityTrimmingService;
+
 
         public BranchFeeAmountController(
             IBranchFeeAmountService branchFeeAmountService,
             IOrganizationService organizationService,
-            IFinanceYearService financeYearService,
-            ISecurityTrimmingService securityTrimmingService)
+            IFinanceYearService financeYearService)
         {
             _branchFeeAmountService = branchFeeAmountService ?? throw new ArgumentNullException(nameof(branchFeeAmountService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
-            _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
 
         [HttpGet("[action]")]
@@ -122,8 +118,6 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var access = _securityTrimmingService.CanCurrentUserAccess("", "BranchFeeAmountController", "Index");
-
             var filterInput = new BranchFeeAmountFilter
             {
                 OrderBy = "organization",
