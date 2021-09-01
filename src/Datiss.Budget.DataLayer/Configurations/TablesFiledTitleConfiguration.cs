@@ -9,9 +9,8 @@ namespace Datiss.Budget.DataLayer.Configurations
     {
         public void Configure(EntityTypeBuilder<TablesFiledTitle> builder)
         {
-            builder.ToTable("UserTypeAverageCapacity_Y");
+            builder.ToTable("TablesFiledTitle");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.Id).HasColumnName("UTACY_ID");
 
             builder.Property(x => x.Title)
                 .HasMaxLength(400)
