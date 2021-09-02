@@ -10,6 +10,7 @@ namespace Datiss.Budget.DataLayer.Configurations
         public void Configure(EntityTypeBuilder<TablesFiledTitle> builder)
         {
             builder.ToTable("TablesFiledTitle");
+
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Title)

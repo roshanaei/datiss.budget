@@ -21,10 +21,21 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.UserTypeId).IsRequired();
 
+            builder.HasOne(x => x.FinanceYear)
+                .WithMany(x => x.SalesSplitFunctions)
+                .HasForeignKey(x => x.YearId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.Organization)
+                .WithMany(x => x.SalesSplitFunctions)
+                .HasForeignKey(x => x.OrganizationId)
+                .OnDelete(DeleteBehavior.Restrict);
 
 
-
-
+            builder.HasOne(x => x.UserType)
+                .WithMany(x => x.SalesSplitFunctions)
+                .HasForeignKey(x => x.UserTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
