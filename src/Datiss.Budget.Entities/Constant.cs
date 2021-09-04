@@ -40,11 +40,11 @@ namespace Datiss.Budget.Entities
         
         public ICollection<WasteInstallFee> WasteInstallFees { get; set; }
         
-        public ICollection<WaterSalesSplit> PipeDiameterWaterSalesSplit { get; set; }
+        public ICollection<WaterSalesSplit> WaterPipeDiameterSalessplit { get; set; }
         public ICollection<WaterSalesSplit> UserTypeWaterSalesSplit { get; set; }
 
         public ICollection<WasteSalesSplit> UserTypeWasteSalesSplit { get; set; }
-        public ICollection<WasteSalesSplit> PipeDiameterWasteSalesSplit { get; set; }
+        public ICollection<WasteSalesSplit> WastepipeDiameterSalesSplit { get; set; }
 
         public ICollection<AverageContractedCapacityNHUses> AverageContractedCapacityNHUses { get; set; }
 
