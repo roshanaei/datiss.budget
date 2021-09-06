@@ -14,6 +14,9 @@ using Datiss.Budget.Services.Models;
 using Datiss.Budget.Resources;
 using Microsoft.AspNetCore.Http;
 using Datiss.Budget.Services.Excel;
+using Mapster;
+using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Common.Exceptions;
 
 namespace Datiss.Budget.Services
 {
@@ -21,14 +24,19 @@ namespace Datiss.Budget.Services
     {
         private readonly IUnitOfWork _uow;
         private readonly IExcelService _excelService;
+        private readonly IUserService _userService;
         
         private DbSet<WaterInstallFee> _dbSet;
 
-        public WaterInstallFeeService(IUnitOfWork uow, IExcelService excelService)
+        public WaterInstallFeeService(
+            IUnitOfWork uow, 
+            IExcelService excelService,
+            IUserService userService)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<WaterInstallFee>();
             _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
 
         private IQueryable<WaterInstallFee> Query()
@@ -188,10 +196,27 @@ namespace Datiss.Budget.Services
         }
 
 
-        public Task ImportExcelAsync(IFormFile fileInfo) {
-            fileInfo.CheckArgumentIsNull(nameof(fileInfo));
+        public async Task ImportExcelAsync(IFormFile fileInfo) {
+            var data = await _excelService.ImportAsync<WaterInstallFeeImportModel>(fileInfo);
+            
+            var records = data.Adapt<List<WaterInstallFee>>();
 
-            var data = await _
+            int rowIndex = 1;
+            
+            foreach(var record in records) {
+
+                if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
+                    throw new UserOrganizationAccessException(rowIndex);
+
+                if (!await checkLogicAsync(
+                    record.YearId,
+                    record.OrganizationId,
+                    record.DWaterTypeId))
+                    throw new ImportExcelFileException(rowIndex);
+            }
+
+            await _dbSet.AddRangeAsync(records);
+            await _uow.SaveChangesAsync();
         }
 
 
