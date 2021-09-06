@@ -7,5 +7,10 @@
     { }
 
     public class ImportExcelFileException : BaseAppException
-    { }
+    {
+        public int ExcelRowIndex { get; private set; }
+
+        public ImportExcelFileException(int excelRowIndex)
+            => ExcelRowIndex = excelRowIndex;
+    }
 }
