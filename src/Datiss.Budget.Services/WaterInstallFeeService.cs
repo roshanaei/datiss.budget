@@ -12,19 +12,23 @@ using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.Resources;
+using Microsoft.AspNetCore.Http;
+using Datiss.Budget.Services.Excel;
 
 namespace Datiss.Budget.Services
 {
     public class WaterInstallFeeService : IWaterInstallFeeService
     {
         private readonly IUnitOfWork _uow;
+        private readonly IExcelService _excelService;
         
         private DbSet<WaterInstallFee> _dbSet;
 
-        public WaterInstallFeeService(IUnitOfWork uow)
+        public WaterInstallFeeService(IUnitOfWork uow, IExcelService excelService)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<WaterInstallFee>();
+            _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
         }
 
         private IQueryable<WaterInstallFee> Query()
@@ -182,6 +186,14 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.Id);
             }
         }
+
+
+        public Task ImportExcelAsync(IFormFile fileInfo) {
+            fileInfo.CheckArgumentIsNull(nameof(fileInfo));
+
+            var data = await _
+        }
+
 
         #region Logics
 
