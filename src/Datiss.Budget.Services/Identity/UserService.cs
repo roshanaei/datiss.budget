@@ -24,7 +24,7 @@ namespace Datiss.Budget.Services.Identity
 
         public UserService(
             IUnitOfWork uow, 
-            UserContext userContext,
+            IUserContext userContext,
             IOrganizationService organizationService) {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));

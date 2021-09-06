@@ -10,6 +10,8 @@
     {
         public int ExcelRowIndex { get; private set; }
 
+        public ImportExcelFileException(): base() { }
+
         public ImportExcelFileException(int excelRowIndex)
             => ExcelRowIndex = excelRowIndex;
     }
