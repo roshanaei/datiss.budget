@@ -213,6 +213,8 @@ namespace Datiss.Budget.Services
                     record.OrganizationId,
                     record.DWaterTypeId))
                     throw new ImportExcelFileException(rowIndex);
+
+                rowIndex++;
             }
 
             await _dbSet.AddRangeAsync(records);

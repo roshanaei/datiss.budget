@@ -1,12 +1,9 @@
 ﻿using Datiss.Budget.Services;
 using Datiss.Budget.Services.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Services.Identity;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -19,6 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
             
             services.AddScoped<IUserContext, UserContext>();
 
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IConstantService, ConstantService>();
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IFinanceYearService, FinanceYearService>();

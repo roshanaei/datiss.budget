@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 using Datiss.Budget.ViewModels;
 using Datiss.Budget.Services.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -18,6 +19,8 @@ namespace Datiss.Budget.ViewModels
         public PagedResult<WaterInstallFeeViewModel> Model { get; set; }
 
         public WaterInstallFeeFilterViewModel Filter { get; set; }
+
+        public IFormFile ExcelFile { get; set; }
 
         public void SetOrganizationFilterSource(IEnumerable<DropDownItem> source) {
             Filter.OrganizationSource = source.Select(x => new SelectListItem {
