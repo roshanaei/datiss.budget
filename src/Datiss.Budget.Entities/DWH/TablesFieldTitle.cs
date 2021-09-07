@@ -8,7 +8,10 @@ namespace Datiss.Budget.Entities.DWH
 {
     public class TablesFiledTitle : IAuditableEntity
     {
-        public TablesFiledTitle() { }
+        public TablesFiledTitle() 
+        {
+            Childrens = new HashSet<TablesFiledTitle>();
+        }
 
         #region Properties
         public int Id { get; set; }
