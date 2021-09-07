@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ganss.Excel;
 
-namespace Datiss.Budget.Services.Excel.Models
+namespace Datiss.Budget.Services.Excel
 {
     public class WaterInstallFeeImportModel
     {

@@ -91,18 +91,22 @@
                             <div class="rowACJSB" style="margin-top:20px">
                                 <!--Tools-->
                                 <div class="rowACJS">
-                                    <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnCreate" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
-                                    </button>
-                                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="submit" name="btnFilter" class="btn btn-warning bg-light-warning mr-1 my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
-                                    </button>
-                                    <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="submit" name="btnCreate" class="btn btn-danger  bg-light-danger mr-1 my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
-                                    </button>
-                                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="submit" name="btnReport" class="btn btn-info bg-light-info mr-1 my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                                    </button>
+                                    <form asp-controller="WaterInstallFee" asp-action="Actions" method="post" asp-antiforgery="true">
+                                        <input name="importExcelFile" type="file" />
+                                        <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnExcelImport" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                                        </button>
+                                        <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="submit" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                                        </button>
+                                        <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="submit" name="btnDelete" class="btn btn-danger  bg-light-danger mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+                                        </button>
+                                        <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="submit" name="btnReport" class="btn btn-info bg-light-info mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                                        </button>
+                                    </form>
+                                    
                                 </div>
                                 <!--Pagination-->
                                 @*<p>

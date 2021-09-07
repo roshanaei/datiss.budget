@@ -11,6 +11,7 @@ using Datiss.Budget.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Datiss.Budget.Services.Identity;
 using Datiss.Budget.Services.Contracts.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -151,17 +152,16 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(WaterInstallFeeFilterViewModel model) 
-        {
-            if(Request.Form["btnFilter"].Count() > 0) {
+        public async Task<IActionResult> Index(WaterInstallFeeFilterViewModel model) {
+            if (Request.Form["btnFilter"].Count() > 0) {
                 var filterInput = model.Adapt<WaterInstallFeeFilter>();
 
                 var result = await _waterInstallFeeService.GetListAsync(filterInput);
 
                 return View(result);
             }
-            
-            if(Request.Form["btnCreate"].Count() > 0) {
+
+            if (Request.Form["btnCreate"].Count() > 0) {
                 int yearId = int.Parse(Request.Form["Filter.YearId"].ToString());
                 int orgId = int.Parse(Request.Form["Filter.OrganizationId"].ToString());
 
@@ -169,6 +169,22 @@ namespace Datiss.Budget.Web.Controllers
                     organizationId = orgId,
                     yearId = yearId
                 });
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost("[action]")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Actions(IFormCollection form) {
+
+            if(Request.Form["btnExcelImport"].Count > 0) {
+                //var file = Request.Form["importExcelFile"].FirstOrDefault();
+
+                var file = form.Files[0];
+
+                await _waterInstallFeeService.ImportExcelAsync(file);
+
             }
 
             return RedirectToAction("Index");
