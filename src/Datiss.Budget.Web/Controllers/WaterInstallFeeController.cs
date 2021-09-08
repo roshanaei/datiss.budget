@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Datiss.Budget.Services.Identity;
 using Datiss.Budget.Services.Contracts.Identity;
 using Microsoft.AspNetCore.Http;
+using Datiss.Budget.Common.Exceptions;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -19,7 +22,7 @@ namespace Datiss.Budget.Web.Controllers
     [Route("[controller]")]
     public class WaterInstallFeeController : Controller
     {
-
+        private readonly IWebHostEnvironment _env;
         private readonly IWaterInstallFeeService _waterInstallFeeService;
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
@@ -27,12 +30,14 @@ namespace Datiss.Budget.Web.Controllers
         private readonly ISecurityTrimmingService _securityTrimmingService;
 
         public WaterInstallFeeController(
+            IWebHostEnvironment environment,
             IWaterInstallFeeService waterInstallFeeService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             IConstantService constantService,
             ISecurityTrimmingService securityTrimmingService) 
         {
+            _env = environment ?? throw new ArgumentNullException(nameof(environment));
             _waterInstallFeeService = waterInstallFeeService ?? throw new ArgumentNullException(nameof(waterInstallFeeService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
@@ -137,7 +142,8 @@ namespace Datiss.Budget.Web.Controllers
 
             var filterInput = new WaterInstallFeeFilter {
                 OrderBy = "dwatertype",
-                PageNumber = page
+                PageNumber = page,
+                PageSize = 2
             };
 
             var result = await _waterInstallFeeService.GetListAsync(filterInput);
@@ -150,15 +156,19 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(WaterInstallFeeFilterViewModel model) {
+        public async Task<IActionResult> Index(WaterInstallFeeIndexViewModel viewModel, int page = 1) {
             if (Request.Form["btnFilter"].Count() > 0) {
-                var filterInput = model.Adapt<WaterInstallFeeFilter>();
+                var filterInput = viewModel.Filter.Adapt<WaterInstallFeeFilter>();
 
                 var result = await _waterInstallFeeService.GetListAsync(filterInput);
 
-                return View(result);
+                viewModel.SetFinanceYearFilterSource(await _financeYearService.GetDropDownDataAsync());
+                viewModel.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync(null));
+                viewModel.Model = result;
+
+                return View(viewModel);
             }
 
             if (Request.Form["btnCreate"].Count() > 0) {
@@ -179,15 +189,41 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Actions(IFormCollection form) {
 
             if(Request.Form["btnExcelImport"].Count > 0) {
-                //var file = Request.Form["importExcelFile"].FirstOrDefault();
+                //var file = Request.Form["importExcelFile"].FirstOrDefault();\
 
                 var file = form.Files[0];
-
-                await _waterInstallFeeService.ImportExcelAsync(file);
-
+                try {
+                    await _waterInstallFeeService.ImportExcelAsync(file);
+                }
+                catch(ImportExcelFileFormatInvalidException ex) {
+                    ViewData["import_error"] = "فرمت فایل اکسل نمی باشد.";
+                }
+                catch(ImportExcelFileSizeInvalidException ex) {
+                    ViewData["import_error"] = "سایز فایل بیش از حد مجاز است.";
+                }
+                catch(ImportExcelFileException ex) {
+                    ViewData["import_error"] = $"رکورد سطر {ex.ExcelRowIndex} از قبل وجود دارد.";
+                }
             }
 
             return RedirectToAction("Index");
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> DownloadExcelTemplate() {
+            var filePath = $"{_env.WebRootPath}\\Excel\\WaterInstallFeeImport.xlsx";
+
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return File(
+                stream, 
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", 
+                "WaterInstallFee.xlsx");
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ExportExcel(WaterInstallFeeIndexViewModel viewModel) {
+            
+
         }
     }
 }

@@ -17,6 +17,7 @@ using Datiss.Budget.Services.Excel;
 using Mapster;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Common.Exceptions;
+using System.IO;
 
 namespace Datiss.Budget.Services
 {
@@ -105,16 +106,7 @@ namespace Datiss.Budget.Services
 
         }
 
-        public async Task<PagedResult<WaterInstallFeeViewModel>> GetListAsync(WaterInstallFeeFilter filter) 
-        {
-            filter.CheckArgumentIsNull(nameof(filter));
-            var result = new PagedResult<WaterInstallFeeViewModel> {
-                PageSize = filter.PageSize,
-                PageNumber = filter.PageNumber
-            };
-
-            var query = Query();
-
+        private IQueryable<WaterInstallFee> setFilter(IQueryable<WaterInstallFee> query, WaterInstallFeeFilter filter) {
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
 
@@ -124,8 +116,8 @@ namespace Datiss.Budget.Services
             if (filter.DWaterTypeId.HasValue)
                 query = query.Where(x => x.DWaterTypeId == filter.DWaterTypeId.Value);
 
-            if(filter.WInstallFee.HasValue) {
-                switch(filter.FeeMode) {
+            if (filter.WInstallFee.HasValue) {
+                switch (filter.FeeMode) {
                     case InstallFeeFilterMode.Exact:
                         query = query.Where(x => x.WInstllFee == filter.WInstallFee.Value);
                         break;
@@ -137,6 +129,21 @@ namespace Datiss.Budget.Services
                         break;
                 }
             }
+
+            return query;
+        }
+
+        public async Task<PagedResult<WaterInstallFeeViewModel>> GetListAsync(WaterInstallFeeFilter filter) 
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+            var result = new PagedResult<WaterInstallFeeViewModel> {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
+
+            var query = Query();
+
+            query = setFilter(query, filter);
 
             result.TotalCount = await query.CountAsync();
 
@@ -219,6 +226,36 @@ namespace Datiss.Budget.Services
 
             await _dbSet.AddRangeAsync(records);
             await _uow.SaveChangesAsync();
+        }
+
+
+        public async Task<Stream> ExportExcelAsync(WaterInstallFeeFilter filter, Stream stream) {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.DWaterType)
+                                    .Select(x => new WaterInstallFeeViewModel {
+                                        Id = x.Id,
+                                        DWaterTypeDisplay = x.DWaterType.Title,
+                                        DWaterTypeId = x.DWaterTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        WInstallFee = x.WInstllFee,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
+                                    }).ToListAsync();
+
+            _excelService.Export(items, stream);
+
+            return stream;
         }
 
 

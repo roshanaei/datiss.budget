@@ -58,10 +58,10 @@ namespace Datiss.Budget.Services.Identity
         /// </summary>
         public void Initialize()
         {
-            _scopeFactory.RunScopedService<ApplicationDbContext>(context =>
-                {
-                    context.Database.Migrate();
-                });
+            //_scopeFactory.RunScopedService<ApplicationDbContext>(context =>
+            //    {
+            //        context.Database.Migrate();
+            //    });
         }
 
         /// <summary>
