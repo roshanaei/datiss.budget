@@ -23,6 +23,14 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.WPipeDiameterId).IsRequired();
 
+            builder.Property(x => x.NumberSales).IsRequired();
+
+            builder.Property(x => x.UnitSales).IsRequired();
+            
+            builder.Property(x => x.AverageCapacity)
+                    .IsRequired()
+                    .HasColumnType("decimal(18,6)");
+
 
             builder.HasOne(x => x.FinanceYear)
                     .WithMany(x => x.WaterSalesSplits)
@@ -40,7 +48,7 @@ namespace Datiss.Budget.DataLayer.Mappings
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.WPipeDiameter)
-                    .WithMany(x => x.PipeDiameterWaterSalesSplit)
+                    .WithMany(x => x.WaterPipeDiameterSalessplit)
                     .HasForeignKey(x => x.WPipeDiameterId)
                     .OnDelete(DeleteBehavior.Restrict);
         }
