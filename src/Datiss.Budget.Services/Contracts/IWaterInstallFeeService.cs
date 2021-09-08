@@ -5,6 +5,7 @@ using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
 using Datiss.Budget.Entities.DWH;
 using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Datiss.Budget.Services.Contracts
 {
@@ -19,6 +20,8 @@ namespace Datiss.Budget.Services.Contracts
         Task HardDeleteAsync(int Id);
 
         Task<PagedResult<WaterInstallFeeViewModel>> GetListAsync(WaterInstallFeeFilter filter);
+
+        Task<Stream> ExportExcelAsync(WaterInstallFeeFilter filter, Stream stream);
 
         Task ImportExcelAsync(IFormFile fileInfo);
     }
