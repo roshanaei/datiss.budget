@@ -9,9 +9,19 @@ namespace Datiss.Budget.DataLayer.Mappings
     {
         public void Configure(EntityTypeBuilder<WasteInstallFee> builder)
         {
+            builder.ToTable("WasteInstallFees");
+
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id).HasColumnName("WasteInstallFeeId");
+
+            builder.Property(x => x.YearId).IsRequired();
+
+            builder.Property(x => x.OrganizationId).IsRequired();
+
+            builder.Property(x => x.DWasteTypeId).IsRequired();
+
+            builder.Property(x => x.WsInstllFee).IsRequired();
 
             builder.HasOne(x => x.FinanceYear)
                 .WithMany(x => x.WasteInstallFees)
@@ -28,7 +38,7 @@ namespace Datiss.Budget.DataLayer.Mappings
                 .HasForeignKey(x => x.DWasteTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.ToTable("WasteInstallFees");
+          
         }
     }
 

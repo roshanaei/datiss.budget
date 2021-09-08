@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210902063832_AddSalesSplitFunction")]
+    partial class AddSalesSplitFunction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -428,7 +430,7 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<int>("OrganizationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("WsInstllFee")
+                    b.Property<int>("WInstllFee")
                         .HasColumnType("int");
 
                     b.Property<int>("YearId")
@@ -452,9 +454,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .HasColumnType("int")
                         .HasColumnName("SalesSplitWsYID")
                         .UseIdentityColumn();
-
-                    b.Property<decimal>("AverageCapacity")
-                        .HasColumnType("decimal(18,6)");
 
                     b.Property<string>("CreatedByBrowserName")
                         .HasMaxLength(1000)
@@ -581,9 +580,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .HasColumnType("int")
                         .HasColumnName("SalesSplitWYID")
                         .UseIdentityColumn();
-
-                    b.Property<decimal>("AverageCapacity")
-                        .HasColumnType("decimal(18,6)");
 
                     b.Property<string>("CreatedByBrowserName")
                         .HasMaxLength(1000)
@@ -1516,7 +1512,7 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .IsRequired();
 
                     b.HasOne("Datiss.Budget.Entities.Constant", "WsPipeDiameter")
-                        .WithMany("WastepipeDiameterSalesSplit")
+                        .WithMany("PipeDiameterWasteSalesSplit")
                         .HasForeignKey("WsPipeDiameterId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1578,7 +1574,7 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .IsRequired();
 
                     b.HasOne("Datiss.Budget.Entities.Constant", "WPipeDiameter")
-                        .WithMany("WaterPipeDiameterSalessplit")
+                        .WithMany("PipeDiameterWaterSalesSplit")
                         .HasForeignKey("WPipeDiameterId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -1698,6 +1694,10 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("Childrens");
 
+                    b.Navigation("PipeDiameterWasteSalesSplit");
+
+                    b.Navigation("PipeDiameterWaterSalesSplit");
+
                     b.Navigation("SalesSplitFunctions");
 
                     b.Navigation("UserTypeWasteSalesSplit");
@@ -1706,11 +1706,7 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("WasteInstallFees");
 
-                    b.Navigation("WastepipeDiameterSalesSplit");
-
                     b.Navigation("WaterInstallFees");
-
-                    b.Navigation("WaterPipeDiameterSalessplit");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.TablesFiledTitle", b =>

@@ -43,7 +43,7 @@ namespace Datiss.Budget.Services
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
                 DWasteTypeId = model.DWasteTypeId,
-                WInstllFee = model.WInstllFee
+                WsInstllFee = model.WInstllFee
             };
 
             if(await checkLogicAsync(model.YearId, model.OrganizationId, model.DWasteTypeId)) {
@@ -68,7 +68,7 @@ namespace Datiss.Budget.Services
                 entity.OrganizationId = model.OrganizationId;
                 entity.YearId = model.YearId;
                 entity.DWasteTypeId = model.DWasteTypeId;
-                entity.WInstllFee = model.WInstllFee;
+                entity.WsInstllFee = model.WInstllFee;
 
                 await _uow.SaveChangesAsync();
 
@@ -112,13 +112,13 @@ namespace Datiss.Budget.Services
             if(filter.WInstallFee.HasValue) {
                 switch(filter.FeeMode) {
                     case InstallFeeFilterMode.Exact:
-                        query = query.Where(x => x.WInstllFee == filter.WInstallFee.Value);
+                        query = query.Where(x => x.WsInstllFee == filter.WInstallFee.Value);
                         break;
                     case InstallFeeFilterMode.GreaterThan:
-                        query = query.Where(x => x.WInstllFee >= filter.WInstallFee.Value);
+                        query = query.Where(x => x.WsInstllFee >= filter.WInstallFee.Value);
                         break;
                     case InstallFeeFilterMode.LessThan:
-                        query = query.Where(x => x.WInstllFee <= filter.WInstallFee.Value);
+                        query = query.Where(x => x.WsInstllFee <= filter.WInstallFee.Value);
                         break;
                 }
             }
@@ -141,7 +141,7 @@ namespace Datiss.Budget.Services
                                         DWasteTypeId = x.DWasteTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        WInstallFee = x.WInstllFee,
+                                        WInstallFee = x.WsInstllFee,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();

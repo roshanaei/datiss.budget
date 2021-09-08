@@ -22,6 +22,8 @@ namespace Datiss.Budget.Entities.DWH
         
         public int UnitSales { get; set; }
 
+        public decimal AverageCapacity { get; set; }
+
         #endregion
 
         #region Navigation
