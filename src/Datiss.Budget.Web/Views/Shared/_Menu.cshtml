@@ -13,51 +13,358 @@
     <!-- Sidebar Header Ends-->
     <!-- / main menu header-->
     <!-- main menu content-->
-    <div class="sidebar-content main-menu-content">
-        <div class="nav-container">
-            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-            </ul>
+    <div class="app-sidebar menu-fixed" data-background-color="purple-bliss" data-image="~/assets/img/sidebar-bg/01.jpg" data-scroll-to-active="true">
+        <!-- main menu header-->
+        <!-- Sidebar Header starts-->
+        <div class="sidebar-header">
+            <div class="logo clearfix">
+                <a class="logo-text float-left">
+                    <div class="logo-img"><img src="~/images/logo/DATISS.png" alt="" height="30"></div>
+                    <span class="text my-font-bold">سیستم بودجه</span>
+                </a>
+                <a class="nav-toggle d-none d-lg-none d-xl-block" id="sidebarToggle" href="javascript:;">
+                    <i class="toggle-icon ft-toggle-right" data-toggle="expanded"></i>
+                </a>
+                <a class="nav-close d-block d-lg-block d-xl-none" id="sidebarClose" href="@Url.Action("Index", "Home", values: new { area = AreaConstants.IdentityArea }, protocol: this.Context.Request.Scheme)" @*href="/"*@>
+                    <i class="ft-x"></i>
+                </a>
+            </div>
         </div>
-    </div>
-    <!-- main menu content-->
-    <!-- main menu content-->
-    <div class="sidebar-content main-menu-content">
-        <div class="nav-container">
-            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+        <!-- Sidebar Header Ends-->
+        <!-- main menu content-->
+        <div class="sidebar-content main-menu-content">
+            <div class="nav-container">
+                <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+                    <!-- مدیریت  سامانه-->
+                    <li class="has-sub nav-item ">
+                        <a class="CollapseBase" href="#">
+                            <div>
+                                <i class="ft-help-circle"></i>
+                                <span data-i18n="" class="menu-title">مدیریت سامانه</span>
+                            </div>
+                        </a>
+                        <ul class="menu-content" id="CollapseBase" parent="CollapseBase">
+                            <li class="nav-item">
+                                <a href="#">
+                                    <i class="ft-refresh-cw"></i>
+                                    <span data-i18n="سال" class="menu-title my-font"> سال </span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#">
+                                    <i class="ft-refresh-cw"></i>
+                                    <span data-i18n="سازمان" class="menu-title my-font"> سازمان </span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#">
+                                    <i class="ft-refresh-cw"></i>
+                                    <span data-i18n="ثابت ها" class="menu-title my-font"> ثابت ها </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- مدیریت کاربران-->
+                    <li class="has-sub nav-item">
+                        <a class="CollapseAccount" href="#">
+                            <div>
+                                <i class="ft-users"></i>
+                                <span data-i18n="مدیریت کاربران" class="menu-title">مدیریت کاربران</span>
+                            </div>
+                        </a>
+                        <ul class="menu-content" id="CollapseAccount" parent="CollapseAccount">
 
+                            <li class="">
+                                <a class="menu-item" asp-area="" asp-controller="" asp-action="">
+                                    <i class="ft-arrow-right submenu-icon"></i>
+                                    <span class="menu-item" data-i18n="کاربران"> کاربران</span>
+                                </a>
+                            </li>
 
+                            <li class="">
+                                <a class="menu-item" asp-area="" asp-controller="" asp-action="">
+                                    <i class="ft-arrow-right submenu-icon"></i>
+                                    <span class="menu-item" data-i18n="دسترسی ها">دسترسی ها</span>
+                                </a>
+                            </li>
 
-                <li class=" nav-item">
-                    <a href="~/help.pdf" target="_blank"><i class="ft-help-circle"></i><span data-i18n="راهنمای سامانه" class="menu-title my-font">راهنمای سامانه</span></a>
-                </li>
+                        </ul>
+                    </li>
+                    <!--  پیش بینی بودجه-->
+                    <li class="has-sub nav-item">
+                        <a class="CollapseForcastManagment" href="#">
+                            <div>
+                                <i class="icon-note"></i>
+                                <span data-i18n="" class="menu-title">پیش بینی بودجه</span>
+                            </div>
+                        </a>
+                        <!--درآمد سرمایه ای-->
+                        <ul class="has-sub" id="CapitalIncome" parent="CollapseForcastManagment">
+                            <li class="has-sub">
+                                <a href="#">
+                                    <i class="icon-target"></i>
+                                    <span data-i18n="درآمد سرمایه ای" class="menu-title my-font">درآمد سرمایه ای</span>
+                                </a>
+                                <ul class="menu-content" id="CapitalIncome" parent="CollapseForcastManagment">
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="BranchFeeAmount" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="مبلغ حق انشعاب" class="menu-item my-font-light">مبلغ حق انشعاب</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="WaterInstallFee" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="تعرفه نصب انشعاب آب" class="menu-item my-font-light"> تعرفه نصب انشعاب آب </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="WasteInstallFee" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="تعرفه نصب انشعاب فاضلاب" class="menu-item my-font-light"> تعرفه نصب انشعاب فاضلاب </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="WaterSalesSplit" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n=" فروش انشعاب آب" class="menu-item my-font-light"> فروش انشعاب آب </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="WasteSalesSplit" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n=" فروش انشعاب فاضلاب" class="menu-item my-font-light"> فروش انشعاب فاضلاب </span>
+                                        </a>
+                                    </li>
+                                    <li asp-area="" asp-controller="" asp-action="Index">
+                                        <a href="#">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی درآمدهای سرمایه ای آب" class="menu-item my-font-light">پیش بینی درآمدهای سرمایه ای آب </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی درآمدهای سرمایه ای فاضلاب" class="menu-item my-font-light">پیش بینی درآمدهای سرمایه ای فاضلاب </span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی سایر درآمدهای سرمایه ای آب و فاضلاب" class="menu-item my-font-light">پیش بینی سایر درآمدهای سرمایه ای آب و فاضلاب</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!--درآمد سرمایه ای-->
+                        <!--هزینه سرمایه ای-->
+                        <ul class="has-sub" id="CapitalCost" parent="CollapseForcastManagment">
+                            <li class="has-sub">
+                                <a asp-area="" asp-controller="" asp-action="Index">
+                                    <i class="icon-target"></i>
+                                    <span data-i18n="درآمد جاری" class="menu-title my-font">درآمد جاری</span>
+                                </a>
+                                <ul class="menu-content" id="CapitalCost" parent="CollapseForcastManagment">
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی حجم مصرف آب" class="menu-item my-font-light">پیش بینی حجم مصرف آب</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی حجم دفع فاضلاب" class="menu-item my-font-light">پیش بینی حجم دفع فاضلاب</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی درآمد آب بها" class="menu-item my-font-light">پیش بینی درآمد آب بها</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی درآمد فاضلاب بها" class="menu-item my-font-light">پیش بینی درآمد فاضلاب بها</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی سایر درآمدهای جاری" class="menu-item my-font-light">پیش بینی سایر درآمدهای جاری</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!--  درآمد جاری-->
+                        <!--هزینه سرمایه ای -->
+                        <ul class="has-sub" id="CurrentIncome" parent="CollapseForcastManagment">
+                            <li class="has-sub">
+                                <a asp-area="" asp-controller="" asp-action="Index">
+                                    <i class="icon-target"></i>
+                                    <span data-i18n="هزینه سرمایه ای" class="menu-title my-font">هزینه سرمایه ای</span>
+                                </a>
+                                <ul class="menu-content" id="CurrentIncome" parent="CollapseForcastManagment">
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی خریدهای سرمایه ای" class="menu-item my-font-light">پیش بینی خریدهای سرمایه ای</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی اصلاح و توسعه شبکه آب" class="menu-item my-font-light">پیش بینی اصلاح و توسعه شبکه آب</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی اصلاح و توسعه شبکه فاضلاب" class="menu-item my-font-light">پیش بینی اصلاح و توسعه شبکه فاضلاب</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی اهداف عمرانی آب" class="menu-item my-font-light">پیش بینی اهداف عمرانی آب</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی اهداف عمرانی فاضلاب" class="menu-item my-font-light">پیش بینی اهداف عمرانی فاضلاب</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!--هزینه سرمایه ای -->
+                        <!--هزینه جاری-->
 
-                <!-- مدیریت نرم افزار-->
+                        <ul class="has-sub" id="CurrentCost" parent="CollapseForcastManagment">
+                            <li class="has-sub">
+                                <a asp-area="" asp-controller="" asp-action="Index">
+                                    <i class="icon-target"></i>
+                                    <span data-i18n="هزینه جاری" class="menu-title my-font"> هزینه جاری </span>
+                                </a>
+                                <ul class="menu-content" id="CurrentCost" parent="CollapseForcastManagment">
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی حجم تولید آب" class="menu-item my-font-light">پیش بینی حجم تولید آب</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی مواد مصرفی تولید آب" class="menu-item my-font-light">پیش بینی مواد مصرفی تولید آب</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی مواد مصرفی تولید فاضلاب" class="menu-item my-font-light">پیش بینی مواد مصرفی تولید فاضلاب</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی هزینه استهلاک و تعمیر و نگهداری" class="menu-item my-font-light">پیش بینی هزینه استهلاک و تعمیر و نگهداری</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی سایر هزینه ها" class="menu-item my-font-light">پیش بینی سایر هزینه ها</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی هزینه کارمزد بانکی" class="menu-item my-font-light">پیش بینی هزینه کارمزد بانکی</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی هزینه خرید آب خام و حق النظاره" class="menu-item my-font-light">پیش بینی هزینه خرید آب خام و حق النظاره</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی هزینه خدمات قراردادی" class="menu-item my-font-light">پیش بینی هزینه خدمات قراردادی</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی هزینه برق مصرفی" class="menu-item my-font-light">پیش بینی هزینه برق مصرفی</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <i class="ft-arrow-right submenu-icon"></i>
+                                            <span data-i18n="پیش بینی حقوق و دستمزد" class="menu-item my-font-light">پیش بینی حقوق و دستمزد</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <!--هزینه جاری-->
 
-                <li class="nav-item AppConfigCollapse"><a href="#"><span data-i18n="مدیریت نرم افزار" class="menu-title my-font">مدیریت نرم افزار</span></a></li>
-
-                <!-- تنظیمات نرم افزار-->
-                <!--<li class="has-sub nav-item">
-                    <a href="#"><i class="ft-refresh-cw"></i><span data-i18n="تنظیمات نرم افزار" class="menu-title my-font">تنظیمات نرم افزار</span></a>
-                    <ul class="menu-content" id="AppLogCollapse" parent="AppConfigCollapse">
-                        <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString()=="SystemLog" ? "active" : "")">
-                            <a class="menu-item" asp-area="@AreaConstants.IdentityArea" asp-controller="SystemLog" asp-action="Index">
-                                <i class="ft-arrow-right submenu-icon"></i><span class="menu-item" data-i18n="گزارش رخ‌ دادهای سیستم">
-                                    گزارش رخ‌ دادهای سیستم
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>-->
-
-
-            </ul>
+                    </li>
+                    <!-- کنترل بودجه-->
+                    <li class="nav-item">
+                        <a asp-area="" asp-controller="" asp-action="Index">
+                            <i class="ft-refresh-cw"></i>
+                            <span data-i18n="کنترل بودجه" class="menu-title my-font"> کنترل بودجه </span>
+                        </a>
+                    </li>
+                    <!--  ارزیابی بودجه-->
+                    <li class="nav-item">
+                        <a asp-area="" asp-controller="" asp-action="Index">
+                            <i class="ft-refresh-cw"></i>
+                            <span data-i18n="ارزیابی بودجه" class="menu-title my-font"> ارزیابی بودجه </span>
+                        </a>
+                    </li>
+                    <!--  گزارش-->
+                    <li class="nav-item">
+                        <a href="#">
+                            <i class="ft-refresh-cw"></i>
+                            <span data-i18n="گزارش" class="menu-title my-font"> گزارش </span>
+                        </a>
+                    </li>
+                    <!-- تنظیمات نرم افزار-->
+                    <li class="has-sub nav-item">
+                        <a href="#">
+                            <i class="ft-refresh-cw"></i>
+                            <span data-i18n="تنظیمات نرم افزار" class="menu-title my-font">تنظیمات نرم افزار</span>
+                        </a>
+                        <ul class="menu-content" id="AppLogCollapse" parent="AppConfigCollapse">
+                            <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString()=="SystemLog" ? "active" : "")">
+                                <a class="menu-item" asp-area="@AreaConstants.IdentityArea" asp-controller="SystemLog" asp-action="Index">
+                                    <i class="ft-arrow-right submenu-icon"></i><span class="menu-item" data-i18n="گزارش رخ‌ دادهای سیستم">
+                                        گزارش رخ‌ دادهای سیستم
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
+        <!-- main menu content-->
+        <!-- / main menu header-->
+
+        <div class="sidebar-background"></div>
+        <!-- main menu footer-->
+        <!-- include includes/menu-footer-->
+        <!-- main menu footer-->
     </div>
-    <!-- main menu content-->
-    <div class="sidebar-background"></div>
-    <!-- main menu footer-->
-    <!-- include includes/menu-footer-->
-    <!-- main menu footer-->
 </div>
 
 <!-- / main menu-->
