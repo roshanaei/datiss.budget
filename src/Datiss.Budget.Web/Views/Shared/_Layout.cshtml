@@ -104,11 +104,99 @@
 
 
     <--!Modals-->
-        <div class="modal fade text-left" id="backdrop" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" aria-hidden="true">
+        <div class="modal fade text-left" id="ExcellModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="myModalLabel4">Basic Modal</h4>
+                        <h4 class="modal-title my-font" id="myModalLabel1">ورود اطلاعات اکسل</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-md-12 col-12">
+                            <fieldset class="form-group">
+                                <label for="inputGroupFile01" class="my-font">فایل مورد نظر را انتخاب کنید ...</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="inputGroupFile01">
+                                    <label class="custom-file-label" for="inputGroupFile01">...</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
+                        <button type="button" class="btn btn-info bg-light-info mr-1 my-font">بارگزاری</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </--!Modals-->
+    <--!Modals-->
+        <div class="modal fade text-left" id="CopyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title my-font" id="myModalLabel2">کپی اطلاعات</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="my-font-bold">انتخاب سال</p>
+                        <div class="my-font col-md-6 col-12">
+                            <fieldset class="form-group">
+                                <label class="my-font">
+                                    سال مبدا:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
+                                    </select>
+                                </label>
+                            </fieldset>
+                        </div>
+                        <div class="my-font col-md-6 col-12">
+                            <fieldset class="form-group">
+                                <label>
+                                    سال مقصد:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
+                                    </select>
+                                </label>
+                            </fieldset>
+                        </div>
+                        <hr>
+                        <p class="my-font-bold">انتخاب سازمان</p>
+                        <div class="my-font col-md-6 col-12">
+                            <fieldset class="form-group">
+                                <label class="my-font">
+                                    سازمان مبدا:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
+                                    </select>
+                                </label>
+                            </fieldset>
+                        </div>
+                        <div class="my-font col-md-6 col-12">
+                            <fieldset class="form-group">
+                                <label>
+                                    سازمان مقصد:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
+                                    </select>
+                                </label>
+                            </fieldset>
+                        </div>
+                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
+                            <button type="button" class="btn btn-warning bg-light-warning mr-1 my-font">ثبت</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </--!Modals-->
+    <--!Modals-->
+        <div class="modal fade text-left" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title my-font" id="myModalLabel3">حذف اطلاعات</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
                         </button>
@@ -122,13 +210,40 @@
                         <p>Cupcake sugar plum dessert tart powder chocolate fruitcake jelly. Tootsie roll bonbon toffee danish. Biscuit sweet cake gummies danish. Tootsie roll cotton candy tiramisu lollipop candy cookie biscuit pie.</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn bg-light-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
+                        <button type="button" class="btn btn-danger bg-light-danger mr-1 my-font">حذف اطلاعات</button>
                     </div>
                 </div>
             </div>
         </div>
     </--!Modals-->
+    <--!Modals-->
+        <div class="modal fade text-left" id="CalculationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel4">اطلاعات محاسبات</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Check First Paragraph</h5>
+                        <p>Oat cake ice cream candy chocolate cake chocolate cake cotton candy dragée apple pie. Brownie carrot cake candy canes bonbon fruitcake topping halvah. Cake sweet roll cake cheesecake cookie chocolate cake liquorice. Apple pie sugar plum powder donut soufflé.</p>
+                        <p>Sweet roll biscuit donut cake gingerbread. Chocolate cupcake chocolate bar ice cream. Danish candy cake.</p>
+                        <hr>
+                        <h5>Some More Text</h5>
+                        <p>Cupcake sugar plum dessert tart powder chocolate fruitcake jelly. Tootsie roll bonbon toffee danish. Biscuit sweet cake gummies danish. Tootsie roll cotton candy tiramisu lollipop candy cookie biscuit pie.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </--!Modals-->
+
+
     @RenderSection("footSection", required: false)
 
 
