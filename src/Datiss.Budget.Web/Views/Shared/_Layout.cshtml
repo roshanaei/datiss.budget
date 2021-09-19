@@ -103,7 +103,7 @@
     <script src="~/assets/js/table.js"></script>
 
 
-    <--!Modals-->
+    <!--Modals-->
         <div class="modal fade text-left" id="ExcellModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -131,8 +131,8 @@
                 </div>
             </div>
         </div>
-    </--!Modals-->
-    <--!Modals-->
+    <!--Modals-->
+    <!--Modals-->
         <div class="modal fade text-left" id="CopyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -143,7 +143,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p class="my-font-bold">انتخاب سال</p>
+                        <p class="my-font-bold">انتخاب اطلاعات مبدا</p>
                         <div class="my-font col-md-6 col-12">
                             <fieldset class="form-group">
                                 <label class="my-font">
@@ -156,18 +156,18 @@
                         <div class="my-font col-md-6 col-12">
                             <fieldset class="form-group">
                                 <label>
-                                    سال مقصد:
-                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
+                                   سازمان مبدا:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="organizationId">
                                     </select>
                                 </label>
                             </fieldset>
                         </div>
                         <hr>
-                        <p class="my-font-bold">انتخاب سازمان</p>
+                        <p class="my-font-bold">انتخاب اطلاعات مقصد</p>
                         <div class="my-font col-md-6 col-12">
                             <fieldset class="form-group">
                                 <label class="my-font">
-                                    سازمان مبدا:
+                                     سال مقصد:
                                     <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
                                     </select>
                                 </label>
@@ -177,7 +177,7 @@
                             <fieldset class="form-group">
                                 <label>
                                     سازمان مقصد:
-                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="organizationId">
                                     </select>
                                 </label>
                             </fieldset>
@@ -190,8 +190,8 @@
                     </div>
             </div>
         </div>
-    </--!Modals-->
-    <--!Modals-->
+    <!--Modals-->
+    <!--Modals-->
         <div class="modal fade text-left" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -202,12 +202,24 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <h5>Check First Paragraph</h5>
-                        <p>Oat cake ice cream candy chocolate cake chocolate cake cotton candy dragée apple pie. Brownie carrot cake candy canes bonbon fruitcake topping halvah. Cake sweet roll cake cheesecake cookie chocolate cake liquorice. Apple pie sugar plum powder donut soufflé.</p>
-                        <p>Sweet roll biscuit donut cake gingerbread. Chocolate cupcake chocolate bar ice cream. Danish candy cake.</p>
-                        <hr>
-                        <h5>Some More Text</h5>
-                        <p>Cupcake sugar plum dessert tart powder chocolate fruitcake jelly. Tootsie roll bonbon toffee danish. Biscuit sweet cake gummies danish. Tootsie roll cotton candy tiramisu lollipop candy cookie biscuit pie.</p>
+                        <div class="my-font col-md-6 col-12">
+                            <fieldset class="form-group">
+                                <label class="my-font">
+                                    سال:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
+                                    </select>
+                                </label>
+                            </fieldset>
+                        </div>
+                        <div class="my-font col-md-6 col-12">
+                            <fieldset class="form-group">
+                                <label>
+                                    سازمان:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="organizationId">
+                                    </select>
+                                </label>
+                            </fieldset>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
@@ -216,8 +228,8 @@
                 </div>
             </div>
         </div>
-    </--!Modals-->
-    <--!Modals-->
+    <!--Modals-->
+    <!--Modals-->
         <div class="modal fade text-left" id="CalculationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -227,13 +239,47 @@
                             <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <h5>Check First Paragraph</h5>
-                        <p>Oat cake ice cream candy chocolate cake chocolate cake cotton candy dragée apple pie. Brownie carrot cake candy canes bonbon fruitcake topping halvah. Cake sweet roll cake cheesecake cookie chocolate cake liquorice. Apple pie sugar plum powder donut soufflé.</p>
-                        <p>Sweet roll biscuit donut cake gingerbread. Chocolate cupcake chocolate bar ice cream. Danish candy cake.</p>
-                        <hr>
-                        <h5>Some More Text</h5>
-                        <p>Cupcake sugar plum dessert tart powder chocolate fruitcake jelly. Tootsie roll bonbon toffee danish. Biscuit sweet cake gummies danish. Tootsie roll cotton candy tiramisu lollipop candy cookie biscuit pie.</p>
+                    <div class="modal-body my-font ">
+                        <!--Striped rows Light Starts-->
+                        <section id="striped-light">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card-content">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped m-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>عنوان</th>
+                                                            <th>مقدار</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">1</th>
+                                                            <td>Mark</td>
+                                                            <td>Otto</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">2</th>
+                                                            <td>Jacob</td>
+                                                            <td>Thornton</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">3</th>
+                                                            <td>Larry</td>
+                                                            <td>the Bird</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!--Striped rows Light Ends-->
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
@@ -241,7 +287,7 @@
                 </div>
             </div>
         </div>
-    </--!Modals-->
+    <!--Modals-->
 
 
     @RenderSection("footSection", required: false)
