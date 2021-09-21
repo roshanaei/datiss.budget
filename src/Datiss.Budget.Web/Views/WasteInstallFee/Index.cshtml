@@ -55,26 +55,26 @@
                         <hr />
                         <!--SearchBox-->
                         <div class="rowACJSB">
-                        <fieldset class="form-group">
-                            <label for="ngx-filter-ref" class="my-font">
-                                جستجو:
-                                <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
-                            </label>  
-                        </fieldset>
-                        <fieldset>
-                            <div class="rowACJE">
-                                <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="submit" name="btnExportExcell" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                                    <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
-                                </button>
-                                <button data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" type="submit" name="btnDownloadExcellFormat" class="btn btn-warning bg-light-warning mb-1 my-font">
-                                    <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
-                                </button>
-                            </div>
-                        </fieldset>
+                            <fieldset class="form-group">
+                                <label for="ngx-filter-ref" class="my-font">
+                                    جستجو:
+                                    <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
+                                </label>
+                            </fieldset>
+                            <fieldset>
+                                <div class="rowACJE">
+                                    <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="submit" name="btnExportExcell" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
+                                    </button>
+                                    <button data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" type="submit" name="btnDownloadExcellFormat" class="btn btn-warning bg-light-warning mb-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
+                                    </button>
+                                </div>
+                            </fieldset>
                         </div>
                         <!--DataTable-->
                         <div class="table-responsive">
-                            <table id="" class=" table table-hover table-bordered m-0 my-font">
+                            <table id="" class=" table table-hover table-bordered m-0 my-font ">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>سال</th>
@@ -121,9 +121,9 @@
                                         <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="submit" name="btnReport" class="btn btn-info bg-light-info mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
                                         </button>
-                                     </span>
+                                    </span>
 
-                                        <!-- Modal -->
+                                    <!-- Modal -->
 
                                 </div>
                                 <nav aria-label="Page navigation">
@@ -139,15 +139,17 @@
                                 </nav>
                             </div>
 
-                                <!--Pagination-->
-                               
-                            </div>
+                            <!--Pagination-->
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </div>
+
+    @{ await Html.RenderPartialAsync("_TreeView").ConfigureAwait(false); }
 </section>
 
 @section footSection {

@@ -20,6 +20,8 @@
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/prism.min.css" />
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/switchery.min.css" />
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/chartist.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/bootstrap-treeview.min.css">
+
     <!-- END VENDOR CSS-->
     <!-- BEGIN APEX CSS-->
     <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/bootstrap.css" />
@@ -29,6 +31,8 @@
     <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/components.css" />
     <link rel="stylesheet" href="~/assets/css-rtl/plugins/switchery.css" />
     <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/custom-rtl.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/pages/ex-component-treeview.css">
+
     <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/custom-fonts.css" />
     <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/pages/dashboard.css" />
     <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/custom-layout.css" />
@@ -96,197 +100,199 @@
     <script src="~/assets/vendors/js/switchery.min.js"></script>
 
     <script src="~/assets/vendors/js/chartist.min.js"></script>
+    <script src="~/assets/vendors/js/bootstrap-treeview.min.js"></script>
     <script src="~/assets/js/core/app-menu.js"></script>
     <script src="~/assets/js/core/app.js"></script>
     <script src="~/assets/js/scroll-top.js"></script>
     <script src="~/assets/js/dashboard.js"></script>
     <script src="~/assets/js/table.js"></script>
+    <script src="~/assets/js/treeView.js"></script>
 
 
     <!--Modals-->
-        <div class="modal fade text-left" id="ExcellModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title my-font" id="myModalLabel1">ورود اطلاعات اکسل</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
-                        </button>
+    <div class="modal fade text-left" id="ExcellModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title my-font" id="myModalLabel1">ورود اطلاعات اکسل</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12 col-12">
+                        <fieldset class="form-group">
+                            <label for="inputGroupFile01" class="my-font">فایل مورد نظر را انتخاب کنید ...</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="inputGroupFile01">
+                                <label class="custom-file-label" for="inputGroupFile01">...</label>
+                            </div>
+                        </fieldset>
                     </div>
-                    <div class="modal-body">
-                        <div class="col-md-12 col-12">
-                            <fieldset class="form-group">
-                                <label for="inputGroupFile01" class="my-font">فایل مورد نظر را انتخاب کنید ...</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="inputGroupFile01">
-                                    <label class="custom-file-label" for="inputGroupFile01">...</label>
-                                </div>
-                            </fieldset>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
-                        <button type="button" class="btn btn-info bg-light-info mr-1 my-font">بارگزاری</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
+                    <button type="button" class="btn btn-info bg-light-info mr-1 my-font">بارگزاری</button>
                 </div>
             </div>
         </div>
+    </div>
     <!--Modals-->
     <!--Modals-->
-        <div class="modal fade text-left" id="CopyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title my-font" id="myModalLabel2">کپی اطلاعات</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
-                        </button>
+    <div class="modal fade text-left" id="CopyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title my-font" id="myModalLabel2">کپی اطلاعات</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="my-font-bold">انتخاب اطلاعات مبدا</p>
+                    <div class="my-font col-md-6 col-12">
+                        <fieldset class="form-group">
+                            <label class="my-font">
+                                سال مبدا:
+                                <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
+                                </select>
+                            </label>
+                        </fieldset>
                     </div>
-                    <div class="modal-body">
-                        <p class="my-font-bold">انتخاب اطلاعات مبدا</p>
-                        <div class="my-font col-md-6 col-12">
-                            <fieldset class="form-group">
-                                <label class="my-font">
-                                    سال مبدا:
-                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
-                                    </select>
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font col-md-6 col-12">
-                            <fieldset class="form-group">
-                                <label>
-                                   سازمان مبدا:
-                                    <select class="form-control form-control-sm d-inline-block width-100" id="organizationId">
-                                    </select>
-                                </label>
-                            </fieldset>
-                        </div>
-                        <hr>
-                        <p class="my-font-bold">انتخاب اطلاعات مقصد</p>
-                        <div class="my-font col-md-6 col-12">
-                            <fieldset class="form-group">
-                                <label class="my-font">
-                                     سال مقصد:
-                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
-                                    </select>
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font col-md-6 col-12">
-                            <fieldset class="form-group">
-                                <label>
-                                    سازمان مقصد:
-                                    <select class="form-control form-control-sm d-inline-block width-100" id="organizationId">
-                                    </select>
-                                </label>
-                            </fieldset>
-                        </div>
+                    <div class="my-font col-md-6 col-12">
+                        <fieldset class="form-group">
+                            <label>
+                                سازمان مبدا:
+                                <select class="form-control form-control-sm d-inline-block width-100" id="organizationId">
+                                </select>
+                            </label>
+                        </fieldset>
                     </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
-                            <button type="button" class="btn btn-warning bg-light-warning mr-1 my-font">ثبت</button>
-                        </div>
+                    <hr>
+                    <p class="my-font-bold">انتخاب اطلاعات مقصد</p>
+                    <div class="my-font col-md-6 col-12">
+                        <fieldset class="form-group">
+                            <label class="my-font">
+                                سال مقصد:
+                                <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
+                                </select>
+                            </label>
+                        </fieldset>
                     </div>
-            </div>
-        </div>
-    <!--Modals-->
-    <!--Modals-->
-        <div class="modal fade text-left" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title my-font" id="myModalLabel3">حذف اطلاعات</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
-                        </button>
+                    <div class="my-font col-md-6 col-12">
+                        <fieldset class="form-group">
+                            <label>
+                                سازمان مقصد:
+                                <select class="form-control form-control-sm d-inline-block width-100" id="organizationId">
+                                </select>
+                            </label>
+                        </fieldset>
                     </div>
-                    <div class="modal-body">
-                        <div class="my-font col-md-6 col-12">
-                            <fieldset class="form-group">
-                                <label class="my-font">
-                                    سال:
-                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
-                                    </select>
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font col-md-6 col-12">
-                            <fieldset class="form-group">
-                                <label>
-                                    سازمان:
-                                    <select class="form-control form-control-sm d-inline-block width-100" id="organizationId">
-                                    </select>
-                                </label>
-                            </fieldset>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
-                        <button type="button" class="btn btn-danger bg-light-danger mr-1 my-font">حذف اطلاعات</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
+                    <button type="button" class="btn btn-warning bg-light-warning mr-1 my-font">ثبت</button>
                 </div>
             </div>
         </div>
+    </div>
     <!--Modals-->
     <!--Modals-->
-        <div class="modal fade text-left" id="CalculationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="myModalLabel4">اطلاعات محاسبات</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
-                        </button>
+    <div class="modal fade text-left" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title my-font" id="myModalLabel3">حذف اطلاعات</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="my-font col-md-6 col-12">
+                        <fieldset class="form-group">
+                            <label class="my-font">
+                                سال:
+                                <select class="form-control form-control-sm d-inline-block width-100" id="yearId">
+                                </select>
+                            </label>
+                        </fieldset>
                     </div>
-                    <div class="modal-body my-font ">
-                        <!--Striped rows Light Starts-->
-                        <section id="striped-light">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="card-content">
-                                        <div class="card-body">
-                                            <div class="table-responsive">
-                                                <table class="table table-striped m-0">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>عنوان</th>
-                                                            <th>مقدار</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td>Mark</td>
-                                                            <td>Otto</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">2</th>
-                                                            <td>Jacob</td>
-                                                            <td>Thornton</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">3</th>
-                                                            <td>Larry</td>
-                                                            <td>the Bird</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                    <div class="my-font col-md-6 col-12">
+                        <fieldset class="form-group">
+                            <label>
+                                سازمان:
+                                <select class="form-control form-control-sm d-inline-block width-100" id="organizationId">
+                                </select>
+                            </label>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
+                    <button type="button" class="btn btn-danger bg-light-danger mr-1 my-font">حذف اطلاعات</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modals-->
+    <!--Modals-->
+    <div class="modal fade text-left" id="CalculationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel4" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel4">اطلاعات محاسبات</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body my-font ">
+                    <!--Striped rows Light Starts-->
+                    <section id="striped-light">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped m-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>عنوان</th>
+                                                        <th>مقدار</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row">1</th>
+                                                        <td>Mark</td>
+                                                        <td>Otto</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">2</th>
+                                                        <td>Jacob</td>
+                                                        <td>Thornton</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">3</th>
+                                                        <td>Larry</td>
+                                                        <td>the Bird</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </section>
-                        <!--Striped rows Light Ends-->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
-                    </div>
+                        </div>
+                    </section>
+                    <!--Striped rows Light Ends-->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
                 </div>
             </div>
         </div>
+    </div>
     <!--Modals-->
 
 
