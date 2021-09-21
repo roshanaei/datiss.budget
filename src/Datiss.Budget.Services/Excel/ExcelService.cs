@@ -14,7 +14,7 @@ namespace Datiss.Budget.Services.Excel
     {
         Task<IEnumerable<TResult>> ImportAsync<TResult>(IFormFile fileInfo) where TResult : class;
 
-        void Export<T>(IEnumerable<T> model, Stream stream) where T : class;
+        Stream Export<T>(IEnumerable<T> model, Stream stream) where T : class;
     }
 
     public class ExcelService : IExcelService 
@@ -55,8 +55,10 @@ namespace Datiss.Budget.Services.Excel
             }
         }
 
-        public void Export<T>(IEnumerable<T> model, Stream stream) where T : class {
+        public Stream Export<T>(IEnumerable<T> model, Stream stream) where T : class {
             _mapper.Save<T>(stream, model, "Sheet1");
+
+            return stream;
         }
     }
 }

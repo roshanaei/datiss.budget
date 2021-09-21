@@ -109,9 +109,14 @@
                                         <a data-toggle="tooltip" data-placement="top" asp-action="DownloadExcelTemplate" title="دانلود قالب اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-cloud-download"></i>
                                         </a>
-                                        <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="submit" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                                        <button data-toggle="tooltip" data-placement="top" title="خروجی اکسل" type="submit" name="btnExportExcel" class="btn btn-warning bg-light-warning mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-excel"></i>
                                         </button>
+                                        <span data-toggle="modal" data-target="#CopyModal">
+                                            <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                                            </button>
+                                        </span>
                                         <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="submit" name="btnDelete" class="btn btn-danger  bg-light-danger mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
                                         </button>
@@ -174,6 +179,7 @@
 </section>
 
 @section footSection {
+    <partial name="_copyModal" />
     <script>
 
         function loadCreateLink() {
@@ -187,7 +193,28 @@
             a.href = url + "/" + organizationId + "/" + yearId;
         }
 
-        loadCreateLink();
+        $(document).ready(function () {
+            loadCreateLink();
+
+
+        });
+
+
+         function exportExcel() {
+             let exportUrl = '@Url.Action("ExportExcel")';
+             console.log(exportUrl);
+            $.ajax({
+                type: 'POST',
+                url: exportUrl,
+                success: function (data, status, settings) {
+                    console.log(data);
+                },
+                error: function (ajaxrequest, ajaxOptions, thrownError) {
+                    console.log('erorr');
+                }
+            });
+        };
+
     </script>
 
 }

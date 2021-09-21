@@ -229,7 +229,7 @@ namespace Datiss.Budget.Services
         }
 
 
-        public async Task<Stream> ExportExcelAsync(WaterInstallFeeFilter filter, Stream stream) {
+        public async Task<Stream> ExportExcelAsync(WaterInstallFeeFilter filter) {
             filter.CheckArgumentIsNull(nameof(filter));
 
             var query = Query();
@@ -253,9 +253,12 @@ namespace Datiss.Budget.Services
                                         YearId = x.YearId
                                     }).ToListAsync();
 
-            _excelService.Export(items, stream);
+            var ms = new MemoryStream();
+            var result = _excelService.Export(items, ms);
 
-            return stream;
+            var mem1 = new MemoryStream(ms.ToArray());
+
+            return mem1;
         }
 
 
