@@ -15,6 +15,9 @@ using Microsoft.AspNetCore.Http;
 using Datiss.Budget.Common.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using System.Net.Http;
+using System.Net;
+using System.Net.Http.Headers;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -206,6 +209,29 @@ namespace Datiss.Budget.Web.Controllers
                 }
             }
 
+            if(Request.Form["btnExportExcel"].Count > 0) {
+                var result = await _waterInstallFeeService.ExportExcelAsync(new WaterInstallFeeFilter());
+                var ms = new MemoryStream();
+                result.CopyTo(ms);
+
+                var response = new HttpResponseMessage(HttpStatusCode.OK) {
+                    Content = new ByteArrayContent(ms.ToArray())
+                };
+                response.Content.Headers.ContentDisposition =
+                new ContentDispositionHeaderValue("attachment") {
+                    FileName = "WaterInstallFee.xlsx"
+                };
+                response.Content.Headers.ContentType =
+                    new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+                //return File(ms,
+                //    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                //    "WaterInstallFee.xlsx");
+
+                //return File(response.Content,
+                //    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            }
+
             return RedirectToAction("Index");
         }
 
@@ -220,10 +246,35 @@ namespace Datiss.Budget.Web.Controllers
                 "WaterInstallFee.xlsx");
         }
 
-        //[HttpPost("[action]")]
-        //public async Task<IActionResult> ExportExcel(WaterInstallFeeIndexViewModel viewModel) {
-            
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ExportExcel(WaterInstallFeeIndexViewModel viewModel) {
+            var filter = viewModel.Filter.Adapt<WaterInstallFeeFilter>();
 
-        //}
+            //using (var stream = new MemoryStream()) {
+            //    await _waterInstallFeeService.ExportExcelAsync(filter, stream);
+            //    return File(
+            //        stream,
+            //        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            //        "WaterInstallFee.xlsx");
+            //}
+
+            //var stream = new MemoryStream();
+
+            //try {
+            //    var result = await _waterInstallFeeService.ExportExcelAsync(filter, stream);
+            //    result.CopyTo(stream);
+            //}
+            //catch(Exception ex) {
+
+            //}
+
+            var result = await _waterInstallFeeService.ExportExcelAsync(filter);
+            var ms = new MemoryStream();
+            result.CopyTo(ms);
+
+            return File(ms,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "WaterInstallFee.xlsx");
+        }
     }
 }
