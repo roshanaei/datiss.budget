@@ -220,10 +220,10 @@ namespace Datiss.Budget.Web.Controllers
                 "WaterInstallFee.xlsx");
         }
 
-        [HttpPost("[action]")]
-        public async Task<IActionResult> ExportExcel(WaterInstallFeeIndexViewModel viewModel) {
+        //[HttpPost("[action]")]
+        //public async Task<IActionResult> ExportExcel(WaterInstallFeeIndexViewModel viewModel) {
             
 
-        }
+        //}
     }
 }

@@ -101,9 +101,11 @@
                                           asp-antiforgery="true">
                                         <input name="importExcelFile" type="file" />
                                         @*<input asp-for="ExcelFile" type="file" />*@
-                                        <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnExcelImport" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
-                                        </button>
+                                        <span data-toggle="modal" data-target="#backdrop">
+                                            <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnExcelImport" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                                            </button>
+                                        </span>
                                         <a data-toggle="tooltip" data-placement="top" asp-action="DownloadExcelTemplate" title="دانلود قالب اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-cloud-download"></i>
                                         </a>
