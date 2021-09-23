@@ -22,17 +22,17 @@ namespace Datiss.Budget.ViewModels
 
         public IFormFile ExcelFile { get; set; }
 
-        public void SetOrganizationFilterSource(IEnumerable<DropDownItem> source) {
+        public void SetOrganizationFilterSource(IEnumerable<DropDownItem> source, int? selectedOrgId = null) {
             Filter.OrganizationSource = source.Select(x => new SelectListItem {
-                Selected = x.Selected,
+                Selected = x.Id == selectedOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
             });
         }
 
-        public void SetFinanceYearFilterSource(IEnumerable<DropDownItem> source) {
+        public void SetFinanceYearFilterSource(IEnumerable<DropDownItem> source, int? selectedYearId = null) {
             Filter.YearSource = source.Select(x => new SelectListItem {
-                Selected = x.Selected,
+                Selected = x.Id == selectedYearId,
                 Text = x.Title,
                 Value = x.Id.ToString()
             });

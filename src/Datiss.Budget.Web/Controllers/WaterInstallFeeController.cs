@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
+using System.Net.Http;
+using System.Net;
+using System.Net.Http.Headers;
 using Mapster;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
@@ -14,17 +17,17 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Microsoft.AspNetCore.Http;
 using Datiss.Budget.Common.Exceptions;
 using Microsoft.AspNetCore.Hosting;
-using System.IO;
-using System.Net.Http;
-using System.Net;
-using System.Net.Http.Headers;
+using Datiss.Budget.Web.ViewModels;
+using Datiss.Budget.Common.GuardToolkit;
 
 namespace Datiss.Budget.Web.Controllers
 {
+
     [Authorize(Policy = ConstantPolicies.DynamicPermission)]
     [Route("[controller]")]
     public class WaterInstallFeeController : Controller
     {
+
         private readonly IWebHostEnvironment _env;
         private readonly IWaterInstallFeeService _waterInstallFeeService;
         private readonly IConstantService _constantService;
@@ -143,17 +146,23 @@ namespace Datiss.Budget.Web.Controllers
         {
             var access = _securityTrimmingService.CanCurrentUserAccess("", "WaterInstallFee", "Index");
 
+            var model = new WaterInstallFeeIndexViewModel();
+            var years = await _financeYearService.GetDropDownDataAsync();
+            int maxYear = years.Max(_ => _.Id);
+
+            model.SetFinanceYearFilterSource(years, maxYear);
+            model.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
+
             var filterInput = new WaterInstallFeeFilter {
                 OrderBy = "dwatertype",
                 PageNumber = page,
-                PageSize = 2
+                PageSize = 2,
+                YearId = maxYear
             };
 
             var result = await _waterInstallFeeService.GetListAsync(filterInput);
             
-            var model = new WaterInstallFeeIndexViewModel();
-            model.SetFinanceYearFilterSource(await _financeYearService.GetDropDownDataAsync());
-            model.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync(null));
+            
             model.Model = result;
 
             return View(model);
@@ -168,7 +177,7 @@ namespace Datiss.Budget.Web.Controllers
                 var result = await _waterInstallFeeService.GetListAsync(filterInput);
 
                 viewModel.SetFinanceYearFilterSource(await _financeYearService.GetDropDownDataAsync());
-                viewModel.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync(null));
+                viewModel.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
                 viewModel.Model = result;
 
                 return View(viewModel);
@@ -245,6 +254,39 @@ namespace Datiss.Budget.Web.Controllers
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", 
                 "WaterInstallFee.xlsx");
         }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Copy() {
+            var model = new CopyViewModel();
+            model.SetOrganizationSource(await _organizationService.GetDropDownDataAsync());
+            model.SetYearSource(await _financeYearService.GetDropDownDataAsync());
+
+            return PartialView("_copyModal", model);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Copy(CopyViewModel model) {
+            model.CheckArgumentIsNull(nameof(model));
+
+            try {
+                await _waterInstallFeeService.CopyAsync(
+                                                    model.SourceYearId, 
+                                                    model.SourceOrgId, 
+                                                    model.TargetYearId);
+            }
+            catch(CopySameYearException ex) {
+                model.AddError("سال ها یکی نباشد.");
+                return View(model);
+            }
+            catch(CopyDestYearHasDataException ex) {
+                model.AddError("سال هدف نباید دیتا داشته باشد.");
+                return View();
+            }
+
+            ViewData["copy"] = true;
+            return RedirectToAction("Index");
+        }
+
 
         [HttpPost("[action]")]
         public async Task<IActionResult> ExportExcel(WaterInstallFeeIndexViewModel viewModel) {
