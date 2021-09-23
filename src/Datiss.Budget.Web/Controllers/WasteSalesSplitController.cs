@@ -178,7 +178,7 @@ namespace Datiss.Budget.Web.Controllers
 
             var model = new WasteSalesSplitIndexViewModel();
             model.SetFinanceYearFilterSource(await _financeYearService.GetDropDownDataAsync());
-            model.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync(null));
+            model.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
             model.Model = result;
 
             return View(model);

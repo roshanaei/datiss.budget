@@ -16,7 +16,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<IEnumerable<DropDownItem>> GetParentsAsync();
 
-        Task<IEnumerable<DropDownItem>> GetDropDownDataAsync(int? parentId);
+        Task<IEnumerable<DropDownItem>> GetDropDownDataAsync();
 
         Task<bool> IsDescendentAsync(int orgId);
     }

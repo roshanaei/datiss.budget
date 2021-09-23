@@ -18,6 +18,7 @@ using Mapster;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Common.Exceptions;
 using System.IO;
+using Datiss.Budget.Entities;
 
 namespace Datiss.Budget.Services
 {
@@ -28,6 +29,7 @@ namespace Datiss.Budget.Services
         private readonly IUserService _userService;
         
         private DbSet<WaterInstallFee> _dbSet;
+        private DbSet<Organization> _orgDbSet;
 
         public WaterInstallFeeService(
             IUnitOfWork uow, 
@@ -36,6 +38,7 @@ namespace Datiss.Budget.Services
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<WaterInstallFee>();
+            _orgDbSet = _uow.Set<Organization>();
             _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
@@ -111,7 +114,9 @@ namespace Datiss.Budget.Services
                 query = query.Where(x => x.YearId == filter.YearId.Value);
 
             if (filter.OrganizationId.HasValue)
-                query = query.Where(x => x.OrganizationId == filter.OrganizationId.Value);
+                query = query.Where(x => x.OrganizationId == filter.OrganizationId.Value ||
+                                        x.Organization.Parent.Id == filter.OrganizationId.Value ||
+                                        x.Organization.Parent.Parent.Id == filter.OrganizationId.Value);
 
             if (filter.DWaterTypeId.HasValue)
                 query = query.Where(x => x.DWaterTypeId == filter.DWaterTypeId.Value);
@@ -170,6 +175,57 @@ namespace Datiss.Budget.Services
 
             return await Task.FromResult(result);
         }
+
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId) {
+
+            if (sourceYearId == destYearId)
+                throw new CopySameYearException();
+
+            var result = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+
+            _dbSet.AddRange(result);
+
+            await _uow.SaveChangesAsync();
+        }
+
+
+        private async Task<IEnumerable<WaterInstallFee>> getChildrenData(int parentOrganizationId, int yearId, int targetYearId) {
+
+            var children = await _orgDbSet
+                .Where(_ => _.ParentId == parentOrganizationId)
+                .ToListAsync();
+
+            var result = new List<WaterInstallFee>();
+
+            foreach (var org in children) {
+                if (await Query()
+                            .Where(_ => _.OrganizationId == org.Id)
+                            .Where(_ => _.YearId == targetYearId).AnyAsync()) {
+                    throw new CopyDestYearHasDataException();
+                }
+
+                var data = await Query()
+                                .Where(_ => _.YearId == yearId)
+                                .Where(_ => _.OrganizationId == org.Id)
+                                .ToListAsync();
+
+                foreach (var item in data) {
+                    var entity = new WaterInstallFee {
+                        DWaterTypeId = item.DWaterTypeId,
+                        OrganizationId = item.OrganizationId,
+                        YearId = targetYearId,
+                        WInstllFee = item.WInstllFee
+                    };
+
+                    result.Add(entity);
+                }
+
+                result.AddRange(await getChildrenData(org.Id, yearId, targetYearId));
+            }
+
+            return result;
+        }
+
 
         private IQueryable<WaterInstallFee> setOrder(
             IQueryable<WaterInstallFee> query,

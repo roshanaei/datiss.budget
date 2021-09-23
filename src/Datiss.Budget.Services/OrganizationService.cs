@@ -12,19 +12,23 @@ using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.Security;
 
 namespace Datiss.Budget.Services
 {
     public class OrganizationService : IOrganizationService
     {
         private readonly IUnitOfWork _uow;
+        private readonly IUserContext _userContext;
 
         private DbSet<Organization> _dbSet;
 
         public OrganizationService(
-            IUnitOfWork uow)
+            IUnitOfWork uow,
+            IUserContext userContext)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _dbSet = _uow.Set<Organization>();
         }
 
@@ -96,6 +100,17 @@ namespace Datiss.Budget.Services
                 }).ToListAsync();
 
 
+        private async Task<IEnumerable<Organization>> getWithChildrenAsync(int organizationId) {
+            var result = new List<Organization>();
+            var myself = await _dbSet.FirstOrDefaultAsync(_ => _.Id == organizationId);
+            result.Add(myself);
+
+            var children = await getByParnetIdAsync(myself.Id);
+            result.AddRange(children);
+
+            return await Task.FromResult(result);
+        }
+
         private async Task<IEnumerable<Organization>> getByParnetIdAsync(int? parentId) {
             
             var firstLevel = await Query()
@@ -132,13 +147,22 @@ namespace Datiss.Budget.Services
             return false;
         }
 
-        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync(int? parentId) 
-            => (await getByParnetIdAsync(parentId))
-                .Select(x => new DropDownItem {
-                    Id = x.Id,
-                    Title = x.Title,
-                    Selected = x.Id == parentId
-                }).ToList();
+        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync() 
+            => _userContext.OrganizationId.HasValue
+
+                ? (await getWithChildrenAsync(_userContext.OrganizationId.Value))
+                    .Select(x => new DropDownItem {
+                        Id = x.Id,
+                        Title = x.Title,
+                        Selected = x.Id == _userContext.OrganizationId
+                    }).ToList()
+
+                : (await getByParnetIdAsync(_userContext.OrganizationId))
+                    .Select(x => new DropDownItem {
+                        Id = x.Id,
+                        Title = x.Title,
+                        Selected = x.Id == _userContext.OrganizationId
+                    }).ToList();
 
     }
 }
