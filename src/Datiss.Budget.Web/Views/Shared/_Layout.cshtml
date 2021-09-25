@@ -18,6 +18,9 @@
     <link rel="stylesheet" type="text/css" href="~/assets/fonts/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/perfect-scrollbar.min.css" />
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/prism.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/sweetalert2.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/animate.min.css" />
+
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/switchery.min.css" />
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/chartist.min.css" />
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/bootstrap-treeview.min.css">
@@ -64,8 +67,8 @@
                     </div>
                     @RenderBody()
                 </div>
-            </div>
 
+            </div>
             <!-- END : End Main Content-->
             <!-- BEGIN : Footer-->
             <footer class="footer footer-static footer-light">
@@ -82,11 +85,8 @@
                     </div>
                 </div>
             </footer>
-            <!-- End : Footer-->
-
-        </div>
+            <!-- End : Footer--> 
     </div>
-
     <!-- main menu-->
 
     @{ await Html.RenderPartialAsync("_Menu").ConfigureAwait(false); }
@@ -101,6 +101,7 @@
 
     <script src="~/assets/vendors/js/chartist.min.js"></script>
     <script src="~/assets/vendors/js/bootstrap-treeview.min.js"></script>
+    <script src="~/assets/vendors/js/sweetalert2.all.min.js"></script>
     <script src="~/assets/js/core/app-menu.js"></script>
     <script src="~/assets/js/core/app.js"></script>
     <script src="~/assets/js/scroll-top.js"></script>
@@ -109,10 +110,10 @@
     <script src="~/assets/js/treeView.js"></script>
 
 
-    
-   
-   
-    
+
+
+
+
 
 
     @RenderSection("footSection", required: false)

@@ -3,13 +3,7 @@
 <div class="app-sidebar menu-fixed" data-background-color="purple-bliss" data-image="../assets/img/sidebar-bg/01.jpg" data-scroll-to-active="true">
     <!-- main menu header-->
     <!-- Sidebar Header starts-->
-    <div class="sidebar-header">
-        <div class="logo clearfix">
-            <a class="logo-text float-left">
-                <div class="logo-img"><img src="~/images/logo/DATISS.png" alt="" height="30"></div><span class="text my-font-bold">سیستم جامع بودجه</span>
-            </a><a class="nav-toggle d-none d-lg-none d-xl-block" id="sidebarToggle" href="javascript:;"><i class="toggle-icon ft-toggle-right" data-toggle="expanded"></i></a><a class="nav-close d-block d-lg-block d-xl-none" id="sidebarClose" href="@Url.Action("Index", "Home", values: new { area = AreaConstants.IdentityArea }, protocol: this.Context.Request.Scheme)" @*href="/"*@><i class="ft-x"></i></a>
-        </div>
-    </div>
+   
     <!-- Sidebar Header Ends-->
     <!-- / main menu header-->
     <!-- main menu content-->
@@ -19,7 +13,6 @@
         <div class="sidebar-header">
             <div class="logo clearfix">
                 <a class="logo-text float-left">
-                    <div class="logo-img"><img src="~/images/logo/DATISS.png" alt="" height="30"></div>
                     <span class="text my-font-bold">سیستم بودجه</span>
                 </a>
                 <a class="nav-toggle d-none d-lg-none d-xl-block" id="sidebarToggle" href="javascript:;">

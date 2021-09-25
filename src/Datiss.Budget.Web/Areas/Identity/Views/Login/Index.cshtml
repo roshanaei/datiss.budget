@@ -41,10 +41,10 @@
                                                         <input type="password" asp-for="Password" class="form-control mb-2 my-font" placeholder="کلمه عبور" />
                                                         <div class="d-sm-flex justify-content-between mb-3 font-small-2">
                                                             <div class="remember-me mb-2 mb-sm-0">
-                                                                <div class="checkbox auth-checkbox">
-                                                                    <input type="checkbox" asp-for="RememberMe" id="auth-ligin" />
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input class="custom-control-input" type="checkbox" asp-for="RememberMe" id="auth-ligin" />
                                                                     @*@Html.DisplayNameFor(m => m.RememberMe)*@
-                                                                    <label for="auth-ligin">
+                                                                    <label class="custom-control-label" for="auth-ligin">
                                                                         <span class="my-font">مرا به یاد داشته باش</span>
                                                                     </label>
                                                                 </div>
