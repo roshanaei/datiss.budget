@@ -357,10 +357,10 @@ button::-moz-focus-inner,
 }
 
 input[type='radio'],
-input[type='checkbox']
-{
+input[type='checkbox'] {
     box-sizing: border-box;
     padding: 0;
+    background-color: rebeccapurple;
 }
 
 input[type='date'],

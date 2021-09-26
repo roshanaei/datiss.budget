@@ -2072,8 +2072,7 @@ form label,
     height: 9px;
 }
 
-.checkbox
-{
+.checkbox {
     position: relative;
 }
 .checkbox input[type='checkbox']
