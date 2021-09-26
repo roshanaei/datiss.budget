@@ -66,8 +66,11 @@
                                     <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="submit" name="btnExportExcell" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                         <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                     </button>
-                                    <button data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" type="submit" name="btnDownloadExcellFormat" class="btn btn-warning bg-light-warning mb-1 my-font">
+                                    <button data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" type="submit" name="btnDownloadExcellFormat" class="btn btn-warning bg-light-warning my-font">
                                         <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
+                                    </button>
+                                    <button class="btn btn-warning bg-light-warning my-font my-alert">
+                                       <span>آلرت</span>
                                     </button>
                                 </div>
                             </fieldset>
@@ -103,22 +106,22 @@
                                 <!--Tools-->
                                 <div class="rowACJS">
                                     <span data-toggle="modal" data-target="#ExcellModal">
-                                        <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnCreate" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnExcelImport" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
                                         </button>
                                     </span>
                                     <span data-toggle="modal" data-target="#CopyModal">
-                                        <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="submit" name="btnFilter" class="btn btn-warning bg-light-warning mr-1 my-font">
+                                        <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font modallink">
                                             <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
                                         </button>
                                     </span>
                                     <span data-toggle="modal" data-target="#DeleteModal">
-                                        <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="submit" name="btnCreate" class="btn btn-danger  bg-light-danger mr-1 my-font">
+                                        <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" name="btnDelete" class="btn btn-danger  bg-light-danger mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
                                         </button>
                                     </span>
                                     <span data-toggle="modal" data-target="#CalculationModal">
-                                        <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="submit" name="btnReport" class="btn btn-info bg-light-info mr-1 my-font">
+                                        <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnReport" class="btn btn-info bg-light-info mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
                                         </button>
                                     </span>
@@ -153,6 +156,35 @@
 
 @section footSection {
     <script>
+        $(".my-alert").on('click', function () {
+            Swal.fire({
+                title: 'Flip In Animation',
+                animation: false,
+                customClass: 'animated flipInX',
+                confirmButtonClass: 'btn btn-info',
+                buttonsStyling: false,
+            });
+        });
+
+        $(document).on('click', '.modallink', function() {
+
+            let myurl = '@Url.Action("Copy")';
+
+            $.ajax({
+                type: 'GET',
+                url: myurl,
+                success: function (data, status, settings) {
+
+                    $("#modaldiv").html(data);
+                    $('#CopyModal').modal('show');
+                },
+                error: function (ajaxrequest, ajaxOptions, thrownError) {
+
+                    $("#modaldiv").html('Failed to load more content');
+                }
+            });
+
+        });
 
         function loadCreateLink() {
             var a = document.getElementById("createLink");

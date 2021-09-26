@@ -3791,15 +3791,13 @@ body[data-menu='horizontal-menu'] .app-sidebar .navigation li.active > a:before
 .app-sidebar .logo .logo-text
 {
     font-size: 1.6rem;
-    font-weight: 400; 
+    font-weight: 100; 
 
     display: block;
 
     padding: 5px 0;
 
     text-align: right;
-    letter-spacing: 2px;
-    text-transform: uppercase;
 
     color: #fff;
 }
