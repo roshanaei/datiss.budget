@@ -1,0 +1,9 @@
+﻿@using Stimulsoft.Report.Mvc;
+
+@Html.StiNetCoreViewer(new StiNetCoreViewerOptions() {
+                    Actions =
+                    {
+                        GetReport = "Report",
+                        ViewerEvent = "ViewerEvent"
+                    }
+                })

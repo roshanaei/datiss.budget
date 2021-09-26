@@ -9,6 +9,9 @@ using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Hosting;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Mvc;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -21,17 +24,20 @@ namespace Datiss.Budget.Web.Controllers
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
+        private readonly IWebHostEnvironment _webHost;
 
         public WasteInstallFeeController(
             IWasteInstallFeeService waterInstallFeeService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
-            IConstantService constantService) 
+            IConstantService constantService,
+            IWebHostEnvironment webHost) 
         {
             _wasteInstallFeeService = waterInstallFeeService ?? throw new ArgumentNullException(nameof(waterInstallFeeService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
+            _webHost = webHost;
         }
 
         [HttpGet("[action]")]
@@ -167,5 +173,20 @@ namespace Datiss.Budget.Web.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+        [HttpGet("report")]
+        public async Task<IActionResult> Report() {
+            StiReport report = new StiReport();
+            report.Load(_webHost.WebRootPath + "\\report.mrt");
+
+            return await StiNetCoreViewer.GetReportResultAsync(this, report);
+        }
+
+        [HttpGet("[action]")]
+        public IActionResult ViewerEvent() {
+            return StiNetCoreViewer.ViewerEventResult(this);
+        }
+
     }
 }
