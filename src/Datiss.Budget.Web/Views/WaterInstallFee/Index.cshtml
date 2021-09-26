@@ -33,16 +33,16 @@
                 <div class="card-content">
                     <div class="card-body">
                         <!--Filters-->
-                        <form method="post" asp-controller="WaterInstallFee" asp-action="Index" asp-antiforgery="true">
-                            <fieldset class="form-group">
+                        <form method="post" class="rowACJSB"  asp-controller="WaterInstallFee" asp-action="Index" asp-antiforgery="true">
+                            <fieldset class="form-group mt-3">
                                 <label asp-for="Filter.YearId" class="my-font">
                                     سال:
-                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()">
+                                    <select class="form-control d-inline-block width-100" id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()">
                                     </select>
                                 </label>
                                 <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
                                     سازمان:
-                                    <select class="form-control form-control-sm d-inline-block width-300" id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()">
+                                    <select class="form-control d-inline-block width-300" id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()">
                                     </select>
                                 </label>
                                 <input asp-for="Filter.OrderBy" type="hidden" />
@@ -50,10 +50,10 @@
                             </fieldset>
                             <fieldset>
                                 <div class="rowACJE">
-                                    <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 mb-1 my-font">
+                                    <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                         <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                     </button>
-                                    <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success mb-1 my-font">
+                                    <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success my-font">
                                         <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
                                     </button>
                                 </div>
@@ -62,12 +62,27 @@
                         <hr />
                         <!--SearchBox-->
                         <div class="rowACJSB">
+                            <div class="rowAC" style="flex:1">
                                 <fieldset class="form-group">
                                     <label for="ngx-filter-ref" class="my-font">
                                         جستجو:
                                         <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
                                     </label>
                                 </fieldset>
+                                <fieldset class="form-group" style="margin-right:10px">
+                                    <label class="my-font rowAC">
+                                        <span>نمایش</span>
+
+                                        <select  style="margin-right:10px" class="form-control" id="basicSelect">
+                                            <option>10</option>
+                                            <option>20</option>
+                                            <option>30</option>
+                                        </select>
+                                        <span  style="margin-right:10px">رکورد</span>
+
+                                    </label>
+                                </fieldset>
+                            </div>
                                 <fieldset>
                                     <div class="rowACJE">
                                         <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="submit" name="btnExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
