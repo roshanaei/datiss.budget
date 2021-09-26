@@ -22,6 +22,7 @@
     <PackageReference Include="DNTCommon.Web.Core" Version="2.9.1" />
     <PackageReference Include="Mapster" Version="7.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.7" />
+    <PackageReference Include="Stimulsoft.Reports.Web.NetCore" Version="2021.3.6" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PlatformTarget>anycpu</PlatformTarget>
