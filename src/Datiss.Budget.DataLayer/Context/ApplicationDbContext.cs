@@ -217,6 +217,16 @@ namespace Datiss.Budget.DataLayer.Context
 
             // This should be placed here, at the end.
             builder.AddAuditableShadowProperties();
+
+            //TODO : Add all mapping configuration
+            builder.ApplyConfiguration(new WaterInstallFeeConfiguration())
+                .ApplyConfiguration(new FinanceYearConfiguration())
+                .ApplyConfiguration(new WasteInstallFeeConfiguration())
+                .ApplyConfiguration(new WasteSalesSplitConfiguration())
+                .ApplyConfiguration(new WaterSalesSplitConfiguration())
+                .ApplyConfiguration(new ReportConfiguration())
+                .ApplyConfiguration(new ReportParamConfiguration());
+
         }
     }
 }
