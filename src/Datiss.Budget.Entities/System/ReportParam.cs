@@ -23,6 +23,8 @@ namespace Datiss.Budget.Entities
 
         public int ReportId { get; set; }
 
+        public string ConstantKey { get; set; }
+
         #endregion
 
         #region Navigations
