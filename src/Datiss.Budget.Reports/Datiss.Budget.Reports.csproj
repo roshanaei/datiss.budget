@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Stimulsoft.Reports.Engine.NetCore" Version="2021.3.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Datiss.Budget.Entities\Datiss.Budget.Entities.csproj" />
+    <ProjectReference Include="..\Datiss.Budget.Services\Datiss.Budget.Services.csproj" />
+  </ItemGroup>
+
+</Project>
