@@ -53,6 +53,8 @@ namespace Datiss.Budget.Reports
         public int ReportId { get; set; }
 
         public string ConstantKey { get; set; }
+
+        public object Value { get; set; }
     }
 
 }

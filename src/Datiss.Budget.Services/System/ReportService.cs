@@ -15,7 +15,7 @@ using Datiss.Budget.Services.Models;
 
 namespace Datiss.Budget.Services
 {
-    public class ReportService 
+    public class ReportService : IReportService
     {
 
         private readonly IUnitOfWork _uow;
