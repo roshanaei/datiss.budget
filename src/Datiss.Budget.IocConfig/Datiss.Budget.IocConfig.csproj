@@ -7,6 +7,7 @@
     <ProjectReference Include="..\Datiss.Budget.Common\Datiss.Budget.Common.csproj" />
     <ProjectReference Include="..\Datiss.Budget.DataLayer\Datiss.Budget.DataLayer.csproj" />
     <ProjectReference Include="..\Datiss.Budget.Entities\Datiss.Budget.Entities.csproj" />
+    <ProjectReference Include="..\Datiss.Budget.Reports\Datiss.Budget.Reports.csproj" />
     <ProjectReference Include="..\Datiss.Budget.ViewModels\Datiss.Budget.ViewModels.csproj" />
     <ProjectReference Include="..\Datiss.Budget.Services\Datiss.Budget.Services.csproj" />
 

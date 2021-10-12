@@ -24,8 +24,8 @@ namespace Datiss.Budget.Services
 
         public ReportService(IUnitOfWork uow) {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbSet = _uow.Set<Report>();
         }
-
 
         public async Task<Report> GetAsync(int id) {
             var report = await _dbSet

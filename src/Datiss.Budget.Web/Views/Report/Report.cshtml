@@ -1,0 +1,14 @@
+﻿
+ 
+@model Datiss.Budget.Reports.ReportViewData 
+
+<form asp-controller="Report" 
+      asp-action="Report1"
+      data-ajax="true"
+      data-ajax-update="#Viewer"
+      method="post">
+    <input asp-for="Id" type="hidden" />
+
+    <button type="submit">Send</button>
+</form>
+
