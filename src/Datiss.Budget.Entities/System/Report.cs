@@ -28,6 +28,8 @@ namespace Datiss.Budget.Entities
 
         public byte[] FileData { get; set; }
 
+        public string FilePath { get; set; }
+
         #endregion
 
         #region Navigations

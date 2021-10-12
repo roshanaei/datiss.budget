@@ -4,6 +4,8 @@ using Datiss.Budget.Security;
 using Datiss.Budget.Services.Excel;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Identity;
+using Datiss.Budget.Reports;
+using Datiss.Budget.Reports.Contracts;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -25,6 +27,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IWaterSalesSplitService, WaterSalesSplitService>();
             services.AddScoped<IWasteSalesSplitService, WasteSalesSplitService>();
             services.AddScoped<IBranchFeeAmountService, BranchFeeAmountService>();
+            services.AddScoped<IReportService, ReportService>();
+
+            services.AddScoped<IReportEngine, ReportEngine>();
+
 
             return services;
         }

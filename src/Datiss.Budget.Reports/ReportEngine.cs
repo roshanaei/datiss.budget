@@ -7,22 +7,31 @@ using Datiss.Budget.Entities;
 using Datiss.Budget.Enum;
 using Datiss.Budget.Services.Contracts;
 using Stimulsoft.Report;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Stimulsoft.Report.Dictionary;
+using Datiss.Budget.Reports.Contracts;
 
 namespace Datiss.Budget.Reports
 {
-    public class ReportEngine
-    {
+    public class ReportEngine : IReportEngine {
 
+        private readonly IWebHostEnvironment _env;
         private readonly IReportService _reportService;
         private readonly IFinanceYearService _yearService;
         private readonly IOrganizationService _orgService;
         private readonly IConstantService _constantService;
+        private readonly IConfiguration _config;
 
         public ReportEngine(
+            IWebHostEnvironment env,
+            IConfiguration config,
             IReportService reportService,
             IFinanceYearService yearService,
             IOrganizationService orgService,
             IConstantService constantService) {
+            _env = env ?? throw new ArgumentNullException(nameof(env));
+            _config = config ?? throw new ArgumentNullException(nameof(config));
             _reportService = reportService
                 ?? throw new ArgumentNullException(nameof(reportService));
             _yearService = yearService
@@ -33,6 +42,9 @@ namespace Datiss.Budget.Reports
                 ?? throw new ArgumentNullException(nameof(constantService));
         }
 
+        
+        private string getConnectionString() 
+            => _config.GetConnectionString("ApplicationDbContextConnection");
 
         public async Task<ReportViewData> GetViewDataAsync(int reportId) {
             var report = await _reportService.GetAsync(reportId);
@@ -77,6 +89,24 @@ namespace Datiss.Budget.Reports
         public async Task<StiReport> GenerateReportAsync(ReportViewData model) {
             if (model == null) throw new ArgumentNullException(nameof(model));
 
+            var report = await _reportService.GetAsync(model.Id);
+
+            var _report = new StiReport();
+            _report.Dictionary.Databases.Add(new StiSqlDatabase(
+                "Budget", 
+                getConnectionString())
+            );
+
+            var filePath = report.FilePath.Replace("~", _env.WebRootPath);
+
+            _report.Load(filePath);
+
+            foreach (var prm in report.Params) {
+                _report.Variables[prm.Name] = model.Params
+                    .FirstOrDefault(_ => _.Name == prm.Name).Value;
+            }
+
+            return _report;
         }
     }
 }
