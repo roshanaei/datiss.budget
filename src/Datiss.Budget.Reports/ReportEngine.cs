@@ -101,9 +101,9 @@ namespace Datiss.Budget.Reports
 
             _report.Load(filePath);
 
-            foreach (var prm in report.Params) {
-                _report.Variables[prm.Name] = model.Params
-                    .FirstOrDefault(_ => _.Name == prm.Name).Value;
+            foreach (var prm in model.Params) {
+                //_report.Variables[prm.Name] = prm.Value;
+                _report[prm.Name] = prm.Value;
             }
 
             return _report;

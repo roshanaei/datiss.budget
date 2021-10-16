@@ -5,13 +5,14 @@
     Actions =
     {
         GetReport = "GetReport",
-        ViewerEvent = "ViewerEvent"
+        ViewerEvent = "ViewerEvent"    
     },
     Server =
     {
-        Controller = "Viewer",
+        Controller = "Report",
         RequestTimeout = 60000,
-        CacheMode = StiServerCacheMode.None
+        CacheMode = StiServerCacheMode.None,
+        RouteTemplate = "Report/{action}"
     },
     Appearance =
     {
