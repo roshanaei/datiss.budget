@@ -1,0 +1,240 @@
+﻿@*@model WaterInstallFeeIndexViewModel*@
+@{ ViewData["Title"] = "سازمان"; }
+
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            @*<i class="ft-settings mr-1"></i>*@
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <!--Filters-->
+                        <form method="post" class="rowACJSB" asp-controller="Organization" asp-action="Index" asp-antiforgery="true">
+                            <fieldset class="form-group mt-3">
+                                <label class="my-font">
+                                    سازمان پدر:
+                                    <select class="form-control d-inline-block width-300" id="organizationId" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                <label class="my-font" style="margin-right:20px">
+                                    نوع سازمان:
+                                    <select class="form-control d-inline-block width-100" id="yearId" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                <label class="my-font" style="margin-right:20px">
+                                    فاضلاب:
+                                    <select class="form-control d-inline-block width-100" id="yearId" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                <label class="my-font" style="margin-right:20px">
+                                     وضعیت:
+                                    <select class="form-control d-inline-block width-100" id="yearId" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+
+                                <input type="hidden" />
+                                <input type="hidden" />
+                            </fieldset>
+                            <fieldset>
+                                <div class="rowACJE">
+                                    <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+                                    </button>
+                                    <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </form>
+                        <hr />
+                        <!--SearchBox-->
+                        <div class="rowACJSB">
+                            <div class="rowAC" style="flex:1">
+                                <fieldset class="form-group">
+                                    <label for="ngx-filter-ref" class="my-font">
+                                        جستجو:
+                                        <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
+                                    </label>
+                                </fieldset>
+                                <fieldset class="form-group" style="margin-right:10px">
+                                    <label class="my-font rowAC">
+                                        <span>نمایش</span>
+
+                                        <select style="margin-right:10px" class="form-control" id="basicSelect">
+                                            <option>10</option>
+                                            <option>20</option>
+                                            <option>30</option>
+                                        </select>
+                                        <span style="margin-right:10px">رکورد</span>
+
+                                    </label>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <!--DataTable-->
+                        <div class="table-responsive">
+                            <table id="" class=" table table-hover table-bordered m-0 my-font">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>نام سازمان</th>
+                                        <th>نوع سازمان</th>
+                                        <th>ترتیب نمایش</th>
+                                        <th>فاضلاب</th>
+                                        <th>وضعیت</th>
+                                        <th>مدیریت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @*@foreach (var item in Model.Model.Items)
+                                    {
+                                        <tr>
+                                            <td>@item.Year.ToString()</td>
+                                            <td>@item.OrganizationDisplay </td>
+                                            <td>@item.DWaterTypeDisplay </td>
+                                            <td>@item.WInstallFee.ToString() </td>
+                                            <td>
+                                                <a asp-controller="Organization" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                                            </td>
+                                        </tr>
+                                    }*@
+                                </tbody>
+                            </table>
+                            <div class="rowACJSB" style="margin-top:20px">
+                                <!--Pagination-->
+                                @*<p>
+                                        Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
+                                    </p>*@
+
+                                @*@if (Model.Model.PagesCount > 1)
+                                {
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination justify-content-center">
+                                            @if (Model.Model.PageNumber > 1)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-controller="Organization"
+                                                       asp-action="Index"
+                                                       asp-route-page="@Model.Model.PreviousPage"
+                                                       aria-label="Previous">«</a>
+                                                </li>
+                                            }
+
+                                            @for (int i = 1; i <= Model.Model.PagesCount; i++)
+                                            {
+                                                if (i == Model.Model.PageNumber)
+                                                {
+                                                    <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                                                }
+                                                else
+                                                {
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                           asp-controller="Organization"
+                                                           asp-action="Index"
+                                                           asp-route-page="@i">@i.ToString() </a>
+                                                    </li>
+                                                }
+                                            }
+
+                                            @if (Model.Model.PageNumber < Model.Model.PagesCount)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-controller="Organization"
+                                                       asp-action="Index"
+                                                       asp-route-page="@Model.Model.NextPage"
+                                                       aria-label="Next">»</a>
+                                                </li>
+                                            }
+
+                                        </ul>
+                                    </nav>
+                                }*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+
+@section footSection {
+    <div id="modaldiv">
+
+    </div>
+    <script>
+        $(".confirm-delete").on('click', function () {
+            Swal.fire({
+                title: 'برای حذف اطمینان دارید؟',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2F8BE6',
+                animation: false,
+                customClass: 'animated flipInX',
+                cancelButtonColor: '#F55252',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+
+                confirmButtonClass: 'btn btn-warning my-font',
+                cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.value) {
+                    alert('deleted')
+                }
+            });
+        });
+        function loadCreateLink() {
+            var a = document.getElementById("createLink");
+            var organizationId = document.getElementById('organizationId').value;
+
+            var yearId = document.getElementById('yearId').value;
+
+            var url = 'Organization/new'
+
+            a.href = url + "/" + organizationId + "/" + yearId;
+        }
+
+         $(document).on('click', '.modallink', function() {
+
+            let myurl = '@Url.Action("Copy")';
+
+            $.ajax({
+                type: 'GET',
+                url: myurl,
+                success: function (data, status, settings) {
+
+                    $("#modaldiv").html(data);
+                    $('#CopyModal').modal('show');
+                },
+                error: function (ajaxrequest, ajaxOptions, thrownError) {
+
+                    $("#modaldiv").html('Failed to load more content');
+                }
+            });
+
+         });
+
+        $(document).ready(function () {
+            loadCreateLink();
+        });
+
+    </script>
+
+}
+

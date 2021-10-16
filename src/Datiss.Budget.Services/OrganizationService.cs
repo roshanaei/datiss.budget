@@ -164,5 +164,92 @@ namespace Datiss.Budget.Services
                         Selected = x.Id == _userContext.OrganizationId
                     }).ToList();
 
+
+        private IQueryable<Organization> setFilter(IQueryable<Organization> query, OrganizationFilter filter)
+        {
+            if (filter.ParentId.HasValue)
+                query = query.Where(x => x.ParentId == filter.ParentId.Value);
+
+            if (filter.Type.HasValue)
+                query = query.Where(x => x.Type == filter.Type.Value);
+
+            if (filter.SewageStatus.HasValue)
+                query = query.Where(x => x.SewageStatus == filter.SewageStatus.Value);
+
+            if (filter.Status.HasValue)
+                query = query.Where(x => x.Status == filter.Status.Value);
+
+            return query;
+        }
+
+        public async Task<PagedResult<OrganizationViewModel>> GetListAsync(OrganizationFilter filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+            var result = new PagedResult<OrganizationViewModel>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
+
+            var query = Query();
+
+            query = setFilter(query, filter);
+
+            result.TotalCount = await query.CountAsync();
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            query = query
+                .Skip(filter.StartIndex)
+                .Take(filter.PageSize);
+
+            result.Items = await query
+                                    .Include(x => x.Parent)
+                                    .Include(x => x.Childrens)
+                                    .Select(x => new OrganizationViewModel
+                                    {
+                                        Id = x.Id,
+                                        ParentId = x.ParentId,
+                                        Title = x.Title,
+                                        DisplayOrder = x.DisplayOrder,
+                                        Type = x.Type,
+                                        SewageStatus = x.SewageStatus,
+                                        Status = x.Status
+                                    }).ToListAsync();
+
+            return await Task.FromResult(result);
+        }
+    }
+
+    private IQueryable<Organization> setOrder(
+            IQueryable<Organization> query,
+            string orderBy = "id",
+            bool desc = false){
+        if (string.IsNullOrWhiteSpace(orderBy))
+            orderBy = "id";
+
+        orderBy = orderBy.ToLower();
+        switch (orderBy)
+        {
+            case "parent":
+                return desc
+                    ? query.OrderByDescending(x => x.Parent.Id)
+                    : query.OrderBy(x => x.Parent.Id);
+
+            case "title":
+                return desc
+                    ? query.OrderByDescending(x => x.Title)
+                    : query.OrderBy(x => x.Title);
+
+            case "sewagestatus":
+                return desc
+                    ? query.OrderByDescending(x => x.SewageStatus)
+                    : query.OrderBy(x => x.SewageStatus);
+
+            default:
+                return desc
+                    ? query.OrderByDescending(x => x.Id)
+                    : query.OrderBy(x => x.Id);
+        }
     }
 }

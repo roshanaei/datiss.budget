@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Datiss.Budget.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,14 @@ namespace Datiss.Budget.Services.Models
         GreaterThan = 2
     }
 
+
+    public class OrganizationFilter:FilterInput
+    {
+        public int? ParentId { get; set; }
+        public OrganizationType? Type { get; set; }
+        public bool? SewageStatus { get; set; }
+        public EntityStatus? Status { get; set; }
+    }
 
     public class WaterInstallFeeFilter: FilterInput
     {

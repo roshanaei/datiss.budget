@@ -1,33 +1,70 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Datiss.Budget.Services.Contracts;
-using Datiss.Budget.ViewModels;
+using System.IO;
+using System.Net.Http;
+using System.Net;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Datiss.Budget.Services.Identity;
+using Datiss.Budget.Services.Contracts.Identity;
+using Microsoft.AspNetCore.Http;
+using Datiss.Budget.Common.Exceptions;
+using Microsoft.AspNetCore.Hosting;
+using Datiss.Budget.Web.ViewModels;
+using Datiss.Budget.Common.GuardToolkit;
+
+
 
 namespace Datiss.Budget.Web.Controllers
 {
 
-    [Authorize]
+    [Authorize(Policy = ConstantPolicies.DynamicPermission)]
     [Route("[controller]/[action]")]
     public class OrganizationController : Controller
     {
 
+        private readonly IWebHostEnvironment _env;
+        private readonly ISecurityTrimmingService _securityTrimmingService;
         private readonly IOrganizationService _organizationService;
 
-        public OrganizationController(IOrganizationService organizationService)
+        public OrganizationController(
+            IWebHostEnvironment environment,
+            ISecurityTrimmingService securityTrimmingService,
+            IOrganizationService organizationService)
         {
+            _env = environment ?? throw new ArgumentNullException(nameof(environment));
+            _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
-
         }
 
-        [HttpGet]
-        public IActionResult Index()
+        [HttpGet("{page?}")]
+        public  async Task<IActionResult> Index(int page = 1)
         {
-            return View();
+            var access = _securityTrimmingService.CanCurrentUserAccess("", "Organization", "Index");
+
+            var model = new OrganizationIndexViewModel();
+
+            model.SetParentOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
+
+            var filterInput = new OrganizationFilter
+            {
+                OrderBy = "DisplayOrder",
+                PageNumber = page,
+                PageSize = 10
+            };
+
+            var result = await _organizationService.GetListAsync(filterInput);
+
+            model.Model = result;
+
+            return View(model);
         }
 
         [HttpGet]
