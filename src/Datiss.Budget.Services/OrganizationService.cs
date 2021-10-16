@@ -100,7 +100,8 @@ namespace Datiss.Budget.Services
                 }).ToListAsync();
 
 
-        private async Task<IEnumerable<Organization>> getWithChildrenAsync(int organizationId) {
+        private async Task<IEnumerable<Organization>> getWithChildrenAsync(int organizationId)
+        {
             var result = new List<Organization>();
             var myself = await _dbSet.FirstOrDefaultAsync(_ => _.Id == organizationId);
             result.Add(myself);
@@ -111,17 +112,20 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        private async Task<IEnumerable<Organization>> getByParnetIdAsync(int? parentId) {
-            
+        private async Task<IEnumerable<Organization>> getByParnetIdAsync(int? parentId)
+        {
+
             var firstLevel = await Query()
-                .Include(x=> x.Childrens)
+                .Include(x => x.Childrens)
                 .Where(x => x.ParentId == parentId).ToListAsync();
 
             var result = new List<Organization>();
             result.AddRange(firstLevel);
 
-            foreach (var item in firstLevel) {
-                foreach (var child in item.Childrens) {
+            foreach (var item in firstLevel)
+            {
+                foreach (var child in item.Childrens)
+                {
                     result.Add(child);
                     result.AddRange(await getByParnetIdAsync(child.Id));
                 }
@@ -130,15 +134,18 @@ namespace Datiss.Budget.Services
             return result;
         }
 
-        public async Task<bool> IsDescendentAsync(int orgId) {
+        public async Task<bool> IsDescendentAsync(int orgId)
+        {
             var query = Query();
 
             var any = await query.CountAsync(x => x.Id == orgId || x.ParentId == orgId) > 0;
 
-            if(any) {
+            if (any)
+            {
                 return true;
             }
-            else {
+            else
+            {
                 var childs = await query.Where(x => x.ParentId == orgId).ToListAsync();
                 foreach (var child in childs)
                     return await IsDescendentAsync(child.Id);
@@ -147,18 +154,20 @@ namespace Datiss.Budget.Services
             return false;
         }
 
-        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync() 
+        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync()
             => _userContext.OrganizationId.HasValue
 
                 ? (await getWithChildrenAsync(_userContext.OrganizationId.Value))
-                    .Select(x => new DropDownItem {
+                    .Select(x => new DropDownItem
+                    {
                         Id = x.Id,
                         Title = x.Title,
                         Selected = x.Id == _userContext.OrganizationId
                     }).ToList()
 
                 : (await getByParnetIdAsync(_userContext.OrganizationId))
-                    .Select(x => new DropDownItem {
+                    .Select(x => new DropDownItem
+                    {
                         Id = x.Id,
                         Title = x.Title,
                         Selected = x.Id == _userContext.OrganizationId
@@ -219,37 +228,40 @@ namespace Datiss.Budget.Services
 
             return await Task.FromResult(result);
         }
-    }
 
-    private IQueryable<Organization> setOrder(
-            IQueryable<Organization> query,
-            string orderBy = "id",
-            bool desc = false){
-        if (string.IsNullOrWhiteSpace(orderBy))
-            orderBy = "id";
 
-        orderBy = orderBy.ToLower();
-        switch (orderBy)
+        private IQueryable<Organization> setOrder(
+                IQueryable<Organization> query,
+                string orderBy = "id",
+                bool desc = false)
         {
-            case "parent":
-                return desc
-                    ? query.OrderByDescending(x => x.Parent.Id)
-                    : query.OrderBy(x => x.Parent.Id);
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "id";
 
-            case "title":
-                return desc
-                    ? query.OrderByDescending(x => x.Title)
-                    : query.OrderBy(x => x.Title);
+            orderBy = orderBy.ToLower();
+            switch (orderBy)
+            {
+                case "parent":
+                    return desc
+                        ? query.OrderByDescending(x => x.Parent.Id)
+                        : query.OrderBy(x => x.Parent.Id);
 
-            case "sewagestatus":
-                return desc
-                    ? query.OrderByDescending(x => x.SewageStatus)
-                    : query.OrderBy(x => x.SewageStatus);
+                case "title":
+                    return desc
+                        ? query.OrderByDescending(x => x.Title)
+                        : query.OrderBy(x => x.Title);
 
-            default:
-                return desc
-                    ? query.OrderByDescending(x => x.Id)
-                    : query.OrderBy(x => x.Id);
+                case "sewagestatus":
+                    return desc
+                        ? query.OrderByDescending(x => x.SewageStatus)
+                        : query.OrderBy(x => x.SewageStatus);
+
+                default:
+                    return desc
+                        ? query.OrderByDescending(x => x.Id)
+                        : query.OrderBy(x => x.Id);
+            }
         }
     }
 }
+
