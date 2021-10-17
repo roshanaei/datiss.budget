@@ -18,30 +18,72 @@
     // default data nested arrary for treeview
 
     var defaultData = [{
-        text: 'پدر ۱',
+        text: 'درآمد سرمایه ای',
         nodes: [{
             text: 'فرزند ۱',
             nodes: [{
                 text: 'نوه ۱',
             },
             {
-                text: 'Grandchild 2',
+                text: 'نوه 2',
             }
             ]
         },
         {
-            text: 'Child 2',
+            text: 'فرزند 2',
         }
         ]
     }, {
-        text: 'Parent 2',
+        text: 'درآمد جاری',
     }, {
-        text: 'Parent 3',
+        text: 'هزینه سرمایه ای',
     }, {
-        text: 'Parent 4',
+        text: 'هزینه جاری',
     }, {
         text: 'Parent 5',
-    }];
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+    }, {
+            text: 'Parent 5',
+        }];
 
 
     // alternateData nested arrary for treeview

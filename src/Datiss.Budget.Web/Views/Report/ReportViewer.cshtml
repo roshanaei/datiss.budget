@@ -1,0 +1,76 @@
+﻿@{ ViewData["Title"] = "گزارش ها"; }
+
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            @*<i class="ft-settings mr-1"></i>*@
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
+
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <!--Filters-->
+                        <form method="post" asp-controller="" asp-action="" asp-antiforgery="true">
+                            <fieldset class="form-group">
+                                <label class="my-font" style="margin-left:20px">
+                                    سال:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                <label class="my-font" style="margin-left:20px">
+                                    سازمان:
+                                    <select class="form-control form-control-sm d-inline-block width-300" id="organizationId" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                <label class="my-font" style="margin-left:20px">
+                                    حوزه فعالیت:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="activityId" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                <label class="my-font" style="margin-left:20px">
+                                    مرکز هزینه:
+                                    <select class="form-control form-control-sm d-inline-block width-200" id="costCenterId" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                <label class="my-font" style="margin-left:20px">
+                                    قطر لوله:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="diameterPipeId" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                <label class="my-font" style="margin-left:20px">
+                                    نوع استخدام:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                @*<input asp-for="" type="hidden" />
+                                    <input asp-for="" type="hidden" />*@
+                            </fieldset>
+                            <fieldset>
+                                <div class="rowACJE">
+                                    <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 mb-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </form>
+                        <hr />
+                        <!--ReportBody-->
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
