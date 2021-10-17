@@ -106,7 +106,30 @@ namespace Datiss.Budget.Services
             _dbSet.Remove(entity);
 
             await _uow.SaveChangesAsync();
+        }
 
+        public async Task HardDeleteAsync(int yearId, int organizationId) {
+            var items = await _dbSet.Where(_ => _.YearId == yearId)
+                                    .Where(_ => _.OrganizationId == organizationId)
+                                    .ToListAsync();
+
+            _dbSet.RemoveRange(items);
+
+            await _uow.SaveChangesAsync();
+        }
+
+        public async Task<int> CalculationAsync(int yearId, int organizationId) {
+            //var sum = _dbSet.Where(_ => _.YearId == yearId)
+            //                        .Where(_ => _.OrganizationId == organizationId)
+            //                        .GroupBy(_ => _.DWaterTypeId)
+            //                        .Select(_ => new {
+            //                            _.Key,
+            //                            Sum = _.Sum(_ => _.WInstllFee)
+            //                        });
+
+            return await _dbSet.Where(_ => _.YearId == yearId)
+                               .Where(_ => _.OrganizationId == organizationId)
+                               .SumAsync(_ => _.WInstllFee);
         }
 
         private IQueryable<WaterInstallFee> setFilter(IQueryable<WaterInstallFee> query, WaterInstallFeeFilter filter) {

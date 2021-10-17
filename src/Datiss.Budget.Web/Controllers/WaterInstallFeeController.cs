@@ -153,17 +153,21 @@ namespace Datiss.Budget.Web.Controllers
             model.SetFinanceYearFilterSource(years, maxYear);
             model.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
 
+            int firstOrgId = int.Parse(model.Filter.OrganizationSource.FirstOrDefault().Value);
+
             var filterInput = new WaterInstallFeeFilter {
                 OrderBy = "dwatertype",
                 PageNumber = page,
                 PageSize = 2,
-                YearId = maxYear
+                YearId = maxYear,
+                OrganizationId = firstOrgId
             };
 
             var result = await _waterInstallFeeService.GetListAsync(filterInput);
-            
-            
+
             model.Model = result;
+            model.Filter.YearId = filterInput.YearId;
+            model.Filter.OrganizationId = filterInput.OrganizationId;
 
             return View(model);
         }
@@ -240,9 +244,37 @@ namespace Datiss.Budget.Web.Controllers
                 //return File(response.Content,
                 //    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             }
+            
+            if(Request.Form["btnCalculaton"].Count > 0) {
+                var yearId = int.Parse(form["filterYearId"].ToString());
+                var orgId = int.Parse(form["filterOrganizationId"].ToString());
+
+                int calculationResult = await _waterInstallFeeService.CalculationAsync(yearId, orgId);
+            }
 
             return RedirectToAction("Index");
         }
+
+        [HttpPost("[action]"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(IFormCollection form) {
+            var yearId = int.Parse(form["filterYearId"].ToString());
+            var orgId = int.Parse(form["filterOrganizationId"].ToString());
+
+            await _waterInstallFeeService.HardDeleteAsync(yearId, orgId);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost("[action]"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Calculation(IFormCollection form) {
+            var yearId = int.Parse(form["filterYearId"].ToString());
+            var orgId = int.Parse(form["filterOrganizationId"].ToString());
+
+            var result = await _waterInstallFeeService.CalculationAsync(yearId, orgId);
+
+            return RedirectToAction("Index");
+        }
+
 
         [HttpGet("[action]")]
         public async Task<IActionResult> DownloadExcelTemplate() {
@@ -318,5 +350,9 @@ namespace Datiss.Budget.Web.Controllers
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 "WaterInstallFee.xlsx");
         }
+
+
+        //public async Task<IActionResult> Delete()
+
     }
 }
