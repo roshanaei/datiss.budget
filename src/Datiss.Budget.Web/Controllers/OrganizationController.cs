@@ -19,8 +19,7 @@ using Datiss.Budget.Common.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Datiss.Budget.Web.ViewModels;
 using Datiss.Budget.Common.GuardToolkit;
-
-
+using Mapster;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -63,6 +62,31 @@ namespace Datiss.Budget.Web.Controllers
             model.Model = result;
 
             return View(model);
+        }
+
+        [HttpPost("{page?}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index (OrganizationIndexViewModel viewModel,int page = 1)
+        {
+            if(Request.Form["btnFilter"].Count() > 0)
+            {
+                var filterInput = viewModel.Filter.Adapt<OrganizationFilter>();
+
+                var result = await _organizationService.GetListAsync(filterInput);
+
+                viewModel.SetParentOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
+                viewModel.Model = result;
+
+                return View(viewModel);
+            }
+
+            if (Request.Form["btnCreate"].Count() > 0)
+            {
+                //int parentId = int.Parse(Request.Form["Filter.ParentId"].ToString());
+
+                return RedirectToAction("Create", new { });
+            }
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
