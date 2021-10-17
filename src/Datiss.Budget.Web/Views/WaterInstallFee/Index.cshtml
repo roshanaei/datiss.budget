@@ -73,7 +73,7 @@
                                     <label class="my-font rowAC">
                                         <span>نمایش</span>
 
-                                        <select  style="margin-right:10px" class="form-control" id="basicSelect">
+                                        <select style="margin-right:10px" class="form-control" id="basicSelect">
                                             <option>10</option>
                                             <option>20</option>
                                             <option>30</option>
@@ -124,12 +124,14 @@
                                 <div class="rowACJSB" style="margin-top:20px">
                                     <!--Tools-->
                                     <div class="rowACJS">
-                                        <form asp-controller="WaterInstallFee"
-                                              asp-action="Actions"
+                                        <form id="toolForm"
                                               enctype="multipart/form-data"
                                               method="post"
                                               asp-antiforgery="true">
                                             <input name="importExcelFile" type="file" />
+                                            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+                                            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
                                             @*<input asp-for="ExcelFile" type="file" />*@
                                             <span data-toggle="modal" data-target="#backdrop">
                                                 <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnExcelImport" class="btn btn-secondary bg-light-secondary mr-1 my-font">
@@ -141,11 +143,11 @@
                                                     <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
                                                 </button>
                                             </span>
-                                            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                                            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
                                                 <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
                                             </button>
                                             <span data-toggle="modal" data-target="#success">
-                                                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnReport" class="btn btn-info  bg-light-info mr-1 my-font">
+                                                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" onclick="return calculation(this.click);" class="btn btn-info  bg-light-info mr-1 my-font">
                                                     <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
                                                 </button>
                                             </span>
@@ -219,8 +221,10 @@
     <div id="modaldiv">
 
     </div>
-    <script>
-        $(".confirm-delete").on('click', function () {
+
+    <script type="text/javascript">
+
+        function hardDelete(e) {
             Swal.fire({
                 title: 'برای حذف اطمینان دارید؟',
                 text: "You won't be able to revert this!",
@@ -238,10 +242,26 @@
                 buttonsStyling: false,
             }).then(function (result) {
                 if (result.value) {
-                    alert('deleted')
+                    $('#toolForm').attr('action', '@Url.Action("Delete")');
+                    $('#toolForm').submit();
+
+                    return true;
+                }
+                else {
+
+                    return false;
                 }
             });
-        });
+        }
+
+        function calculation(e) {
+            $('#toolForm').attr('action', '@Url.Action("Calculation")');
+            $('#toolForm').submit();
+
+            return true;
+        }
+
+
         function loadCreateLink() {
             var a = document.getElementById("createLink");
             var organizationId = document.getElementById('organizationId').value;
@@ -274,9 +294,6 @@
          });
 
 
-        $(document).ready(function () {
-            loadCreateLink();
-        });
 
 
          function exportExcel() {

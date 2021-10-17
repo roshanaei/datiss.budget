@@ -19,6 +19,10 @@ namespace Datiss.Budget.Services.Contracts
 
         Task HardDeleteAsync(int Id);
 
+        Task HardDeleteAsync(int yearId, int organizationId);
+
+        Task<int> CalculationAsync(int yearId, int organizationId);
+
         Task<PagedResult<WaterInstallFeeViewModel>> GetListAsync(WaterInstallFeeFilter filter);
 
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
