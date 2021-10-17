@@ -1,14 +1,34 @@
 ﻿
- 
-@model Datiss.Budget.Reports.ReportViewData 
 
-<form asp-controller="Report" 
-      asp-action="Report1"
-      data-ajax="true"
-      data-ajax-update="#Viewer"
-      method="post">
-    <input asp-for="Id" type="hidden" />
+@model Datiss.Budget.Reports.ReportViewData
+@*<form asp-controller="Report"
+          asp-action="Report1"
+          data-ajax="true"
+          data-ajax-update="#Viewer"
+          method="post">
+        <input asp-for="Id" type="hidden" />
 
-    <button type="submit">Send</button>
-</form>
+        <button type="submit">Send</button>
+    </form>*@
 
+@using Stimulsoft.Report.Mvc;
+@using Stimulsoft.Report.Web;
+@using Stimulsoft.System.Web.UI.WebControls;
+
+<p>
+    Hello
+</p>
+
+@Html.StiNetCoreViewer(new StiNetCoreViewerOptions() {
+    Actions =
+    {
+        ViewerEvent = "ViewerEvent",
+        GetReport = "GetReport"
+    },
+    Server =
+    {
+        Controller = "Report",
+        RequestTimeout = 60000,
+        RouteTemplate = "Report/{action}"
+    }
+})

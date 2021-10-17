@@ -10,7 +10,7 @@ using Stimulsoft.Report.Mvc;
 namespace Datiss.Budget.Web.Controllers
 {
 
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]  
     public class ReportController : Controller
     {
 
@@ -51,12 +51,14 @@ namespace Datiss.Budget.Web.Controllers
                 }
             };
 
-            var myreport = await _reportEngine.GenerateReportAsync(model);
+            //var myreport = await _reportEngine.GenerateReportAsync(model);
 
-             await myreport.ExportDocumentAsync(
-                 Stimulsoft.Report.StiExportFormat.Pdf, @"E:\Projects\Datiss\datiss.budget\src\Datiss.Budget.Web\wwwroot\iman.pdf");
+            //myreport.Render(true);
 
-            return View();
+            //await myreport.ExportDocumentAsync(
+            //     Stimulsoft.Report.StiExportFormat.Pdf, @"E:\Projects\Datiss\datiss.budget\src\Datiss.Budget.Web\wwwroot\iman.pdf");
+
+            return View(model);
         }
 
         [HttpPost("report1")]
@@ -65,16 +67,9 @@ namespace Datiss.Budget.Web.Controllers
             return PartialView("_report1");
         }
 
-
-        [Route("[action]")]
-        public IActionResult ViewerEvent() {
-            return StiNetCoreViewer.ViewerEventResult(this);
-        }
-
-        [HttpPost("GetReport/{id}")]
-        public async Task<IActionResult> GetReport(int id = 1) {
+        public IActionResult GetReport() {
             var model = new ReportViewData {
-                Id = id,
+                Id = 1,
                 Params = new List<ReportParamViewData> {
                     new ReportParamViewData {
                         ParamType = Enum.ReportParamType.Year,
@@ -94,9 +89,22 @@ namespace Datiss.Budget.Web.Controllers
                 }
             };
 
-            var myreport = await _reportEngine.GenerateReportAsync(model);
+            //var myreport = await _reportEngine.GenerateReportAsync(model);
 
-            return await StiNetCoreViewer.GetReportResultAsync(this, myreport);
-        } 
+            var myreport = _reportEngine.GenerateReportAsync(model).Result;
+
+            myreport.Render(true);
+
+            //return await StiNetCoreViewer.GetReportResultAsync(this, myreport);
+
+            return StiNetCoreViewer.GetReportResult(this, myreport);
+        }
+
+
+        public IActionResult ViewerEvent() {
+            return StiNetCoreViewer.ViewerEventResult(this);
+        }
+
+        
     }
 }

@@ -5,8 +5,8 @@
     <Databases isList="true" count="1">
       <MS_x0020_SQL Ref="2" type="Stimulsoft.Report.Dictionary.StiSqlDatabase" isKey="true">
         <Alias>MS SQL</Alias>
-        <ConnectionStringEncrypted>9FTXocZco4VFQflAxIhiF4N60YhjXdOZa3u5iWpE6xvRfGWJYWdybWlJnFjqGOOn9FbLwu9f2YXsFaXcThi1L8RU0QtETQ==</ConnectionStringEncrypted>
-        <Key>20322278af4742b29e886be9e115c062</Key>
+        <ConnectionStringEncrypted>9Fz3oe9K88hFYYRY5Bxgf9Fu+c1WX3ukRVu5CGNxoD/fNrVIxgPD+X999dxpTOFn9MTZCc1Rw4FpTaEYTRjhXvJU94rFUaPIa0S5zGdY617EWg==</ConnectionStringEncrypted>
+        <Key>70d931fb54c8480098ad36e88698c15a</Key>
         <Name>MS SQL</Name>
       </MS_x0020_SQL>
     </Databases>
@@ -14,23 +14,23 @@
       <WaterInstallFees Ref="3" type="Stimulsoft.Report.Dictionary.StiSqlSource" isKey="true">
         <Alias>WaterInstallFees</Alias>
         <Columns isList="true" count="13">
-          <value>WaterInstallFeeId,System.Int32</value>
-          <value>YearId,System.Int32</value>
-          <value>OrganizationId,System.Int32</value>
           <value>DWaterTypeId,System.Int32</value>
+          <value>OrganizationId,System.Int32</value>
+          <value>WaterInstallFeeId,System.Int32</value>
           <value>WInstllFee,System.Int32</value>
-          <value>CreatedByBrowserName,System.String</value>
-          <value>CreatedByIp,System.String</value>
-          <value>CreatedByUserId,System.Int32</value>
-          <value>CreatedDateTime,System.DateTime</value>
+          <value>YearId,System.Int32</value>
           <value>ModifiedByBrowserName,System.String</value>
           <value>ModifiedByIp,System.String</value>
           <value>ModifiedByUserId,System.Int32</value>
           <value>ModifiedDateTime,System.DateTime</value>
+          <value>CreatedByBrowserName,System.String</value>
+          <value>CreatedByIp,System.String</value>
+          <value>CreatedByUserId,System.Int32</value>
+          <value>CreatedDateTime,System.DateTime</value>
         </Columns>
         <CommandTimeout>30</CommandTimeout>
         <Dictionary isRef="1" />
-        <Key>efcb6b30555f4c6f846bc8091d986d4f</Key>
+        <Key>6a014d770c9145a888fa7ed3d22204a9</Key>
         <Name>WaterInstallFees</Name>
         <NameInSource>MS SQL</NameInSource>
         <Parameters isList="true" count="0" />
@@ -42,8 +42,8 @@
     <Resources isList="true" count="0" />
     <Variables isList="true" count="3">
       <value>,YearId,YearId,,System.Int32,,True,False,False,False,,_x0037_b9e5b06568d4227bb71ec7e4a5f69c3</value>
-      <value>,OrganizationId,OrganizationId,,System.Int32,,True,False,False,False</value>
-      <value>,UserTypeId,UserTypeId,,System.Int32,,True,False,False,False</value>
+      <value>,OrganizationId,OrganizationId,,System.Int32,,True,False,False,False,,c5b5aaab275a4ca982f0d53f92c01ea3</value>
+      <value>,UserTypeId,UserTypeId,,System.Int32,,True,False,False,False,,bbb7d654ce5946c2abc14b17c43fc059</value>
     </Variables>
   </Dictionary>
   <EngineVersion>EngineV2</EngineVersion>
@@ -239,6 +239,7 @@
         </HeaderBand1>
         <DataBand1 Ref="17" type="DataBand" isKey="true">
           <Brush>Transparent</Brush>
+          <BusinessObjectGuid isNull="true" />
           <ClientRectangle>0,1.8,7.72,0.3</ClientRectangle>
           <Components isList="true" count="4">
             <Text1 Ref="18" type="Text" isKey="true">
@@ -339,13 +340,13 @@
     <value>Stimulsoft.Report.Dll</value>
   </ReferencedAssemblies>
   <ReportAlias>Report</ReportAlias>
-  <ReportChanged>9/25/2021 4:15:40 PM</ReportChanged>
+  <ReportChanged>10/16/2021 7:30:53 PM</ReportChanged>
   <ReportCreated>9/25/2021 4:01:16 PM</ReportCreated>
-  <ReportFile>C:\Users\Datiss\Desktop\Report.mrt</ReportFile>
-  <ReportGuid>cf1a440300ee46d996fa91d87d54cae0</ReportGuid>
+  <ReportFile>E:\Projects\Datiss\datiss.budget\src\Datiss.Budget.Web\wwwroot\report-templates\Sample-Report.mrt</ReportFile>
+  <ReportGuid>50d7b1e2e76540718a44806abe825cb8</ReportGuid>
   <ReportName>Report</ReportName>
   <ReportUnit>Inches</ReportUnit>
-  <ReportVersion>2021.3.2.0</ReportVersion>
+  <ReportVersion>2021.3.6.0</ReportVersion>
   <Script>using System;
 using System.Drawing;
 using System.Windows.Forms;
