@@ -79,12 +79,11 @@ namespace Datiss.Budget
 
                 endpoints.MapControllerRoute(
                     name: "areaRoute",
-                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                pattern: "{area:exists}/{controller=Identity}/{action=Index}/{id?}");
 
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action}/{id?}"
-                    );
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
                 endpoints.MapRazorPages();
             });

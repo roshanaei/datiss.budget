@@ -6,10 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Datiss.Budget.Enum;
+using Datiss.Budget.ViewModels.Base;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class AddOrganizationViewModel
+    public class AddOrganizationViewModel : BaseViewModel
     {
         public int? ParentId { get; set; }
 
@@ -29,5 +30,39 @@ namespace Datiss.Budget.ViewModels
     public class UpdateOrganizationViewModel : AddOrganizationViewModel
     {
         public int Id { get; set; }
+    }
+
+    public class OrganizationViewModel
+    {
+        public int Id { get; set; }
+
+        public int? ParentId { get; set; }
+
+        public string Title { get; set; }
+
+        public int DisplayOrder { get; set; }
+
+        public OrganizationType Type { get; set; }
+
+        public bool SewageStatus { get; set; }
+
+        public EntityStatus Status { get; set; }
+    }
+
+    public class OrganizationFilterViewModel : FilterViewModel
+    {
+        public int? ParentId { get; set; }
+
+        public OrganizationType? Type { get; set; }
+
+        public bool? SewageStatus { get; set; }
+
+        public EntityStatus? Status { get; set; }
+
+        public IEnumerable<SelectListItem> ParentOrganozationSource { get; set; }
+
+        public IEnumerable<SelectListItem> OrganizationTypeSource { get; set; }
+
+        public IEnumerable<SelectListItem> OrganizationStatusSource { get; set; }
     }
 }

@@ -125,33 +125,62 @@
                                             <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
                                         </button>
                                     </span>
-
-                                    <!-- Modal -->
-
                                 </div>
-                                <nav aria-label="Page navigation">
-                                    <ul class="pagination justify-content-center">
-                                        <li class="page-item"><a class="page-link" href="javascript:;" aria-label="Previous">«</a></li>
-                                        <li class="page-item"><a class="page-link" href="javascript:;">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="javascript:;">2</a></li>
-                                        <li class="page-item active"><a class="page-link" href="javascript:;">3</a></li>
-                                        <li class="page-item"><a class="page-link" href="javascript:;">4</a></li>
-                                        <li class="page-item"><a class="page-link" href="javascript:;">5</a></li>
-                                        <li class="page-item"><a class="page-link" href="javascript:;" aria-label="Next">»</a></li>
-                                    </ul>
-                                </nav>
+
+                                <!--Pagination-->
+                                @if (Model.Model.PagesCount > 1)
+                                {
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination justify-content-center">
+                                            @if (Model.Model.PageNumber > 1)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-controller="WasteInstallFee"
+                                                       asp-action="Index"
+                                                       asp-route-page="@Model.Model.PreviousPage"
+                                                       aria-label="Previous">«</a>
+                                                </li>
+                                            }
+
+                                            @for (int i = 1; i <= Model.Model.PagesCount; i++)
+                                            {
+                                                if (i == Model.Model.PageNumber)
+                                                {
+                                                    <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                                                }
+                                                else
+                                                {
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                           asp-controller="WasteInstallFee"
+                                                           asp-action="Index"
+                                                           asp-route-page="@i">@i.ToString() </a>
+                                                    </li>
+                                                }
+                                            }
+
+                                            @if (Model.Model.PageNumber < Model.Model.PagesCount)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-controller="WasteInstallFee"
+                                                       asp-action="Index"
+                                                       asp-route-page="@Model.Model.NextPage"
+                                                       aria-label="Next">»</a>
+                                                </li>
+                                            }
+
+                                        </ul>
+                                    </nav>
+                                }
                             </div>
-
-                            <!--Pagination-->
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    @{ await Html.RenderPartialAsync("_TreeView").ConfigureAwait(false); }
 </section>
 
 @section footSection {

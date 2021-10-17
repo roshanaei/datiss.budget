@@ -38,19 +38,19 @@
                         </a>
                         <ul class="menu-content" id="CollapseBase" parent="CollapseBase">
                             <li class="nav-item">
-                                <a href="#">
+                                <a asp-area="" asp-controller="FinanceYear" asp-action="New">
                                     <i class="ft-refresh-cw"></i>
                                     <span data-i18n="سال" class="menu-title my-font"> سال </span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#">
+                                <a asp-area="" asp-controller="Organization" asp-action="Index">
                                     <i class="ft-refresh-cw"></i>
                                     <span data-i18n="سازمان" class="menu-title my-font"> سازمان </span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#">
+                                <a asp-area="" asp-controller="Constant" asp-action="New">
                                     <i class="ft-refresh-cw"></i>
                                     <span data-i18n="ثابت ها" class="menu-title my-font"> ثابت ها </span>
                                 </a>
@@ -68,7 +68,7 @@
                         <ul class="menu-content" id="CollapseAccount" parent="CollapseAccount">
 
                             <li class="">
-                                <a class="menu-item" asp-area="" asp-controller="" asp-action="">
+                                <a class="menu-item" asp-area="Identity" asp-controller="UsersManager" asp-action="Index">
                                     <i class="ft-arrow-right submenu-icon"></i>
                                     <span class="menu-item" data-i18n="کاربران"> کاربران</span>
                                 </a>
@@ -326,7 +326,7 @@
                     </li>
                     <!--  گزارش-->
                     <li class="nav-item">
-                        <a href="#">
+                        <a asp-area="" asp-controller="Report" asp-action="Index">
                             <i class="ft-refresh-cw"></i>
                             <span data-i18n="گزارش" class="menu-title my-font"> گزارش </span>
                         </a>
