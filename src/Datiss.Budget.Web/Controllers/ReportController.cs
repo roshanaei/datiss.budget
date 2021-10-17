@@ -10,7 +10,7 @@ using Stimulsoft.Report.Mvc;
 namespace Datiss.Budget.Web.Controllers
 {
 
-    [Route("[controller]/[action]")]
+    [Route("[controller]/[action]")]  
     public class ReportController : Controller
     {
 
