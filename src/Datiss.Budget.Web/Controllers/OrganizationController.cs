@@ -47,8 +47,6 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public  async Task<IActionResult> Index(int page = 1)
         {
-            var access = _securityTrimmingService.CanCurrentUserAccess("", "Organization", "Index");
-
             var model = new OrganizationIndexViewModel();
 
             model.SetParentOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
