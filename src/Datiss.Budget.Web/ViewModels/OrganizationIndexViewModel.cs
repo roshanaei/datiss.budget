@@ -31,5 +31,25 @@ namespace Datiss.Budget.Web.ViewModels
             });
         }
 
+        public void SetOrganizationTypeFilterSource(IEnumerable<DropDownItem> source,int? selectOrgTypeId = null)
+        {
+            Filter.OrganizationTypeSource = source.Select(x => new SelectListItem 
+            { 
+                Selected = x.Id == selectOrgTypeId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+        }
+
+        public void SetOrganizationStatusFilterSource(IEnumerable<DropDownItem> source, int? selectOrgStatusId = null)
+        {
+            Filter.OrganizationStatusSource = source.Select(x => new SelectListItem
+            {
+                Selected = x.Id == selectOrgStatusId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+        }
+
     }
 }
