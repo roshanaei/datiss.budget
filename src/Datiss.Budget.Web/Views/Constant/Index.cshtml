@@ -1,5 +1,5 @@
-﻿@model OrganizationIndexViewModel
-@{ ViewData["Title"] = "سازمان"; }
+﻿@*@model OrganizationIndexViewModel*@
+@{ ViewData["Title"] = "ثابت ها"; }
 
 <!--Title-->
 <div class="row">
@@ -11,38 +11,23 @@
     </div>
 </div>
 
+
 <section>
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-content">
-                    <div class="card-body">
+                    <div class="card-body"
                         <!--Filters-->
-                        <form method="post" class="rowACJSB" asp-controller="Organization" asp-action="Index" asp-antiforgery="true">
+                        <form method="post" class="rowACJSB" asp-controller="WaterInstallFee" asp-action="Index" asp-antiforgery="true">
                             <fieldset class="form-group mt-3">
-                                <label asp-for="Filter.ParentOrganozationSource" class="my-font">
-                                    سازمان پدر:
-                                    <select class="form-control d-inline-block width-300" id="organizationId" onchange="loadCreateLink()" asp-for="Filter.ParentOrganozationSource" asp-items="Model.Filter.ParentOrganozationSource">
+                                <label  class="my-font">
+                                    سال:
+                                    <select class="form-control d-inline-block width-100" id="yearId"  onchange="loadCreateLink()">
                                     </select>
                                 </label>
-                                <label  asp-for="Filter.OrganizationTypeSource" class="my-font" style="margin-right:20px">
-                                    نوع سازمان:
-                                    <select class="form-control d-inline-block width-100" id="yearId" onchange="loadCreateLink()" asp-for="Filter.OrganizationTypeSource" asp-items="Model.Filter.OrganizationTypeSource">
-                                    </select>
-                                </label>
-                                <label class="my-font" style="margin-right:20px">
-                                    فاضلاب:
-                                    <select class="form-control d-inline-block width-100" id="yearId" onchange="loadCreateLink()">
-                                    </select>
-                                </label>
-                                <label class="my-font" style="margin-right:20px">
-                                     وضعیت:
-                                    <select class="form-control d-inline-block width-100" id="yearId" onchange="loadCreateLink()">
-                                    </select>
-                                </label>
-
-                                <input type="hidden" />
-                                <input type="hidden" />
+                                @*<input asp-for="Filter.OrderBy" type="hidden" />
+                                <input asp-for="Filter.OrderDesc" type="hidden" />*@
                             </fieldset>
                             <fieldset>
                                 <div class="rowACJE">
@@ -79,17 +64,23 @@
                                     </label>
                                 </fieldset>
                             </div>
+                            <fieldset>
+                                <div class="rowACJE">
+                                    <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="submit" name="btnExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
+                                    </button>
+                                </div>
+                            </fieldset>
                         </div>
                         <!--DataTable-->
                         <div class="table-responsive">
                             <table id="" class=" table table-hover table-bordered m-0 my-font">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>نام سازمان</th>
-                                        <th>نوع سازمان</th>
-                                        <th>ترتیب نمایش</th>
-                                        <th>فاضلاب</th>
-                                        <th>وضعیت</th>
+                                        <th>سال</th>
+                                        <th>سازمان</th>
+                                        <th>کاربری</th>
+                                        <th>قیمت</th>
                                         <th>مدیریت</th>
                                     </tr>
                                 </thead>
@@ -102,17 +93,46 @@
                                             <td>@item.DWaterTypeDisplay </td>
                                             <td>@item.WInstallFee.ToString() </td>
                                             <td>
-                                                <a asp-controller="Organization" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                                                <a asp-controller="WaterInstallFee" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
                                             </td>
                                         </tr>
                                     }*@
                                 </tbody>
                             </table>
                             <div class="rowACJSB" style="margin-top:20px">
+                                <!--Tools-->
+                                <div class="rowACJS">
+                                    <form id="toolForm"
+                                          enctype="multipart/form-data"
+                                          method="post"
+                                          asp-antiforgery="true">
+                                        <input name="importExcelFile" type="file" />
+                                        @*<input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+                                        <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />*@
+
+                                        @*<input asp-for="ExcelFile" type="file" />*@
+                                        <span data-toggle="modal" data-target="#backdrop">
+                                            <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnExcelImport" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                                            </button>
+                                        </span>
+                                        <span data-toggle="modal" data-target="#CopyModal">
+                                            <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font modallink">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                                            </button>
+                                        </span>
+                                        <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+                                        </button>
+                                        <span data-toggle="modal" data-target="#success">
+                                            <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" onclick="return calculation(this.click);" class="btn btn-info  bg-light-info mr-1 my-font">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                                            </button>
+                                        </span>
+                                    </form>
+
+                                </div>
                                 <!--Pagination-->
-                                @*<p>
-                                        Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
-                                    </p>*@
 
                                 @*@if (Model.Model.PagesCount > 1)
                                 {
@@ -122,7 +142,7 @@
                                             {
                                                 <li class="page-item">
                                                     <a class="page-link"
-                                                       asp-controller="Organization"
+                                                       asp-controller="WaterInstallFee"
                                                        asp-action="Index"
                                                        asp-route-page="@Model.Model.PreviousPage"
                                                        aria-label="Previous">«</a>
@@ -139,7 +159,7 @@
                                                 {
                                                     <li class="page-item">
                                                         <a class="page-link"
-                                                           asp-controller="Organization"
+                                                           asp-controller="WaterInstallFee"
                                                            asp-action="Index"
                                                            asp-route-page="@i">@i.ToString() </a>
                                                     </li>
@@ -150,7 +170,7 @@
                                             {
                                                 <li class="page-item">
                                                     <a class="page-link"
-                                                       asp-controller="Organization"
+                                                       asp-controller="WaterInstallFee"
                                                        asp-action="Index"
                                                        asp-route-page="@Model.Model.NextPage"
                                                        aria-label="Next">»</a>
@@ -169,72 +189,3 @@
     </div>
 
 </section>
-
-
-
-@section footSection {
-    <div id="modaldiv">
-
-    </div>
-    <script>
-        $(".confirm-delete").on('click', function () {
-            Swal.fire({
-                title: 'برای حذف اطمینان دارید؟',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#2F8BE6',
-                animation: false,
-                customClass: 'animated flipInX',
-                cancelButtonColor: '#F55252',
-                cancelButtonText: 'انصراف',
-                confirmButtonText: 'حذف اطلاعات!',
-
-                confirmButtonClass: 'btn btn-warning my-font',
-                cancelButtonClass: 'btn btn-danger  my-font ml-1',
-                buttonsStyling: false,
-            }).then(function (result) {
-                if (result.value) {
-                    alert('deleted')
-                }
-            });
-        });
-        function loadCreateLink() {
-            var a = document.getElementById("createLink");
-            var organizationId = document.getElementById('organizationId').value;
-
-            var yearId = document.getElementById('yearId').value;
-
-            var url = 'Organization/new'
-
-            a.href = url + "/" + organizationId + "/" + yearId;
-        }
-
-         $(document).on('click', '.modallink', function() {
-
-            let myurl = '@Url.Action("Copy")';
-
-            $.ajax({
-                type: 'GET',
-                url: myurl,
-                success: function (data, status, settings) {
-
-                    $("#modaldiv").html(data);
-                    $('#CopyModal').modal('show');
-                },
-                error: function (ajaxrequest, ajaxOptions, thrownError) {
-
-                    $("#modaldiv").html('Failed to load more content');
-                }
-            });
-
-         });
-
-        $(document).ready(function () {
-            loadCreateLink();
-        });
-
-    </script>
-
-}
-
