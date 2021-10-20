@@ -204,7 +204,29 @@ namespace Datiss.Budget.Services
             if (sourceYearId == destYearId)
                 throw new CopySameYearException();
 
-            var result = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+            var result = new List<WaterInstallFee>();
+
+            var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
+                                        .Where(_ => _.YearId == sourceYearId)
+                                        .ToListAsync();
+
+            if(selfData.Any()) {
+                foreach(var item in selfData) {
+                    var entity = new WaterInstallFee {
+                        DWaterTypeId = item.DWaterTypeId,
+                        OrganizationId = item.OrganizationId,
+                        YearId = destYearId,
+                        WInstllFee = item.WInstllFee
+                    };
+                    result.Add(entity);
+                }
+            }
+
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+
+            if(childrens.Any()) {
+                result.AddRange(childrens);
+            }
 
             _dbSet.AddRange(result);
 
