@@ -173,7 +173,6 @@ namespace Datiss.Budget.Web.Controllers
             var filterInput = new WaterInstallFeeFilter {
                 OrderBy = "dwatertype",
                 PageNumber = page,
-                PageSize = 2,
                 YearId = maxYear,
                 OrganizationId = firstOrgId
             };
