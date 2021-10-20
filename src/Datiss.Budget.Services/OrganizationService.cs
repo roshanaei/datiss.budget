@@ -100,6 +100,10 @@ namespace Datiss.Budget.Services
                 }).ToListAsync();
 
 
+
+        public async Task<IEnumerable<Organization>> GetWithChildrenAsync(int organizationId)
+            => await getWithChildrenAsync(organizationId);
+
         private async Task<IEnumerable<Organization>> getWithChildrenAsync(int organizationId)
         {
             var result = new List<Organization>();
