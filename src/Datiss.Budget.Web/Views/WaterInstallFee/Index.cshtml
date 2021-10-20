@@ -15,25 +15,39 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
+
+                @if (ViewData["message"] != null) {
+                    <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                        </button>
+                        <span>@ViewData["message"]</span>
+                    </div>
+                }
+
                 <!--Alert-->
                 <div class="alert bg-light-warning alert-dismissible m-2" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
                     </button>
-                    @if (ViewData["copy"] != null)
-                    {
+                    @if (ViewData["copy"] != null) {
                         <span class="my-font">کپی اطلاعات با موفقیت انجام شد.</span>
                     }
                     <span class="my-font">این یه پیغام جدید است!</span>
-                    @if (ViewData["import_error"] != null)
-                    {
+                    @if (ViewData["import_error"] != null) {
                         <span>@ViewData["import_error"].ToString() </span>
                     }
+                    @if (ViewData["message"] != null) {
+                        <span></span>
+                    }
                 </div>
+
+
+
                 <div class="card-content">
                     <div class="card-body">
                         <!--Filters-->
-                        <form method="post" class="rowACJSB"  asp-controller="WaterInstallFee" asp-action="Index" asp-antiforgery="true">
+                        <form method="post" class="rowACJSB" asp-controller="WaterInstallFee" asp-action="Index" asp-antiforgery="true">
                             <fieldset class="form-group mt-3">
                                 <label asp-for="Filter.YearId" class="my-font">
                                     سال:
@@ -78,137 +92,130 @@
                                             <option>20</option>
                                             <option>30</option>
                                         </select>
-                                        <span  style="margin-right:10px">رکورد</span>
+                                        <span style="margin-right:10px">رکورد</span>
 
                                     </label>
                                 </fieldset>
                             </div>
-                                <fieldset>
-                                    <div class="rowACJE">
-                                        <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="submit" name="btnExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
-                                        </button>
-                                        <a data-toggle="tooltip" data-placement="top" asp-action="DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
-                                        </a>
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <!--DataTable-->
-                            <div class="table-responsive">
-                                <table id="" class=" table table-hover table-bordered m-0 my-font">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th>سال</th>
-                                            <th>سازمان</th>
-                                            <th>کاربری</th>
-                                            <th>قیمت</th>
-                                            <th>مدیریت</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in Model.Model.Items)
-                                        {
-                                            <tr>
-                                                <td>@item.Year.ToString()</td>
-                                                <td>@item.OrganizationDisplay </td>
-                                                <td>@item.DWaterTypeDisplay </td>
-                                                <td>@item.WInstallFee.ToString() </td>
-                                                <td>
-                                                    <a asp-controller="WaterInstallFee" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                                <div class="rowACJSB" style="margin-top:20px">
-                                    <!--Tools-->
-                                    <div class="rowACJS">
-                                        <form id="toolForm"
-                                              enctype="multipart/form-data"
-                                              method="post"
-                                              asp-antiforgery="true">
-                                            <input name="importExcelFile" type="file" />
-                                            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
-                                            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
-
-                                            @*<input asp-for="ExcelFile" type="file" />*@
-                                            <span data-toggle="modal" data-target="#backdrop">
-                                                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnExcelImport" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                                                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
-                                                </button>
-                                            </span>
-                                            <span data-toggle="modal" data-target="#CopyModal">
-                                                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font modallink">
-                                                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
-                                                </button>
-                                            </span>
-                                            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                                                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
-                                            </button>
-                                            <span data-toggle="modal" data-target="#success">
-                                                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" onclick="return calculation(this.click);" class="btn btn-info  bg-light-info mr-1 my-font">
-                                                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                                                </button>
-                                            </span>
-                                        </form>
-
-                                    </div>
-                                    <!--Pagination-->
-                                    @*<p>
-                        Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
-                    </p>*@
-
-                                    @if (Model.Model.PagesCount > 1)
-                                    {
-                                        <nav aria-label="Page navigation">
-                                            <ul class="pagination justify-content-center">
-                                                @if (Model.Model.PageNumber > 1)
-                                                {
-                                                    <li class="page-item">
-                                                        <a class="page-link"
-                                                           asp-controller="WaterInstallFee"
-                                                           asp-action="Index"
-                                                           asp-route-page="@Model.Model.PreviousPage"
-                                                           aria-label="Previous">«</a>
-                                                    </li>
-                                                }
-
-                                                @for (int i = 1; i <= Model.Model.PagesCount; i++)
-                                                {
-                                                    if (i == Model.Model.PageNumber)
-                                                    {
-                                                        <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
-                                                    }
-                                                    else
-                                                    {
-                                                        <li class="page-item">
-                                                            <a class="page-link"
-                                                               asp-controller="WaterInstallFee"
-                                                               asp-action="Index"
-                                                               asp-route-page="@i">@i.ToString() </a>
-                                                        </li>
-                                                    }
-                                                }
-
-                                                @if (Model.Model.PageNumber < Model.Model.PagesCount)
-                                                {
-                                                    <li class="page-item">
-                                                        <a class="page-link"
-                                                           asp-controller="WaterInstallFee"
-                                                           asp-action="Index"
-                                                           asp-route-page="@Model.Model.NextPage"
-                                                           aria-label="Next">»</a>
-                                                    </li>
-                                                }
-
-                                            </ul>
-                                        </nav>
-                                    }
+                            <fieldset>
+                                <div class="rowACJE">
+                                    <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="submit" name="btnExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
+                                    </button>
+                                    <a data-toggle="tooltip" data-placement="top" asp-action="DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
+                                    </a>
                                 </div>
+                            </fieldset>
+                        </div>
+                        <!--DataTable-->
+                        <div class="table-responsive">
+                            <table id="" class=" table table-hover table-bordered m-0 my-font">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>سال</th>
+                                        <th>سازمان</th>
+                                        <th>کاربری</th>
+                                        <th>قیمت</th>
+                                        <th>مدیریت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Model.Items) {
+                                        <tr>
+                                            <td>@item.Year.ToString()</td>
+                                            <td>@item.OrganizationDisplay </td>
+                                            <td>@item.DWaterTypeDisplay </td>
+                                            <td>@item.WInstallFee.ToString() </td>
+                                            <td>
+                                                <a asp-controller="WaterInstallFee" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="rowACJSB" style="margin-top:20px">
+                                <!--Tools-->
+                                <div class="rowACJS">
+                                    <form id="toolForm"
+                                          enctype="multipart/form-data"
+                                          method="post"
+                                          asp-antiforgery="true">
+                                        <input name="importExcelFile" type="file" />
+                                        <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+                                        <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+                                        @*<input asp-for="ExcelFile" type="file" />*@
+                                        <span data-toggle="modal" data-target="#backdrop">
+                                            <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                                            </button>
+                                        </span>
+                                        <span data-toggle="modal" data-target="#CopyModal">
+                                            <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font modallink">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                                            </button>
+                                        </span>
+                                        <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+                                        </button>
+                                        <span data-toggle="modal" data-target="#success">
+                                            <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" onclick="return calculation(this.click);" class="btn btn-info  bg-light-info mr-1 my-font">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                                            </button>
+                                        </span>
+                                    </form>
+
+                                </div>
+                                <!--Pagination-->
+                                @*<p>
+                            Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
+                        </p>*@
+
+                                @if (Model.Model.PagesCount > 1) {
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination justify-content-center">
+                                            @if (Model.Model.PageNumber > 1) {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-controller="WaterInstallFee"
+                                                       asp-action="Index"
+                                                       asp-route-page="@Model.Model.PreviousPage"
+                                                       aria-label="Previous">«</a>
+                                                </li>
+                                            }
+
+                                            @for (int i = 1; i <= Model.Model.PagesCount; i++) {
+                                                if (i == Model.Model.PageNumber) {
+                                                    <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                                                }
+                                                else {
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                           asp-controller="WaterInstallFee"
+                                                           asp-action="Index"
+                                                           asp-route-page="@i">@i.ToString() </a>
+                                                    </li>
+                                                }
+                                            }
+
+                                            @if (Model.Model.PageNumber < Model.Model.PagesCount) {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-controller="WaterInstallFee"
+                                                       asp-action="Index"
+                                                       asp-route-page="@Model.Model.NextPage"
+                                                       aria-label="Next">»</a>
+                                                </li>
+                                            }
+
+                                        </ul>
+                                    </nav>
+                                }
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>
@@ -218,6 +225,7 @@
 
 
 @section footSection {
+    <partial name="_excelModal" model="new ImportExcelViewModel()" />
     <div id="modaldiv">
 
     </div>
@@ -273,7 +281,15 @@
             a.href = url + "/" + organizationId + "/" + yearId;
         }
 
-         $(document).on('click', '.modallink', function() {
+        function openImportExcelForm() {
+            $('#importExcelForm').attr(
+                'action',
+                '@Url.Action(WaterInstallFeeController.ACTION_ImportExcel)'
+            );
+            $('#ExcellModal').modal('show');
+        }
+
+        $(document).on('click', '.modallink', function() {
 
             let myurl = '@Url.Action("Copy")';
 
@@ -281,7 +297,7 @@
                 type: 'GET',
                 url: myurl,
                 success: function (data, status, settings) {
-
+                    $('#modaldiv').html('');
                     $("#modaldiv").html(data);
                     $('#CopyModal').modal('show');
                 },
@@ -291,7 +307,7 @@
                 }
             });
 
-         });
+        });
 
 
 
