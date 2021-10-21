@@ -9,8 +9,9 @@
                     <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
                 </button>
             </div>
-            <form asp-controller="WaterInstallFee"
-                  asp-action="Copy"
+            <form asp-controller="@WaterInstallFeeController.Name"
+                  asp-action="@WaterInstallFeeController.ACTION_Copy"
+                  method="post"
                   asp-antiforgery="true">
                 <div class="modal-body">
                     <p class="my-font-bold">انتخاب اطلاعات مبدا</p>
