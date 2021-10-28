@@ -13,7 +13,7 @@ namespace Datiss.Budget {
 
         public static void Main(string[] args)
         {
-            Log.Logger = SerilogConfiguration.CreateLogger(seqUrl: "");
+            Log.Logger = SerilogConfiguration.CreateLogger(seqUrl: "http://localhost:5341/");
 
             try {
                 Log.Information("Starting web host for Datiss.Budget");
