@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datiss.Budget.IocConfig", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datiss.Budget.Resources", "src\Datiss.Budget.Resources\Datiss.Budget.Resources.csproj", "{6E7697D0-6CB1-47F6-950C-3DFC2727E295}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Datiss.Budget.Reports", "src\Datiss.Budget.Reports\Datiss.Budget.Reports.csproj", "{0FFD7F4F-5A8F-4E0A-BDB1-111CE776B561}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datiss.Budget.Reports", "src\Datiss.Budget.Reports\Datiss.Budget.Reports.csproj", "{0FFD7F4F-5A8F-4E0A-BDB1-111CE776B561}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

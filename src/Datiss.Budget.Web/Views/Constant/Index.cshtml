@@ -77,10 +77,10 @@
                             <table id="" class=" table table-hover table-bordered m-0 my-font">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>سال</th>
-                                        <th>سازمان</th>
-                                        <th>کاربری</th>
-                                        <th>قیمت</th>
+                                        <th>عنوان</th>
+                                        <th>ترتیب نمایش</th>
+                                        <th>وضعیت</th>
+                                        <th>کلید</th>
                                         <th>مدیریت</th>
                                     </tr>
                                 </thead>
@@ -101,37 +101,6 @@
                             </table>
                             <div class="rowACJSB" style="margin-top:20px">
                                 <!--Tools-->
-                                <div class="rowACJS">
-                                    <form id="toolForm"
-                                          enctype="multipart/form-data"
-                                          method="post"
-                                          asp-antiforgery="true">
-                                        <input name="importExcelFile" type="file" />
-                                        @*<input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
-                                        <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />*@
-
-                                        @*<input asp-for="ExcelFile" type="file" />*@
-                                        <span data-toggle="modal" data-target="#backdrop">
-                                            <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnExcelImport" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                                                <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
-                                            </button>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#CopyModal">
-                                            <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font modallink">
-                                                <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
-                                            </button>
-                                        </span>
-                                        <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
-                                        </button>
-                                        <span data-toggle="modal" data-target="#success">
-                                            <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" onclick="return calculation(this.click);" class="btn btn-info  bg-light-info mr-1 my-font">
-                                                <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                                            </button>
-                                        </span>
-                                    </form>
-
-                                </div>
                                 <!--Pagination-->
 
                                 @*@if (Model.Model.PagesCount > 1)

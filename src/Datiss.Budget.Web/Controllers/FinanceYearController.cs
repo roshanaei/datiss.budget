@@ -22,10 +22,23 @@ namespace Datiss.Budget.Web.Controllers
 
         }
 
-        [HttpGet]
-        public IActionResult Index()
+        [HttpGet("{page?}")]
+        public  async Task<IActionResult>Index(int page = 1)
         {
-            return View();
+            var model = new FinanceYearIndexViewModel();
+            return View(model);
+        }
+
+
+        [HttpPost("{page?}")]
+        public async Task<IActionResult> Index(FinanceYearIndexViewModel viewModel,int page = 1)
+        {
+            if (Request.Form["btnCreate"].Count() > 0)
+            {
+                return RedirectToAction("Create");
+            }
+
+            return RedirectToAction("Index");
         }
 
         [HttpGet("create")]
