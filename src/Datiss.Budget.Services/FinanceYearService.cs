@@ -79,7 +79,6 @@ namespace Datiss.Budget.Services
         {
             var result = new PagedResult<FinanceYearViewModel>
             {
-               
             };
 
             var query = Query();
@@ -104,11 +103,11 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync() 
-            => await Query().Select(x => new DropDownItem {
-                Id = x.Id,
-                Title = x.Year.ToString()
-            }).ToListAsync();
+        //public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync() 
+        //    => await Query().Select(x => new DropDownItem {
+        //        Id = x.Id,
+        //        Title = x.Year.ToString()
+        //    }).ToListAsync();
         
     }
 }
