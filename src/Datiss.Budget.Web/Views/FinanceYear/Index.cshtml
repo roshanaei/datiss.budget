@@ -19,7 +19,7 @@
                         <form method="post" class="rowACJSB" asp-controller="FinanceYear" asp-action="Index" asp-antiforgery="true">
                             <fieldset class="form-group mt-3">
                                 @*<input asp-for="Filter.OrderBy" type="hidden" />
-                <input asp-for="Filter.OrderDesc" type="hidden" />*@
+                                <input asp-for="Filter.OrderDesc" type="hidden" />*@
                             </fieldset>
                             <fieldset>
                                 <div class="rowACJE">
@@ -68,8 +68,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model.Model.Items)
-                                    {
+                                    @foreach (var item in Model.Model.Items){
                                         <tr>
                                             <td>@item.Title</td>
                                             <td>@item.Year.ToString()</td>
@@ -79,42 +78,39 @@
                                             <td>
                                                 <a asp-controller="FinanceYear" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
                                             </td>
-                                        </tr>
-                                    }
+                                        </tr> }
                                 </tbody>
                              </table>
-                                <div class="rowACJSB" style="margin-top:20px">
-                                    <!--Tools-->
-                                    <div class="rowACJS">
+                             <div class="rowACJSB" style="margin-top:20px">
+                                 <!--Tools-->
+                                 <div class="rowACJS">
                                         <form id="toolForm"
                                               enctype="multipart/form-data"
                                               method="post"
                                               asp-antiforgery="true">
                                         </form>
                                     </div>
-                                    <!--Pagination-->
-                                    @*<p>Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount</p>*@
-
-                                    @*@if (Model.Model.PagesCount > 1)
-                                    {
-                                        <nav aria-label="Page navigation">
-                                            <ul class="pagination justify-content-center">
-                                                @if (Model.Model.PageNumber > 1)
-                                                {
-                                                    <li class="page-item">
-                                                        <a class="page-link"
+                                 <!--Pagination-->
+                                 @*<p>Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount</p>*@
+                                 @if (Model.Model.PagesCount > 1) 
+                                  {
+                                      <nav aria-label="Page navigation">
+                                          <ul class="pagination justify-content-center">
+                                              @if (Model.Model.PageNumber > 1){
+                                                   <li class="page-item">
+                                                       <a class="page-link"
                                                            asp-controller="FinanceYear"
                                                            asp-action="Index"
                                                            asp-route-page="@Model.Model.PreviousPage"
-                                                           aria-label="Previous">«</a>
-                                                    </li>
-                                                }
-
-                                                @for (int i = 1; i <= Model.Model.PagesCount; i++)
-                                                {
+                                                           aria-label="Previous">«
+                                                       </a>
+                                                   </li>}
+                                               @for (int i = 1; i <= Model.Model.PagesCount; i++) {
                                                     if (i == Model.Model.PageNumber)
                                                     {
-                                                        <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                                                        <li class="page-item active">
+                                                            <a class="page-link" href="#">@i.ToString() </a>
+                                                        </li>
                                                     }
                                                     else
                                                     {
@@ -126,7 +122,6 @@
                                                         </li>
                                                     }
                                                 }
-
                                                 @if (Model.Model.PageNumber < Model.Model.PagesCount)
                                                 {
                                                     <li class="page-item">
@@ -137,14 +132,13 @@
                                                            aria-label="Next">»</a>
                                                     </li>
                                                 }
-
                                             </ul>
-                                        </nav>
-                                    }*@
-                                </div>
-                            </div>
+                                      </nav>
+                                  }
+                             </div>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>
