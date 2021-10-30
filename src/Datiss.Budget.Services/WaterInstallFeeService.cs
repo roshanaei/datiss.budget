@@ -19,6 +19,7 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Common.Exceptions;
 using System.IO;
 using Datiss.Budget.Entities;
+using LinqKit;
 
 namespace Datiss.Budget.Services
 {
@@ -27,6 +28,7 @@ namespace Datiss.Budget.Services
         private readonly IUnitOfWork _uow;
         private readonly IExcelService _excelService;
         private readonly IUserService _userService;
+        private readonly IOrganizationService _organizationService;
         
         private DbSet<WaterInstallFee> _dbSet;
         private DbSet<Organization> _orgDbSet;
@@ -34,13 +36,15 @@ namespace Datiss.Budget.Services
         public WaterInstallFeeService(
             IUnitOfWork uow, 
             IExcelService excelService,
-            IUserService userService)
+            IUserService userService,
+            IOrganizationService organizationService)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<WaterInstallFee>();
             _orgDbSet = _uow.Set<Organization>();
             _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
         private IQueryable<WaterInstallFee> Query()
@@ -132,14 +136,22 @@ namespace Datiss.Budget.Services
                                .SumAsync(_ => _.WInstllFee);
         }
 
-        private IQueryable<WaterInstallFee> setFilter(IQueryable<WaterInstallFee> query, WaterInstallFeeFilter filter) {
+        private async Task<IQueryable<WaterInstallFee>> setFilter(IQueryable<WaterInstallFee> query, WaterInstallFeeFilter filter) {
+
+            var predicate = PredicateBuilder.New<WaterInstallFee>();
+
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
 
-            if (filter.OrganizationId.HasValue)
-                query = query.Where(x => x.OrganizationId == filter.OrganizationId.Value ||
-                                        x.Organization.Parent.Id == filter.OrganizationId.Value ||
-                                        x.Organization.Parent.Parent.Id == filter.OrganizationId.Value);
+            if(filter.OrganizationId.HasValue) {
+                var organizations = await _organizationService
+                    .GetWithChildrenAsync(filter.OrganizationId.Value);
+                foreach(var org in organizations) {
+                    predicate.Or(_ => _.OrganizationId == org.Id);
+                }
+
+                query = query.Where(predicate);
+            }
 
             if (filter.DWaterTypeId.HasValue)
                 query = query.Where(x => x.DWaterTypeId == filter.DWaterTypeId.Value);
@@ -171,7 +183,7 @@ namespace Datiss.Budget.Services
 
             var query = Query();
 
-            query = setFilter(query, filter);
+            query = await setFilter(query, filter);
 
             result.TotalCount = await query.CountAsync();
 
@@ -204,7 +216,29 @@ namespace Datiss.Budget.Services
             if (sourceYearId == destYearId)
                 throw new CopySameYearException();
 
-            var result = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+            var result = new List<WaterInstallFee>();
+
+            var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
+                                        .Where(_ => _.YearId == sourceYearId)
+                                        .ToListAsync();
+
+            if(selfData.Any()) {
+                foreach(var item in selfData) {
+                    var entity = new WaterInstallFee {
+                        DWaterTypeId = item.DWaterTypeId,
+                        OrganizationId = item.OrganizationId,
+                        YearId = destYearId,
+                        WInstllFee = item.WInstllFee
+                    };
+                    result.Add(entity);
+                }
+            }
+
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+
+            if(childrens.Any()) {
+                result.AddRange(childrens);
+            }
 
             _dbSet.AddRange(result);
 
@@ -313,7 +347,7 @@ namespace Datiss.Budget.Services
 
             var query = Query();
 
-            query = setFilter(query, filter);
+            query = await setFilter(query, filter);
 
             query = setOrder(query, filter.OrderBy, filter.OrderDesc);
 

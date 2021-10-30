@@ -10,12 +10,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ServiceMessages.resx</DependentUpon>
     </Compile>
+    <Compile Update="ViewMessages.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ViewMessages.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Update="ServiceMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ServiceMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ViewMessages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

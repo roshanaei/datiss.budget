@@ -3,16 +3,31 @@ using Datiss.Budget.Services.Identity.Logger;
 using Datiss.Budget.IocConfig;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Datiss.Budget.Web.Core;
+using System;
 
-namespace Datiss.Budget
-{
-    public class Program
-    {
+namespace Datiss.Budget {
+
+    public class Program {
+
         public static void Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
-            host.Services.InitializeDb();
-            host.Run();
+            Log.Logger = SerilogConfiguration.CreateLogger(seqUrl: "http://localhost:5341/");
+
+            try {
+                Log.Information("Starting web host for Datiss.Budget");
+                var host = CreateHostBuilder(args).Build();
+                host.Services.InitializeDb();
+                host.Run();
+            }
+            catch(Exception ex) {
+                Log.Fatal(ex, "Host of Datiss.Budget terminated unexpectedly");
+            }
+            finally {
+                Log.CloseAndFlush();
+            }
+            
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -33,7 +48,8 @@ namespace Datiss.Budget
                                    logging.AddDbLogger(); // You can change its Log Level using the `appsettings.json` file -> Logging -> LogLevel -> Default
                                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
                                })
-                              .UseStartup<Startup>();
+                              .UseStartup<Startup>()
+                              .UseSerilog();
                 });
     }
 }
