@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using Datiss.Budget.Enum;
 using Datiss.Budget.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Datiss.Budget.ViewModels.Base;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class AddConstantViewModel
+    public class AddConstantViewModel : BaseViewModel
     {
         public int? ParentId { get; set; }
 
@@ -28,5 +29,29 @@ namespace Datiss.Budget.ViewModels
     public class UpdateConstantViewModel: AddConstantViewModel
     {
         public int Id { get; set; }
+    }
+
+    public class ConstantViewModel
+    {
+        public int Id { get; set; }
+
+        public int? ParentId { get; set; }
+
+        public string Title { get; set; }
+
+        public string ConstantKey { get; set; }
+
+        public int DisplayOrder { get; set; }
+
+        public bool Enabled { get; set; }
+
+    }
+
+    public class ConstantFilterViewModel : FilterViewModel
+    {
+
+        public int? ParentId { get; set; }
+
+        public IEnumerable<SelectListItem> ParentSource { get; set; }
     }
 }

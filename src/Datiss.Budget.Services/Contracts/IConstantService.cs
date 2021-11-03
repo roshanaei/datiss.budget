@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Datiss.Budget.Entities;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
@@ -8,6 +9,7 @@ namespace Datiss.Budget.Services.Contracts
 {
     public interface IConstantService
     {
+        Task<Constant> GetByIdAsync(int id);
 
         Task<ValidationResult> AddAsync(AddConstantViewModel model);
 
