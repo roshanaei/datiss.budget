@@ -33,6 +33,11 @@ namespace Datiss.Budget.Services.Models
         public EntityStatus? Status { get; set; }
     }
 
+    public class ConstantFilter : FilterInput
+    {
+        public int? parentId { get; set; }
+    }
+
     public class WaterInstallFeeFilter: FilterInput
     {
         public int? YearId { get; set; }
