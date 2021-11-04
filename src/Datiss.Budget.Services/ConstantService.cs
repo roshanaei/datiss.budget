@@ -27,13 +27,17 @@ namespace Datiss.Budget.Services
     public class ConstantService : IConstantService
     {
         private readonly IUnitOfWork _uow;
+        private readonly IUserService _userService;
+
 
         private DbSet<Constant> _dbSet;
 
         public ConstantService(
-            IUnitOfWork uow)
+            IUnitOfWork uow,
+            IUserService userService)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _dbSet = _uow.Set<Constant>();
         }
 
@@ -146,6 +150,48 @@ namespace Datiss.Budget.Services
                         ? query.OrderByDescending(x => x.DisplayOrder)
                         : query.OrderBy(x => x.DisplayOrder);
             }
+        }
+
+        public async Task<PagedResult<ConstantViewModel>> GetListAsync(ConstantFilter filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+            var result = new PagedResult<ConstantViewModel>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            result.TotalCount = await query.CountAsync();
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            query = query
+                .Skip(filter.StartIndex)
+                .Take(filter.PageSize);
+
+            result.Items = await query
+                                    .Include( x => x.Parent)
+                                    .Select(x => new ConstantViewModel{
+                                        Id = x.Id,
+                                        Title = x.Title,
+                                        ConstantKey = x.ConstantKey,
+                                        ParentId = x.ParentId,
+                                        DisplayOrder = x.DisplayOrder
+                                    }).ToListAsync();
+
+            return await Task.FromResult(result);
+        }
+
+        private async Task<IQueryable<Constant>> setFilter(IQueryable<Constant> query, ConstantFilter filter)
+        {
+            var prpredicate = PredicateBuilder.New<Constant>(); 
+
+            if (filter.parentId.HasValue)
+                //query =
         }
 
         #region Private Methods
