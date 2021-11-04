@@ -18,5 +18,7 @@ namespace Datiss.Budget.Services.Contracts
         Task<ValidationResult> SoftDeleteAsync(int id);
 
         Task<IEnumerable<DropDownItem>> GetDropDownDataAsync();
+
+        Task<PagedResult<FinanceYearViewModel>> GetListAsync();
     }
 }

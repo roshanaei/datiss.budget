@@ -13,6 +13,8 @@ using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.Security;
+using Datiss.Budget.Services.Contracts.Identity;
+
 
 namespace Datiss.Budget.Services
 {
@@ -20,6 +22,7 @@ namespace Datiss.Budget.Services
     {
         private readonly IUnitOfWork _uow;
         private readonly IUserContext _userContext;
+        private readonly IUserService _userService;
 
         private DbSet<Organization> _dbSet;
 
@@ -98,8 +101,6 @@ namespace Datiss.Budget.Services
                     Id = x.Id,
                     Title = x.Title
                 }).ToListAsync();
-
-
 
         public async Task<IEnumerable<Organization>> GetWithChildrenAsync(int organizationId)
             => await getWithChildrenAsync(organizationId);

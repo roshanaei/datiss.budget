@@ -74,11 +74,41 @@ namespace Datiss.Budget.Services
 
         }
 
-        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync() 
-            => await Query().Select(x => new DropDownItem {
+
+        public async Task<PagedResult<FinanceYearViewModel>> GetListAsync()
+        {
+            var result = new PagedResult<FinanceYearViewModel>
+            {
+            };
+
+            var query = Query();
+
+            result.TotalCount = await query.CountAsync();
+
+            //query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+
+
+            result.Items = await query
+                                    .Select(x => new FinanceYearViewModel
+                                    {
+                                        Id = x.Id,
+                                        Title = x.Title,
+                                        EndDate = x.EndDate,
+                                        StartDate = x.StartDate,
+                                        Status = x.Status,
+                                        Year = x.Year
+                                    }).ToListAsync();
+
+            return await Task.FromResult(result);
+        }
+
+        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync()
+            => await Query().Select(x => new DropDownItem
+            {
                 Id = x.Id,
                 Title = x.Year.ToString()
             }).ToListAsync();
-        
+
     }
 }
