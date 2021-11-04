@@ -24,6 +24,17 @@ namespace Datiss.Budget.ViewModels
         public bool Enabled { get; set; }
 
         public IEnumerable<SelectListItem> ParentList { get; set; }
+
+        public string ParentTitle
+        {
+            get
+            {
+                if (ParentList == null || !ParentList.Any())
+                    return string.Empty;
+
+                return ParentList.FirstOrDefault(x => x.Value.ToString() == ParentId.ToString()).Text;
+            }
+        }
     }
 
     public class UpdateConstantViewModel: AddConstantViewModel
