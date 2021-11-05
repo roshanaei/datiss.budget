@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Hosting;
 using Datiss.Budget.Web.Helpers;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Web.ViewModels;
+using Datiss.Budget.Services.Models;
+using Mapster;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -19,10 +21,10 @@ namespace Datiss.Budget.Web.Controllers
     public class ConstantController : Controller
     {
         public const string Name = "WaterInstallFee";
-        public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Create = nameof(New);
         public const string ACTION_Index = nameof(Index);
-        public const string ACTION_Edit = nameof(Edit);
-        public const string ACTION_Delete = nameof(Delete);
+        //public const string ACTION_Edit = nameof(Edit);
+        //public const string ACTION_Delete = nameof(Delete);
 
         private readonly IWebHostEnvironment _env;
         private readonly IConstantService _constantService;
@@ -43,17 +45,18 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1) {
-
+            
             var model = new ConstantIndexViewModel();
-            int parentId = await _constantService.GetParentsAsync();
+            var parentId = await _constantService.GetParentsAsync();
             int minParent = parentId.Min(x => x.Id);
+
+            model.SetConstantParentSource(parentId, minParent);
 
             var filterInput = new ConstantFilter
             {
-                orderBy = "displayOrder",
-                pageNumber = page,
-                parentId = minParent
-
+                OrderBy = "displayOrder",
+                PageNumber = page,
+                ParentId = minParent
             };
 
             var result = await _constantService.GetListAsync(filterInput);
@@ -70,12 +73,27 @@ namespace Datiss.Budget.Web.Controllers
         {
             if (Request.Form["btnFilter"].Count() > 0)
             {
-                var filterInput = viewModel.Filter.adapt<ConstantFilterViewModel>();
+                var filterInput = viewModel.Filter.Adapt<ConstantFilter>();
 
                 var result = await _constantService.GetListAsync(filterInput);
 
-                
+                viewModel.SetConstantParentSource(await _constantService.GetParentsAsync());
+
+                viewModel.Model = result;
+
+                return View(viewModel);
             }
+
+            if (Request.Form["btnCreate"].Count() > 0)
+            {
+                int parentId = int.Parse(Request.Form["Filter.ParentId"].ToString());
+
+                return RedirectToAction("Create", new
+                {
+                    parentId = parentId
+                });
+            }
+            return RedirectToAction("Index");
         }
 
         [HttpGet]

@@ -1,4 +1,4 @@
-﻿@*@model OrganizationIndexViewModel*@
+﻿@model ConstantIndexViewModel
 @{ ViewData["Title"] = "ثابت ها"; }
 
 <!--Title-->
@@ -16,87 +16,105 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
+                @if(ViewData["message"] != null){
+                    <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                        </button>
+                        <span>@ViewData["message"]</span>
+                    </div>
+                 }
+
                 <div class="card-content">
-                    <div class="card-body"
+                    <div class="card-body">
                         <!--Filters-->
-                        <form method="post" class="rowACJSB" asp-controller="WaterInstallFee" asp-action="Index" asp-antiforgery="true">
-                            <fieldset class="form-group mt-3">
-                                <label  class="my-font">
-                                    انتخاب :
-                                    <select class="form-control d-inline-block width-100" id="yearId"  onchange="loadCreateLink()">
-                                    </select>
-                                </label>
-                                @*<input asp-for="Filter.OrderBy" type="hidden" />
-                                <input asp-for="Filter.OrderDesc" type="hidden" />*@
-                            </fieldset>
-                            <fieldset>
-                                <div class="rowACJE">
-                                    <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
-                                    </button>
-                                    <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
-                                    </button>
-                                </div>
-                            </fieldset>
-                        </form>
-                        <hr />
-                        <!--SearchBox-->
-                        <div class="rowACJSB">
-                            <div class="rowAC" style="flex:1">
-                                <fieldset class="form-group">
-                                    <label for="ngx-filter-ref" class="my-font">
-                                        جستجو:
-                                        <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
-                                    </label>
-                                </fieldset>
-                                <fieldset class="form-group" style="margin-right:10px">
-                                    <label class="my-font rowAC">
-                                        <span>نمایش</span>
-
-                                        <select style="margin-right:10px" class="form-control" id="basicSelect">
-                                            <option>10</option>
-                                            <option>20</option>
-                                            <option>30</option>
+                        <form method="post"
+                              id="filterForm"
+                              asp-controller="@ConstantController.Name"
+                              asp-action="@ConstantController.ACTION_Index"
+                              asp-antiforgery="true">
+                            <div class=" rowACJSB">
+                                <fieldset class="form-group mt-3">
+                                    <label asp-for="Filter.ParentId" class="my-font">
+                                        انتخاب :
+                                        <select class="form-control d-inline-block width-100" id="ParentId" asp-for="Filter.ParentId" asp-items="Model.Filter.ParentSource" onchange="loadCreateLink()">
                                         </select>
-                                        <span style="margin-right:10px">رکورد</span>
-
                                     </label>
+                                    <input asp-for="Filter.OrderBy" type="hidden" />
+                                    <input asp-for="Filter.OrderDesc" type="hidden" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+                                        </button>
+                                        <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                        </button>
+                                    </div>
                                 </fieldset>
                             </div>
-                            <fieldset>
-                                <div class="rowACJE">
-                                    <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="submit" name="btnExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
-                                    </button>
+                            <hr />
+                            <!--SearchBox-->
+                            <div class="rowACJSB">
+                                <div class="rowAC" style="flex:1">
+                                    <fieldset class="form-group">
+                                        <label for="ngx-filter-ref" class="my-font">
+                                            جستجو:
+                                            <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
+                                        </label>
+                                    </fieldset>
+                                    <fieldset class="form-group" style="margin-right:10px">
+                                        <label class="my-font rowAC">
+                                            <span>نمایش</span>
+
+                                            <select asp-for="Filter.PageSize"
+                                                    style="margin-right:10px" 
+                                                    class="form-control"
+                                                    onchange="changePageSize();"
+                                                    id="ddlPageSize">
+                                                <option>10</option>
+                                                <option>20</option>
+                                                <option>30</option>
+                                            </select>
+                                            <span style="margin-right:10px">رکورد</span>
+                                        </label>
+                                    </fieldset>
                                 </div>
-                            </fieldset>
-                        </div>
+                                <fieldset>
+                                    <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="submit" name="btnExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
+                                        </button>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </form>
                         <!--DataTable-->
                         <div class="table-responsive">
                             <table id="" class=" table table-hover table-bordered m-0 my-font">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>عنوان</th>
                                         <th>ترتیب نمایش</th>
+                                        <th>عنوان</th>
                                         <th>وضعیت</th>
                                         <th>کلید</th>
                                         <th>مدیریت</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @*@foreach (var item in Model.Model.Items)
+                                    @foreach (var item in Model.Model.Items)
                                     {
                                         <tr>
-                                            <td>@item.Year.ToString()</td>
-                                            <td>@item.OrganizationDisplay </td>
-                                            <td>@item.DWaterTypeDisplay </td>
-                                            <td>@item.WInstallFee.ToString() </td>
+                                            <td>@item.DisplayOrder</td>
+                                            <td>@item.Title </td>
+                                            <td>@item.Enabled</td>
+                                            <td>@item.ConstantKey </td>
                                             <td>
-                                                <a asp-controller="WaterInstallFee" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                                                <a asp-controller="@ConstantController.Name" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
                                             </td>
                                         </tr>
-                                    }*@
+                                    }
                                 </tbody>
                             </table>
                             <div class="rowACJSB" style="margin-top:20px">

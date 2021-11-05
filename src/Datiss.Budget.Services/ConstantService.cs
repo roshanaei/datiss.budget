@@ -28,17 +28,20 @@ namespace Datiss.Budget.Services
     {
         private readonly IUnitOfWork _uow;
         private readonly IUserService _userService;
+        private readonly IConstantService _constantService;
 
 
         private DbSet<Constant> _dbSet;
 
         public ConstantService(
             IUnitOfWork uow,
-            IUserService userService)
+            IUserService userService,
+            IConstantService constantService)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _dbSet = _uow.Set<Constant>();
+            _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
         }
 
         private IQueryable<Constant> Query()
@@ -51,7 +54,8 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
         
-        public async Task<ValidationResult> AddAsync(AddConstantViewModel model) {
+        public async Task<ValidationResult> AddAsync(AddConstantViewModel model) 
+        {
             model.CheckArgumentIsNull(nameof(model));
 
             if (await ExistByKeyAsync(model.ConstantKey))
@@ -188,10 +192,12 @@ namespace Datiss.Budget.Services
 
         private async Task<IQueryable<Constant>> setFilter(IQueryable<Constant> query, ConstantFilter filter)
         {
-            var prpredicate = PredicateBuilder.New<Constant>(); 
+            var prpredicate = PredicateBuilder.New<Constant>();
 
-            if (filter.parentId.HasValue)
-                //query =
+            if (filter.ParentId.HasValue)
+                query = query.Where(x => x.ParentId == filter.ParentId.Value);
+
+            return query;
         }
 
         #region Private Methods

@@ -20,5 +20,7 @@ namespace Datiss.Budget.Services.Contracts
         Task<IEnumerable<DropDownItem>> GetParentsAsync();
 
         Task<IEnumerable<DropDownItem>> GetByConstantKeyAsync(string key);
+
+        Task<PagedResult<ConstantViewModel>> GetListAsync(ConstantFilter filter);
     }
 }

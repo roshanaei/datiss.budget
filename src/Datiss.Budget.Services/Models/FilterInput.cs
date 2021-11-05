@@ -35,7 +35,7 @@ namespace Datiss.Budget.Services.Models
 
     public class ConstantFilter : FilterInput
     {
-        public int? parentId { get; set; }
+        public int? ParentId { get; set; }
     }
 
     public class WaterInstallFeeFilter: FilterInput
