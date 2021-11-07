@@ -178,7 +178,7 @@ namespace Datiss.Budget.Services
                     }).ToList();
 
 
-        private IQueryable<Organization> setFilter(IQueryable<Organization> query, OrganizationFilter filter)
+        private IQueryable<Organization> setFilter(IQueryable<Organization> query, OrganizationFilterDTO filter)
         {
             if (filter.ParentId.HasValue)
                 query = query.Where(x => x.ParentId == filter.ParentId.Value);
@@ -195,7 +195,7 @@ namespace Datiss.Budget.Services
             return query;
         }
 
-        public async Task<PagedResult<OrganizationViewModel>> GetListAsync(OrganizationFilter filter)
+        public async Task<PagedResult<OrganizationViewModel>> GetListAsync(OrganizationFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
             var result = new PagedResult<OrganizationViewModel>

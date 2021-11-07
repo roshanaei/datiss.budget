@@ -134,7 +134,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1) 
         {
-            var filterInput = new WasteInstallFeeFilter {
+            var filterInput = new WasteInstallFeeFilterDTO {
                 OrderBy = "dwatertype",
                 PageNumber = page
             };
@@ -154,7 +154,7 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Index(WasteInstallFeeFilterViewModel model) 
         {
             if(Request.Form["btnFilter"].Count() > 0) {
-                var filterInput = model.Adapt<WasteInstallFeeFilter>();
+                var filterInput = model.Adapt<WasteInstallFeeFilterDTO>();
 
                 var result = await _wasteInstallFeeService.GetListAsync(filterInput);
 

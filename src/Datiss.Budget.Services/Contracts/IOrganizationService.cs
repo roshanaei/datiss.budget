@@ -23,7 +23,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<bool> IsDescendentAsync(int orgId);
 
-        Task<PagedResult<OrganizationViewModel>> GetListAsync(OrganizationFilter filter);
+        Task<PagedResult<OrganizationViewModel>> GetListAsync(OrganizationFilterDTO filter);
 
     }
 }

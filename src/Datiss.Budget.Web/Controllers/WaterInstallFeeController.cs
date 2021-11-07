@@ -171,7 +171,7 @@ namespace Datiss.Budget.Web.Controllers
 
             int firstOrgId = int.Parse(model.Filter.OrganizationSource.FirstOrDefault().Value);
 
-            var filterInput = new WaterInstallFeeFilter {
+            var filterInput = new WaterInstallFeeFilterDTO {
                 OrderBy = "dwatertype",
                 PageNumber = page,
                 YearId = maxYear,
@@ -191,7 +191,7 @@ namespace Datiss.Budget.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(WaterInstallFeeIndexViewModel viewModel, int page = 1) {
             if (Request.Form["btnFilter"].Count() > 0) {
-                var filterInput = viewModel.Filter.Adapt<WaterInstallFeeFilter>();
+                var filterInput = viewModel.Filter.Adapt<WaterInstallFeeFilterDTO>();
 
                 var result = await _waterInstallFeeService.GetListAsync(filterInput);
 
@@ -313,7 +313,7 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("[action]")]
         public async Task<IActionResult> ExportExcel(WaterInstallFeeIndexViewModel viewModel) {
-            var filter = viewModel.Filter.Adapt<WaterInstallFeeFilter>();
+            var filter = viewModel.Filter.Adapt<WaterInstallFeeFilterDTO>();
 
             var result = await _waterInstallFeeService.GetExportItemsAsync(filter);
 
