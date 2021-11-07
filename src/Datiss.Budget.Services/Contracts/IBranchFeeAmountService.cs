@@ -17,7 +17,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task HardDeleteAsync(int Id);
 
-        Task<PagedResult<BranchFeeAmountViewModel>> GetListAsync(BranchFeeAmountFilter filter);
+        Task<PagedResult<BranchFeeAmountViewModel>> GetListAsync(BranchFeeAmountFilterDTO filter);
 
     }
 }

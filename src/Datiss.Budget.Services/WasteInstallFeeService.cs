@@ -90,7 +90,7 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<WasteInstallFeeViewModel>> GetListAsync(WasteInstallFeeFilter filter) 
+        public async Task<PagedResult<WasteInstallFeeViewModel>> GetListAsync(WasteInstallFeeFilterDTO filter) 
         {
             filter.CheckArgumentIsNull(nameof(filter));
             var result = new PagedResult<WasteInstallFeeViewModel> {

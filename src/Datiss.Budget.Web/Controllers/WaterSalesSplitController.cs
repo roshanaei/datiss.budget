@@ -168,7 +168,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var filterInput = new WaterSalesSplitFilter
+            var filterInput = new WaterSalesSplitFilterDTO
             {
                 OrderBy = "usertype",
                 PageNumber = page
@@ -189,7 +189,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             if (Request.Form["btnFilter"].Count() > 0)
             {
-                var filterInput = model.Adapt<WaterSalesSplitFilter>();
+                var filterInput = model.Adapt<WaterSalesSplitFilterDTO>();
 
                 var result = await _waterSalesSplitService.GetListAsync(filterInput);
 

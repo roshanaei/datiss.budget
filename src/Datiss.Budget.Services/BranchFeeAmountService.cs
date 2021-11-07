@@ -114,7 +114,7 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
         
-        public async Task<PagedResult<BranchFeeAmountViewModel>> GetListAsync(BranchFeeAmountFilter filter)
+        public async Task<PagedResult<BranchFeeAmountViewModel>> GetListAsync(BranchFeeAmountFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 

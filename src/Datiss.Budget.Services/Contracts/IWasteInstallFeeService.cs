@@ -17,6 +17,6 @@ namespace Datiss.Budget.Services.Contracts
 
         Task HardDeleteAsync(int Id);
 
-        Task<PagedResult<WasteInstallFeeViewModel>> GetListAsync(WasteInstallFeeFilter filter);
+        Task<PagedResult<WasteInstallFeeViewModel>> GetListAsync(WasteInstallFeeFilterDTO filter);
     }
 }

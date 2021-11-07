@@ -98,7 +98,7 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
 
         }
-         public async Task<PagedResult<WasteSalesSplitViewModel>> GetListAsync(WasteSalesSplitFilter filter)
+         public async Task<PagedResult<WasteSalesSplitViewModel>> GetListAsync(WasteSalesSplitFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
             var result = new PagedResult<WasteSalesSplitViewModel>

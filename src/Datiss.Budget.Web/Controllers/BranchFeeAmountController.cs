@@ -118,7 +118,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var filterInput = new BranchFeeAmountFilter
+            var filterInput = new BranchFeeAmountFilterDTO
             {
                 OrderBy = "organization",
                 PageNumber = page
@@ -141,7 +141,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             if (Request.Form["btnFilter"].Count() > 0)
             {
-                var filterInput = model.Adapt<BranchFeeAmountFilter>();
+                var filterInput = model.Adapt<BranchFeeAmountFilterDTO>();
 
                 var result = await _branchFeeAmountService.GetListAsync(filterInput);
                 return View(result);

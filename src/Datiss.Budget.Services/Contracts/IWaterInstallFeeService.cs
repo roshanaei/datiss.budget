@@ -15,7 +15,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<ValidationResult> AddAsync(CreateWaterInstallFeeDTO model);
 
-        Task<ValidationResult> UpdateAsync(UpdateWaterInstallFeeViewModel model);
+        Task<ValidationResult> UpdateAsync(UpdateWaterInstallFeeDTO model);
 
         Task HardDeleteAsync(int Id);
 
@@ -23,13 +23,13 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<int> CalculationAsync(int yearId, int organizationId);
 
-        Task<PagedResult<WaterInstallFeeViewModel>> GetListAsync(WaterInstallFeeFilter filter);
+        Task<PagedResult<WaterInstallFeeDTO>> GetListAsync(WaterInstallFeeFilterDTO filter);
 
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
 
-        Task<Stream> ExportExcelAsync(WaterInstallFeeFilter filter);
+        Task<Stream> ExportExcelAsync(WaterInstallFeeFilterDTO filter);
 
-        Task<IEnumerable<WaterInstallFeeViewModel>> GetExportItemsAsync(WaterInstallFeeFilter filter);
+        Task<IEnumerable<WaterInstallFeeDTO>> GetExportItemsAsync(WaterInstallFeeFilterDTO filter);
 
         Task ImportExcelAsync(IFormFile fileInfo);
     }

@@ -50,7 +50,7 @@ namespace Datiss.Budget.Web.Controllers
 
             model.SetParentOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
 
-            var filterInput = new OrganizationFilter
+            var filterInput = new OrganizationFilterDTO
             {
                 OrderBy = "DisplayOrder",
                 PageNumber = page,
@@ -70,7 +70,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             if(Request.Form["btnFilter"].Count() > 0)
             {
-                var filterInput = viewModel.Filter.Adapt<OrganizationFilter>();
+                var filterInput = viewModel.Filter.Adapt<OrganizationFilterDTO>();
 
                 var result = await _organizationService.GetListAsync(filterInput);
 
