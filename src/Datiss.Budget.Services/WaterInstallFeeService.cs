@@ -342,6 +342,33 @@ namespace Datiss.Budget.Services
         }
 
 
+        public async Task<IEnumerable<WaterInstallFeeViewModel>> GetExportItemsAsync(WaterInstallFeeFilter filter) {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.DWaterType)
+                                    .Select(x => new WaterInstallFeeViewModel {
+                                        Id = x.Id,
+                                        DWaterTypeDisplay = x.DWaterType.Title,
+                                        DWaterTypeId = x.DWaterTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        WInstallFee = x.WInstllFee,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
+                                    }).ToListAsync();
+
+            return items;
+        }
+
         public async Task<Stream> ExportExcelAsync(WaterInstallFeeFilter filter) {
             filter.CheckArgumentIsNull(nameof(filter));
 

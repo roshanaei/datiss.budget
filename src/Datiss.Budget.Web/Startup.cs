@@ -51,6 +51,16 @@ namespace Datiss.Budget
                 mvc.AddRazorRuntimeCompilation();
             }
 
+            services.AddCors(options => {
+                options.AddPolicy("EnableCORS", bl => {
+                    bl.WithOrigins("localhost")
+                      .AllowAnyMethod()
+                      .AllowAnyHeader()
+                      .AllowCredentials()
+                      .Build();
+                });
+            });
+
             services.AddRazorPages();
         }
 
@@ -65,11 +75,13 @@ namespace Datiss.Budget
                 app.UseStatusCodePagesWithReExecute("/error/index/{0}");
             }
 
+            
             app.UseHsts();
             app.UseHttpsRedirection();
             app.UseContentSecurityPolicy();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseCors(policyName: "EnableCORS");
             app.UseAuthentication();
             app.UseAuthorization();
 

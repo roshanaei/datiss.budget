@@ -18,6 +18,7 @@ using Datiss.Budget.Web.ViewModels;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Web.Helpers;
 using Datiss.Budget.Resources;
+using Ganss.Excel;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -314,6 +315,19 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> ExportExcel(WaterInstallFeeIndexViewModel viewModel) {
             var filter = viewModel.Filter.Adapt<WaterInstallFeeFilter>();
 
+            var result = await _waterInstallFeeService.GetExportItemsAsync(filter);
+
+            var _excelMapper = new ExcelMapper();
+            //var ms = new MemoryStream();
+            //await _excelMapper.SaveAsync(ms, result);
+
+            var stream = new FileStream("export.xlsx", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            await _excelMapper.SaveAsync(stream, result);
+
+            //var mem = new MemoryStream(ms.ToArray());
+            //mem.Seek(0, SeekOrigin.Begin);
+
+            //ms.Seek(0, SeekOrigin.Begin);
             //using (var stream = new MemoryStream()) {
             //    await _waterInstallFeeService.ExportExcelAsync(filter, stream);
             //    return File(
@@ -332,11 +346,11 @@ namespace Datiss.Budget.Web.Controllers
 
             //}
 
-            var result = await _waterInstallFeeService.ExportExcelAsync(filter);
-            var ms = new MemoryStream();
-            result.CopyTo(ms);
+            //return new FileStreamResult(
+            //    ms,
+            //    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
-            return File(ms,
+            return File(stream,
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 "WaterInstallFee.xlsx");
         }
