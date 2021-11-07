@@ -93,7 +93,7 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> New()
         {
             var parentList = await _organizationService.GetParentsAsync();
-            var model = new AddOrganizationViewModel
+            var model = new CreateOrganizationViewModel
             {
                 ParentList = parentList.Select(x => new SelectListItem
                 {

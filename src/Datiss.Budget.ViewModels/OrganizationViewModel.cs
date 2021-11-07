@@ -1,16 +1,11 @@
-﻿using Datiss.Budget.Entities;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Datiss.Budget.Enum;
 using Datiss.Budget.ViewModels.Base;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class AddOrganizationViewModel : BaseViewModel
+    public class CreateOrganizationViewModel : BaseViewModel
     {
         public int? ParentId { get; set; }
 
@@ -27,7 +22,7 @@ namespace Datiss.Budget.ViewModels
         public IEnumerable<SelectListItem> ParentList { get; set; }
     }
 
-    public class UpdateOrganizationViewModel : AddOrganizationViewModel
+    public class UpdateOrganizationViewModel : CreateOrganizationViewModel
     {
         public int Id { get; set; }
     }
