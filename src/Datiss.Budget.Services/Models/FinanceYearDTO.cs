@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Datiss.Budget.ViewModels
+namespace Datiss.Budget.Services.Models
 {
-    public class CreateFinanceYearViewModel
+    public class CreateFinanceYearDTO
     {
         public string Title { get; set; }
 
@@ -15,8 +15,8 @@ namespace Datiss.Budget.ViewModels
         public bool Enabled { get; set; }
     }
 
-    public class UpdateFinanceYearViewModel : CreateFinanceYearViewModel
-    {
+    public class UpdateFinanceYearDTO : CreateFinanceYearDTO
+    { 
         public int Id { get; set; }
     }
 }

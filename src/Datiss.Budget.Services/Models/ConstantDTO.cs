@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace Datiss.Budget.ViewModels
+﻿namespace Datiss.Budget.Services.Models
 {
-    public class AddConstantViewModel
+    public class CreateConstantDTO
     {
         public int? ParentId { get; set; }
 
@@ -14,12 +11,15 @@ namespace Datiss.Budget.ViewModels
         public int DisplayOrder { get; set; }
 
         public bool Enabled { get; set; }
-
-        public IEnumerable<SelectListItem> ParentList { get; set; }
     }
 
-    public class UpdateConstantViewModel: AddConstantViewModel
+    public class UpdateConstantDTO : CreateConstantDTO
     {
         public int Id { get; set; }
+    }
+
+    public class ConstantDTO
+    {
+
     }
 }

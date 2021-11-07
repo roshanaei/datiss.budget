@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Datiss.Budget.Services.Infrastructure;
-using Datiss.Budget.Services.Models;
-using Datiss.Budget.ViewModels;
+﻿using System.Threading.Tasks;
 using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.Services.Infrastructure;
 
 namespace Datiss.Budget.Services.Contracts
 {
@@ -13,11 +11,11 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<ValidationResult> AddAsync(CreateBranchFeeAmountDTO model);
 
-        Task<ValidationResult> UpdateAsync(UpdateBranchFeeAmountViewModel model);
+        Task<ValidationResult> UpdateAsync(UpdateBranchFeeAmountDTO model);
 
         Task HardDeleteAsync(int Id);
 
-        Task<PagedResult<BranchFeeAmountViewModel>> GetListAsync(BranchFeeAmountFilterDTO filter);
+        Task<PagedResult<BranchFeeAmountDTO>> GetListAsync(BranchFeeAmountFilterDTO filter);
 
     }
 }
