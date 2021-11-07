@@ -18,13 +18,11 @@ namespace Datiss.Budget.Services
     public class BranchFeeAmountService : IBranchFeeAmountService
     {
         private readonly IUnitOfWork _uow;
-
-        private DbSet<BranchFeeAmount> _dbSet;
+        private readonly DbSet<BranchFeeAmount> _dbSet;
 
         public BranchFeeAmountService(IUnitOfWork uow)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-
             _dbSet = _uow.Set<BranchFeeAmount>();
         }
 
@@ -66,13 +64,14 @@ namespace Datiss.Budget.Services
 
                 return ValidationResult.Success();
             }
+
             return ValidationResult.Failed(
                 string.Format(ServiceMessages.Logic_BranchFeeAmount,
                                     model.YearId, model.OrganizationId)
                 );
         }
 
-        public async Task<ValidationResult> UpdateAsync(UpdateBranchFeeAmountViewModel model)
+        public async Task<ValidationResult> UpdateAsync(UpdateBranchFeeAmountDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -99,6 +98,7 @@ namespace Datiss.Budget.Services
 
                 return ValidationResult.Success();
             }
+
             return ValidationResult.Failed(
                 string.Format(ServiceMessages.Logic_BranchFeeAmount,
                                 model.YearId, model.OrganizationId)
@@ -114,11 +114,11 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
         
-        public async Task<PagedResult<BranchFeeAmountViewModel>> GetListAsync(BranchFeeAmountFilterDTO filter)
+        public async Task<PagedResult<BranchFeeAmountDTO>> GetListAsync(BranchFeeAmountFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var result = new PagedResult<BranchFeeAmountViewModel>
+            var result = new PagedResult<BranchFeeAmountDTO>
             {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -176,7 +176,7 @@ namespace Datiss.Budget.Services
             result.Items = await query
                             .Include(x => x.FinanceYear)
                             .Include(x => x.Organization)
-                            .Select(x => new BranchFeeAmountViewModel {
+                            .Select(x => new BranchFeeAmountDTO {
                                 Id=x.Id,
                                 Year = x.FinanceYear.Year,
                                 YearId = x.YearId,
@@ -202,21 +202,22 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        private IQueryable<BranchFeeAmount>setOrder(
+
+        #region Private Helper Methods
+
+        private IQueryable<BranchFeeAmount> setOrder(
             IQueryable<BranchFeeAmount> query,
             string orderBy = "id",
-            bool desc = false)
-        {
+            bool desc = false) {
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "id";
             orderBy = orderBy.ToLower();
-            switch (orderBy)
-            {
+            switch (orderBy) {
                 case "year":
                     return desc
                         ? query.OrderByDescending(x => x.FinanceYear.Year)
                         : query.OrderBy(x => x.FinanceYear.Year);
-                
+
                 case "organization":
                     return desc
                         ? query.OrderByDescending(x => x.Organization.Title)
@@ -226,7 +227,7 @@ namespace Datiss.Budget.Services
                     return desc
                         ? query.OrderByDescending(x => x.UrbanAdjustmentFactor)
                         : query.OrderBy(x => x.UrbanAdjustmentFactor);
-             
+
                 case "wasteRateInWater":
                     return desc
                         ? query.OrderByDescending(x => x.WasteRateInWater)
@@ -293,6 +294,10 @@ namespace Datiss.Budget.Services
 
             }
         }
+
+
+        #endregion
+
         #region Logics
 
         private async Task<bool> checkLogicAsync(
