@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Datiss.Budget.Enum;
-using Datiss.Budget.ViewModels.Base;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -59,5 +59,39 @@ namespace Datiss.Budget.ViewModels
         public IEnumerable<SelectListItem> OrganizationTypeSource { get; set; }
 
         public IEnumerable<SelectListItem> OrganizationStatusSource { get; set; }
+    }
+
+    public class OrganizationIndexViewModel : PagedViewModel<OrganizationViewModel>
+    {
+        public OrganizationIndexViewModel() {
+            Filter = new OrganizationFilterViewModel();
+        }
+
+        public OrganizationFilterViewModel Filter { get; set; }
+
+        public void SetParentOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectParentOrgId = null) {
+            Filter.ParentOrganozationSource = source.Select(x => new SelectListItem {
+                Selected = x.Id == selectParentOrgId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+        }
+
+        public void SetOrganizationTypeFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectOrgTypeId = null) {
+            Filter.OrganizationTypeSource = source.Select(x => new SelectListItem {
+                Selected = x.Id == selectOrgTypeId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+        }
+
+        public void SetOrganizationStatusFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectOrgStatusId = null) {
+            Filter.OrganizationStatusSource = source.Select(x => new SelectListItem {
+                Selected = x.Id == selectOrgStatusId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+        }
+
     }
 }

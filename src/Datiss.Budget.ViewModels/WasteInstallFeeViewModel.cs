@@ -1,15 +1,13 @@
-﻿using Datiss.Budget.ViewModels.Base;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class CreateWasteInstallFeeViewModel: BaseViewModel
+    public class CreateWasteInstallFeeViewModel : BaseViewModel
     {
-
         public int YearId { get; set; }
 
         public int OrganizationId { get; set; }
@@ -17,7 +15,7 @@ namespace Datiss.Budget.ViewModels
         public int DWasteTypeId { get; set; }
 
         [Required(ErrorMessage = "*")]
-        [Range(0, int.MaxValue, ErrorMessage = "Please dorost vared kon")]
+        [Range(0, int.MaxValue, ErrorMessage = "Please dorost vared kon")] //TODO : use resources
         public int WInstllFee { get; set; }
 
         public IEnumerable<SelectListItem> DWasteTypeSource { get; set; }
@@ -63,4 +61,28 @@ namespace Datiss.Budget.ViewModels
         public IEnumerable<SelectListItem> OrganizationSource { get; set; }
     }
 
+    public class WasteInstallFeeIndexViewModel : PagedViewModel<WasteInstallFeeViewModel>
+    {
+        public WasteInstallFeeIndexViewModel() {
+            Filter = new WasteInstallFeeFilterViewModel();
+        }
+
+        public WasteInstallFeeFilterViewModel Filter { get; set; }
+
+        public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source) {
+            Filter.OrganizationSource = source.Select(x => new SelectListItem {
+                Selected = x.Selected,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+        }
+
+        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source) {
+            Filter.YearSource = source.Select(x => new SelectListItem {
+                Selected = x.Selected,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+        }
+    }
 }

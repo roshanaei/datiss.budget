@@ -9,7 +9,7 @@ namespace Datiss.Budget.Services.Contracts
     {
         Task<BranchFeeAmount> GetByIdAsync(int id);
 
-        Task<ValidationResult> AddAsync(CreateBranchFeeAmountDTO model);
+        Task<ValidationResult> CreateAsync(CreateBranchFeeAmountDTO model);
 
         Task<ValidationResult> UpdateAsync(UpdateBranchFeeAmountDTO model);
 

@@ -12,13 +12,13 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<WaterSalesSplit> GetByIdAsync(int id);
 
-        Task<ValidationResult> AddAsync(CreateWaterSalesSplitDTO model);
+        Task<ValidationResult> CreateAsync(CreateWaterSalesSplitDTO model);
 
-        Task<ValidationResult> UpdateAsync(UpdateWaterSalesSplitViewModel model);
+        Task<ValidationResult> UpdateAsync(UpdateWaterSalesSplitDTO model);
 
         Task HardDeleteAsync(int Id);
 
-        Task<PagedResult<WaterSalesSplitViewModel>> GetListAsync(WaterSalesSplitFilterDTO filter);
+        Task<PagedResult<WaterSalesSplitDTO>> GetListAsync(WaterSalesSplitFilterDTO filter);
 
     }
     

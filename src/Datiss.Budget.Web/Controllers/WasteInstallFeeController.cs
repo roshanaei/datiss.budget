@@ -117,12 +117,10 @@ namespace Datiss.Budget.Web.Controllers
                 return View(model);
             }
 
-            var result = await _wasteInstallFeeService.UpdateAsync(model);
+            var result = await _wasteInstallFeeService.UpdateAsync(model.Adapt<UpdateWasteInstallFeeDTO>());
 
             if(!result.IsValid) {
-                model._HasError = true;
-                model._ErrorMessage = result.Message;
-
+                model.AddError(result.Message);
                 return View(model);
             }
 
@@ -139,10 +137,15 @@ namespace Datiss.Budget.Web.Controllers
 
             var result = await _wasteInstallFeeService.GetListAsync(filterInput);
 
-            var model = new WasteInstallFeeIndexViewModel();
-            model.SetFinanceYearFilterSource(await _financeYearService.GetDropDownDataAsync());
-            model.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
-            model.Model = result;
+            var model = result.Adapt<WasteInstallFeeIndexViewModel>();
+            model.SetFinanceYearFilterSource(
+                (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+            model.SetOrganizationFilterSource(
+                (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
 
             return View(model);
         }
