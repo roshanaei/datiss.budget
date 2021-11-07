@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Datiss.Budget.Services.Models
+﻿namespace Datiss.Budget.Services.Models
 {
     public class CreateWasteInstallFeeDTO
     {
@@ -19,5 +13,21 @@ namespace Datiss.Budget.Services.Models
         public string DWasteTypeTitle { get; set; }
     }
 
+    public class UpdateWasteInstallFeeDTO : CreateWasteInstallFeeDTO
+    { 
+        public int Id { get; set; }
+    }
+
+    public class WasteInstallFeeDTO
+    {
+        public int Id { get; set; }
+        public int YearId { get; set; }
+        public int Year { get; set; }
+        public int OrganizationId { get; set; }
+        public string OrganizationDisplay { get; set; }
+        public int DWasteTypeId { get; set; }
+        public string DWasteTypeDisplay { get; set; }
+        public int WInstallFee { get; set; }
+    }
 
 }
