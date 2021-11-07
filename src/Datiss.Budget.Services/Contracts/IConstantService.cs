@@ -8,7 +8,7 @@ namespace Datiss.Budget.Services.Contracts
     public interface IConstantService
     {
 
-        Task<ValidationResult> AddAsync(CreateConstantDTO model);
+        Task<ValidationResult> CreateAsync(CreateConstantDTO model);
 
         Task<ValidationResult> UpdateAsync(UpdateConstantDTO model);
 

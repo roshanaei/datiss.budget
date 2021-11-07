@@ -42,7 +42,7 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpGet("[action]")]
         public async Task<IActionResult> Create(int organizationId, int yearId) {
-            var model = new AddWasteInstallFeeViewModel {
+            var model = new CreateWasteInstallFeeViewModel {
                 OrganizationId = organizationId,
                 YearId = yearId
             };
@@ -57,7 +57,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(AddWasteInstallFeeViewModel model) 
+        public async Task<IActionResult> Create(CreateWasteInstallFeeViewModel model) 
         {
             var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
             model.DWasteTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
@@ -70,7 +70,7 @@ namespace Datiss.Budget.Web.Controllers
                 return View(model);
             }
 
-            var result = await _wasteInstallFeeService.AddAsync(new CreateWasteInstallFeeDTO {
+            var result = await _wasteInstallFeeService.CreateAsync(new CreateWasteInstallFeeDTO {
                 DWasteTypeId = model.DWasteTypeId,
                 OrganizationId = model.OrganizationId,
                 WInstllFee = model.WInstllFee,
@@ -78,10 +78,8 @@ namespace Datiss.Budget.Web.Controllers
                 DWasteTypeTitle = model.DWasteTypeTitle
             });
 
-            if(! result.IsValid) {
-                model._HasError = true;
-                model._ErrorMessage = result.Message;
-
+            if(!result.IsValid) {
+                model.AddError(result.Message);
                 return View(model);
             }
 
