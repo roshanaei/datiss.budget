@@ -29,6 +29,8 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<Stream> ExportExcelAsync(WaterInstallFeeFilter filter);
 
+        Task<IEnumerable<WaterInstallFeeViewModel>> GetExportItemsAsync(WaterInstallFeeFilter filter);
+
         Task ImportExcelAsync(IFormFile fileInfo);
     }
 }
