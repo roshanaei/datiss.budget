@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Models
 {
@@ -25,4 +22,25 @@ namespace Datiss.Budget.Services.Models
         public int UnitSales { get; set; }
 
     }
+
+    public class UpdateWaterSalesSplitDTO : CreateWaterSalesSplitDTO
+    {
+        public int Id { get; set; }
+    }
+
+    public class WaterSalesSplitDTO
+    {
+        public int Id { get; set; }
+        public int YearId { get; set; }
+        public int Year { get; set; }
+        public int OrganizationId { get; set; }
+        public string OrganizationDisplay { get; set; }
+        public int UserTypeId { get; set; }
+        public string UserTypeDisplay { get; set; }
+        public int WPipeDiameterId { get; set; }
+        public string WPipeDiameterDisplay { get; set; }
+        public int NumberSales { get; set; }
+        public int UnitSales { get; set; }
+    }
+
 }

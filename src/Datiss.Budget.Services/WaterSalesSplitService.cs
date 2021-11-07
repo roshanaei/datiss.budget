@@ -1,13 +1,10 @@
 ﻿using Datiss.Budget.DataLayer.Context;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Services.Contracts;
 using Microsoft.EntityFrameworkCore;
-using Datiss.Budget.ViewModels;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
@@ -20,7 +17,7 @@ namespace Datiss.Budget.Services
     {
         private readonly IUnitOfWork _uow;
 
-        private DbSet<WaterSalesSplit> _dbSet;
+        private readonly DbSet<WaterSalesSplit> _dbSet;
 
         public WaterSalesSplitService(IUnitOfWork uow)
         {
@@ -37,7 +34,7 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult> AddAsync(CreateWaterSalesSplitDTO model)
+        public async Task<ValidationResult> CreateAsync(CreateWaterSalesSplitDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
             var entity = new WaterSalesSplit
@@ -65,7 +62,7 @@ namespace Datiss.Budget.Services
         }
 
 
-        public async Task<ValidationResult> UpdateAsync(UpdateWaterSalesSplitViewModel model)
+        public async Task<ValidationResult> UpdateAsync(UpdateWaterSalesSplitDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -98,10 +95,11 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
 
         }
-         public async Task<PagedResult<WaterSalesSplitViewModel>> GetListAsync(WaterSalesSplitFilterDTO filter)
+
+         public async Task<PagedResult<WaterSalesSplitDTO>> GetListAsync(WaterSalesSplitFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
-            var result = new PagedResult<WaterSalesSplitViewModel>
+            var result = new PagedResult<WaterSalesSplitDTO>
             {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -159,7 +157,7 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.Organization)
                                     .Include(x => x.UserType)
                                     .Include(x=> x.WPipeDiameter)
-                                    .Select(x => new WaterSalesSplitViewModel
+                                    .Select(x => new WaterSalesSplitDTO 
                                     {
                                         Id = x.Id,
                                         UserTypeDisplay = x.UserType.Title,
@@ -177,17 +175,43 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+
+        #region Logics
+
+        private async Task<bool> checkLogicAsync(
+            int yearId,
+            int organizationId,
+            int userTypeId,
+            int wPipeDiameterId,
+            int? id = null)
+        {
+            var result = id == null
+                ? await Query().AnyAsync(x => x.YearId == yearId &&
+                                                x.OrganizationId == organizationId &&
+                                                x.UserTypeId == userTypeId &&
+                                                x.WPipeDiameterId == wPipeDiameterId)
+
+                : await Query().AnyAsync(x => x.YearId == yearId &&
+                                            x.OrganizationId == organizationId &&
+                                            x.UserTypeId == userTypeId &&
+                                            x.WPipeDiameterId == wPipeDiameterId &&
+                                            x.Id != id);
+            return !result;
+        }
+
+        #endregion
+
+        #region Private Helper Methods
+
         private IQueryable<WaterSalesSplit> setOrder(
             IQueryable<WaterSalesSplit> query,
             string orderBy = "id",
-            bool desc = false)
-        {
+            bool desc = false) {
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "id";
 
             orderBy = orderBy.ToLower();
-            switch (orderBy)
-            {
+            switch (orderBy) {
                 case "year":
                     return desc
                         ? query.OrderByDescending(x => x.FinanceYear.Year)
@@ -212,29 +236,6 @@ namespace Datiss.Budget.Services
                         ? query.OrderByDescending(x => x.Id)
                         : query.OrderBy(x => x.Id);
             }
-        }
-
-        #region Logics
-
-        private async Task<bool> checkLogicAsync(
-            int yearId,
-            int organizationId,
-            int userTypeId,
-            int wPipeDiameterId,
-            int? id = null)
-        {
-            var result = id == null
-                ? await Query().AnyAsync(x => x.YearId == yearId &&
-                                                x.OrganizationId == organizationId &&
-                                                x.UserTypeId == userTypeId &&
-                                                x.WPipeDiameterId == wPipeDiameterId)
-
-                : await Query().AnyAsync(x => x.YearId == yearId &&
-                                            x.OrganizationId == organizationId &&
-                                            x.UserTypeId == userTypeId &&
-                                            x.WPipeDiameterId == wPipeDiameterId &&
-                                            x.Id != id);
-            return !result;
         }
 
         #endregion

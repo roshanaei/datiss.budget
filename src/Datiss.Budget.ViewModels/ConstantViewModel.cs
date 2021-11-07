@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class AddConstantViewModel
+    public class CreateConstantViewModel
     {
         public int? ParentId { get; set; }
 
@@ -18,7 +18,7 @@ namespace Datiss.Budget.ViewModels
         public IEnumerable<SelectListItem> ParentList { get; set; }
     }
 
-    public class UpdateConstantViewModel: AddConstantViewModel
+    public class UpdateConstantViewModel: CreateConstantViewModel
     {
         public int Id { get; set; }
     }

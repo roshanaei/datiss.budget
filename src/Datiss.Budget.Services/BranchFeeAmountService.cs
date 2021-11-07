@@ -35,7 +35,7 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult> AddAsync(CreateBranchFeeAmountDTO model)
+        public async Task<ValidationResult> CreateAsync(CreateBranchFeeAmountDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
             var entity = new BranchFeeAmount

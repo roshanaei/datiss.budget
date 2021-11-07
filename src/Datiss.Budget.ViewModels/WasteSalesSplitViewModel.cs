@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Datiss.Budget.ViewModels.Base;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class AddWasteSalesSplitViewModel:BaseViewModel
+    public class CreateWasteSalesSplitViewModel : BaseViewModel
     {
         public int YearId { get; set; }
 
@@ -20,7 +17,7 @@ namespace Datiss.Budget.ViewModels
         public int WsPipeDiameterId { get; set; }
 
         [Required(ErrorMessage ="*")]
-        [Range(0,int.MaxValue,ErrorMessage ="تعداد انشعاب باید به صورت عددی وارد شود")]
+        [Range(0,int.MaxValue,ErrorMessage ="تعداد انشعاب باید به صورت عددی وارد شود")] //TODO : use resources instead
         public int NumberSales { get; set; }
 
         [Required(ErrorMessage ="*")]
@@ -52,7 +49,7 @@ namespace Datiss.Budget.ViewModels
         }
     }
 
-    public class UpdateWasteSalesSplitViewModel :AddWasteSalesSplitViewModel
+    public class UpdateWasteSalesSplitViewModel : CreateWasteSalesSplitViewModel
     {
         public int Id { get; set; }
     }
@@ -99,5 +96,32 @@ namespace Datiss.Budget.ViewModels
         public IEnumerable<SelectListItem> YearSource { get; set; }
 
         public IEnumerable<SelectListItem> OrganizationSource { get; set; }
+    }
+
+    public class WasteSalesSplitIndexViewModel : PagedViewModel<WasteSalesSplitViewModel>
+    {
+
+        public WasteSalesSplitIndexViewModel() {
+            Filter = new WasteSalesSplitFilterViewModel();
+        }
+
+        public WasteSalesSplitFilterViewModel Filter { get; set; }
+
+        public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source) {
+            Filter.OrganizationSource = source.Select(x => new SelectListItem {
+                Selected = x.Selected,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+        }
+
+        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source) {
+            Filter.YearSource = source.Select(x => new SelectListItem {
+                Selected = x.Selected,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+        }
+
     }
 }

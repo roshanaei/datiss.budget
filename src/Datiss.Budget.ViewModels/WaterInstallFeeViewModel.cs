@@ -1,17 +1,14 @@
-﻿using Datiss.Budget.ViewModels.Base;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class AddWaterInstallFeeViewModel: BaseViewModel
+    public class CreateWaterInstallFeeViewModel: BaseViewModel
     {
-
         public int YearId { get; set; }
 
         public int OrganizationId { get; set; }
@@ -35,7 +32,7 @@ namespace Datiss.Budget.ViewModels
         
     }
 
-    public class UpdateWaterInstallFeeViewModel : AddWaterInstallFeeViewModel
+    public class UpdateWaterInstallFeeViewModel : CreateWaterInstallFeeViewModel
     {
         public int Id { get; set; }
 
@@ -63,6 +60,33 @@ namespace Datiss.Budget.ViewModels
         public IEnumerable<SelectListItem> YearSource { get; set; }
 
         public IEnumerable<SelectListItem> OrganizationSource { get; set; }
+    }
+
+    public class WaterInstallFeeIndexViewModel : PagedViewModel<WaterInstallFeeViewModel>
+    {
+        public WaterInstallFeeIndexViewModel() {
+            Filter = new WaterInstallFeeFilterViewModel();
+        }
+
+        public WaterInstallFeeFilterViewModel Filter { get; set; }
+
+        public IFormFile ExcelFile { get; set; }
+
+        public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null) {
+            Filter.OrganizationSource = source.Select(x => new SelectListItem {
+                Selected = x.Id == selectedOrgId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+        }
+
+        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null) {
+            Filter.YearSource = source.Select(x => new SelectListItem {
+                Selected = x.Id == selectedYearId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
+        }
     }
 
 }
