@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Datiss.Budget.Services.Models
 {
@@ -10,9 +6,7 @@ namespace Datiss.Budget.Services.Models
     {
         public IEnumerable<T> Items { get; set; }
         public int PageSize { get; set; } = 10;
-        public int PreviousPage => PageNumber - 1;
         public int PageNumber { get; set; } = 1;
-        public int NextPage => PageNumber + 1;
         public int TotalCount { get; set; }
         public int PagesCount => TotalCount / PageSize;
     }

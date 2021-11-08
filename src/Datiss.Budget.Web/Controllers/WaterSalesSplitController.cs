@@ -38,7 +38,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> Create(int organizationId, int yearId)
         {
-            var model = new AddWaterSalesSplitViewModel
+            var model = new CreateWaterSalesSplitViewModel
             {
                 OrganizationId = organizationId,
                 YearId = yearId
@@ -60,7 +60,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(AddWaterSalesSplitViewModel model)
+        public async Task<IActionResult> Create(CreateWaterSalesSplitViewModel model)
         {
             var userTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
             model.UserTypeSource = userTypeSource.Select(x => new SelectListItem
@@ -81,7 +81,7 @@ namespace Datiss.Budget.Web.Controllers
                 return View(model);
             }
 
-            var result = await _waterSalesSplitService.AddAsync(new CreateWaterSalesSplitDTO { 
+            var result = await _waterSalesSplitService.CreateAsync(new CreateWaterSalesSplitDTO { 
                 OrganizationId = model.OrganizationId,
                 YearId = model.YearId,
                 UserTypeId = model.UserTypeId,
@@ -151,14 +151,12 @@ namespace Datiss.Budget.Web.Controllers
             {
                 return View(model);
             }
-
-            var result = await _waterSalesSplitService.UpdateAsync(model);
+            var data = model.Adapt<UpdateWaterSalesSplitDTO>();
+            var result = await _waterSalesSplitService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
-                model._HasError = true;
-                model._ErrorMessage = result.Message;
-
+                model.AddError(result.Message);
                 return View(model);
             }
 
@@ -168,7 +166,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var filterInput = new WaterSalesSplitFilter
+            var filterInput = new WaterSalesSplitFilterDTO
             {
                 OrderBy = "usertype",
                 PageNumber = page
@@ -176,11 +174,17 @@ namespace Datiss.Budget.Web.Controllers
 
             var result = await _waterSalesSplitService.GetListAsync(filterInput);
 
-            var model = new WaterSalesSplitIndexViewModel();
-            model.SetFinanceYearFilterSource(await _financeYearService.GetDropDownDataAsync());
-            model.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
-            model.Model = result;
+            var model = result.Adapt<WaterSalesSplitIndexViewModel>();
 
+            model.SetFinanceYearFilterSource(
+                (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+            model.SetOrganizationFilterSource(
+                (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+            
             return View(model);
         }
         [HttpPost]
@@ -189,7 +193,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             if (Request.Form["btnFilter"].Count() > 0)
             {
-                var filterInput = model.Adapt<WaterSalesSplitFilter>();
+                var filterInput = model.Adapt<WaterSalesSplitFilterDTO>();
 
                 var result = await _waterSalesSplitService.GetListAsync(filterInput);
 

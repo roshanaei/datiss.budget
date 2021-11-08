@@ -30,7 +30,7 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> New() 
         {
             var parentList = await _constantService.GetParentsAsync();
-            var model = new AddConstantViewModel {
+            var model = new CreateConstantViewModel {
                 ParentList = parentList.Select(x=> new SelectListItem { 
                     Value = x.Id.ToString(),
                     Text = x.Title
