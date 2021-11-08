@@ -1,22 +1,19 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
-using Datiss.Budget.ViewModels;
+using Datiss.Budget.Services.Infrastructure;
 
 namespace Datiss.Budget.Services.Contracts
 {
     public interface IFinanceYearService
     {
-        Task<ValidationResult> AddAsync(AddFinanceYearViewModel model);
+        Task<ValidationResult> CreateAsync(CreateFinanceYearDTO model);
         
-        Task<ValidationResult> UpdateAsync(UpdateFinanceYearViewModel model);
+        Task<ValidationResult> UpdateAsync(UpdateFinanceYearDTO model);
 
         Task<ValidationResult> SoftDeleteAsync(int id);
 
         Task<IEnumerable<DropDownItem>> GetDropDownDataAsync();
+
     }
 }

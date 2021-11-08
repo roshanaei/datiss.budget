@@ -38,7 +38,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> Create(int organizationId, int yearId)
         {
-            var model = new AddWasteSalesSplitViewModel
+            var model = new CreateWasteSalesSplitViewModel
             {
                 OrganizationId = organizationId,
                 YearId = yearId
@@ -60,7 +60,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(AddWasteSalesSplitViewModel model)
+        public async Task<IActionResult> Create(CreateWasteSalesSplitViewModel model)
         {
             var userTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
             model.UserTypeSource = userTypeSource.Select(x => new SelectListItem
@@ -81,7 +81,7 @@ namespace Datiss.Budget.Web.Controllers
                 return View(model);
             }
 
-            var result = await _wasteSalesSplitService.AddAsync(new CreateWasteSalesSplitDTO { 
+            var result = await _wasteSalesSplitService.CreateAsync(new CreateWasteSalesSplitDTO { 
                 OrganizationId = model.OrganizationId,
                 YearId = model.YearId,
                 UserTypeId = model.UserTypeId,
@@ -94,9 +94,7 @@ namespace Datiss.Budget.Web.Controllers
 
             if (!result.IsValid)
             {
-                model._HasError = true;
-                model._ErrorMessage = result.Message;
-
+                model.AddError(result.Message);
                 return View(model);
             }
 
@@ -152,13 +150,12 @@ namespace Datiss.Budget.Web.Controllers
                 return View(model);
             }
 
-            var result = await _wasteSalesSplitService.UpdateAsync(model);
+            var data = model.Adapt<UpdateWasteSalesSplitDTO>();
+            var result = await _wasteSalesSplitService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
-                model._HasError = true;
-                model._ErrorMessage = result.Message;
-
+                model.AddError(result.Message);
                 return View(model);
             }
 
@@ -168,18 +165,23 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var filterInput = new WasteSalesSplitFilter
+            var filterInput = new WasteSalesSplitFilterDTO
             {
                 OrderBy = "usertype",
                 PageNumber = page
             };
 
             var result = await _wasteSalesSplitService.GetListAsync(filterInput);
+            var model = result.Adapt<WasteSalesSplitIndexViewModel>();
 
-            var model = new WasteSalesSplitIndexViewModel();
-            model.SetFinanceYearFilterSource(await _financeYearService.GetDropDownDataAsync());
-            model.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
-            model.Model = result;
+            model.SetFinanceYearFilterSource(
+                (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+            model.SetOrganizationFilterSource(
+                (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
 
             return View(model);
         }
@@ -189,7 +191,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             if (Request.Form["btnFilter"].Count() > 0)
             {
-                var filterInput = model.Adapt<WasteSalesSplitFilter>();
+                var filterInput = model.Adapt<WasteSalesSplitFilterDTO>();
 
                 var result = await _wasteSalesSplitService.GetListAsync(filterInput);
 

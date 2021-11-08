@@ -1,13 +1,10 @@
-﻿using Datiss.Budget.DataLayer.Context;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Services.Contracts;
-using Microsoft.EntityFrameworkCore;
-using Datiss.Budget.ViewModels;
+using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
@@ -19,7 +16,7 @@ namespace Datiss.Budget.Services
     {
         private readonly IUnitOfWork _uow;
         
-        private DbSet<WasteInstallFee> _dbSet;
+        private readonly DbSet<WasteInstallFee> _dbSet;
 
         public WasteInstallFeeService(IUnitOfWork uow)
         {
@@ -35,9 +32,10 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult> AddAsync(CreateWasteInstallFeeDTO model)
+        public async Task<ValidationResult> CreateAsync(CreateWasteInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
+
             var entity = new WasteInstallFee
             {
                 YearId = model.YearId,
@@ -59,7 +57,7 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<ValidationResult> UpdateAsync(UpdateWasteInstallFeeViewModel model)
+        public async Task<ValidationResult> UpdateAsync(UpdateWasteInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -90,10 +88,10 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<WasteInstallFeeViewModel>> GetListAsync(WasteInstallFeeFilter filter) 
+        public async Task<PagedResult<WasteInstallFeeDTO>> GetListAsync(WasteInstallFeeFilterDTO filter) 
         {
             filter.CheckArgumentIsNull(nameof(filter));
-            var result = new PagedResult<WasteInstallFeeViewModel> {
+            var result = new PagedResult<WasteInstallFeeDTO> {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
             };
@@ -135,7 +133,7 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
                                     .Include(x => x.DWasteType)
-                                    .Select(x => new WasteInstallFeeViewModel {
+                                    .Select(x => new WasteInstallFeeDTO {
                                         Id = x.Id,
                                         DWasteTypeDisplay = x.DWasteType.Title,
                                         DWasteTypeId = x.DWasteTypeId,
@@ -148,6 +146,8 @@ namespace Datiss.Budget.Services
 
             return await Task.FromResult(result);
         }
+
+        #region Private Helper Methods
 
         private IQueryable<WasteInstallFee> setOrder(
             IQueryable<WasteInstallFee> query,
@@ -179,6 +179,8 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.Id);
             }
         }
+
+        #endregion
 
         #region Logics
 

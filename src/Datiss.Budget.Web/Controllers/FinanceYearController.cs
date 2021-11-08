@@ -32,7 +32,7 @@ namespace Datiss.Budget.Web.Controllers
         public  async Task<IActionResult> Create()
         {
 
-            var model = new AddFinanceYearViewModel();
+            var model = new CreateFinanceYearViewModel();
             return View(model);
         }
      
