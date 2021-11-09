@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -69,17 +70,23 @@ namespace Datiss.Budget.ViewModels
 
         public WasteInstallFeeFilterViewModel Filter { get; set; }
 
-        public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source) {
-            Filter.OrganizationSource = source.Select(x => new SelectListItem {
-                Selected = x.Selected,
+        public IFormFile ExcelFile { get; set; }
+
+        public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
+        {
+            Filter.OrganizationSource = source.Select(x => new SelectListItem
+            {
+                Selected = x.Id == selectedOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList().AddEmptySelectListItem();
         }
 
-        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source) {
-            Filter.YearSource = source.Select(x => new SelectListItem {
-                Selected = x.Selected,
+        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
+        {
+            Filter.YearSource = source.Select(x => new SelectListItem
+            {
+                Selected = x.Id == selectedYearId,
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList().AddEmptySelectListItem();

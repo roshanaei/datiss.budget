@@ -27,7 +27,7 @@
         public string OrganizationDisplay { get; set; }
         public int DWasteTypeId { get; set; }
         public string DWasteTypeDisplay { get; set; }
-        public int WInstallFee { get; set; }
+        public int WsInstallFee { get; set; }
     }
 
 }

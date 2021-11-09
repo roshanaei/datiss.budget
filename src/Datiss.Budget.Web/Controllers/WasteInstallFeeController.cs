@@ -19,6 +19,16 @@ namespace Datiss.Budget.Web.Controllers
     [Route("[controller]")]
     public class WasteInstallFeeController : Controller
     {
+        public const string Name = "WasteInstallFee";
+        public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Index = nameof(Index);
+        public const string ACTION_Edit = nameof(Edit);
+        //public const string ACTION_Copy = nameof(Copy);
+        //public const string ACTION_Delete = nameof(Delete);
+        //public const string ACTION_ImportExcel = nameof(ImportExcel);
+        //public const string ACTION_Calculation = nameof(Calculation);
+        //public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
+        //public const string ACTION_ExportExcel = nameof(ExportExcel);
 
         private readonly IWasteInstallFeeService _wasteInstallFeeService;
         private readonly IConstantService _constantService;
@@ -27,13 +37,13 @@ namespace Datiss.Budget.Web.Controllers
         private readonly IWebHostEnvironment _webHost;
 
         public WasteInstallFeeController(
-            IWasteInstallFeeService waterInstallFeeService,
+            IWasteInstallFeeService wasteInstallFeeService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             IConstantService constantService,
-            IWebHostEnvironment webHost) 
+            IWebHostEnvironment webHost)
         {
-            _wasteInstallFeeService = waterInstallFeeService ?? throw new ArgumentNullException(nameof(waterInstallFeeService));
+            _wasteInstallFeeService = wasteInstallFeeService ?? throw new ArgumentNullException(nameof(wasteInstallFeeService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
@@ -57,7 +67,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(CreateWasteInstallFeeViewModel model) 
+        public async Task<IActionResult> Create(CreateWasteInstallFeeViewModel model)
         {
             var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
             model.DWasteTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
@@ -78,7 +88,7 @@ namespace Datiss.Budget.Web.Controllers
                 DWasteTypeTitle = model.DWasteTypeTitle
             });
 
-            if(!result.IsValid) {
+            if (!result.IsValid) {
                 model.AddError(result.Message);
                 return View(model);
             }
@@ -90,7 +100,7 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Edit(int id) {
             var entity = await _wasteInstallFeeService.GetByIdAsync(id);
 
-            if(entity == null) {
+            if (entity == null) {
                 return RedirectToAction("Index");
             }
 
@@ -119,7 +129,7 @@ namespace Datiss.Budget.Web.Controllers
 
             var result = await _wasteInstallFeeService.UpdateAsync(model.Adapt<UpdateWasteInstallFeeDTO>());
 
-            if(!result.IsValid) {
+            if (!result.IsValid) {
                 model.AddError(result.Message);
                 return View(model);
             }
@@ -128,45 +138,67 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("{page?}")]
-        public async Task<IActionResult> Index(int page = 1) 
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var filterInput = new WasteInstallFeeFilterDTO {
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+               .Adapt<List<DropDownItemViewModel>>();
+            int firstOrgId = orgSource.FirstOrDefault().Id;
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(_ => _.Id);
+
+            var filterInput = new WasteInstallFeeFilterDTO
+            {
                 OrderBy = "dwatertype",
-                PageNumber = page
+                PageNumber = page,
+                YearId = maxYear,
+                OrganizationId = firstOrgId
             };
 
             var result = await _wasteInstallFeeService.GetListAsync(filterInput);
-
             var model = result.Adapt<WasteInstallFeeIndexViewModel>();
-            model.SetFinanceYearFilterSource(
-                (await _financeYearService.GetDropDownDataAsync())
-                .Adapt<IEnumerable<DropDownItemViewModel>>()
-            );
-            model.SetOrganizationFilterSource(
-                (await _organizationService.GetDropDownDataAsync())
-                .Adapt<IEnumerable<DropDownItemViewModel>>()
-            );
+
+            model.SetFinanceYearFilterSource(yearSource, maxYear);
+            model.SetOrganizationFilterSource(orgSource);
+
+            model.Filter.YearId = filterInput.YearId;
+            model.Filter.OrganizationId = filterInput.OrganizationId;
 
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(WasteInstallFeeFilterViewModel model) 
+        public async Task<IActionResult> Index(WasteInstallFeeIndexViewModel viewModel, int page = 1)
         {
-            if(Request.Form["btnFilter"].Count() > 0) {
-                var filterInput = model.Adapt<WasteInstallFeeFilterDTO>();
+            if (Request.Form["btnFilter"].Count() > 0)
+            {
+                var filterInput = viewModel.Filter.Adapt<WasteInstallFeeFilterDTO>();
 
                 var result = await _wasteInstallFeeService.GetListAsync(filterInput);
 
-                return View(result);
+                viewModel.SetFinanceYearFilterSource(
+                    (await _financeYearService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+                );
+
+                viewModel.SetOrganizationFilterSource(
+                    (await _organizationService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+                );
+                viewModel = result.Adapt<WasteInstallFeeIndexViewModel>();
+
+                return View(viewModel);
             }
-            
-            if(Request.Form["btnCreate"].Count() > 0) {
+
+            if (Request.Form["btnCreate"].Count() > 0)
+            {
                 int yearId = int.Parse(Request.Form["Filter.YearId"].ToString());
                 int orgId = int.Parse(Request.Form["Filter.OrganizationId"].ToString());
 
-                return RedirectToAction("Create", new {
+                return RedirectToAction("Create", new
+                {
                     organizationId = orgId,
                     yearId = yearId
                 });
@@ -174,8 +206,6 @@ namespace Datiss.Budget.Web.Controllers
 
             return RedirectToAction("Index");
         }
-
-
         [HttpGet("report")]
         public async Task<IActionResult> Report() {
             StiReport report = new StiReport();

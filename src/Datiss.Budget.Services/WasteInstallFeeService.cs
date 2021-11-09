@@ -15,13 +15,16 @@ namespace Datiss.Budget.Services
     public class WasteInstallFeeService : IWasteInstallFeeService
     {
         private readonly IUnitOfWork _uow;
-        
+        private readonly IOrganizationService _organizationService;
         private readonly DbSet<WasteInstallFee> _dbSet;
 
-        public WasteInstallFeeService(IUnitOfWork uow)
+        public WasteInstallFeeService(
+            IUnitOfWork uow,
+            IOrganizationService organizationService)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<WasteInstallFee>();
+            _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
         private IQueryable<WasteInstallFee> Query()
@@ -88,27 +91,75 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<PagedResult<WasteInstallFeeDTO>> GetListAsync(WasteInstallFeeFilterDTO filter) 
+        public async Task<PagedResult<WasteInstallFeeDTO>> GetListAsync(WasteInstallFeeFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
-            var result = new PagedResult<WasteInstallFeeDTO> {
+            var result = new PagedResult<WasteInstallFeeDTO>
+            {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
             };
 
             var query = Query();
 
+            query = await setFilter(query, filter);
+
+            result.TotalCount = await query.CountAsync();
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            query = query
+                .Skip(filter.StartIndex)
+                .Take(filter.PageSize);
+
+            result.Items = await query.Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.DWasteType)
+                                    .Select(x => new WasteInstallFeeDTO
+                                    {
+                                        Id = x.Id,
+                                        DWasteTypeDisplay = x.DWasteType.Title,
+                                        DWasteTypeId = x.DWasteTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        WsInstallFee = x.WsInstllFee,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
+                                    }).ToListAsync();
+
+            return await Task.FromResult(result);
+        }
+
+        #region Private Helper Methods
+        private async Task<IQueryable<WasteInstallFee>> setFilter(
+            IQueryable<WasteInstallFee> query,
+            WasteInstallFeeFilterDTO filter)
+        {
+
+            var predicate = LinqKit.PredicateBuilder.New<WasteInstallFee>();
+
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
 
             if (filter.OrganizationId.HasValue)
-                query = query.Where(x => x.OrganizationId == filter.OrganizationId.Value);
+            {
+                var organizations = await _organizationService
+                    .GetWithChildrenAsync(filter.OrganizationId.Value);
+                foreach (var org in organizations)
+                {
+                    predicate.Or(_ => _.OrganizationId == org.Id);
+                }
+
+                query = query.Where(predicate);
+            }
 
             if (filter.DWasteTypeId.HasValue)
                 query = query.Where(x => x.DWasteTypeId == filter.DWasteTypeId.Value);
 
-            if(filter.WInstallFee.HasValue) {
-                switch(filter.FeeMode) {
+            if (filter.WInstallFee.HasValue)
+            {
+                switch (filter.FeeMode)
+                {
                     case InstallFeeFilterMode.Exact:
                         query = query.Where(x => x.WsInstllFee == filter.WInstallFee.Value);
                         break;
@@ -121,34 +172,8 @@ namespace Datiss.Budget.Services
                 }
             }
 
-            result.TotalCount = await query.CountAsync();
-
-            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
-
-            query = query
-                .Skip(filter.StartIndex)
-                .Take(filter.PageSize);
-
-            result.Items = await query
-                                    .Include(x => x.FinanceYear)
-                                    .Include(x => x.Organization)
-                                    .Include(x => x.DWasteType)
-                                    .Select(x => new WasteInstallFeeDTO {
-                                        Id = x.Id,
-                                        DWasteTypeDisplay = x.DWasteType.Title,
-                                        DWasteTypeId = x.DWasteTypeId,
-                                        OrganizationDisplay = x.Organization.Title,
-                                        OrganizationId = x.OrganizationId,
-                                        WInstallFee = x.WsInstllFee,
-                                        Year = x.FinanceYear.Year,
-                                        YearId = x.YearId
-                                    }).ToListAsync();
-
-            return await Task.FromResult(result);
+            return query;
         }
-
-        #region Private Helper Methods
-
         private IQueryable<WasteInstallFee> setOrder(
             IQueryable<WasteInstallFee> query,
             string orderBy = "id",
