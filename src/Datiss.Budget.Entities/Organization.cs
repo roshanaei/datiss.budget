@@ -60,6 +60,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<IncomeForcast> IncomeForcasts { get; set; }
 
+        public ICollection<IncomeForcastWs> IncomeForcastWs { get; set; }
+
         #endregion
     }
 }
