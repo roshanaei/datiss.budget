@@ -28,6 +28,11 @@ namespace Datiss.Budget.Services.Models
         public bool? SewageStatus { get; set; }
         public EntityStatus? Status { get; set; }
     }
+    public class ConstantFilterDTO : FilterInputDTO
+    {
+        public int? ParentId { get; set; }
+        public string ConstantKey { get; set; }
+    }
 
     public class WaterInstallFeeFilterDTO : FilterInputDTO
     {
@@ -42,9 +47,6 @@ namespace Datiss.Budget.Services.Models
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
-        public int? DWasteTypeId { get; set; }
-        public int? WInstallFee { get; set; }
-        public InstallFeeFilterMode FeeMode { get; set; }
     }
 
     public class WaterSalesSplitFilterDTO : FilterInputDTO

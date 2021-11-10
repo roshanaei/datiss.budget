@@ -321,25 +321,6 @@ namespace Datiss.Budget.Services
                 query = query.Where(predicate);
             }
 
-            if (filter.DWasteTypeId.HasValue)
-                query = query.Where(x => x.DWasteTypeId == filter.DWasteTypeId.Value);
-
-            if (filter.WInstallFee.HasValue)
-            {
-                switch (filter.FeeMode)
-                {
-                    case InstallFeeFilterMode.Exact:
-                        query = query.Where(x => x.WsInstllFee == filter.WInstallFee.Value);
-                        break;
-                    case InstallFeeFilterMode.GreaterThan:
-                        query = query.Where(x => x.WsInstllFee >= filter.WInstallFee.Value);
-                        break;
-                    case InstallFeeFilterMode.LessThan:
-                        query = query.Where(x => x.WsInstllFee <= filter.WInstallFee.Value);
-                        break;
-                }
-            }
-
             return query;
         }
         private IQueryable<WasteInstallFee> setOrder(
