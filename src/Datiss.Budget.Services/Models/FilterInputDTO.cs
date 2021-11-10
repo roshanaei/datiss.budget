@@ -33,7 +33,10 @@ namespace Datiss.Budget.Services.Models
         public int? ParentId { get; set; }
         public string ConstantKey { get; set; }
     }
+    public class FinanceYearFilterDTO : FilterInputDTO
+    {
 
+    }
     public class WaterInstallFeeFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
