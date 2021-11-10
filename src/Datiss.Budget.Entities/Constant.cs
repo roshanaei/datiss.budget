@@ -51,6 +51,8 @@ namespace Datiss.Budget.Entities
         public ICollection<SalesSplitFunction> SalesSplitFunctions { get; set; }
 
         public ICollection<UserTypeAverageCapacity> UserTypeAverageCapacities { get; set; }
+
+        public ICollection<IncomeForcast> IncomeForcasts { get; set; } 
         #endregion
     }
 }
