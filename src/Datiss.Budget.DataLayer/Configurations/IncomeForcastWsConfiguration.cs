@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Datiss.Budget.DataLayer.Configurations
+namespace Datiss.Budget.DataLayer.Mappings
 {
     public class IncomeForcastWsConfiguration : IEntityTypeConfiguration<IncomeForcastWs>
     {

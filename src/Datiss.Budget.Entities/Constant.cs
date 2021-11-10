@@ -55,6 +55,9 @@ namespace Datiss.Budget.Entities
         public ICollection<IncomeForcast> IncomeForcasts { get; set; }
 
         public ICollection<IncomeForcastWs> IncomeForcastWs { get; set; }
+
+        public ICollection<WWsFee> WWsFees { get; set; }
+
         #endregion
     }
 }
