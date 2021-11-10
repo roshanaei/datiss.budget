@@ -94,7 +94,9 @@
                                         <th>سال</th>
                                         <th>سازمان</th>
                                         <th>کاربری</th>
-                                        <th>قیمت</th>
+                                        <th>قطر لوله آب</th>
+                                        <th>تعداد انشعاب</th>
+                                        <th>احاد انشعاب</th>
                                         <th>مدیریت</th>
                                     </tr>
                                 </thead>
@@ -104,6 +106,8 @@
                                         <tr>
                                             <td>@item.Year.ToString()</td>
                                             <td>@item.OrganizationDisplay </td>
+                                            <td>@item.UserTypeDisplay</td>
+                                            <td>@item.WPipeDiameterId</td>
                                             <td>@item.NumberSales </td>
                                             <td>@item.UnitSales </td>
                                             <td>

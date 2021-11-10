@@ -23,23 +23,24 @@ namespace Datiss.Budget.Services
     public class WasteInstallFeeService : IWasteInstallFeeService
     {
         private readonly IUnitOfWork _uow;
-        private readonly IOrganizationService _organizationService;
-        private readonly DbSet<WasteInstallFee> _dbSet;
-        private readonly DbSet<Organization> _orgDbSet;
         private readonly IExcelService _excelService;
         private readonly IUserService _userService;
+        private readonly IOrganizationService _organizationService;
+
+        private readonly DbSet<WasteInstallFee> _dbSet;
+        private readonly DbSet<Organization> _orgDbSet;
 
         public WasteInstallFeeService(
             IUnitOfWork uow,
-            IOrganizationService organizationService,
             IExcelService excelService,
-            IUserService userService)
+            IUserService userService,
+            IOrganizationService organizationService)
         {
+            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<WasteInstallFee>();
             _orgDbSet = _uow.Set<Organization>();
-            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 

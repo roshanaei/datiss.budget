@@ -30,24 +30,25 @@ namespace Datiss.Budget.Web.Controllers
         //public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         //public const string ACTION_ExportExcel = nameof(ExportExcel);
 
+        private readonly IWebHostEnvironment _env;
         private readonly IWasteInstallFeeService _wasteInstallFeeService;
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
-        private readonly IWebHostEnvironment _webHost;
 
         public WasteInstallFeeController(
+            IWebHostEnvironment environment,
             IWasteInstallFeeService wasteInstallFeeService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
-            IConstantService constantService,
-            IWebHostEnvironment webHost)
+            IConstantService constantService
+            )
         {
+            _env = environment ?? throw new ArgumentNullException(nameof(environment));
             _wasteInstallFeeService = wasteInstallFeeService ?? throw new ArgumentNullException(nameof(wasteInstallFeeService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
-            _webHost = webHost;
         }
 
         [HttpGet("[action]")]
@@ -206,13 +207,13 @@ namespace Datiss.Budget.Web.Controllers
 
             return RedirectToAction("Index");
         }
-        [HttpGet("report")]
-        public async Task<IActionResult> Report() {
-            StiReport report = new StiReport();
-            report.Load(_webHost.WebRootPath + "\\report.mrt");
+        //[HttpGet("report")]
+        //public async Task<IActionResult> Report() {
+        //    StiReport report = new StiReport();
+        //    report.Load(_webHost.WebRootPath + "\\report.mrt");
 
-            return await StiNetCoreViewer.GetReportResultAsync(this, report);
-        }
+        //    return await StiNetCoreViewer.GetReportResultAsync(this, report);
+        //}
 
         [HttpGet("[action]")]
         public IActionResult ViewerEvent() {

@@ -47,7 +47,7 @@ namespace Datiss.Budget.ViewModels
         public string OrganizationDisplay { get; set; }
         public int DWasteTypeId { get; set; }
         public string DWasteTypeDisplay { get; set; }
-        public int WInstallFee { get; set; }
+        public int WsInstallFee { get; set; }
     }
 
     public class WasteInstallFeeFilterViewModel: FilterViewModel
@@ -55,7 +55,7 @@ namespace Datiss.Budget.ViewModels
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
         public int? DWasteTypeId { get; set; }
-        public int? WInstallFee { get; set; }
+        public int? WsInstallFee { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
 
