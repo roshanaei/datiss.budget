@@ -1,9 +1,6 @@
-﻿using System;
+﻿using System.Linq;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Threading.Tasks;
-using Datiss.Budget.ViewModels;
 using Datiss.Budget.Services.Models;
 using Microsoft.AspNetCore.Http;
 
@@ -27,7 +24,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItem> source, int? selectedYearId = null) {
@@ -35,7 +32,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedYearId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
     }
 }
