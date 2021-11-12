@@ -24,7 +24,7 @@ namespace Datiss.Budget.ViewModels
 
         public bool SewageStatus { get; set; }
 
-        public IEnumerable<SelectListItem> ParentList { get; set; }
+        public IList<SelectListItem> ParentList { get; set; }
     }
 
     public class UpdateOrganizationViewModel : AddOrganizationViewModel
@@ -59,10 +59,10 @@ namespace Datiss.Budget.ViewModels
 
         public EntityStatus? Status { get; set; }
 
-        public IEnumerable<SelectListItem> ParentOrganozationSource { get; set; }
+        public IList<SelectListItem> ParentOrganozationSource { get; set; }
 
-        public IEnumerable<SelectListItem> OrganizationTypeSource { get; set; }
+        public IList<SelectListItem> OrganizationTypeSource { get; set; }
 
-        public IEnumerable<SelectListItem> OrganizationStatusSource { get; set; }
+        public IList<SelectListItem> OrganizationStatusSource { get; set; }
     }
 }

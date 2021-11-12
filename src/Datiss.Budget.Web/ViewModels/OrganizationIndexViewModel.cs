@@ -28,7 +28,7 @@ namespace Datiss.Budget.Web.ViewModels
                 Selected = x.Id == selectParentOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
 
         public void SetOrganizationTypeFilterSource(IEnumerable<DropDownItem> source,int? selectOrgTypeId = null)
@@ -38,7 +38,7 @@ namespace Datiss.Budget.Web.ViewModels
                 Selected = x.Id == selectOrgTypeId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
 
         public void SetOrganizationStatusFilterSource(IEnumerable<DropDownItem> source, int? selectOrgStatusId = null)
@@ -48,7 +48,7 @@ namespace Datiss.Budget.Web.ViewModels
                 Selected = x.Id == selectOrgStatusId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
 
     }

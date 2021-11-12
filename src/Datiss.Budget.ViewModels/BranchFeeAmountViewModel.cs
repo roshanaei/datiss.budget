@@ -118,8 +118,8 @@ namespace Datiss.Budget.ViewModels
 
         public int? WsTubingCost { get; set; }
 
-        public IEnumerable<SelectListItem> YearSource { get; set; }
+        public IList<SelectListItem> YearSource { get; set; }
 
-        public IEnumerable<SelectListItem> OrganizationSource { get; set; }
+        public IList<SelectListItem> OrganizationSource { get; set; }
     }
 }

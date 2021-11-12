@@ -24,7 +24,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Selected,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItem> source) {
@@ -32,7 +32,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Selected,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
     }
 }
