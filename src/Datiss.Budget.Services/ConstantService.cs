@@ -126,15 +126,13 @@ namespace Datiss.Budget.Services
 
             result.TotalCount = await query.CountAsync();
 
-            query = setOrder(query, filter.OrderBy);
+            query = setOrder(query, filter.OrderBy , filter.OrderDesc);
 
             query = query
                 .Skip(filter.StartIndex)
                 .Take(filter.PageSize);
 
             result.Items = await query
-                                    .Include(x => x.Parent)
-                                    .Include(x => x.Childrens)
                                     .Select(x => new ConstantDTO
                                     {
                                         Id = x.Id,
@@ -157,7 +155,8 @@ namespace Datiss.Budget.Services
         }
         private IQueryable<Constant> setOrder(
              IQueryable<Constant> query,
-             string orderBy = "id")
+             string orderBy = "id",
+             bool desc = false)
         {
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "id";
@@ -166,17 +165,22 @@ namespace Datiss.Budget.Services
             switch (orderBy)
             {
                 case "displayorder":
-                    return query.OrderBy(x => x.DisplayOrder);
+                    return desc
+                                ? query.OrderByDescending(x => x.DisplayOrder)
+                                : query.OrderBy(x => x.DisplayOrder);
 
                 default:
-                    return query.OrderBy(x => x.Id);
+                    return desc
+                                ? query.OrderByDescending(x => x.Id)
+                                : query.OrderBy(x => x.Id);
             }
+                    
         }
         private async Task<bool> ExistByKeyAsync(string contantKey, int? id = null)
             => id == null
-                ? await _dbSet.FirstOrDefaultAsync
+                ? await _dbSet.AnyAsync
                     (_ => _.ConstantKey.ToUpper() == contantKey.ToUpper()) != null
-                : await _dbSet.FirstOrDefaultAsync
+                : await _dbSet.AnyAsync
                     (_ => _.Id != id.Value && _.ConstantKey.ToUpper() == contantKey.ToUpper()) != null;
 
         #endregion
