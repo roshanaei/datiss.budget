@@ -15,15 +15,9 @@ namespace Datiss.Budget.DataLayer.Mappings
             builder.Property(x => x.Id)
                     .HasColumnName("IncomeForcastWsId");
 
-            builder.Property(x => x.OrganizationId).IsRequired();
-
-            builder.Property(x => x.YearId).IsRequired();
-
-            builder.Property(x => x.UserTypeId).IsRequired();
-
             builder.HasOne(x => x.Organization)
                     .WithMany(x => x.IncomeForcastWs)
-                    .HasForeignKey(x => x.UserTypeId)
+                    .HasForeignKey(x => x.OrganizationId)
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.FinanceYear)

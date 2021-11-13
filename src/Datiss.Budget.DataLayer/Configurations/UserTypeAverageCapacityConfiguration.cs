@@ -15,12 +15,6 @@ namespace Datiss.Budget.DataLayer.Mappings
             builder.Property(x => x.Id)
                 .HasColumnName("UTACID");
 
-            builder.Property(x => x.OrganizationId).IsRequired();
-
-            builder.Property(x => x.YearId).IsRequired();
-
-            builder.Property(x => x.UserTypeId).IsRequired();
-
             builder.Property(x => x.AverageCapacityW).HasColumnType("decimal(18,6)");
 
             builder.Property(x => x.AverageCapacityWs).HasColumnType("decimal(18,6)");
