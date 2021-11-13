@@ -1,13 +1,9 @@
 ﻿using Datiss.Budget.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Models
 {
-    public abstract class FilterInput
+
+    public abstract class FilterInputDTO
     {
         public string Search { get; set; }
         public string OrderBy { get; set; }
@@ -25,7 +21,7 @@ namespace Datiss.Budget.Services.Models
     }
 
 
-    public class OrganizationFilter:FilterInput
+    public class OrganizationFilterDTO : FilterInputDTO
     {
         public int? ParentId { get; set; }
         public OrganizationType? Type { get; set; }
@@ -33,7 +29,7 @@ namespace Datiss.Budget.Services.Models
         public EntityStatus? Status { get; set; }
     }
 
-    public class WaterInstallFeeFilter: FilterInput
+    public class WaterInstallFeeFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
@@ -42,7 +38,7 @@ namespace Datiss.Budget.Services.Models
         public InstallFeeFilterMode FeeMode { get; set; }
     }
 
-    public class WasteInstallFeeFilter : FilterInput
+    public class WasteInstallFeeFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
@@ -51,7 +47,7 @@ namespace Datiss.Budget.Services.Models
         public InstallFeeFilterMode FeeMode { get; set; }
     }
 
-    public class WaterSalesSplitFilter : FilterInput
+    public class WaterSalesSplitFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
@@ -63,7 +59,7 @@ namespace Datiss.Budget.Services.Models
         public InstallFeeFilterMode UnitMode { get; set; }
     }
 
-    public class BranchFeeAmountFilter : FilterInput
+    public class BranchFeeAmountFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
 
@@ -96,7 +92,7 @@ namespace Datiss.Budget.Services.Models
         public int? WsTubingCost { get; set; }
     }
 
-    public class WasteSalesSplitFilter : FilterInput
+    public class WasteSalesSplitFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }

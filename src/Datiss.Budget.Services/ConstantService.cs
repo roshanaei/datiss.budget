@@ -9,9 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Datiss.Budget.Enum;
 using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Common.PersianToolkit;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
+using DNTPersianUtils.Core;
 
 namespace Datiss.Budget.Services
 {
@@ -19,7 +21,7 @@ namespace Datiss.Budget.Services
     {
         private readonly IUnitOfWork _uow;
 
-        private DbSet<Constant> _dbSet;
+        private readonly DbSet<Constant> _dbSet;
 
         public ConstantService(
             IUnitOfWork uow) 
@@ -32,20 +34,20 @@ namespace Datiss.Budget.Services
            => _dbSet.AsNoTracking()
                     .Where(_ => _.Status != EntityStatus.Deleted);
         
-        public async Task<ValidationResult> AddAsync(AddConstantViewModel model) {
+        public async Task<ValidationResult> CreateAsync(CreateConstantDTO model) {
             model.CheckArgumentIsNull(nameof(model));
 
             if (await ExistByKeyAsync(model.ConstantKey))
                 return new ValidationResult {
                     IsValid = false,
-                    Message = "نام کلید تکراری است."
+                    Message = "نام کلید تکراری است." //TODO : move this to resource
                 };
 
             var entity = new Constant {
-                ConstantKey = model.ConstantKey,
+                ConstantKey = model.ConstantKey.Trim(),
                 DisplayOrder = model.DisplayOrder,
                 ParentId = model.ParentId,
-                Title = model.Title
+                Title = model.Title.Trim().ApplyCorrectYeKe()
             };
 
             entity.Status = model.Enabled 
@@ -58,13 +60,13 @@ namespace Datiss.Budget.Services
             return ValidationResult.Success();
         }
 
-        public async Task<ValidationResult> UpdateAsync(UpdateConstantViewModel model) {
+        public async Task<ValidationResult> UpdateAsync(UpdateConstantDTO model) {
             model.CheckArgumentIsNull(nameof(model));
 
             if (await ExistByKeyAsync(model.ConstantKey, model.Id))
                 return new ValidationResult {
                     IsValid = false,
-                    Message = "نام کلید تکراری است."
+                    Message = "نام کلید تکراری است." //TODO : move this to resource
                 };
 
             var entity = await _dbSet.FindAsync(model.Id);
@@ -86,7 +88,6 @@ namespace Datiss.Budget.Services
             entity.CheckArgumentIsNull(nameof(entity));
 
             entity.Status = EntityStatus.Deleted;
-
             await _uow.SaveChangesAsync();
 
             return ValidationResult.Success();

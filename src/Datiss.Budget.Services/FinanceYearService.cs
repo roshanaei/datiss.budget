@@ -1,18 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Enum;
 using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Entities;
-using Datiss.Budget.ViewModels;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
-using System.Globalization;
 
 namespace Datiss.Budget.Services
 {
@@ -32,9 +29,10 @@ namespace Datiss.Budget.Services
             => _dbSet.AsNoTracking()
                         .Where(x=> x.Status != EntityStatus.Deleted);
 
-        public async Task<ValidationResult> AddAsync(AddFinanceYearViewModel model) {
+        public async Task<ValidationResult> CreateAsync(CreateFinanceYearDTO model) {
             model.CheckArgumentIsNull(nameof(model));
 
+            //TODO : check logic
             var entity = new FinanceYear {
                 Year = model.Year,
                 Title = model.Title,
@@ -48,7 +46,7 @@ namespace Datiss.Budget.Services
             return ValidationResult.Success();
         }
 
-        public async Task<ValidationResult> UpdateAsync(UpdateFinanceYearViewModel model) {
+        public async Task<ValidationResult> UpdateAsync(UpdateFinanceYearDTO model) {
             model.CheckArgumentIsNull(nameof(model));
 
             var entity = await _dbSet.FindAsync(model.Id);
@@ -71,7 +69,6 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
 
             return ValidationResult.Success();
-
         }
 
         public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync() 

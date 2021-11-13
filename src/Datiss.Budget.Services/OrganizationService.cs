@@ -1,11 +1,9 @@
 ﻿using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Entities;
-using Datiss.Budget.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Datiss.Budget.Enum;
 using Datiss.Budget.Common.GuardToolkit;
@@ -21,7 +19,7 @@ namespace Datiss.Budget.Services
         private readonly IUnitOfWork _uow;
         private readonly IUserContext _userContext;
 
-        private DbSet<Organization> _dbSet;
+        private readonly DbSet<Organization> _dbSet;
 
         public OrganizationService(
             IUnitOfWork uow,
@@ -36,10 +34,11 @@ namespace Datiss.Budget.Services
             => _dbSet.AsNoTracking()
                         .Where(x => x.Status != EntityStatus.Deleted);
 
-        public async Task<ValidationResult> AddAsync(AddOrganizationViewModel model)
+        public async Task<ValidationResult> CreateAsync(CreateOrganizationDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
+            //TODO : check logic
             var entity = new Organization
             {
                 Type = model.Type,
@@ -59,10 +58,11 @@ namespace Datiss.Budget.Services
             return ValidationResult.Success();
         }
 
-        public async Task<ValidationResult> UpdateAsync(UpdateOrganizationViewModel model)
+        public async Task<ValidationResult> UpdateAsync(UpdateOrganizationDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
+            //TODO : check logic
             var entity = await _dbSet.FindAsync(model.Id);
             entity.ParentId = model.ParentId;
             entity.Title = model.Title;
@@ -99,8 +99,6 @@ namespace Datiss.Budget.Services
                     Title = x.Title
                 }).ToListAsync();
 
-
-
         public async Task<IEnumerable<Organization>> GetWithChildrenAsync(int organizationId)
             => await getWithChildrenAsync(organizationId);
 
@@ -116,28 +114,7 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        private async Task<IEnumerable<Organization>> getByParnetIdAsync(int? parentId)
-        {
-
-            var firstLevel = await Query()
-                .Include(x => x.Childrens)
-                .Where(x => x.ParentId == parentId).ToListAsync();
-
-            var result = new List<Organization>();
-            result.AddRange(firstLevel);
-
-            foreach (var item in firstLevel)
-            {
-                foreach (var child in item.Childrens)
-                {
-                    result.Add(child);
-                    result.AddRange(await getByParnetIdAsync(child.Id));
-                }
-            }
-
-            return result;
-        }
-
+        
         public async Task<bool> IsDescendentAsync(int orgId)
         {
             var query = Query();
@@ -177,28 +154,10 @@ namespace Datiss.Budget.Services
                         Selected = x.Id == _userContext.OrganizationId
                     }).ToList();
 
-
-        private IQueryable<Organization> setFilter(IQueryable<Organization> query, OrganizationFilter filter)
-        {
-            if (filter.ParentId.HasValue)
-                query = query.Where(x => x.ParentId == filter.ParentId.Value);
-
-            if (filter.Type.HasValue)
-                query = query.Where(x => x.Type == filter.Type.Value);
-
-            if (filter.SewageStatus.HasValue)
-                query = query.Where(x => x.SewageStatus == filter.SewageStatus.Value);
-
-            if (filter.Status.HasValue)
-                query = query.Where(x => x.Status == filter.Status.Value);
-
-            return query;
-        }
-
-        public async Task<PagedResult<OrganizationViewModel>> GetListAsync(OrganizationFilter filter)
+        public async Task<PagedResult<OrganizationDTO>> GetListAsync(OrganizationFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
-            var result = new PagedResult<OrganizationViewModel>
+            var result = new PagedResult<OrganizationDTO>
             {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -219,7 +178,7 @@ namespace Datiss.Budget.Services
             result.Items = await query
                                     .Include(x => x.Parent)
                                     .Include(x => x.Childrens)
-                                    .Select(x => new OrganizationViewModel
+                                    .Select(x => new OrganizationDTO 
                                     {
                                         Id = x.Id,
                                         ParentId = x.ParentId,
@@ -233,18 +192,33 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        #region Private Helper Methods
+
+        private IQueryable<Organization> setFilter(IQueryable<Organization> query, OrganizationFilterDTO filter) {
+            if (filter.ParentId.HasValue)
+                query = query.Where(x => x.ParentId == filter.ParentId.Value);
+
+            if (filter.Type.HasValue)
+                query = query.Where(x => x.Type == filter.Type.Value);
+
+            if (filter.SewageStatus.HasValue)
+                query = query.Where(x => x.SewageStatus == filter.SewageStatus.Value);
+
+            if (filter.Status.HasValue)
+                query = query.Where(x => x.Status == filter.Status.Value);
+
+            return query;
+        }
 
         private IQueryable<Organization> setOrder(
                 IQueryable<Organization> query,
                 string orderBy = "id",
-                bool desc = false)
-        {
+                bool desc = false) {
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "id";
 
             orderBy = orderBy.ToLower();
-            switch (orderBy)
-            {
+            switch (orderBy) {
                 case "parent":
                     return desc
                         ? query.OrderByDescending(x => x.Parent.Id)
@@ -266,6 +240,30 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.Id);
             }
         }
+
+        private async Task<IEnumerable<Organization>> getByParnetIdAsync(int? parentId) {
+
+            var firstLevel = await Query()
+                .Include(x => x.Childrens)
+                .Where(x => x.ParentId == parentId).ToListAsync();
+
+            var result = new List<Organization>();
+            result.AddRange(firstLevel);
+
+            foreach (var item in firstLevel) {
+                foreach (var child in item.Childrens) {
+                    result.Add(child);
+                    result.AddRange(await getByParnetIdAsync(child.Id));
+                }
+            }
+
+            return result;
+        }
+
+
+        #endregion
+
+
     }
 }
 

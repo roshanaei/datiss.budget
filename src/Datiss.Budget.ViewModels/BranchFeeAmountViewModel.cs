@@ -1,13 +1,10 @@
-﻿using Datiss.Budget.ViewModels.Base;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
+﻿using System.Linq;
 using System.Collections.Generic;
-using System.Linq;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Datiss.Budget.ViewModels
 {
-   public class AddBranchFeeAmountViewModel:BaseViewModel
+    public class CreateBranchFeeAmountViewModel : BaseViewModel
     {
         public int YearId { get; set; }
 
@@ -40,7 +37,7 @@ namespace Datiss.Budget.ViewModels
         public int WsTubingCost { get; set; }
     }
 
-    public class UpdateBranchFeeAmountViewModel : AddBranchFeeAmountViewModel
+    public class UpdateBranchFeeAmountViewModel : CreateBranchFeeAmountViewModel
     {
         public int Id { get; set; }
     }
@@ -121,5 +118,30 @@ namespace Datiss.Budget.ViewModels
         public IList<SelectListItem> YearSource { get; set; }
 
         public IList<SelectListItem> OrganizationSource { get; set; }
+    }
+
+    public class BranchFeeAmountIndexViewModel : PagedViewModel<BranchFeeAmountViewModel>
+    {
+        public BranchFeeAmountIndexViewModel() {
+            Filter = new BranchFeeAmountFilterViewModel();
+        }
+
+        public BranchFeeAmountFilterViewModel Filter { get; set; }
+
+        public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source) {
+            Filter.OrganizationSource = source.Select(x => new SelectListItem {
+                Selected = x.Selected,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList().AddEmptySelectListItem();
+        }
+
+        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source) {
+            Filter.YearSource = source.Select(x => new SelectListItem {
+                Selected = x.Selected,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList().AddEmptySelectListItem();
+        }
     }
 }

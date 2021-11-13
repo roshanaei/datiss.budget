@@ -42,7 +42,7 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpGet("[action]")]
         public async Task<IActionResult> Create(int organizationId, int yearId) {
-            var model = new AddWasteInstallFeeViewModel {
+            var model = new CreateWasteInstallFeeViewModel {
                 OrganizationId = organizationId,
                 YearId = yearId
             };
@@ -57,7 +57,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(AddWasteInstallFeeViewModel model) 
+        public async Task<IActionResult> Create(CreateWasteInstallFeeViewModel model) 
         {
             var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
             model.DWasteTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
@@ -70,7 +70,7 @@ namespace Datiss.Budget.Web.Controllers
                 return View(model);
             }
 
-            var result = await _wasteInstallFeeService.AddAsync(new CreateWasteInstallFeeDTO {
+            var result = await _wasteInstallFeeService.CreateAsync(new CreateWasteInstallFeeDTO {
                 DWasteTypeId = model.DWasteTypeId,
                 OrganizationId = model.OrganizationId,
                 WInstllFee = model.WInstllFee,
@@ -78,10 +78,8 @@ namespace Datiss.Budget.Web.Controllers
                 DWasteTypeTitle = model.DWasteTypeTitle
             });
 
-            if(! result.IsValid) {
-                model._HasError = true;
-                model._ErrorMessage = result.Message;
-
+            if(!result.IsValid) {
+                model.AddError(result.Message);
                 return View(model);
             }
 
@@ -119,12 +117,10 @@ namespace Datiss.Budget.Web.Controllers
                 return View(model);
             }
 
-            var result = await _wasteInstallFeeService.UpdateAsync(model);
+            var result = await _wasteInstallFeeService.UpdateAsync(model.Adapt<UpdateWasteInstallFeeDTO>());
 
             if(!result.IsValid) {
-                model._HasError = true;
-                model._ErrorMessage = result.Message;
-
+                model.AddError(result.Message);
                 return View(model);
             }
 
@@ -134,17 +130,22 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1) 
         {
-            var filterInput = new WasteInstallFeeFilter {
+            var filterInput = new WasteInstallFeeFilterDTO {
                 OrderBy = "dwatertype",
                 PageNumber = page
             };
 
             var result = await _wasteInstallFeeService.GetListAsync(filterInput);
 
-            var model = new WasteInstallFeeIndexViewModel();
-            model.SetFinanceYearFilterSource(await _financeYearService.GetDropDownDataAsync());
-            model.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
-            model.Model = result;
+            var model = result.Adapt<WasteInstallFeeIndexViewModel>();
+            model.SetFinanceYearFilterSource(
+                (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+            model.SetOrganizationFilterSource(
+                (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
 
             return View(model);
         }
@@ -154,7 +155,7 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Index(WasteInstallFeeFilterViewModel model) 
         {
             if(Request.Form["btnFilter"].Count() > 0) {
-                var filterInput = model.Adapt<WasteInstallFeeFilter>();
+                var filterInput = model.Adapt<WasteInstallFeeFilterDTO>();
 
                 var result = await _wasteInstallFeeService.GetListAsync(filterInput);
 

@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net;
@@ -17,7 +18,6 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Microsoft.AspNetCore.Http;
 using Datiss.Budget.Common.Exceptions;
 using Microsoft.AspNetCore.Hosting;
-using Datiss.Budget.Web.ViewModels;
 using Datiss.Budget.Common.GuardToolkit;
 using Mapster;
 
@@ -46,20 +46,18 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public  async Task<IActionResult> Index(int page = 1)
         {
-            var model = new OrganizationIndexViewModel();
-
-            model.SetParentOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
-
-            var filterInput = new OrganizationFilter
-            {
+            var filterInput = new OrganizationFilterDTO {
                 OrderBy = "DisplayOrder",
                 PageNumber = page,
                 PageSize = 10
             };
 
             var result = await _organizationService.GetListAsync(filterInput);
-
-            model.Model = result;
+            var model = new OrganizationIndexViewModel();
+            model.SetParentOrganizationFilterSource(
+                (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
 
             return View(model);
         }
@@ -70,14 +68,16 @@ namespace Datiss.Budget.Web.Controllers
         {
             if(Request.Form["btnFilter"].Count() > 0)
             {
-                var filterInput = viewModel.Filter.Adapt<OrganizationFilter>();
-
+                var filterInput = viewModel.Filter.Adapt<OrganizationFilterDTO>();
+                filterInput.PageNumber = page;
                 var result = await _organizationService.GetListAsync(filterInput);
+                var model = result.Adapt<OrganizationIndexViewModel>();
+                model.SetParentOrganizationFilterSource(
+                    (await _organizationService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+                );
 
-                viewModel.SetParentOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
-                viewModel.Model = result;
-
-                return View(viewModel);
+                return View(model);
             }
 
             if (Request.Form["btnCreate"].Count() > 0)
@@ -93,7 +93,7 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> New()
         {
             var parentList = await _organizationService.GetParentsAsync();
-            var model = new AddOrganizationViewModel
+            var model = new CreateOrganizationViewModel
             {
                 ParentList = parentList.Select(x => new SelectListItem
                 {
