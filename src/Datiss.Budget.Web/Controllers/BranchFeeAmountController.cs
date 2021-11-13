@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -34,7 +33,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> Create(int organizationId,int yearId)
         {
-            var model = new AddBranchFeeAmountViewModel
+            var model = new CreateBranchFeeAmountViewModel
             {
                 OrganizationId = organizationId,
                 YearId = yearId
@@ -44,37 +43,20 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(AddBranchFeeAmountViewModel model)
+        public async Task<IActionResult> Create(CreateBranchFeeAmountViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            var result = await _branchFeeAmountService.AddAsync(new CreateBranchFeeAmountDTO
-            {
-                YearId = model.YearId,
-                OrganizationId = model.OrganizationId,
-                UrbanAdjustmentFactor = model.UrbanAdjustmentFactor,
-                WasteRateInWater = model.WasteRateInWater,
-                WaterBranchingPerHousing = model.WaterBranchingPerHousing,
-                TubingCost = model.TubingCost,
-                WaterPartnershipAmountDomestic = model.WaterPartnershipAmountDomestic,
-                WaterPartnershipAmountNDomestic = model.WaterPartnershipAmountNDomestic,
-                WastePartnershipAmountDomestic = model.WastePartnershipAmountDomestic,
-                WastePartnershipAmountNDomestic = model.WastePartnershipAmountNDomestic,
-                FixCostNote11H = model.FixCostNote11H,
-                FixCostNote11NH = model.FixCostNote11NH,
-                FixCostNote11HWs = model.FixCostNote11HWs,
-                FixCostNote11NHWs = model.FixCostNote11NHWs,
-                WsTubingCost = model.WsTubingCost
-            });
+            var data = model.Adapt<CreateBranchFeeAmountDTO>();
+
+            var result = await _branchFeeAmountService.CreateAsync(data);
 
             if(!result.IsValid)
             {
-                model._HasError = true;
-                model._ErrorMessage = result.Message;
-
+                model.AddError(result.Message);
                 return View(model);
             }
 
@@ -103,13 +85,13 @@ namespace Datiss.Budget.Web.Controllers
                 return View(model);
             }
 
-            var result = await _branchFeeAmountService.UpdateAsync(model);
+            var data = model.Adapt<UpdateBranchFeeAmountDTO>();
+
+            var result = await _branchFeeAmountService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
-                model._HasError = true;
-                model._ErrorMessage = result.Message;
-
+                model.AddError(result.Message);
                 return View(model);
             }
             return RedirectToAction("Index", new { page = model._CurrentPage });
@@ -118,21 +100,24 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var filterInput = new BranchFeeAmountFilter
+            var filterInput = new BranchFeeAmountFilterDTO
             {
                 OrderBy = "organization",
                 PageNumber = page
             };
 
             var result = await _branchFeeAmountService.GetListAsync(filterInput);
+            var model = result.Adapt<BranchFeeAmountIndexViewModel>();
 
-            var model = new BranchFeeAmountIndexViewModel();
-            model.SetFinanceYearFilterSource(await _financeYearService.GetDropDownDataAsync());
-            model.SetOrganizationFilterSource(await _organizationService.GetDropDownDataAsync());
-            model.Model = result;
-
+            model.SetFinanceYearFilterSource(
+                (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+            model.SetOrganizationFilterSource(
+                (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>());
+            
             return View(model);
-
         }
 
         [HttpPost]
@@ -141,7 +126,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             if (Request.Form["btnFilter"].Count() > 0)
             {
-                var filterInput = model.Adapt<BranchFeeAmountFilter>();
+                var filterInput = model.Adapt<BranchFeeAmountFilterDTO>();
 
                 var result = await _branchFeeAmountService.GetListAsync(filterInput);
                 return View(result);
@@ -160,10 +145,7 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return RedirectToAction("Index");
-
-
         }
 
-       
     }
 }

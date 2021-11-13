@@ -3,15 +3,14 @@ using System.Threading.Tasks;
 using Datiss.Budget.Entities;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
-using Datiss.Budget.ViewModels;
 
 namespace Datiss.Budget.Services.Contracts
 {
     public interface IOrganizationService
     {
-        Task<ValidationResult> AddAsync(AddOrganizationViewModel model);
+        Task<ValidationResult> CreateAsync(CreateOrganizationDTO model);
 
-        Task<ValidationResult> UpdateAsync(UpdateOrganizationViewModel model);
+        Task<ValidationResult> UpdateAsync(UpdateOrganizationDTO model);
 
         Task<ValidationResult> SoftDeleteAsync(int id);
 
@@ -23,7 +22,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<bool> IsDescendentAsync(int orgId);
 
-        Task<PagedResult<OrganizationViewModel>> GetListAsync(OrganizationFilter filter);
+        Task<PagedResult<OrganizationDTO>> GetListAsync(OrganizationFilterDTO filter);
 
     }
 }

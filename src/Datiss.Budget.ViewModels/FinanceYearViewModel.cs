@@ -1,13 +1,8 @@
-﻿using Datiss.Budget.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class AddFinanceYearViewModel
+    public class CreateFinanceYearViewModel
     {
         public string Title { get; set; }
 
@@ -20,7 +15,7 @@ namespace Datiss.Budget.ViewModels
         public bool Enabled { get; set; }
     }
 
-    public class UpdateFinanceYearViewModel : AddFinanceYearViewModel
+    public class UpdateFinanceYearViewModel : CreateFinanceYearViewModel
     {
         public int Id { get; set; }
     }

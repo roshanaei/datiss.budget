@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Datiss.Budget.ViewModels.Base;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class AddWaterSalesSplitViewModel : BaseViewModel
+    public class CreateWaterSalesSplitViewModel : BaseViewModel
     {
         public int YearId { get; set; }
 
@@ -54,7 +51,7 @@ namespace Datiss.Budget.ViewModels
 
     }
 
-    public class UpdateWaterSalesSplitViewModel :AddWaterSalesSplitViewModel
+    public class UpdateWaterSalesSplitViewModel : CreateWaterSalesSplitViewModel
        {
         public int Id { get; set; }
        }
@@ -94,4 +91,34 @@ namespace Datiss.Budget.ViewModels
         public IList<SelectListItem> OrganizationSource { get; set; }
 
     }
+
+    public class WaterSalesSplitIndexViewModel : PagedViewModel<WaterSalesSplitViewModel>
+    {
+
+        public WaterSalesSplitIndexViewModel() 
+        {
+            Filter = new WaterSalesSplitFilterViewModel();
+        }
+
+        public WaterSalesSplitFilterViewModel Filter { get; set; }
+
+        public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source) {
+            Filter.OrganizationSource = source.Select(x => new SelectListItem {
+                Selected = x.Selected,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList().AddEmptySelectListItem();
+        }
+
+        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source) {
+            Filter.YearSource = source.Select(x => new SelectListItem {
+                Selected = x.Selected,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList().AddEmptySelectListItem();
+        }
+
+    }
+
+    
 }

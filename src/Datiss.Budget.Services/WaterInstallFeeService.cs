@@ -1,28 +1,27 @@
-﻿using Datiss.Budget.DataLayer.Context;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Datiss.Budget.Entities.DWH;
-using Datiss.Budget.Services.Contracts;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Datiss.Budget.ViewModels;
+using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.Resources;
-using Microsoft.AspNetCore.Http;
+using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Services.Excel;
-using Mapster;
-using Datiss.Budget.Services.Contracts.Identity;
-using Datiss.Budget.Common.Exceptions;
-using System.IO;
 using Datiss.Budget.Entities;
+using Datiss.Budget.Common.Exceptions;
+using Datiss.Budget.DataLayer.Context;
+using Datiss.Budget.Services.Contracts.Identity;
+using Mapster;
 using LinqKit;
 
 namespace Datiss.Budget.Services
 {
+
     public class WaterInstallFeeService : IWaterInstallFeeService
     {
         private readonly IUnitOfWork _uow;
@@ -30,8 +29,8 @@ namespace Datiss.Budget.Services
         private readonly IUserService _userService;
         private readonly IOrganizationService _organizationService;
         
-        private DbSet<WaterInstallFee> _dbSet;
-        private DbSet<Organization> _orgDbSet;
+        private readonly DbSet<WaterInstallFee> _dbSet;
+        private readonly DbSet<Organization> _orgDbSet;
 
         public WaterInstallFeeService(
             IUnitOfWork uow, 
@@ -79,7 +78,7 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<ValidationResult> UpdateAsync(UpdateWaterInstallFeeViewModel model)
+        public async Task<ValidationResult> UpdateAsync(UpdateWaterInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -136,47 +135,10 @@ namespace Datiss.Budget.Services
                                .SumAsync(_ => _.WInstllFee);
         }
 
-        private async Task<IQueryable<WaterInstallFee>> setFilter(IQueryable<WaterInstallFee> query, WaterInstallFeeFilter filter) {
-
-            var predicate = PredicateBuilder.New<WaterInstallFee>();
-
-            if (filter.YearId.HasValue)
-                query = query.Where(x => x.YearId == filter.YearId.Value);
-
-            if(filter.OrganizationId.HasValue) {
-                var organizations = await _organizationService
-                    .GetWithChildrenAsync(filter.OrganizationId.Value);
-                foreach(var org in organizations) {
-                    predicate.Or(_ => _.OrganizationId == org.Id);
-                }
-
-                query = query.Where(predicate);
-            }
-
-            if (filter.DWaterTypeId.HasValue)
-                query = query.Where(x => x.DWaterTypeId == filter.DWaterTypeId.Value);
-
-            if (filter.WInstallFee.HasValue) {
-                switch (filter.FeeMode) {
-                    case InstallFeeFilterMode.Exact:
-                        query = query.Where(x => x.WInstllFee == filter.WInstallFee.Value);
-                        break;
-                    case InstallFeeFilterMode.GreaterThan:
-                        query = query.Where(x => x.WInstllFee >= filter.WInstallFee.Value);
-                        break;
-                    case InstallFeeFilterMode.LessThan:
-                        query = query.Where(x => x.WInstllFee <= filter.WInstallFee.Value);
-                        break;
-                }
-            }
-
-            return query;
-        }
-
-        public async Task<PagedResult<WaterInstallFeeViewModel>> GetListAsync(WaterInstallFeeFilter filter) 
+        public async Task<PagedResult<WaterInstallFeeDTO>> GetListAsync(WaterInstallFeeFilterDTO filter) 
         {
             filter.CheckArgumentIsNull(nameof(filter));
-            var result = new PagedResult<WaterInstallFeeViewModel> {
+            var result = new PagedResult<WaterInstallFeeDTO> {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
             };
@@ -193,11 +155,10 @@ namespace Datiss.Budget.Services
                 .Skip(filter.StartIndex)
                 .Take(filter.PageSize);
 
-            result.Items = await query
-                                    .Include(x => x.FinanceYear)
+            result.Items = await query.Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
                                     .Include(x => x.DWaterType)
-                                    .Select(x => new WaterInstallFeeViewModel {
+                                    .Select(x => new WaterInstallFeeDTO {
                                         Id = x.Id,
                                         DWaterTypeDisplay = x.DWaterType.Title,
                                         DWaterTypeId = x.DWaterTypeId,
@@ -245,8 +206,167 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
+        public async Task ImportExcelAsync(IFormFile fileInfo) {
+            var data = await _excelService.ImportAsync<WaterInstallFeeImportModel>(fileInfo);
+            
+            var records = data.Adapt<List<WaterInstallFee>>();
 
-        private async Task<IEnumerable<WaterInstallFee>> getChildrenData(int parentOrganizationId, int yearId, int targetYearId) {
+            int rowIndex = 1;
+            
+            foreach(var record in records) {
+
+                if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
+                    throw new UserOrganizationAccessException(rowIndex);
+
+                if (!await checkLogicAsync(
+                    record.YearId,
+                    record.OrganizationId,
+                    record.DWaterTypeId))
+                    throw new ImportExcelFileException(rowIndex);
+
+                rowIndex++;
+            }
+
+            await _dbSet.AddRangeAsync(records);
+            await _uow.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<WaterInstallFeeDTO>> GetExportItemsAsync(WaterInstallFeeFilterDTO filter) {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.DWaterType)
+                                    .Select(x => new WaterInstallFeeDTO {
+                                        Id = x.Id,
+                                        DWaterTypeDisplay = x.DWaterType.Title,
+                                        DWaterTypeId = x.DWaterTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        WInstallFee = x.WInstllFee,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
+                                    }).ToListAsync();
+
+            return items;
+        }
+
+        public async Task<Stream> ExportExcelAsync(WaterInstallFeeFilterDTO filter) {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.DWaterType)
+                                    .Select(x => new WaterInstallFeeDTO {
+                                        Id = x.Id,
+                                        DWaterTypeDisplay = x.DWaterType.Title,
+                                        DWaterTypeId = x.DWaterTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        WInstallFee = x.WInstllFee,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
+                                    }).ToListAsync();
+
+            var ms = new MemoryStream();
+            var result = _excelService.Export(items, ms);
+
+            var mem1 = new MemoryStream(ms.ToArray());
+
+            return mem1;
+        }
+
+
+        #region Private Helper Methods
+
+        private async Task<IQueryable<WaterInstallFee>> setFilter(
+            IQueryable<WaterInstallFee> query, 
+            WaterInstallFeeFilterDTO filter) {
+
+            var predicate = PredicateBuilder.New<WaterInstallFee>();
+
+            if (filter.YearId.HasValue)
+                query = query.Where(x => x.YearId == filter.YearId.Value);
+
+            if (filter.OrganizationId.HasValue) {
+                var organizations = await _organizationService
+                    .GetWithChildrenAsync(filter.OrganizationId.Value);
+                foreach (var org in organizations) {
+                    predicate.Or(_ => _.OrganizationId == org.Id);
+                }
+
+                query = query.Where(predicate);
+            }
+
+            if (filter.DWaterTypeId.HasValue)
+                query = query.Where(x => x.DWaterTypeId == filter.DWaterTypeId.Value);
+
+            if (filter.WInstallFee.HasValue) {
+                switch (filter.FeeMode) {
+                    case InstallFeeFilterMode.Exact:
+                        query = query.Where(x => x.WInstllFee == filter.WInstallFee.Value);
+                        break;
+                    case InstallFeeFilterMode.GreaterThan:
+                        query = query.Where(x => x.WInstllFee >= filter.WInstallFee.Value);
+                        break;
+                    case InstallFeeFilterMode.LessThan:
+                        query = query.Where(x => x.WInstllFee <= filter.WInstallFee.Value);
+                        break;
+                }
+            }
+
+            return query;
+        }
+
+        private IQueryable<WaterInstallFee> setOrder(
+           IQueryable<WaterInstallFee> query,
+           string orderBy = "id",
+           bool desc = false) {
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "id";
+
+            orderBy = orderBy.ToLower();
+            switch (orderBy) {
+                case "year":
+                    return desc
+                        ? query.OrderByDescending(x => x.FinanceYear.Year)
+                        : query.OrderBy(x => x.FinanceYear.Year);
+
+                case "organization":
+                    return desc
+                        ? query.OrderByDescending(x => x.Organization.Title)
+                        : query.OrderBy(x => x.Organization.Title);
+
+                case "dwatertype":
+                    return desc
+                        ? query.OrderByDescending(x => x.DWaterType.DisplayOrder)
+                        : query.OrderBy(x => x.DWaterType.DisplayOrder);
+
+                default:
+                    return desc
+                        ? query.OrderByDescending(x => x.Id)
+                        : query.OrderBy(x => x.Id);
+            }
+        }
+
+        private async Task<IEnumerable<WaterInstallFee>> getChildrenData(
+            int parentOrganizationId, 
+            int yearId, 
+            int targetYearId) {
 
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
@@ -283,124 +403,7 @@ namespace Datiss.Budget.Services
             return result;
         }
 
-
-        private IQueryable<WaterInstallFee> setOrder(
-            IQueryable<WaterInstallFee> query,
-            string orderBy = "id",
-            bool desc = false) {
-            if (string.IsNullOrWhiteSpace(orderBy))
-                orderBy = "id";
-
-            orderBy = orderBy.ToLower();
-            switch (orderBy) {
-                case "year":
-                    return desc
-                        ? query.OrderByDescending(x => x.FinanceYear.Year)
-                        : query.OrderBy(x => x.FinanceYear.Year);
-
-                case "organization":
-                    return desc
-                        ? query.OrderByDescending(x => x.Organization.Title)
-                        : query.OrderBy(x => x.Organization.Title);
-
-                case "dwatertype":
-                    return desc
-                        ? query.OrderByDescending(x => x.DWaterType.DisplayOrder)
-                        : query.OrderBy(x => x.DWaterType.DisplayOrder);
-
-                default:
-                    return desc
-                        ? query.OrderByDescending(x => x.Id)
-                        : query.OrderBy(x => x.Id);
-            }
-        }
-
-
-        public async Task ImportExcelAsync(IFormFile fileInfo) {
-            var data = await _excelService.ImportAsync<WaterInstallFeeImportModel>(fileInfo);
-            
-            var records = data.Adapt<List<WaterInstallFee>>();
-
-            int rowIndex = 1;
-            
-            foreach(var record in records) {
-
-                if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
-                    throw new UserOrganizationAccessException(rowIndex);
-
-                if (!await checkLogicAsync(
-                    record.YearId,
-                    record.OrganizationId,
-                    record.DWaterTypeId))
-                    throw new ImportExcelFileException(rowIndex);
-
-                rowIndex++;
-            }
-
-            await _dbSet.AddRangeAsync(records);
-            await _uow.SaveChangesAsync();
-        }
-
-
-        public async Task<IEnumerable<WaterInstallFeeViewModel>> GetExportItemsAsync(WaterInstallFeeFilter filter) {
-            filter.CheckArgumentIsNull(nameof(filter));
-
-            var query = Query();
-
-            query = await setFilter(query, filter);
-
-            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
-
-            var items = await query
-                                    .Include(x => x.FinanceYear)
-                                    .Include(x => x.Organization)
-                                    .Include(x => x.DWaterType)
-                                    .Select(x => new WaterInstallFeeViewModel {
-                                        Id = x.Id,
-                                        DWaterTypeDisplay = x.DWaterType.Title,
-                                        DWaterTypeId = x.DWaterTypeId,
-                                        OrganizationDisplay = x.Organization.Title,
-                                        OrganizationId = x.OrganizationId,
-                                        WInstallFee = x.WInstllFee,
-                                        Year = x.FinanceYear.Year,
-                                        YearId = x.YearId
-                                    }).ToListAsync();
-
-            return items;
-        }
-
-        public async Task<Stream> ExportExcelAsync(WaterInstallFeeFilter filter) {
-            filter.CheckArgumentIsNull(nameof(filter));
-
-            var query = Query();
-
-            query = await setFilter(query, filter);
-
-            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
-
-            var items = await query
-                                    .Include(x => x.FinanceYear)
-                                    .Include(x => x.Organization)
-                                    .Include(x => x.DWaterType)
-                                    .Select(x => new WaterInstallFeeViewModel {
-                                        Id = x.Id,
-                                        DWaterTypeDisplay = x.DWaterType.Title,
-                                        DWaterTypeId = x.DWaterTypeId,
-                                        OrganizationDisplay = x.Organization.Title,
-                                        OrganizationId = x.OrganizationId,
-                                        WInstallFee = x.WInstllFee,
-                                        Year = x.FinanceYear.Year,
-                                        YearId = x.YearId
-                                    }).ToListAsync();
-
-            var ms = new MemoryStream();
-            var result = _excelService.Export(items, ms);
-
-            var mem1 = new MemoryStream(ms.ToArray());
-
-            return mem1;
-        }
-
+        #endregion
 
         #region Logics
 
