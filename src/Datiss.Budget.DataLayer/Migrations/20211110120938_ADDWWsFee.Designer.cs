@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211110120938_ADDWWsFee")]
+    partial class ADDWWsFee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -382,8 +384,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrganizationId");
 
                     b.HasIndex("UserTypeId");
 
@@ -1897,13 +1897,13 @@ namespace Datiss.Budget.DataLayer.Migrations
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.IncomeForcastWs", b =>
                 {
-                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
+                    b.HasOne("Datiss.Budget.Entities.Constant", "UserType")
                         .WithMany("IncomeForcastWs")
-                        .HasForeignKey("OrganizationId")
+                        .HasForeignKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Datiss.Budget.Entities.Constant", "UserType")
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
                         .WithMany("IncomeForcastWs")
                         .HasForeignKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
