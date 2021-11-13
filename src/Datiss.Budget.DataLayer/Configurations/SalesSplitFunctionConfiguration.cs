@@ -15,12 +15,6 @@ namespace Datiss.Budget.DataLayer.Mappings
             builder.Property(x => x.Id)
                 .HasColumnName("TSalesSplitID");
 
-            builder.Property(x => x.YearId).IsRequired();
-
-            builder.Property(x => x.OrganizationId).IsRequired();
-
-            builder.Property(x => x.UserTypeId).IsRequired();
-
             builder.HasOne(x => x.FinanceYear)
                 .WithMany(x => x.SalesSplitFunctions)
                 .HasForeignKey(x => x.YearId)
