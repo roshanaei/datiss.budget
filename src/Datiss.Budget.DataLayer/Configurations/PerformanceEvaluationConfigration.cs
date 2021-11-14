@@ -13,6 +13,10 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.HasKey(x => x.Id);
 
+            builder.Property(x => x.Target).HasColumnType("decimal(18,6)");
+
+            builder.Property(x => x.Operation).HasColumnType("decimal(18,6)");
+
             builder.Property(x => x.Status)
                     .HasDefaultValue(EntityStatus.Enabled);
 
