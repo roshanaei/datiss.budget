@@ -57,6 +57,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<PerformanceEvaluation> PerformanceEvaluation { get; set; }
 
+        public ICollection<SalesSplitTotal> SalesSplitTotal { get; set; }
 
         #endregion
     }
