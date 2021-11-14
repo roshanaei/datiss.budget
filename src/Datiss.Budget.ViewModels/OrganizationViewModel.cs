@@ -19,7 +19,7 @@ namespace Datiss.Budget.ViewModels
 
         public bool SewageStatus { get; set; }
 
-        public IEnumerable<SelectListItem> ParentList { get; set; }
+        public IList<SelectListItem> ParentList { get; set; }
     }
 
     public class UpdateOrganizationViewModel : CreateOrganizationViewModel
@@ -54,11 +54,11 @@ namespace Datiss.Budget.ViewModels
 
         public EntityStatus? Status { get; set; }
 
-        public IEnumerable<SelectListItem> ParentOrganozationSource { get; set; }
+        public IList<SelectListItem> ParentOrganozationSource { get; set; }
 
-        public IEnumerable<SelectListItem> OrganizationTypeSource { get; set; }
+        public IList<SelectListItem> OrganizationTypeSource { get; set; }
 
-        public IEnumerable<SelectListItem> OrganizationStatusSource { get; set; }
+        public IList<SelectListItem> OrganizationStatusSource { get; set; }
     }
 
     public class OrganizationIndexViewModel : PagedViewModel<OrganizationViewModel>
@@ -74,7 +74,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectParentOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
 
         public void SetOrganizationTypeFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectOrgTypeId = null) {
@@ -82,7 +82,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectOrgTypeId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
 
         public void SetOrganizationStatusFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectOrgStatusId = null) {
@@ -90,7 +90,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectOrgStatusId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
 
     }

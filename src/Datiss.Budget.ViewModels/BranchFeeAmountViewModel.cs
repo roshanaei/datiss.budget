@@ -115,9 +115,9 @@ namespace Datiss.Budget.ViewModels
 
         public int? WsTubingCost { get; set; }
 
-        public IEnumerable<SelectListItem> YearSource { get; set; }
+        public IList<SelectListItem> YearSource { get; set; }
 
-        public IEnumerable<SelectListItem> OrganizationSource { get; set; }
+        public IList<SelectListItem> OrganizationSource { get; set; }
     }
 
     public class BranchFeeAmountIndexViewModel : PagedViewModel<BranchFeeAmountViewModel>
@@ -133,7 +133,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Selected,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source) {
@@ -141,7 +141,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Selected,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
     }
 }

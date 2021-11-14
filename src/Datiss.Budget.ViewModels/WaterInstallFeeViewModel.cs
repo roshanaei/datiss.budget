@@ -57,9 +57,9 @@ namespace Datiss.Budget.ViewModels
         public int? DWaterTypeId { get; set; }
         public int? WInstallFee { get; set; }
 
-        public IEnumerable<SelectListItem> YearSource { get; set; }
+        public IList<SelectListItem> YearSource { get; set; }
 
-        public IEnumerable<SelectListItem> OrganizationSource { get; set; }
+        public IList<SelectListItem> OrganizationSource { get; set; }
     }
 
     public class WaterInstallFeeIndexViewModel : PagedViewModel<WaterInstallFeeViewModel>
@@ -77,7 +77,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null) {
@@ -85,7 +85,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedYearId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            });
+            }).ToList().AddEmptySelectListItem();
         }
     }
 

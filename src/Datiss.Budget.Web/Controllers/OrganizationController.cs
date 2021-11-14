@@ -99,7 +99,7 @@ namespace Datiss.Budget.Web.Controllers
                 {
                     Value = x.Id.ToString(),
                     Text = x.Title
-                })
+                }).ToList()
             };
 
             return View(model);
