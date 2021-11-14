@@ -55,6 +55,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<WWsFee> WWsFees { get; set; }
 
+        public ICollection<PerformanceEvaluation> PerformanceEvaluation { get; set; }
+
 
         #endregion
     }
