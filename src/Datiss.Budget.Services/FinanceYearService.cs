@@ -76,6 +76,62 @@ namespace Datiss.Budget.Services
                 Id = x.Id,
                 Title = x.Year.ToString()
             }).ToListAsync();
-        
+
+        public async Task<PagedResult<FinanceYearDTO>> GetListAsync(FinanceYearFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+            var result = new PagedResult<FinanceYearDTO>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
+
+            var query = Query();
+
+            result.TotalCount = await query.CountAsync();
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            query = query
+                .Skip(filter.StartIndex)
+                .Take(filter.PageSize);
+
+            result.Items = await query
+                                    .Select(x => new FinanceYearDTO
+                                    {
+                                        Id = x.Id,
+                                        Title = x.Title,
+                                        StartDate = x.StartDate,
+                                        EndDate = x.EndDate,
+                                        Year = x.Year,
+                                        Status = x.Status
+                                    }).ToListAsync();
+
+            return await Task.FromResult(result);
+        }
+
+        #region Private Helper Methods
+        private IQueryable<FinanceYear> setOrder(
+        IQueryable<FinanceYear> query,
+        string orderBy = "id",
+        bool desc = true)
+        {
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "id";
+
+            orderBy = orderBy.ToLower();
+            switch (orderBy)
+            {
+                case "financeyearid":
+                    return desc
+                        ? query.OrderByDescending(x => x.Id)
+                        : query.OrderBy(x => x.Id);
+                default:
+                    return desc
+                        ? query.OrderByDescending(x => x.Id)
+                        : query.OrderBy(x => x.Id);
+            }
+        }
+        #endregion
     }
 }

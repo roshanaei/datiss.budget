@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datiss.Budget.Resources", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datiss.Budget.Reports", "src\Datiss.Budget.Reports\Datiss.Budget.Reports.csproj", "{0FFD7F4F-5A8F-4E0A-BDB1-111CE776B561}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Datiss.Budget.Web.Core", "Datiss.Budget.Web.Core\Datiss.Budget.Web.Core.csproj", "{68283BE5-AE8A-48D1-B1FD-A1A79491572F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Datiss.Budget.Web.Core", "Datiss.Budget.Web.Core\Datiss.Budget.Web.Core.csproj", "{68283BE5-AE8A-48D1-B1FD-A1A79491572F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

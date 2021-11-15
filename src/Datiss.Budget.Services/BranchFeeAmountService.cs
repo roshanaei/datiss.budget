@@ -12,18 +12,39 @@ using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.Resources;
+using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Entities;
+using LinqKit;
+using Datiss.Budget.Common.Exceptions;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using Mapster;
 
 namespace Datiss.Budget.Services
 {
     public class BranchFeeAmountService : IBranchFeeAmountService
     {
         private readonly IUnitOfWork _uow;
-        private readonly DbSet<BranchFeeAmount> _dbSet;
+        private readonly IExcelService _excelService;
+        private readonly IUserService _userService;
+        private readonly IOrganizationService _organizationService;
 
-        public BranchFeeAmountService(IUnitOfWork uow)
+        private readonly DbSet<BranchFeeAmount> _dbSet;
+        private readonly DbSet<Organization> _orgDbSet;
+
+        public BranchFeeAmountService(
+            IUnitOfWork uow,
+            IExcelService excelService,
+            IUserService userService,
+            IOrganizationService organizationService)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<BranchFeeAmount>();
+            _orgDbSet = _uow.Set<Organization>();
+            _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
         private IQueryable<BranchFeeAmount> Query()
@@ -113,66 +134,30 @@ namespace Datiss.Budget.Services
             _dbSet.Remove(entity);
             await _uow.SaveChangesAsync();
         }
-        
+        public async Task HardDeleteAsync(int yearId, int organizationId)
+        {
+            var items = await _dbSet.Where(_ => _.YearId == yearId)
+                        .Where(_ => _.OrganizationId == organizationId)
+                        .ToListAsync();
+            _dbSet.RemoveRange(items);
+            await _uow.SaveChangesAsync();
+        }
+
         public async Task<PagedResult<BranchFeeAmountDTO>> GetListAsync(BranchFeeAmountFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
-
             var result = new PagedResult<BranchFeeAmountDTO>
             {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
             };
-
             var query = Query();
-
-            if (filter.UrbanAdjustmentFactor.HasValue)
-                query = query.Where(x => x.UrbanAdjustmentFactor == filter.UrbanAdjustmentFactor.Value);
-
-            if (filter.WasteRateInWater.HasValue)
-                query = query.Where(x => x.WasteRateInWater == filter.WasteRateInWater.Value);
-
-            if (filter.WaterBranchingPerHousing.HasValue)
-                query = query.Where(x => x.WaterBranchingPerHousing == filter.WaterBranchingPerHousing.Value);
-
-            if (filter.TubingCost.HasValue)
-                query = query.Where(x => x.TubingCost == filter.TubingCost.Value);
-
-            if (filter.WaterPartnershipAmountDomestic.HasValue)
-                query = query.Where(x => x.WaterPartnershipAmountDomestic == filter.WaterPartnershipAmountDomestic.Value);
-
-            if (filter.WaterPartnershipAmountNDomestic.HasValue)
-                query = query.Where(x => x.WaterPartnershipAmountNDomestic == filter.WaterPartnershipAmountNDomestic.Value);
-
-            if (filter.WastePartnershipAmountDomestic.HasValue)
-                query = query.Where(x => x.WastePartnershipAmountDomestic == filter.WastePartnershipAmountDomestic.Value);
-
-            if (filter.WastePartnershipAmountNDomestic.HasValue)
-                query = query.Where(x => x.WastePartnershipAmountNDomestic == filter.WastePartnershipAmountNDomestic.Value);
-
-            if (filter.FixCostNote11H.HasValue)
-                query = query.Where(x => x.FixCostNote11H == filter.FixCostNote11H.Value);
-
-            if (filter.FixCostNote11NH.HasValue)
-                query = query.Where(x => x.FixCostNote11NH == filter.FixCostNote11NH.Value);
-
-            if (filter.FixCostNote11HWs.HasValue)
-                query = query.Where(x => x.FixCostNote11HWs == filter.FixCostNote11HWs.Value);
-
-            if (filter.FixCostNote11NHWs.HasValue)
-                query = query.Where(x => x.FixCostNote11NHWs == filter.FixCostNote11NHWs.Value);
-
-            if (filter.WsTubingCost.HasValue)
-                query = query.Where(x => x.WsTubingCost == filter.WsTubingCost.Value);
-
+            query = await setFilter(query, filter);
             result.TotalCount = await query.CountAsync();
-
             query = setOrder(query, filter.OrderBy, filter.OrderDesc);
-
             query = query
                 .Skip(filter.StartIndex)
                 .Take(filter.PageSize);
-
             result.Items = await query
                             .Include(x => x.FinanceYear)
                             .Include(x => x.Organization)
@@ -195,11 +180,157 @@ namespace Datiss.Budget.Services
                                 FixCostNote11HWs = x.FixCostNote11HWs,
                                 FixCostNote11NHWs = x.FixCostNote11NHWs,
                                 WsTubingCost = x.WsTubingCost
-
                             }).ToListAsync();
-
-
             return await Task.FromResult(result);
+        }
+
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
+        {
+            if (sourceYearId == destYearId)
+                throw new CopySameYearException();
+
+            var result = new List<BranchFeeAmount>();
+
+            var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
+                                        .Where(_ => _.YearId == sourceYearId)
+                                        .ToListAsync();
+            if (selfData.Any())
+            {
+                foreach (var item in selfData)
+                {
+                    var entity = new BranchFeeAmount
+                    {
+                        YearId = item.YearId,
+                        OrganizationId = item.OrganizationId,
+                        UrbanAdjustmentFactor = item.UrbanAdjustmentFactor,
+                        WasteRateInWater = item.WasteRateInWater,
+                        WaterBranchingPerHousing = item.WaterBranchingPerHousing,
+                        TubingCost = item.TubingCost,
+                        WaterPartnershipAmountDomestic = item.WaterPartnershipAmountDomestic,
+                        WaterPartnershipAmountNDomestic = item.WaterPartnershipAmountNDomestic,
+                        WastePartnershipAmountDomestic = item.WastePartnershipAmountDomestic,
+                        WastePartnershipAmountNDomestic = item.WastePartnershipAmountNDomestic,
+                        FixCostNote11H = item.FixCostNote11H,
+                        FixCostNote11NH = item.FixCostNote11NH,
+                        FixCostNote11HWs = item.FixCostNote11HWs,
+                        FixCostNote11NHWs = item.FixCostNote11NHWs,
+                        WsTubingCost = item.WsTubingCost
+                    };
+                    result.Add(entity);
+                }
+            }
+
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+
+            if (childrens.Any())
+            {
+                result.AddRange(childrens);
+            }
+
+            _dbSet.AddRange(result);
+
+            await _uow.SaveChangesAsync();
+        }
+
+        public async Task<Stream> ExportExcelAsync(BranchFeeAmountFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Select(x => new BranchFeeAmountDTO
+                                    {
+                                        Id = x.Id,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        OrganizationId = x.OrganizationId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        UrbanAdjustmentFactor = x.UrbanAdjustmentFactor,
+                                        WasteRateInWater = x.WasteRateInWater,
+                                        WaterBranchingPerHousing = x.WaterBranchingPerHousing,
+                                        TubingCost = x.TubingCost,
+                                        WaterPartnershipAmountDomestic = x.WaterPartnershipAmountDomestic,
+                                        WaterPartnershipAmountNDomestic = x.WaterPartnershipAmountNDomestic,
+                                        WastePartnershipAmountDomestic = x.WastePartnershipAmountDomestic,
+                                        WastePartnershipAmountNDomestic = x.WastePartnershipAmountNDomestic,
+                                        FixCostNote11H = x.FixCostNote11H,
+                                        FixCostNote11NH = x.FixCostNote11NH,
+                                        FixCostNote11HWs = x.FixCostNote11HWs,
+                                        FixCostNote11NHWs = x.FixCostNote11NHWs,
+                                        WsTubingCost = x.WsTubingCost
+                                    }).ToListAsync();
+
+            var ms = new MemoryStream();
+            var result = _excelService.Export(items, ms);
+
+            var mem1 = new MemoryStream(ms.ToArray());
+
+            return mem1;
+        }
+
+        public async Task<IEnumerable<BranchFeeAmountDTO>> GetExportItemsAsync(BranchFeeAmountFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Select(x => new BranchFeeAmountDTO
+                                    {
+                                        Id = x.Id,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        OrganizationId = x.OrganizationId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        UrbanAdjustmentFactor = x.UrbanAdjustmentFactor,
+                                        WasteRateInWater = x.WasteRateInWater,
+                                        WaterBranchingPerHousing = x.WaterBranchingPerHousing,
+                                        TubingCost = x.TubingCost,
+                                        WaterPartnershipAmountDomestic = x.WaterPartnershipAmountDomestic,
+                                        WaterPartnershipAmountNDomestic = x.WaterPartnershipAmountNDomestic,
+                                        WastePartnershipAmountDomestic = x.WastePartnershipAmountDomestic,
+                                        WastePartnershipAmountNDomestic = x.WastePartnershipAmountNDomestic,
+                                        FixCostNote11H = x.FixCostNote11H,
+                                        FixCostNote11NH = x.FixCostNote11NH,
+                                        FixCostNote11HWs = x.FixCostNote11HWs,
+                                        FixCostNote11NHWs = x.FixCostNote11NHWs,
+                                        WsTubingCost = x.WsTubingCost
+                                    }).ToListAsync();
+
+            return items;
+        }
+
+        public async Task ImportExcelAsync(IFormFile fileInfo)
+        {
+            var data = await _excelService.ImportAsync<BranchFeeAmountImportModel>(fileInfo);
+            var records = data.Adapt<List<BranchFeeAmount>>();
+            int rowIndex = 1;
+            foreach (var record in records)
+            { 
+                if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
+                    throw new UserOrganizationAccessException(rowIndex);
+
+                if (!await checkLogicAsync(
+                    record.YearId,
+                    record.OrganizationId))
+                    throw new ImportExcelFileException(rowIndex);
+                rowIndex++;
+            }
+            await _dbSet.AddRangeAsync(records);
+            await _uow.SaveChangesAsync();
         }
 
 
@@ -294,7 +425,112 @@ namespace Datiss.Budget.Services
 
             }
         }
+        private async Task<IQueryable<BranchFeeAmount>> setFilter(
+            IQueryable<BranchFeeAmount> query,
+            BranchFeeAmountFilterDTO filter){
+            var predicate = PredicateBuilder.New<BranchFeeAmount>();
+            if (filter.YearId.HasValue)
+                query = query.Where(x => x.YearId == filter.YearId.Value);
+            if (filter.OrganizationId.HasValue)
+            {
+                var organizations = await _organizationService
+                    .GetWithChildrenAsync(filter.OrganizationId.Value);
+                foreach (var org in organizations)
+                {
+                    predicate.Or(_ => _.OrganizationId == org.Id);
+                }
 
+                query = query.Where(predicate);
+            }
+
+            if (filter.UrbanAdjustmentFactor.HasValue)
+                query = query.Where(x => x.UrbanAdjustmentFactor == filter.UrbanAdjustmentFactor.Value);
+
+            if (filter.WasteRateInWater.HasValue)
+                query = query.Where(x => x.WasteRateInWater == filter.WasteRateInWater.Value);
+
+            if (filter.WaterBranchingPerHousing.HasValue)
+                query = query.Where(x => x.WaterBranchingPerHousing == filter.WaterBranchingPerHousing.Value);
+
+            if (filter.TubingCost.HasValue)
+                query = query.Where(x => x.TubingCost == filter.TubingCost.Value);
+
+            if (filter.WaterPartnershipAmountDomestic.HasValue)
+                query = query.Where(x => x.WaterPartnershipAmountDomestic == filter.WaterPartnershipAmountDomestic.Value);
+
+            if (filter.WaterPartnershipAmountNDomestic.HasValue)
+                query = query.Where(x => x.WaterPartnershipAmountNDomestic == filter.WaterPartnershipAmountNDomestic.Value);
+
+            if (filter.WastePartnershipAmountDomestic.HasValue)
+                query = query.Where(x => x.WastePartnershipAmountDomestic == filter.WastePartnershipAmountDomestic.Value);
+
+            if (filter.WastePartnershipAmountNDomestic.HasValue)
+                query = query.Where(x => x.WastePartnershipAmountNDomestic == filter.WastePartnershipAmountNDomestic.Value);
+
+            if (filter.FixCostNote11H.HasValue)
+                query = query.Where(x => x.FixCostNote11H == filter.FixCostNote11H.Value);
+
+            if (filter.FixCostNote11NH.HasValue)
+                query = query.Where(x => x.FixCostNote11NH == filter.FixCostNote11NH.Value);
+
+            if (filter.FixCostNote11HWs.HasValue)
+                query = query.Where(x => x.FixCostNote11HWs == filter.FixCostNote11HWs.Value);
+
+            if (filter.FixCostNote11NHWs.HasValue)
+                query = query.Where(x => x.FixCostNote11NHWs == filter.FixCostNote11NHWs.Value);
+
+            if (filter.WsTubingCost.HasValue)
+                query = query.Where(x => x.WsTubingCost == filter.WsTubingCost.Value);
+
+            return query;
+        }
+        private async Task<IEnumerable<BranchFeeAmount>> getChildrenData(
+            int parentOrganizationId,
+            int yearId,
+            int targetYearId)
+        {
+            var children = await _orgDbSet
+                .Where(_ => _.ParentId == parentOrganizationId)
+                .ToListAsync();
+            var result = new List<BranchFeeAmount>();
+            foreach (var org in children)
+            {
+                if (await Query()
+                            .Where(_ => _.OrganizationId == org.Id)
+                            .Where(_ => _.YearId == targetYearId).AnyAsync())
+                {
+                    throw new CopyDestYearHasDataException();
+                }
+                var data = await Query()
+                                .Where(_ => _.YearId == yearId)
+                                .Where(_ => _.OrganizationId == org.Id)
+                                .ToListAsync();
+                foreach (var item in data)
+                {
+                    var entity = new BranchFeeAmount
+                    {
+                        YearId = item.YearId,
+                        OrganizationId = item.OrganizationId,
+                        UrbanAdjustmentFactor = item.UrbanAdjustmentFactor,
+                        WasteRateInWater = item.WasteRateInWater,
+                        WaterBranchingPerHousing = item.WaterBranchingPerHousing,
+                        TubingCost = item.TubingCost,
+                        WaterPartnershipAmountDomestic = item.WaterPartnershipAmountDomestic,
+                        WaterPartnershipAmountNDomestic = item.WaterPartnershipAmountNDomestic,
+                        WastePartnershipAmountDomestic = item.WastePartnershipAmountDomestic,
+                        WastePartnershipAmountNDomestic = item.WastePartnershipAmountNDomestic,
+                        FixCostNote11H = item.FixCostNote11H,
+                        FixCostNote11NH = item.FixCostNote11NH,
+                        FixCostNote11HWs = item.FixCostNote11HWs,
+                        FixCostNote11NHWs = item.FixCostNote11NHWs,
+                        WsTubingCost = item.WsTubingCost
+                    };
+                    result.Add(entity);
+                }
+                result.AddRange(await getChildrenData(org.Id, yearId, targetYearId));
+            }
+            return result;
+        }
 
         #endregion
 

@@ -194,6 +194,8 @@ namespace Datiss.Budget.Web.Controllers
 
                 var result = await _waterInstallFeeService.GetListAsync(filterInput);
 
+                viewModel = result.Adapt<WaterInstallFeeIndexViewModel>();
+
                 viewModel.SetFinanceYearFilterSource(
                     (await _financeYearService.GetDropDownDataAsync())
                     .Adapt<IEnumerable<DropDownItemViewModel>>()
@@ -203,7 +205,6 @@ namespace Datiss.Budget.Web.Controllers
                     (await _organizationService.GetDropDownDataAsync())
                     .Adapt<IEnumerable<DropDownItemViewModel>>()
                 );
-                viewModel = result.Adapt<WaterInstallFeeIndexViewModel>();
 
                 return View(viewModel);
             }
