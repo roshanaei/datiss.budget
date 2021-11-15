@@ -111,13 +111,76 @@ namespace Datiss.Budget.Services
                             Title = x.Title
                         }).ToListAsync();
 
-        #region Private Methods
+        public async Task<PagedResult<ConstantDTO>> GetListAsync(ConstantFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+            var result = new PagedResult<ConstantDTO>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
 
+            var query = Query();
+
+            query = setFilter(query, filter);
+
+            result.TotalCount = await query.CountAsync();
+
+            query = setOrder(query, filter.OrderBy , filter.OrderDesc);
+
+            query = query
+                .Skip(filter.StartIndex)
+                .Take(filter.PageSize);
+
+            result.Items = await query
+                                    .Select(x => new ConstantDTO
+                                    {
+                                        Id = x.Id,
+                                        ParentId = x.ParentId,
+                                        Title = x.Title,
+                                        ConstantKey = x.ConstantKey,
+                                        Status = x.Status,
+                                        DisplayOrder = x.DisplayOrder
+                                    }).ToListAsync();
+
+            return await Task.FromResult(result);
+        }
+
+        #region Private Methods
+        private IQueryable<Constant> setFilter(IQueryable<Constant> query, ConstantFilterDTO filter)
+        {
+            if (filter.ParentId.HasValue)
+                query = query.Where(x => x.ParentId == filter.ParentId.Value);
+            return query;
+        }
+        private IQueryable<Constant> setOrder(
+             IQueryable<Constant> query,
+             string orderBy = "id",
+             bool desc = false)
+        {
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "id";
+
+            orderBy = orderBy.ToLower();
+            switch (orderBy)
+            {
+                case "displayorder":
+                    return desc
+                                ? query.OrderByDescending(x => x.DisplayOrder)
+                                : query.OrderBy(x => x.DisplayOrder);
+
+                default:
+                    return desc
+                                ? query.OrderByDescending(x => x.Id)
+                                : query.OrderBy(x => x.Id);
+            }
+                    
+        }
         private async Task<bool> ExistByKeyAsync(string contantKey, int? id = null)
             => id == null
-                ? await _dbSet.FirstOrDefaultAsync
+                ? await _dbSet.AnyAsync
                     (_ => _.ConstantKey.ToUpper() == contantKey.ToUpper()) != null
-                : await _dbSet.FirstOrDefaultAsync
+                : await _dbSet.AnyAsync
                     (_ => _.Id != id.Value && _.ConstantKey.ToUpper() == contantKey.ToUpper()) != null;
 
         #endregion

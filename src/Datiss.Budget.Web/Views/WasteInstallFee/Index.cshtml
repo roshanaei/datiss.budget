@@ -1,6 +1,6 @@
 ﻿@model WasteInstallFeeIndexViewModel
-@{ 
-    ViewData["Title"] = "تعرفه نصب انشعاب فاضلاب"; 
+@{
+    ViewData["Title"] = "تعرفه نصب انشعاب فاضلاب";
 }
 
 <!--Title-->
@@ -26,55 +26,79 @@
                 <div class="card-content">
                     <div class="card-body">
                         <!--Filters-->
-                        <form method="post" asp-controller="WasteInstallFee" asp-action="Index" asp-antiforgery="true">
-                            <fieldset class="form-group">
-                                <label asp-for="Filter.YearId" class="my-font">
-                                    سال:
-                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()">
-                                    </select>
-                                </label>
-                                <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
-                                    سازمان:
-                                    <select class="form-control form-control-sm d-inline-block width-300" id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()">
-                                    </select>
-                                </label>
-                                <input asp-for="Filter.OrderBy" type="hidden" />
-                                <input asp-for="Filter.OrderDesc" type="hidden" />
-                            </fieldset>
-                            <fieldset>
-                                <div class="rowACJE">
-                                    <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 mb-1 my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
-                                    </button>
-                                    <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success mb-1 my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
-                                    </button>
+                        <form method="post"
+                              id="filterForm"
+                              asp-controller="@WasteInstallFeeController.Name"
+                              asp-action="@WasteInstallFeeController.ACTION_Index"
+                              asp-antiforgery="true">
+
+                            <div class="class=" rowACJSB"">
+                                <fieldset class="form-group mt-3">
+                                    <label asp-for="Filter.YearId" class="my-font">
+                                        سال:
+                                        <select class="form-control d-inline-block width-100" id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()">
+                                        </select>
+                                    </label>
+                                    <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
+                                        سازمان:
+                                        <select class="form-control d-inline-block width-300" id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()">
+                                        </select>
+                                    </label>
+                                    <input asp-for="Filter.OrderBy" type="hidden" />
+                                    <input asp-for="Filter.OrderDesc" type="hidden" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+                                        </button>
+                                        <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                        </button>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <hr />
+                            <!--SearchBox-->
+                            <div class="rowACJSB">
+                                <div class="rowAC" style="flex:1">
+                                    <fieldset class="form-group">
+                                        <label for="ngx-filter-ref" class="my-font">
+                                            جستجو:
+                                            <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
+                                        </label>
+                                    </fieldset>
+                                    <fieldset class="form-group" style="margin-right:10px">
+                                        <label class="my-font rowAC">
+                                            <span>نمایش</span>
+
+                                            <select asp-for="Filter.PageSize"
+                                                    style="margin-right:10px"
+                                                    class="form-control"
+                                                    onchange="changePageSize();"
+                                                    id="ddlPageSize">
+                                                <option>10</option>
+                                                <option>20</option>
+                                                <option>30</option>
+                                            </select>
+                                            <span style="margin-right:10px">رکورد</span>
+
+                                        </label>
+                                    </fieldset>
                                 </div>
-                            </fieldset>
+                                <fieldset>
+                                    <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="button" name="btnExportExcel" onclick="exportExcel();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
+                                        </button>
+                                        <a data-toggle="tooltip" data-placement="top" asp-action="DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
+                                        </a>
+                                    </div>
+                                </fieldset>
+                            </div>
                         </form>
-                        <hr />
-                        <!--SearchBox-->
-                        <div class="rowACJSB">
-                            <fieldset class="form-group">
-                                <label for="ngx-filter-ref" class="my-font">
-                                    جستجو:
-                                    <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
-                                </label>
-                            </fieldset>
-                            <fieldset>
-                                <div class="rowACJE">
-                                    <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="submit" name="btnExportExcell" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
-                                    </button>
-                                    <button data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" type="submit" name="btnDownloadExcellFormat" class="btn btn-warning bg-light-warning my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
-                                    </button>
-                                    <button class="btn btn-warning bg-light-warning my-font my-alert">
-                                       <span>آلرت</span>
-                                    </button>
-                                </div>
-                            </fieldset>
-                        </div>
                         <!--DataTable-->
                         <div class="table-responsive">
                             <table id="" class=" table table-hover table-bordered m-0 my-font ">
@@ -94,7 +118,7 @@
                                             <td>@item.Year.ToString()</td>
                                             <td>@item.OrganizationDisplay </td>
                                             <td>@item.DWasteTypeDisplay </td>
-                                            <td>@item.WInstallFee.ToString() </td>
+                                            <td>@item.WsInstallFee.ToString() </td>
                                             <td>
                                                 <a asp-controller="WasteInstallFee" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
                                             </td>
@@ -184,16 +208,69 @@
 </section>
 
 @section footSection {
-    <script>
-        $(".my-alert").on('click', function () {
+    <partial name="_excelModal" model="new ImportExcelViewModel()" />
+    <div id="modaldiv">
+
+    </div>
+
+    <script type="text/javascript">
+
+        function hardDelete(e) {
             Swal.fire({
-                title: 'Flip In Animation',
+                title: 'برای حذف اطمینان دارید؟',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2F8BE6',
                 animation: false,
                 customClass: 'animated flipInX',
-                confirmButtonClass: 'btn btn-info',
+                cancelButtonColor: '#F55252',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+
+                confirmButtonClass: 'btn btn-warning my-font',
+                cancelButtonClass: 'btn btn-danger  my-font ml-1',
                 buttonsStyling: false,
+            }).then(function (result) {
+                if (result.value) {
+                    $('#toolForm').attr('action', '@Url.Action("Delete")');
+                    $('#toolForm').submit();
+
+                    return true;
+                }
+                else {
+
+                    return false;
+                }
             });
-        });
+        }
+
+        function calculation(e) {
+            $('#toolForm').attr('action', '@Url.Action("Calculation")');
+            $('#toolForm').submit();
+
+            return true;
+        }
+
+
+        function loadCreateLink() {
+            var a = document.getElementById("createLink");
+            var organizationId = document.getElementById('organizationId').value;
+
+            var yearId = document.getElementById('yearId').value;
+
+            var url = 'wasteinstallfee/create'
+
+            a.href = url + "/" + organizationId + "/" + yearId;
+        }
+
+        function openImportExcelForm() {
+            $('#importExcelForm').attr(
+                'action',
+                '@Url.Action(WaterInstallFeeController.ACTION_ImportExcel)'
+            );
+            $('#ExcellModal').modal('show');
+        }
 
         $(document).on('click', '.modallink', function() {
 
@@ -203,7 +280,7 @@
                 type: 'GET',
                 url: myurl,
                 success: function (data, status, settings) {
-
+                    $('#modaldiv').html('');
                     $("#modaldiv").html(data);
                     $('#CopyModal').modal('show');
                 },
@@ -215,18 +292,28 @@
 
         });
 
-        function loadCreateLink() {
-            var a = document.getElementById("createLink");
-            var organizationId = document.getElementById('organizationId').value;
 
-            var yearId = document.getElementById('yearId').value;
-
-            var url = 'waterinstallfee/create'
-
-            a.href = url + "/" + organizationId + "/" + yearId;
+        function changePageSize() {
+            let pageSize = $('#ddlPageSize').attr('value');
+            console.log(pageSize);
+            $('#filterForm').submit();
         }
 
-        loadCreateLink();
+         function exportExcel() {
+             let exportUrl = '@Url.Action("ExportExcel")';
+             console.log(exportUrl);
+            $.ajax({
+                type: 'POST',
+                url: exportUrl,
+                success: function (data, status, settings) {
+                    console.log(data);
+                },
+                error: function (ajaxrequest, ajaxOptions, thrownError) {
+                    console.log('erorr');
+                }
+            });
+        };
+
     </script>
 
 }

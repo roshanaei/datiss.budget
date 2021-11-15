@@ -1,4 +1,6 @@
-﻿namespace Datiss.Budget.Services.Models
+﻿using Datiss.Budget.Enum;
+
+namespace Datiss.Budget.Services.Models
 {
     public class CreateConstantDTO
     {
@@ -20,6 +22,11 @@
 
     public class ConstantDTO
     {
-
+        public int Id { get; set; }
+        public int? ParentId { get; set; }
+        public string Title { get; set; }
+        public string ConstantKey { get; set; }
+        public int DisplayOrder { get; set; }
+        public EntityStatus Status { get; set; }
     }
 }
