@@ -68,6 +68,9 @@ namespace Datiss.Budget.Entities
 
         public ICollection<SalesSplitTotal> SalesSplitTotal { get; set; }
 
+        public ICollection<FeeCity> FeeCity { get; set; }
+
+
         #endregion
     }
 }
