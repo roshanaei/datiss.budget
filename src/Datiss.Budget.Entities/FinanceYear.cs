@@ -65,6 +65,9 @@ namespace Datiss.Budget.Entities
 
         public ICollection<IncomeCurrentWH> IncomeCurrentWH { get; set; }
 
+        public ICollection<IncomeCurrentWNH> IncomeCurrentWNH { get; set; }
+
+
 
         #endregion
     }

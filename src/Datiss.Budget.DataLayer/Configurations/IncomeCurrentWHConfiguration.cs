@@ -28,7 +28,7 @@ namespace Datiss.Budget.DataLayer.Mappings
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.UserType)
-                .WithMany(x => x.UserTypeIncomeCurrentWH)
+                .WithMany(x => x.IncomeCurrentWH)
                 .HasForeignKey(x => x.UserTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
 

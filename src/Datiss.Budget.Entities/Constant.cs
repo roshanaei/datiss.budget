@@ -64,10 +64,11 @@ namespace Datiss.Budget.Entities
 
         public ICollection<Subscription> Subscription { get; set; }
 
-        public ICollection<IncomeCurrentWH> UserTypeIncomeCurrentWH { get; set; }
+        public ICollection<IncomeCurrentWH> IncomeCurrentWH { get; set; }
 
         public ICollection<IncomeCurrentWH> UsageLayerIncomeCurrentWH { get; set; }
 
+        public ICollection<IncomeCurrentWNH> IncomeCurrentWNH { get; set; }
 
         #endregion
     }
