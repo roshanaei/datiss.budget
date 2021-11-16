@@ -34,6 +34,9 @@ namespace Datiss.Budget.Entities.DWH
         public TablesFiledTitle Parent { get; set; }
 
         public ICollection<TablesFiledTitle> Childrens { get; set; }
+
+        public ICollection<PerformanceEvaluation> PerformanceEvaluation { get; set; }
+
         #endregion
     }
 }

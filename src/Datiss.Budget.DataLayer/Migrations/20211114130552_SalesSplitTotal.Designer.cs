@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211114130552_SalesSplitTotal")]
+    partial class SalesSplitTotal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,63 +241,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("WaterWasteBranchingAmount");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.FeeCity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("FeeCityId")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("DomesticPrice")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("NDomesticPrice")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("FeeCity");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.IncomeForcast", b =>
@@ -673,63 +618,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("SalesSplitTotal");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.Subscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("SubscriptionId")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("SubW")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubWs")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserTypeId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("Subscription");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.TablesFiledTitle", b =>
@@ -2128,25 +2016,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.FeeCity", b =>
-                {
-                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                        .WithMany("FeeCity")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("FeeCity")
-                        .HasForeignKey("YearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FinanceYear");
-
-                    b.Navigation("Organization");
-                });
-
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.IncomeForcast", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
@@ -2278,25 +2147,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("FinanceYear");
 
                     b.Navigation("Organization");
-
-                    b.Navigation("UserType");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.Subscription", b =>
-                {
-                    b.HasOne("Datiss.Budget.Entities.Constant", "UserType")
-                        .WithMany("Subscription")
-                        .HasForeignKey("UserTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("Subscription")
-                        .HasForeignKey("YearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FinanceYear");
 
                     b.Navigation("UserType");
                 });
@@ -2608,8 +2458,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("SalesSplitTotal");
 
-                    b.Navigation("Subscription");
-
                     b.Navigation("UserTypeAverageCapacities");
 
                     b.Navigation("UserTypeWasteSalesSplit");
@@ -2640,8 +2488,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("BranchFeeAmounts");
 
-                    b.Navigation("FeeCity");
-
                     b.Navigation("IncomeForcasts");
 
                     b.Navigation("IncomeForcastWs");
@@ -2651,8 +2497,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("SalesSplitFunctions");
 
                     b.Navigation("SalesSplitTotal");
-
-                    b.Navigation("Subscription");
 
                     b.Navigation("UserTypeAverageCapacities");
 
@@ -2694,8 +2538,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("BranchFeeAmounts");
 
                     b.Navigation("Childrens");
-
-                    b.Navigation("FeeCity");
 
                     b.Navigation("IncomeForcasts");
 
