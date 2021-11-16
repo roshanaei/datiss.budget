@@ -14,6 +14,9 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.Id).HasColumnName("IncomeCurrentWHId");
 
+            builder.Property(x => x.AvgConsumeUser).HasColumnType("decimal(18,6)");
+
+
             builder.HasOne(x => x.FinanceYear)
                     .WithMany(x => x.IncomeCurrentWH)
                     .HasForeignKey(x => x.YearId)
