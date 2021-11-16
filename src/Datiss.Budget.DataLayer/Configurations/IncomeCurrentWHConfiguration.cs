@@ -34,7 +34,7 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.HasOne(x => x.UsageLayer)
                     .WithMany(x => x.UsageLayerIncomeCurrentWH)
-                    .HasForeignKey(x => x.UsageLayer)
+                    .HasForeignKey(x => x.UsageLayerId)
                     .OnDelete(DeleteBehavior.Restrict);
 
         }
