@@ -42,6 +42,8 @@ namespace Datiss.Budget.Entities.DWH
         public Organization Organization { get; set; }
 
         public Constant UserType { get; set; }
+
+        public Constant UsageLayer { get; set; }
         #endregion
     }
 }

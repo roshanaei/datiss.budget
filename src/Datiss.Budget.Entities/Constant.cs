@@ -56,7 +56,9 @@ namespace Datiss.Budget.Entities
 
         public ICollection<IncomeForcastWs> IncomeForcastWs { get; set; }
 
-        public ICollection<WWsFee> WWsFees { get; set; }
+        public ICollection<WWsFee> WWsFee { get; set; }
+
+        public ICollection<WWsFee> UsageLayerWWsFee { get; set; }
 
         public ICollection<SalesSplitTotal> SalesSplitTotal { get; set; }
 

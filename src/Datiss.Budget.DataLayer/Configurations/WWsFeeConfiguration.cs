@@ -15,20 +15,27 @@ namespace Datiss.Budget.DataLayer.Mappings
             builder.Property(x => x.Id).HasColumnName("WWsFeeId");
 
             builder.HasOne(x => x.FinanceYear)
-                    .WithMany(x => x.WWsFees)
+                    .WithMany(x => x.WWsFee)
                     .HasForeignKey(x => x.YearId)
                     .OnDelete(DeleteBehavior.Restrict);
 
 
             builder.HasOne(x => x.Organization)
-                    .WithMany(x => x.WWsFees)
+                    .WithMany(x => x.WWsFee)
                     .HasForeignKey(x => x.OrganizationId)
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.UserType)
-                    .WithMany(x => x.WWsFees)
+                    .WithMany(x => x.WWsFee)
                     .HasForeignKey(x => x.UserTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+
+            builder.HasOne(x => x.UsageLayer)
+                    .WithMany(x => x.WWsFee)
+                    .HasForeignKey(x => x.UsageLayerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
 
         }
 
