@@ -61,6 +61,12 @@ namespace Datiss.Budget.Entities
         public ICollection<SalesSplitTotal> SalesSplitTotal { get; set; }
 
         public ICollection<Subscription> Subscription { get; set; }
+
+        public ICollection<IncomeCurrentWH> UserTypeIncomeCurrentWH { get; set; }
+
+        public ICollection<IncomeCurrentWH> UsageLayerIncomeCurrentWH { get; set; }
+
+
         #endregion
     }
 }

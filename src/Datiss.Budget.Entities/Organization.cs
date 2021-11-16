@@ -70,6 +70,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<FeeCity> FeeCity { get; set; }
 
+        public ICollection<IncomeCurrentWH> IncomeCurrentWH { get; set; }
+
 
         #endregion
     }
