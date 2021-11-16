@@ -115,7 +115,6 @@ namespace Datiss.Budget.Services.Models
         public int? UserTypeId { get; set; }
     }
 
-
     public class IncomeForcastFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
