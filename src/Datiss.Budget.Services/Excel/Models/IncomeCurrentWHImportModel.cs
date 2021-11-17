@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Excel.Models
 {
-    public class IncomeCurrentImportModel
+    public class IncomeCurrentWHImportModel
     {
         [Column(0, MappingDirections.Both, Letter = "A")]
         public int YearId { get; set; }
