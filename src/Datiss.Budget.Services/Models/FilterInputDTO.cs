@@ -135,5 +135,9 @@ namespace Datiss.Budget.Services.Models
         public int? UserTypeId { get; set; }
         public ActivityType? ActivityType { get; set; }
     }
-
+    public class FeeCityFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+    }
 }
