@@ -12,7 +12,6 @@ namespace Datiss.Budget.Services.Models
         public int OrganizationId { get; set; }
         public int UserTypeId { get; set; }
         public string UserTypeTitle { get; set; }
-        public int UsageLayerId { get; set; }
         public int NumberUser { get; set; }
         public int UnitUser { get; set; }
         public decimal AvgConsumeUser { get; set; }
@@ -45,8 +44,6 @@ namespace Datiss.Budget.Services.Models
         public string OrganizationDisplay { get; set; }
         public int UserTypeId { get; set; }
         public string UserTypeDisplay { get; set; }
-        public int UsageLayerId { get; set; }
-        public string UsageLayerDisplay { get; set; }
         public int NumberUser { get; set; }
         public int UnitUser { get; set; }
         public decimal AvgConsumeUser { get; set; }
