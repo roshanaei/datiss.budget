@@ -96,22 +96,26 @@
                                         <th>سال</th>
                                         <th>سازمان</th>
                                         <th>کاربری</th>
-                                        <th>قیمت</th>
+                                        <th>قطر لوله آب</th>
+                                        <th>تعداد انشعاب</th>
+                                        <th>احاد انشعاب</th>
                                         <th>مدیریت</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in Model.Items)
                                     {
-                                        <tr>
-                                            <td>@item.Year.ToString()</td>
-                                            <td>@item.OrganizationDisplay </td>
-                                            <td>@item.NumberSales </td>
-                                            <td>@item.UnitSales </td>
-                                            <td>
-                                                <a asp-controller="WasteSalesSplit" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
-                                            </td>
-                                        </tr>
+                                    <tr>
+                                        <td>@item.Year.ToString()</td>
+                                        <td>@item.OrganizationDisplay </td>
+                                        <td>@item.UserTypeDisplay</td>
+                                        <td>@item.WsPipeDiameterId</td>
+                                        <td>@item.NumberSales </td>
+                                        <td>@item.UnitSales </td>
+                                        <td>
+                                            <a asp-controller="WasteSalesSplit" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                                        </td>
+                                    </tr>
                                     }
                                 </tbody>
                             </table>

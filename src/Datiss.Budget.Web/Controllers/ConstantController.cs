@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Datiss.Budget.Web.Controllers
 {
     [Authorize]
-    [Route("[controller]/[action]")]
+    [Route("[controller]")]
     public class ConstantController : Controller
     {
 

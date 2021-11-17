@@ -2,6 +2,9 @@
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.Services.Infrastructure;
+using System.IO;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace Datiss.Budget.Services.Contracts
 {
@@ -15,7 +18,19 @@ namespace Datiss.Budget.Services.Contracts
 
         Task HardDeleteAsync(int Id);
 
+        Task HardDeleteAsync(int yearId, int organizationId);
+
+        //Task<int> CalculationAsync(int yearId, int organizationId);
+
         Task<PagedResult<BranchFeeAmountDTO>> GetListAsync(BranchFeeAmountFilterDTO filter);
+
+        Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
+
+        Task<Stream> ExportExcelAsync(BranchFeeAmountFilterDTO filter);
+
+        Task<IEnumerable<BranchFeeAmountDTO>> GetExportItemsAsync(BranchFeeAmountFilterDTO filter);
+
+        Task ImportExcelAsync(IFormFile fileInfo);
 
     }
 }

@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700,900%7CMontserrat:300,400,500,600,700,800,900" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700,900%7CMontserrat:300,400,500,600,700,800,900"  rel="stylesheet" />
     <!-- BEGIN VENDOR CSS-->
     <!-- font icons-->
     <link rel="stylesheet" type="text/css" href="~/assets/fonts/feather/style.min.css" />
@@ -22,7 +22,6 @@
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/animate.min.css" />
 
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/switchery.min.css" />
-    <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/chartist.min.css" />
     <link rel="stylesheet" type="text/css" href="~/assets/vendors/css/bootstrap-treeview.min.css">
 
     <!-- END VENDOR CSS-->
@@ -37,11 +36,13 @@
     <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/pages/ex-component-treeview.css">
 
     <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/custom-fonts.css" />
-    <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/pages/dashboard.css" />
     <link rel="stylesheet" type="text/css" href="~/assets/css-rtl/custom-layout.css" />
+<<<<<<< HEAD
     <link href="https://unpkg.com/tabulator-tables@4.9.3/dist/css/tabulator.min.css" rel="stylesheet">
     
     <link href="https://unpkg.com/tabulator-tables@4.9.3/dist/css/semantic-ui/tabulator_semantic-ui.min.css" rel="stylesheet">
+=======
+>>>>>>> 631c05d4dc3b7ae9b2828f471f02bb7f3b36892e
     @RenderSection("headSection", required: false)
 
 </head>
@@ -89,6 +90,7 @@
         </div>
         <!-- main menu-->
     </div>
+<<<<<<< HEAD
         @{ await Html.RenderPartialAsync("_Menu").ConfigureAwait(false); }
 
         <!-- main menu-->
@@ -109,6 +111,38 @@
         <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.min.js"></script>
 
         @RenderSection("footSection", required: false)
+=======
+    <!-- main menu-->
+
+    @{ await Html.RenderPartialAsync("_Menu").ConfigureAwait(false); }
+
+    <!-- main menu-->
+
+
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+    <script src="~/assets/vendors/js/vendors.min.js"></script>
+    <script src="~/assets/vendors/js/switchery.min.js"></script>
+
+    @*<script src="~/assets/vendors/js/chartist.min.js"></script>*@
+    <script src="~/assets/vendors/js/bootstrap-treeview.min.js"></script>
+    <script src="~/assets/vendors/js/sweetalert2.all.min.js"></script>
+    <script src="~/assets/js/core/app-menu.js"></script>
+    <script src="~/assets/js/core/app.js"></script>
+    <script src="~/assets/js/scroll-top.js"></script>
+    <script src="~/assets/js/table.js"></script>
+
+
+
+
+
+
+
+
+
+    @RenderSection("footSection", required: false)
+
+>>>>>>> 631c05d4dc3b7ae9b2828f471f02bb7f3b36892e
 
 </body>
 

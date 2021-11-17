@@ -101,20 +101,6 @@ namespace Datiss.Budget.Services
 
         public async Task<IEnumerable<Organization>> GetWithChildrenAsync(int organizationId)
             => await getWithChildrenAsync(organizationId);
-
-        private async Task<IEnumerable<Organization>> getWithChildrenAsync(int organizationId)
-        {
-            var result = new List<Organization>();
-            var myself = await _dbSet.FirstOrDefaultAsync(_ => _.Id == organizationId);
-            result.Add(myself);
-
-            var children = await getByParnetIdAsync(myself.Id);
-            result.AddRange(children);
-
-            return await Task.FromResult(result);
-        }
-
-        
         public async Task<bool> IsDescendentAsync(int orgId)
         {
             var query = Query();
@@ -258,6 +244,18 @@ namespace Datiss.Budget.Services
             }
 
             return result;
+        }
+
+        private async Task<IEnumerable<Organization>> getWithChildrenAsync(int organizationId)
+        {
+            var result = new List<Organization>();
+            var myself = await _dbSet.FirstOrDefaultAsync(_ => _.Id == organizationId);
+            result.Add(myself);
+
+            var children = await getByParnetIdAsync(myself.Id);
+            result.AddRange(children);
+
+            return await Task.FromResult(result);
         }
 
 

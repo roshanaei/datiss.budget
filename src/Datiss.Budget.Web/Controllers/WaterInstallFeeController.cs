@@ -195,10 +195,12 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(WaterInstallFeeIndexViewModel viewModel, int page = 1) {
-            var filterInput = viewModel.Filter.Adapt<WaterInstallFeeFilterDTO>();
+        public async Task<IActionResult> Index(WaterInstallFeeIndexViewModel model, int page = 1) {
+            var filterInput = model.Filter.Adapt<WaterInstallFeeFilterDTO>();
 
             var result = await _waterInstallFeeService.GetListAsync(filterInput);
+            model = result.Adapt<WaterInstallFeeIndexViewModel>();
+
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
@@ -208,16 +210,11 @@ namespace Datiss.Budget.Web.Controllers
             var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            viewModel.SetFinanceYearFilterSource(yearSource);
-            viewModel.SetYearSource(yearSource);
-            viewModel.SetDWaterTypeSource(dwaterSource);
-
-            viewModel.SetOrganizationFilterSource(orgSource);
-            viewModel.SetOrganizationSource(orgSource);
-
-            viewModel = result.Adapt<WaterInstallFeeIndexViewModel>();
-
-            return View(viewModel);
+            model.SetFinanceYearFilterSource(yearSource);
+            model.SetOrganizationFilterSource(orgSource);
+            model.SetDWaterTypeSource(dwaterSource);
+            
+            return View(model);
 
             if (Request.Form["btnFilter"].Count() > 0) {
                 
