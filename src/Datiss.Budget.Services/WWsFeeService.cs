@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services
 {
-    public class WWsFeeService
+    public class WWsFeeService : IWWsFeeService
     {
         private readonly IUnitOfWork _uow;
         private readonly IExcelService _excelService;
