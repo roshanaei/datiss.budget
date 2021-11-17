@@ -13,8 +13,8 @@ namespace Datiss.Budget.Services.Models
         public int OrganizationId { get; set; }
         public int UserTypeId { get; set; }
         public string UserTypeTitle { get; set; }
-        public ActivityType ActivityType { get; set; }
         public int UsageLayerId { get; set; }
+        public ActivityType ActivityType { get; set; }
         public int P1Fee { get; set; }
         public int P2Fee { get; set; }
         public int P1Note3 { get; set; }
@@ -37,8 +37,9 @@ namespace Datiss.Budget.Services.Models
         public string OrganizationDisplay { get; set; }
         public int UserTypeId { get; set; }
         public string UserTypeDisplay { get; set; }
-        public ActivityType ActivityType { get; set; }
         public int UsageLayerId { get; set; }
+        public string UsageLayerDisplay { get; set; }
+        public ActivityType ActivityType { get; set; }
         public int P1Fee { get; set; }
         public int P2Fee { get; set; }
         public int P1Note3 { get; set; }
