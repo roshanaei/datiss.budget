@@ -53,7 +53,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<IncomeForcastWs> IncomeForcastWs { get; set; }
 
-        public ICollection<WWsFee> WWsFees { get; set; }
+        public ICollection<WWsFee> WWsFee { get; set; }
 
         public ICollection<PerformanceEvaluation> PerformanceEvaluation { get; set; }
 
@@ -62,6 +62,12 @@ namespace Datiss.Budget.Entities
         public ICollection<FeeCity> FeeCity { get; set; }
 
         public ICollection<Subscription> Subscription { get; set; }
+
+        public ICollection<IncomeCurrentWH> IncomeCurrentWH { get; set; }
+
+        public ICollection<IncomeCurrentWNH> IncomeCurrentWNH { get; set; }
+
+
 
         #endregion
     }

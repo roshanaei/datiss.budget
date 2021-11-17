@@ -68,35 +68,35 @@ function endEdit(input) {
 }
 applyEdit("tab1", [1, 2, 3, 4]); */
 
-$(document).ready(function () {
-    var table;
+//$(document).ready(function () {
+//    var table;
 
-    LoadTable();
-});
+//    LoadTable();
+//});
 
-function LoadTable() {
-	var table = new Tabulator("#WasteInstallFeeTable", {
-		height: "311px",
-		layout: "fitColumns",
-		placeholder: "No Data Set",
-		ajaxURL: '@Url.Action("Index", "WasteInstallFee", new { Area = "" })',
+//function LoadTable() {
+//	var table = new Tabulator("#WasteInstallFeeTable", {
+//		height: "311px",
+//		layout: "fitColumns",
+//		placeholder: "No Data Set",
+//		ajaxURL: '@Url.Action("Index", "WasteInstallFee", new { Area = "" })',
 
-		columns: [
-			{ title: "Name", field: "name", sorter: "string", width: 200 },
-			{ title: "Progress", field: "progress", sorter: "number", formatter: "progress" },
-			{ title: "Gender", field: "gender", sorter: "string" },
-			{ title: "Rating", field: "rating", formatter: "star", hozAlign: "center", width: 100 },
-			{ title: "Favourite Color", field: "col", sorter: "string" },
-			{ title: "Date Of Birth", field: "dob", sorter: "date", hozAlign: "center" },
-			{ title: "Driver", field: "car", hozAlign: "center", formatter: "tickCross", sorter: "boolean" },
-		],
-	});
+//		columns: [
+//			{ title: "Name", field: "name", sorter: "string", width: 200 },
+//			{ title: "Progress", field: "progress", sorter: "number", formatter: "progress" },
+//			{ title: "Gender", field: "gender", sorter: "string" },
+//			{ title: "Rating", field: "rating", formatter: "star", hozAlign: "center", width: 100 },
+//			{ title: "Favourite Color", field: "col", sorter: "string" },
+//			{ title: "Date Of Birth", field: "dob", sorter: "date", hozAlign: "center" },
+//			{ title: "Driver", field: "car", hozAlign: "center", formatter: "tickCross", sorter: "boolean" },
+//		],
+//	});
     
-}
+//}
 
-function ReloadTable() {
-    table.ajax.reload();
-}
+//function ReloadTable() {
+//    table.ajax.reload();
+//}
 
 //var tableData = [
 //	{ Year: , Organization: "تست یک", DWasteType: "1994", Fee:"male"},
