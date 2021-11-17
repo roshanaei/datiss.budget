@@ -9,20 +9,39 @@ using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.Resources;
-
+using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Entities;
+using Datiss.Budget.Common.Exceptions;
+using System.Collections.Generic;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using Mapster;
 
 namespace Datiss.Budget.Services
 {
     public class WaterSalesSplitService : IWaterSalesSplitService
     {
         private readonly IUnitOfWork _uow;
+        private readonly IExcelService _excelService;
+        private readonly IUserService _userService;
+        private readonly IOrganizationService _organizationService;
 
         private readonly DbSet<WaterSalesSplit> _dbSet;
+        private readonly DbSet<Organization> _orgDbSet;
 
-        public WaterSalesSplitService(IUnitOfWork uow)
+        public WaterSalesSplitService(
+            IUnitOfWork uow,
+            IExcelService excelService,
+            IUserService userService,
+            IOrganizationService organizationService)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<WaterSalesSplit>();
+            _orgDbSet = _uow.Set<Organization>();
+            _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
         private IQueryable<WaterSalesSplit> Query()
@@ -61,7 +80,6 @@ namespace Datiss.Budget.Services
                 );
         }
 
-
         public async Task<ValidationResult> UpdateAsync(UpdateWaterSalesSplitDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
@@ -95,8 +113,17 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
 
         }
+        public async Task HardDeleteAsync(int yearId, int organizationId)
+        {
+            var items = await _dbSet.Where(_ => _.YearId == yearId)
+                        .Where(_ => _.OrganizationId == organizationId)
+                        .ToListAsync();
 
-         public async Task<PagedResult<WaterSalesSplitDTO>> GetListAsync(WaterSalesSplitFilterDTO filter)
+            _dbSet.RemoveRange(items);
+
+            await _uow.SaveChangesAsync();
+        }
+        public async Task<PagedResult<WaterSalesSplitDTO>> GetListAsync(WaterSalesSplitFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
             var result = new PagedResult<WaterSalesSplitDTO>
@@ -107,43 +134,8 @@ namespace Datiss.Budget.Services
 
             var query = Query();
 
-            if (filter.UserTypeId.HasValue)
-                query = query.Where(x => x.UserTypeId == filter.UserTypeId.Value);
+            query = await setFilter(query, filter);
 
-            if (filter.WPipeDiameterId.HasValue)
-                query = query.Where(x => x.WPipeDiameterId == filter.WPipeDiameterId.Value);
-
-            if (filter.NumberSales.HasValue)
-            {
-                switch (filter.NumberMode)
-                {
-                    case InstallFeeFilterMode.Exact:
-                        query = query.Where(x => x.NumberSales == filter.NumberSales.Value);
-                        break;
-                    case InstallFeeFilterMode.GreaterThan:
-                        query = query.Where(x => x.NumberSales >= filter.NumberSales.Value);
-                        break;
-                    case InstallFeeFilterMode.LessThan:
-                        query = query.Where(x => x.NumberSales <= filter.NumberSales.Value);
-                        break;
-                }
-            }
-
-            if (filter.UnitSales.HasValue)
-            {
-                switch (filter.UnitMode)
-                {
-                    case InstallFeeFilterMode.Exact:
-                        query = query.Where(x => x.UnitSales == filter.UnitSales.Value);
-                        break;
-                    case InstallFeeFilterMode.GreaterThan:
-                        query = query.Where(x => x.UnitSales >= filter.UnitSales.Value);
-                        break;
-                    case InstallFeeFilterMode.LessThan:
-                        query = query.Where(x => x.UnitSales <= filter.UnitSales.Value);
-                        break;
-                }
-            }
             result.TotalCount = await query.CountAsync();
 
             query = setOrder(query, filter.OrderBy, filter.OrderDesc);
@@ -152,27 +144,165 @@ namespace Datiss.Budget.Services
                 .Skip(filter.StartIndex)
                 .Take(filter.PageSize);
 
-            result.Items = await query
-                                    .Include(x => x.FinanceYear)
+            result.Items = await query.Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
                                     .Include(x => x.UserType)
-                                    .Include(x=> x.WPipeDiameter)
-                                    .Select(x => new WaterSalesSplitDTO 
+                                    .Include(x => x.WPipeDiameter)
+                                    .Select(x => new WaterSalesSplitDTO
                                     {
                                         Id = x.Id,
                                         UserTypeDisplay = x.UserType.Title,
                                         UserTypeId = x.UserTypeId,
-                                        WPipeDiameterDisplay = x.WPipeDiameter.Title,
-                                        WPipeDiameterId = x.WPipeDiameterId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        NumberSales = x.NumberSales,
-                                        UnitSales = x.UnitSales,
+                                        WPipeDiameterDisplay = x.WPipeDiameter.Title,
+                                        WPipeDiameterId=x.WPipeDiameterId,
                                         Year = x.FinanceYear.Year,
-                                        YearId = x.YearId
+                                        YearId = x.YearId,
+                                        NumberSales=x.NumberSales,
+                                        UnitSales=x.UnitSales,
+                                        AverageCapacity = x.AverageCapacity
                                     }).ToListAsync();
 
             return await Task.FromResult(result);
+        }
+        
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
+        {
+            if (sourceYearId == destYearId)
+                throw new CopySameYearException();
+
+            var result = new List<WaterSalesSplit>();
+
+            var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
+                                        .Where(_ => _.YearId == sourceYearId)
+                                        .ToListAsync();
+
+            if (selfData.Any())
+            {
+                foreach (var item in selfData)
+                {
+                    var entity = new WaterSalesSplit
+                    {
+                        UserTypeId= item.UserTypeId,
+                        OrganizationId = item.OrganizationId,
+                        YearId = destYearId,
+                        WPipeDiameterId = item.WPipeDiameterId,
+                        UnitSales=item.UnitSales,
+                        NumberSales=item.NumberSales,
+                        AverageCapacity=item.AverageCapacity
+                    };
+                    result.Add(entity);
+                }
+            }
+
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+
+            if (childrens.Any())
+            {
+                result.AddRange(childrens);
+            }
+
+            _dbSet.AddRange(result);
+
+            await _uow.SaveChangesAsync();
+        }
+
+        public async Task<Stream> ExportExcelAsync(WaterSalesSplitFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.UserType)
+                                    .Include(x => x.WPipeDiameter)
+                                    .Select(x => new WaterSalesSplitDTO
+                                    {
+                                        Id = x.Id,
+                                        UserTypeDisplay = x.UserType.Title,
+                                        UserTypeId = x.UserTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        WPipeDiameterDisplay = x.WPipeDiameter.Title,
+                                        WPipeDiameterId = x.WPipeDiameterId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        NumberSales = x.NumberSales,
+                                        UnitSales = x.UnitSales,
+                                        AverageCapacity = x.AverageCapacity
+                                    }).ToListAsync();
+
+            var ms = new MemoryStream();
+            var result = _excelService.Export(items, ms);
+
+            var mem1 = new MemoryStream(ms.ToArray());
+
+            return mem1;
+        }
+
+        public async Task<IEnumerable<WaterSalesSplitDTO>> GetExportItemsAsync(WaterSalesSplitFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+            var query = Query();
+            query = await setFilter(query, filter);
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.UserType)
+                                    .Include(x => x.WPipeDiameter)
+                                    .Select(x => new WaterSalesSplitDTO
+                                    {
+                                        Id = x.Id,
+                                        UserTypeDisplay = x.UserType.Title,
+                                        UserTypeId = x.UserTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        WPipeDiameterDisplay = x.WPipeDiameter.Title,
+                                        WPipeDiameterId = x.WPipeDiameterId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        NumberSales = x.NumberSales,
+                                        UnitSales = x.UnitSales,
+                                        AverageCapacity = x.AverageCapacity
+                                    }).ToListAsync();
+
+            return items;
+        }
+
+        public async Task ImportExcelAsync(IFormFile fileInfo)
+        {
+            var data = await _excelService.ImportAsync<WaterSalesSplitImportModel>(fileInfo);
+
+            var records = data.Adapt<List<WaterSalesSplit>>();
+
+            int rowIndex = 1;
+
+            foreach (var record in records)
+            {
+
+                if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
+                    throw new UserOrganizationAccessException(rowIndex);
+
+                if (!await checkLogicAsync(
+                    record.YearId,
+                    record.OrganizationId,
+                    record.UserTypeId,
+                    record.WPipeDiameterId))
+                    throw new ImportExcelFileException(rowIndex);
+
+                rowIndex++;
+            }
+
+            await _dbSet.AddRangeAsync(records);
+            await _uow.SaveChangesAsync();
         }
 
 
@@ -236,6 +366,72 @@ namespace Datiss.Budget.Services
                         ? query.OrderByDescending(x => x.Id)
                         : query.OrderBy(x => x.Id);
             }
+        }
+        private async Task<IQueryable<WaterSalesSplit>> setFilter(
+            IQueryable<WaterSalesSplit> query,
+            WaterSalesSplitFilterDTO filter){
+            var predicate = LinqKit.PredicateBuilder.New<WaterSalesSplit>();
+            if (filter.YearId.HasValue)
+                query = query.Where(x => x.YearId == filter.YearId.Value);
+            if (filter.OrganizationId.HasValue)
+            {
+                var organizations = await _organizationService
+                    .GetWithChildrenAsync(filter.OrganizationId.Value);
+                foreach (var org in organizations)
+                {
+                    predicate.Or(_ => _.OrganizationId == org.Id);
+                }
+
+                query = query.Where(predicate);
+            }
+            if (filter.UserTypeId.HasValue)
+                query = query.Where(x => x.UserTypeId == filter.UserTypeId.Value);
+            if (filter.WPipeDiameterId.HasValue)
+                query = query.Where(x => x.WPipeDiameterId == filter.WPipeDiameterId.Value);
+            return query;
+        }
+        private async Task<IEnumerable<WaterSalesSplit>> getChildrenData(
+            int parentOrganizationId,
+            int yearId,
+            int targetYearId){
+            var children = await _orgDbSet
+                .Where(_ => _.ParentId == parentOrganizationId)
+                .ToListAsync();
+            var result = new List<WaterSalesSplit>();
+            foreach (var org in children)
+            {
+                if (await Query()
+                            .Where(_ => _.OrganizationId == org.Id)
+                            .Where(_ => _.YearId == targetYearId).AnyAsync())
+                {
+                    throw new CopyDestYearHasDataException();
+                }
+
+                var data = await Query()
+                                .Where(_ => _.YearId == yearId)
+                                .Where(_ => _.OrganizationId == org.Id)
+                                .ToListAsync();
+
+                foreach (var item in data)
+                {
+                    var entity = new WaterSalesSplit
+                    {
+                        UserTypeId= item.UserTypeId,
+                        OrganizationId = item.OrganizationId,
+                        YearId = targetYearId,
+                        WPipeDiameterId = item.WPipeDiameterId,
+                        UnitSales=item.UnitSales,
+                        NumberSales=item.NumberSales,
+                        AverageCapacity=item.AverageCapacity
+                    };
+
+                    result.Add(entity);
+                }
+
+                result.AddRange(await getChildrenData(org.Id, yearId, targetYearId));
+            }
+
+            return result;
         }
 
         #endregion
