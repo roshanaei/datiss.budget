@@ -157,6 +157,5 @@ namespace Datiss.Budget.Services.Models
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
         public int? UserTypeId { get; set; }
-        public int? UsageLayerId { get; set; }
     }
 }
