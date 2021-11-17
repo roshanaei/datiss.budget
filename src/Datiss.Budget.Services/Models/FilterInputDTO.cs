@@ -128,5 +128,12 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
         public int? UserTypeId { get; set; }
     }
+    public class WWsFeeFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
+        public ActivityType? ActivityType { get; set; }
+    }
 
 }
