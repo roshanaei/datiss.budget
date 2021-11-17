@@ -152,4 +152,11 @@ namespace Datiss.Budget.Services.Models
         public int? UserTypeId { get; set; }
         public int? UsageLayerId { get; set; }
     }
+    public class IncomeCurrentWNHFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
+        public int? UsageLayerId { get; set; }
+    }
 }
