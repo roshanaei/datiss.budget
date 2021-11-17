@@ -44,7 +44,7 @@ namespace Datiss.Budget.Services.Models
         public int UserTypeId { get; set; }
         public string UserTypeDisplay { get; set; }
         public int UsageLayerId { get; set; }
-        public int UsageLayerDisplay { get; set; }
+        public string UsageLayerDisplay { get; set; }
         public int NumberUser { get; set; }
         public int UnitUser { get; set; }
         public decimal AvgConsumeUser { get; set; }
