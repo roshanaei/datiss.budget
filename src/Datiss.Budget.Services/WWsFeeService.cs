@@ -112,6 +112,7 @@ namespace Datiss.Budget.Services
                                         YearId = x.YearId,
                                         ActivityType = x.ActivityType,
                                         UsageLayerId = x.UsageLayerId,
+                                        UsageLayerDisplay = x.UsageLayer.Title,
                                         P1Fee = x.P1Fee,
                                         P2Fee = x.P2Fee,
                                         P1Note3 = x.P1Note3,
@@ -221,6 +222,7 @@ namespace Datiss.Budget.Services
                                         YearId = x.YearId,
                                         ActivityType = x.ActivityType,
                                         UsageLayerId = x.UsageLayerId,
+                                        UsageLayerDisplay = x.UsageLayer.Title,
                                         P1Fee = x.P1Fee,
                                         P2Fee = x.P2Fee,
                                         P1Note3 = x.P1Note3,
@@ -257,6 +259,7 @@ namespace Datiss.Budget.Services
                                         YearId = x.YearId,
                                         ActivityType = x.ActivityType,
                                         UsageLayerId = x.UsageLayerId,
+                                        UsageLayerDisplay = x.UserType.Title,
                                         P1Fee = x.P1Fee,
                                         P2Fee = x.P2Fee,
                                         P1Note3 = x.P1Note3,
@@ -280,12 +283,10 @@ namespace Datiss.Budget.Services
             IQueryable<WWsFee> query,
             WWsFeeFilterDTO filter)
         {
-
             var predicate = PredicateBuilder.New<WWsFee>();
 
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
-
             if (filter.OrganizationId.HasValue)
             {
                 var organizations = await _organizationService
@@ -297,12 +298,13 @@ namespace Datiss.Budget.Services
 
                 query = query.Where(predicate);
             }
-
             if (filter.UserTypeId.HasValue)
                 query = query.Where(x => x.UserTypeId == filter.UserTypeId.Value);
-
             if (filter.ActivityType.HasValue)
                 query = query.Where(x => x.ActivityType == filter.ActivityType);
+            if (filter.UsageLayerId.HasValue)
+                query = query.Where(x => x.UsageLayerId == filter.UsageLayerId.Value);
+
             return query;
         }
 
@@ -321,12 +323,10 @@ namespace Datiss.Budget.Services
                     return desc
                         ? query.OrderByDescending(x => x.FinanceYear.Year)
                         : query.OrderBy(x => x.FinanceYear.Year);
-
                 case "organization":
                     return desc
                         ? query.OrderByDescending(x => x.Organization.Title)
                         : query.OrderBy(x => x.Organization.Title);
-
                 case "usertype":
                     return desc
                         ? query.OrderByDescending(x => x.UserType.DisplayOrder)
@@ -335,6 +335,10 @@ namespace Datiss.Budget.Services
                     return desc
                         ? query.OrderByDescending(x => x.ActivityType)
                         : query.OrderBy(x => x.ActivityType);
+                case "usagelayer":
+                    return desc
+                        ? query.OrderByDescending(x => x.UsageLayer.DisplayOrder)
+                        : query.OrderBy(x => x.UsageLayer.DisplayOrder);
                 default:
                     return desc
                         ? query.OrderByDescending(x => x.Id)
