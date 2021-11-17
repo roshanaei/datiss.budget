@@ -19,9 +19,7 @@ namespace Datiss.Budget.Services.Contracts
 
         //Task<ValidationResult> UpdateAsync(UpdateSubscriptionDTO model);
 
-        Task HardDeleteAsync(int Id);
-
-        Task HardDeleteAsync(int yearId, int organizationId);
+        Task HardDeleteAsync(int yearId);
 
         //Task<int> CalculationAsync(int yearId, int organizationId);
 
