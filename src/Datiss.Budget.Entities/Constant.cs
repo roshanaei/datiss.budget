@@ -75,7 +75,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<IncomeCurrentWsH> UsageLayerIncomeCurrentWsH { get; set; }
 
-
+        public ICollection<IncomeCurrentWsNH> IncomeCurrentWsNH { get; set; }
 
         #endregion
     }
