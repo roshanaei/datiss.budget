@@ -33,7 +33,7 @@
                               asp-controller="@WaterInstallFeeController.Name"
                               asp-action="@WaterInstallFeeController.ACTION_Index"
                               asp-antiforgery="true">
-                            
+
                             <div class="class=" rowACJSB"">
                                 <fieldset class="form-group mt-3">
                                     <label asp-for="Filter.YearId" class="my-font">
@@ -54,7 +54,7 @@
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
-                                        <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success my-font">
+                                        <button id="addRow" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
                                         </button>
                                     </div>
@@ -103,7 +103,7 @@
                         </form>
                         <!--DataTable-->
                         <div class="table-responsive">
-                            <table id="" class=" table table-hover table-bordered m-0 my-font">
+                            <table id="my-table" class="table table-hover table-bordered m-0 my-font">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>سال</th>
@@ -161,8 +161,8 @@
                                 </div>
                                 <!--Pagination-->
                                 @*<p>
-                            Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
-                        </p>*@
+                                        Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
+                                    </p>*@
 
                                 @if (Model.PagesCount > 1) {
                                     <nav aria-label="Page navigation">
@@ -221,7 +221,73 @@
 
     </div>
 
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+    <script src="~/js/jquery.tabledit.js" type="text/javascript"></script>
+
     <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#my-table").Tabledit({
+                hideIdentifier: true,
+                columns: {
+                    //identifier: [0, "id"],
+                    editable: [
+                        [1, "سال مالی", "select", "{ @Html.Raw(Model.YearSourceArray) }"],
+                        [2, "سازمان", "select", "{ @Html.Raw(Model.OrganizationSourceArray) }"],
+                        [3, "نوع کاربری", "select", "{ @Html.Raw(Model.DWaterTypeSourceArray) }"],
+                        [4, "قیمت", "number"]
+                    ],
+                },
+                //   buttons: {
+                //     edit: {
+                //         class: 'btn btn-sm btn-default',
+                //         html: '<span class="glyphicon glyphicon-pencil"></span>',
+                //         action: 'edit'
+                //     },
+                //     delete: {
+                //         class: 'btn btn-sm btn-default',
+                //         html: '<span class="glyphicon glyphicon-trash"></span>',
+                //         action: 'delete'
+                //     },
+                //     save: {
+                //         class: 'btn btn-sm btn-success',
+                //         html: 'Save'
+                //     },
+                //     restore: {
+                //         class: 'btn btn-sm btn-warning',
+                //         html: 'Restore',
+                //         action: 'restore'
+                //     },
+                //     confirm: {
+                //         class: 'btn btn-sm btn-danger',
+                //         html: 'Confirm'
+                //     }
+                // }
+            });
+            $("#addRow").on("click", function () {
+                var data = " <tr><td></td><td></td><td></td><td></td></tr>";
+                $("#my-table tbody").append(data);
+                $("#my-table").Tabledit("update");
+                // ajax example
+                    $.ajax({
+                        type: "POST",
+                        url: "url ajax ro bezar",
+                        datatype: "html",
+                        data: {
+                            parameters: Parameters,
+                        },
+                        success: function (data) {
+                            // Add 'html' data to table
+                            $("#my-table tbody").append(data);
+
+                            // Update Tabledit plugin
+                            $("#my-table").Tabledit("update");
+                        },
+                        error: function () {},
+                    });
+            });
+        });
+
 
         function hardDelete(e) {
             Swal.fire({

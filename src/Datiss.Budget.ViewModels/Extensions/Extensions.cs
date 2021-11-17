@@ -16,5 +16,15 @@ namespace Datiss.Budget.ViewModels
 
             return items;
         }
+
+        public static string ToStringArray(this IEnumerable<SelectListItem> items) {
+            string result = "";
+            foreach(var item in items) {
+                result += $"'{item.Value}':'{item.Text}',";
+            }
+            if (result == "") return result;
+
+            return result.Substring(0, result.Length -1);
+        }
     }
 }

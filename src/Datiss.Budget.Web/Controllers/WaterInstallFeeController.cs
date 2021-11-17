@@ -167,6 +167,9 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
             var filterInput = new WaterInstallFeeFilterDTO {
                 OrderBy = "dwatertype",
                 PageNumber = page,
@@ -176,7 +179,11 @@ namespace Datiss.Budget.Web.Controllers
 
             var result = await _waterInstallFeeService.GetListAsync(filterInput);
             var model = result.Adapt<WaterInstallFeeIndexViewModel>();
-            
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetDWaterTypeSource(dwaterSource);
+
             model.SetFinanceYearFilterSource(yearSource, maxYear);
             model.SetOrganizationFilterSource(orgSource);
             
@@ -189,23 +196,31 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(WaterInstallFeeIndexViewModel viewModel, int page = 1) {
+            var filterInput = viewModel.Filter.Adapt<WaterInstallFeeFilterDTO>();
+
+            var result = await _waterInstallFeeService.GetListAsync(filterInput);
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            viewModel.SetFinanceYearFilterSource(yearSource);
+            viewModel.SetYearSource(yearSource);
+            viewModel.SetDWaterTypeSource(dwaterSource);
+
+            viewModel.SetOrganizationFilterSource(orgSource);
+            viewModel.SetOrganizationSource(orgSource);
+
+            viewModel = result.Adapt<WaterInstallFeeIndexViewModel>();
+
+            return View(viewModel);
+
             if (Request.Form["btnFilter"].Count() > 0) {
-                var filterInput = viewModel.Filter.Adapt<WaterInstallFeeFilterDTO>();
-
-                var result = await _waterInstallFeeService.GetListAsync(filterInput);
-
-                viewModel.SetFinanceYearFilterSource(
-                    (await _financeYearService.GetDropDownDataAsync())
-                    .Adapt<IEnumerable<DropDownItemViewModel>>()
-                );
-
-                viewModel.SetOrganizationFilterSource(
-                    (await _organizationService.GetDropDownDataAsync())
-                    .Adapt<IEnumerable<DropDownItemViewModel>>()
-                );
-                viewModel = result.Adapt<WaterInstallFeeIndexViewModel>();
-
-                return View(viewModel);
+                
             }
 
             if (Request.Form["btnCreate"].Count() > 0) {
