@@ -18,7 +18,8 @@ using Microsoft.AspNetCore.Hosting;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Web.Helpers;
 using Datiss.Budget.Resources;
-using Ganss.Excel;
+using ClosedXML.Extensions;
+using Datiss.Budget.Reports.Excel;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -210,6 +211,8 @@ namespace Datiss.Budget.Web.Controllers
             var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
             model.SetFinanceYearFilterSource(yearSource);
             model.SetOrganizationFilterSource(orgSource);
             model.SetDWaterTypeSource(dwaterSource);
@@ -337,18 +340,25 @@ namespace Datiss.Budget.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost("[action]")]
+        [HttpGet("[action]")]
         public async Task<IActionResult> ExportExcel(WaterInstallFeeIndexViewModel viewModel) {
             var filter = viewModel.Filter.Adapt<WaterInstallFeeFilterDTO>();
 
             var result = await _waterInstallFeeService.GetExportItemsAsync(filter);
+            //var stream = new MemoryStream();
+            using var workbook = result.ExportExcel();
 
-            var _excelMapper = new ExcelMapper();
+            return workbook.Deliver("WatreInstallFee.xlsx");
+
+
+            //var _excelMapper = new ExcelMapper();
             //var ms = new MemoryStream();
-            //await _excelMapper.SaveAsync(ms, result);
-
-            var stream = new FileStream("export.xlsx", FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            await _excelMapper.SaveAsync(stream, result);
+            //_excelMapper.Save(ms, result);
+            //var memSteram = new MemoryStream();
+            //ms.CopyTo(memSteram);
+            //memSteram.Position = 0;
+            //var stream = new FileStream("export.xlsx", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            //await _excelMapper.SaveAsync(stream, result);
 
             //var mem = new MemoryStream(ms.ToArray());
             //mem.Seek(0, SeekOrigin.Begin);
@@ -373,12 +383,14 @@ namespace Datiss.Budget.Web.Controllers
             //}
 
             //return new FileStreamResult(
-            //    ms,
-            //    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            //    memSteram,
+            //    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+            //    FileDownloadName = "WatreInstallFee.xlsx"
+            //};
 
-            return File(stream,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "WaterInstallFee.xlsx");
+            //return File(stream,
+            //    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            //    "WaterInstallFee.xlsx");
         }
 
     }

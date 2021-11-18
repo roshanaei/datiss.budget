@@ -73,15 +73,15 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> YearSource { get; set; }
 
-        public string YearSourceArray => YearSource.ToStringArray();
+        //public string YearSourceArray => YearSource.ToStringArray();
 
         public IList<SelectListItem> OrganizationSource { get; set; }
 
-        public string OrganizationSourceArray => OrganizationSource.ToStringArray();
+        //public string OrganizationSourceArray => OrganizationSource.ToStringArray();
 
         public IList<SelectListItem> DWaterTypeSource { get; set; }
 
-        public string DWaterTypeSourceArray => DWaterTypeSource.ToStringArray();
+        //public string DWaterTypeSourceArray => DWaterTypeSource.ToStringArray();
 
         public IFormFile ExcelFile { get; set; }
 

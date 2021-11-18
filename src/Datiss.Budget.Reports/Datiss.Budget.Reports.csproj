@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.95.4" />
     <PackageReference Include="Stimulsoft.Reports.Engine.NetCore" Version="2021.3.6" />
   </ItemGroup>
 
