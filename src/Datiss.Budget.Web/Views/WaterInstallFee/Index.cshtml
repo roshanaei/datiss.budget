@@ -91,9 +91,9 @@
                                 </div>
                                 <fieldset>
                                     <div class="rowACJE">
-                                        <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="button" name="btnExportExcel" onclick="exportExcel();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="ExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
-                                        </button>
+                                        </a>
                                         <a data-toggle="tooltip" data-placement="top" asp-action="DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
                                         </a>
@@ -225,68 +225,6 @@
     <script src="~/js/jquery.tabledit.js" type="text/javascript"></script>
 
     <script type="text/javascript">
-
-        $(document).ready(function () {
-            $("#my-table").Tabledit({
-                hideIdentifier: true,
-                columns: {
-                    //identifier: [0, "id"],
-                    editable: [
-                        [1, "سال مالی", "select", "{ @Html.Raw(Model.YearSourceArray) }"],
-                        [2, "سازمان", "select", "{ @Html.Raw(Model.OrganizationSourceArray) }"],
-                        [3, "نوع کاربری", "select", "{ @Html.Raw(Model.DWaterTypeSourceArray) }"],
-                        [4, "قیمت", "number"]
-                    ],
-                },
-                //   buttons: {
-                //     edit: {
-                //         class: 'btn btn-sm btn-default',
-                //         html: '<span class="glyphicon glyphicon-pencil"></span>',
-                //         action: 'edit'
-                //     },
-                //     delete: {
-                //         class: 'btn btn-sm btn-default',
-                //         html: '<span class="glyphicon glyphicon-trash"></span>',
-                //         action: 'delete'
-                //     },
-                //     save: {
-                //         class: 'btn btn-sm btn-success',
-                //         html: 'Save'
-                //     },
-                //     restore: {
-                //         class: 'btn btn-sm btn-warning',
-                //         html: 'Restore',
-                //         action: 'restore'
-                //     },
-                //     confirm: {
-                //         class: 'btn btn-sm btn-danger',
-                //         html: 'Confirm'
-                //     }
-                // }
-            });
-            $("#addRow").on("click", function () {
-                var data = " <tr><td></td><td></td><td></td><td></td></tr>";
-                $("#my-table tbody").append(data);
-                $("#my-table").Tabledit("update");
-                // ajax example
-                    $.ajax({
-                        type: "POST",
-                        url: "url ajax ro bezar",
-                        datatype: "html",
-                        data: {
-                            parameters: Parameters,
-                        },
-                        success: function (data) {
-                            // Add 'html' data to table
-                            $("#my-table tbody").append(data);
-
-                            // Update Tabledit plugin
-                            $("#my-table").Tabledit("update");
-                        },
-                        error: function () {},
-                    });
-            });
-        });
 
 
         function hardDelete(e) {
