@@ -34,6 +34,11 @@ namespace Datiss.Budget.Web.Controllers
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
         }
+        private void showMessage(string type, string message)
+        {
+            ViewData["type"] = type;
+            ViewData["message"] = message;
+        }
 
         [HttpGet("[action]")]
         public async Task<IActionResult> Create(int organizationId, int yearId)
@@ -51,11 +56,6 @@ namespace Datiss.Budget.Web.Controllers
             });
 
             var wPipeDiameterTypeSourse = await _constantService.GetByConstantKeyAsync("wpipediametertype");
-            model.WPipeDiameterTypeSourse = wPipeDiameterTypeSourse.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
             return View(model);
         }
 
@@ -70,11 +70,7 @@ namespace Datiss.Budget.Web.Controllers
             });
 
             var wPipeDiameterTypeSourse = await _constantService.GetByConstantKeyAsync("wpipediametertype");
-            model.WPipeDiameterTypeSourse = wPipeDiameterTypeSourse.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
+
 
             if (!ModelState.IsValid)
             {
@@ -122,11 +118,7 @@ namespace Datiss.Budget.Web.Controllers
             });
 
             var wPipeDiameterTypeSourse = await _constantService.GetByConstantKeyAsync("wpipediametertype");
-            model.WPipeDiameterTypeSourse = wPipeDiameterTypeSourse.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
+
             return View(model);
         }
 
@@ -141,11 +133,6 @@ namespace Datiss.Budget.Web.Controllers
             });
 
             var wPipeDiameterTypeSourse = await _constantService.GetByConstantKeyAsync("wpipediametertype");
-            model.WPipeDiameterTypeSourse = wPipeDiameterTypeSourse.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
 
             if (!ModelState.IsValid)
             {
@@ -166,38 +153,66 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1)
         {
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+               .Adapt<List<DropDownItemViewModel>>();
+            int firstOrgId = orgSource.FirstOrDefault().Id;
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(_ => _.Id);
+
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
             var filterInput = new WaterSalesSplitFilterDTO
             {
                 OrderBy = "usertype",
-                PageNumber = page
+                PageNumber = page,
+                YearId = maxYear,
+                OrganizationId = firstOrgId
             };
 
             var result = await _waterSalesSplitService.GetListAsync(filterInput);
-
             var model = result.Adapt<WaterSalesSplitIndexViewModel>();
 
-            model.SetFinanceYearFilterSource(
-                (await _financeYearService.GetDropDownDataAsync())
-                .Adapt<IEnumerable<DropDownItemViewModel>>()
-            );
-            model.SetOrganizationFilterSource(
-                (await _organizationService.GetDropDownDataAsync())
-                .Adapt<IEnumerable<DropDownItemViewModel>>()
-            );
-            
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+
+            model.SetFinanceYearFilterSource(yearSource, maxYear);
+            model.SetOrganizationFilterSource(orgSource);
+
+            model.Filter.YearId = filterInput.YearId;
+            model.Filter.OrganizationId = filterInput.OrganizationId;
+
             return View(model);
         }
-        [HttpPost]
+        [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(WaterSalesSplitFilterViewModel model)
+        public async Task<IActionResult> Index(WaterSalesSplitIndexViewModel model, int page = 1)
         {
+            var filterInput = model.Filter.Adapt<WaterSalesSplitFilterDTO>();
+            var result = await _waterSalesSplitService.GetListAsync(filterInput);
+            model = result.Adapt<WaterSalesSplitIndexViewModel>();
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetFinanceYearFilterSource(yearSource);
+            model.SetOrganizationFilterSource(orgSource);
+            
+            return View(model);
+
             if (Request.Form["btnFilter"].Count() > 0)
             {
-                var filterInput = model.Adapt<WaterSalesSplitFilterDTO>();
 
-                var result = await _waterSalesSplitService.GetListAsync(filterInput);
-
-                return View(result);
             }
 
             if (Request.Form["btnCreate"].Count() > 0)
