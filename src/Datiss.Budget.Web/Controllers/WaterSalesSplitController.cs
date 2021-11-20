@@ -25,7 +25,7 @@ namespace Datiss.Budget.Web.Controllers
     [Route("[controller]")]
     public class WaterSalesSplitController : Controller
     {
-        public const string Name = "WaterInstallFee";
+        public const string Name = "WaterSalesSplit";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
@@ -375,7 +375,7 @@ namespace Datiss.Budget.Web.Controllers
             //var stream = new MemoryStream();
             using var workbook = result.ExportExcel();
 
-            return workbook.Deliver("WatreInstallFee.xlsx");
+            return workbook.Deliver("WaterSalesSplit.xlsx");
         }
     }
     
