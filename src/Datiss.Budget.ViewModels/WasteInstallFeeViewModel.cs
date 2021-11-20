@@ -70,26 +70,58 @@ namespace Datiss.Budget.ViewModels
 
         public WasteInstallFeeFilterViewModel Filter { get; set; }
 
+        public IList<SelectListItem> YearSource { get; set; }
+
+        //public string YearSourceArray => YearSource.ToStringArray();
+
+        public IList<SelectListItem> OrganizationSource { get; set; }
+
+        //public string OrganizationSourceArray => OrganizationSource.ToStringArray();
+
+        public IList<SelectListItem> DWaterTypeSource { get; set; }
+
+        //public string DWaterTypeSourceArray => DWaterTypeSource.ToStringArray();
+
         public IFormFile ExcelFile { get; set; }
 
+        public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
+            => YearSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => OrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+
+        public void SetDWaterTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => DWaterTypeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
         public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
-        {
-            Filter.OrganizationSource = source.Select(x => new SelectListItem
+            => Filter.OrganizationSource = source.Select(x => new SelectListItem
             {
                 Selected = x.Id == selectedOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList().AddEmptySelectListItem();
-        }
+
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
-        {
-            Filter.YearSource = source.Select(x => new SelectListItem
+            => Filter.YearSource = source.Select(x => new SelectListItem
             {
                 Selected = x.Id == selectedYearId,
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList().AddEmptySelectListItem();
-        }
     }
+    
 }
