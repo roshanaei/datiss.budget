@@ -210,6 +210,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetFinanceYearFilterSource(yearSource);
             model.SetOrganizationFilterSource(orgSource);
             model.SetDWaterTypeSource(dwaterSource);
+            model.Filter.YearId = filterInput.YearId;
+            model.Filter.OrganizationId = filterInput.OrganizationId;
 
             return View(model);
 
