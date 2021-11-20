@@ -26,7 +26,7 @@ namespace Datiss.Budget.Web.Controllers
     [Route("[controller]")]
     public class WasteSalesSplitController : Controller
     {
-        public const string Name = "WaterInstallFee";
+        public const string Name = "WasteSalesSplit";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
