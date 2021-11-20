@@ -73,7 +73,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<ConsumeForcast> ConsumeForcast { get; set; }
 
-
+        public ICollection<ConsumeForcastWs> ConsumeForcastWs { get; set; }
         #endregion
     }
 }
