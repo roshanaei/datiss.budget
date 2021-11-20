@@ -13,9 +13,9 @@ namespace Datiss.Budget.Services.Contracts
     {
         Task<WaterInstallFee> GetByIdAsync(int id);
 
-        Task<ValidationResult> AddAsync(CreateWaterInstallFeeDTO model);
+        Task<ValidationResult<WaterInstallFeeDTO>> CreateAsync(CreateWaterInstallFeeDTO model);
 
-        Task<ValidationResult> UpdateAsync(UpdateWaterInstallFeeDTO model);
+        Task<ValidationResult<WaterInstallFeeDTO>> UpdateAsync(UpdateWaterInstallFeeDTO model);
 
         Task HardDeleteAsync(int Id);
 

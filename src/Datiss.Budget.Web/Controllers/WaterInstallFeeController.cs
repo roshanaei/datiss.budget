@@ -69,11 +69,8 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> Create(int organizationId, int yearId) {
-            var model = new CreateWaterInstallFeeViewModel {
-                OrganizationId = organizationId,
-                YearId = yearId
-            };
+        public async Task<IActionResult> Create() {
+            var model = new CreateWaterInstallFeeViewModel();
 
             var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
             model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
@@ -81,39 +78,32 @@ namespace Datiss.Budget.Web.Controllers
                 Value = x.Id.ToString()
             });
 
-            return View(model);
+            return PartialView("_create", model);
         }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWaterInstallFeeViewModel model) 
         {
-            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
+            //var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
+            //model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
+            //    Text = x.Title,
+            //    Value = x.Id.ToString()
+            //});
 
-            if (!ModelState.IsValid) {
-
-                return View(model);
-            }
-
-            var result = await _waterInstallFeeService.AddAsync(new CreateWaterInstallFeeDTO {
+            var result = await _waterInstallFeeService.CreateAsync(new CreateWaterInstallFeeDTO {
                 DWaterTypeId = model.DWaterTypeId,
                 OrganizationId = model.OrganizationId,
-                WInstllFee = model.WInstllFee,
+                WInstallFee = model.WInstallFee,
                 YearId = model.YearId,
                 DWaterTypeTitle = model.DWaterTypeTitle
             });
 
             if(! result.IsValid) {
-                model._HasError = true;
-                model._ErrorMessage = result.Message;
-
-                return View(model);
+                model.AddError(result.Message);
+                return Json(model);
             }
 
-            return RedirectToAction("Index");
+            return Json(result.Result.Adapt<WaterInstallFeeViewModel>());
         }
 
         [HttpGet("[action]/{id}")]
@@ -136,14 +126,15 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("[action]/{id}")]
         public async Task<IActionResult> Edit(int id, UpdateWaterInstallFeeViewModel model) {
-            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
+            //var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("[usertype]");
+            //model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
+            //    Text = x.Title,
+            //    Value = x.Id.ToString()
+            //});
 
             if (!ModelState.IsValid) {
-                return View(model);
+                model.AddError("خطاهای داده ای را بررسی نمایید.");
+                return Json(model);
             }
 
             var data = model.Adapt<UpdateWaterInstallFeeDTO>();
@@ -151,10 +142,14 @@ namespace Datiss.Budget.Web.Controllers
 
             if(!result.IsValid) {
                 model.AddError(result.Message);
-                return View(model);
+                return Json(model);
             }
 
-            return RedirectToAction("Index", new { page = model._CurrentPage });
+            return Json(
+                result.Result.Adapt<WaterInstallFeeViewModel>()
+            ); 
+
+            //return RedirectToAction("Index", new { page = model._CurrentPage });
         }
 
         [HttpGet("{page?}")]
@@ -168,7 +163,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync("[UserType]"))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var filterInput = new WaterInstallFeeFilterDTO {
@@ -218,22 +213,6 @@ namespace Datiss.Budget.Web.Controllers
             model.SetDWaterTypeSource(dwaterSource);
             
             return View(model);
-
-            if (Request.Form["btnFilter"].Count() > 0) {
-                
-            }
-
-            if (Request.Form["btnCreate"].Count() > 0) {
-                int yearId = int.Parse(Request.Form["Filter.YearId"].ToString());
-                int orgId = int.Parse(Request.Form["Filter.OrganizationId"].ToString());
-
-                return RedirectToAction("Create", new {
-                    organizationId = orgId,
-                    yearId = yearId
-                });
-            }
-
-            return RedirectToAction("Index");
         }
 
         [HttpPost("[action]"), ValidateAntiForgeryToken]

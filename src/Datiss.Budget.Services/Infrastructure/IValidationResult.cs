@@ -16,6 +16,27 @@ namespace Datiss.Budget.Services.Infrastructure
         string Message { get; set; }
     }
 
+    public class ValidationResult<T> : ValidationResult
+    {
+        public T Result { get; set; }
+
+        public static ValidationResult<T> Success(T result) {
+            return new ValidationResult<T> {
+                IsValid = true,
+                Result = result
+            };
+        }
+
+        public static new ValidationResult<T> Failed(string message) {
+            return new ValidationResult<T> {
+                IsValid = false,
+                Message = message
+            };
+        }
+
+    }
+
+
     public class ValidationResult : IValidationResult
     {
         private Dictionary<string, string> _errors;
