@@ -9,6 +9,15 @@ using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Common.Exceptions;
+using Datiss.Budget.Web.Helpers;
+using Datiss.Budget.Resources;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Datiss.Budget.Reports.Excel;
+using ClosedXML.Extensions;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -16,6 +25,18 @@ namespace Datiss.Budget.Web.Controllers
     [Route("[controller]")]
     public class WaterSalesSplitController : Controller
     {
+        public const string Name = "WaterInstallFee";
+        public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Index = nameof(Index);
+        public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Copy = nameof(Copy);
+        //public const string ACTION_Delete = nameof(Delete);
+        public const string ACTION_ImportExcel = nameof(ImportExcel);
+        //public const string ACTION_Calculation = nameof(Calculation);
+        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
+        public const string ACTION_ExportExcel = nameof(ExportExcel);
+
+        private readonly IWebHostEnvironment _env;
         private readonly IWaterSalesSplitService _waterSalesSplitService;
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
@@ -23,12 +44,14 @@ namespace Datiss.Budget.Web.Controllers
 
 
         public WaterSalesSplitController(
+            IWebHostEnvironment environment,
             IWaterSalesSplitService waterSaleSplitService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             IConstantService constantService
             )
         {
+            _env = environment ?? throw new ArgumentNullException(nameof(environment));
             _waterSalesSplitService = waterSaleSplitService ?? throw new ArgumentNullException(nameof(_waterSalesSplitService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
@@ -228,6 +251,131 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+        [HttpPost("[action]"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            if (model.ExcelFile == null ||
+                model.ExcelFile.Length == 0)
+                return RedirectToAction("Index");
+
+            try
+            {
+                await _waterSalesSplitService.ImportExcelAsync(model.ExcelFile);
+            }
+            catch (ImportExcelFileFormatInvalidException ex)
+            {
+                showMessage(CssClassNames.Error,
+                    ViewMessages.ImportExcelFileFormatInvalid);
+            }
+            catch (ImportExcelFileSizeInvalidException ex)
+            {
+                showMessage(CssClassNames.Error,
+                    ViewMessages.ImportExcelFileSizeInvalid);
+            }
+            catch (ImportExcelFileException ex)
+            {
+                showMessage(CssClassNames.Error,
+                    string.Format(
+                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
+                    );
+            }
+
+            showMessage(CssClassNames.Success,
+                ViewMessages.ImportExcelSuccess);
+
+            return RedirectToAction("Index");
+        }
+        [HttpPost("[action]"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(IFormCollection form)
+        {
+            var yearId = int.Parse(form["filterYearId"].ToString());
+            var orgId = int.Parse(form["filterOrganizationId"].ToString());
+
+            await _waterSalesSplitService.HardDeleteAsync(yearId, orgId);
+
+            return RedirectToAction("Index");
+        }
+
+        //[HttpPost("[action]"), ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Calculation(IFormCollection form)
+        //{
+        //    var yearId = int.Parse(form["filterYearId"].ToString());
+        //    var orgId = int.Parse(form["filterOrganizationId"].ToString());
+
+        //    var result = await _waterInstallFeeService.CalculationAsync(yearId, orgId);
+
+        //    return RedirectToAction("Index");
+        //}
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> DownloadExcelTemplate()
+        {
+            var filePath = $"{_env.WebRootPath}\\Excel\\WaterSalesSplitImport.xlsx";
+
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return File(
+                stream,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "WaterSalesSplit.xlsx");
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Copy()
+        {
+            var model = new CopyViewModel();
+
+            model.SetOrganizationSource(
+                (await _organizationService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            model.SetYearSource(
+                (await _financeYearService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            return PartialView("_copyModal", model);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Copy(CopyViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            try
+            {
+                await _waterSalesSplitService.CopyAsync(
+                                                    model.SourceYearId,
+                                                    model.SourceOrgId,
+                                                    model.TargetYearId);
+            }
+            catch (CopySameYearException ex)
+            {
+                model.AddError(ViewMessages.CopySameYear);
+                return View(model);
+            }
+            catch (CopyDestYearHasDataException ex)
+            {
+                model.AddError(ViewMessages.CopyDestYearHasData);
+                return View();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> ExportExcel(WaterSalesSplitIndexViewModel viewModel)
+        {
+            var filter = viewModel.Filter.Adapt<WaterSalesSplitFilterDTO>();
+
+            var result = await _waterSalesSplitService.GetExportItemsAsync(filter);
+            //var stream = new MemoryStream();
+            using var workbook = result.ExportExcel();
+
+            return workbook.Deliver("WatreInstallFee.xlsx");
         }
     }
     
