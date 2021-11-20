@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211117124656_ADDIncomeCurrentWsH")]
+    partial class ADDIncomeCurrentWsH
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -615,107 +617,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("IncomeCurrentWsH");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.IncomeCurrentWsNH", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("IncomeCurrentWsNHId")
-                        .UseIdentityColumn();
-
-                    b.Property<decimal>("AvgConsumeUser")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<decimal>("Capacity")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<int>("ConsumptionUser")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Cost")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ExcessIncome")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Income")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Note3Income")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Note3Price")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Note7Income")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Note7Price")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NumberUser")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SeasonalIncome")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SubscriptionIncome")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalIncome")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UnitUser")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("UserTypeId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("IncomeCurrentWsNH");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.IncomeForcast", b =>
@@ -2666,33 +2567,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("UserType");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.IncomeCurrentWsNH", b =>
-                {
-                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                        .WithMany("IncomeCurrentWsNH")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.Constant", "UserType")
-                        .WithMany("IncomeCurrentWsNH")
-                        .HasForeignKey("UserTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("IncomeCurrentWsNH")
-                        .HasForeignKey("YearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FinanceYear");
-
-                    b.Navigation("Organization");
-
-                    b.Navigation("UserType");
-                });
-
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.IncomeForcast", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
@@ -3160,8 +3034,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("IncomeCurrentWsH");
 
-                    b.Navigation("IncomeCurrentWsNH");
-
                     b.Navigation("IncomeForcasts");
 
                     b.Navigation("IncomeForcastWs");
@@ -3215,8 +3087,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("IncomeCurrentWNH");
 
                     b.Navigation("IncomeCurrentWsH");
-
-                    b.Navigation("IncomeCurrentWsNH");
 
                     b.Navigation("IncomeForcasts");
 
@@ -3278,8 +3148,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("IncomeCurrentWNH");
 
                     b.Navigation("IncomeCurrentWsH");
-
-                    b.Navigation("IncomeCurrentWsNH");
 
                     b.Navigation("IncomeForcasts");
 
