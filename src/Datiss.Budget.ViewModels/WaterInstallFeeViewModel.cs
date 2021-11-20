@@ -10,14 +10,16 @@ namespace Datiss.Budget.ViewModels
     public class CreateWaterInstallFeeViewModel: BaseViewModel
     {
         public int YearId { get; set; }
+        public string YearDisplay { get; set; }
 
         public int OrganizationId { get; set; }
+        public string OrganizationDisplay { get; set; }
 
         public int DWaterTypeId { get; set; }
 
         [Required(ErrorMessage = "*")]
         [Range(0, int.MaxValue, ErrorMessage = "لطفاً مبلغ را بصورت صحیح وارد نمایید.")]
-        public int WInstllFee { get; set; }
+        public int WInstallFee { get; set; }
 
         public IEnumerable<SelectListItem> DWaterTypeSource { get; set; }
 

@@ -31,6 +31,8 @@ namespace Datiss.Budget.Services
         
         private readonly DbSet<WaterInstallFee> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
+        private readonly DbSet<FinanceYear> _yearSet;
+        private readonly DbSet<Constant> _constSet;
 
         public WaterInstallFeeService(
             IUnitOfWork uow, 
@@ -41,6 +43,8 @@ namespace Datiss.Budget.Services
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<WaterInstallFee>();
             _orgDbSet = _uow.Set<Organization>();
+            _yearSet = _uow.Set<FinanceYear>();
+            _constSet = _uow.Set<Constant>();
             _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
@@ -54,31 +58,38 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult> AddAsync(CreateWaterInstallFeeDTO model)
+        public async Task<ValidationResult<WaterInstallFeeDTO>> CreateAsync(CreateWaterInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
+
             var entity = new WaterInstallFee
             {
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
                 DWaterTypeId = model.DWaterTypeId,
-                WInstllFee = model.WInstllFee
+                WInstllFee = model.WInstallFee
             };
 
             if(await checkLogicAsync(model.YearId, model.OrganizationId, model.DWaterTypeId)) {
                 await _dbSet.AddAsync(entity);
                 await _uow.SaveChangesAsync();
 
-                return ValidationResult.Success();
+                var result = entity.Adapt<WaterInstallFeeDTO>();
+                result.DWaterTypeDisplay = (await _constSet.FindAsync(model.DWaterTypeId)).Title;
+                result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+                result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                result.WInstallFee = entity.WInstllFee;
+
+                return ValidationResult<WaterInstallFeeDTO>.Success(result);
             }
 
-            return ValidationResult.Failed(
+            return ValidationResult<WaterInstallFeeDTO>.Failed(
                 string.Format(ServiceMessages.Logic_DWaterType, 
                                 model.DWaterTypeTitle)
                 );
         }
 
-        public async Task<ValidationResult> UpdateAsync(UpdateWaterInstallFeeDTO model)
+        public async Task<ValidationResult<WaterInstallFeeDTO>> UpdateAsync(UpdateWaterInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -87,14 +98,24 @@ namespace Datiss.Budget.Services
                 entity.OrganizationId = model.OrganizationId;
                 entity.YearId = model.YearId;
                 entity.DWaterTypeId = model.DWaterTypeId;
-                entity.WInstllFee = model.WInstllFee;
+                entity.WInstllFee = model.WInstallFee;
 
                 await _uow.SaveChangesAsync();
 
-                return ValidationResult.Success();
+                var result = new WaterInstallFeeDTO {
+                    OrganizationId = model.OrganizationId,
+                    YearId = model.YearId,
+                    DWaterTypeId = model.DWaterTypeId,
+                    WInstallFee = model.WInstallFee,
+                    OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
+                    DWaterTypeDisplay = (await _constSet.FindAsync(model.DWaterTypeId)).Title,
+                    Year = (await _yearSet.FindAsync(model.YearId)).Year
+                };
+
+                return ValidationResult<WaterInstallFeeDTO>.Success(result);
             }
 
-            return ValidationResult.Failed(
+            return ValidationResult<WaterInstallFeeDTO>.Failed(
                 string.Format(ServiceMessages.Logic_DWaterType,
                                 model.DWaterTypeTitle)
                 );
