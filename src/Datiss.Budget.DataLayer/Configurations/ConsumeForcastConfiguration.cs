@@ -41,7 +41,7 @@ namespace Datiss.Budget.DataLayer.Mappings
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.UsageLayer)
-                    .WithMany(x => x.ConsumeForcast)
+                    .WithMany(x => x.UsageLayerConsumeForcast)
                     .HasForeignKey(x => x.UsageLayerId)
                     .OnDelete(DeleteBehavior.Restrict);
 
