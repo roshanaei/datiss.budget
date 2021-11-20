@@ -12,6 +12,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Hosting;
 using Stimulsoft.Report;
 using Stimulsoft.Report.Mvc;
+using Datiss.Budget.Reports.Excel;
+using ClosedXML.Extensions;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Common.Exceptions;
+using Datiss.Budget.Web.Helpers;
+using Datiss.Budget.Resources;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -20,15 +28,15 @@ namespace Datiss.Budget.Web.Controllers
     public class WasteInstallFeeController : Controller
     {
         public const string Name = "WasteInstallFee";
-        public const string ACTION_Create = nameof(Create);
+        //public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
-        public const string ACTION_Edit = nameof(Edit);
-        //public const string ACTION_Copy = nameof(Copy);
-        //public const string ACTION_Delete = nameof(Delete);
-        //public const string ACTION_ImportExcel = nameof(ImportExcel);
+        //public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Copy = nameof(Copy);
+        public const string ACTION_Delete = nameof(Delete);
+        public const string ACTION_ImportExcel = nameof(ImportExcel);
         //public const string ACTION_Calculation = nameof(Calculation);
-        //public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
-        //public const string ACTION_ExportExcel = nameof(ExportExcel);
+        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
+        public const string ACTION_ExportExcel = nameof(ExportExcel);
 
         private readonly IWebHostEnvironment _env;
         private readonly IWasteInstallFeeService _wasteInstallFeeService;
@@ -50,7 +58,11 @@ namespace Datiss.Budget.Web.Controllers
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
         }
-
+        private void showMessage(string type, string message)
+        {
+            ViewData["type"] = type;
+            ViewData["message"] = message;
+        }
         [HttpGet("[action]")]
         public async Task<IActionResult> Create(int organizationId, int yearId) {
             var model = new CreateWasteInstallFeeViewModel {
@@ -148,6 +160,8 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var filterInput = new WasteInstallFeeFilterDTO
             {
@@ -160,6 +174,10 @@ namespace Datiss.Budget.Web.Controllers
             var result = await _wasteInstallFeeService.GetListAsync(filterInput);
             var model = result.Adapt<WasteInstallFeeIndexViewModel>();
 
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetDWaterTypeSource(dwaterSource);
+
             model.SetFinanceYearFilterSource(yearSource, maxYear);
             model.SetOrganizationFilterSource(orgSource);
 
@@ -171,26 +189,33 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(WasteInstallFeeIndexViewModel viewModel, int page = 1)
+        public async Task<IActionResult> Index(WasteInstallFeeIndexViewModel model, int page = 1)
         {
+            var filterInput = model.Filter.Adapt<WasteInstallFeeFilterDTO>();
+
+            var result = await _wasteInstallFeeService.GetListAsync(filterInput);
+            model = result.Adapt<WasteInstallFeeIndexViewModel>();
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetFinanceYearFilterSource(yearSource);
+            model.SetOrganizationFilterSource(orgSource);
+            model.SetDWaterTypeSource(dwaterSource);
+
+            return View(model);
+
             if (Request.Form["btnFilter"].Count() > 0)
             {
-                var filterInput = viewModel.Filter.Adapt<WasteInstallFeeFilterDTO>();
 
-                var result = await _wasteInstallFeeService.GetListAsync(filterInput);
-
-                viewModel.SetFinanceYearFilterSource(
-                    (await _financeYearService.GetDropDownDataAsync())
-                    .Adapt<IEnumerable<DropDownItemViewModel>>()
-                );
-
-                viewModel.SetOrganizationFilterSource(
-                    (await _organizationService.GetDropDownDataAsync())
-                    .Adapt<IEnumerable<DropDownItemViewModel>>()
-                );
-                viewModel = result.Adapt<WasteInstallFeeIndexViewModel>();
-
-                return View(viewModel);
             }
 
             if (Request.Form["btnCreate"].Count() > 0)
@@ -207,17 +232,118 @@ namespace Datiss.Budget.Web.Controllers
 
             return RedirectToAction("Index");
         }
-        //[HttpGet("report")]
-        //public async Task<IActionResult> Report() {
-        //    StiReport report = new StiReport();
-        //    report.Load(_webHost.WebRootPath + "\\report.mrt");
+        [HttpPost("[action]"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
 
-        //    return await StiNetCoreViewer.GetReportResultAsync(this, report);
-        //}
+            if (model.ExcelFile == null ||
+                model.ExcelFile.Length == 0)
+                return RedirectToAction("Index");
+
+            try
+            {
+                await _wasteInstallFeeService.ImportExcelAsync(model.ExcelFile);
+            }
+            catch (ImportExcelFileFormatInvalidException ex)
+            {
+                showMessage(CssClassNames.Error,
+                    ViewMessages.ImportExcelFileFormatInvalid);
+            }
+            catch (ImportExcelFileSizeInvalidException ex)
+            {
+                showMessage(CssClassNames.Error,
+                    ViewMessages.ImportExcelFileSizeInvalid);
+            }
+            catch (ImportExcelFileException ex)
+            {
+                showMessage(CssClassNames.Error,
+                    string.Format(
+                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
+                    );
+            }
+
+            showMessage(CssClassNames.Success,
+                ViewMessages.ImportExcelSuccess);
+
+            return RedirectToAction("Index");
+        }
+
+
+        [HttpPost("[action]"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(IFormCollection form)
+        {
+            var yearId = int.Parse(form["filterYearId"].ToString());
+            var orgId = int.Parse(form["filterOrganizationId"].ToString());
+
+            await _wasteInstallFeeService.HardDeleteAsync(yearId, orgId);
+
+            return RedirectToAction("Index");
+        }
 
         [HttpGet("[action]")]
-        public IActionResult ViewerEvent() {
-            return StiNetCoreViewer.ViewerEventResult(this);
+        public async Task<IActionResult> DownloadExcelTemplate()
+        {
+            var filePath = $"{_env.WebRootPath}\\Excel\\WasteInstallFeeImport.xlsx";
+
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return File(
+                stream,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "WasteInstallFee.xlsx");
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Copy()
+        {
+            var model = new CopyViewModel();
+
+            model.SetOrganizationSource(
+                (await _organizationService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            model.SetYearSource(
+                (await _financeYearService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            return PartialView("_copyModal", model);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Copy(CopyViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            try
+            {
+                await _wasteInstallFeeService.CopyAsync(
+                                                    model.SourceYearId,
+                                                    model.SourceOrgId,
+                                                    model.TargetYearId);
+            }
+            catch (CopySameYearException ex)
+            {
+                model.AddError(ViewMessages.CopySameYear);
+                return View(model);
+            }
+            catch (CopyDestYearHasDataException ex)
+            {
+                model.AddError(ViewMessages.CopyDestYearHasData);
+                return View();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> ExportExcel(WasteInstallFeeIndexViewModel viewModel)
+        {
+            var filter = viewModel.Filter.Adapt<WasteInstallFeeFilterDTO>();
+            var result = await _wasteInstallFeeService.GetExportItemsAsync(filter);
+            using var workbook = result.ExportExcel();
+            return workbook.Deliver("WasteInstallFee.xlsx");
         }
 
     }
