@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Excel.Models
 {
-    public class WasteSalesSplitImportModel
+    public class FeeCityImportModel
     {
         [Column(0, MappingDirections.Both, Letter = "A")]
         public int YearId { get; set; }
@@ -16,15 +16,9 @@ namespace Datiss.Budget.Services.Excel.Models
         public int OrganizationId { get; set; }
 
         [Column(2, MappingDirections.Both, Letter = "C")]
-        public int UserTypeId { get; set; }
+        public decimal DomesticPrice { get; set; }
 
         [Column(3, MappingDirections.Both, Letter = "D")]
-        public int WsPipeDiameterId { get; set; }
-
-        [Column(4, MappingDirections.Both, Letter = "E")]
-        public int NumberSales { get; set; }
-
-        [Column(5, MappingDirections.Both, Letter = "F")]
-        public int UnitSales { get; set; }
+        public decimal NDomesticPrice { get; set; }
     }
 }

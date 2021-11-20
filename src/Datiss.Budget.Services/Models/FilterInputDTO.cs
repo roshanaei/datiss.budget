@@ -128,5 +128,35 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
         public int? UserTypeId { get; set; }
     }
-
+    public class WWsFeeFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
+        public int? UsageLayerId { get; set; }
+        public ActivityType? ActivityType { get; set; }
+    }
+    public class FeeCityFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+    }
+    public class SubscriptionFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? UserTypeId { get; set; }
+    }
+    public class IncomeCurrentWHFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
+        public int? UsageLayerId { get; set; }
+    }
+    public class IncomeCurrentWNHFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
+    }
 }
