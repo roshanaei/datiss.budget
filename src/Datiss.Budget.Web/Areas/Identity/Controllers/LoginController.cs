@@ -124,7 +124,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
             return View(model);
         }
 
-        [Route("logoff")]
+        [Route("logOff")]
         public async Task<IActionResult> LogOff()
         {
             var user = User.Identity.IsAuthenticated ? await _userManager.FindByNameAsync(User.Identity.Name) : null;
