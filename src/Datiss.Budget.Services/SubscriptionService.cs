@@ -1,0 +1,257 @@
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Common.Exceptions;
+using Datiss.Budget.DataLayer.Context;
+using Datiss.Budget.Services.Contracts.Identity;
+using Mapster;
+using LinqKit;
+using Datiss.Budget.Services.Excel.Models;
+
+namespace Datiss.Budget.Services
+{
+    public class SubscriptionService : ISubscriptionService
+    {
+        private readonly IUnitOfWork _uow;
+        private readonly IExcelService _excelService;
+        private readonly IUserService _userService;
+
+        private readonly DbSet<Subscription> _dbSet;
+
+        public SubscriptionService(
+            IUnitOfWork uow,
+            IExcelService excelService,
+            IUserService userService)
+        {
+            _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _dbSet = _uow.Set<Subscription>();
+            _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
+            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+        }
+
+        private IQueryable<Subscription> Query()
+            => _dbSet.AsNoTracking();
+        public async Task<Subscription> GetByIdAsync(int id)
+        {
+            var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
+            return await Task.FromResult(entity);
+        }
+        public async Task HardDeleteAsync(int Id)
+        {
+            var entity = await _dbSet.FindAsync(Id);
+
+            entity.CheckArgumentIsNull(nameof(entity));
+
+            _dbSet.Remove(entity);
+
+            await _uow.SaveChangesAsync();
+        }
+        public async Task HardDeleteAsync(int yearId, int organizationId)
+        {
+            var items = await _dbSet.Where(_ => _.YearId == yearId)
+                                    .ToListAsync();
+
+            _dbSet.RemoveRange(items);
+
+            await _uow.SaveChangesAsync();
+        }
+        public async Task<PagedResult<SubscriptionDTO>> GetListAsync(SubscriptionFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+            var result = new PagedResult<SubscriptionDTO>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            result.TotalCount = await query.CountAsync();
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            query = query
+                .Skip(filter.StartIndex)
+                .Take(filter.PageSize);
+
+            result.Items = await query.Include(x => x.FinanceYear)
+                                    .Include(x => x.UserType)
+                                    .Select(x => new SubscriptionDTO
+                                    {
+                                        Id = x.Id,
+                                        UserTypeDisplay = x.UserType.Title,
+                                        UserTypeId = x.UserTypeId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        SubW = x.SubW,
+                                        SubWs = x.SubWs
+                                    }).ToListAsync();
+
+            return await Task.FromResult(result);
+        }
+
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
+        {
+            if (sourceYearId == destYearId)
+                throw new CopySameYearException();
+
+            var result = new List<Subscription>();
+
+            var selfData = await Query().Where(_ => _.YearId == sourceYearId)
+                                        .ToListAsync();
+
+            if (selfData.Any())
+            {
+                foreach (var item in selfData)
+                {
+                    var entity = new Subscription
+                    {
+                        UserTypeId = item.UserTypeId,
+                        YearId = destYearId,
+                        SubW = item.SubW,
+                        SubWs = item.SubWs
+                    };
+                    result.Add(entity);
+                }
+            }
+            _dbSet.AddRange(result);
+            await _uow.SaveChangesAsync();
+        }
+        public async Task ImportExcelAsync(IFormFile fileInfo)
+        {
+            var data = await _excelService.ImportAsync<SubscriptionImportModel>(fileInfo);
+
+            var records = data.Adapt<List<Subscription>>();
+
+            int rowIndex = 1;
+
+            foreach (var record in records)
+            {
+                if (!await checkLogicAsync(
+                    record.YearId,
+                    record.UserTypeId))
+                    throw new ImportExcelFileException(rowIndex);
+                rowIndex++;
+            }
+            await _dbSet.AddRangeAsync(records);
+            await _uow.SaveChangesAsync();
+        }
+        public async Task<IEnumerable<SubscriptionDTO>> GetExportItemsAsync(SubscriptionFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+            var query = Query();
+            query = await setFilter(query, filter);
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.UserType)
+                                    .Select(x => new SubscriptionDTO
+                                    {
+                                        Id = x.Id,
+                                        UserTypeDisplay = x.UserType.Title,
+                                        UserTypeId = x.UserTypeId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        SubW = x.SubW,
+                                        SubWs = x.SubWs
+                                    }).ToListAsync();
+
+            return items;
+        }
+        public async Task<Stream> ExportExcelAsync(SubscriptionFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+            var query = Query();
+            query = await setFilter(query, filter);
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.UserType)
+                                    .Select(x => new SubscriptionDTO
+                                    {
+                                        Id = x.Id,
+                                        UserTypeDisplay = x.UserType.Title,
+                                        UserTypeId = x.UserTypeId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        SubW = x.SubW,
+                                        SubWs = x.SubWs
+                                    }).ToListAsync();
+
+            var ms = new MemoryStream();
+            var result = _excelService.Export(items, ms);
+            var mem1 = new MemoryStream(ms.ToArray());
+            return mem1;
+        }
+        #region Private Helper Methods
+        private async Task<IQueryable<Subscription>> setFilter(
+            IQueryable<Subscription> query,
+            SubscriptionFilterDTO filter)
+        {
+            var predicate = PredicateBuilder.New<Subscription>();
+            if (filter.YearId.HasValue)
+                query = query.Where(x => x.YearId == filter.YearId.Value);
+            if (filter.UserTypeId.HasValue)
+                query = query.Where(x => x.UserTypeId == filter.UserTypeId.Value);
+            return query;
+        }
+
+        private IQueryable<Subscription> setOrder(
+           IQueryable<Subscription> query,
+           string orderBy = "id",
+           bool desc = false)
+        {
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "id";
+
+            orderBy = orderBy.ToLower();
+            switch (orderBy)
+            {
+                case "year":
+                    return desc
+                        ? query.OrderByDescending(x => x.FinanceYear.Year)
+                        : query.OrderBy(x => x.FinanceYear.Year);
+                case "usertype":
+                    return desc
+                        ? query.OrderByDescending(x => x.UserType.DisplayOrder)
+                        : query.OrderBy(x => x.UserType.DisplayOrder);
+
+                default:
+                    return desc
+                        ? query.OrderByDescending(x => x.Id)
+                        : query.OrderBy(x => x.Id);
+            }
+        }
+        #endregion
+
+        #region Logics
+
+        private async Task<bool> checkLogicAsync(
+            int yearId,
+            int userTypeId,
+            int? id = null)
+        {
+            var result = id == null
+                ? await Query().AnyAsync(x => x.YearId == yearId &&
+                                                x.UserTypeId == userTypeId)
+
+                : await Query().AnyAsync(x => x.YearId == yearId &&
+                                            x.UserTypeId == userTypeId &&
+                                            x.Id != id);
+            return !result;
+        }
+
+        #endregion
+    }
+}
