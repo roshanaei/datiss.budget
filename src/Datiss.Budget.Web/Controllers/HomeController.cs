@@ -20,7 +20,7 @@ namespace Datiss.Budget.Controllers
         public IActionResult Index()
         {
             if (!_userContext.IsAuthenticated)
-                return RedirectToAction("Login", "Index", new { area = "Identity" });
+                return RedirectToAction("Index", "Login", new { area = "Identity" });
 
             return View();
         }
