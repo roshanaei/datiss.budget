@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -33,18 +34,6 @@ namespace Datiss.Budget.ViewModels
                 if (UserTypeSource == null || !UserTypeSource.Any())
                     return string.Empty;
                 return UserTypeSource.FirstOrDefault(x => x.Value.ToString() == UserTypeSource.ToString()).Text;
-            }
-        }
-
-        public IEnumerable<SelectListItem> WsPipeDiameterTypeSource { get; set; }
-
-        public string WsPipeDiameterTitle
-        {
-            get
-            {
-                if (WsPipeDiameterTypeSource == null || WsPipeDiameterTypeSource.Any())
-                    return string.Empty;
-                return WsPipeDiameterTypeSource.FirstOrDefault(x => x.Value.ToString() == WsPipeDiameterId.ToString()).Text;
             }
         }
     }
@@ -81,9 +70,9 @@ namespace Datiss.Budget.ViewModels
 
     public class WasteSalesSplitFilterViewModel : FilterViewModel
     {
-        public int YearId { get; set; }
+        public int? YearId { get; set; }
 
-        public int OrganizationId { get; set; }
+        public int? OrganizationId { get; set; }
         
         public int? UserTypeId { get; set; }
 
@@ -101,27 +90,44 @@ namespace Datiss.Budget.ViewModels
     public class WasteSalesSplitIndexViewModel : PagedViewModel<WasteSalesSplitViewModel>
     {
 
-        public WasteSalesSplitIndexViewModel() {
+        public WasteSalesSplitIndexViewModel()
+        {
             Filter = new WasteSalesSplitFilterViewModel();
         }
-
         public WasteSalesSplitFilterViewModel Filter { get; set; }
+        public IList<SelectListItem> YearSource { get; set; }
+        public IList<SelectListItem> OrganizationSource { get; set; }
+        public IFormFile ExcelFile { get; set; }
+        public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
+            => YearSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
 
-        public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source) {
-            Filter.OrganizationSource = source.Select(x => new SelectListItem {
-                Selected = x.Selected,
+        public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => OrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
+            => Filter.OrganizationSource = source.Select(x => new SelectListItem
+            {
+                Selected = x.Id == selectedOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList().AddEmptySelectListItem();
-        }
 
-        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source) {
-            Filter.YearSource = source.Select(x => new SelectListItem {
-                Selected = x.Selected,
+
+        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
+            => Filter.YearSource = source.Select(x => new SelectListItem
+            {
+                Selected = x.Id == selectedYearId,
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList().AddEmptySelectListItem();
-        }
 
     }
 }
