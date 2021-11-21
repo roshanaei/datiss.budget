@@ -343,7 +343,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action("ExportExcel")',
+                url: '@Url.Action(WaterInstallFeeController.ACTION_ExportExcel)',
                 success: function (data, status, settings) {
                     console.log(data);
                 },
