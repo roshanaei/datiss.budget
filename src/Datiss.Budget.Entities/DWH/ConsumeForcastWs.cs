@@ -1,11 +1,9 @@
 ﻿using Datiss.Budget.Entities.AuditableEntity;
-
-namespace Datiss.Budget.Entities.DWH
+namespace Datiss.Budget.Entities
 {
-    public class SalesSplitFunction : IAuditableEntity
+    public class ConsumeForcastWs : IAuditableEntity
     {
-        public SalesSplitFunction() { }
-
+        public ConsumeForcastWs() { }
         #region Properties
         public int Id { get; set; }
 
@@ -15,31 +13,30 @@ namespace Datiss.Budget.Entities.DWH
 
         public int UserTypeId { get; set; }
 
-        public int WNumber { get; set; }
+        public int UsageLayerId { get; set; }
 
-        public int WUnit { get;set;}
+        public decimal CountUser { get; set; }
 
-        public int WsNumber { get;set;}
+        public decimal UnitUser { get; set; }
 
-        public int WsUnit { get;set;}
+        public decimal ConsumeUser { get; set; }
 
-        public int WNumber_2 { get; set; }
+        public decimal AvgConsumeUser { get; set; }
 
-        public int WUnit_2 { get; set; }
-
-        public int WsNumber_2 { get; set; }
-
-        public int WsUnit_2 { get; set; }
+        public decimal ConsumeUserForcast { get; set; }
 
         #endregion
 
         #region Navigations
-
         public FinanceYear FinanceYear { get; set; }
 
         public Organization Organization { get; set; }
 
         public Constant UserType { get; set; }
+
+        public Constant UsageLayer { get; set; }
+
         #endregion
+
     }
 }
