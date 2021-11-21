@@ -293,7 +293,7 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            return RedirectToAction("Index");
+            return Json(model);
         }
 
         [HttpGet("[action]")]

@@ -42,6 +42,8 @@ namespace Datiss.Budget.ViewModels
         public bool SewageStatus { get; set; }
 
         public EntityStatus Status { get; set; }
+
+        public string StatusDisplay => Status.ToDisplay();
     }
 
     public class OrganizationFilterViewModel : FilterViewModel
