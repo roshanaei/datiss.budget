@@ -18,8 +18,6 @@ namespace Datiss.Budget.Entities.DWH
 
         public int OIFTypeId { get; set; }
 
-        public int OIFCount { get; set; }
-
         public int OIFPrice { get; set; }
 
         #endregion
