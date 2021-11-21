@@ -85,6 +85,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<ConsumeForcastWs> UsageLayerConsumeForcastWs { get; set; }
 
+        public ICollection<IncomeForcastOther> IncomeForcastOthers { get; set; }
+
         #endregion
     }
 }
