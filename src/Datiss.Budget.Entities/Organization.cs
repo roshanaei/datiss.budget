@@ -54,8 +54,6 @@ namespace Datiss.Budget.Entities
 
         public ICollection<AverageContractedCapacityNHUses> AverageContractedCapacityNHUses { get; set; }
 
-        public ICollection<SalesSplitFunction> SalesSplitFunctions { get; set; }
-
         public ICollection<UserTypeAverageCapacity> UserTypeAverageCapacities { get; set; }
 
         public ICollection<IncomeForcast> IncomeForcasts { get; set; }
@@ -77,6 +75,16 @@ namespace Datiss.Budget.Entities
         public ICollection<IncomeCurrentWsH> IncomeCurrentWsH { get; set; }
 
         public ICollection<IncomeCurrentWsNH> IncomeCurrentWsNH { get; set; }
+
+        public ICollection<ConsumeForcast> ConsumeForcast { get; set; }
+
+        public ICollection<ConsumeForcastWs> ConsumeForcastWs { get; set; }
+
+        public ICollection<IncomeForcastOther> IncomeForcastOthers { get; set; }
+
+        public ICollection<IncomeCurrentNOperational> IncomeCurrentNOperationals { get; set; }
+
+        public ICollection<IncomeCurrentOperational> IncomeCurrentOperationals { get; set; }
 
 
         #endregion
