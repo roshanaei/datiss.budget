@@ -112,10 +112,13 @@ namespace Datiss.Budget.Services
         }
         public async Task HardDeleteAsync(int yearId, int organizationId)
         {
-            var items = await _dbSet.Where(_ => _.YearId == yearId)
-                                    .Where(_ => _.OrganizationId == organizationId)
-                                    .ToListAsync();
 
+            var items = await _dbSet.Where(_ => _.YearId == yearId)
+                                    .Where(_ => _.OrganizationId == organizationId ||
+                                                _.Organization.ParentId==organizationId ||
+                                                _.Organization.Parent.ParentId == organizationId ||
+                                                _.Organization.Parent.Parent.ParentId == organizationId)
+                                    .ToListAsync();
             _dbSet.RemoveRange(items);
 
             await _uow.SaveChangesAsync();
@@ -275,7 +278,7 @@ namespace Datiss.Budget.Services
 
         public async Task ImportExcelAsync(IFormFile fileInfo)
         {
-            var data = await _excelService.ImportAsync<WaterInstallFeeImportModel>(fileInfo);
+            var data = await _excelService.ImportAsync<WasteInstallFeeImportModel>(fileInfo);
 
             var records = data.Adapt<List<WasteInstallFee>>();
 
