@@ -20,6 +20,7 @@ using Datiss.Budget.Web.Helpers;
 using Datiss.Budget.Resources;
 using ClosedXML.Extensions;
 using Datiss.Budget.Reports.Excel;
+using Microsoft.Extensions.Logging;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -39,6 +40,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
 
+        private readonly ILogger<WaterInstallFeeController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly IWaterInstallFeeService _waterInstallFeeService;
         private readonly IConstantService _constantService;
@@ -47,6 +49,7 @@ namespace Datiss.Budget.Web.Controllers
         private readonly ISecurityTrimmingService _securityTrimmingService;
 
         public WaterInstallFeeController(
+            ILogger<WaterInstallFeeController> logger,
             IWebHostEnvironment environment,
             IWaterInstallFeeService waterInstallFeeService,
             IOrganizationService organizationService,
@@ -54,6 +57,7 @@ namespace Datiss.Budget.Web.Controllers
             IConstantService constantService,
             ISecurityTrimmingService securityTrimmingService) 
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
             _waterInstallFeeService = waterInstallFeeService ?? throw new ArgumentNullException(nameof(waterInstallFeeService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
@@ -68,35 +72,12 @@ namespace Datiss.Budget.Web.Controllers
             ViewData["message"] = message;
         }
 
-        [HttpGet("[action]")]
-        public async Task<IActionResult> Create() {
-            var model = new CreateWaterInstallFeeViewModel();
-
-            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
-
-            return PartialView("_create", model);
-        }
-
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWaterInstallFeeViewModel model) 
         {
-            //var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            //model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-            //    Text = x.Title,
-            //    Value = x.Id.ToString()
-            //});
+            var data = model.Adapt<CreateWaterInstallFeeDTO>();
 
-            var result = await _waterInstallFeeService.CreateAsync(new CreateWaterInstallFeeDTO {
-                DWaterTypeId = model.DWaterTypeId,
-                OrganizationId = model.OrganizationId,
-                WInstallFee = model.WInstallFee,
-                YearId = model.YearId,
-                DWaterTypeTitle = model.DWaterTypeTitle
-            });
+            var result = await _waterInstallFeeService.CreateAsync(data);
 
             if(! result.IsValid) {
                 model.AddError(result.Message);
@@ -106,31 +87,9 @@ namespace Datiss.Budget.Web.Controllers
             return Json(result.Result.Adapt<WaterInstallFeeViewModel>());
         }
 
-        [HttpGet("[action]/{id}")]
-        public async Task<IActionResult> Edit(int id) {
-            var entity = await _waterInstallFeeService.GetByIdAsync(id);
-
-            if(entity == null) {
-                return RedirectToAction("Index");
-            }
-
-            var model = entity.Adapt<UpdateWaterInstallFeeViewModel>();
-            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
-
-            return View(model);
-        }
-
-        [HttpPost("[action]/{id}")]
-        public async Task<IActionResult> Edit(int id, UpdateWaterInstallFeeViewModel model) {
-            //var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("[usertype]");
-            //model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-            //    Text = x.Title,
-            //    Value = x.Id.ToString()
-            //});
+        
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Edit(UpdateWaterInstallFeeViewModel model) {
 
             if (!ModelState.IsValid) {
                 model.AddError("خطاهای داده ای را بررسی نمایید.");
@@ -148,8 +107,6 @@ namespace Datiss.Budget.Web.Controllers
             return Json(
                 result.Result.Adapt<WaterInstallFeeViewModel>()
             ); 
-
-            //return RedirectToAction("Index", new { page = model._CurrentPage });
         }
 
         [HttpGet("{page?}")]
@@ -196,6 +153,7 @@ namespace Datiss.Budget.Web.Controllers
 
             var result = await _waterInstallFeeService.GetListAsync(filterInput);
             model = result.Adapt<WaterInstallFeeIndexViewModel>();
+            model.Filter = filterInput.Adapt<WaterInstallFeeFilterViewModel>();
 
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
@@ -258,6 +216,25 @@ namespace Datiss.Budget.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Delete(int id) {
+            try {
+                await _waterInstallFeeService.HardDeleteAsync(id);
+            }
+            catch(Exception ex) {
+                _logger.LogError(ex.GetBaseException().Message);
+                return Json(new {
+                    hasError = true,
+                    message = "خطا در بروزرسانی اطلاعات. لطفاً دوباره سعی کنید."
+                });
+            }
+
+            return Json(new {
+                hasError = false,
+                message = "حذف رکورد با موفقیت انجام شد."
+            });
+        }
+
         [HttpPost("[action]"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Calculation(IFormCollection form) {
             var yearId = int.Parse(form["filterYearId"].ToString());
@@ -309,11 +286,11 @@ namespace Datiss.Budget.Web.Controllers
             }
             catch(CopySameYearException ex) {
                 model.AddError(ViewMessages.CopySameYear);
-                return View(model);
+                return Json(model);
             }
             catch(CopyDestYearHasDataException ex) {
                 model.AddError(ViewMessages.CopyDestYearHasData);
-                return View();
+                return Json(model);
             }
 
             return RedirectToAction("Index");
@@ -324,52 +301,9 @@ namespace Datiss.Budget.Web.Controllers
             var filter = viewModel.Filter.Adapt<WaterInstallFeeFilterDTO>();
 
             var result = await _waterInstallFeeService.GetExportItemsAsync(filter);
-            //var stream = new MemoryStream();
             using var workbook = result.ExportExcel();
 
             return workbook.Deliver("WatreInstallFee.xlsx");
-
-
-            //var _excelMapper = new ExcelMapper();
-            //var ms = new MemoryStream();
-            //_excelMapper.Save(ms, result);
-            //var memSteram = new MemoryStream();
-            //ms.CopyTo(memSteram);
-            //memSteram.Position = 0;
-            //var stream = new FileStream("export.xlsx", FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            //await _excelMapper.SaveAsync(stream, result);
-
-            //var mem = new MemoryStream(ms.ToArray());
-            //mem.Seek(0, SeekOrigin.Begin);
-
-            //ms.Seek(0, SeekOrigin.Begin);
-            //using (var stream = new MemoryStream()) {
-            //    await _waterInstallFeeService.ExportExcelAsync(filter, stream);
-            //    return File(
-            //        stream,
-            //        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            //        "WaterInstallFee.xlsx");
-            //}
-
-            //var stream = new MemoryStream();
-
-            //try {
-            //    var result = await _waterInstallFeeService.ExportExcelAsync(filter, stream);
-            //    result.CopyTo(stream);
-            //}
-            //catch(Exception ex) {
-
-            //}
-
-            //return new FileStreamResult(
-            //    memSteram,
-            //    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
-            //    FileDownloadName = "WatreInstallFee.xlsx"
-            //};
-
-            //return File(stream,
-            //    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            //    "WaterInstallFee.xlsx");
         }
 
     }
