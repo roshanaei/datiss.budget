@@ -1,0 +1,189 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+
+    function editRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '#7598f3');
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_DWaterType_' + id).hide();
+        $('#divOutput_WInstallFee_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_DWaterType_' + id).show();
+        $('#divInput_WInstallFee_' + id).show();
+
+        $('#btnEdit_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_DWaterType_' + id).hide();
+        $('#divInput_WInstallFee_' + id).hide();
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_DWaterType_' + id).show();
+        $('#divOutput_WInstallFee_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.dWaterTypeId = $('#inputDWaterType_' + id).val();
+        model.wInstallFee = $('#inputWInstallFee_' + id).val();
+
+        $.ajax({
+            url: '@Url.Action(WaterInstallFeeController.ACTION_Edit)' + '/' + id,
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    alert(data._ErrorMessage);
+                    return;
+                }
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanDWaterType_' + id).text(data.dWaterTypeDisplay);
+                $('#spanWInstallFee_' + id).text(data.wInstallFee);
+                
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+        console.log(e);
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.dWaterTypeId = $(e).find('#inputDWaterType_').val();
+        model.wInstallFee = $(e).find('#inputWInstallFee_').val();
+
+        $.ajax({
+            url: '@Url.Action(WaterInstallFeeController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    alert(data._ErrorMessage);
+                    return;
+                }
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //DWaterType
+                $(e).find('#divInput_DWaterType_').attr('id', 'divInput_DWaterType_' + data.id);
+                $(e).find('#hidDWaterTypeId_').attr('id', 'hidDWaterTypeId_' + data.id);
+                $(e).find('#inputDWaterType_').attr('id', 'inputDWaterType_' + data.id);
+                $(e).find('#divOutput_DWaterType_').attr('id', 'divOutput_DWaterType_' + data.id);
+                $(e).find('#spanDWaterType_').attr('id', 'spanDWaterType_' + data.id);
+
+                $('#divInput_DWaterType_' + data.id).hide();
+                $('#spanDWaterType_' + data.id).text(data.dWaterTypeDisplay);
+                $('#divOutput_DWaterType_' + data.id).show();
+
+                //WInstallFee
+                $(e).find('#divInput_WInstallFee_').attr('id', 'divInput_WInstallFee_' + data.id);
+                $(e).find('#inputWInstallFee_').attr('id', 'inputWInstallFee_' + data.id);
+                $(e).find('#divOutput_WInstallFee_').attr('id', 'divOutput_WInstallFee_' + data.id);
+                $(e).find('#spanWInstallFee_').attr('id', 'spanWInstallFee_' + data.id);
+
+                $('#divInput_WInstallFee_' + data.id).hide();
+                $('#spanWInstallFee_' + data.id).text(data.wInstallFee);
+                $('#divOutput_WInstallFee_' + data.id).show();
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+
+                $(e).css('background-color', '');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        var template = $('#rowTemplate')
+            .clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+</script>

@@ -54,7 +54,7 @@
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
-                                        <button id="addRow" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                                        <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
                                         </button>
                                     </div>
@@ -114,14 +114,129 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr id="rowTemplate" style="display: none">
+                                        <td>
+                                            <div id="divInput_Year_">
+                                                <input id="hidYearId_" type="hidden" />
+                                                <select class="form-control" id="inputYear_" asp-items="Model.YearSource">
+                                                </select>
+                                            </div>
+                                            <div id="divOutput_Year_" style="display: none">
+                                                <span id="spanYear_"></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="divInput_Org_">
+                                                <input id="hidOrgId_" type="hidden" />
+                                                <select class="form-control" id="inputOrg_" asp-items="Model.OrganizationSource">
+                                                </select>
+                                            </div>
+                                            <div id="divOutput_Org_">
+                                                <span id="spanOrg_"> </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="divInput_DWaterType_">
+                                                <input id="hidDWaterTypeId_" type="hidden" />
+                                                <select class="form-control" id="inputDWaterType_" asp-items="Model.DWaterTypeSource">
+                                                </select>
+                                            </div>
+                                            <div id="divOutput_DWaterType_" style="display: none">
+                                                <span id="spanDWaterType_"> </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="divInput_WInstallFee_">
+                                                <input class="form-control" id="inputWInstallFee_" type="number" />
+                                            </div>
+                                            <div id="divOutput_WInstallFee_" style="display: none">
+                                                <span id="spanWInstallFee_"> </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a id="btnEdit_" class="edit-row btn btn-sm btn-primary" style="display: none">
+                                                <i class="fa fa-pencil"></i> ویرایش
+                                            </a>
+
+                                            <a id="btnSaveEdit_" class="save-edit-row btn btn-sm btn-success" style="display: none">
+                                                <i class="fa fa-check"></i> ثبت
+                                            </a>
+
+                                            <a id="btnCancelEdit_" class="cancel-edit-row btn btn-sm btn-danger" style="display: none">
+                                                <i class="fa fa-times"></i> انصراف
+                                            </a>
+
+                                            <a id="btnSaveCreate_" class="save-new-row btn btn-sm btn-success">
+                                                <i class="fa fa-check"></i> ثبت
+                                            </a>
+
+                                            <a id="btnCancelCreate_" class="cancel-new-row btn btn-sm btn-danger">
+                                                <i class="fa fa-times"></i> انصراف
+                                            </a>
+
+                                        </td>
+                                    </tr>
                                     @foreach (var item in Model.Items) {
-                                        <tr>
-                                            <td>@item.Year.ToString()</td>
-                                            <td>@item.OrganizationDisplay </td>
-                                            <td>@item.DWaterTypeDisplay </td>
-                                            <td>@item.WInstallFee.ToString() </td>
+                                        <tr id="row_@item.Id">
                                             <td>
-                                                <a asp-controller="WaterInstallFee" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                                                <div id="divInput_Year_@item.Id" style="display: none">
+                                                    <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                                                    <select class="form-control" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                                                    </select>
+                                                    <script>
+                                                        $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                                    </script>
+                                                </div>
+                                                <div id="divOutput_Year_@item.Id">
+                                                    <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div id="divInput_Org_@item.Id" style="display: none">
+                                                    <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                                                    <select class="form-control" id="inputOrg_@item.Id" asp-items="Model.OrganizationSource">
+                                                    </select>
+                                                    <script>
+                                                        $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                                    </script>
+                                                </div>
+                                                <div id="divOutput_Org_@item.Id">
+                                                    <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div id="divInput_DWaterType_@item.Id" style="display: none">
+                                                    <input id="hidDWaterTypeId_@item.Id" type="hidden" value="@item.DWaterTypeId" />
+                                                    <select class="form-control" id="inputDWaterType_@item.Id" asp-items="Model.DWaterTypeSource">
+                                                    </select>
+                                                    <script>
+                                                        $('select#inputDWaterType_' + @item.Id + ' option[value=' + @item.DWaterTypeId + ']').attr('selected', true);
+                                                    </script>
+                                                </div>
+                                                <div id="divOutput_DWaterType_@item.Id">
+                                                    <span id="spanDWaterType_@item.Id">@item.DWaterTypeDisplay </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div id="divInput_WInstallFee_@item.Id" style="display: none">
+                                                    <input class="form-control" id="inputWInstallFee_@item.Id" value="@item.WInstallFee" type="number" />
+                                                </div>
+                                                <div id="divOutput_WInstallFee_@item.Id">
+                                                    <span id="spanWInstallFee_@item.Id">@item.WInstallFee.ToString() </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn btn-sm btn-primary">
+                                                    <i class="fa fa-pencil"></i> ویرایش
+                                                </a>
+
+                                                <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-sm btn-success" style="display: none">
+                                                    <i class="fa fa-check"></i> ثبت
+                                                </a>
+
+                                                <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-sm btn-danger" style="display: none">
+                                                    <i class="fa fa-times"></i> انصراف
+                                                </a>
                                             </td>
                                         </tr>
                                     }
@@ -215,18 +330,22 @@
 
 </section>
 
+
+
 @section footSection {
+
     <partial name="_excelModal" model="new ImportExcelViewModel()" />
+    <div id="divCreate">
+
+    </div>
+
     <div id="modaldiv">
 
     </div>
 
-    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
-    <script src="~/js/jquery.tabledit.js" type="text/javascript"></script>
+    <partial name="_editorScript" />
 
     <script type="text/javascript">
-
-
         function hardDelete(e) {
             Swal.fire({
                 title: 'برای حذف اطمینان دارید؟',
@@ -264,7 +383,6 @@
             return true;
         }
 
-
         function loadCreateLink() {
             var a = document.getElementById("createLink");
             var organizationId = document.getElementById('organizationId').value;
@@ -283,6 +401,37 @@
             );
             $('#ExcellModal').modal('show');
         }
+
+
+        $(document).on('click', '#btnCreate', function () {
+            addNewRow();
+        });
+
+        $(document).on('click', '.edit-row', function () {
+            let id = $(this).data('id');
+            editRow(id);
+        });
+
+        $(document).on('click', '.cancel-edit-row', function () {
+            let id = $(this).data('id');
+            cancelEditRow(id);
+        });
+
+        $(document).on('click', '.save-edit-row', function () {
+            let id = $(this).data('id');
+            $(this).prop('disabled', true);
+            saveEditRow(id);
+            $(this).prop('disabled', false);
+        });
+
+        $(document).on('click', '.save-new-row', function () {
+            let row = $(this).closest('tr');
+            saveNewRow(row);
+        });
+
+        $(document).on('click', '.cancel-new-row', function () {
+            cancelNewRow(this);
+        });
 
         $(document).on('click', '.modallink', function() {
 
