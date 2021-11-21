@@ -1,7 +1,5 @@
 ﻿@model WasteInstallFeeIndexViewModel
-@{
-    ViewData["Title"] = "تعرفه نصب انشعاب فاضلاب";
-}
+@{ ViewData["Title"] = "تعرفه نصب انشعاب فاضلاب";}
 
 <!--Title-->
 <div class="row">
@@ -16,13 +14,15 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <!--Alert-->
-                <div class="alert bg-light-warning alert-dismissible m-2" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
-                    </button>
-                    <span class="my-font">این یه پیغام جدید است!</span>
-                </div>
+                @if (ViewData["message"] != null)
+                {
+                    <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                        </button>
+                        <span>@ViewData["message"]</span>
+                    </div>
+                }
                 <div class="card-content">
                     <div class="card-body">
                         <!--Filters-->
@@ -89,10 +89,10 @@
                                 </div>
                                 <fieldset>
                                     <div class="rowACJE">
-                                        <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="button" name="btnExportExcel" onclick="exportExcel();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WasteInstallFeeController.ACTION_ExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
-                                        </button>
-                                        <a data-toggle="tooltip" data-placement="top" asp-action="DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
+                                        </a>
+                                        <a data-toggle="tooltip" data-placement="top" asp-action="@WasteInstallFeeController.ACTION_DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
                                         </a>
                                     </div>
@@ -120,7 +120,7 @@
                                             <td>@item.DWasteTypeDisplay </td>
                                             <td>@item.WsInstallFee.ToString() </td>
                                             <td>
-                                                <a asp-controller="WasteInstallFee" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                                                <a asp-controller="@WasteInstallFeeController.Name" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
                                             </td>
                                         </tr>
                                     }
@@ -129,82 +129,86 @@
                             <div class="rowACJSB" style="margin-top:20px">
                                 <!--Tools-->
                                 <div class="rowACJS">
-                                    <span data-toggle="modal" data-target="#ExcellModal">
-                                        <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnExcelImport" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
-                                        </button>
-                                    </span>
-                                    <span data-toggle="modal" data-target="#CopyModal">
-                                        <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font modallink">
-                                            <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
-                                        </button>
-                                    </span>
-                                    <span data-toggle="modal" data-target="#DeleteModal">
-                                        <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" name="btnDelete" class="btn btn-danger  bg-light-danger mr-1 my-font">
+                                    <form id="toolForm"
+                                          enctype="multipart/form-data"
+                                          method="post"
+                                          asp-antiforgery="true">                                        
+                                        <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+                                        <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+                                        <span data-toggle="modal" data-target="#backdrop">
+                                            <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                                            </button>
+                                        </span>
+                                        <span data-toggle="modal" data-target="#CopyModal">
+                                            <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font modallink">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                                            </button>
+                                        </span>
+                                        <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
                                         </button>
-                                    </span>
-                                    <span data-toggle="modal" data-target="#CalculationModal">
-                                        <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnReport" class="btn btn-info bg-light-info mr-1 my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                                        </button>
-                                    </span>
-                                </div>
-
-                                <!--Pagination-->
-                                @if (Model.PagesCount > 1)
-                                {
-                                    <nav aria-label="Page navigation">
-                                        <ul class="pagination justify-content-center">
-                                            @if (Model.PageNumber > 1)
-                                            {
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       asp-controller="WasteInstallFee"
-                                                       asp-action="Index"
-                                                       asp-route-page="@Model.PreviousPage"
-                                                       aria-label="Previous">«</a>
-                                                </li>
-                                            }
-
-                                            @for (int i = 1; i <= Model.PagesCount; i++)
-                                            {
-                                                if (i == Model.PageNumber)
-                                                {
-                                                    <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
-                                                }
-                                                else
+                                        <span data-toggle="modal" data-target="#success">
+                                            <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" onclick="return calculation(this.click);" class="btn btn-info  bg-light-info mr-1 my-font">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                                            </button>
+                                        </span>
+                                    </form>
+                                    <!--Pagination-->
+                                    @if (Model.PagesCount > 1)
+                                    {
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination justify-content-center">
+                                                @if (Model.PageNumber > 1)
                                                 {
                                                     <li class="page-item">
                                                         <a class="page-link"
-                                                           asp-controller="WasteInstallFee"
-                                                           asp-action="Index"
-                                                           asp-route-page="@i">@i.ToString() </a>
+                                                           asp-controller="@WasteInstallFeeController.Name"
+                                                           asp-action="@WasteInstallFeeController.ACTION_Index"
+                                                           asp-route-page="@Model.PreviousPage"
+                                                           aria-label="Previous">«</a>
                                                     </li>
                                                 }
-                                            }
 
-                                            @if (Model.PageNumber < Model.PagesCount)
-                                            {
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       asp-controller="WasteInstallFee"
-                                                       asp-action="Index"
-                                                       asp-route-page="@Model.NextPage"
-                                                       aria-label="Next">»</a>
-                                                </li>
-                                            }
+                                                @for (int i = 1; i <= Model.PagesCount; i++)
+                                                {
+                                                    if (i == Model.PageNumber)
+                                                    {
+                                                        <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li class="page-item">
+                                                            <a class="page-link"
+                                                               asp-controller="@WasteInstallFeeController.Name"
+                                                               asp-action="@WasteInstallFeeController.ACTION_Index"
+                                                               asp-route-page="@i">@i.ToString() </a>
+                                                        </li>
+                                                    }
+                                                }
 
-                                        </ul>
-                                    </nav>
-                                }
+                                                @if (Model.PageNumber < Model.PagesCount)
+                                                {
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                           asp-controller="@WasteInstallFeeController.Name"
+                                                           asp-action="@WasteInstallFeeController.ACTION_Index"
+                                                           asp-route-page="@Model.NextPage"
+                                                           aria-label="Next">»</a>
+                                                    </li>
+                                                }
+
+                                            </ul>
+                                        </nav>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </section>
 
 @section footSection {
@@ -212,6 +216,7 @@
     <div id="modaldiv">
 
     </div>
+    <script src="~/js/jquery.tabledit.js" type="text/javascript"></script>
 
     <script type="text/javascript">
 
@@ -267,7 +272,7 @@
         function openImportExcelForm() {
             $('#importExcelForm').attr(
                 'action',
-                '@Url.Action(WaterInstallFeeController.ACTION_ImportExcel)'
+                '@Url.Action(WasteInstallFeeController.ACTION_ImportExcel)'
             );
             $('#ExcellModal').modal('show');
         }
