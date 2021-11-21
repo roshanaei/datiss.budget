@@ -38,12 +38,18 @@
                                 <fieldset class="form-group mt-3">
                                     <label asp-for="Filter.YearId" class="my-font">
                                         سال:
-                                        <select class="form-control d-inline-block width-100" id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()">
+                                        <select asp-for="Filter.YearId"
+                                                asp-items="Model.Filter.YearSource"
+                                                class="form-control d-inline-block width-100" 
+                                                id="yearId">
                                         </select>
                                     </label>
                                     <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
                                         سازمان:
-                                        <select class="form-control d-inline-block width-300" id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()">
+                                        <select asp-for="Filter.OrganizationId"
+                                                asp-items="Model.Filter.OrganizationSource"
+                                                class="form-control d-inline-block width-300" 
+                                                id="organizationId"  >
                                         </select>
                                     </label>
                                     <input asp-for="Filter.OrderBy" type="hidden" />
@@ -68,7 +74,7 @@
                                     <fieldset class="form-group">
                                         <label for="ngx-filter-ref" class="my-font">
                                             جستجو:
-                                            <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
+                                            <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
                                         </label>
                                     </fieldset>
                                     <fieldset class="form-group" style="margin-right:10px">
@@ -101,226 +107,10 @@
                                 </fieldset>
                             </div>
                         </form>
+
                         <!--DataTable-->
-                        <div class="table-responsive">
-                            <table id="my-table" class="table table-hover table-bordered m-0 my-font">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>سال</th>
-                                        <th>سازمان</th>
-                                        <th>کاربری</th>
-                                        <th>قیمت</th>
-                                        <th>مدیریت</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr id="rowTemplate" style="display: none">
-                                        <td>
-                                            <div id="divInput_Year_">
-                                                <input id="hidYearId_" type="hidden" />
-                                                <select class="form-control" id="inputYear_" asp-items="Model.YearSource">
-                                                </select>
-                                            </div>
-                                            <div id="divOutput_Year_" style="display: none">
-                                                <span id="spanYear_"></span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div id="divInput_Org_">
-                                                <input id="hidOrgId_" type="hidden" />
-                                                <select class="form-control" id="inputOrg_" asp-items="Model.OrganizationSource">
-                                                </select>
-                                            </div>
-                                            <div id="divOutput_Org_">
-                                                <span id="spanOrg_"> </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div id="divInput_DWaterType_">
-                                                <input id="hidDWaterTypeId_" type="hidden" />
-                                                <select class="form-control" id="inputDWaterType_" asp-items="Model.DWaterTypeSource">
-                                                </select>
-                                            </div>
-                                            <div id="divOutput_DWaterType_" style="display: none">
-                                                <span id="spanDWaterType_"> </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div id="divInput_WInstallFee_">
-                                                <input class="form-control" id="inputWInstallFee_" type="number" />
-                                            </div>
-                                            <div id="divOutput_WInstallFee_" style="display: none">
-                                                <span id="spanWInstallFee_"> </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a id="btnEdit_" class="edit-row btn btn-sm btn-primary" style="display: none">
-                                                <i class="fa fa-pencil"></i> ویرایش
-                                            </a>
+                        <partial name="_table" model="Model" />
 
-                                            <a id="btnSaveEdit_" class="save-edit-row btn btn-sm btn-success" style="display: none">
-                                                <i class="fa fa-check"></i> ثبت
-                                            </a>
-
-                                            <a id="btnCancelEdit_" class="cancel-edit-row btn btn-sm btn-danger" style="display: none">
-                                                <i class="fa fa-times"></i> انصراف
-                                            </a>
-
-                                            <a id="btnSaveCreate_" class="save-new-row btn btn-sm btn-success">
-                                                <i class="fa fa-check"></i> ثبت
-                                            </a>
-
-                                            <a id="btnCancelCreate_" class="cancel-new-row btn btn-sm btn-danger">
-                                                <i class="fa fa-times"></i> انصراف
-                                            </a>
-
-                                        </td>
-                                    </tr>
-                                    @foreach (var item in Model.Items) {
-                                        <tr id="row_@item.Id">
-                                            <td>
-                                                <div id="divInput_Year_@item.Id" style="display: none">
-                                                    <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
-                                                    <select class="form-control" id="inputYear_@item.Id" asp-items="Model.YearSource">
-                                                    </select>
-                                                    <script>
-                                                        $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
-                                                    </script>
-                                                </div>
-                                                <div id="divOutput_Year_@item.Id">
-                                                    <span id="spanYear_@item.Id">@item.Year.ToString()</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div id="divInput_Org_@item.Id" style="display: none">
-                                                    <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
-                                                    <select class="form-control" id="inputOrg_@item.Id" asp-items="Model.OrganizationSource">
-                                                    </select>
-                                                    <script>
-                                                        $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
-                                                    </script>
-                                                </div>
-                                                <div id="divOutput_Org_@item.Id">
-                                                    <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div id="divInput_DWaterType_@item.Id" style="display: none">
-                                                    <input id="hidDWaterTypeId_@item.Id" type="hidden" value="@item.DWaterTypeId" />
-                                                    <select class="form-control" id="inputDWaterType_@item.Id" asp-items="Model.DWaterTypeSource">
-                                                    </select>
-                                                    <script>
-                                                        $('select#inputDWaterType_' + @item.Id + ' option[value=' + @item.DWaterTypeId + ']').attr('selected', true);
-                                                    </script>
-                                                </div>
-                                                <div id="divOutput_DWaterType_@item.Id">
-                                                    <span id="spanDWaterType_@item.Id">@item.DWaterTypeDisplay </span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div id="divInput_WInstallFee_@item.Id" style="display: none">
-                                                    <input class="form-control" id="inputWInstallFee_@item.Id" value="@item.WInstallFee" type="number" />
-                                                </div>
-                                                <div id="divOutput_WInstallFee_@item.Id">
-                                                    <span id="spanWInstallFee_@item.Id">@item.WInstallFee.ToString() </span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn btn-sm btn-primary">
-                                                    <i class="fa fa-pencil"></i> ویرایش
-                                                </a>
-
-                                                <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-sm btn-success" style="display: none">
-                                                    <i class="fa fa-check"></i> ثبت
-                                                </a>
-
-                                                <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-sm btn-danger" style="display: none">
-                                                    <i class="fa fa-times"></i> انصراف
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                            <div class="rowACJSB" style="margin-top:20px">
-                                <!--Tools-->
-                                <div class="rowACJS">
-                                    <form id="toolForm"
-                                          enctype="multipart/form-data"
-                                          method="post"
-                                          asp-antiforgery="true">
-                                        <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
-                                        <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
-
-                                        @*<input asp-for="ExcelFile" type="file" />*@
-                                        <span data-toggle="modal" data-target="#backdrop">
-                                            <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                                                <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
-                                            </button>
-                                        </span>
-                                        <span data-toggle="modal" data-target="#CopyModal">
-                                            <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font modallink">
-                                                <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
-                                            </button>
-                                        </span>
-                                        <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
-                                        </button>
-                                        <span data-toggle="modal" data-target="#success">
-                                            <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" onclick="return calculation(this.click);" class="btn btn-info  bg-light-info mr-1 my-font">
-                                                <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                                            </button>
-                                        </span>
-                                    </form>
-
-                                </div>
-                                <!--Pagination-->
-                                @*<p>
-                                        Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
-                                    </p>*@
-
-                                @if (Model.PagesCount > 1) {
-                                    <nav aria-label="Page navigation">
-                                        <ul class="pagination justify-content-center">
-                                            @if (Model.PageNumber > 1) {
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       asp-controller="WaterInstallFee"
-                                                       asp-action="Index"
-                                                       asp-route-page="@Model.PreviousPage"
-                                                       aria-label="Previous">«</a>
-                                                </li>
-                                            }
-
-                                            @for (int i = 1; i <= Model.PagesCount; i++) {
-                                                if (i == Model.PageNumber) {
-                                                    <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
-                                                }
-                                                else {
-                                                    <li class="page-item">
-                                                        <a class="page-link"
-                                                           asp-controller="WaterInstallFee"
-                                                           asp-action="Index"
-                                                           asp-route-page="@i">@i.ToString() </a>
-                                                    </li>
-                                                }
-                                            }
-
-                                            @if (Model.PageNumber < Model.PagesCount) {
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       asp-controller="WaterInstallFee"
-                                                       asp-action="Index"
-                                                       asp-route-page="@Model.NextPage"
-                                                       aria-label="Next">»</a>
-                                                </li>
-                                            }
-
-                                        </ul>
-                                    </nav>
-                                }
-                            </div>
-                        </div>
                     </div>
 
                 </div>
@@ -343,7 +133,7 @@
 
     </div>
 
-    <partial name="_editorScript" />
+    <partial name="_tableScript" />
 
     <script type="text/javascript">
         function hardDelete(e) {
@@ -409,7 +199,48 @@
 
         $(document).on('click', '.edit-row', function () {
             let id = $(this).data('id');
+            let input = document.getElementById('inputWInstallFee_' + id);
+            let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
+            input.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
             editRow(id);
+        });
+
+        $(document).on('click', '.delete-row', function () {
+            let id = $(this).data('id');
+            let btn = this;
+
+            Swal.fire({
+                title: 'برای حذف اطمینان دارید؟',
+                text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2F8BE6',
+                animation: false,
+                customClass: 'animated flipInX',
+                cancelButtonColor: '#F55252',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+
+                confirmButtonClass: 'btn btn-warning my-font',
+                cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.value) {
+                    deleteRow(btn, id);
+
+                    return true;
+                }
+                else {
+
+                    return false;
+                }
+            });
         });
 
         $(document).on('click', '.cancel-edit-row', function () {
@@ -435,11 +266,9 @@
 
         $(document).on('click', '.modallink', function() {
 
-            let myurl = '@Url.Action("Copy")';
-
             $.ajax({
                 type: 'GET',
-                url: myurl,
+                url: '@Url.Action("Copy")',
                 success: function (data, status, settings) {
                     $('#modaldiv').html('');
                     $("#modaldiv").html(data);
@@ -453,6 +282,56 @@
 
         });
 
+        $(document).on('click', '#btnDoCopy', function () {
+            let model = {};
+            model.sourceYearId = $('#SourceYearId').val();
+            model.sourceOrgId = $('#SourceOrgId').val();
+            model.targetYearId = $('#TargetYearId').val();
+
+            console.log(model);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(WaterInstallFeeController.ACTION_Copy)',
+                data: model,
+                dataType: 'json',
+                success: function (data, status, settings) {
+                    if (data._HasError) {
+                        Swal.fire({
+                            title: 'خطا',
+                            text: data._ErrorMessage,
+                            type: 'warning',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-warning my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
+
+                    Swal.fire({
+                        title: 'عملیات موفق',
+                        text: "عملیات کپی اطلاعات با موفقیت انجام شد.",
+                        type: 'info',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-warning my-font',
+                        buttonsStyling: false,
+                    });
+
+                    document.location.href = '@WaterInstallFeeController.ACTION_Index';
+                },
+                error: function (request, options, err) {
+                    console.log(err);
+                    alert('عملیات کپی با خطا مواجه شد.');
+                }
+            });
+        });
+
 
         function changePageSize() {
             let pageSize = $('#ddlPageSize').attr('value');
@@ -461,11 +340,10 @@
         }
 
          function exportExcel() {
-             let exportUrl = '@Url.Action("ExportExcel")';
-             console.log(exportUrl);
+
             $.ajax({
                 type: 'POST',
-                url: exportUrl,
+                url: '@Url.Action("ExportExcel")',
                 success: function (data, status, settings) {
                     console.log(data);
                 },
