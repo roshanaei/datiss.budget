@@ -87,6 +87,9 @@ namespace Datiss.Budget.Entities
 
         public ICollection<IncomeCurrentNOperational> IncomeCurrentNOperationals { get; set; }
 
+        public ICollection<IncomeCurrentOperational> IncomeCurrentOperationals { get; set; }
+
+
 
         #endregion
     }
