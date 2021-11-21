@@ -76,6 +76,9 @@ namespace Datiss.Budget.Entities
         public ICollection<ConsumeForcastWs> ConsumeForcastWs { get; set; }
 
         public ICollection<IncomeForcastOther> IncomeForcastOthers { get; set; }
+
+        public ICollection<IncomeCurrentNOperational> IncomeCurrentNOperationals { get; set; }
+
         #endregion
     }
 }
