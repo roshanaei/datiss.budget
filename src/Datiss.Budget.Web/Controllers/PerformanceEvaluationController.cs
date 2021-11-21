@@ -1,5 +1,6 @@
 ﻿using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
@@ -24,8 +25,7 @@ namespace Datiss.Budget.Web.Controllers
     [Route("[controller]")]
     public class PerformanceEvaluationController : Controller
     {
-
-        public const string Name = "WaterInstallFee";
+        public const string Name = "PerformanceEvaluation";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
@@ -33,7 +33,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_ImportExcel = nameof(ImportExcel);
 
         private readonly IWebHostEnvironment _env;
-        private readonly IPerformanceEvalutionService _performanceEvalutionService;
+        private readonly IPerformanceEvaluationService _performanceEvalutionService;
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
@@ -41,7 +41,7 @@ namespace Datiss.Budget.Web.Controllers
 
         public PerformanceEvaluationController(
             IWebHostEnvironment environment,
-            IPerformanceEvalutionService performanceEvalutionService,
+            IPerformanceEvaluationService performanceEvalutionService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             IConstantService constantService,
@@ -166,6 +166,7 @@ namespace Datiss.Budget.Web.Controllers
                 OrderBy = "displayorder",
                 PageNumber = page,
                 YearId = maxYear,
+                tableNames = TablesName.CurrentIncome,
                 OrganizationId = firstOrgId
             };
 

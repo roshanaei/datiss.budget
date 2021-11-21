@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Contracts
 {
-    public interface IPerformanceEvalutionService
+    public interface IPerformanceEvaluationService
     {
         Task<PerformanceEvaluation> GetByIdAsync(int id);
         Task<ValidationResult<PerformanceEvaluationDTO>> CreateAsync(CreatePerformanceEvaluationDTO model);

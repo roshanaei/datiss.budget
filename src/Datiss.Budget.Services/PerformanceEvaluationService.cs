@@ -23,7 +23,7 @@ using Datiss.Budget.Services.Excel.Models;
 
 namespace Datiss.Budget.Services
 {
-    public class PerformanceEvaluationService : IPerformanceEvalutionService
+    public class PerformanceEvaluationService : IPerformanceEvaluationService
     {
         private readonly IUnitOfWork _uow;
         private readonly IExcelService _excelService;
@@ -52,7 +52,8 @@ namespace Datiss.Budget.Services
         }
 
         private IQueryable<PerformanceEvaluation> Query()
-            => _dbSet.AsNoTracking();
+            => _dbSet.AsNoTracking()
+                     .Where(x => x.Status != EntityStatus.Deleted);
 
         public async Task<PerformanceEvaluation> GetByIdAsync(int id)
         {
@@ -175,7 +176,8 @@ namespace Datiss.Budget.Services
                                         Target = x.Target,
                                         Operation = x.Operation,
                                         Year = x.FinanceYear.Year,
-                                        YearId = x.YearId
+                                        YearId = x.YearId,
+                                        Status = true
                                     }).ToListAsync();
 
             return await Task.FromResult(result);
@@ -231,6 +233,8 @@ namespace Datiss.Budget.Services
 
                 query = query.Where(predicate);
             }
+            if (filter.tableNames.HasValue)
+                query = query.Where(x => x.TablesFiled.TableName == filter.tableNames);
             return query;
         }
 

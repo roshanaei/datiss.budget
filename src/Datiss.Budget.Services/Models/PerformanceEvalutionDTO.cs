@@ -10,15 +10,11 @@ namespace Datiss.Budget.Services.Models
     public class CreatePerformanceEvaluationDTO
     {
         public int YearId { get; set; }
-
         public int OrganizationId { get; set; }
-
         public EntityStatus Status { get; set; }
-
         public int TableFieldId { get; set; }
-
+        public string TableFieldTitle { get; set; }
         public decimal Target { get; set; }
-
         public decimal Operation { get; set; }
     }
 
@@ -35,7 +31,7 @@ namespace Datiss.Budget.Services.Models
         public int Year { get; set; }
         public int OrganizationId { get; set; }
         public string OrganizationDisplay { get; set; }
-        public EntityStatus Status { get; set; }
+        public bool Status { get; set; }
         public int TableFieldId { get; set; }
         public string TableFieldDisplay { get; set; }
         public decimal Target { get; set; }
