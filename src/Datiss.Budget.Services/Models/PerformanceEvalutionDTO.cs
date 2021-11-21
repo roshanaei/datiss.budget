@@ -37,6 +37,7 @@ namespace Datiss.Budget.Services.Models
         public string OrganizationDisplay { get; set; }
         public EntityStatus Status { get; set; }
         public int TableFieldId { get; set; }
+        public string TableFieldDisplay { get; set; }
         public decimal Target { get; set; }
         public decimal Operation { get; set; }
     }
