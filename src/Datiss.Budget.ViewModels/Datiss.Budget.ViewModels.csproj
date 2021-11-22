@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Datiss.Budget.Entities\Datiss.Budget.Entities.csproj" />
+    <ProjectReference Include="..\Datiss.Budget.Resources\Datiss.Budget.Resources.csproj" />
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
