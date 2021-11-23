@@ -61,6 +61,24 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to فاضلاب.
+        /// </summary>
+        public static string ActivityType_Waste {
+            get {
+                return ResourceManager.GetString("ActivityType_Waste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to آب.
+        /// </summary>
+        public static string ActivityType_Water {
+            get {
+                return ResourceManager.GetString("ActivityType_Water", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to حذف شده.
         /// </summary>
         public static string EntityStatus_Deleted {
@@ -84,6 +102,60 @@ namespace Datiss.Budget.Resources {
         public static string EntityStatus_Enabled {
             get {
                 return ResourceManager.GetString("EntityStatus_Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to شهر.
+        /// </summary>
+        public static string OrganizationType_City {
+            get {
+                return ResourceManager.GetString("OrganizationType_City", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to شهرستان.
+        /// </summary>
+        public static string OrganizationType_County {
+            get {
+                return ResourceManager.GetString("OrganizationType_County", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to استان.
+        /// </summary>
+        public static string OrganizationType_Root {
+            get {
+                return ResourceManager.GetString("OrganizationType_Root", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to روستا.
+        /// </summary>
+        public static string OrganizationType_Village {
+            get {
+                return ResourceManager.GetString("OrganizationType_Village", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to عملکرد هزینه های جاری.
+        /// </summary>
+        public static string TablesName_CurrentCost {
+            get {
+                return ResourceManager.GetString("TablesName_CurrentCost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to درآمدهای جاری.
+        /// </summary>
+        public static string TablesName_CurrentIncome {
+            get {
+                return ResourceManager.GetString("TablesName_CurrentIncome", resourceCulture);
             }
         }
         

@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="EnumText.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EnumText.resx</DependentUpon>
+    </Compile>
     <Compile Update="ServiceMessages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -18,6 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="EnumText.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EnumText.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="ServiceMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ServiceMessages.Designer.cs</LastGenOutput>
