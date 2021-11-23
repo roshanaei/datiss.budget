@@ -11,7 +11,7 @@ namespace Datiss.Budget.ViewModels
 
     public static class EnumDisplayProvider
     {
-        public static string ToDisplayStatus(this EntityStatus status)
+        public static string ToDisplay(this EntityStatus status)
             => status switch
             {
                 EntityStatus.Deleted => EnumText.EntityStatus_Deleted,
@@ -19,7 +19,7 @@ namespace Datiss.Budget.ViewModels
                 EntityStatus.Enabled => EnumText.EntityStatus_Enabled,
                 _ => EnumText.Unknown
             };
-        public static string ToDisplayOrganizationType(this OrganizationType orgType)
+        public static string ToDisplay(this OrganizationType orgType)
             => orgType switch
             {
                 OrganizationType.Root => EnumText.OrganizationType_Root,
@@ -28,14 +28,14 @@ namespace Datiss.Budget.ViewModels
                 OrganizationType.Village => EnumText.OrganizationType_Village,
                 _=>EnumText.Unknown
             };
-        public static string ToDisplayActivityType(this ActivityType activity)
+        public static string ToDisplay(this ActivityType activity)
             => activity switch
             {
                 ActivityType.Water => EnumText.ActivityType_Water,
                 ActivityType.Waste => EnumText.ActivityType_Waste,
                 _=>EnumText.Unknown
             };
-        public static string ToDisplayTablesName(this TablesName tables)
+        public static string ToDisplay(this TablesName tables)
             => tables switch
             {
                 TablesName.CurrentIncome => EnumText.TablesName_CurrentIncome,

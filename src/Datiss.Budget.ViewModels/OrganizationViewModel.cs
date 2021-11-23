@@ -43,7 +43,7 @@ namespace Datiss.Budget.ViewModels
 
         public EntityStatus Status { get; set; }
 
-        public string StatusDisplay => Status.ToDisplayStatus();
+        public string StatusDisplay => Status.ToDisplay();
     }
 
     public class OrganizationFilterViewModel : FilterViewModel
