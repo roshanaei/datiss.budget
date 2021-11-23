@@ -133,11 +133,12 @@ namespace Datiss.Budget.Services
         }
 
         public async Task HardDeleteAsync(int yearId, int organizationId) {
-            var items = await _dbSet.Where(_ => _.YearId == yearId)
+            var self = await _dbSet.Where(_ => _.YearId == yearId)
                                     .Where(_ => _.OrganizationId == organizationId)
                                     .ToListAsync();
-
-            _dbSet.RemoveRange(items);
+            _dbSet.RemoveRange(self);
+            var childrens = await getChildren(organizationId, yearId);
+            _dbSet.RemoveRange(childrens);
 
             await _uow.SaveChangesAsync();
         }
@@ -421,6 +422,29 @@ namespace Datiss.Budget.Services
                 result.AddRange(await getChildrenData(org.Id, yearId, targetYearId));
             }
 
+            return result;
+        }
+        private async Task<IEnumerable<WaterInstallFee>> getChildren(
+            int parentOrganizationId,
+            int yearId)
+        {
+            var children = await _orgDbSet
+                .Where(_ => _.ParentId == parentOrganizationId)
+                .ToListAsync();
+            var result = new List<WaterInstallFee>();
+            foreach (var org in children)
+            {
+                var data = await Query()
+                                .Where(_ => _.YearId == yearId)
+                                .Where(_ => _.OrganizationId == org.Id)
+                                .ToListAsync();
+
+                foreach (var item in data)
+                {
+                    result.Add(item);
+                }
+                result.AddRange(await getChildren(org.Id, yearId));
+            }
             return result;
         }
 
