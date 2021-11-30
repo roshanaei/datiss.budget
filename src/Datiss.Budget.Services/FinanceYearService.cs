@@ -10,6 +10,7 @@ using Datiss.Budget.Entities;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
 
 namespace Datiss.Budget.Services
 {
@@ -77,10 +78,14 @@ namespace Datiss.Budget.Services
                 Title = x.Year.ToString()
             }).ToListAsync();
 
-        public Task<IEnumerable<DropDownItem>> GetDropDownStatusAsync()
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<IEnumerable<DropDownItem>> GetDropDownStatusAsync()
+            => (from EntityStatus entitystatus in EntityStatus.GetValues(typeof(EntityStatus))
+                select new DropDownItem
+                {
+                    Id = (int)entitystatus,
+                    Title = entitystatus.ToDisplay()
+                }).Where(x => x.Id != -1)
+                .OrderByDescending(x => x.Id);
 
         public async Task<PagedResult<FinanceYearDTO>> GetListAsync(FinanceYearFilterDTO filter)
         {
