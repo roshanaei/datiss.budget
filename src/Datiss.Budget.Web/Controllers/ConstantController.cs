@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Datiss.Budget.Services.Models;
+using Mapster;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -22,8 +24,28 @@ namespace Datiss.Budget.Web.Controllers
 
         }
 
-        public IActionResult Index() {
-            return View();
+        [HttpGet("{page}")]
+        public async Task<IActionResult> Index(int page = 1) {
+            var parentSource = (await _constantService.GetParentsAsync())
+                    .Adapt<List<DropDownItemViewModel>>();
+            int firstParentId = parentSource.FirstOrDefault().Id;
+
+
+            var filterInput = new ConstantFilterDTO
+            {
+                OrderBy = "displayorder",
+                PageNumber = page,
+                ParentId = firstParentId
+            };
+
+            var result = await _constantService.GetListAsync(filterInput);
+            var model = result.Adapt<ConstantIndexViewModel>();
+
+            model.SetParentSource(parentSource);
+
+            model.Filter.ParentId = filterInput.ParentId;
+
+            return View(model);
         }
 
         [HttpGet]
