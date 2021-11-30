@@ -45,5 +45,17 @@ namespace Datiss.Budget.Web.Controllers
             var model = result.Adapt<FinanceYearIndexViewModel>();
             return View(model);
         }
+        [HttpPost("{page?}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(FinanceYearIndexViewModel model, int page = 1)
+        {
+            var filterInput = model.Filter.Adapt<FinanceYearFilterDTO>();
+
+            var result = await _financeYearService.GetListAsync(filterInput);
+            model = result.Adapt<FinanceYearIndexViewModel>();
+            model.Filter = filterInput.Adapt<FinanceYearFilterViewModel>();
+
+            return View(model);
+        }
     }
 }
