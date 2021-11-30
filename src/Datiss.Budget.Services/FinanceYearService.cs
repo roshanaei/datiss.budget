@@ -11,6 +11,7 @@ using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
+using Mapster;
 
 namespace Datiss.Budget.Services
 {
@@ -30,21 +31,32 @@ namespace Datiss.Budget.Services
             => _dbSet.AsNoTracking()
                         .Where(x=> x.Status != EntityStatus.Deleted);
 
-        public async Task<ValidationResult> CreateAsync(CreateFinanceYearDTO model) {
-            model.CheckArgumentIsNull(nameof(model));
-
-            //TODO : check logic
-            var entity = new FinanceYear {
-                Year = model.Year,
+        public async Task CreateAsync(CreateFinanceYearDTO model)
+        {
+            var entity = new FinanceYear
+            {
                 Title = model.Title,
+                Status = model.Enabled
+                         ? EntityStatus.Enabled
+                         : EntityStatus.Disbaled,
+                Year = model.Year,
                 StartDate = model.StartDate,
                 EndDate = model.EndDate
             };
 
-            await _dbSet.AddAsync(entity);
-            await _uow.SaveChangesAsync();
+            if (await checkLogicAsync(model.Title))
+            {
+                await _dbSet.AddAsync(entity);
+                await _uow.SaveChangesAsync();
+                var result = entity.Adapt<FinanceYearDTO>();
+                result.Title = entity.Title;
+                result.Year = entity.Year;
+                result.StartDate = entity.StartDate;
+                result.EndDate = entity.EndDate;
+                result.Status = entity.Status;
 
-            return ValidationResult.Success();
+                //return ValidationResult<FinanceYearDTO>.Success(result);
+            }
         }
 
         public async Task<ValidationResult> UpdateAsync(UpdateFinanceYearDTO model) {
@@ -141,6 +153,21 @@ namespace Datiss.Budget.Services
                         ? query.OrderByDescending(x => x.Id)
                         : query.OrderBy(x => x.Id);
             }
+        }
+
+        #endregion
+        #region Logics
+
+        private async Task<bool> checkLogicAsync(
+            string title,
+            int? id = null)
+        {
+            var result = id == null
+                ? await Query().AnyAsync(x => x.Title==title)
+
+                : await Query().AnyAsync(x => x.Title==title &&
+                                            x.Id != id);
+            return !result;
         }
 
         #endregion
