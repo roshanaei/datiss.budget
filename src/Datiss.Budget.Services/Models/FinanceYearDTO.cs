@@ -20,7 +20,7 @@ namespace Datiss.Budget.Services.Models
     { 
         public int Id { get; set; }
     }
-    public class FinanceYearDTO
+    public class FinanceYearDTO : FilterInputDTO
     {
         public int Id { get; set; }
         public string Title { get; set; }

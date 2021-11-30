@@ -7,13 +7,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Datiss.Budget.ViewModels;
 using Datiss.Budget.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
+using Datiss.Budget.Services.Identity;
+using Datiss.Budget.Services.Models;
+using Mapster;
 
 namespace Datiss.Budget.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = ConstantPolicies.DynamicPermission)]
     [Route("[controller]")]
     public class FinanceYearController : Controller
     {
+        public const string Name = "FinanceYear";
+        //public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Index = nameof(Index);
+        //public const string ACTION_Edit = nameof(Edit);
+        //public const string ACTION_Delete = nameof(Delete);
+
         private readonly IFinanceYearService _financeYearService;
 
         public FinanceYearController(IFinanceYearService financeYearService){
@@ -22,19 +31,19 @@ namespace Datiss.Budget.Web.Controllers
 
         }
 
-        [HttpGet]
-        public IActionResult Index()
+        [HttpGet("{page?}")]
+        public async Task<IActionResult> Index(int page = 1)
         {
-            return View();
-        }
+            var filterInput = new FinanceYearFilterDTO
+            {
+                OrderBy = "id",
+                OrderDesc = true,
+                PageNumber = page
+            };
 
-        [HttpGet("create")]
-        public  async Task<IActionResult> Create()
-        {
-
-            var model = new CreateFinanceYearViewModel();
+            var result = await _financeYearService.GetListAsync(filterInput);
+            var model = result.Adapt<FinanceYearIndexViewModel>();
             return View(model);
         }
-     
     }
 }
