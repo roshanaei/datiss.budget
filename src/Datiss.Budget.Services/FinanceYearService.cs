@@ -77,6 +77,11 @@ namespace Datiss.Budget.Services
                 Title = x.Year.ToString()
             }).ToListAsync();
 
+        public Task<IEnumerable<DropDownItem>> GetDropDownStatusAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<PagedResult<FinanceYearDTO>> GetListAsync(FinanceYearFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
@@ -132,6 +137,7 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.Id);
             }
         }
+
         #endregion
     }
 }

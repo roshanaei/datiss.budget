@@ -43,6 +43,9 @@ namespace Datiss.Budget.Web.Controllers
 
             var result = await _financeYearService.GetListAsync(filterInput);
             var model = result.Adapt<FinanceYearIndexViewModel>();
+            model.SetOrganizationStatusFilterSource(
+    (await _organizationService.GetDropDownStatusAsync())
+    .Adapt<IEnumerable<DropDownItemViewModel>>());
             return View(model);
         }
         [HttpPost("{page?}")]
@@ -54,7 +57,9 @@ namespace Datiss.Budget.Web.Controllers
             var result = await _financeYearService.GetListAsync(filterInput);
             model = result.Adapt<FinanceYearIndexViewModel>();
             model.Filter = filterInput.Adapt<FinanceYearFilterViewModel>();
-
+            model.SetOrganizationStatusFilterSource(
+               (await _organizationService.GetDropDownStatusAsync())
+               .Adapt<IEnumerable<DropDownItemViewModel>>());
             return View(model);
         }
     }
