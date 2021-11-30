@@ -73,12 +73,12 @@
                                             <td>@item.StatusDisplay</td>
                                             <td>
                                                 <span data-toggle="modal" data-target="#EditModal">
-                                                    <button value="@item.Id" data-toggle="tooltip" data-placement="top" title="ویرایش اطلاعات" type="button" name="btnEdit" class="btn btn-primary bg-light-primary mr-1 my-font modallink" onclick="Edit(@item.Id)">
+                                                    <button value="@item.Id" data-toggle="tooltip" data-placement="top" title="ویرایش اطلاعات" type="button" name="btnEdit" class="btn bg-light-info btn-info mr-1 my-font modallink" onclick="Edit(@item.Id)">
                                                         <i _ngcontent-dpj-c129="" class="fa fa-edit"></i>
                                                     </button>
-                                                </span> |
+                                                </span>
                                                 <span data-toggle="modal" data-target="#DeleteModal">
-                                                    <button value="@item.Id" data-toggle="tooltip" data-placement="top" title="حذف رکورد" type="button" name="btnDelete" class="btn btn-danger bg-light-danger mr-1 my-font modallink" onclick="Delete(@item.Id)">
+                                                    <button id="btnDelete_@item.Id" data-id="@item.Id" value="@item.Id" data-toggle="tooltip" data-placement="top" title="حذف رکورد" type="button" name="btnDelete" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" onclick="Delete(@item.Id)">
                                                         <i _ngcontent-dpj-c129="" class="fa fa-trash-o"></i>
                                                     </button>
                                                 </span>
