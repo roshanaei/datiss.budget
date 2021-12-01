@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class CreateFinanceYearViewModel
+    public class CreateFinanceYearViewModel : BaseViewModel
     {
         public string Title { get; set; }
 

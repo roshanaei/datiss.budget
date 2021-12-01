@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Authorization;
 using Datiss.Budget.Services.Identity;
 using Datiss.Budget.Services.Models;
 using Mapster;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Resources;
+using Datiss.Budget.Common.Exceptions;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -18,7 +21,7 @@ namespace Datiss.Budget.Web.Controllers
     public class FinanceYearController : Controller
     {
         public const string Name = "FinanceYear";
-        //public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         //public const string ACTION_Edit = nameof(Edit);
         //public const string ACTION_Delete = nameof(Delete);
@@ -29,6 +32,11 @@ namespace Datiss.Budget.Web.Controllers
 
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
 
+        }
+        private void showMessage(string type, string message)
+        {
+            ViewData["type"] = type;
+            ViewData["message"] = message;
         }
 
         [HttpGet("{page?}")]
@@ -62,5 +70,30 @@ namespace Datiss.Budget.Web.Controllers
                .Adapt<IEnumerable<DropDownItemViewModel>>());
             return View(model);
         }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Create()
+        {
+            var model = new CreateFinanceYearViewModel();
+            return PartialView("_createModal", model);
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create(CreateFinanceYearViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+            var data = model.Adapt<CreateFinanceYearDTO>();
+            try
+            {
+                await _financeYearService.CreateAsync(data);
+            }
+            catch (CopySameYearException ex)
+            {
+                model.AddError(ViewMessages.CopyDestYearHasData);
+                return Json(model);
+            }
+
+            return RedirectToAction("index");
+        }
+        
     }
 }
