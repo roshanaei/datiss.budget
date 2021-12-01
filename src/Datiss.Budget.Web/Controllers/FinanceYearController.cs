@@ -24,7 +24,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
-        //public const string ACTION_Delete = nameof(Delete);
+        public const string ACTION_Delete = nameof(Delete);
 
         private readonly IFinanceYearService _financeYearService;
 
@@ -137,6 +137,27 @@ namespace Datiss.Budget.Web.Controllers
 
             return RedirectToAction("index");
         }
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _financeYearService.SoftDeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = "خطایی به وجود آمده است ."
+                });
+            }
 
+            return Json(new
+            {
+                hasError = false,
+                message = "حذف رکورد با موفقیت انجام شد."
+            });
+        }
     }
 }

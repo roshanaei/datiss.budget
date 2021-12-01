@@ -102,11 +102,8 @@ namespace Datiss.Budget.Services
         public async Task<ValidationResult> SoftDeleteAsync(int id) {
             var entity = await _dbSet.FindAsync(id);
             entity.CheckArgumentIsNull(nameof(entity));
-
             entity.Status = EntityStatus.Deleted;
-
             await _uow.SaveChangesAsync();
-
             return ValidationResult.Success();
         }
 
