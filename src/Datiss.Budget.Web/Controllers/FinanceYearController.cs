@@ -23,7 +23,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string Name = "FinanceYear";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
-        //public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Edit = nameof(Edit);
         //public const string ACTION_Delete = nameof(Delete);
 
         private readonly IFinanceYearService _financeYearService;
@@ -94,6 +94,49 @@ namespace Datiss.Budget.Web.Controllers
 
             return RedirectToAction("index");
         }
-        
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var entity = await _financeYearService.GetByIdAsync(id);
+
+            if (entity == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var model = entity.Adapt<UpdateFinanceYearViewModel>();
+            model.SetOrganizationStatusFilterSource(
+                (await _financeYearService.GetDropDownStatusAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>());
+            return PartialView("_editModal", model);
+        }
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Edit(int id, UpdateFinanceYearViewModel model)
+        {
+
+            model.CheckArgumentIsNull(nameof(model));
+            if (!ModelState.IsValid)
+            {
+                model.AddError("خطاهای داده ای را بررسی نمایید.");
+                return Json(model);
+            }
+            var data = model.Adapt<UpdateFinanceYearDTO>();
+            try
+            {
+                await _financeYearService.UpdateAsync(data);
+            }
+            catch (CopySameYearException ex)
+            {
+                model.AddError(ViewMessages.CopySameYear);
+                return Json(model);
+            }
+            catch (CopyDestYearHasDataException ex)
+            {
+                model.AddError(ViewMessages.CopyDestYearHasData);
+                return Json(model);
+            }
+
+            return RedirectToAction("index");
+        }
+
     }
 }

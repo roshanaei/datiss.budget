@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.Services.Infrastructure;
+using Datiss.Budget.Entities;
 
 namespace Datiss.Budget.Services.Contracts
 {
     public interface IFinanceYearService
     {
+        Task<FinanceYear> GetByIdAsync(int id);
         Task CreateAsync(CreateFinanceYearDTO model);
         Task<ValidationResult<FinanceYearDTO>> UpdateAsync(UpdateFinanceYearDTO model);
         Task<ValidationResult> SoftDeleteAsync(int id);

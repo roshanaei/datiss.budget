@@ -32,7 +32,11 @@ namespace Datiss.Budget.Services
         private IQueryable<FinanceYear> Query()
             => _dbSet.AsNoTracking()
                         .Where(x=> x.Status != EntityStatus.Deleted);
-
+        public async Task<FinanceYear> GetByIdAsync(int id)
+        {
+            var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
+            return await Task.FromResult(entity);
+        }
         public async Task CreateAsync(CreateFinanceYearDTO model)
         { 
             var entity = new FinanceYear
@@ -57,7 +61,6 @@ namespace Datiss.Budget.Services
 
                 //return ValidationResult<FinanceYearDTO>.Success(result);
             }
-            throw new CopySameYearException();
         }
         public async Task<ValidationResult<FinanceYearDTO>> UpdateAsync(UpdateFinanceYearDTO model)
         {
