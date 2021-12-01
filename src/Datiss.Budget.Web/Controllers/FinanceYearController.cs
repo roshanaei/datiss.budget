@@ -37,7 +37,7 @@ namespace Datiss.Budget.Web.Controllers
             var filterInput = new FinanceYearFilterDTO
             {
                 OrderBy = "id",
-                OrderDesc = false,
+                OrderDesc = true,
                 PageNumber = page
             };
 
