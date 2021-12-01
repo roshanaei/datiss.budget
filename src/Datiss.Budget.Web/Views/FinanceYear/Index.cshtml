@@ -195,7 +195,6 @@
         }
 
         function Delete(yearid) {
-            debugger;
             let myurl = '@Url.Action("Delete")';
             myurl = myurl + "/" + yearid;
             $.ajax({
@@ -212,6 +211,58 @@
                 }
             });
         }
+
+        $(document).on('click', '.delete-row', function () {
+            let id = $(this).data('id');
+            let btn = this;
+
+            Swal.fire({
+                title: 'برای حذف اطمینان دارید؟',
+                text: "",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2F8BE6',
+                animation: false,
+                customClass: 'animated flipInX',
+                cancelButtonColor: '#F55252',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+
+                confirmButtonClass: 'btn btn-warning my-font',
+                cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.value) {
+                    deleteRow(btn, id);
+
+                    return true;
+                }
+                else {
+
+                    return false;
+                }
+            });
+        });
+        function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(FinanceYearController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    alert(data.message);
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                console.log(err);
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
 
     </script>
 
