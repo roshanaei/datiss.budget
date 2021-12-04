@@ -21,6 +21,7 @@ using Datiss.Budget.Resources;
 using ClosedXML.Extensions;
 using Datiss.Budget.Reports.Excel;
 using Microsoft.Extensions.Logging;
+using Datiss.Budget.Common;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -120,7 +121,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync("[UserType]"))
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var filterInput = new WaterInstallFeeFilterDTO {
@@ -161,7 +162,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
