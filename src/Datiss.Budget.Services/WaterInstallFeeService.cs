@@ -206,6 +206,7 @@ namespace Datiss.Budget.Services
 
             if(selfData.Any()) {
                 foreach(var item in selfData) {
+
                     var entity = new WaterInstallFee {
                         DWaterTypeId = item.DWaterTypeId,
                         OrganizationId = item.OrganizationId,
