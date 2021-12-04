@@ -154,8 +154,55 @@
                 buttonsStyling: false,
             }).then(function (result) {
                 if (result.value) {
-                    $('#toolForm').attr('action', '@Url.Action("Delete")');
-                    $('#toolForm').submit();
+                    let params = {};
+                    params.yearId = $('#yearId option:selected').val();
+                    params.orgId = $('#organizationId option:selected').val();
+                    console.log(params);
+                    let deleteUrl = '@Url.Action(WaterInstallFeeController.ACTION_Delete)';
+                    console.log(deleteUrl);
+
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'POST',
+                        data: params,
+                        success: function(data, status, settings) {
+                            console.log(status);
+                            if(data.hasError) {
+                                Swal.fire({
+                                    title: 'خطا',
+                                    text: data.message,
+                                    type: 'error',
+                                    confirmButtonColor: '#2F8BE6',
+                                    animation: false,
+                                    customClass: 'animated flipInX',
+                                    confirmButtonText: 'بستن',
+                                    confirmButtonClass: 'btn btn-warning my-font',
+                                    buttonsStyling: false,
+                                });
+                                return;
+                            }
+
+                            Swal.fire({
+                                title: 'عملیات موفق',
+                                text: data.message,
+                                type: 'info',
+                                confirmButtonColor: '#2F8BE6',
+                                animation: false,
+                                customClass: 'animated flipInX',
+                                confirmButtonText: 'بستن',
+                                confirmButtonClass: 'btn btn-warning my-font',
+                                buttonsStyling: false,
+                            }).then(function(result) {
+                                document.location.href = '@Url.Action(WaterInstallFeeController.ACTION_Index)';
+                            });
+                        },
+                        error: function(request, option, err) {
+                            console.log(err);
+                        }
+                    });
+
+                    //$('#toolForm').attr('action', '@Url.Action("Delete")');
+                    //$('#toolForm').submit();
 
                     return true;
                 }

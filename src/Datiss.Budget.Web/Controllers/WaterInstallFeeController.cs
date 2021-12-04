@@ -206,15 +206,31 @@ namespace Datiss.Budget.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost("records/delete")]
+        public async Task<IActionResult> Delete(int yearId, int orgId) {
+            try {
+                var result = await _waterInstallFeeService.HardDeleteAsync(yearId, orgId);
 
-        [HttpPost("[action]"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(IFormCollection form) {
-            var yearId = int.Parse(form["filterYearId"].ToString());
-            var orgId = int.Parse(form["filterOrganizationId"].ToString());
-
-            await _waterInstallFeeService.HardDeleteAsync(yearId, orgId);
-
-            return RedirectToAction("Index");
+                return Json(new {
+                    success = true,
+                    message = string.Format(
+                        ViewMessages.DeleteMultipleDataForOrg,
+                        result.OrganizationTitle,
+                        result.Year)
+                });
+            }
+            catch(NullReferenceException) {
+                return Json(new {
+                    hasError = true,
+                    message = ViewMessages.NullRef
+                });
+            }
+            catch(Exception ex) {
+                return Json(new {
+                    hasError = true,
+                    message = ViewMessages.DeleteRelatedData
+                });
+            }
         }
 
         [HttpPost("[action]/{id}")]

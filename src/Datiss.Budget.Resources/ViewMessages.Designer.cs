@@ -88,6 +88,24 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to حذف رکورد برای سازمان {0} در سال {1} با موفقیت انجام شد..
+        /// </summary>
+        public static string DeleteMultipleDataForOrg {
+            get {
+                return ResourceManager.GetString("DeleteMultipleDataForOrg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to بدلیل وجود داده های وابسته امکان حذف رکورد وجود ندارد..
+        /// </summary>
+        public static string DeleteRelatedData {
+            get {
+                return ResourceManager.GetString("DeleteRelatedData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to فرمت فایل اکسل نمی باشد..
         /// </summary>
         public static string ImportExcelFileFormatInvalid {
@@ -120,6 +138,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelSuccess {
             get {
                 return ResourceManager.GetString("ImportExcelSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات مورد نظر یافت نشد..
+        /// </summary>
+        public static string NullRef {
+            get {
+                return ResourceManager.GetString("NullRef", resourceCulture);
             }
         }
         

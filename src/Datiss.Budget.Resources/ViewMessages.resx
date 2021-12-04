@@ -126,6 +126,12 @@
   <data name="CopySuccess" xml:space="preserve">
     <value>کپی اطلاعات با موفقیت انجام شد</value>
   </data>
+  <data name="DeleteMultipleDataForOrg" xml:space="preserve">
+    <value>حذف رکورد برای سازمان {0} در سال {1} با موفقیت انجام شد.</value>
+  </data>
+  <data name="DeleteRelatedData" xml:space="preserve">
+    <value>بدلیل وجود داده های وابسته امکان حذف رکورد وجود ندارد.</value>
+  </data>
   <data name="ImportExcelFileFormatInvalid" xml:space="preserve">
     <value>فرمت فایل اکسل نمی باشد.</value>
   </data>
@@ -137,6 +143,9 @@
   </data>
   <data name="ImportExcelSuccess" xml:space="preserve">
     <value>عملیات ورود فایل اکسل با موفقیت انجام گردید</value>
+  </data>
+  <data name="NullRef" xml:space="preserve">
+    <value>اطلاعات مورد نظر یافت نشد.</value>
   </data>
   <data name="SystemError" xml:space="preserve">
     <value>خطای سیستمی. لطفاً با پشتیبانی تماس بگیرید.</value>
