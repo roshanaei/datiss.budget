@@ -284,16 +284,18 @@ namespace Datiss.Budget.Web.Controllers
                                                     model.SourceYearId, 
                                                     model.SourceOrgId, 
                                                     model.TargetYearId);
+                model.Succeed(ViewMessages.CopySuccess);
             }
-            catch(CopySameYearException ex) {
+            catch(CopySameYearException) {
                 model.AddError(ViewMessages.CopySameYear);
-                return Json(model);
             }
-            catch(CopyDestYearHasDataException ex) {
+            catch(CopyDestYearHasDataException) {
                 model.AddError(ViewMessages.CopyDestYearHasData);
-                return Json(model);
             }
-
+            catch(Exception ex) {
+                model.AddError(ViewMessages.SystemError);
+            }
+            
             return Json(model);
         }
 
