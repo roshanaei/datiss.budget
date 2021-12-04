@@ -48,12 +48,8 @@ namespace Datiss.Budget.Web.Controllers
                 OrderDesc = true,
                 PageNumber = page
             };
-
             var result = await _financeYearService.GetListAsync(filterInput);
             var model = result.Adapt<FinanceYearIndexViewModel>();
-            model.SetOrganizationStatusFilterSource(
-                (await _financeYearService.GetDropDownStatusAsync())
-                .Adapt<IEnumerable<DropDownItemViewModel>>());
             return View(model);
         }
         [HttpPost("{page?}")]
@@ -61,13 +57,9 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Index(FinanceYearIndexViewModel model, int page = 1)
         {
             var filterInput = model.Filter.Adapt<FinanceYearFilterDTO>();
-
             var result = await _financeYearService.GetListAsync(filterInput);
             model = result.Adapt<FinanceYearIndexViewModel>();
             model.Filter = filterInput.Adapt<FinanceYearFilterViewModel>();
-            model.SetOrganizationStatusFilterSource(
-               (await _financeYearService.GetDropDownStatusAsync())
-               .Adapt<IEnumerable<DropDownItemViewModel>>());
             return View(model);
         }
 

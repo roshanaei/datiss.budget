@@ -35,7 +35,7 @@ namespace Datiss.Budget.Services.Models
     }
     public class FinanceYearFilterDTO : FilterInputDTO
     {
-        public EntityStatus? Status { get; set; }
+
     }
     public class WaterInstallFeeFilterDTO : FilterInputDTO
     {

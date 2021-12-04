@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Enum;
+using DNTPersianUtils.Core;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,10 @@ namespace Datiss.Budget.ViewModels
     public class CreateFinanceYearViewModel : BaseViewModel
     {
         public string Title { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public string startdate { get; set; }
+        public DateTime StartDate => (DateTime)startdate.ToGregorianDateTime();
+        public string enddate { get; set; }
+        public DateTime EndDate => (DateTime)enddate.ToGregorianDateTime();
         public int Year { get; set; }
         public EntityStatus Status { get; set; }
         public string StatusDisplay => Status.ToDisplay();
@@ -42,8 +45,7 @@ namespace Datiss.Budget.ViewModels
     }
     public class FinanceYearFilterViewModel : FilterViewModel
     {
-        public EntityStatus? Status { get; set; }
-        public IList<SelectListItem> OrganizationStatusSource { get; set; }
+
     }
     public class FinanceYearIndexViewModel : PagedViewModel<FinanceYearViewModel>
     {
@@ -53,16 +55,6 @@ namespace Datiss.Budget.ViewModels
         }
 
         public FinanceYearFilterViewModel Filter { get; set; }
-
-        public void SetOrganizationStatusFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectOrgStatusId = null)
-        {
-            Filter.OrganizationStatusSource = source.Select(x => new SelectListItem
-            {
-                Selected = x.Id == selectOrgStatusId,
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
-        }
 
     }
 }

@@ -1,5 +1,15 @@
 ﻿@model CreateFinanceYearViewModel
 
+
+<script src="~/js/plugin/jquery.js"></script>
+<script src="~/js/plugin/waitMe.min.js" type="text/javascript" asp-append-version="true"></script>
+@*<script src="~/js/plugin/bootstrap-datepicker.fa.min.js" type="text/javascript" asp-append-version="true"></script>
+    <script src="~/js/plugin/bootstrap-datepicker.min.js" type="text/javascript" asp-append-version="true"></script>*@
+<script src="~/js/plugin/persian-date.min.js" type="text/javascript" asp-append-version="true"></script>
+<script src="~/js/plugin/persian-datepicker.min.js" type="text/javascript" asp-append-version="true"></script>
+<script src="~/js/plugin/myDatepicker.js" type="text/javascript" asp-append-version="true"></script>
+
+
 <div class="modal fade text-left" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -12,7 +22,7 @@
 
             <form asp-controller="FinanceYear"
                   asp-action="Create"
-                  asp-antiforgery="true">
+                  asp-antiforgery="true" id="ManageMeetingForm">
                 <div class="modal-body">
 
                     <div class="rowAC">
@@ -32,11 +42,23 @@
                             </label>
                         </fieldset>
                     </div>
-                    <input id="textBoxInputId" asp-for="StartDate" type="text" />
-                    <input id="textBoxInputId" asp-for="EndDate" type="text" />
-
-
-
+                    <div class="rowAC">
+                        <div class="my-font">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left:5px">شروع سال:</span>
+                                    <input asp-for="startdate" class="form-control form-control-sm d-inline-block" autocomplete="off" datepicker="datepicker" />
+                                </label>
+                            </fieldset>
+                        </div>
+                        <div class="my-font" style="flex:0.25" />
+                        <div class="form-group">
+                            <label class="my-font rowAC">
+                                <span style="margin-left:5px">شروع سال:</span>
+                                <input asp-for="enddate" class="form-control form-control-sm d-inline-block" autocomplete="off" datepicker="datepicker" />
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
@@ -54,3 +76,70 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+
+    $(function () {
+        $("#ManageMeetingForm [datepicker]").datepicker({
+            isRTL: true,
+            dateFormat: "yy/m/d"
+        });
+
+        $('#ManageMeetingForm [timepicker]').timepicker({
+            //template: false,
+            //showInputs: false,
+            maxHours: 24
+        });
+
+        $('#UserDisplayNamesBox #UserDisplayNames').tagsinput({
+            freeInput: false,
+            itemValue: 'id',
+            itemText: 'text'
+        });
+
+        $('#ProcessesBox #ProcessIds').tagsinput({
+            freeInput: false,
+            itemValue: 'id',
+            itemText: 'text'
+        });
+
+        $('#UserDisplayNamesBox #UserDisplayNames').on('itemRemoved', function (event) {
+            // event.item: contains the item
+            var tag = event.item;
+
+            $('#ManageMeetingForm #UserIds_' + tag.id).remove();
+        });
+
+        $('#ProcessesBox #ProcessIds').on('itemRemoved', function (event) {
+            // event.item: contains the item
+            var tag = event.item;
+
+            $('#ManageMeetingForm #SuggestIds_' + tag.id).remove();
+        });
+
+        $('#UserDisplayNamesBox .bootstrap-tagsinput').css('background-color', '#ccc');
+        $('#ProcessesBox .bootstrap-tagsinput').css('background-color', '#ccc');
+
+        $('#UserDisplayNamesBox input').attr('readonly', 'readonly').css('background-color', '#ccc');
+        $('#ProcessesBox input').attr('readonly', 'readonly').css('background-color', '#ccc');
+    });
+
+    $(document).ready(function () {
+        if (!isNullOrEmpty($('#ManageMeetingForm input[name=UserDisplayNames]').val())) {
+            var userDisplayNames = $.parseJSON($('#ManageMeetingForm input[name=UserDisplayNames]').val());
+
+            for (var i = 0; i < userDisplayNames.length; i++) {
+                $('#ManageMeetingForm input[name=UserDisplayNames]').tagsinput('add', userDisplayNames[i]);
+            }
+        }
+
+        if (!isNullOrEmpty($('#ManageMeetingForm input[name=ProcessIds]').val())) {
+            var processIds = $.parseJSON($('#ManageMeetingForm input[name=ProcessIds]').val());
+
+            for (var i = 0; i < processIds.length; i++) {
+                $('#ManageMeetingForm input[name=ProcessIds]').tagsinput('add', processIds[i]);
+            }
+        }
+    });
+
+</script>

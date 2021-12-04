@@ -131,7 +131,6 @@ namespace Datiss.Budget.Services
                 PageNumber = filter.PageNumber
             };
             var query = Query();
-            query = await setFilter(query, filter);
             result.TotalCount = await query.CountAsync();
             query = setOrder(query, filter.OrderBy, filter.OrderDesc);
             query = query
@@ -152,14 +151,6 @@ namespace Datiss.Budget.Services
         }
 
         #region Private Helper Methods
-        private async Task<IQueryable<FinanceYear>> setFilter(
-            IQueryable<FinanceYear> query,
-            FinanceYearFilterDTO filter)
-        {
-            if (filter.Status.HasValue)
-                query = query.Where(x => x.Status == filter.Status.Value);
-            return query;
-        }
         private IQueryable<FinanceYear> setOrder(
         IQueryable<FinanceYear> query,
         string orderBy = "id",

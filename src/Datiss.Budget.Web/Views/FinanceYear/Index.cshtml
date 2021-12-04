@@ -27,25 +27,13 @@
                     <div class="card-body">
                         <!--Filters-->
                         <form method="post" class="" asp-controller="FinanceYear" asp-action="Index" asp-antiforgery="true">
-
                             <div class="class=" rowACJSB"">
                                 <fieldset class="">
-                                    <label asp-for="Filter.Status" class="my-font">
-                                        وضعیت:
-                                        <select asp-for="Filter.Status"
-                                                asp-items="Model.Filter.OrganizationStatusSource"
-                                                class="form-control d-inline-block width-200"
-                                                id="yearId">
-                                        </select>
-                                    </label>
                                     <input asp-for="Filter.OrderBy" type="hidden" />
                                     <input asp-for="Filter.OrderDesc" type="hidden" />
                                 </fieldset>
                                 <fieldset>
                                     <div class="rowACJE">
-                                        <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
-                                        </button>
                                         <span data-toggle="modal" data-target="#CreateModal">
                                             <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" name="btnCreate" class="btn btn-success bg-light-success mr-1 my-font modallink" onclick="Create()">
                                                 <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
