@@ -186,8 +186,8 @@
                     @if (Model.PageNumber > 1) {
                         <li class="page-item">
                             <a class="page-link"
-                               asp-controller="WaterInstallFee"
-                               asp-action="Index"
+                               asp-controller="@WaterInstallFeeController.Name"
+                               asp-action="@WaterInstallFeeController.ACTION_Index"
                                asp-route-page="@Model.PreviousPage"
                                aria-label="Previous">«</a>
                         </li>
@@ -200,8 +200,8 @@
                         else {
                             <li class="page-item">
                                 <a class="page-link"
-                                   asp-controller="WaterInstallFee"
-                                   asp-action="Index"
+                                   asp-controller="@WaterInstallFeeController.Name"
+                                   asp-action="@WaterInstallFeeController.ACTION_Index"
                                    asp-route-page="@i">@i.ToString() </a>
                             </li>
                         }
@@ -210,8 +210,8 @@
                     @if (Model.PageNumber < Model.PagesCount) {
                         <li class="page-item">
                             <a class="page-link"
-                               asp-controller="WaterInstallFee"
-                               asp-action="Index"
+                               asp-controller="@WaterInstallFeeController.Name"
+                               asp-action="@WaterInstallFeeController.ACTION_Index"
                                asp-route-page="@Model.NextPage"
                                aria-label="Next">»</a>
                         </li>

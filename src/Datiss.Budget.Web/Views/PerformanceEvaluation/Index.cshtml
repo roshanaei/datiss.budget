@@ -1,0 +1,487 @@
+﻿@model PerformanceEvaluationIndexViewModel
+@{ ViewData["Title"] = "جدول ارزیابی"; }
+
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            @*<i class="ft-settings mr-1"></i>*@
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+
+                @if (ViewData["message"] != null)
+                {
+                    <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                        </button>
+                        <span>@ViewData["message"]</span>
+                    </div>
+                }
+
+                <div class="card-content">
+                    <div class="card-body">
+                        <!--Filters-->
+                        <form method="post"
+                              id="filterForm"
+                              asp-controller="@PerformanceEvaluationController.Name"
+                              asp-action="@PerformanceEvaluationController.ACTION_Index"
+                              asp-antiforgery="true">
+
+                            <div class="class=" rowACJSB"">
+                                <fieldset class="form-group mt-3">
+                                    <label asp-for="Filter.YearId" class="my-font">
+                                        سال:
+                                        <select class="form-control d-inline-block width-100" id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()">
+                                        </select>
+                                    </label>
+                                    <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
+                                        سازمان:
+                                        <select class="form-control d-inline-block width-300" id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()">
+                                        </select>
+                                    </label>
+                                    <input asp-for="Filter.OrderBy" type="hidden" />
+                                    <input asp-for="Filter.OrderDesc" type="hidden" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+                                        </button>
+                                        <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                        </button>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <hr />
+                            <!--SearchBox-->
+                            <div class="rowACJSB">
+                                <div class="rowAC" style="flex:1">
+                                    <fieldset class="form-group">
+                                        <label for="ngx-filter-ref" class="my-font">
+                                            جستجو:
+                                            <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
+                                        </label>
+                                    </fieldset>
+                                    <fieldset class="form-group" style="margin-right:10px">
+                                        <label class="my-font rowAC">
+                                            <span>نمایش</span>
+
+                                            <select asp-for="Filter.PageSize"
+                                                    style="margin-right:10px"
+                                                    class="form-control"
+                                                    onchange="changePageSize();"
+                                                    id="ddlPageSize">
+                                                <option>10</option>
+                                                <option>20</option>
+                                                <option>30</option>
+                                            </select>
+                                            <span style="margin-right:10px">رکورد</span>
+
+                                        </label>
+                                    </fieldset>
+                                </div>
+                                <fieldset>
+                                    <div class="rowACJE">
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </form>
+                        <!--DataTable-->
+                        <div class="table-responsive">
+                            <table id="" class=" table table-hover table-bordered m-0 my-font ">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>سال</th>
+                                        <th>سازمان</th>
+                                        <th>نام جدول</th>
+                                        <th>وضعیت</th>
+                                        <th>هدف</th>
+                                        <th>عملکرد</th>
+                                        <th>مدیریت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id="rowTemplate" style="display: none">
+                                        <td>
+                                            <div id="divInput_Year_">
+                                                <input id="hidYearId_" type="hidden" />
+                                                <select class="form-control" id="inputYear_" asp-items="Model.YearSource">
+                                                </select>
+                                            </div>
+                                            <div id="divOutput_Year_" style="display: none">
+                                                <span id="spanYear_"></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="divInput_Org_">
+                                                <input id="hidOrgId_" type="hidden" />
+                                                <select class="form-control" id="inputOrg_" asp-items="Model.OrganizationSource">
+                                                </select>
+                                            </div>
+                                            <div id="divOutput_Org_">
+                                                <span id="spanOrg_"> </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="divInput_tablename_">
+                                                <input class="form-control" id="inputtablename_" type="number" />
+                                            </div>
+                                            <div id="divOutput_tablename_" style="display: none">
+                                                <span id="spantablename_"> </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="divInput_status_">
+                                                <input class="form-control" id="inputstatus_" type="number" />
+                                            </div>
+                                            <div id="divOutput_status_" style="display: none">
+                                                <span id="spanstatus_"> </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="divInput_target_">
+                                                <input class="form-control" id="inputtarget_" type="number" />
+                                            </div>
+                                            <div id="divOutput_target_" style="display: none">
+                                                <span id="spantarget_"> </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div id="divInput_operation_">
+                                                <input class="form-control" id="inputoperation_" type="number" />
+                                            </div>
+                                            <div id="divOutput_operation_" style="display: none">
+                                                <span id="spanoperation_"> </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a id="btnEdit_" class="edit-row btn btn-sm btn-primary" style="display: none">
+                                                <i class="fa fa-pencil"></i> ویرایش
+                                            </a>
+
+                                            <a id="btnSaveEdit_" class="save-edit-row btn btn-sm btn-success" style="display: none">
+                                                <i class="fa fa-check"></i> ثبت
+                                            </a>
+
+                                            <a id="btnCancelEdit_" class="cancel-edit-row btn btn-sm btn-danger" style="display: none">
+                                                <i class="fa fa-times"></i> انصراف
+                                            </a>
+
+                                            <a id="btnSaveCreate_" class="save-new-row btn btn-sm btn-success">
+                                                <i class="fa fa-check"></i> ثبت
+                                            </a>
+
+                                            <a id="btnCancelCreate_" class="cancel-new-row btn btn-sm btn-danger">
+                                                <i class="fa fa-times"></i> انصراف
+                                            </a>
+
+                                        </td>
+                                    </tr>
+                                    @foreach (var item in Model.Items)
+                                    {
+                                <tr id="row_@item.Id">
+                                    <td>
+                                        <div id="divInput_Year_@item.Id" style="display: none">
+                                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                                            <select class="form-control" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                                            </select>
+                                            <script>
+                                                        $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                            </script>
+                                        </div>
+                                        <div id="divOutput_Year_@item.Id">
+                                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="divInput_Org_@item.Id" style="display: none">
+                                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                                            <select class="form-control" id="inputOrg_@item.Id" asp-items="Model.OrganizationSource">
+                                            </select>
+                                            <script>
+                                                        $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                            </script>
+                                        </div>
+                                        <div id="divOutput_Org_@item.Id">
+                                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div id="divInput_tablename_@item.Id" style="display: none">
+                                            <input class="form-control" id="inputtablename_@item.Id" value="@item.TableFieldId" type="number" />
+                                        </div>
+                                        <div id="divOutput_tablename_@item.Id">
+                                            <span id="spantablename_@item.Id">@item.TableFieldDisplay.ToString() </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="divInput_status_@item.Id" style="display: none">
+                                            <input class="form-control" id="inputstatus_@item.Id" value="@item.Status" type="number" />
+                                        </div>
+                                        <div id="divOutput_status_@item.Id">
+                                            <span id="spanstatus_@item.Id">@item.Status.ToString() </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="divInput_target_@item.Id" style="display: none">
+                                            <input class="form-control" id="inputtarget_@item.Id" value="@item.Target" type="number" />
+                                        </div>
+                                        <div id="divOutput_target_@item.Id">
+                                            <span id="spantarget_@item.Id">@item.Target.ToString() </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div id="divInput_operation_@item.Id" style="display: none">
+                                            <input class="form-control" id="inputoperation_@item.Id" value="@item.Operation" type="number" />
+                                        </div>
+                                        <div id="divOutput_operation_@item.Id">
+                                            <span id="spanoperation_@item.Id">@item.Operation.ToString() </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn btn-sm btn-primary">
+                                            <i class="fa fa-pencil"></i> ویرایش
+                                        </a>
+
+                                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-sm btn-success" style="display: none">
+                                            <i class="fa fa-check"></i> ثبت
+                                        </a>
+
+                                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-sm btn-danger" style="display: none">
+                                            <i class="fa fa-times"></i> انصراف
+                                        </a>
+                                    </td>
+                                </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="rowACJSB" style="margin-top:20px">
+                                <!--Tools-->
+                                <div class="rowACJS">
+                                    <form id="toolForm"
+                                          enctype="multipart/form-data"
+                                          method="post"
+                                          asp-antiforgery="true">
+                                        <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+                                        <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+                                        <span data-toggle="modal" data-target="#backdrop">
+                                            <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                                            </button>
+                                        </span>
+                                        <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                    <!--Pagination-->
+                                    @if (Model.PagesCount > 1)
+                                    {
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination justify-content-center">
+                                                @if (Model.PageNumber > 1)
+                                                {
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                           asp-controller="@WasteInstallFeeController.Name"
+                                                           asp-action="@WasteInstallFeeController.ACTION_Index"
+                                                           asp-route-page="@Model.PreviousPage"
+                                                           aria-label="Previous">«</a>
+                                                    </li>
+                                                }
+
+                                                @for (int i = 1; i <= Model.PagesCount; i++)
+                                                {
+                                                    if (i == Model.PageNumber)
+                                                    {
+                                                        <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li class="page-item">
+                                                            <a class="page-link"
+                                                               asp-controller="@WasteInstallFeeController.Name"
+                                                               asp-action="@WasteInstallFeeController.ACTION_Index"
+                                                               asp-route-page="@i">@i.ToString() </a>
+                                                        </li>
+                                                    }
+                                                }
+
+                                                @if (Model.PageNumber < Model.PagesCount)
+                                                {
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                           asp-controller="@WasteInstallFeeController.Name"
+                                                           asp-action="@WasteInstallFeeController.ACTION_Index"
+                                                           asp-route-page="@Model.NextPage"
+                                                           aria-label="Next">»</a>
+                                                    </li>
+                                                }
+
+                                            </ul>
+                                        </nav>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+
+@section footSection {
+
+    <div id="divCreate">
+
+    </div>
+
+    <div id="modaldiv">
+
+    </div>
+    <partial name="_editorScript" />
+
+    <script type="text/javascript">
+        function hardDelete(e) {
+            Swal.fire({
+                title: 'برای حذف اطمینان دارید؟',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2F8BE6',
+                animation: false,
+                customClass: 'animated flipInX',
+                cancelButtonColor: '#F55252',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+
+                confirmButtonClass: 'btn btn-warning my-font',
+                cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.value) {
+                    $('#toolForm').attr('action', '@Url.Action("Delete")');
+                    $('#toolForm').submit();
+
+                    return true;
+                }
+                else {
+
+                    return false;
+                }
+            });
+        }
+
+
+        function loadCreateLink() {
+            var a = document.getElementById("createLink");
+            var organizationId = document.getElementById('organizationId').value;
+
+            var yearId = document.getElementById('yearId').value;
+
+            var url = 'performanceevaluation/create'
+
+            a.href = url + "/" + organizationId + "/" + yearId;
+        }
+
+        function openImportExcelForm() {
+            $('#importExcelForm').attr(
+                'action',
+                '@Url.Action(PerformanceEvaluationController.ACTION_ImportExcel)'
+            );
+            $('#ExcellModal').modal('show');
+        }
+
+
+        $(document).on('click', '#btnCreate', function () {
+            addNewRow();
+        });
+
+        $(document).on('click', '.edit-row', function () {
+            let id = $(this).data('id');
+            editRow(id);
+        });
+
+        $(document).on('click', '.cancel-edit-row', function () {
+            let id = $(this).data('id');
+            cancelEditRow(id);
+        });
+
+        $(document).on('click', '.save-edit-row', function () {
+            let id = $(this).data('id');
+            $(this).prop('disabled', true);
+            saveEditRow(id);
+            $(this).prop('disabled', false);
+        });
+
+        $(document).on('click', '.save-new-row', function () {
+            let row = $(this).closest('tr');
+            saveNewRow(row);
+        });
+
+        $(document).on('click', '.cancel-new-row', function () {
+            cancelNewRow(this);
+        });
+
+        $(document).on('click', '.modallink', function() {
+
+            let myurl = '@Url.Action("Copy")';
+
+            $.ajax({
+                type: 'GET',
+                url: myurl,
+                success: function (data, status, settings) {
+                    $('#modaldiv').html('');
+                    $("#modaldiv").html(data);
+                    $('#CopyModal').modal('show');
+                },
+                error: function (ajaxrequest, ajaxOptions, thrownError) {
+
+                    $("#modaldiv").html('Failed to load more content');
+                }
+            });
+
+        });
+
+
+        function changePageSize() {
+            let pageSize = $('#ddlPageSize').attr('value');
+            console.log(pageSize);
+            $('#filterForm').submit();
+        }
+
+         function exportExcel() {
+             let exportUrl = '@Url.Action("ExportExcel")';
+             console.log(exportUrl);
+            $.ajax({
+                type: 'POST',
+                url: exportUrl,
+                success: function (data, status, settings) {
+                    console.log(data);
+                },
+                error: function (ajaxrequest, ajaxOptions, thrownError) {
+                    console.log('erorr');
+                }
+            });
+        };
+
+    </script>
+
+}
+

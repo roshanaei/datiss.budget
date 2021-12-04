@@ -112,15 +112,15 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
-        
+            }).ToList();
+        //AddEmptySelectListItem()
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null) 
             => Filter.YearSource = source.Select(x => new SelectListItem {
                 Selected = x.Id == selectedYearId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
+            }).ToList();
         
     }
 
