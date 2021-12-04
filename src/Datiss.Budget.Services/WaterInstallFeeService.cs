@@ -200,12 +200,19 @@ namespace Datiss.Budget.Services
 
             var result = new List<WaterInstallFee>();
 
+            if (await Query()
+                        .Where(_ => _.OrganizationId == sourceOrgId)
+                        .Where(_ => _.YearId == destYearId).AnyAsync())
+                throw new CopyDestYearHasDataException();
+
             var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
                                         .Where(_ => _.YearId == sourceYearId)
                                         .ToListAsync();
 
             if(selfData.Any()) {
                 foreach(var item in selfData) {
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.DWaterTypeId))
+                        throw new CopyDestYearHasDataException();
 
                     var entity = new WaterInstallFee {
                         DWaterTypeId = item.DWaterTypeId,
@@ -409,6 +416,9 @@ namespace Datiss.Budget.Services
                                 .ToListAsync();
 
                 foreach (var item in data) {
+                    if (!await checkLogicAsync(targetYearId, org.Id, item.DWaterTypeId))
+                        throw new CopyDestYearHasDataException();
+
                     var entity = new WaterInstallFee {
                         DWaterTypeId = item.DWaterTypeId,
                         OrganizationId = item.OrganizationId,

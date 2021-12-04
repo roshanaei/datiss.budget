@@ -138,4 +138,7 @@
   <data name="ImportExcelSuccess" xml:space="preserve">
     <value>عملیات ورود فایل اکسل با موفقیت انجام گردید</value>
   </data>
+  <data name="SystemError" xml:space="preserve">
+    <value>خطای سیستمی. لطفاً با پشتیبانی تماس بگیرید.</value>
+  </data>
 </root>

@@ -129,7 +129,7 @@
 
     </div>
 
-    <div id="modaldiv">
+    <div id="divCopy">
 
     </div>
 
@@ -264,19 +264,19 @@
             cancelNewRow(this);
         });
 
-        $(document).on('click', '.modallink', function() {
+        $(document).on('click', '.openCopy', function() {
 
             $.ajax({
                 type: 'GET',
                 url: '@Url.Action("Copy")',
                 success: function (data, status, settings) {
-                    $('#modaldiv').html('');
-                    $("#modaldiv").html(data);
+                    $('#divCopy').html('');
+                    $("#divCopy").html(data);
                     $('#CopyModal').modal('show');
                 },
-                error: function (ajaxrequest, ajaxOptions, thrownError) {
-
-                    $("#modaldiv").html('Failed to load more content');
+                error: function (request, options, err) {
+                    console.log(err);
+                    $("#divCopy").html('Failed to load more content');
                 }
             });
 
@@ -284,9 +284,9 @@
 
         $(document).on('click', '#btnDoCopy', function () {
             let model = {};
-            model.sourceYearId = $('#SourceYearId').val();
+            model.sourceYearId = $('#SourceYearId option:selected').val();
             model.sourceOrgId = $('#SourceOrgId').val();
-            model.targetYearId = $('#TargetYearId').val();
+            model.targetYearId = $('#TargetYearId option:selected').val();
 
             console.log(model);
 
@@ -322,8 +322,6 @@
                         confirmButtonClass: 'btn btn-warning my-font',
                         buttonsStyling: false,
                     });
-
-                    document.location.href = '@WaterInstallFeeController.ACTION_Index';
                 },
                 error: function (request, options, err) {
                     console.log(err);
