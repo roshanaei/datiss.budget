@@ -97,10 +97,10 @@
                                 </div>
                                 <fieldset>
                                     <div class="rowACJE">
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="ExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WaterInstallFeeController.ACTION_ExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
-                                        <a data-toggle="tooltip" data-placement="top" asp-action="DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
+                                        <a data-toggle="tooltip" data-placement="top" asp-action="@WaterInstallFeeController.ACTION_DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
                                         </a>
                                     </div>
@@ -139,7 +139,7 @@
         function hardDelete(e) {
             Swal.fire({
                 title: 'برای حذف اطمینان دارید؟',
-                text: "You won't be able to revert this!",
+                text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#2F8BE6',
