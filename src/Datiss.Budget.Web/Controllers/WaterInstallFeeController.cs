@@ -305,7 +305,11 @@ namespace Datiss.Budget.Web.Controllers
             catch(CopySameYearException) {
                 model.AddError(ViewMessages.CopySameYear);
             }
-            catch(CopyDestYearHasDataException) {
+            catch (CopyOrgNullDataException)
+            {
+                model.AddError(ViewMessages.CopySourceOrgNullData);
+            }
+            catch (CopyDestYearHasDataException) {
                 model.AddError(ViewMessages.CopyDestYearHasData);
             }
             catch(Exception ex) {
