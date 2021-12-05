@@ -1,6 +1,6 @@
 ﻿@model CreateConstantViewModel
 
-<form asp-action="New" asp-controller="Constant" method="post" asp-antiforgery="true">
+<form asp-action="Create" asp-controller="Constant" method="post" asp-antiforgery="true">
     <label asp-for="ParentId">انتخاب سطح پدر</label>
     <select asp-for="ParentId" asp-items="Model.ParentList"></select>
     <br />

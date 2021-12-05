@@ -1,4 +1,4 @@
-﻿@*@model WaterInstallFeeIndexViewModel*@
+﻿@model ConstantIndexViewModel
 @{ ViewData["Title"] = "ثابت ها"; }
 
 <!--Title-->
@@ -15,53 +15,77 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
+
+                @if (ViewData["message"] != null)
+                {
+                    <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                        </button>
+                        <span>@ViewData["message"]</span>
+                    </div>
+                }
+
                 <div class="card-content">
                     <div class="card-body">
                         <!--Filters-->
-                        <form method="post" class="rowACJSB" asp-controller="Organization" asp-action="Index" asp-antiforgery="true">
-                            <fieldset class="form-group mt-3">
-                                <label class="my-font">
-                                    سازمان پدر:
-                                    <select class="form-control d-inline-block width-300" id="organizationId" onchange="loadCreateLink()">
-                                    </select>
-                                </label>
-                                <input type="hidden" />
-                                <input type="hidden" />
-                                <div class="rowACJE">
-                                    <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
-                                    </button>
-                                    <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
-                                    </button>
-                                </div>
-                            </fieldset>
-                        </form>
-                        <hr />
-                        <!--SearchBox-->
-                        <div class="rowACJSB">
-                            <div class="rowAC" style="flex:1">
-                                <fieldset class="form-group">
-                                    <label for="ngx-filter-ref" class="my-font">
-                                        جستجو:
-                                        <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
-                                    </label>
-                                </fieldset>
-                                <fieldset class="form-group" style="margin-right:10px">
-                                    <label class="my-font rowAC">
-                                        <span>نمایش</span>
+                        <form method="post"
+                              id="filterForm"
+                              asp-controller="Constant"
+                              asp-action="Index"
+                              asp-antiforgery="true">
 
-                                        <select style="margin-right:10px" class="form-control" id="basicSelect">
-                                            <option>10</option>
-                                            <option>20</option>
-                                            <option>30</option>
+                            <div class="rowACJSB">
+                                <fieldset class="form-group mt-3">
+                                    <label asp-for="Filter.ParentId" class="my-font">
+                                         آیتم های:
+                                        <select asp-for="Filter.ParentId"
+                                                asp-items="Model.Filter.ParentSource"
+                                                class="form-control d-inline-block width-300"
+                                                id="parentId">
                                         </select>
-                                        <span style="margin-right:10px">رکورد</span>
-
                                     </label>
+                                    <input asp-for="Filter.OrderBy" type="hidden" />
+                                    <input asp-for="Filter.OrderDesc" type="hidden" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+                                        </button>
+                                        <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                        </button>
+                                    </div>
                                 </fieldset>
                             </div>
-                        </div>
+                            <hr />
+                            <!--SearchBox-->
+                            <div class="rowACJSB">
+                                <div class="rowAC" style="flex:1">
+                                    <fieldset class="form-group">
+                                        <label for="ngx-filter-ref" class="my-font">
+                                            جستجو:
+                                            <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
+                                        </label>
+                                    </fieldset>
+                                    <fieldset class="form-group" style="margin-right:10px">
+                                        <label class="my-font rowAC">
+                                            <span>نمایش</span>
+
+                                            <select style="margin-right:10px" class="form-control" id="basicSelect">
+                                                <option>10</option>
+                                                <option>20</option>
+                                                <option>30</option>
+                                            </select>
+                                            <span style="margin-right:10px">رکورد</span>
+
+                                        </label>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </form>
+
                         <!--DataTable-->
                         <div class="table-responsive">
                             <table id="" class=" table table-hover table-bordered m-0 my-font">
@@ -75,72 +99,67 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @*@foreach (var item in Model.Model.Items)
+                                    @foreach (var item in Model.Items)
                                         {
                                             <tr>
-                                                <td>@item.Year.ToString()</td>
-                                                <td>@item.OrganizationDisplay </td>
-                                                <td>@item.DWaterTypeDisplay </td>
-                                                <td>@item.WInstallFee.ToString() </td>
+                                                <td>@item.DisplayOrder.ToString()</td>
+                                                <td>@item.Title </td>
+                                                <td>@item.ConstantKey </td>
+                                                <td>@item.Status.ToString() </td>
                                                 <td>
-                                                    <a asp-controller="Organization" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                                                    <a asp-controller="Constant" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
                                                 </td>
                                             </tr>
-                                        }*@
+                                        }
                                 </tbody>
                             </table>
-                            <div class="rowACJSB" style="margin-top:20px">
+                            <div class="rowACJE" style="margin-top:20px">
                                 <!--Pagination-->
-                                @*<p>
-                                        Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
-                                    </p>*@
 
-                                @*@if (Model.Model.PagesCount > 1)
-                                    {
-                                        <nav aria-label="Page navigation">
-                                            <ul class="pagination justify-content-center">
-                                                @if (Model.Model.PageNumber > 1)
+                               @if (Model.PagesCount > 1)
+                                {
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination justify-content-center">
+                                            @if (Model.PageNumber > 1){
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-controller="Constant"
+                                                       asp-action="Index"
+                                                       asp-route-page="@Model.PreviousPage"
+                                                       aria-label="Previous">«</a>
+                                                </li>
+                                             }
+
+                                            @for (int i = 1; i <= Model.PagesCount; i++)
+                                            {
+                                                if (i == Model.PageNumber)
+                                                {
+                                                    <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                                                }
+                                                else
                                                 {
                                                     <li class="page-item">
                                                         <a class="page-link"
-                                                           asp-controller="Organization"
+                                                           asp-controller="Constant"
                                                            asp-action="Index"
-                                                           asp-route-page="@Model.Model.PreviousPage"
-                                                           aria-label="Previous">«</a>
+                                                           asp-route-page="@i">@i.ToString() </a>
                                                     </li>
                                                 }
+                                            }
 
-                                                @for (int i = 1; i <= Model.Model.PagesCount; i++)
-                                                {
-                                                    if (i == Model.Model.PageNumber)
-                                                    {
-                                                        <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
-                                                    }
-                                                    else
-                                                    {
-                                                        <li class="page-item">
-                                                            <a class="page-link"
-                                                               asp-controller="Organization"
-                                                               asp-action="Index"
-                                                               asp-route-page="@i">@i.ToString() </a>
-                                                        </li>
-                                                    }
-                                                }
-
-                                                @if (Model.Model.PageNumber < Model.Model.PagesCount)
+                                            @if (Model.PageNumber < Model.PagesCount)
                                                 {
                                                     <li class="page-item">
                                                         <a class="page-link"
-                                                           asp-controller="Organization"
+                                                           asp-controller="Constant"
                                                            asp-action="Index"
-                                                           asp-route-page="@Model.Model.NextPage"
+                                                           asp-route-page="@Model.NextPage"
                                                            aria-label="Next">»</a>
                                                     </li>
-                                                }
-
-                                            </ul>
-                                        </nav>
-                                    }*@
+                                                 }
+                                        </ul>
+                                    </nav>
+                                }
                             </div>
                         </div>
                     </div>
@@ -182,34 +201,12 @@
         });
         function loadCreateLink() {
             var a = document.getElementById("createLink");
-            var organizationId = document.getElementById('organizationId').value;
+            var parentId = document.getElementById('parentId').value;
 
-            var yearId = document.getElementById('yearId').value;
+            var url = 'Constant/Create'
 
-            var url = 'Organization/new'
-
-            a.href = url + "/" + organizationId + "/" + yearId;
-        }
-
-         $(document).on('click', '.modallink', function() {
-
-            let myurl = '@Url.Action("Copy")';
-
-            $.ajax({
-                type: 'GET',
-                url: myurl,
-                success: function (data, status, settings) {
-
-                    $("#modaldiv").html(data);
-                    $('#CopyModal').modal('show');
-                },
-                error: function (ajaxrequest, ajaxOptions, thrownError) {
-
-                    $("#modaldiv").html('Failed to load more content');
-                }
-            });
-
-         });
+            a.href = url + "/" + parentId ;
+        });
 
         $(document).ready(function () {
             loadCreateLink();

@@ -9,6 +9,9 @@ using Datiss.Budget.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Datiss.Budget.Services.Models;
 using Mapster;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Hosting;
+using Datiss.Budget.Services.Contracts.Identity;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -16,15 +19,38 @@ namespace Datiss.Budget.Web.Controllers
     [Route("[controller]")]
     public class ConstantController : Controller
     {
+        public const string Name = "Constant";
+        public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Index = nameof(Index);
+        //public const string ACTION_Edit = nameof(Edit);
+        //public const string ACTION_Delete = nameof(Delete);
 
+        private readonly ILogger<ConstantController> _logger;
+        private readonly IWebHostEnvironment _env;
         private readonly IConstantService _constantService;
+        private readonly ISecurityTrimmingService _securityTrimmingService;
 
-        public ConstantController(IConstantService constantService) {
+
+        public ConstantController(
+            ILogger<ConstantController> logger,
+            IWebHostEnvironment environment,
+            IConstantService constantService,
+            ISecurityTrimmingService securityTrimmingService)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _env = environment ?? throw new ArgumentNullException(nameof(environment));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
-
+            _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
 
-        [HttpGet("{page}")]
+
+        private void showMessage(string type, string message)
+        {
+            ViewData["type"] = type;
+            ViewData["message"] = message;
+        }
+
+        [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1) {
             var parentSource = (await _constantService.GetParentsAsync())
                     .Adapt<List<DropDownItemViewModel>>();
@@ -43,13 +69,34 @@ namespace Datiss.Budget.Web.Controllers
 
             model.SetParentSource(parentSource);
 
+            model.SetParentFilterSource(parentSource, firstParentId);
+
             model.Filter.ParentId = filterInput.ParentId;
 
             return View(model);
         }
 
+        [HttpPost("{page?}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(ConstantIndexViewModel model, int page = 1)
+        {
+            var filterInput = model.Filter.Adapt<ConstantFilterDTO>();
+
+            var result = await _constantService.GetListAsync(filterInput);
+            model = result.Adapt<ConstantIndexViewModel>();
+            model.Filter = filterInput.Adapt<ConstatntFilterViewModel>();
+
+            var parentSource = (await _constantService.GetParentsAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            model.SetParentSource(parentSource);
+            model.SetParentFilterSource(parentSource);
+
+            return View(model);
+        }
+
         [HttpGet]
-        public async Task<IActionResult> New() 
+        public async Task<IActionResult> Create() 
         {
             var parentList = await _constantService.GetParentsAsync();
             var model = new CreateConstantViewModel {
