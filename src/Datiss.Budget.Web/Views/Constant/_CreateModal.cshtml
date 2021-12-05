@@ -21,40 +21,32 @@
                   asp-antiforgery="true" 
                   id="CreateConstantForm">
                 <div class="modal-body">
-
                     <div class="rowAC">
-                        <div class="my-font">
+                        <div class="rowAC">
+                            <div class="my-font">
+                                <fieldset class="form-group">
+                                    <label class="my-font rowAC">
+                                        <span style="margin-left:5px">ترتیب نمایش:</span>
+                                        <input asp-for="DisplayOrder" class="form-control form-control-sm d-inline-block" />
+                                    </label>
+                                </fieldset>
+                            </div>
+                            <div class="my-font">
+                                <fieldset class="form-group">
+                                    <label class="my-font rowAC">
+                                        <span style="margin-left:5px"> عنوان:</span>
+                                        <input asp-for="Title" type="text" class="form-control form-control-sm d-inline-block" />
+                                    </label>
+                                </fieldset>
+                            </div>
+                            <div class="my-font" style="flex:0.25" />
                             <fieldset class="form-group">
                                 <label class="my-font rowAC">
-                                    <span style="margin-left:5px"> عنوان:</span>
-                                    <input asp-for="Title" type="text" class="form-control form-control-sm d-inline-block" />
+                                    <span style="margin-left:5px">کلید:</span>
+                                    <input asp-for="ConstantKey" type="text" class="form-control form-control-sm d-inline-block" />
                                 </label>
                             </fieldset>
                         </div>
-                        <div class="my-font" style="flex:0.25" />
-                        <fieldset class="form-group">
-                            <label class="my-font rowAC">
-                                <span style="margin-left:5px">کلید:</span>
-                                <input asp-for="ConstantKey" type="text" class="form-control form-control-sm d-inline-block" />
-                            </label>
-                        </fieldset>
-                    </div>
-                    <div class="rowAC">
-                        <div class="my-font">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left:5px">ترتیب نمایش:</span>
-                                    <input asp-for="DisplayOrder" class="form-control form-control-sm d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:0.25" />
-                        @*<div class="form-group">
-                            <label class="my-font rowAC">
-                                <span style="margin-left:5px">شروع سال:</span>
-                                <input asp-for="enddate" class="form-control form-control-sm d-inline-block" autocomplete="off" datepicker="datepicker" />
-                            </label>
-                        </div>*@
                     </div>
                 </div>
                 <div class="modal-footer">

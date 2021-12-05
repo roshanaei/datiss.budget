@@ -33,7 +33,13 @@ namespace Datiss.Budget.Services
         private IQueryable<Constant> Query() 
            => _dbSet.AsNoTracking()
                     .Where(_ => _.Status != EntityStatus.Deleted);
-        
+
+        public async Task<Constant> GetByIdAsync(int id)
+        {
+            var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
+            return await Task.FromResult(entity);
+        }
+
         public async Task<ValidationResult> CreateAsync(CreateConstantDTO model) {
             model.CheckArgumentIsNull(nameof(model));
 

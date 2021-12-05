@@ -128,5 +128,21 @@ namespace Datiss.Budget.Web.Controllers
             return RedirectToAction("index");
         }
 
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var entity = await _constantService.GetByIdAsync(id);
+
+            if (entity == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var model = entity.Adapt<UpdateConstantViewModel>();
+            //model.set(
+            //    (await _constantService.ge())
+            //    .Adapt<IEnumerable<DropDownItemViewModel>>());
+            return PartialView("_editModal", model);
+        }
+
     }
 }
