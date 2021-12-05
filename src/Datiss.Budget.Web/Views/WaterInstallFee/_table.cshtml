@@ -123,7 +123,7 @@
                             <input class="form-control" id="inputWInstallFee_@item.Id" value="@item.WInstallFee" type="number" />
                         </div>
                         <div id="divOutput_WInstallFee_@item.Id">
-                            <span id="spanWInstallFee_@item.Id">@item.WInstallFee.ToString() </span>
+                            <span id="spanWInstallFee_@item.Id">@item.WInstallFeeDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -164,7 +164,7 @@
                     </button>
                 </span>
                 <span data-toggle="modal" data-target="#CopyModal">
-                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font modallink">
+                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
                         <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
                     </button>
                 </span>

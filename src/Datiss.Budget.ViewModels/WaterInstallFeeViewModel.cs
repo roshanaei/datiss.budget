@@ -50,6 +50,7 @@ namespace Datiss.Budget.ViewModels
         public int DWaterTypeId { get; set; }
         public string DWaterTypeDisplay { get; set; }
         public int WInstallFee { get; set; }
+        public string WInstallFeeDisplay => WInstallFee.ToString("N0");
     }
 
     public class WaterInstallFeeFilterViewModel: FilterViewModel

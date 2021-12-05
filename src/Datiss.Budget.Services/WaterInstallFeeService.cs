@@ -132,7 +132,13 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task HardDeleteAsync(int yearId, int organizationId) {
+        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId) {
+            var organization = await _orgDbSet.FindAsync(organizationId);
+            organization.CheckReferenceIsNull(nameof(organization));
+
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
             var self = await _dbSet.Where(_ => _.YearId == yearId)
                                     .Where(_ => _.OrganizationId == organizationId)
                                     .ToListAsync();
@@ -140,7 +146,16 @@ namespace Datiss.Budget.Services
             var childrens = await getChildren(organizationId, yearId);
             _dbSet.RemoveRange(childrens);
 
+            var result = new OrganizationDeleteDataResult
+            {
+                OrganizationTitle = organization.Title,
+                Year = year.Year,
+                YearTitle = year.Title
+            }; 
+
             await _uow.SaveChangesAsync();
+
+            return await Task.FromResult(result);
         }
 
         public async Task<int> CalculationAsync(int yearId, int organizationId) {
@@ -201,12 +216,20 @@ namespace Datiss.Budget.Services
 
             var result = new List<WaterInstallFee>();
 
+            if (await Query()
+                        .Where(_ => _.OrganizationId == sourceOrgId)
+                        .Where(_ => _.YearId == destYearId).AnyAsync())
+                throw new CopyDestYearHasDataException();
+
             var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
                                         .Where(_ => _.YearId == sourceYearId)
                                         .ToListAsync();
 
             if(selfData.Any()) {
                 foreach(var item in selfData) {
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.DWaterTypeId))
+                        throw new CopyDestYearHasDataException();
+
                     var entity = new WaterInstallFee {
                         DWaterTypeId = item.DWaterTypeId,
                         OrganizationId = item.OrganizationId,
@@ -409,6 +432,9 @@ namespace Datiss.Budget.Services
                                 .ToListAsync();
 
                 foreach (var item in data) {
+                    if (!await checkLogicAsync(targetYearId, org.Id, item.DWaterTypeId))
+                        throw new CopyDestYearHasDataException();
+
                     var entity = new WaterInstallFee {
                         DWaterTypeId = item.DWaterTypeId,
                         OrganizationId = item.OrganizationId,

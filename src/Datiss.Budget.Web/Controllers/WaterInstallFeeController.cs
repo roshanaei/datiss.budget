@@ -21,6 +21,7 @@ using Datiss.Budget.Resources;
 using ClosedXML.Extensions;
 using Datiss.Budget.Reports.Excel;
 using Microsoft.Extensions.Logging;
+using Datiss.Budget.Common;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -120,7 +121,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync("[UserType]"))
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var filterInput = new WaterInstallFeeFilterDTO {
@@ -161,7 +162,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
@@ -205,15 +206,31 @@ namespace Datiss.Budget.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost("records/delete")]
+        public async Task<IActionResult> Delete(int yearId, int orgId) {
+            try {
+                var result = await _waterInstallFeeService.HardDeleteAsync(yearId, orgId);
 
-        [HttpPost("[action]"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(IFormCollection form) {
-            var yearId = int.Parse(form["filterYearId"].ToString());
-            var orgId = int.Parse(form["filterOrganizationId"].ToString());
-
-            await _waterInstallFeeService.HardDeleteAsync(yearId, orgId);
-
-            return RedirectToAction("Index");
+                return Json(new {
+                    success = true,
+                    message = string.Format(
+                        ViewMessages.DeleteMultipleDataForOrg,
+                        result.OrganizationTitle,
+                        result.Year)
+                });
+            }
+            catch(NullReferenceException) {
+                return Json(new {
+                    hasError = true,
+                    message = ViewMessages.NullRef
+                });
+            }
+            catch(Exception ex) {
+                return Json(new {
+                    hasError = true,
+                    message = ViewMessages.DeleteRelatedData
+                });
+            }
         }
 
         [HttpPost("[action]/{id}")]
@@ -283,16 +300,18 @@ namespace Datiss.Budget.Web.Controllers
                                                     model.SourceYearId, 
                                                     model.SourceOrgId, 
                                                     model.TargetYearId);
+                model.Succeed(ViewMessages.CopySuccess);
             }
-            catch(CopySameYearException ex) {
+            catch(CopySameYearException) {
                 model.AddError(ViewMessages.CopySameYear);
-                return Json(model);
             }
-            catch(CopyDestYearHasDataException ex) {
+            catch(CopyDestYearHasDataException) {
                 model.AddError(ViewMessages.CopyDestYearHasData);
-                return Json(model);
             }
-
+            catch(Exception ex) {
+                model.AddError(ViewMessages.SystemError);
+            }
+            
             return Json(model);
         }
 

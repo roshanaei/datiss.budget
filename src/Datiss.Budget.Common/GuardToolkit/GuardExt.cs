@@ -18,6 +18,17 @@ namespace Datiss.Budget.Common.GuardToolkit
         }
 
         /// <summary>
+        /// Check if reference of an object is null.
+        /// </summary>
+        /// <param name="o">Object to check </param>
+        /// <param name="name">name of the object</param>
+        /// <exception cref="NullReferenceException"></exception>
+        public static void CheckReferenceIsNull(this object o, string name) {
+            if (o == null)
+                throw new NullReferenceException(name);
+        }
+
+        /// <summary>
         /// Checks if the parameter is null.
         /// </summary>
         public static void CheckMandatoryOption(this string s, string name)
