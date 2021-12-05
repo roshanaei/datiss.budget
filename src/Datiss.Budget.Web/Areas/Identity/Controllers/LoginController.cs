@@ -1,4 +1,6 @@
-﻿using Datiss.Budget.Resources;
+﻿using System;
+using System.Threading.Tasks;
+using Datiss.Budget.Resources;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.ViewModels.Identity;
 using Datiss.Budget.ViewModels.Identity.Settings;
@@ -9,8 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Threading.Tasks;
 
 namespace Datiss.Budget.Areas.Identity.Controllers
 {

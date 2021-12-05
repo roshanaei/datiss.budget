@@ -3,76 +3,84 @@
     ViewData["Title"] = "ورود به سیستم";
     Layout = "_LayoutLogin";
 }
-<body class=" horizontal-layout horizontal-menu horizontal-menu-padding  1-column auth-page navbar-sticky blank-page "
-      data-open="hover" data-menu="horizontal-menu" data-col="1-column">
-    
-    <div class="wrapper">
-        <div class="main-panel">
-            <!-- BEGIN : Main Content-->
-            <div class="main-content">
-                <div class="content-overlay"></div>
-                <div class="content-wrapper">
-                    <!--Login Page Starts-->
-                    <section id="login" class="auth-height">
-                        <div class="row full-height-vh m-0">
-                            <div class=" col-12 d-flex align-items-center justify-content-center">
-                                <div class="card overflow-hidden">
-                                    <div class="card-content">
-                                        <div class="card-body auth-img">
-                                            <div class="row m-0">
-                                                <div class=" col-lg-6 d-non e d-lg-flex justify-content-center align-items-center auth-img-bg p-3">
-                                                    <img src="../assets/img/gallery/login.png" alt="" class="img-fluid" width="300" height="230" />
-                                                </div>
 
-                                                <div class="col-lg-6 col-12 px-4 py-3">
-                                                    <form id="LoginForm" asp-controller="Login"
-                                                          asp-action="Index"
-                                                          asp-route-returnurl="@ViewData["ReturnUrl"]"
-                                                          asp-asp-antiforgery="true"
-                                                          method="post"
-                                                          autocomplete="off"
-                                                          class="error">
-                                                        <h4 class="mb-2 card-title my-font-bold">ورود</h4>
-                                                        <p class="my-font">خوش آمدید لطفا وارد شوید</p>
+<div class="wrapper">
+    <div class="main-panel">
+        <!-- BEGIN : Main Content-->
+        <div class="main-content">
+            <div class="content-overlay"></div>
+            <div class="content-wrapper">
+                <!--Login Page Starts-->
+                <section id="login" class="auth-height">
+                    <div class="row full-height-vh m-0">
+                        <div class=" col-12 d-flex align-items-center justify-content-center">
+                            <div class="card overflow-hidden">
+                                <div class="card-content">
+                                    <div class="card-body auth-img">
+                                        <div class="row m-0">
+                                            <div class=" col-lg-6 d-non e d-lg-flex justify-content-center align-items-center auth-img-bg p-3">
+                                                <img src="../assets/img/gallery/login.png" alt="" class="img-fluid" width="300" height="230" />
+                                            </div>
 
-                                                        @if(Model._HasError) {
-                                                            <div class="alert alert-danger mt-5">
-                                                                <a href="#" class="close" data-dismiss="alert">×</a>
-                                                                @Model._ErrorMessage
-                                                            </div>
-                                                        }
+                                            <div class="col-lg-6 col-12 px-4 py-3">
+                                                <form id="LoginForm" asp-controller="Login"
+                                                        asp-action="Index"
+                                                        asp-route-returnurl="@ViewData["ReturnUrl"]"
+                                                        asp-asp-antiforgery="true"
+                                                        method="post"
+                                                        autocomplete="off"
+                                                        class="error">
+                                                    <h4 class="mb-2 card-title my-font-bold">ورود</h4>
+                                                    <p class="my-font">خوش آمدید</p>
 
-                                                        <input type="text" asp-for="Username" class="form-control mb-3 my-font" placeholder="نام کاربری" required />
+                                                    @if(Model._HasError) {
+                                                        <div class="alert alert-danger mt-5">
+                                                            <a href="#" class="close" data-dismiss="alert">×</a>
+                                                            @Model._ErrorMessage
+                                                        </div>
+                                                    }
+
+                                                    <div class="form-group">
+                                                        <input type="text" asp-for="Username" class="form-control mb-3 my-font" placeholder="نام کاربری" style="direction: ltr;" required />
                                                         <span asp-validation-for="Username"></span>
-                                                        <input type="password" asp-for="Password" class="form-control mb-2 my-font" placeholder="کلمه عبور" required />
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <input type="password" asp-for="Password" class="form-control mb-2 my-font" placeholder="کلمه عبور" style="direction: ltr;" required />
                                                         <span asp-validation-for="Password"></span>
-                                                        <div class="d-sm-flex justify-content-between mb-3 font-small-2">
-                                                            <div class="remember-me mb-2 mb-sm-0">
-                                                                <div class="custom-control custom-checkbox">
-                                                                    <input class="custom-control-input" type="checkbox" asp-for="RememberMe" id="auth-ligin" />
-                                                                    @*@Html.DisplayNameFor(m => m.RememberMe)*@
-                                                                    <label class="custom-control-label" for="auth-ligin">
-                                                                        <span class="my-font">مرا به یاد داشته باش</span>
-                                                                    </label>
-                                                                </div>
+                                                    </div>
+                                                    <div class="d-sm-flex justify-content-between mb-3 font-small-2">
+                                                        <div class="remember-me mb-2 mb-sm-0">
+                                                            <div class="custom-control custom-checkbox">
+                                                                <input class="custom-control-input" type="checkbox" asp-for="RememberMe" id="auth-ligin" />
+                                                                <label class="custom-control-label" for="auth-ligin">
+                                                                    <span class="my-font">مرا به یاد داشته باش</span>
+                                                                </label>
                                                             </div>
                                                         </div>
-                                                        <div class="d-flex justify-content-between flex-sm-row flex-column ">
-                                                            <button type="submit" form="LoginForm" class="btn btn-info bg-light-info mb-1 my-font">ورود</button>
-                                                            <a class="my-font" asp-action="Index" asp-controller="ForgotPassword" asp-area="@AreaConstants.IdentityArea"><small>رمز عبور خود را فراموش کرده‌اید؟</small></a>
-                                                        </div>
-                                                    </form>
-                                                </div>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between flex-sm-row flex-column ">
+                                                        <button type="submit" form="LoginForm" class="btn btn-info bg-light-info mb-1 my-font">ورود</button>
+                                                        <a class="my-font" asp-action="Index" asp-controller="ForgotPassword" asp-area="@AreaConstants.IdentityArea"><small>رمز عبور خود را فراموش کرده‌اید؟</small></a>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </section>
-                </div>
+                    </div>
+                </section>
             </div>
         </div>
     </div>
-</body>
+</div>
 
+@section footSection {
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#Username').focus();
+        });
+    </script>
+}
