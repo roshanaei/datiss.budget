@@ -12,6 +12,7 @@ using Mapster;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Common.GuardToolkit;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -95,7 +96,7 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         public async Task<IActionResult> Create() 
         {
             var parentList = await _constantService.GetParentsAsync();
@@ -106,7 +107,25 @@ namespace Datiss.Budget.Web.Controllers
                 })
             };
 
-            return View(model);
+            return PartialView("_CreateModal",model);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create(CreateConstantViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+            var data = model.Adapt<CreateConstantDTO>();
+            //try
+            //{
+            //    await _constantService.CreateAsync(data);
+            //}
+            //catch (CopySameYearException ex)
+            //{
+            //    model.AddError(ViewMessages.CopyDestYearHasData);
+            //    return Json(model);
+            //}
+
+            return RedirectToAction("index");
         }
 
     }
