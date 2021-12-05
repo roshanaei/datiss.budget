@@ -1,13 +1,118 @@
-﻿<!DOCTYPE html>
+﻿@model UpdateConstantViewModel
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-</head>
-<body>
-    <div>
-        @RenderBody()
+<script src="~/js/plugin/jquery.js"></script>
+
+<!--Modals-->
+<div class="modal fade text-left" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title my-font" id="myModalLabel2">ویرایش اطلاعات</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                </button>
+            </div>
+            <form asp-controller="FinanceYear"
+                  asp-action="Edit"
+                  asp-antiforgery="true" id="ManageMeetingForm">
+                <div class="modal-body">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="rowAC">
+                        <div class="my-font">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left:5px">عنوان</span>
+                                    <input asp-for="Title" type="text" class="form-control form-control-sm d-inline-block" />
+                                </label>
+                            </fieldset>
+                        </div>
+
+                        <div class="my-font">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left:5px">ترتیب نمایش</span>
+                                    <input asp-for="DisplayOrder" type="number" class="form-control form-control-sm d-inline-block" />
+                                </label>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="rowAC">
+                        <div class="my-font">
+                            <fieldset class="form-group">
+                                <label class="rowAC">
+                                    <span style="margin-left:5px">وضعیت</span>
+                                    <input asp-for="Enabled"
+                                            style="flex:1"
+                                            class="form-control form-control-sm d-inline-block">
+                                    </input>
+                                </label>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="rowAC">
+                        <div class="my-font">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left:5px">کلید</span>
+                                    <input asp-for="ConstantKey" class="form-control form-control-sm d-inline-block" />
+                                </label>
+                            </fieldset>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
+                    <button type="submit" class="btn btn-info bg-light-info mr-1 my-font">ثبت</button>
+                </div>
+            </form>
+
+        </div>
     </div>
-</body>
-</html>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#ManageMeetingForm [datepicker]").datepicker({
+            isRTL: true,
+            dateFormat: "yy/m/d"
+        });
+        $('#UserDisplayNamesBox #UserDisplayNames').tagsinput({
+            freeInput: false,
+            itemValue: 'id',
+            itemText: 'text'
+        });
+        $('#ProcessesBox #ProcessIds').tagsinput({
+            freeInput: false,
+            itemValue: 'id',
+            itemText: 'text'
+        });
+        $('#UserDisplayNamesBox #UserDisplayNames').on('itemRemoved', function (event) {
+            // event.item: contains the item
+            var tag = event.item;
+            $('#ManageMeetingForm #UserIds_' + tag.id).remove();
+        });
+        $('#ProcessesBox #ProcessIds').on('itemRemoved', function (event) {
+            // event.item: contains the item
+            var tag = event.item;
+            $('#ManageMeetingForm #SuggestIds_' + tag.id).remove();
+        });
+        $('#UserDisplayNamesBox .bootstrap-tagsinput').css('background-color', '#ccc');
+        $('#ProcessesBox .bootstrap-tagsinput').css('background-color', '#ccc');
+        $('#UserDisplayNamesBox input').attr('readonly', 'readonly').css('background-color', '#ccc');
+        $('#ProcessesBox input').attr('readonly', 'readonly').css('background-color', '#ccc');
+    });
+    $(document).ready(function () {
+        if (!isNullOrEmpty($('#ManageMeetingForm input[name=UserDisplayNames]').val())) {
+            var userDisplayNames = $.parseJSON($('#ManageMeetingForm input[name=UserDisplayNames]').val());
+            for (var i = 0; i < userDisplayNames.length; i++) {
+                $('#ManageMeetingForm input[name=UserDisplayNames]').tagsinput('add', userDisplayNames[i]);
+            }
+        }
+        if (!isNullOrEmpty($('#ManageMeetingForm input[name=ProcessIds]').val())) {
+            var processIds = $.parseJSON($('#ManageMeetingForm input[name=ProcessIds]').val());
+            for (var i = 0; i < processIds.length; i++) {
+                $('#ManageMeetingForm input[name=ProcessIds]').tagsinput('add', processIds[i]);
+            }
+        }
+    });
+</script>
