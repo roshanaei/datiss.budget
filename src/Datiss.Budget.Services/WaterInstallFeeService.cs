@@ -213,7 +213,7 @@ namespace Datiss.Budget.Services
 
             if (sourceYearId == destYearId)
                 throw new CopySameYearException();
-            if (!await IsExistOrg(sourceOrgId,sourceYearId))
+            if (!await hasAnyDataAsync(sourceOrgId,sourceYearId))
                 throw new CopyOrgNullDataException();
             var result = new List<WaterInstallFee>();
 
@@ -474,7 +474,7 @@ namespace Datiss.Budget.Services
             }
             return result;
         }
-        private async Task<bool> IsExistOrg(int orgid,int yearid)
+        private async Task<bool> hasAnyDataAsync(int orgid,int yearid)
         {
             bool any = await Query().AnyAsync(x => x.OrganizationId == orgid && 
                                                 x.YearId==yearid);
@@ -484,11 +484,15 @@ namespace Datiss.Budget.Services
             }
             else
             {
-                var childs = await Query()
-                                    .Include(x => x.Organization)
-                                    .Where(x => x.Organization.ParentId == orgid).ToListAsync();
+                if (await Query().Include(x=>x.Organization)
+                                 .AnyAsync(x => x.Organization.ParentId == orgid &&
+                                                x.YearId == yearid))
+                {
+                    return true;
+                }
+                var childs = await _orgDbSet.Where(x => x.ParentId == orgid).ToListAsync();
                 foreach (var child in childs)
-                    return await IsExistOrg(child.OrganizationId,yearid);
+                    return await hasAnyDataAsync(child.Id,yearid);
             }
 
             return false;
