@@ -368,6 +368,8 @@
                         confirmButtonText: 'بستن',
                         confirmButtonClass: 'btn btn-warning my-font',
                         buttonsStyling: false,
+                    }).then(function(result) {
+                        $('#CopyModal').modal('hide');
                     });
                 },
                 error: function (request, options, err) {
@@ -401,4 +403,3 @@
     </script>
 
 }
-

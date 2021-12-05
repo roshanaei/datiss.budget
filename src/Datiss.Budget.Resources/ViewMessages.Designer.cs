@@ -142,6 +142,33 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند.
+        /// </summary>
+        public static string InvalidUsernameOrPassword {
+            get {
+                return ResourceManager.GetString("InvalidUsernameOrPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اجازه ورود به سیستم برای شما وجود ندارد..
+        /// </summary>
+        public static string LoginNotAllowed {
+            get {
+                return ResourceManager.GetString("LoginNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to لطفاً داده های ورودی خود را چک کنید..
+        /// </summary>
+        public static string ModelState {
+            get {
+                return ResourceManager.GetString("ModelState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات مورد نظر یافت نشد..
         /// </summary>
         public static string NullRef {
@@ -156,6 +183,24 @@ namespace Datiss.Budget.Resources {
         public static string SystemError {
             get {
                 return ResourceManager.GetString("SystemError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to حساب کاربری شما غیرفعال شده‌است..
+        /// </summary>
+        public static string UserDisabled {
+            get {
+                return ResourceManager.GetString("UserDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to لطفا به پست الکترونیک خود مراجعه کرده و ایمیل خود را تائید کنید!.
+        /// </summary>
+        public static string UserEmailNotConfirmed {
+            get {
+                return ResourceManager.GetString("UserEmailNotConfirmed", resourceCulture);
             }
         }
     }

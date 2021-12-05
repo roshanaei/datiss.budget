@@ -2,7 +2,7 @@
 
 namespace Datiss.Budget.ViewModels.Identity
 {
-    public class LoginViewModel
+    public class LoginViewModel : BaseViewModel
     {
         [Required(ErrorMessage = "(*)")]
         [Display(Name = "نام کاربری")]

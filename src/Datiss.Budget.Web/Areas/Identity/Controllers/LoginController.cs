@@ -1,4 +1,5 @@
-﻿using Datiss.Budget.Services.Contracts.Identity;
+﻿using Datiss.Budget.Resources;
+using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.ViewModels.Identity;
 using Datiss.Budget.ViewModels.Identity.Settings;
 using DNTBreadCrumb.Core;
@@ -41,86 +42,71 @@ namespace Datiss.Budget.Areas.Identity.Controllers
         [HttpGet("login")]
         public IActionResult Index(string returnUrl = null)
         {
+            var model = new LoginViewModel();
             ViewData["ReturnUrl"] = returnUrl;
-            return View();
+            return View(model);
         }
 
         [HttpPost("login")]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         //[ValidateDNTCaptcha(CaptchaGeneratorLanguage = Language.Persian,
         //                    CaptchaGeneratorDisplayMode = DisplayMode.SumOfTwoNumbers)]
         public async Task<IActionResult> Index(LoginViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByNameAsync(model.Username);
-                if (user == null)
-                {
-                    ModelState.AddModelError(string.Empty, "نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند.");
-                    return View(model);
-                }
 
-                if (!user.IsActive)
-                {
-                    ModelState.AddModelError(string.Empty, "اکانت شما غیرفعال شده‌است.");
-                    return View(model);
-                }
-
-                if (_siteOptions.Value.EnableEmailConfirmation &&
-                    !await _userManager.IsEmailConfirmedAsync(user))
-                {
-                    ModelState.AddModelError("", "لطفا به پست الکترونیک خود مراجعه کرده و ایمیل خود را تائید کنید!");
-                    return View(model);
-                }
-
-                var result = await _signInManager.PasswordSignInAsync(
-                                        model.Username,
-                                        model.Password,
-                                        model.RememberMe,
-                                        lockoutOnFailure: true);
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation(1, $"{model.Username} logged in.");
-                    if (returnUrl == "/Identity")
-                        returnUrl = null;
-                    if (Url.IsLocalUrl(returnUrl))
-                    {
-                        return Redirect(returnUrl);
-                    }
-                    //var url = Url.RouteUrl("default", new {
-                    //    controller = "Home",
-                    //    action = "Index",
-                    //    area = ""
-                    //});
-                    return RedirectToAction("Index", "Home", new { area = "" });
-                }
-
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToAction(
-                        nameof(TwoFactorController.SendCode),
-                        "TwoFactor",
-                        new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                }
-
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning(2, $"{model.Username} قفل شده‌است.");
-                    return View("~/Areas/Identity/Views/TwoFactor/Lockout.cshtml");
-                }
-
-                if (result.IsNotAllowed)
-                {
-                    ModelState.AddModelError(string.Empty, "عدم دسترسی ورود.");
-                    return View(model);
-                }
-
-                ModelState.AddModelError(string.Empty, "نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند.");
+            if(!ModelState.IsValid) {
+                model.AddError(ViewMessages.ModelState);
                 return View(model);
             }
 
-            // If we got this far, something failed, redisplay form
+            var user = await _userManager.FindByNameAsync(model.Username);
+            if (user == null) {
+                model.AddError(ViewMessages.InvalidUsernameOrPassword);
+                return View(model);
+            }
+
+            if (!user.IsActive) {
+                model.AddError(ViewMessages.UserDisabled);
+                return View(model);
+            }
+
+            if (_siteOptions.Value.EnableEmailConfirmation &&
+                    !await _userManager.IsEmailConfirmedAsync(user)) {
+                model.AddError(ViewMessages.UserEmailNotConfirmed);
+                return View(model);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(
+                                    model.Username,
+                                    model.Password,
+                                    model.RememberMe,
+                                    lockoutOnFailure: true);
+
+            if (result.RequiresTwoFactor) {
+                return RedirectToAction(
+                    nameof(TwoFactorController.SendCode),
+                    "TwoFactor",
+                    new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+            }
+            else if (result.IsLockedOut) {
+                return View("~/Areas/Identity/Views/TwoFactor/Lockout.cshtml");
+            }
+            else if (result.IsNotAllowed) {
+                model.AddError(ViewMessages.LoginNotAllowed);
+                return View(model);
+            }
+            else if (result.Succeeded) {
+                _logger.LogInformation(1, $"{model.Username} logged in.");
+                if (returnUrl == "/Identity")
+                    returnUrl = null;
+                if (Url.IsLocalUrl(returnUrl)) {
+                    return Redirect(returnUrl);
+                }
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+
+            model.AddError(ViewMessages.InvalidUsernameOrPassword);
             return View(model);
         }
 
