@@ -123,6 +123,9 @@
   <data name="CopySameYear" xml:space="preserve">
     <value>سال ها یکی نباشد</value>
   </data>
+  <data name="CopySourceOrgNullData" xml:space="preserve">
+    <value>سازمان مورد نظر برای سال مبدا داده ای ندارد .</value>
+  </data>
   <data name="CopySuccess" xml:space="preserve">
     <value>کپی اطلاعات با موفقیت انجام شد</value>
   </data>
