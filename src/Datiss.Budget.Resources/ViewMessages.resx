@@ -144,10 +144,25 @@
   <data name="ImportExcelSuccess" xml:space="preserve">
     <value>عملیات ورود فایل اکسل با موفقیت انجام گردید</value>
   </data>
+  <data name="InvalidUsernameOrPassword" xml:space="preserve">
+    <value>نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند</value>
+  </data>
+  <data name="LoginNotAllowed" xml:space="preserve">
+    <value>اجازه ورود به سیستم برای شما وجود ندارد.</value>
+  </data>
+  <data name="ModelState" xml:space="preserve">
+    <value>لطفاً داده های ورودی خود را چک کنید.</value>
+  </data>
   <data name="NullRef" xml:space="preserve">
     <value>اطلاعات مورد نظر یافت نشد.</value>
   </data>
   <data name="SystemError" xml:space="preserve">
     <value>خطای سیستمی. لطفاً با پشتیبانی تماس بگیرید.</value>
+  </data>
+  <data name="UserDisabled" xml:space="preserve">
+    <value>حساب کاربری شما غیرفعال شده‌است.</value>
+  </data>
+  <data name="UserEmailNotConfirmed" xml:space="preserve">
+    <value>لطفا به پست الکترونیک خود مراجعه کرده و ایمیل خود را تائید کنید!</value>
   </data>
 </root>

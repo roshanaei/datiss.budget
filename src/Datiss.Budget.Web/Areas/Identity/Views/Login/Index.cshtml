@@ -1,15 +1,11 @@
 ﻿@model LoginViewModel
-
 @{
+    ViewData["Title"] = "ورود به سیستم";
     Layout = "_LayoutLogin";
 }
-
-
-
-
 <body class=" horizontal-layout horizontal-menu horizontal-menu-padding  1-column auth-page navbar-sticky blank-page "
       data-open="hover" data-menu="horizontal-menu" data-col="1-column">
-    <!-- ////////////////////////////////////////////////////////////////////////////-->
+    
     <div class="wrapper">
         <div class="main-panel">
             <!-- BEGIN : Main Content-->
@@ -32,13 +28,24 @@
                                                     <form id="LoginForm" asp-controller="Login"
                                                           asp-action="Index"
                                                           asp-route-returnurl="@ViewData["ReturnUrl"]"
+                                                          asp-asp-antiforgery="true"
                                                           method="post"
                                                           autocomplete="off"
                                                           class="error">
                                                         <h4 class="mb-2 card-title my-font-bold">ورود</h4>
                                                         <p class="my-font">خوش آمدید لطفا وارد شوید</p>
-                                                        <input type="text" asp-for="Username" class="form-control mb-3 my-font" placeholder="نام کاربری" />
-                                                        <input type="password" asp-for="Password" class="form-control mb-2 my-font" placeholder="کلمه عبور" />
+
+                                                        @if(Model._HasError) {
+                                                            <div class="alert alert-danger mt-5">
+                                                                <a href="#" class="close" data-dismiss="alert">×</a>
+                                                                @Model._ErrorMessage
+                                                            </div>
+                                                        }
+
+                                                        <input type="text" asp-for="Username" class="form-control mb-3 my-font" placeholder="نام کاربری" required />
+                                                        <span asp-validation-for="Username"></span>
+                                                        <input type="password" asp-for="Password" class="form-control mb-2 my-font" placeholder="کلمه عبور" required />
+                                                        <span asp-validation-for="Password"></span>
                                                         <div class="d-sm-flex justify-content-between mb-3 font-small-2">
                                                             <div class="remember-me mb-2 mb-sm-0">
                                                                 <div class="custom-control custom-checkbox">
