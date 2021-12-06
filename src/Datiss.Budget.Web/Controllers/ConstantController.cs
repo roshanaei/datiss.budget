@@ -23,7 +23,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string Name = "Constant";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
-        //public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Edit = nameof(Edit);
         //public const string ACTION_Delete = nameof(Delete);
 
         private readonly ILogger<ConstantController> _logger;
@@ -141,8 +141,35 @@ namespace Datiss.Budget.Web.Controllers
             //model.set(
             //    (await _constantService.ge())
             //    .Adapt<IEnumerable<DropDownItemViewModel>>());
-            return PartialView("_editModal", model);
+            return PartialView("_EditModal", model);
         }
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Edit(int id, UpdateConstantViewModel model)
+        {
 
+            model.CheckArgumentIsNull(nameof(model));
+            if (!ModelState.IsValid)
+            {
+                //model.AddError("خطاهای داده ای را بررسی نمایید.");
+                return Json(model);
+            }
+            var data = model.Adapt<UpdateConstantDTO>();
+            //try
+            //{
+            //    await _constantService.UpdateAsync(data);
+            //}
+            //catch (CopySameYearException ex)
+            //{
+            //    model.AddError(ViewMessages.CopySameYear);
+            //    return Json(model);
+            //}
+            //catch (CopyDestYearHasDataException ex)
+            //{
+            //    model.AddError(ViewMessages.CopyDestYearHasData);
+            //    return Json(model);
+            //}
+
+            return RedirectToAction("index");
+        }
     }
 }

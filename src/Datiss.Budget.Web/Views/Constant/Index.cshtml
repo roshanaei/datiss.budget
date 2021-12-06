@@ -107,7 +107,16 @@
                                             <td>@item.ConstantKey </td>
                                             <td>@item.Status.ToString() </td>
                                             <td>
-                                                <a asp-controller="Constant" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                                                @*<button asp-controller="@ConstantController.Name" asp-action="@ConstantController.ACTION_Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="ویرایش" type="button" name="btnEdit" class="btn btn-success bg-light-success my-font" onclick="Edit(@item.Id)">
+                                                        <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                                    </button>*@
+                                                @*<button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" name="btnCreate" class="btn btn-success bg-light-success my-font" onclick="Edit(@item.Id)">
+                                                    <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                                </button>*@
+                                                <button value="@item.Id" data-toggle="tooltip" data-placement="top" title="ویرایش اطلاعات" type="button" name="btnEdit" class="btn btn-primary bg-light-primary mr-1 my-font modallink" onclick="Edit(@item.Id)">
+                                                    <i _ngcontent-dpj-c129="" class="fa fa-edit"></i>
+                                                </button>
+                                                @*<a asp-controller="@ConstantController.Name" asp-action="@ConstantController.ACTION_Edit" asp-route-id="@item.Id" onclick="Edit()">ویرایش</a>*@
                                             </td>
                                         </tr>
                                     }
@@ -124,8 +133,8 @@
                                             {
                                                 <li class="page-item">
                                                     <a class="page-link"
-                                                       asp-controller="Constant"
-                                                       asp-action="Index"
+                                                       asp-controller="@ConstantController.Name"
+                                                       asp-action="@ConstantController.ACTION_Index"
                                                        asp-route-page="@Model.PreviousPage"
                                                        aria-label="Previous">«</a>
                                                 </li>
@@ -141,8 +150,8 @@
                                                 {
                                                     <li class="page-item">
                                                         <a class="page-link"
-                                                           asp-controller="Constant"
-                                                           asp-action="Index"
+                                                           asp-controller="@ConstantController.Name"
+                                                           asp-action="@ConstantController.ACTION_Index"
                                                            asp-route-page="@i">@i.ToString() </a>
                                                     </li>
                                                 }
@@ -152,8 +161,8 @@
                                             {
                                                 <li class="page-item">
                                                     <a class="page-link"
-                                                       asp-controller="Constant"
-                                                       asp-action="Index"
+                                                       asp-controller="@ConstantController.Name"
+                                                       asp-action="@ConstantController.ACTION_Index"
                                                        asp-route-page="@Model.NextPage"
                                                        aria-label="Next">»</a>
                                                 </li>
@@ -181,7 +190,7 @@
     <script>
 
         function Edit(id) {
-            let myurl = '@Url.Action("Edit")';
+            let myurl = '@Url.Action(ConstantController.ACTION_Edit)';
             myurl = myurl + "/" + id;
             $.ajax({
                 type: 'GET',
@@ -290,48 +299,4 @@
     </script>
 }
 
-
-    @*@section footSection {
-        <div id="modaldiv">
-
-        </div>
-        <script>
-            $(".confirm-delete").on('click', function () {
-                Swal.fire({
-                    title: 'برای حذف اطمینان دارید؟',
-                    text: "You won't be able to revert this!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#2F8BE6',
-                    animation: false,
-                    customClass: 'animated flipInX',
-                    cancelButtonColor: '#F55252',
-                    cancelButtonText: 'انصراف',
-                    confirmButtonText: 'حذف اطلاعات!',
-
-                    confirmButtonClass: 'btn btn-warning my-font',
-                    cancelButtonClass: 'btn btn-danger  my-font ml-1',
-                    buttonsStyling: false,
-                }).then(function (result) {
-                    if (result.value) {
-                        alert('deleted')
-                    }
-                });
-            });
-            function loadCreateLink() {
-                var a = document.getElementById("createLink");
-                var parentId = document.getElementById('parentId').value;
-
-                var url = 'Constant/Create'
-
-                a.href = url + "/" + parentId;
-            });
-
-            $(document).ready(function () {
-                loadCreateLink();
-            });
-
-        </script>
-
-    }*@
 
