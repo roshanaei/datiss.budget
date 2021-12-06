@@ -349,11 +349,10 @@ namespace Datiss.Budget.Web.Controllers
             return Json(model);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IActionResult> ExportExcel(WaterInstallFeeIndexViewModel viewModel) {
+        [HttpGet("[action]/{orgid}/{yearid}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid) {
 
-            var filter = viewModel.Filter.Adapt<WaterInstallFeeFilterDTO>();
-            var result = await _waterInstallFeeService.GetExportItemsAsync(filter);
+            var result = await _waterInstallFeeService.GetExportItemsAsync(yearid,orgid);
             using var workbook = result.ExportExcel();
 
             return workbook.Deliver("WatreInstallFee.xlsx");
