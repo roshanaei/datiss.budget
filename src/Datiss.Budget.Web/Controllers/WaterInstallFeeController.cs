@@ -351,8 +351,8 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpGet("[action]")]
         public async Task<IActionResult> ExportExcel(WaterInstallFeeIndexViewModel viewModel) {
-            var filter = viewModel.Filter.Adapt<WaterInstallFeeFilterDTO>();
 
+            var filter = viewModel.Filter.Adapt<WaterInstallFeeFilterDTO>();
             var result = await _waterInstallFeeService.GetExportItemsAsync(filter);
             using var workbook = result.ExportExcel();
 

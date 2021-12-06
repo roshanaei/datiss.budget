@@ -487,6 +487,24 @@
                 }
             });
         };
+        @*function exportExcel() {
+             let params = {};
+             params.yearId = $('#yearId option:selected').val();
+             params.orgId = $('#organizationId option:selected').val();
+             console.log(params);
+             $.ajax({
+                 type: 'POST',
+                 data: params,
+                url: '@Url.Action(WaterInstallFeeController.ACTION_ExportExcel)',
+                success: function (data, status, settings) {
+                    console.log(data);
+                },
+                error: function (ajaxrequest, ajaxOptions, thrownError) {
+                    console.log('erorr');
+                }
+            });
+        };*@
+
 
     </script>
 
