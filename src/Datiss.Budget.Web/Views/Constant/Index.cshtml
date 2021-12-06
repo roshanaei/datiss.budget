@@ -107,16 +107,12 @@
                                             <td>@item.ConstantKey </td>
                                             <td>@item.Status.ToString() </td>
                                             <td>
-                                                @*<button asp-controller="@ConstantController.Name" asp-action="@ConstantController.ACTION_Edit" asp-route-id="@item.Id" data-toggle="tooltip" data-placement="top" title="ویرایش" type="button" name="btnEdit" class="btn btn-success bg-light-success my-font" onclick="Edit(@item.Id)">
-                                                        <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
-                                                    </button>*@
-                                                @*<button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" name="btnCreate" class="btn btn-success bg-light-success my-font" onclick="Edit(@item.Id)">
-                                                    <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
-                                                </button>*@
                                                 <button value="@item.Id" data-toggle="tooltip" data-placement="top" title="ویرایش اطلاعات" type="button" name="btnEdit" class="btn btn-primary bg-light-primary mr-1 my-font modallink" onclick="Edit(@item.Id)">
                                                     <i _ngcontent-dpj-c129="" class="fa fa-edit"></i>
                                                 </button>
-                                                @*<a asp-controller="@ConstantController.Name" asp-action="@ConstantController.ACTION_Edit" asp-route-id="@item.Id" onclick="Edit()">ویرایش</a>*@
+                                                <button value="@item.Id" data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" name="btnDelete" class="btn btn-primary bg-light-primary mr-1 my-font modallink" onclick="Delete(@item.Id)">
+                                                    <i _ngcontent-dpj-c129="" class="fa fa-edit"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                     }
