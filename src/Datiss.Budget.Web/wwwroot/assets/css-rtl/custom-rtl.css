@@ -107,3 +107,11 @@ body .sidebar-content .ps__rail-y
     -webkit-animation: progress-bar-stripes 40s linear infinite;
             animation: progress-bar-stripes 40s linear infinite;
 }
+
+.field-validation-error {
+    color: red;
+}
+
+.input-validation-error {
+    border-color: red;
+}

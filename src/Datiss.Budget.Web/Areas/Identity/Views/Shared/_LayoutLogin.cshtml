@@ -1,6 +1,6 @@
 ﻿@inject IOptionsSnapshot<SiteSettings> SiteOptions
 <!DOCTYPE html>
-<html class="loading" lang="en">
+<html class="loading" lang="fa">
 <!-- BEGIN : Head-->
 
 <head>
@@ -40,6 +40,8 @@
           type="text/css" />
 
     <link rel="stylesheet" href="../assets/css-rtl/pages/authentication.css" />
+
+    @RenderSection("headSection", false)
 </head>
 <!-- END : Head-->
 <!-- BEGIN : Body-->
@@ -72,7 +74,7 @@
     <!-- END APEX JS-->
     <!-- BEGIN PAGE LEVEL JS-->
     <!-- END PAGE LEVEL JS-->
-
+    @RenderSection("footSection", false)
 </body>
 <!-- END : Body-->
 

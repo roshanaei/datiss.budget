@@ -36,6 +36,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Edit = nameof(Edit);
         public const string ACTION_Copy = nameof(Copy);
         public const string ACTION_Delete = nameof(Delete);
+        public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
@@ -207,7 +208,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("records/delete")]
-        public async Task<IActionResult> Delete(int yearId, int orgId) {
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId) {
             try {
                 var result = await _waterInstallFeeService.HardDeleteAsync(yearId, orgId);
 
@@ -305,7 +306,11 @@ namespace Datiss.Budget.Web.Controllers
             catch(CopySameYearException) {
                 model.AddError(ViewMessages.CopySameYear);
             }
-            catch(CopyDestYearHasDataException) {
+            catch (CopyOrgNullDataException)
+            {
+                model.AddError(ViewMessages.CopySourceOrgNullData);
+            }
+            catch (CopyDestYearHasDataException) {
                 model.AddError(ViewMessages.CopyDestYearHasData);
             }
             catch(Exception ex) {
