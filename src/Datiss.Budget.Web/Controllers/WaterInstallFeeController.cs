@@ -350,9 +350,12 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("[action]/{orgid}/{yearid}")]
-        public async Task<IActionResult> ExportExcel(int orgid, int yearid) {
-
+        public async Task<IActionResult> ExportExcel(int? orgid, int? yearid) {
+            if (orgid==null || yearid == null)
+               return RedirectToAction("Index");
             var result = await _waterInstallFeeService.GetExportItemsAsync(yearid,orgid);
+            if(result.Count()==0)
+                return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
 
             return workbook.Deliver("WatreInstallFee.xlsx");
