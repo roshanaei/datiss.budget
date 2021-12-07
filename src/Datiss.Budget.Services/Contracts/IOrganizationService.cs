@@ -22,6 +22,8 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<bool> IsDescendentAsync(int orgId);
 
+        Task<IEnumerable<Organization>> GetAllDescendentsAsync(int? parentId);
+
         Task<PagedResult<OrganizationDTO>> GetListAsync(OrganizationFilterDTO filter);
 
     }

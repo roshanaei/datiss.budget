@@ -175,7 +175,7 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-        [HttpPost("[action]"), ValidateAntiForgeryToken]
+        [HttpPost("[action]")]
         public async Task<IActionResult> ImportExcel(ImportExcelViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -184,21 +184,47 @@ namespace Datiss.Budget.Web.Controllers
                     return RedirectToAction("Index");
 
             try {
-                await _waterInstallFeeService.ImportExcelAsync(model.ExcelFile);
+                var result = await _waterInstallFeeService.ImportExcelAsync(model.ExcelFile);
+                if(result.AskToImport) {
+                    return Json(new {
+                        ask = true,
+                        message = result.Message
+                    });
+                }
+
+                if(!result.Success) {
+                    return Json(new {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
             }
             catch (ImportExcelFileFormatInvalidException ex) {
                 showMessage(CssClassNames.Error,
                     ViewMessages.ImportExcelFileFormatInvalid);
+                return Json(new {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileFormatInvalid
+                });
             }
             catch (ImportExcelFileSizeInvalidException ex) {
                 showMessage(CssClassNames.Error,
                     ViewMessages.ImportExcelFileSizeInvalid);
+                return Json(new {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileSizeInvalid
+                });
             }
             catch (ImportExcelFileException ex) {
                 showMessage(CssClassNames.Error,
                     string.Format(
                         ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
                     );
+                return Json(new {
+                    hasError = true,
+                    message = string.Format(
+                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
+                });
             }
 
             showMessage(CssClassNames.Success,
