@@ -13,12 +13,12 @@ namespace Datiss.Budget.Services.Models
 
         public int Year { get; set; }
 
-        public bool Enabled { get; set; }
     }
 
     public class UpdateFinanceYearDTO : CreateFinanceYearDTO
     { 
         public int Id { get; set; }
+        public bool Enabled { get; set; }
     }
     public class FinanceYearDTO
     {
