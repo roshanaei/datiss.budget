@@ -10,72 +10,100 @@ using Datiss.Budget.Entities;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
+using Mapster;
+using Datiss.Budget.Resources;
+using Datiss.Budget.Common.Exceptions;
 
 namespace Datiss.Budget.Services
 {
-    public class FinanceYearService: IFinanceYearService
+    public class FinanceYearService : IFinanceYearService
     {
         private readonly IUnitOfWork _uow;
 
         private DbSet<FinanceYear> _dbSet;
 
         public FinanceYearService(
-            IUnitOfWork uow) {
+            IUnitOfWork uow)
+        {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<FinanceYear>();
         }
 
         private IQueryable<FinanceYear> Query()
             => _dbSet.AsNoTracking()
-                        .Where(x=> x.Status != EntityStatus.Deleted);
+                        .Where(x => x.Status != EntityStatus.Deleted);
+        public async Task<FinanceYear> GetByIdAsync(int id)
+        {
+            var entity = await _dbSet.FindAsync(id);
+            return await Task.FromResult(entity);
+        }
+        public async Task CreateAsync(CreateFinanceYearDTO model)
+        {
+            if (model.EndDate <= model.StartDate || (model.EndDate - model.StartDate).TotalDays != 364)
+                throw new FinanceYearInvalidYearException();
+            if (await checkLogicAsync(model.Title, model.Year, model.StartDate,model.EndDate))
+                throw new FinanceYearInvalidCopyDataException();
 
-        public async Task<ValidationResult> CreateAsync(CreateFinanceYearDTO model) {
-            model.CheckArgumentIsNull(nameof(model));
-
-            //TODO : check logic
-            var entity = new FinanceYear {
-                Year = model.Year,
+            var entity = new FinanceYear
+            {
                 Title = model.Title,
+                Year = model.Year,
                 StartDate = model.StartDate,
-                EndDate = model.EndDate
+                EndDate = model.EndDate,
+                Status = EntityStatus.Enabled
             };
 
             await _dbSet.AddAsync(entity);
             await _uow.SaveChangesAsync();
-
-            return ValidationResult.Success();
         }
-
-        public async Task<ValidationResult> UpdateAsync(UpdateFinanceYearDTO model) {
+        public async Task UpdateAsync(UpdateFinanceYearDTO model)
+        {
             model.CheckArgumentIsNull(nameof(model));
+            if (model.EndDate <= model.StartDate || (model.EndDate - model.StartDate).TotalDays != 364)
+                throw new FinanceYearInvalidYearException();
+            if (await checkLogicAsync(model.Title, model.Year, model.StartDate, model.EndDate))
+                throw new FinanceYearInvalidCopyDataException();
 
-            var entity = await _dbSet.FindAsync(model.Id);
-            entity.Year = model.Year;
-            entity.Title = model.Title;
-            entity.StartDate = model.StartDate;
-            entity.EndDate = model.EndDate;
+            var entity = new FinanceYear
+            {
+                Title = model.Title,
+                Year = model.Year,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate,
+                Status = model.Enabled
+                                ? EntityStatus.Enabled
+                                : EntityStatus.Disbaled
+            };
 
+            await _dbSet.AddAsync(entity);
             await _uow.SaveChangesAsync();
-
-            return ValidationResult.Success();
         }
 
-        public async Task<ValidationResult> SoftDeleteAsync(int id) {
+        public async Task<ValidationResult> SoftDeleteAsync(int id)
+        {
             var entity = await _dbSet.FindAsync(id);
             entity.CheckArgumentIsNull(nameof(entity));
-
             entity.Status = EntityStatus.Deleted;
-
             await _uow.SaveChangesAsync();
-
             return ValidationResult.Success();
         }
 
-        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync() 
-            => await Query().Select(x => new DropDownItem {
+        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync()
+            => await Query().Select(x => new DropDownItem
+            {
                 Id = x.Id,
                 Title = x.Year.ToString()
             }).ToListAsync();
+
+        public async Task<IEnumerable<DropDownItem>> GetDropDownStatusAsync()
+            => (from EntityStatus entitystatus in EntityStatus.GetValues(typeof(EntityStatus))
+                select new DropDownItem
+                {
+                    Id = (int)entitystatus,
+                    Title = entitystatus.ToDisplay()
+                }).Where(x => x.Id != -1)
+                .OrderByDescending(x => x.Id);
 
         public async Task<PagedResult<FinanceYearDTO>> GetListAsync(FinanceYearFilterDTO filter)
         {
@@ -85,17 +113,12 @@ namespace Datiss.Budget.Services
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
             };
-
             var query = Query();
-
             result.TotalCount = await query.CountAsync();
-
             query = setOrder(query, filter.OrderBy, filter.OrderDesc);
-
             query = query
                 .Skip(filter.StartIndex)
                 .Take(filter.PageSize);
-
             result.Items = await query
                                     .Select(x => new FinanceYearDTO
                                     {
@@ -132,6 +155,31 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.Id);
             }
         }
+
+        #endregion
+        #region Logics
+
+        private async Task<bool> checkLogicAsync(
+            string title,
+            int year,
+            DateTime startDate,
+            DateTime endDate,
+            int? id = null)
+        {
+            var result = id == null
+                ? await Query().AnyAsync(x => x.Title == title ||
+                                                x.Year == x.Year ||
+                                                x.StartDate == startDate ||
+                                                x.EndDate == endDate)
+
+                : await Query().AnyAsync(x => x.Title == title ||
+                                                x.Year == x.Year ||
+                                                x.StartDate == startDate ||
+                                                x.EndDate == endDate ||
+                                                x.Id != id);
+            return !result;
+        }
+
         #endregion
     }
 }
