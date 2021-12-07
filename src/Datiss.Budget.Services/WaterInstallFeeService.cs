@@ -18,12 +18,14 @@ using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Services.Contracts.Identity;
 using Mapster;
 using LinqKit;
+using Datiss.Budget.Security;
 
 namespace Datiss.Budget.Services
 {
 
     public class WaterInstallFeeService : IWaterInstallFeeService
     {
+        private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
         private readonly IExcelService _excelService;
         private readonly IUserService _userService;
@@ -35,11 +37,13 @@ namespace Datiss.Budget.Services
         private readonly DbSet<Constant> _constSet;
 
         public WaterInstallFeeService(
+            IUserContext userContext,
             IUnitOfWork uow, 
             IExcelService excelService,
             IUserService userService,
             IOrganizationService organizationService)
         {
+            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<WaterInstallFee>();
             _orgDbSet = _uow.Set<Organization>();
@@ -252,29 +256,65 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task ImportExcelAsync(IFormFile fileInfo) {
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false) {
             var data = await _excelService.ImportAsync<WaterInstallFeeImportModel>(fileInfo);
             
             var records = data.Adapt<List<WaterInstallFee>>();
 
             int rowIndex = 1;
-            
+
+            var descendents = await _organizationService
+                .GetAllDescendentsAsync(_userContext.OrganizationId);
+
+            foreach(var rec in records) {
+                var org = await _orgDbSet.FindAsync(rec.OrganizationId);
+                if(org == null) {
+                    return ImportResult.Failed($"سازمان به کد ({rec.Id}) در سیستم یافت نشد.");
+                }
+             }
+
+            if(!continueIfAnyOrgMissing) {
+                var missingOrgs = new List<Organization>();
+
+                foreach (var item in descendents) {
+                    var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                    if (!existInExcel)
+                        missingOrgs.Add(item);
+                }
+
+                if (missingOrgs.Any()) {
+                    string orgNames = "";
+                    foreach(var item in missingOrgs) {
+                        orgNames += item.Title + ",";
+                    }
+
+                    return new ImportResult
+                    {
+                        Message = $"سازمان های ({orgNames}) در فایل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟",
+                        AskToImport = true
+                    };
+                }
+            }
+
             foreach(var record in records) {
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
-                    throw new UserOrganizationAccessException(rowIndex);
+                    ImportResult.Failed(string.Format(ServiceMessages.ImportExcelAccessError, rowIndex));
 
                 if (!await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
-                    record.DWaterTypeId))
-                    throw new ImportExcelFileException(rowIndex);
+                    record.DWaterTypeId)) {
+                        ImportResult.Failed(string.Format(ServiceMessages.ImportExcelLogicError, rowIndex));
+                }
 
                 rowIndex++;
             }
 
             await _dbSet.AddRangeAsync(records);
             await _uow.SaveChangesAsync();
+
+            return ImportResult.Succeed("ورود اطلاعات با موفقیت انجام گردید.");
         }
 
         public async Task<IEnumerable<WaterInstallFeeDTO>> GetExportItemsAsync(WaterInstallFeeFilterDTO filter) {
