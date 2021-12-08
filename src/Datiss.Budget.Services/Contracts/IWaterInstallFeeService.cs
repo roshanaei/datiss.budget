@@ -31,6 +31,6 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<IEnumerable<WaterInstallFeeDTO>> GetExportItemsAsync(WaterInstallFeeFilterDTO filter);
 
-        Task ImportExcelAsync(IFormFile fileInfo);
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false);
     }
 }

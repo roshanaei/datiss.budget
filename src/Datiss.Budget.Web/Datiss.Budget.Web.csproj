@@ -45,6 +45,11 @@
     <!-- extends watching group to include *.js files -->
     <Watch Include="**\*.js" Exclude="node_modules\**\*;**\*.js.map;obj\**\*;bin\**\*;wwwroot\**\*;src\**\*" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\assets\js\select2\.github\CONTRIBUTING.md" />
+    <None Include="wwwroot\assets\js\select2\.github\ISSUE_TEMPLATE.md" />
+    <None Include="wwwroot\assets\js\select2\.github\PULL_REQUEST_TEMPLATE.md" />
+  </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(MSBuildProjectDirectory)\node_modules') ">
     <!-- Ensure Node.js is installed -->

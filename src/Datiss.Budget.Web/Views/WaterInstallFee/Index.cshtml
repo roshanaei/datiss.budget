@@ -119,11 +119,31 @@
 
 </section>
 
+@section headSection {
+    @*<link href="~/assets/js/select2/dist/css/select2.min.css" rel="stylesheet" />*@
+    <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
+    <style>
+        .select2-results__options{
+            font-family: Vazir;
+            font-size:14px !important;
+        }
+        .select2-selection__rendered {
+            font-family: Vazir;
+            font-size: 12px;
+        }
+        .select2-container--krajee .select2-dropdown--below{
+            width: 600px !important;
+            margin-left: -70px !important;
+        }
+    </style>
 
+}
 
 @section footSection {
 
     <partial name="_excelModal" model="new ImportExcelViewModel()" />
+
     <div id="divCreate">
 
     </div>
@@ -132,9 +152,19 @@
 
     </div>
 
+    @*<script type="texttext/javascript" src="~/assets/js/select2/dist/js/select2.min.js" />*@
+
+    
+
     <partial name="_tableScript" />
 
     <script type="text/javascript">
+        
+        $(document).ready(function () {
+            console.log('ready');
+            $('#organizationId').select2();
+        });
+
         function hardDelete(e) {
             Swal.fire({
                 title: 'برای حذف اطمینان دارید؟',
@@ -219,10 +249,10 @@
         }
 
         function openImportExcelForm() {
-            $('#importExcelForm').attr(
-                'action',
-                '@Url.Action(WaterInstallFeeController.ACTION_ImportExcel)'
-            );
+            //$('#importExcelForm').attr(
+            //    'action',
+            //    '@Url.Action(WaterInstallFeeController.ACTION_ImportExcel)'
+            //);
             $('#ExcellModal').modal('show');
         }
 
@@ -311,6 +341,80 @@
                     $("#divCopy").html('Failed to load more content');
                 }
             });
+
+        });
+
+        $(document).on('click', '#btnDoImportExcel', function() {
+            var fdata = new FormData();
+            var fileInput = $('#ExcelFile')[0];
+            var file = fileInput.files[0];
+            fdata.append('ExcelFile', file);
+
+            $.ajax({
+                url: '@Url.Action(WaterInstallFeeController.ACTION_ImportExcel)',
+                type: 'POST',
+                data: fdata,
+                processData: false,
+                contentType: false,
+                success: function(data, status, settings) {
+                    if(data.ask) {
+                        Swal.fire({
+                            title: data.message,
+                            text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            cancelButtonColor: '#F55252',
+                            cancelButtonText: 'خیر',
+                            confirmButtonText: 'بله',
+                            confirmButtonClass: 'btn btn-warning my-font',
+                            cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                            buttonsStyling: false,
+                        }).then(function(result) {
+                            if(result.value) {
+                                fdata.append('ContinueIfAnyOrgMissing', true);
+
+                                $.ajax({
+                                    url: '@WaterInstallFeeController.ACTION_ImportExcel',
+                                    type: 'POST',
+                                    data: fdata,
+                                    processData: false,
+                                    contentType: false,
+                                    success: function(data, status, settings) {
+                                        if(data.hasError) {
+                                            //TODO : show read message
+                                            alert(data.message);
+                                        }
+
+                                        if(data.succes) {
+                                            alert('success');
+                                        }
+
+                                        if(data.ask) {
+                                            alert('dont ask again');
+                                        }
+                                    },
+                                    error: function(request, options, err) {
+                                        console.log(err);
+                                    }
+                                });
+
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        });
+                    }
+
+                },
+                error: function(request, options, err) {
+                    console.log(err);
+                    alert(err);
+                }
+            })
 
         });
 

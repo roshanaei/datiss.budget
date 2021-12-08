@@ -129,6 +129,12 @@
   <data name="DuplicateNames" xml:space="preserve">
     <value>عنوان ({0}) تکراری است.</value>
   </data>
+  <data name="ImportExcelAccessError" xml:space="preserve">
+    <value>دسترسی شما برای تغییر اطلاعات سازمان وجود ندارد. خطا در سطر {0} فایل اکسل</value>
+  </data>
+  <data name="ImportExcelLogicError" xml:space="preserve">
+    <value>داده سطر {0} در اکسل مشکل دارد. لطفاً ورودی ها را بررسی نمایید.</value>
+  </data>
   <data name="Logic_BranchFeeAmount" xml:space="preserve">
     <value>اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است</value>
   </data>

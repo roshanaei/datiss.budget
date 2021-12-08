@@ -6,5 +6,7 @@ namespace Datiss.Budget.ViewModels
     {
 
         public IFormFile ExcelFile { get; set; }
+
+        public bool ContinueIfAnyOrgMissing { get; set; }
     }
 }
