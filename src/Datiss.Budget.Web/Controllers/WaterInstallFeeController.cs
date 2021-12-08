@@ -77,6 +77,11 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWaterInstallFeeViewModel model) 
         {
+            if (!ModelState.IsValid)
+            {
+                model.AddError("خطاهای داده ای را بررسی نمایید.");
+                return Json(model);
+            }
             var data = model.Adapt<CreateWaterInstallFeeDTO>();
 
             var result = await _waterInstallFeeService.CreateAsync(data);
