@@ -156,6 +156,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(WaterInstallFeeIndexViewModel model, int page = 1) {
+            model.Filter.PageNumber = page;
             var filterInput = model.Filter.Adapt<WaterInstallFeeFilterDTO>();
 
             var result = await _waterInstallFeeService.GetListAsync(filterInput);

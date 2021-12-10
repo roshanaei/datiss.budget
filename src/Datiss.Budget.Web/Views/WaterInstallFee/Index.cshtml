@@ -39,7 +39,7 @@
                                         سال:
                                         <select asp-for="Filter.YearId"
                                                 asp-items="Model.Filter.YearSource"
-                                                class="form-control d-inline-block width-100" 
+                                                class="form-control d-inline-block width-100"
                                                 id="yearId">
                                         </select>
                                     </label>
@@ -47,7 +47,7 @@
                                         سازمان:
                                         <select asp-for="Filter.OrganizationId"
                                                 asp-items="Model.Filter.OrganizationSource"
-                                                class="form-control d-inline-block width-300" 
+                                                class="form-control d-inline-block width-300"
                                                 id="organizationId"  >
                                         </select>
                                     </label>
@@ -105,18 +105,15 @@
                                     </div>
                                 </fieldset>
                             </div>
+
+                            <!--DataTable-->
+                            <partial name="_table" model="Model" />
                         </form>
-
-                        <!--DataTable-->
-                        <partial name="_table" model="Model" />
-
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
-
 </section>
 
 @section headSection {
