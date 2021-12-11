@@ -21,6 +21,7 @@ using Datiss.Budget.Resources;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Datiss.Budget.Common;
+using Microsoft.Extensions.Logging;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -40,6 +41,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
 
+        private readonly ILogger<WasteInstallFeeController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly IWasteInstallFeeService _wasteInstallFeeService;
         private readonly IConstantService _constantService;
@@ -47,6 +49,7 @@ namespace Datiss.Budget.Web.Controllers
         private readonly IFinanceYearService _financeYearService;
 
         public WasteInstallFeeController(
+            ILogger<WasteInstallFeeController> logger,
             IWebHostEnvironment environment,
             IWasteInstallFeeService wasteInstallFeeService,
             IOrganizationService organizationService,
@@ -54,6 +57,7 @@ namespace Datiss.Budget.Web.Controllers
             IConstantService constantService
             )
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
             _wasteInstallFeeService = wasteInstallFeeService ?? throw new ArgumentNullException(nameof(wasteInstallFeeService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
@@ -208,15 +212,62 @@ namespace Datiss.Budget.Web.Controllers
         }
 
 
-        [HttpPost("[action]"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(IFormCollection form)
+        [HttpPost("records/delete")]
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
         {
-            var yearId = int.Parse(form["filterYearId"].ToString());
-            var orgId = int.Parse(form["filterOrganizationId"].ToString());
+            try
+            {
+                var result = await _wasteInstallFeeService.HardDeleteAsync(yearId, orgId);
 
-            await _wasteInstallFeeService.HardDeleteAsync(yearId, orgId);
+                return Json(new
+                {
+                    success = true,
+                    message = string.Format(
+                        ViewMessages.DeleteMultipleDataForOrg,
+                        result.OrganizationTitle,
+                        result.Year)
+                });
+            }
+            catch (NullReferenceException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.NullRef
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteRelatedData
+                });
+            }
+        }
 
-            return RedirectToAction("Index");
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _wasteInstallFeeService.HardDeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.GetBaseException().Message);
+                return Json(new
+                {
+                    hasError = true,
+                    message = "خطا در بروزرسانی اطلاعات. لطفاً دوباره سعی کنید."
+                });
+            }
+
+            return Json(new
+            {
+                hasError = false,
+                message = "حذف رکورد با موفقیت انجام شد."
+            });
         }
 
         [HttpGet("[action]")]
@@ -282,39 +333,6 @@ namespace Datiss.Budget.Web.Controllers
             var result = await _wasteInstallFeeService.GetExportItemsAsync(filter);
             using var workbook = result.ExportExcel();
             return workbook.Deliver("WasteInstallFee.xlsx");
-        }
-        [HttpPost("records/delete")]
-        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
-        {
-            try
-            {
-                var result = await _wasteInstallFeeService.HardDeleteAsync(yearId, orgId);
-
-                return Json(new
-                {
-                    success = true,
-                    message = string.Format(
-                        ViewMessages.DeleteMultipleDataForOrg,
-                        result.OrganizationTitle,
-                        result.Year)
-                });
-            }
-            catch (NullReferenceException)
-            {
-                return Json(new
-                {
-                    hasError = true,
-                    message = ViewMessages.NullRef
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new
-                {
-                    hasError = true,
-                    message = ViewMessages.DeleteRelatedData
-                });
-            }
         }
 
     }
