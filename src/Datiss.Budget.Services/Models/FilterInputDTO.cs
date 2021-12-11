@@ -45,7 +45,6 @@ namespace Datiss.Budget.Services.Models
         public int? WInstallFee { get; set; }
         public InstallFeeFilterMode FeeMode { get; set; }
     }
-
     public class WasteInstallFeeFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
@@ -54,7 +53,6 @@ namespace Datiss.Budget.Services.Models
         public int? WsInstallFee { get; set; }
         public InstallFeeFilterMode FeeMode { get; set; }
     }
-
     public class WaterSalesSplitFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
@@ -66,7 +64,6 @@ namespace Datiss.Budget.Services.Models
         public InstallFeeFilterMode NumberMode { get; set; }
         public InstallFeeFilterMode UnitMode { get; set; }
     }
-
     public class BranchFeeAmountFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
@@ -99,7 +96,6 @@ namespace Datiss.Budget.Services.Models
 
         public int? WsTubingCost { get; set; }
     }
-
     public class WasteSalesSplitFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
@@ -117,14 +113,12 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
         public int? UserTypeId { get; set; }
     }
-
     public class IncomeForcastFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
         public int? UserTypeId { get; set; }
     }
-
     public class IncomeForcastWsFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
@@ -168,5 +162,58 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
         public int? DisplayOrder { get; set; }
         public TablesName? tableNames { get; set; }
+    }
+    public class ConsumeForcastFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
+        public int? UsageLayerId { get; set; }
+    }
+    public class ConsumeForcastWsFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
+        public int? UsageLayerId { get; set; }
+    }
+    public class IncomeCurrentNOperationalFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? NOICType { get; set; }
+    }
+    public class IncomeCurrentOperationalFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public ActivityType? Type { get; set; }
+        public int? ICOTypeId { get; set; }
+    }
+    public class IncomeCurrentWsHFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
+        public int? UsageLayerId { get; set; }
+    }
+    public class IncomeCurrentWsNHFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
+    }
+    public class IncomeForcastOtherFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public ActivityType? Type { get; set; }
+        public int? OIFTypeId { get; set; }
+    }
+    public class SalesSplitTotalFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
     }
 }
