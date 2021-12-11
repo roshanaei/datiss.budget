@@ -1,0 +1,234 @@
+﻿@model WasteInstallFeeIndexViewModel
+
+<div class="table-responsive">
+    <table id="my-table" class=" table table-hover table-bordered m-0 my-font ">
+        <thead class="thead-light">
+            <tr>
+                <th>سال</th>
+                <th>سازمان</th>
+                <th>کاربری</th>
+                <th>قیمت</th>
+                <th>مدیریت</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowTemplate" style="display: none">
+                <td>
+                    <div id="divInput_Year_">
+                        <input id="hidYearId_" type="hidden" />
+                        <select class="form-control" id="inputYear_" asp-items="Model.YearSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_Year_" style="display: none">
+                        <span id="spanYear_"></span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Org_">
+                        <input id="hidOrgId_" type="hidden" />
+                        <select class="form-control" id="inputOrg_" asp-items="Model.OrganizationSource">
+                        </select>
+                        <script>
+                            $('#inputOrg_').select2();
+                        </script>
+                    </div>
+                    <div id="divOutput_Org_">
+                        <span id="spanOrg_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_DWasteType_">
+                        <input id="hidDWasteTypeId_" type="hidden" />
+                        <select class="form-control" id="inputDWasteType_" asp-items="Model.DWasteTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_DWasteType_" style="display: none">
+                        <span id="spanDWasteType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_WsInstallFee_">
+                        <input class="form-control" id="inputWsInstallFee_" type="number" />
+                    </div>
+                    <div id="divOutput_WsInstallFee_" style="display: none">
+                        <span id="spanWsInstallFee_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <a id="btnEdit_" class="edit-row btn btn-sm btn-primary" style="display: none">
+                        <i class="fa fa-pencil"></i> ویرایش
+                    </a>
+
+                    <a id="btnDelete_" class="delete-row btn btn-sm btn-danger" style="display: none">
+                        <i class="fa fa-remove"></i> حذف
+                    </a>
+
+                    <a id="btnSaveEdit_" class="save-edit-row btn btn-sm btn-success" style="display: none">
+                        <i class="fa fa-check"></i> ثبت
+                    </a>
+
+                    <a id="btnCancelEdit_" class="cancel-edit-row btn btn-sm btn-danger" style="display: none">
+                        <i class="fa fa-times"></i> انصراف
+                    </a>
+
+                    <a id="btnSaveCreate_" class="save-new-row btn btn-sm btn-success">
+                        <i class="fa fa-check"></i> ثبت
+                    </a>
+
+                    <a id="btnCancelCreate_" class="cancel-new-row btn btn-sm btn-danger">
+                        <i class="fa fa-times"></i> انصراف
+                    </a>
+
+                </td>
+            </tr>
+            @foreach (var item in Model.Items)
+            {
+                <tr id="row_@item.Id">
+                    <td>
+                        <div id="divInput_Year_@item.Id" style="display: none">
+                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                            <select class="form-control" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            </select>
+                            <script>
+                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                            </script>
+                        </div>
+                        <div id="divOutput_Year_@item.Id">
+                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Org_@item.Id" style="display: none">
+                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                            <select class="form-control" id="inputOrg_@item.Id" asp-items="Model.OrganizationSource">
+                            </select>
+                            <script>
+                                $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                $('#inputOrg_' + @item.Id).select2();
+                            </script>
+                        </div>
+                        <div id="divOutput_Org_@item.Id">
+                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_DWasteType_@item.Id" style="display: none">
+                            <input id="hidDWasteTypeId_@item.Id" type="hidden" value="@item.DWasteTypeId" />
+                            <select class="form-control" id="inputDWasteType_@item.Id" asp-items="Model.DWasteTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputDWasteType_' + @item.Id + ' option[value=' + @item.DWasteTypeId + ']').attr('selected', true);
+                            </script>
+                        </div>
+                        <div id="divOutput_DWasteType_@item.Id">
+                            <span id="spanDWasteType_@item.Id">@item.DWasteTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_WsInstallFee_@item.Id" style="display: none">
+                            <input class="form-control" id="inputWsInstallFee_@item.Id" value="@item.WsInstallFee" type="number" />
+                        </div>
+                        <div id="divOutput_WsInstallFee_@item.Id">
+                            <span id="spanWsInstallFee_@item.Id">@item.WsInstallFeeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
+
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
+
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
+
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="rowACJSB" style="margin-top:20px">
+        <!--Tools-->
+        <div class="rowACJS">
+            <form id="toolForm"
+                  enctype="multipart/form-data"
+                  method="post"
+                  asp-antiforgery="true">
+                <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+                <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+                <span data-toggle="modal" data-target="#backdrop">
+                    <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                        <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                    </button>
+                </span>
+                <span data-toggle="modal" data-target="#CopyModal">
+                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                        <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                    </button>
+                </span>
+                <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+                </button>
+                <span data-toggle="modal" data-target="#success">
+                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" onclick="return calculation(this.click);" class="btn btn-info  bg-light-info mr-1 my-font">
+                        <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                    </button>
+                </span>
+            </form>
+        </div>
+        <!--Pagination-->
+        @if (Model.PagesCount > 1)
+        {
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    @if (Model.PageNumber > 1)
+                    {
+                        <li class="page-item">
+                            <button class="page-link"
+                               asp-controller="@WasteInstallFeeController.Name"
+                               asp-action="@WasteInstallFeeController.ACTION_Index"
+                               asp-route-page="@Model.PreviousPage"
+                               aria-label="Previous">«</button>
+                        </li>
+                    }
+
+                    @for (int i = 1; i <= Model.PagesCount; i++)
+                    {
+                        if (i == Model.PageNumber)
+                        {
+                            <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                <button class="page-link"
+                                   asp-controller="@WasteInstallFeeController.Name"
+                                   asp-action="@WasteInstallFeeController.ACTION_Index"
+                                   asp-route-page="@i">@i.ToString() </button>
+                            </li>
+                        }
+                    }
+
+                    @if (Model.PageNumber < Model.PagesCount)
+                    {
+                        <li class="page-item">
+                            <button class="page-link"
+                               asp-controller="@WasteInstallFeeController.Name"
+                               asp-action="@WasteInstallFeeController.ACTION_Index"
+                               asp-route-page="@Model.NextPage"
+                               aria-label="Next">»</button>
+                        </li>
+                    }
+
+                </ul>
+            </nav>
+        }
+    </div>
+</div>

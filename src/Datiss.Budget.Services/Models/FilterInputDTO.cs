@@ -50,6 +50,9 @@ namespace Datiss.Budget.Services.Models
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
+        public int? DWasteTypeId { get; set; }
+        public int? WsInstallFee { get; set; }
+        public InstallFeeFilterMode FeeMode { get; set; }
     }
 
     public class WaterSalesSplitFilterDTO : FilterInputDTO

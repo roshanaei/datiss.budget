@@ -48,6 +48,7 @@ namespace Datiss.Budget.ViewModels
         public int DWasteTypeId { get; set; }
         public string DWasteTypeDisplay { get; set; }
         public int WsInstallFee { get; set; }
+        public string WsInstallFeeDisplay => WsInstallFee.ToString("N0");
     }
 
     public class WasteInstallFeeFilterViewModel: FilterViewModel
@@ -78,7 +79,7 @@ namespace Datiss.Budget.ViewModels
 
         //public string OrganizationSourceArray => OrganizationSource.ToStringArray();
 
-        public IList<SelectListItem> DWaterTypeSource { get; set; }
+        public IList<SelectListItem> DWasteTypeSource { get; set; }
 
         //public string DWaterTypeSourceArray => DWaterTypeSource.ToStringArray();
 
@@ -100,7 +101,7 @@ namespace Datiss.Budget.ViewModels
 
 
         public void SetDWaterTypeSource(IEnumerable<DropDownItemViewModel> source)
-            => DWaterTypeSource = source.Select(x => new SelectListItem
+            => DWasteTypeSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
@@ -112,7 +113,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
+            }).ToList();
 
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
@@ -121,7 +122,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedYearId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
+            }).ToList();
     }
     
 }

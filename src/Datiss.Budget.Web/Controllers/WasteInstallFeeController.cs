@@ -28,11 +28,12 @@ namespace Datiss.Budget.Web.Controllers
     public class WasteInstallFeeController : Controller
     {
         public const string Name = "WasteInstallFee";
-        //public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
-        //public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Edit = nameof(Edit);
         public const string ACTION_Copy = nameof(Copy);
         public const string ACTION_Delete = nameof(Delete);
+        public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         //public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
@@ -160,12 +161,13 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
+
             var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var filterInput = new WasteInstallFeeFilterDTO
             {
-                OrderBy = "dwatertype",
+                OrderBy = "dwastetype",
                 PageNumber = page,
                 YearId = maxYear,
                 OrganizationId = firstOrgId
@@ -191,6 +193,7 @@ namespace Datiss.Budget.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(WasteInstallFeeIndexViewModel model, int page = 1)
         {
+            model.Filter.PageNumber = page;
             var filterInput = model.Filter.Adapt<WasteInstallFeeFilterDTO>();
 
             var result = await _wasteInstallFeeService.GetListAsync(filterInput);
@@ -210,29 +213,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetFinanceYearFilterSource(yearSource);
             model.SetOrganizationFilterSource(orgSource);
             model.SetDWaterTypeSource(dwaterSource);
-            model.Filter.YearId = filterInput.YearId;
-            model.Filter.OrganizationId = filterInput.OrganizationId;
 
             return View(model);
-
-            if (Request.Form["btnFilter"].Count() > 0)
-            {
-
-            }
-
-            if (Request.Form["btnCreate"].Count() > 0)
-            {
-                int yearId = int.Parse(Request.Form["Filter.YearId"].ToString());
-                int orgId = int.Parse(Request.Form["Filter.OrganizationId"].ToString());
-
-                return RedirectToAction("Create", new
-                {
-                    organizationId = orgId,
-                    yearId = yearId
-                });
-            }
-
-            return RedirectToAction("Index");
         }
         [HttpPost("[action]"), ValidateAntiForgeryToken]
         public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
@@ -346,6 +328,39 @@ namespace Datiss.Budget.Web.Controllers
             var result = await _wasteInstallFeeService.GetExportItemsAsync(filter);
             using var workbook = result.ExportExcel();
             return workbook.Deliver("WasteInstallFee.xlsx");
+        }
+        [HttpPost("records/delete")]
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
+        {
+            try
+            {
+                var result = await _wasteInstallFeeService.HardDeleteAsync(yearId, orgId);
+
+                return Json(new
+                {
+                    success = true,
+                    message = string.Format(
+                        ViewMessages.DeleteMultipleDataForOrg,
+                        result.OrganizationTitle,
+                        result.Year)
+                });
+            }
+            catch (NullReferenceException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.NullRef
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteRelatedData
+                });
+            }
         }
 
     }
