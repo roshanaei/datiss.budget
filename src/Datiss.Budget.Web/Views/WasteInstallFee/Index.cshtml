@@ -57,7 +57,7 @@
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
-                                        <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success my-font">
+                                        <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
                                         </button>
                                     </div>
@@ -109,9 +109,11 @@
 
                         </form>
                     </div>
+
                 </div>
             </div>
         </div>
+    </div>
 </section>
 
 @section footSection {
@@ -229,7 +231,7 @@
 
         $(document).on('click', '.edit-row', function () {
             let id = $(this).data('id');
-            let input = document.getElementById('inputWInstallFee_' + id);
+            let input = document.getElementById('inputWsInstallFee_' + id);
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
             input.addEventListener("keyup", function (event) {
                 event.preventDefault();

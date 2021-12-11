@@ -12,9 +12,9 @@ namespace Datiss.Budget.Services.Contracts
     {
         Task<WasteInstallFee> GetByIdAsync(int id);
 
-        Task<ValidationResult> CreateAsync(CreateWasteInstallFeeDTO model);
+        Task<ValidationResult<WasteInstallFeeDTO>> CreateAsync(CreateWasteInstallFeeDTO model);
 
-        Task<ValidationResult> UpdateAsync(UpdateWasteInstallFeeDTO model);
+        Task<ValidationResult<WasteInstallFeeDTO>> UpdateAsync(UpdateWasteInstallFeeDTO model);
 
         Task HardDeleteAsync(int Id);
 

@@ -20,6 +20,7 @@ using Datiss.Budget.Web.Helpers;
 using Datiss.Budget.Resources;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Datiss.Budget.Common;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -64,91 +65,44 @@ namespace Datiss.Budget.Web.Controllers
             ViewData["type"] = type;
             ViewData["message"] = message;
         }
-        [HttpGet("[action]")]
-        public async Task<IActionResult> Create(int organizationId, int yearId) {
-            var model = new CreateWasteInstallFeeViewModel {
-                OrganizationId = organizationId,
-                YearId = yearId
-            };
-
-            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            model.DWasteTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
-
-            return View(model);
-        }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWasteInstallFeeViewModel model)
         {
-            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            model.DWasteTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
+            var data = model.Adapt<CreateWasteInstallFeeDTO>();
 
-            if (!ModelState.IsValid) {
+            var result = await _wasteInstallFeeService.CreateAsync(data);
 
-                return View(model);
-            }
-
-            var result = await _wasteInstallFeeService.CreateAsync(new CreateWasteInstallFeeDTO {
-                DWasteTypeId = model.DWasteTypeId,
-                OrganizationId = model.OrganizationId,
-                WInstllFee = model.WInstllFee,
-                YearId = model.YearId,
-                DWasteTypeTitle = model.DWasteTypeTitle
-            });
-
-            if (!result.IsValid) {
+            if (!result.IsValid)
+            {
                 model.AddError(result.Message);
-                return View(model);
+                return Json(model);
             }
 
-            return RedirectToAction("Index");
+            return Json(result.Result.Adapt<WasteInstallFeeViewModel>());
         }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Edit(UpdateWasteInstallFeeViewModel model)
+        {
 
-        [HttpGet("[action]/{id}")]
-        public async Task<IActionResult> Edit(int id) {
-            var entity = await _wasteInstallFeeService.GetByIdAsync(id);
-
-            if (entity == null) {
-                return RedirectToAction("Index");
+            if (!ModelState.IsValid)
+            {
+                model.AddError("خطاهای داده ای را بررسی نمایید.");
+                return Json(model);
             }
 
-            var model = entity.Adapt<UpdateWasteInstallFeeViewModel>();
-            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            model.DWasteTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
+            var data = model.Adapt<UpdateWasteInstallFeeDTO>();
+            var result = await _wasteInstallFeeService.UpdateAsync(data);
 
-            return View(model);
-        }
-
-        [HttpPost("[action]/{id}")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, UpdateWasteInstallFeeViewModel model) {
-            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            model.DWasteTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
-
-            if (!ModelState.IsValid) {
-                return View(model);
-            }
-
-            var result = await _wasteInstallFeeService.UpdateAsync(model.Adapt<UpdateWasteInstallFeeDTO>());
-
-            if (!result.IsValid) {
+            if (!result.IsValid)
+            {
                 model.AddError(result.Message);
-                return View(model);
+                return Json(model);
             }
 
-            return RedirectToAction("Index", new { page = model._CurrentPage });
+            return Json(
+                result.Result.Adapt<WasteInstallFeeViewModel>()
+            );
         }
 
         [HttpGet("{page?}")]
@@ -162,7 +116,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
+            var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var filterInput = new WasteInstallFeeFilterDTO
@@ -178,7 +132,7 @@ namespace Datiss.Budget.Web.Controllers
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
-            model.SetDWaterTypeSource(dwaterSource);
+            model.SetDWasteTypeSource(dwasteSource);
 
             model.SetFinanceYearFilterSource(yearSource, maxYear);
             model.SetOrganizationFilterSource(orgSource);
@@ -205,14 +159,14 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
+            var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetFinanceYearFilterSource(yearSource);
             model.SetOrganizationFilterSource(orgSource);
-            model.SetDWaterTypeSource(dwaterSource);
+            model.SetDWasteTypeSource(dwasteSource);
 
             return View(model);
         }

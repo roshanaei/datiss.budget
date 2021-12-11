@@ -89,7 +89,7 @@
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
         model.dWasteTypeId = $(e).find('#inputDWasteType_').val();
-        model.WsInstallFee = $(e).find('#inputWsInstallFee_').val();
+        model.wsInstallFee = $(e).find('#inputWsInstallFee_').val();
 
         $.ajax({
             url: '@Url.Action(WasteInstallFeeController.ACTION_Create)',
@@ -142,7 +142,7 @@
                 $(e).find('#spanWsInstallFee_').attr('id', 'spanWsInstallFee_' + data.id);
 
                 $('#divInput_WsInstallFee_' + data.id).hide();
-                $('#spanWsInstallFee_' + data.id).text(data.WsInstallFee);
+                $('#spanWsInstallFee_' + data.id).text(data.wsInstallFee);
                 $('#divOutput_WsInstallFee_' + data.id).show();
 
                 //Buttons

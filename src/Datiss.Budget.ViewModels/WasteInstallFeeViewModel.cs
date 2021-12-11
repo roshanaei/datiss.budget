@@ -17,7 +17,7 @@ namespace Datiss.Budget.ViewModels
 
         [Required(ErrorMessage = "*")]
         [Range(0, int.MaxValue, ErrorMessage = "Please dorost vared kon")] //TODO : use resources
-        public int WInstllFee { get; set; }
+        public int WsInstallFee { get; set; }
 
         public IEnumerable<SelectListItem> DWasteTypeSource { get; set; }
 
@@ -81,7 +81,7 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> DWasteTypeSource { get; set; }
 
-        //public string DWaterTypeSourceArray => DWaterTypeSource.ToStringArray();
+        //public string DWasteTypeSourceArray => DWasteTypeSource.ToStringArray();
 
         public IFormFile ExcelFile { get; set; }
 
@@ -100,7 +100,7 @@ namespace Datiss.Budget.ViewModels
             }).ToList();
 
 
-        public void SetDWaterTypeSource(IEnumerable<DropDownItemViewModel> source)
+        public void SetDWasteTypeSource(IEnumerable<DropDownItemViewModel> source)
             => DWasteTypeSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
