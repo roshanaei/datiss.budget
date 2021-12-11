@@ -8,7 +8,7 @@
 
         public int DWasteTypeId { get; set; }
 
-        public int WInstllFee { get; set; }
+        public int WsInstallFee { get; set; }
 
         public string DWasteTypeTitle { get; set; }
     }

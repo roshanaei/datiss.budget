@@ -16,7 +16,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public int DWasteTypeId { get; set; }
 
-        public int WsInstllFee { get; set; }
+        public int WsInstallFee { get; set; }
 
         #endregion
 
