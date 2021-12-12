@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Enum;
 
-namespace Datiss.Budget.ViewModels.Extensions
+namespace Datiss.Budget.Extensions
 {
     public static class EnumSelectListProvider
     {
