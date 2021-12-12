@@ -326,7 +326,12 @@ namespace Datiss.Budget.Services
             return ImportResult.Succeed("ورود اطلاعات با موفقیت انجام گردید.");
         }
 
-        public async Task<IEnumerable<WaterInstallFeeDTO>> GetExportItemsAsync(WaterInstallFeeFilterDTO filter) {
+        public async Task<IEnumerable<WaterInstallFeeDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        {
+            var filter = new WaterInstallFeeFilterDTO { 
+            OrganizationId=organizationId,
+            YearId=yearId
+            };
             filter.CheckArgumentIsNull(nameof(filter));
 
             var query = Query();
