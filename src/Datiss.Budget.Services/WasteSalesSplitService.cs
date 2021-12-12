@@ -285,42 +285,19 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        #region Logics
-
-        private async Task<bool> checkLogicAsync(
-            int yearId,
-            int organizationId,
-            int userTypeId,
-            int wsPipeDiameterId,
-            int? id = null)
-        {
-            var result = id == null
-                ? await Query().AnyAsync(x => x.YearId == yearId &&
-                                                x.OrganizationId == organizationId &&
-                                                x.UserTypeId == userTypeId &&
-                                                x.WsPipeDiameterId == wsPipeDiameterId)
-
-                : await Query().AnyAsync(x => x.YearId == yearId &&
-                                            x.OrganizationId == organizationId &&
-                                            x.UserTypeId == userTypeId &&
-                                            x.WsPipeDiameterId == wsPipeDiameterId &&
-                                            x.Id != id);
-            return !result;
-        }
-
-        #endregion
-
         #region Private Helper Methods
 
         private IQueryable<WasteSalesSplit> setOrder(
            IQueryable<WasteSalesSplit> query,
            string orderBy = "id",
-           bool desc = false) {
+           bool desc = false)
+        {
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "id";
 
             orderBy = orderBy.ToLower();
-            switch (orderBy) {
+            switch (orderBy)
+            {
                 case "year":
                     return desc
                         ? query.OrderByDescending(x => x.FinanceYear.Year)
@@ -373,7 +350,8 @@ namespace Datiss.Budget.Services
         private async Task<IEnumerable<WasteSalesSplit>> getChildrenData(
             int parentOrganizationId,
             int yearId,
-            int targetYearId){
+            int targetYearId)
+        {
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
@@ -414,6 +392,32 @@ namespace Datiss.Budget.Services
         }
 
         #endregion
+
+        #region Logics
+
+        private async Task<bool> checkLogicAsync(
+            int yearId,
+            int organizationId,
+            int userTypeId,
+            int wsPipeDiameterId,
+            int? id = null)
+        {
+            var result = id == null
+                ? await Query().AnyAsync(x => x.YearId == yearId &&
+                                                x.OrganizationId == organizationId &&
+                                                x.UserTypeId == userTypeId &&
+                                                x.WsPipeDiameterId == wsPipeDiameterId)
+
+                : await Query().AnyAsync(x => x.YearId == yearId &&
+                                            x.OrganizationId == organizationId &&
+                                            x.UserTypeId == userTypeId &&
+                                            x.WsPipeDiameterId == wsPipeDiameterId &&
+                                            x.Id != id);
+            return !result;
+        }
+
+        #endregion
+
     }
 }
     

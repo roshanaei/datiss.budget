@@ -12,15 +12,15 @@ namespace Datiss.Budget.Services.Contracts
     {
         Task<WasteInstallFee> GetByIdAsync(int id);
 
-        Task<ValidationResult> CreateAsync(CreateWasteInstallFeeDTO model);
+        Task<ValidationResult<WasteInstallFeeDTO>> CreateAsync(CreateWasteInstallFeeDTO model);
 
-        Task<ValidationResult> UpdateAsync(UpdateWasteInstallFeeDTO model);
+        Task<ValidationResult<WasteInstallFeeDTO>> UpdateAsync(UpdateWasteInstallFeeDTO model);
 
         Task HardDeleteAsync(int Id);
 
         Task<PagedResult<WasteInstallFeeDTO>> GetListAsync(WasteInstallFeeFilterDTO filter);
 
-        Task HardDeleteAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
         //Task<int> CalculationAsync(int yearId, int organizationId);
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);

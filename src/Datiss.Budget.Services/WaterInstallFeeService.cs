@@ -217,6 +217,8 @@ namespace Datiss.Budget.Services
 
             if (sourceYearId == destYearId)
                 throw new CopySameYearException();
+            if (destYearId < sourceYearId)
+                throw new CopyDestYearExxeption();
             if (!await hasAnyDataAsync(sourceOrgId,sourceYearId))
                 throw new CopyOrgNullDataException();
             var result = new List<WaterInstallFee>();

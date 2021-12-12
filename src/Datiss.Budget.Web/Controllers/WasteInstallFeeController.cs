@@ -20,6 +20,8 @@ using Datiss.Budget.Web.Helpers;
 using Datiss.Budget.Resources;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Datiss.Budget.Common;
+using Microsoft.Extensions.Logging;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -28,16 +30,18 @@ namespace Datiss.Budget.Web.Controllers
     public class WasteInstallFeeController : Controller
     {
         public const string Name = "WasteInstallFee";
-        //public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
-        //public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Edit = nameof(Edit);
         public const string ACTION_Copy = nameof(Copy);
         public const string ACTION_Delete = nameof(Delete);
+        public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         //public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
 
+        private readonly ILogger<WasteInstallFeeController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly IWasteInstallFeeService _wasteInstallFeeService;
         private readonly IConstantService _constantService;
@@ -45,6 +49,7 @@ namespace Datiss.Budget.Web.Controllers
         private readonly IFinanceYearService _financeYearService;
 
         public WasteInstallFeeController(
+            ILogger<WasteInstallFeeController> logger,
             IWebHostEnvironment environment,
             IWasteInstallFeeService wasteInstallFeeService,
             IOrganizationService organizationService,
@@ -52,6 +57,7 @@ namespace Datiss.Budget.Web.Controllers
             IConstantService constantService
             )
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
             _wasteInstallFeeService = wasteInstallFeeService ?? throw new ArgumentNullException(nameof(wasteInstallFeeService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
@@ -63,91 +69,44 @@ namespace Datiss.Budget.Web.Controllers
             ViewData["type"] = type;
             ViewData["message"] = message;
         }
-        [HttpGet("[action]")]
-        public async Task<IActionResult> Create(int organizationId, int yearId) {
-            var model = new CreateWasteInstallFeeViewModel {
-                OrganizationId = organizationId,
-                YearId = yearId
-            };
-
-            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            model.DWasteTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
-
-            return View(model);
-        }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWasteInstallFeeViewModel model)
         {
-            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            model.DWasteTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
+            var data = model.Adapt<CreateWasteInstallFeeDTO>();
 
-            if (!ModelState.IsValid) {
+            var result = await _wasteInstallFeeService.CreateAsync(data);
 
-                return View(model);
-            }
-
-            var result = await _wasteInstallFeeService.CreateAsync(new CreateWasteInstallFeeDTO {
-                DWasteTypeId = model.DWasteTypeId,
-                OrganizationId = model.OrganizationId,
-                WInstllFee = model.WInstllFee,
-                YearId = model.YearId,
-                DWasteTypeTitle = model.DWasteTypeTitle
-            });
-
-            if (!result.IsValid) {
+            if (!result.IsValid)
+            {
                 model.AddError(result.Message);
-                return View(model);
+                return Json(model);
             }
 
-            return RedirectToAction("Index");
+            return Json(result.Result.Adapt<WasteInstallFeeViewModel>());
         }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Edit(UpdateWasteInstallFeeViewModel model)
+        {
 
-        [HttpGet("[action]/{id}")]
-        public async Task<IActionResult> Edit(int id) {
-            var entity = await _wasteInstallFeeService.GetByIdAsync(id);
-
-            if (entity == null) {
-                return RedirectToAction("Index");
+            if (!ModelState.IsValid)
+            {
+                model.AddError("خطاهای داده ای را بررسی نمایید.");
+                return Json(model);
             }
 
-            var model = entity.Adapt<UpdateWasteInstallFeeViewModel>();
-            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            model.DWasteTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
+            var data = model.Adapt<UpdateWasteInstallFeeDTO>();
+            var result = await _wasteInstallFeeService.UpdateAsync(data);
 
-            return View(model);
-        }
-
-        [HttpPost("[action]/{id}")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, UpdateWasteInstallFeeViewModel model) {
-            var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            model.DWasteTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            });
-
-            if (!ModelState.IsValid) {
-                return View(model);
-            }
-
-            var result = await _wasteInstallFeeService.UpdateAsync(model.Adapt<UpdateWasteInstallFeeDTO>());
-
-            if (!result.IsValid) {
+            if (!result.IsValid)
+            {
                 model.AddError(result.Message);
-                return View(model);
+                return Json(model);
             }
 
-            return RedirectToAction("Index", new { page = model._CurrentPage });
+            return Json(
+                result.Result.Adapt<WasteInstallFeeViewModel>()
+            );
         }
 
         [HttpGet("{page?}")]
@@ -160,12 +119,13 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
+
+            var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var filterInput = new WasteInstallFeeFilterDTO
             {
-                OrderBy = "dwatertype",
+                OrderBy = "dwastetype",
                 PageNumber = page,
                 YearId = maxYear,
                 OrganizationId = firstOrgId
@@ -176,7 +136,7 @@ namespace Datiss.Budget.Web.Controllers
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
-            model.SetDWaterTypeSource(dwaterSource);
+            model.SetDWasteTypeSource(dwasteSource);
 
             model.SetFinanceYearFilterSource(yearSource, maxYear);
             model.SetOrganizationFilterSource(orgSource);
@@ -191,6 +151,7 @@ namespace Datiss.Budget.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(WasteInstallFeeIndexViewModel model, int page = 1)
         {
+            model.Filter.PageNumber = page;
             var filterInput = model.Filter.Adapt<WasteInstallFeeFilterDTO>();
 
             var result = await _wasteInstallFeeService.GetListAsync(filterInput);
@@ -202,37 +163,16 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
+            var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetFinanceYearFilterSource(yearSource);
             model.SetOrganizationFilterSource(orgSource);
-            model.SetDWaterTypeSource(dwaterSource);
-            model.Filter.YearId = filterInput.YearId;
-            model.Filter.OrganizationId = filterInput.OrganizationId;
+            model.SetDWasteTypeSource(dwasteSource);
 
             return View(model);
-
-            if (Request.Form["btnFilter"].Count() > 0)
-            {
-
-            }
-
-            if (Request.Form["btnCreate"].Count() > 0)
-            {
-                int yearId = int.Parse(Request.Form["Filter.YearId"].ToString());
-                int orgId = int.Parse(Request.Form["Filter.OrganizationId"].ToString());
-
-                return RedirectToAction("Create", new
-                {
-                    organizationId = orgId,
-                    yearId = yearId
-                });
-            }
-
-            return RedirectToAction("Index");
         }
         [HttpPost("[action]"), ValidateAntiForgeryToken]
         public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
@@ -272,15 +212,62 @@ namespace Datiss.Budget.Web.Controllers
         }
 
 
-        [HttpPost("[action]"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(IFormCollection form)
+        [HttpPost("records/delete")]
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
         {
-            var yearId = int.Parse(form["filterYearId"].ToString());
-            var orgId = int.Parse(form["filterOrganizationId"].ToString());
+            try
+            {
+                var result = await _wasteInstallFeeService.HardDeleteAsync(yearId, orgId);
 
-            await _wasteInstallFeeService.HardDeleteAsync(yearId, orgId);
+                return Json(new
+                {
+                    success = true,
+                    message = string.Format(
+                        ViewMessages.DeleteMultipleDataForOrg,
+                        result.OrganizationTitle,
+                        result.Year)
+                });
+            }
+            catch (NullReferenceException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.NullRef
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteRelatedData
+                });
+            }
+        }
 
-            return RedirectToAction("Index");
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _wasteInstallFeeService.HardDeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.GetBaseException().Message);
+                return Json(new
+                {
+                    hasError = true,
+                    message = "خطا در بروزرسانی اطلاعات. لطفاً دوباره سعی کنید."
+                });
+            }
+
+            return Json(new
+            {
+                hasError = false,
+                message = "حذف رکورد با موفقیت انجام شد."
+            });
         }
 
         [HttpGet("[action]")]

@@ -70,6 +70,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to نمی توانید کپی اطلاعات را برای سال های قبلی انجام دهید..
+        /// </summary>
+        public static string CopyErrorDestYear {
+            get {
+                return ResourceManager.GetString("CopyErrorDestYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to سال ها یکی نباشد.
         /// </summary>
         public static string CopySameYear {

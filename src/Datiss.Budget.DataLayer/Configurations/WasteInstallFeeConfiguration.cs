@@ -21,7 +21,7 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.DWasteTypeId).IsRequired();
 
-            builder.Property(x => x.WsInstllFee).IsRequired();
+            builder.Property(x => x.WsInstallFee).IsRequired();
 
             builder.HasOne(x => x.FinanceYear)
                 .WithMany(x => x.WasteInstallFees)

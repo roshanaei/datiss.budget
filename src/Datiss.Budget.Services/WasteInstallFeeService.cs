@@ -29,6 +29,8 @@ namespace Datiss.Budget.Services
 
         private readonly DbSet<WasteInstallFee> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
+        private readonly DbSet<FinanceYear> _yearSet;
+        private readonly DbSet<Constant> _constSet;
 
         public WasteInstallFeeService(
             IUnitOfWork uow,
@@ -39,6 +41,8 @@ namespace Datiss.Budget.Services
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<WasteInstallFee>();
             _orgDbSet = _uow.Set<Organization>();
+            _yearSet = _uow.Set<FinanceYear>();
+            _constSet = _uow.Set<Constant>();
             _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
@@ -53,7 +57,7 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult> CreateAsync(CreateWasteInstallFeeDTO model)
+        public async Task<ValidationResult<WasteInstallFeeDTO>> CreateAsync(CreateWasteInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -62,7 +66,7 @@ namespace Datiss.Budget.Services
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
                 DWasteTypeId = model.DWasteTypeId,
-                WsInstllFee = model.WInstllFee
+                WsInstallFee = model.WsInstallFee
             };
 
             if (await checkLogicAsync(model.YearId, model.OrganizationId, model.DWasteTypeId))
@@ -70,16 +74,22 @@ namespace Datiss.Budget.Services
                 await _dbSet.AddAsync(entity);
                 await _uow.SaveChangesAsync();
 
-                return ValidationResult.Success();
+                var result = entity.Adapt<WasteInstallFeeDTO>();
+                result.DWasteTypeDisplay = (await _constSet.FindAsync(model.DWasteTypeId)).Title;
+                result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+                result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                result.WsInstallFee = entity.WsInstallFee;
+
+                return ValidationResult<WasteInstallFeeDTO>.Success(result);
             }
 
-            return ValidationResult.Failed(
+            return ValidationResult<WasteInstallFeeDTO>.Failed(
                 string.Format(ServiceMessages.Logic_DWasteType,
                                 model.DWasteTypeTitle)
                 );
         }
 
-        public async Task<ValidationResult> UpdateAsync(UpdateWasteInstallFeeDTO model)
+        public async Task<ValidationResult<WasteInstallFeeDTO>> UpdateAsync(UpdateWasteInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -89,14 +99,25 @@ namespace Datiss.Budget.Services
                 entity.OrganizationId = model.OrganizationId;
                 entity.YearId = model.YearId;
                 entity.DWasteTypeId = model.DWasteTypeId;
-                entity.WsInstllFee = model.WInstllFee;
+                entity.WsInstallFee = model.WsInstallFee;
 
                 await _uow.SaveChangesAsync();
 
-                return ValidationResult.Success();
+                var result = new WasteInstallFeeDTO
+                {
+                    OrganizationId = model.OrganizationId,
+                    YearId = model.YearId,
+                    DWasteTypeId = model.DWasteTypeId,
+                    WsInstallFee = model.WsInstallFee,
+                    OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
+                    DWasteTypeDisplay = (await _constSet.FindAsync(model.DWasteTypeId)).Title,
+                    Year = (await _yearSet.FindAsync(model.YearId)).Year
+                };
+
+                return ValidationResult<WasteInstallFeeDTO>.Success(result);
             }
 
-            return ValidationResult.Failed(
+            return ValidationResult<WasteInstallFeeDTO>.Failed(
                 string.Format(ServiceMessages.Logic_DWasteType,
                                 model.DWasteTypeTitle)
                 );
@@ -110,33 +131,46 @@ namespace Datiss.Budget.Services
             _dbSet.Remove(entity);
             await _uow.SaveChangesAsync();
         }
-        public async Task HardDeleteAsync(int yearId, int organizationId)
+        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId)
         {
+            var organization = await _orgDbSet.FindAsync(organizationId);
+            organization.CheckReferenceIsNull(nameof(organization));
 
-            var items = await _dbSet.Where(_ => _.YearId == yearId)
-                                    .Where(_ => _.OrganizationId == organizationId ||
-                                                _.Organization.ParentId==organizationId ||
-                                                _.Organization.Parent.ParentId == organizationId ||
-                                                _.Organization.Parent.Parent.ParentId == organizationId)
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            var self = await _dbSet.Where(_ => _.YearId == yearId)
+                                    .Where(_ => _.OrganizationId == organizationId)
                                     .ToListAsync();
-            _dbSet.RemoveRange(items);
+            _dbSet.RemoveRange(self);
+            var childrens = await getChildren(organizationId, yearId);
+            _dbSet.RemoveRange(childrens);
+
+            var result = new OrganizationDeleteDataResult
+            {
+                OrganizationTitle = organization.Title,
+                Year = year.Year,
+                YearTitle = year.Title
+            };
 
             await _uow.SaveChangesAsync();
+
+            return await Task.FromResult(result);
         }
 
         public async Task<int> CalculationAsync(int yearId, int organizationId)
         {
             //var sum = _dbSet.Where(_ => _.YearId == yearId)
             //                        .Where(_ => _.OrganizationId == organizationId)
-            //                        .GroupBy(_ => _.DWaterTypeId)
+            //                        .GroupBy(_ => _.DWasteTypeId)
             //                        .Select(_ => new {
             //                            _.Key,
-            //                            Sum = _.Sum(_ => _.WInstllFee)
+            //                            Sum = _.Sum(_ => _.WsInstallFee)
             //                        });
 
             return await _dbSet.Where(_ => _.YearId == yearId)
                                .Where(_ => _.OrganizationId == organizationId)
-                               .SumAsync(_ => _.WsInstllFee);
+                               .SumAsync(_ => _.WsInstallFee);
         }
 
         public async Task<PagedResult<WasteInstallFeeDTO>> GetListAsync(WasteInstallFeeFilterDTO filter)
@@ -170,7 +204,7 @@ namespace Datiss.Budget.Services
                                         DWasteTypeId = x.DWasteTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        WsInstallFee = x.WsInstllFee,
+                                        WsInstallFee = x.WsInstallFee,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -195,7 +229,7 @@ namespace Datiss.Budget.Services
                         DWasteTypeId = item.DWasteTypeId,
                         OrganizationId = item.OrganizationId,
                         YearId = destYearId,
-                        WsInstllFee = item.WsInstllFee
+                        WsInstallFee = item.WsInstallFee
                     };
                     result.Add(entity);
                 }
@@ -234,7 +268,7 @@ namespace Datiss.Budget.Services
                                         DWasteTypeId = x.DWasteTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        WsInstallFee = x.WsInstllFee,
+                                        WsInstallFee = x.WsInstallFee,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -268,7 +302,7 @@ namespace Datiss.Budget.Services
                                         DWasteTypeId = x.DWasteTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        WsInstallFee = x.WsInstllFee,
+                                        WsInstallFee = x.WsInstallFee,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -325,6 +359,25 @@ namespace Datiss.Budget.Services
                 query = query.Where(predicate);
             }
 
+            if (filter.DWasteTypeId.HasValue)
+                query = query.Where(x => x.DWasteTypeId == filter.DWasteTypeId.Value);
+
+            if (filter.WsInstallFee.HasValue)
+            {
+                switch (filter.FeeMode)
+                {
+                    case InstallFeeFilterMode.Exact:
+                        query = query.Where(x => x.WsInstallFee == filter.WsInstallFee.Value);
+                        break;
+                    case InstallFeeFilterMode.GreaterThan:
+                        query = query.Where(x => x.WsInstallFee >= filter.WsInstallFee.Value);
+                        break;
+                    case InstallFeeFilterMode.LessThan:
+                        query = query.Where(x => x.WsInstallFee <= filter.WsInstallFee.Value);
+                        break;
+                }
+            }
+
             return query;
         }
         private IQueryable<WasteInstallFee> setOrder(
@@ -348,7 +401,7 @@ namespace Datiss.Budget.Services
                         ? query.OrderByDescending(x => x.Organization.Title)
                         : query.OrderBy(x => x.Organization.Title);
 
-                case "dwatertype":
+                case "dwastetype":
                     return desc
                         ? query.OrderByDescending(x => x.DWasteType.DisplayOrder)
                         : query.OrderBy(x => x.DWasteType.DisplayOrder);
@@ -392,7 +445,7 @@ namespace Datiss.Budget.Services
                         DWasteTypeId = item.DWasteTypeId,
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
-                        WsInstllFee = item.WsInstllFee
+                        WsInstallFee = item.WsInstallFee
                     };
 
                     result.Add(entity);
@@ -403,6 +456,29 @@ namespace Datiss.Budget.Services
 
             return result;
         }
+        private async Task<IEnumerable<WasteInstallFee>> getChildren(
+            int parentOrganizationId,
+            int yearId)
+        {
+            var children = await _orgDbSet
+                .Where(_ => _.ParentId == parentOrganizationId)
+                .ToListAsync();
+            var result = new List<WasteInstallFee>();
+            foreach (var org in children)
+            {
+                var data = await Query()
+                                .Where(_ => _.YearId == yearId)
+                                .Where(_ => _.OrganizationId == org.Id)
+                                .ToListAsync();
+
+                foreach (var item in data)
+                {
+                    result.Add(item);
+                }
+                result.AddRange(await getChildren(org.Id, yearId));
+            }
+            return result;
+        }
         #endregion
 
         #region Logics
@@ -410,17 +486,17 @@ namespace Datiss.Budget.Services
         private async Task<bool> checkLogicAsync(
             int yearId,
             int organizationId,
-            int dwaterTypeId,
+            int dwasteTypeId,
             int? id = null)
         {
             var result = id == null
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&
-                                                x.DWasteTypeId == dwaterTypeId)
+                                                x.DWasteTypeId == dwasteTypeId)
 
                 : await Query().AnyAsync(x => x.YearId == yearId &&
                                             x.OrganizationId == organizationId &&
-                                            x.DWasteTypeId == dwaterTypeId &&
+                                            x.DWasteTypeId == dwasteTypeId &&
                                             x.Id != id);
             return !result;
         }
