@@ -96,7 +96,7 @@
                                 </div>
                                 <fieldset>
                                     <div class="rowACJE">
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WaterInstallFeeController.ACTION_ExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WaterInstallFeeController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" asp-action="@WaterInstallFeeController.ACTION_DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
@@ -452,21 +452,6 @@
             console.log(pageSize);
             $('#filterForm').submit();
         }
-
-         function exportExcel() {
-
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action(WaterInstallFeeController.ACTION_ExportExcel)',
-                success: function (data, status, settings) {
-                    console.log(data);
-                },
-                error: function (ajaxrequest, ajaxOptions, thrownError) {
-                    console.log('erorr');
-                }
-            });
-        };
-
     </script>
 
 }
