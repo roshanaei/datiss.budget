@@ -151,6 +151,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to خطاهای داده ای را بررسی نمایید..
+        /// </summary>
+        public static string InvalidData {
+            get {
+                return ResourceManager.GetString("InvalidData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند.
         /// </summary>
         public static string InvalidUsernameOrPassword {

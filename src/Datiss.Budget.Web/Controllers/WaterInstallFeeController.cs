@@ -79,7 +79,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.AddError("خطاهای داده ای را بررسی نمایید.");
+                model.AddError(ViewMessages.InvalidData);
                 return Json(model);
             }
             var data = model.Adapt<CreateWaterInstallFeeDTO>();
@@ -99,7 +99,7 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Edit(UpdateWaterInstallFeeViewModel model) {
 
             if (!ModelState.IsValid) {
-                model.AddError("خطاهای داده ای را بررسی نمایید.");
+                model.AddError(ViewMessages.InvalidData);
                 return Json(model);
             }
 
