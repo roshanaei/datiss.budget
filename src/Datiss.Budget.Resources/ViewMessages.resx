@@ -120,6 +120,9 @@
   <data name="CopyDestYearHasData" xml:space="preserve">
     <value>سال هدف نباید دیتا داشته باشد</value>
   </data>
+  <data name="CopyErrorDestYear" xml:space="preserve">
+    <value>نمی توانید کپی اطلاعات را برای سال های قبلی انجام دهید.</value>
+  </data>
   <data name="CopySameYear" xml:space="preserve">
     <value>سال ها یکی نباشد</value>
   </data>

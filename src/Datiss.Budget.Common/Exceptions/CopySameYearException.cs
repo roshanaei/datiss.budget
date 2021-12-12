@@ -3,4 +3,7 @@
     public class CopySameYearException : BaseAppException
     {
     }
+    public class CopyDestYearExxeption : BaseAppException
+    {
+    }
 }
