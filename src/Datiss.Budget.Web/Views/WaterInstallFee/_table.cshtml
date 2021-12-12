@@ -190,11 +190,11 @@
                 <ul class="pagination justify-content-center">
                     @if (Model.PageNumber > 1) {
                         <li class="page-item">
-                            <a class="page-link"
+                            <button class="page-link"
                                asp-controller="@WaterInstallFeeController.Name"
                                asp-action="@WaterInstallFeeController.ACTION_Index"
                                asp-route-page="@Model.PreviousPage"
-                               aria-label="Previous">«</a>
+                               aria-label="Previous">«</button>
                         </li>
                     }
 
@@ -204,21 +204,21 @@
                         }
                         else {
                             <li class="page-item">
-                                <a class="page-link"
+                                <button class="page-link"
                                    asp-controller="@WaterInstallFeeController.Name"
                                    asp-action="@WaterInstallFeeController.ACTION_Index"
-                                   asp-route-page="@i">@i.ToString() </a>
+                                   asp-route-page="@i">@i.ToString() </button>
                             </li>
                         }
                     }
 
                     @if (Model.PageNumber < Model.PagesCount) {
                         <li class="page-item">
-                            <a class="page-link"
+                            <button class="page-link"
                                asp-controller="@WaterInstallFeeController.Name"
                                asp-action="@WaterInstallFeeController.ACTION_Index"
                                asp-route-page="@Model.NextPage"
-                               aria-label="Next">»</a>
+                               aria-label="Next">»</button>
                         </li>
                     }
 
