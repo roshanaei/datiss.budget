@@ -115,3 +115,32 @@ body .sidebar-content .ps__rail-y
 .input-validation-error {
     border-color: red;
 }
+
+.select2.select2-container .select2-selection {
+    font-family: 'Vazir',
+    border: 1px solid #e1e1e1;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 5px;
+    height: 36px;
+    outline: none !important;
+    transition: all .15s ease-in-out;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    background-image: url(../img/arrow.png);
+    background-size: contain;
+    border: none !important;
+    height: 12px !important;
+    width: 12px !important;
+    margin-top: 50% !important;
+    top: auto !important;
+}
+
+.select2-container .select2-dropdown .select2-search input {
+    font-family: 'Vazir',
+    outline: none !important;
+    border: 1px solid #ccc !important;
+    padding: 4px 6px !important;
+    border-radius: 5px;
+}
