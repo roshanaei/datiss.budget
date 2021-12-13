@@ -1,19 +1,18 @@
-﻿
-
-@model Datiss.Budget.Reports.ReportViewData
-@*<form asp-controller="Report"
-          asp-action="Report1"
-          data-ajax="true"
-          data-ajax-update="#Viewer"
-          method="post">
-        <input asp-for="Id" type="hidden" />
-
-        <button type="submit">Send</button>
-    </form>*@
-
+﻿@model Datiss.Budget.Reports.ReportViewData
 @using Stimulsoft.Report.Mvc;
 @using Stimulsoft.Report.Web;
 @using Stimulsoft.System.Web.UI.WebControls;
+
+@*<form asp-controller="@ReportController.Name"
+      asp-action="Report1"
+      data-ajax="true"
+      data-ajax-update="#Viewer"
+      method="post">
+
+    <input asp-for="Id" type="hidden" />
+    <button type="submit">Send</button>
+
+</form>*@
 
 <p>
     Hello
@@ -28,7 +27,7 @@
     Server =
     {
         Controller = "Report",
-        RequestTimeout = 60000,
+        RequestTimeout = 360000,
         RouteTemplate = "Report/{action}"
     }
 })

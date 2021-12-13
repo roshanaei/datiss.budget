@@ -42,6 +42,8 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
 
+        private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
+
         private readonly ILogger<WaterInstallFeeController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly IWaterInstallFeeService _waterInstallFeeService;
@@ -119,6 +121,15 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1) 
         {
+            var filter = new WaterInstallFeeFilterDTO();
+
+            var myfilter = TempData.Get<WaterInstallFeeFilterViewModel>(_indexFilterKey);
+            if(myfilter != null) 
+            {
+                filter = myfilter.Adapt<WaterInstallFeeFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+            
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
@@ -130,14 +141,12 @@ namespace Datiss.Budget.Web.Controllers
             var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var filterInput = new WaterInstallFeeFilterDTO {
-                OrderBy = "dwatertype",
-                PageNumber = page,
-                YearId = maxYear,
-                OrganizationId = firstOrgId
-            };
+            filter.PageNumber = page;
+            filter.OrderBy = "dwatertype";
+            filter.YearId = maxYear;
+            filter.OrganizationId = firstOrgId;
 
-            var result = await _waterInstallFeeService.GetListAsync(filterInput);
+            var result = await _waterInstallFeeService.GetListAsync(filter);
             var model = result.Adapt<WaterInstallFeeIndexViewModel>();
 
             model.SetYearSource(yearSource);
@@ -147,8 +156,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetFinanceYearFilterSource(yearSource, maxYear);
             model.SetOrganizationFilterSource(orgSource);
             
-            model.Filter.YearId = filterInput.YearId;
-            model.Filter.OrganizationId = filterInput.OrganizationId;
+            model.Filter.YearId = filter.YearId;
+            model.Filter.OrganizationId = filter.OrganizationId;
 
             return View(model);
         }
@@ -157,11 +166,13 @@ namespace Datiss.Budget.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(WaterInstallFeeIndexViewModel model, int page = 1) {
             model.Filter.PageNumber = page;
-            var filterInput = model.Filter.Adapt<WaterInstallFeeFilterDTO>();
+            var filter = model.Filter.Adapt<WaterInstallFeeFilterDTO>();
 
-            var result = await _waterInstallFeeService.GetListAsync(filterInput);
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _waterInstallFeeService.GetListAsync(filter);
             model = result.Adapt<WaterInstallFeeIndexViewModel>();
-            model.Filter = filterInput.Adapt<WaterInstallFeeFilterViewModel>();
+            model.Filter = filter.Adapt<WaterInstallFeeFilterViewModel>();
 
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();

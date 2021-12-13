@@ -278,6 +278,7 @@ namespace Datiss.Budget.Services
             foreach(var rec in records) {
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
                 if(org == null) {
+                    //TODO : use resource message instead
                     return ImportResult.Failed($"سازمان به کد ({rec.Id}) در سیستم یافت نشد.");
                 }
              }
@@ -299,6 +300,7 @@ namespace Datiss.Budget.Services
 
                     return new ImportResult
                     {
+                        //TODO : use resource message instead
                         Message = $"سازمان های ({orgNames}) در فایل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟",
                         AskToImport = true
                     };
@@ -323,6 +325,7 @@ namespace Datiss.Budget.Services
             await _dbSet.AddRangeAsync(records);
             await _uow.SaveChangesAsync();
 
+            //TODO : use resource message instead
             return ImportResult.Succeed("ورود اطلاعات با موفقیت انجام گردید.");
         }
 
