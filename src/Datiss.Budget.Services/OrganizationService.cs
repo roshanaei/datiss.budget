@@ -139,12 +139,9 @@ namespace Datiss.Budget.Services
         }
 
         public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync(bool input=false)
-            => input ?
-            (_userContext.OrganizationId.HasValue
+            =>_userContext.OrganizationId.HasValue
 
-                ? (await getWithChildrenAsync(_userContext.OrganizationId.Value))
-                    .Where(x => x.Type != OrganizationType.Root &&
-                                x.Type != OrganizationType.County)
+                ? (await getWithChildrenAsync(_userContext.OrganizationId.Value,input))
                     .Select(x => new DropDownItem
                     {
                         Id = x.Id,
@@ -152,32 +149,13 @@ namespace Datiss.Budget.Services
                         Selected = x.Id == _userContext.OrganizationId
                     }).ToList()
 
-                : (await getByParnetIdAsync(_userContext.OrganizationId))
-                    .Where(x => x.Type != OrganizationType.Root &&
-                                x.Type != OrganizationType.County)
+                : (await getByParnetIdAsync(_userContext.OrganizationId,input))
                     .Select(x => new DropDownItem
                     {
                         Id = x.Id,
                         Title = x.Title,
                         Selected = x.Id == _userContext.OrganizationId
-                    }).ToList())
-            : (_userContext.OrganizationId.HasValue
-
-                ? (await getWithChildrenAsync(_userContext.OrganizationId.Value))
-                    .Select(x => new DropDownItem
-                    {
-                        Id = x.Id,
-                        Title = x.Title,
-                        Selected = x.Id == _userContext.OrganizationId
-                    }).ToList()
-
-                : (await getByParnetIdAsync(_userContext.OrganizationId))
-                    .Select(x => new DropDownItem
-                    {
-                        Id = x.Id,
-                        Title = x.Title,
-                        Selected = x.Id == _userContext.OrganizationId
-                    }).ToList());
+                    }).ToList();
 
         public async Task<PagedResult<OrganizationDTO>> GetListAsync(OrganizationFilterDTO filter)
         {
@@ -266,33 +244,59 @@ namespace Datiss.Budget.Services
             }
         }
 
-        private async Task<IEnumerable<Organization>> getByParnetIdAsync(int? parentId) {
+        private async Task<IEnumerable<Organization>> getByParnetIdAsync(int? parentId,bool input=false) {
 
             var firstLevel = await Query()
                 .Include(x => x.Childrens)
                 .Where(x => x.ParentId == parentId).ToListAsync();
 
             var result = new List<Organization>();
-            result.AddRange(firstLevel);
+            if(!input)
+                result.AddRange(firstLevel);
+            else
+            {
+                foreach(var item in firstLevel)
+                {
+                    if (item.Type != OrganizationType.Root && item.Type != OrganizationType.County)
+                        result.Add(item);
+                }
+            }
 
             foreach (var item in firstLevel) {
                 foreach (var child in item.Childrens) {
-                    result.Add(child);
-                    result.AddRange(await getByParnetIdAsync(child.Id));
+                    if (!input)
+                        result.Add(child);
+                    else
+                    {
+                        if (item.Type != OrganizationType.Root && item.Type != OrganizationType.County)
+                            result.Add(child);
+                    }
+                    result.AddRange(await getByParnetIdAsync(child.Id, input));
                 }
             }
 
             return result;
         }
 
-        private async Task<IEnumerable<Organization>> getWithChildrenAsync(int organizationId)
+        private async Task<IEnumerable<Organization>> getWithChildrenAsync(int organizationId, bool input=false)
         {
             var result = new List<Organization>();
             var myself = await _dbSet.FirstOrDefaultAsync(_ => _.Id == organizationId);
-            result.Add(myself);
+            if(!input)
+                result.Add(myself);
 
-            var children = await getByParnetIdAsync(myself.Id);
-            result.AddRange(children);
+            var children = await getByParnetIdAsync(myself.Id,input);
+
+            if (!input)
+                result.AddRange(children);
+            else
+            {
+                foreach (var item in children)
+                {
+                    if (item.Type != OrganizationType.Root && item.Type != OrganizationType.County)
+                        result.Add(item);
+                }
+            }
 
             return await Task.FromResult(result);
         }
