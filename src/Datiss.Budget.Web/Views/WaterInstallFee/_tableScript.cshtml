@@ -165,6 +165,8 @@
                 $('#btnEdit_' + data.id).show();
                 $('#btnDelete_' + data.id).show();
 
+                $('#inputOrg_' + data.id).select2();
+
                 $(e).css('background-color', '');
                 isNewRow = false;
             },

@@ -77,6 +77,11 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWaterInstallFeeViewModel model) 
         {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
             var data = model.Adapt<CreateWaterInstallFeeDTO>();
 
             var result = await _waterInstallFeeService.CreateAsync(data);
@@ -94,7 +99,7 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Edit(UpdateWaterInstallFeeViewModel model) {
 
             if (!ModelState.IsValid) {
-                model.AddError("خطاهای داده ای را بررسی نمایید.");
+                model.AddError(ViewMessages.InvalidData);
                 return Json(model);
             }
 
@@ -151,6 +156,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(WaterInstallFeeIndexViewModel model, int page = 1) {
+            model.Filter.PageNumber = page;
             var filterInput = model.Filter.Adapt<WaterInstallFeeFilterDTO>();
 
             var result = await _waterInstallFeeService.GetListAsync(filterInput);
@@ -349,13 +355,12 @@ namespace Datiss.Budget.Web.Controllers
             return Json(model);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IActionResult> ExportExcel(WaterInstallFeeIndexViewModel viewModel) {
-            var filter = viewModel.Filter.Adapt<WaterInstallFeeFilterDTO>();
-
-            var result = await _waterInstallFeeService.GetExportItemsAsync(filter);
+        [HttpGet("[action]/{orgid}/{yearid}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid) {
+            var result = await _waterInstallFeeService.GetExportItemsAsync(yearid,orgid);
+            if (result.Count() == 0)
+                return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
-
             return workbook.Deliver("WatreInstallFee.xlsx");
         }
 

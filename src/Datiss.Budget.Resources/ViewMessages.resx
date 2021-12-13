@@ -150,6 +150,9 @@
   <data name="ImportExcelSuccess" xml:space="preserve">
     <value>عملیات ورود فایل اکسل با موفقیت انجام گردید</value>
   </data>
+  <data name="InvalidData" xml:space="preserve">
+    <value>خطاهای داده ای را بررسی نمایید.</value>
+  </data>
   <data name="InvalidUsernameOrPassword" xml:space="preserve">
     <value>نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند</value>
   </data>

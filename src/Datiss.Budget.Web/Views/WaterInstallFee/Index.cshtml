@@ -39,7 +39,7 @@
                                         سال:
                                         <select asp-for="Filter.YearId"
                                                 asp-items="Model.Filter.YearSource"
-                                                class="form-control d-inline-block width-100" 
+                                                class="form-control d-inline-block width-100"
                                                 id="yearId">
                                         </select>
                                     </label>
@@ -47,7 +47,7 @@
                                         سازمان:
                                         <select asp-for="Filter.OrganizationId"
                                                 asp-items="Model.Filter.OrganizationSource"
-                                                class="form-control d-inline-block width-300" 
+                                                class="form-control d-inline-block width-300"
                                                 id="organizationId"  >
                                         </select>
                                     </label>
@@ -96,7 +96,7 @@
                                 </div>
                                 <fieldset>
                                     <div class="rowACJE">
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WaterInstallFeeController.ACTION_ExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WaterInstallFeeController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" asp-action="@WaterInstallFeeController.ACTION_DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
@@ -105,38 +105,20 @@
                                     </div>
                                 </fieldset>
                             </div>
+
+                            <!--DataTable-->
+                            <partial name="_table" model="Model" />
                         </form>
-
-                        <!--DataTable-->
-                        <partial name="_table" model="Model" />
-
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
-
 </section>
 
 @section headSection {
     <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
     <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
-    <style>
-        .select2-results__options{
-            font-family: Vazir;
-            font-size:14px !important;
-        }
-        .select2-selection__rendered {
-            font-family: Vazir;
-            font-size: 12px;
-        }
-        .select2-container--krajee .select2-dropdown--below{
-            width: 600px !important;
-            margin-left: -70px !important;
-        }
-    </style>
-
 }
 
 @section footSection {
@@ -151,17 +133,15 @@
 
     </div>
 
-    @*<script type="texttext/javascript" src="~/assets/js/select2/dist/js/select2.min.js" />*@
-
-    
-
     <partial name="_tableScript" />
 
     <script type="text/javascript">
         
         $(document).ready(function () {
             console.log('ready');
-            $('#organizationId').select2();
+            $('#organizationId').select2({
+                dir: 'rtl'
+            });
         });
 
         function hardDelete(e) {
@@ -237,7 +217,6 @@
                 }
             });
 
-            
         }
 
         function calculation(e) {
@@ -473,21 +452,6 @@
             console.log(pageSize);
             $('#filterForm').submit();
         }
-
-         function exportExcel() {
-
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action(WaterInstallFeeController.ACTION_ExportExcel)',
-                success: function (data, status, settings) {
-                    console.log(data);
-                },
-                error: function (ajaxrequest, ajaxOptions, thrownError) {
-                    console.log('erorr');
-                }
-            });
-        };
-
     </script>
 
 }
