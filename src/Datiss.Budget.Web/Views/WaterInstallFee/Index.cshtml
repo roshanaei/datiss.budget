@@ -32,8 +32,8 @@
                               asp-controller="@WaterInstallFeeController.Name"
                               asp-action="@WaterInstallFeeController.ACTION_Index"
                               asp-antiforgery="true">
-
-                            <div class="class=" rowACJSB"">
+                            <input type="hidden" id="hidColumns" name="hidColumns">
+                            <div class="rowACJSB">
                                 <fieldset class="form-group mt-3">
                                     <label asp-for="Filter.YearId" class="my-font">
                                         سال:
@@ -48,7 +48,7 @@
                                         <select asp-for="Filter.OrganizationId"
                                                 asp-items="Model.Filter.OrganizationSource"
                                                 class="form-control d-inline-block width-300"
-                                                id="organizationId"  >
+                                                id="organizationId">
                                         </select>
                                     </label>
                                     <input asp-for="Filter.OrderBy" type="hidden" />
@@ -65,18 +65,18 @@
                                     </div>
                                 </fieldset>
                             </div>
-
                             <hr />
+                            <fieldset class="form-group position-relative has-icon-left">
+                                  <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
+                                  <div class="form-control-position">
+                                      <i class="ft-search font-medium-4"></i>
+                                  </div>
+                            </fieldset>
                             <!--SearchBox-->
                             <div class="rowACJSB">
-                                <div class="rowAC" style="flex:1">
-                                    <fieldset class="form-group">
-                                        <label for="ngx-filter-ref" class="my-font">
-                                            جستجو:
-                                            <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
-                                        </label>
-                                    </fieldset>
-                                    <fieldset class="form-group" style="margin-right:10px">
+                                <div class="d-flex flex-row-reverse align-items-center">
+
+                                    <fieldset class="form-group" style="margin-right:20px">
                                         <label class="my-font rowAC">
                                             <span>نمایش</span>
 
@@ -93,6 +93,65 @@
 
                                         </label>
                                     </fieldset>
+                                    @* drop down menu *@
+                                    <div class="btn-group dropdown form-group">
+                                        <button type="button"
+                                                class="btn btn-light my-font dropdown-toggle"
+                                                data-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                            ستون ها
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <div id="columnSelector">
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-1"
+                                                               id="col-1" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-1"><span>سال</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-2"
+                                                               id="col-2" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-2"><span>سازمان</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-3"
+                                                               id="col-3" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-3"><span>کاربری</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-4"
+                                                               id="col-4" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-4"><span>قیمت</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
                                 <fieldset>
                                     <div class="rowACJE">
@@ -136,14 +195,41 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        
+        let showingColmuns = "1,2,3,4,";
+
         $(document).ready(function () {
             console.log('ready');
+            //fill input hidden with initial columns showing
+            document.getElementById("hidColumns").value = showingColmuns;
+
+            $(".dropdown-menu").click(function (e) {
+                e.stopPropagation();
+            })
+            $("#columnSelector input:checkbox:checked").change(function () {
+                let index = parseInt($(this)[0].id.split('-')[1]);
+                let checked = $(this)[0].checked;
+                if (checked) {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                    showingColmuns = showingColmuns + `${index},`
+                    document.getElementById("hidColumns").value = showingColmuns ;
+                } else {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+                    showingColmuns = showingColmuns.replace(`${index},`, '');
+                    document.getElementById("hidColumns").value = showingColmuns;
+                }
+            });
             $('#organizationId').select2({
                 dir: 'rtl'
             });
         });
-
+        function resetDataColumns() {
+            $('th,tr td').show();
+            let inputs = $("#columnSelector input:checkbox");
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].checked = true
+            }
+            
+        }
         function hardDelete(e) {
             Swal.fire({
                 title: 'برای حذف اطمینان دارید؟',
@@ -238,8 +324,9 @@
         $(document).on('click', '#btnCreate', function () {
             addNewRow();
         });
-
+        
         $(document).on('click', '.edit-row', function () {
+            resetDataColumns()
             let id = $(this).data('id');
             let input = document.getElementById('inputWInstallFee_' + id);
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
