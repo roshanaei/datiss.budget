@@ -453,12 +453,7 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.DWaterType.DisplayOrder);
 
                 default:
-                    return desc
-                        ? query.Include(x => x.Organization)
-                               .Include(x => x.DWaterType)
-                               .OrderByDescending(x => x.Organization.DisplayOrder)
-                               .ThenBy(x=>x.DWaterType.DisplayOrder)
-                        : query.Include(x => x.Organization)
+                    return query.Include(x => x.Organization)
                                .Include(x => x.DWaterType)
                                .OrderBy(x => x.Organization.DisplayOrder)
                                .ThenBy(x => x.DWaterType.DisplayOrder);
