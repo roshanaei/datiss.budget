@@ -10,12 +10,15 @@ using Stimulsoft.Report.Mvc;
 namespace Datiss.Budget.Web.Controllers
 {
 
-    [Route("[controller]/[action]")]  
+    [Route("[controller]")]  
     public class ReportController : Controller
     {
 
-        private readonly IReportEngine _reportEngine;
+        public const string Name = "Report";
+        public const string ACTION_Index = nameof(Index);
+        public const string ACTION_Report = nameof(Report);
 
+        private readonly IReportEngine _reportEngine;
 
         public ReportController(
             IReportEngine reportEngine) {
@@ -23,7 +26,7 @@ namespace Datiss.Budget.Web.Controllers
                 ?? throw new ArgumentNullException(nameof(reportEngine));
         }
 
-
+        [HttpGet]
         public IActionResult Index() {
             return View();
         }

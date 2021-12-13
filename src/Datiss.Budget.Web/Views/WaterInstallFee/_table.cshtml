@@ -15,7 +15,7 @@
                 <td>
                     <div id="divInput_Year_">
                         <input id="hidYearId_" type="hidden" />
-                        <select class="form-control" id="inputYear_" asp-items="Model.YearSource">
+                        <select class="form-control selectYear" id="inputYear_" asp-items="Model.YearSource">
                         </select>
                     </div>
                     <div id="divOutput_Year_" style="display: none">
@@ -25,11 +25,10 @@
                 <td>
                     <div id="divInput_Org_">
                         <input id="hidOrgId_" type="hidden" />
-                        <select class="form-control" id="inputOrg_" asp-items="Model.OrganizationSource">
+                        <select class="form-control selectOrganization" id="inputOrg_" asp-items="Model.OrganizationSource">
                         </select>
                         <script>
                             $('select#inputOrg_ option[value=' + $('#organizationId').val() + ']').attr('selected', true);
-                            $('#inputOrg_').select2();
                         </script>
                     </div>
                     <div id="divOutput_Org_">
@@ -39,7 +38,7 @@
                 <td>
                     <div id="divInput_DWaterType_">
                         <input id="hidDWaterTypeId_" type="hidden" />
-                        <select class="form-control" id="inputDWaterType_" asp-items="Model.DWaterTypeSource">
+                        <select class="form-control selectDWaterType" id="inputDWaterType_" asp-items="Model.DWaterTypeSource">
                         </select>
                     </div>
                     <div id="divOutput_DWaterType_" style="display: none">
@@ -86,7 +85,7 @@
                     <td>
                         <div id="divInput_Year_@item.Id" style="display: none">
                             <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
-                            <select class="form-control" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
                             </select>
                             <script>
                                 $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
@@ -99,7 +98,7 @@
                     <td>
                         <div id="divInput_Org_@item.Id" style="display: none">
                             <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
-                            <select class="form-control" id="inputOrg_@item.Id" asp-items="Model.OrganizationSource">
+                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.OrganizationSource">
                             </select>
                             <script>
                                 $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
@@ -113,7 +112,7 @@
                     <td>
                         <div id="divInput_DWaterType_@item.Id" style="display: none">
                             <input id="hidDWaterTypeId_@item.Id" type="hidden" value="@item.DWaterTypeId" />
-                            <select class="form-control" id="inputDWaterType_@item.Id" asp-items="Model.DWaterTypeSource">
+                            <select class="form-control selectDWaterType" id="inputDWaterType_@item.Id" asp-items="Model.DWaterTypeSource">
                             </select>
                             <script>
                                 $('select#inputDWaterType_' + @item.Id + ' option[value=' + @item.DWaterTypeId + ']').attr('selected', true);

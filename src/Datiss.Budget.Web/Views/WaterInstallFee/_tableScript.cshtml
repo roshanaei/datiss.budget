@@ -185,6 +185,10 @@
             .attr('id', 'newRow')
             .css('background-color', 'rgb(230 247 228)')
             .show();
+        
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
 
         isNewRow = true;
     }
