@@ -131,7 +131,6 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var filterInput = new WaterInstallFeeFilterDTO {
-                OrderBy = "dwatertype",
                 PageNumber = page,
                 YearId = maxYear,
                 OrganizationId = firstOrgId
