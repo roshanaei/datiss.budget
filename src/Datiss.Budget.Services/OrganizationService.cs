@@ -138,8 +138,30 @@ namespace Datiss.Budget.Services
             return false;
         }
 
-        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync()
-            => _userContext.OrganizationId.HasValue
+        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync(bool input=false)
+            => input ?
+            (_userContext.OrganizationId.HasValue
+
+                ? (await getWithChildrenAsync(_userContext.OrganizationId.Value))
+                    .Where(x => x.Type != OrganizationType.Root &&
+                                x.Type != OrganizationType.County)
+                    .Select(x => new DropDownItem
+                    {
+                        Id = x.Id,
+                        Title = x.Title,
+                        Selected = x.Id == _userContext.OrganizationId
+                    }).ToList()
+
+                : (await getByParnetIdAsync(_userContext.OrganizationId))
+                    .Where(x => x.Type != OrganizationType.Root &&
+                                x.Type != OrganizationType.County)
+                    .Select(x => new DropDownItem
+                    {
+                        Id = x.Id,
+                        Title = x.Title,
+                        Selected = x.Id == _userContext.OrganizationId
+                    }).ToList())
+            : (_userContext.OrganizationId.HasValue
 
                 ? (await getWithChildrenAsync(_userContext.OrganizationId.Value))
                     .Select(x => new DropDownItem
@@ -155,7 +177,7 @@ namespace Datiss.Budget.Services
                         Id = x.Id,
                         Title = x.Title,
                         Selected = x.Id == _userContext.OrganizationId
-                    }).ToList();
+                    }).ToList());
 
         public async Task<PagedResult<OrganizationDTO>> GetListAsync(OrganizationFilterDTO filter)
         {
