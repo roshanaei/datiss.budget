@@ -142,7 +142,6 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             filter.PageNumber = page;
-            filter.OrderBy = "dwatertype";
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
 
