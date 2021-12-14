@@ -141,6 +141,9 @@ namespace Datiss.Budget.Web.Controllers
             var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
+
             filter.PageNumber = page;
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
@@ -150,6 +153,7 @@ namespace Datiss.Budget.Web.Controllers
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
             model.SetDWaterTypeSource(dwaterSource);
 
             model.SetFinanceYearFilterSource(yearSource, maxYear);
