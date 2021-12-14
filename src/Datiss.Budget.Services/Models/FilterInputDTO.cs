@@ -6,6 +6,7 @@ namespace Datiss.Budget.Services.Models
     public abstract class FilterInputDTO
     {
         public string Search { get; set; }
+        public string Columns { get; set; }
         public string OrderBy { get; set; }
         public bool OrderDesc { get; set; }
         public int PageSize { get; set; } = 10;

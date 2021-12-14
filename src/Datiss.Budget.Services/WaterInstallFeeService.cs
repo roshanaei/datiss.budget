@@ -20,6 +20,7 @@ using Mapster;
 using LinqKit;
 using Datiss.Budget.Security;
 using System.Data.SqlClient;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services
 {
@@ -186,6 +187,7 @@ namespace Datiss.Budget.Services
         public async Task<PagedResult<WaterInstallFeeDTO>> GetListAsync(WaterInstallFeeFilterDTO filter) 
         {
             filter.CheckArgumentIsNull(nameof(filter));
+
             var result = new PagedResult<WaterInstallFeeDTO> {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -275,11 +277,16 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
+            List<int> notAllowedToInputOrgs = new List<int>();
+
             foreach(var rec in records) {
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
                 if(org == null) {
                     //TODO : use resource message instead
                     return ImportResult.Failed($"سازمان به کد ({rec.Id}) در سیستم یافت نشد.");
+                }
+                if(org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village) {
+                    notAllowedToInputOrgs.Add(org.Id);
                 }
              }
 
@@ -308,15 +315,18 @@ namespace Datiss.Budget.Services
             }
 
             foreach(var record in records) {
+                //if organization type is not city or village then pass
+                if (notAllowedToInputOrgs.Contains(record.OrganizationId))
+                    continue;
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
-                    ImportResult.Failed(string.Format(ServiceMessages.ImportExcelAccessError, rowIndex));
+                    return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelAccessError, rowIndex));
 
                 if (!await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
                     record.DWaterTypeId)) {
-                        ImportResult.Failed(string.Format(ServiceMessages.ImportExcelLogicError, rowIndex));
+                       return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelLogicError, rowIndex));
                 }
 
                 rowIndex++;
@@ -398,7 +408,10 @@ namespace Datiss.Budget.Services
 
         private async Task<IQueryable<WaterInstallFee>> setFilter(
             IQueryable<WaterInstallFee> query, 
-            WaterInstallFeeFilterDTO filter) {
+            WaterInstallFeeFilterDTO filter) 
+        {
+            query.CheckArgumentIsNull(nameof(query));
+            filter.CheckArgumentIsNull(nameof(filter));
 
             var predicate = PredicateBuilder.New<WaterInstallFee>();
 
@@ -408,6 +421,7 @@ namespace Datiss.Budget.Services
             if (filter.OrganizationId.HasValue) {
                 var organizations = await _organizationService
                     .GetWithChildrenAsync(filter.OrganizationId.Value);
+
                 foreach (var org in organizations) {
                     predicate.Or(_ => _.OrganizationId == org.Id);
                 }
@@ -432,6 +446,12 @@ namespace Datiss.Budget.Services
                 }
             }
 
+            if(filter.Search.IsNotNullOrEmpty()) {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
+                                    _.DWaterType.Title.ToUpper().Contains(filter.Search));
+            }
+
             return query;
         }
 
@@ -444,10 +464,6 @@ namespace Datiss.Budget.Services
 
             orderBy = orderBy.ToLower();
             switch (orderBy) {
-                case "year":
-                    return desc
-                        ? query.OrderByDescending(x => x.FinanceYear.Year)
-                        : query.OrderBy(x => x.FinanceYear.Year);
 
                 case "organization":
                     return desc
@@ -460,9 +476,10 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.DWaterType.DisplayOrder);
 
                 default:
-                    return desc
-                        ? query.OrderByDescending(x => x.Id)
-                        : query.OrderBy(x => x.Id);
+                    return query.Include(x=>x.Organization)
+                                .Include(x=>x.DWaterType)
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x=>x.DWaterType.DisplayOrder);
             }
         }
 
