@@ -444,10 +444,6 @@ namespace Datiss.Budget.Services
 
             orderBy = orderBy.ToLower();
             switch (orderBy) {
-                case "year":
-                    return desc
-                        ? query.OrderByDescending(x => x.FinanceYear.Year)
-                        : query.OrderBy(x => x.FinanceYear.Year);
 
                 case "organization":
                     return desc
@@ -460,9 +456,10 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.DWaterType.DisplayOrder);
 
                 default:
-                    return desc
-                        ? query.OrderByDescending(x => x.Id)
-                        : query.OrderBy(x => x.Id);
+                    return query.Include(x=>x.Organization)
+                                .Include(x=>x.DWaterType)
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x=>x.DWaterType.DisplayOrder);
             }
         }
 
