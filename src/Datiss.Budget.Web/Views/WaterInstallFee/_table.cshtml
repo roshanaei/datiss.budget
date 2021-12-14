@@ -25,7 +25,7 @@
                 <td>
                     <div id="divInput_Org_">
                         <input id="hidOrgId_" type="hidden" />
-                        <select class="form-control selectOrganization" id="inputOrg_" asp-items="Model.OrganizationSource">
+                        <select class="form-control selectOrganization" id="inputOrg_" asp-items="Model.InputOrganizationSource">
                         </select>
                         <script>
                             $('select#inputOrg_ option[value=' + $('#organizationId').val() + ']').attr('selected', true);
@@ -98,7 +98,7 @@
                     <td>
                         <div id="divInput_Org_@item.Id" style="display: none">
                             <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
-                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.OrganizationSource">
+                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
                             </select>
                             <script>
                                 $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
