@@ -228,7 +228,7 @@
             for (let i = 0; i < inputs.length; i++) {
                 inputs[i].checked = true
             }
-            
+
         }
         function hardDelete(e) {
             Swal.fire({
@@ -313,10 +313,7 @@
         }
 
         function openImportExcelForm() {
-            //$('#importExcelForm').attr(
-            //    'action',
-            //    '@Url.Action(WaterInstallFeeController.ACTION_ImportExcel)'
-            //);
+
             $('#ExcellModal').modal('show');
         }
 
@@ -324,7 +321,7 @@
         $(document).on('click', '#btnCreate', function () {
             addNewRow();
         });
-        
+
         $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
@@ -415,13 +412,18 @@
             var file = fileInput.files[0];
             fdata.append('ExcelFile', file);
 
+            alert('start import');
+
+
             $.ajax({
                 url: '@Url.Action(WaterInstallFeeController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
                 contentType: false,
-                success: function(data, status, settings) {
+                success: function (data, status, settings) {
+                    console.log(data);
+                    alert(data.ask);
                     if(data.ask) {
                         Swal.fire({
                             title: data.message,
@@ -437,12 +439,18 @@
                             confirmButtonClass: 'btn btn-warning my-font',
                             cancelButtonClass: 'btn btn-danger  my-font ml-1',
                             buttonsStyling: false,
-                        }).then(function(result) {
+                        }).then(function (result) {
+
                             if(result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
 
+                                console.log(fdata);
+
+
+                                alert('continue if missing');
+
                                 $.ajax({
-                                    url: '@WaterInstallFeeController.ACTION_ImportExcel',
+                                    url: '@Url.Action(WaterInstallFeeController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,

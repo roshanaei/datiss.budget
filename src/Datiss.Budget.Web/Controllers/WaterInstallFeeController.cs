@@ -200,7 +200,7 @@ namespace Datiss.Budget.Web.Controllers
                     return RedirectToAction("Index");
 
             try {
-                var result = await _waterInstallFeeService.ImportExcelAsync(model.ExcelFile);
+                var result = await _waterInstallFeeService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing); ;
                 if(result.AskToImport) {
                     return Json(new {
                         ask = true,
