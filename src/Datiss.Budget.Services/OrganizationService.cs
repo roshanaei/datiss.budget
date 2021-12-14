@@ -251,25 +251,29 @@ namespace Datiss.Budget.Services
                 .Where(x => x.ParentId == parentId).ToListAsync();
 
             var result = new List<Organization>();
-            if(!input)
-                result.AddRange(firstLevel);
-            else
+            if (input)
             {
-                foreach(var item in firstLevel)
+                foreach (var item in firstLevel)
                 {
                     if (item.Type != OrganizationType.Root && item.Type != OrganizationType.County)
                         result.Add(item);
                 }
             }
+            else
+            {
+                result.AddRange(firstLevel);
+            }
 
             foreach (var item in firstLevel) {
                 foreach (var child in item.Childrens) {
-                    if (!input)
-                        result.Add(child);
-                    else
-                    {
+                    if (input)
+                    {                       
                         if (item.Type != OrganizationType.Root && item.Type != OrganizationType.County)
                             result.Add(child);
+                    }
+                    else
+                    {
+                        result.Add(child);
                     }
                     result.AddRange(await getByParnetIdAsync(child.Id, input));
                 }
@@ -282,20 +286,23 @@ namespace Datiss.Budget.Services
         {
             var result = new List<Organization>();
             var myself = await _dbSet.FirstOrDefaultAsync(_ => _.Id == organizationId);
+
             if(!input)
                 result.Add(myself);
 
             var children = await getByParnetIdAsync(myself.Id,input);
 
-            if (!input)
-                result.AddRange(children);
-            else
+            if (input)
             {
                 foreach (var item in children)
                 {
                     if (item.Type != OrganizationType.Root && item.Type != OrganizationType.County)
                         result.Add(item);
                 }
+            }   
+            else
+            {
+                result.AddRange(children);
             }
 
             return await Task.FromResult(result);
