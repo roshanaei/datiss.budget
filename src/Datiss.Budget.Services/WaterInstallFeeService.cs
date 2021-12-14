@@ -312,13 +312,13 @@ namespace Datiss.Budget.Services
             foreach(var record in records) {
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
-                    ImportResult.Failed(string.Format(ServiceMessages.ImportExcelAccessError, rowIndex));
+                    return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelAccessError, rowIndex));
 
                 if (!await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
                     record.DWaterTypeId)) {
-                        ImportResult.Failed(string.Format(ServiceMessages.ImportExcelLogicError, rowIndex));
+                       return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelLogicError, rowIndex));
                 }
 
                 rowIndex++;
