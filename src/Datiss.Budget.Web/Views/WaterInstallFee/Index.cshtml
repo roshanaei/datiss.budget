@@ -218,9 +218,11 @@
 
             $(".dropdown-menu").click(function (e) {
                 e.stopPropagation();
-            })
+            });
+
             $("#columnSelector input:checkbox:checked").change(function () {
                 let index = parseInt($(this)[0].id.split('-')[1]);
+                console.log(`showing or hiding col : ${index}`);
                 let checked = $(this)[0].checked;
                 if (checked) {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
@@ -232,6 +234,7 @@
                     document.getElementById("hidColumns").value = showingColmuns;
                 }
             });
+
             $('#organizationId').select2({
                 dir: 'rtl'
             });
