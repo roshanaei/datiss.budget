@@ -277,11 +277,16 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
+            List<int> notAllowedToInputOrgs = new List<int>();
+
             foreach(var rec in records) {
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
                 if(org == null) {
                     //TODO : use resource message instead
                     return ImportResult.Failed($"سازمان به کد ({rec.Id}) در سیستم یافت نشد.");
+                }
+                if(org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village) {
+                    notAllowedToInputOrgs.Add(org.Id);
                 }
              }
 
@@ -310,6 +315,9 @@ namespace Datiss.Budget.Services
             }
 
             foreach(var record in records) {
+                //if organization type is not city or village then pass
+                if (notAllowedToInputOrgs.Contains(record.OrganizationId))
+                    continue;
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
                     return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelAccessError, rowIndex));
