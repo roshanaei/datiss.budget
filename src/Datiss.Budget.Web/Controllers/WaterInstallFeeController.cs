@@ -196,7 +196,7 @@ namespace Datiss.Budget.Web.Controllers
             model.SetOrganizationFilterSource(orgSource);
             model.SetDWaterTypeSource(dwaterSource);
             
-            return View(model);
+             return View(model);
         }
 
         [HttpPost("[action]")]
