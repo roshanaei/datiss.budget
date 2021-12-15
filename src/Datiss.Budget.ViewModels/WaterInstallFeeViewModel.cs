@@ -81,6 +81,7 @@ namespace Datiss.Budget.ViewModels
         public IList<SelectListItem> OrganizationSource { get; set; }
 
         //public string OrganizationSourceArray => OrganizationSource.ToStringArray();
+        public IList<SelectListItem> InputOrganizationSource { get; set; }
 
         public IList<SelectListItem> DWaterTypeSource { get; set; }
 
@@ -99,7 +100,13 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-        
+
+        public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => InputOrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
 
         public void SetDWaterTypeSource(IEnumerable<DropDownItemViewModel> source) 
             => DWaterTypeSource = source.Select(x => new SelectListItem {

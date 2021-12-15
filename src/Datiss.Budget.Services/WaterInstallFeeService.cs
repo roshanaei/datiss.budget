@@ -19,6 +19,8 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Mapster;
 using LinqKit;
 using Datiss.Budget.Security;
+using System.Data.SqlClient;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services
 {
@@ -163,22 +165,29 @@ namespace Datiss.Budget.Services
         }
 
         public async Task<int> CalculationAsync(int yearId, int organizationId) {
-            //var sum = _dbSet.Where(_ => _.YearId == yearId)
-            //                        .Where(_ => _.OrganizationId == organizationId)
-            //                        .GroupBy(_ => _.DWaterTypeId)
-            //                        .Select(_ => new {
-            //                            _.Key,
-            //                            Sum = _.Sum(_ => _.WInstllFee)
-            //                        });
+            SqlParameter resultParam = new SqlParameter
+            {
+                ParameterName = "@result",
+                SqlDbType = System.Data.SqlDbType.Int,
+                Direction = System.Data.ParameterDirection.Output
+            };
 
-            return await _dbSet.Where(_ => _.YearId == yearId)
-                               .Where(_ => _.OrganizationId == organizationId)
-                               .SumAsync(_ => _.WInstllFee);
+            await _uow.ExecuteSqlRawCommandAsync("[dbo].[WaterInstallFees_Cal1] @YearId, @OrganizationId, @Result OUT",
+                new 
+                {
+                    YearId = yearId,
+                    OrganizationId = organizationId,
+                    Result = resultParam
+                }
+            );
+
+            return await Task.FromResult(Convert.ToInt32(resultParam.Value));
         }
 
         public async Task<PagedResult<WaterInstallFeeDTO>> GetListAsync(WaterInstallFeeFilterDTO filter) 
         {
             filter.CheckArgumentIsNull(nameof(filter));
+
             var result = new PagedResult<WaterInstallFeeDTO> {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -268,10 +277,16 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
+            List<int> notAllowedToInputOrgs = new List<int>();
+
             foreach(var rec in records) {
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
                 if(org == null) {
+                    //TODO : use resource message instead
                     return ImportResult.Failed($"سازمان به کد ({rec.Id}) در سیستم یافت نشد.");
+                }
+                if(org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village) {
+                    notAllowedToInputOrgs.Add(org.Id);
                 }
              }
 
@@ -292,6 +307,7 @@ namespace Datiss.Budget.Services
 
                     return new ImportResult
                     {
+                        //TODO : use resource message instead
                         Message = $"سازمان های ({orgNames}) در فایل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟",
                         AskToImport = true
                     };
@@ -299,15 +315,18 @@ namespace Datiss.Budget.Services
             }
 
             foreach(var record in records) {
+                //if organization type is not city or village then pass
+                if (notAllowedToInputOrgs.Contains(record.OrganizationId))
+                    continue;
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
-                    ImportResult.Failed(string.Format(ServiceMessages.ImportExcelAccessError, rowIndex));
+                    return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelAccessError, rowIndex));
 
                 if (!await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
                     record.DWaterTypeId)) {
-                        ImportResult.Failed(string.Format(ServiceMessages.ImportExcelLogicError, rowIndex));
+                       return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelLogicError, rowIndex));
                 }
 
                 rowIndex++;
@@ -316,10 +335,16 @@ namespace Datiss.Budget.Services
             await _dbSet.AddRangeAsync(records);
             await _uow.SaveChangesAsync();
 
+            //TODO : use resource message instead
             return ImportResult.Succeed("ورود اطلاعات با موفقیت انجام گردید.");
         }
 
-        public async Task<IEnumerable<WaterInstallFeeDTO>> GetExportItemsAsync(WaterInstallFeeFilterDTO filter) {
+        public async Task<IEnumerable<WaterInstallFeeDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        {
+            var filter = new WaterInstallFeeFilterDTO { 
+            OrganizationId=organizationId,
+            YearId=yearId
+            };
             filter.CheckArgumentIsNull(nameof(filter));
 
             var query = Query();
@@ -383,7 +408,10 @@ namespace Datiss.Budget.Services
 
         private async Task<IQueryable<WaterInstallFee>> setFilter(
             IQueryable<WaterInstallFee> query, 
-            WaterInstallFeeFilterDTO filter) {
+            WaterInstallFeeFilterDTO filter) 
+        {
+            query.CheckArgumentIsNull(nameof(query));
+            filter.CheckArgumentIsNull(nameof(filter));
 
             var predicate = PredicateBuilder.New<WaterInstallFee>();
 
@@ -393,6 +421,7 @@ namespace Datiss.Budget.Services
             if (filter.OrganizationId.HasValue) {
                 var organizations = await _organizationService
                     .GetWithChildrenAsync(filter.OrganizationId.Value);
+
                 foreach (var org in organizations) {
                     predicate.Or(_ => _.OrganizationId == org.Id);
                 }
@@ -417,6 +446,12 @@ namespace Datiss.Budget.Services
                 }
             }
 
+            if(filter.Search.IsNotNullOrEmpty()) {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
+                                    _.DWaterType.Title.ToUpper().Contains(filter.Search));
+            }
+
             return query;
         }
 
@@ -429,10 +464,6 @@ namespace Datiss.Budget.Services
 
             orderBy = orderBy.ToLower();
             switch (orderBy) {
-                case "year":
-                    return desc
-                        ? query.OrderByDescending(x => x.FinanceYear.Year)
-                        : query.OrderBy(x => x.FinanceYear.Year);
 
                 case "organization":
                     return desc
@@ -445,9 +476,10 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.DWaterType.DisplayOrder);
 
                 default:
-                    return desc
-                        ? query.OrderByDescending(x => x.Id)
-                        : query.OrderBy(x => x.Id);
+                    return query.Include(x=>x.Organization)
+                                .Include(x=>x.DWaterType)
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x=>x.DWaterType.DisplayOrder);
             }
         }
 

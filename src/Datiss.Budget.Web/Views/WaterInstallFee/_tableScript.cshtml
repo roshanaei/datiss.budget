@@ -44,6 +44,14 @@
         $('#btnDelete_' + id).show();
         $('#btnSaveEdit_' + id).hide();
         $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
     }
 
     function saveEditRow(id) {
@@ -63,8 +71,16 @@
             dataType: 'json',
             success: function (data, status, settings) {
                 if (data._HasError) {
-                    alert(data._ErrorMessage);
-                    return;
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
                 }
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
@@ -98,7 +114,15 @@
             dataType: 'json',
             success: function (data, status, settings) {
                 if (data._HasError) {
-                    alert(data._ErrorMessage);
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
                     return;
                 }
 
@@ -165,6 +189,8 @@
                 $('#btnEdit_' + data.id).show();
                 $('#btnDelete_' + data.id).show();
 
+                $('#inputOrg_' + data.id).select2();
+
                 $(e).css('background-color', '');
                 isNewRow = false;
             },
@@ -183,6 +209,10 @@
             .attr('id', 'newRow')
             .css('background-color', 'rgb(230 247 228)')
             .show();
+        
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
 
         isNewRow = true;
     }

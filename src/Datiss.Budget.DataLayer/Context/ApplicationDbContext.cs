@@ -83,10 +83,11 @@ namespace Datiss.Budget.DataLayer.Context
         }
 
         public void ExecuteSqlRawCommand(string query, params object[] parameters)
-        {
-            Database.ExecuteSqlRaw(query, parameters);
-        }
-
+            => Database.ExecuteSqlRaw(query, parameters);
+        
+        public async Task ExecuteSqlRawCommandAsync(string query, params object[] parameters) 
+            => await Database.ExecuteSqlRawAsync(query, parameters);
+        
         public T GetShadowPropertyValue<T>(object entity, string propertyName) where T : IConvertible
         {
             var value = this.Entry(entity).Property(propertyName).CurrentValue;
