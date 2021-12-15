@@ -61,7 +61,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to سال هدف نباید دیتا داشته باشد.
+        ///   Looks up a localized string similar to سال هدف نباید دیتا داشته باشد..
         /// </summary>
         public static string CopyDestYearHasData {
             get {
@@ -79,7 +79,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to سال ها یکی نباشد.
+        ///   Looks up a localized string similar to سال ها یکی نباشد..
         /// </summary>
         public static string CopySameYear {
             get {
@@ -97,7 +97,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to کپی اطلاعات با موفقیت انجام شد.
+        ///   Looks up a localized string similar to کپی اطلاعات با موفقیت انجام شد..
         /// </summary>
         public static string CopySuccess {
             get {
@@ -133,7 +133,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to رکورد سطر {0} از قبل وجود دارد.
+        ///   Looks up a localized string similar to رکورد سطر {0} از قبل وجود دارد..
         /// </summary>
         public static string ImportExcelFileItemExist {
             get {
@@ -151,7 +151,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to عملیات ورود فایل اکسل با موفقیت انجام گردید.
+        ///   Looks up a localized string similar to عملیات ورود فایل اکسل با موفقیت انجام گردید..
         /// </summary>
         public static string ImportExcelSuccess {
             get {
@@ -169,7 +169,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند.
+        ///   Looks up a localized string similar to نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند..
         /// </summary>
         public static string InvalidUsernameOrPassword {
             get {
