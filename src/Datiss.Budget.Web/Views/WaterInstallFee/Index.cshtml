@@ -247,6 +247,7 @@
             for (let i = 0; i < inputs.length; i++) {
                 inputs[i].checked = true
             }
+        }
 
         function setDataColumns() {
             let columnsToShow = document.getElementById("hidColumns").value.split(',');
@@ -348,7 +349,6 @@
         }
 
         function openImportExcelForm() {
-
             $('#ExcellModal').modal('show');
         }
 
@@ -421,7 +421,6 @@
         });
 
         $(document).on('click', '.openCopy', function() {
-
             $.ajax({
                 type: 'GET',
                 url: '@Url.Action("Copy")',
@@ -435,7 +434,6 @@
                     $("#divCopy").html('Failed to load more content');
                 }
             });
-
         });
 
         $(document).on('click', '#btnDoImportExcel', function() {
@@ -443,9 +441,6 @@
             var fileInput = $('#ExcelFile')[0];
             var file = fileInput.files[0];
             fdata.append('ExcelFile', file);
-
-            alert('start import');
-
 
             $.ajax({
                 url: '@Url.Action(WaterInstallFeeController.ACTION_ImportExcel)',
@@ -475,11 +470,7 @@
 
                             if(result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
-
                                 console.log(fdata);
-
-
-                                alert('continue if missing');
 
                                 $.ajax({
                                     url: '@Url.Action(WaterInstallFeeController.ACTION_ImportExcel)',
@@ -519,7 +510,7 @@
                     console.log(err);
                     alert(err);
                 }
-            })
+            });
 
         });
 
@@ -578,7 +569,8 @@
             let pageSize = $('#ddlPageSize').attr('value');
             console.log(pageSize);
             $('#filterForm').submit();
-        }
+        };
+
     </script>
 
 }
