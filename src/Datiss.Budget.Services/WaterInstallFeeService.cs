@@ -19,7 +19,8 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Mapster;
 using LinqKit;
 using Datiss.Budget.Security;
-using System.Data.SqlClient;
+//using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services
@@ -165,23 +166,17 @@ namespace Datiss.Budget.Services
         }
 
         public async Task<int> CalculationAsync(int yearId, int organizationId) {
-            SqlParameter resultParam = new SqlParameter
+            List<SqlParameter> sqlParams = new List<SqlParameter>
             {
-                ParameterName = "@result",
-                SqlDbType = System.Data.SqlDbType.Int,
-                Direction = System.Data.ParameterDirection.Output
+                new SqlParameter("YearId", yearId),
+                new SqlParameter("OrganizationId", organizationId)
             };
 
-            await _uow.ExecuteSqlRawCommandAsync("[dbo].[WaterInstallFees_Cal1] @YearId, @OrganizationId, @Result OUT",
-                new 
-                {
-                    YearId = yearId,
-                    OrganizationId = organizationId,
-                    Result = resultParam
-                }
-            );
+            var result = await _uow.ExecuteScalarAsync<int>(
+                "[dbo].[WaterInstallFees_Cal1] @YearId, @OrganizationId",
+                parameters: sqlParams.ToArray());
 
-            return await Task.FromResult(Convert.ToInt32(resultParam.Value));
+            return await Task.FromResult(result);
         }
 
         public async Task<PagedResult<WaterInstallFeeDTO>> GetListAsync(WaterInstallFeeFilterDTO filter) 

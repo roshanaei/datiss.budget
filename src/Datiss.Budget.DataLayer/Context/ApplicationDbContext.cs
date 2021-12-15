@@ -159,6 +159,25 @@ namespace Datiss.Budget.DataLayer.Context
             return result;
         }
 
+        public async Task<T> ExecuteScalarAsync<T>(string sql, params object[] parameters) {
+            var con = this.Database.GetDbConnection();
+            using (var command = con.CreateCommand()) {
+                command.CommandText = sql;
+                if (parameters != null) {
+                    foreach (var p in parameters)
+                        command.Parameters.Add(p);
+                }
+                await con.OpenAsync();
+
+                var result = await command.ExecuteScalarAsync();
+
+                if (result is DBNull)
+                    return default(T);
+
+                return (T)await command.ExecuteScalarAsync();
+            }
+        }
+
         private void beforeSaveTriggers()
         {
             validateEntities();
