@@ -141,6 +141,9 @@ namespace Datiss.Budget.Web.Controllers
             var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
+
             filter.PageNumber = page;
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
@@ -150,6 +153,7 @@ namespace Datiss.Budget.Web.Controllers
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
             model.SetDWaterTypeSource(dwaterSource);
 
             model.SetFinanceYearFilterSource(yearSource, maxYear);
@@ -182,8 +186,12 @@ namespace Datiss.Budget.Web.Controllers
             var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
+
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
             model.SetFinanceYearFilterSource(yearSource);
             model.SetOrganizationFilterSource(orgSource);
             model.SetDWaterTypeSource(dwaterSource);
@@ -200,7 +208,7 @@ namespace Datiss.Budget.Web.Controllers
                     return RedirectToAction("Index");
 
             try {
-                var result = await _waterInstallFeeService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing); ;
+                var result = await _waterInstallFeeService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
                 if(result.AskToImport) {
                     return Json(new {
                         ask = true,

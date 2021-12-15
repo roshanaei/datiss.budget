@@ -37,6 +37,13 @@ namespace Datiss.Budget.Common.GuardToolkit
                 throw new ArgumentException(name);
         }
 
+
+        public static bool IsNullOrEmpty(this string s)
+            => string.IsNullOrWhiteSpace(s);
+        
+        public static bool IsNotNullOrEmpty(this string s)
+            => !string.IsNullOrWhiteSpace(s);
+        
         public static bool ContainsNumber(this string inputText)
         {
             return !string.IsNullOrWhiteSpace(inputText) && inputText.ToEnglishNumbers().Any(char.IsDigit);

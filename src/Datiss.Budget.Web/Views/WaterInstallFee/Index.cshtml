@@ -32,7 +32,7 @@
                               asp-controller="@WaterInstallFeeController.Name"
                               asp-action="@WaterInstallFeeController.ACTION_Index"
                               asp-antiforgery="true">
-                            <input type="hidden" id="hidColumns" name="hidColumns">
+                            <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
                             <div class="rowACJSB">
                                 <fieldset class="form-group mt-3">
                                     <label asp-for="Filter.YearId" class="my-font">
@@ -195,18 +195,34 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
+        let allColumns = '1,2,3,4';
+        let columnIndices = allColumns.split(',');
+        console.log(columnIndices);
         let showingColmuns = "1,2,3,4,";
+    </script>
+
+    @if(Model.Filter.Columns.IsNotNullOrEmpty()) {
+        <script type="text/javascript">
+            showingColmuns = '@Model.Filter.Columns' ;
+        </script>
+    }
+
+    <script type="text/javascript">
 
         $(document).ready(function () {
             console.log('ready');
             //fill input hidden with initial columns showing
             document.getElementById("hidColumns").value = showingColmuns;
 
+            setDataColumns();
+
             $(".dropdown-menu").click(function (e) {
                 e.stopPropagation();
-            })
+            });
+
             $("#columnSelector input:checkbox:checked").change(function () {
                 let index = parseInt($(this)[0].id.split('-')[1]);
+                console.log(`showing or hiding col : ${index}`);
                 let checked = $(this)[0].checked;
                 if (checked) {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
@@ -218,18 +234,38 @@
                     document.getElementById("hidColumns").value = showingColmuns;
                 }
             });
+
             $('#organizationId').select2({
                 dir: 'rtl'
             });
         });
+
         function resetDataColumns() {
             $('th,tr td').show();
             let inputs = $("#columnSelector input:checkbox");
             for (let i = 0; i < inputs.length; i++) {
                 inputs[i].checked = true
             }
+        }
+
+        function setDataColumns() {
+            let columnsToShow = document.getElementById("hidColumns").value.split(',');
+            console.log('ColumnsToShow ');
+            console.log(columnsToShow);
+            let checkBoxes = $("#columnSelector input:checkbox");
+            for(let i = 0; i < columnIndices.length; i++) {
+                let index = parseInt(columnIndices[i]);
+                let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
+                console.log(`Column : ${index} show = ${showColumn}`);
+                checkBoxes[i].checked = showColumn;
+                if(showColumn)
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                else 
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+            }
 
         }
+
         function hardDelete(e) {
             Swal.fire({
                 title: 'برای حذف اطمینان دارید؟',
