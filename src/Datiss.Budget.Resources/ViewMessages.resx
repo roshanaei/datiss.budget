@@ -118,19 +118,19 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CopyDestYearHasData" xml:space="preserve">
-    <value>سال هدف نباید دیتا داشته باشد</value>
+    <value>سال هدف نباید دیتا داشته باشد.</value>
   </data>
   <data name="CopyErrorDestYear" xml:space="preserve">
     <value>نمی توانید کپی اطلاعات را برای سال های قبلی انجام دهید.</value>
   </data>
   <data name="CopySameYear" xml:space="preserve">
-    <value>سال ها یکی نباشد</value>
+    <value>سال ها یکی نباشد.</value>
   </data>
   <data name="CopySourceOrgNullData" xml:space="preserve">
     <value>سازمان مورد نظر برای سال مبدا داده ای ندارد .</value>
   </data>
   <data name="CopySuccess" xml:space="preserve">
-    <value>کپی اطلاعات با موفقیت انجام شد</value>
+    <value>کپی اطلاعات با موفقیت انجام شد.</value>
   </data>
   <data name="DeleteMultipleDataForOrg" xml:space="preserve">
     <value>حذف رکورد برای سازمان {0} در سال {1} با موفقیت انجام شد.</value>
@@ -142,19 +142,19 @@
     <value>فرمت فایل اکسل نمی باشد.</value>
   </data>
   <data name="ImportExcelFileItemExist" xml:space="preserve">
-    <value>رکورد سطر {0} از قبل وجود دارد</value>
+    <value>رکورد سطر {0} از قبل وجود دارد.</value>
   </data>
   <data name="ImportExcelFileSizeInvalid" xml:space="preserve">
     <value>سایز فایل بیش از حد مجاز است.</value>
   </data>
   <data name="ImportExcelSuccess" xml:space="preserve">
-    <value>عملیات ورود فایل اکسل با موفقیت انجام گردید</value>
+    <value>عملیات ورود فایل اکسل با موفقیت انجام گردید.</value>
   </data>
   <data name="InvalidData" xml:space="preserve">
     <value>خطاهای داده ای را بررسی نمایید.</value>
   </data>
   <data name="InvalidUsernameOrPassword" xml:space="preserve">
-    <value>نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند</value>
+    <value>نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند.</value>
   </data>
   <data name="LoginNotAllowed" xml:space="preserve">
     <value>اجازه ورود به سیستم برای شما وجود ندارد.</value>
