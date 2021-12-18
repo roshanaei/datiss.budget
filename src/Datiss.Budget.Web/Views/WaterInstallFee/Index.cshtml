@@ -369,6 +369,11 @@
                     btnSaveEdit.click();
                 }
             });
+
+            btnSaveEdit.addEventListener('click', function(evenrt) {
+                $(btnSaveEdit).attr('disabled', true);
+            });
+
             editRow(id);
         });
 
@@ -412,6 +417,7 @@
         });
 
         $(document).on('click', '.save-new-row', function () {
+            $(this).attr('disabled', true);
             let row = $(this).closest('tr');
             saveNewRow(row);
         });
