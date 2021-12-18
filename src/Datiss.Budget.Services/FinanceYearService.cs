@@ -96,15 +96,6 @@ namespace Datiss.Budget.Services
                 Title = x.Year.ToString()
             }).ToListAsync();
 
-        public async Task<IEnumerable<DropDownItem>> GetDropDownStatusAsync()
-            => (from EntityStatus entitystatus in EntityStatus.GetValues(typeof(EntityStatus))
-                select new DropDownItem
-                {
-                    Id = (int)entitystatus,
-                    Title = entitystatus.ToDisplay()
-                }).Where(x => x.Id != -1)
-                .OrderByDescending(x => x.Id);
-
         public async Task<PagedResult<FinanceYearDTO>> GetListAsync(FinanceYearFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
