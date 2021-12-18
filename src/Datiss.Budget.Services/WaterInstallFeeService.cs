@@ -149,6 +149,8 @@ namespace Datiss.Budget.Services
             var self = await _dbSet.Where(_ => _.YearId == yearId)
                                     .Where(_ => _.OrganizationId == organizationId)
                                     .ToListAsync();
+            if (self.Count == 0)
+                throw new DeleteNullRecordException();
             _dbSet.RemoveRange(self);
             var childrens = await getChildren(organizationId, yearId);
             _dbSet.RemoveRange(childrens);
@@ -277,8 +279,9 @@ namespace Datiss.Budget.Services
             foreach(var rec in records) {
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
                 if(org == null) {
-                    //TODO : use resource message instead
-                    return ImportResult.Failed($"سازمان به کد ({rec.Id}) در سیستم یافت نشد.");
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rec.Id)
+                        );
                 }
                 if(org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village) {
                     notAllowedToInputOrgs.Add(org.Id);
@@ -302,8 +305,7 @@ namespace Datiss.Budget.Services
 
                     return new ImportResult
                     {
-                        //TODO : use resource message instead
-                        Message = $"سازمان های ({orgNames}) در فایل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟",
+                        Message = string.Format(ServiceMessages.ImportExcelOrgNotInExcel,orgNames),
                         AskToImport = true
                     };
                 }
@@ -330,8 +332,7 @@ namespace Datiss.Budget.Services
             await _dbSet.AddRangeAsync(records);
             await _uow.SaveChangesAsync();
 
-            //TODO : use resource message instead
-            return ImportResult.Succeed("ورود اطلاعات با موفقیت انجام گردید.");
+            return ImportResult.Succeed(ServiceMessages.ImportExcelSuccess);
         }
 
         public async Task<IEnumerable<WaterInstallFeeDTO>> GetExportItemsAsync(int yearId, int organizationId)
