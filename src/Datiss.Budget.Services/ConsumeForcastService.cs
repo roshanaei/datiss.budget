@@ -193,7 +193,20 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task<int> CalculationAsync(int yearId,int organizationId)
+        {
+            List<SqlParameter> sqlParams = new List<SqlParameter>
+            {
+                new SqlParameter ("YearId",yearId),
+                new SqlParameter ("OrganizationId",organizationId)
+            };
 
+            var result = await _uow.ExecuteScalarAsync<int>(
+                "[dbo].[WaterInstallFees_Cal1] @YearId, @OrganizationId",
+                parameters: sqlParams.ToArray());
+
+            return await Task.FromResult(result);
+        }
 
         #region Privte Helper Methods
         private async Task<IQueryable<ConsumeForcast>> setFilter(

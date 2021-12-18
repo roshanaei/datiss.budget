@@ -20,6 +20,8 @@ namespace Datiss.Budget.Services.Contracts
 
         Task HardDeleteAsync(int Id);
 
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
+        Task<int> CalculationAsync(int yearId, int organizationId);
     }
 }
