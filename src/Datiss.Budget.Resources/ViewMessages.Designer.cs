@@ -133,6 +133,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to حذف رکورد با موفقیت انجام شد..
+        /// </summary>
+        public static string DeleteRowSuccess {
+            get {
+                return ResourceManager.GetString("DeleteRowSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to فرمت فایل اکسل نمی باشد..
         /// </summary>
         public static string ImportExcelFileFormatInvalid {
@@ -174,6 +183,15 @@ namespace Datiss.Budget.Resources {
         public static string InvalidData {
             get {
                 return ResourceManager.GetString("InvalidData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to خطا در بروزرسانی اطلاعات. لطفاً دوباره سعی کنید..
+        /// </summary>
+        public static string InvalidUpdateData {
+            get {
+                return ResourceManager.GetString("InvalidUpdateData", resourceCulture);
             }
         }
         

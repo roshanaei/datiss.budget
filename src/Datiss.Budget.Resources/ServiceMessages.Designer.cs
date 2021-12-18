@@ -19,7 +19,7 @@ namespace Datiss.Budget.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class ServiceMessages {
@@ -111,6 +111,33 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelLogicError {
             get {
                 return ResourceManager.GetString("ImportExcelLogicError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سازمان به کد ({0}) در سیستم یافت نشد..
+        /// </summary>
+        public static string ImportExcelNotExistOrg {
+            get {
+                return ResourceManager.GetString("ImportExcelNotExistOrg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سازمان های ({0}) در فایل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟.
+        /// </summary>
+        public static string ImportExcelOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ورود اطلاعات با موفقیت انجام گردید..
+        /// </summary>
+        public static string ImportExcelSuccess {
+            get {
+                return ResourceManager.GetString("ImportExcelSuccess", resourceCulture);
             }
         }
         
