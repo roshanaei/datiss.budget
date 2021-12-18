@@ -101,11 +101,15 @@
     function saveNewRow(e) {
         console.log(e);
 
+
+
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
         model.dWaterTypeId = $(e).find('#inputDWaterType_').val();
         model.wInstallFee = $(e).find('#inputWInstallFee_').val();
+
+        console.log(model);
 
         $.ajax({
             url: '@Url.Action(WaterInstallFeeController.ACTION_Create)',
@@ -203,8 +207,7 @@
     function addNewRow() {
         if (isNewRow) return;
 
-        var template = $('#rowTemplate')
-            .clone()
+        var template = $('#rowTemplate').clone()
             .appendTo($('#my-table tbody'))
             .attr('id', 'newRow')
             .css('background-color', 'rgb(230 247 228)')
@@ -212,6 +215,10 @@
         
         $('.selectOrganization:last').select2({
             dir: 'rtl'
+        });
+
+        $('.selectDWaterType:last').select2({
+            dir : 'rtl'
         });
 
         isNewRow = true;
