@@ -311,14 +311,21 @@ namespace Datiss.Budget.Web.Controllers
             });
         }
 
-        [HttpPost("[action]"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Calculation(IFormCollection form) {
-            var yearId = int.Parse(form["filterYearId"].ToString());
-            var orgId = int.Parse(form["filterOrganizationId"].ToString());
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Calculation(CalculationInputViewModel model) {
+            model.CheckArgumentIsNull(nameof(model));
 
-            var result = await _waterInstallFeeService.CalculationAsync(yearId, orgId);
+            var result = await _waterInstallFeeService.CalculationAsync(
+                model.YearId, 
+                model.OrganizationId);
 
-            return RedirectToAction("Index");
+            var output = new CalculationResultViewModel
+            {
+                Result = result,
+                Title = "WaterInstallFee calc" //TODO : change it to proper title
+            };
+
+            return PartialView("_calculationModal", output);
         }
 
 

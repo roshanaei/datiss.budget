@@ -193,6 +193,10 @@
 
     </div>
 
+    <div id="divCalc">
+
+    </div>
+
     <partial name="_tableScript" />
 
     <script type="text/javascript">
@@ -342,8 +346,10 @@
         }
 
         function calculation(e) {
-            $('#toolForm').attr('action', '@Url.Action("Calculation")');
-            $('#toolForm').submit();
+            //$('#toolForm').attr('action', '@Url.Action("Calculation")');
+            //$('#toolForm').submit();
+
+
 
             return true;
         }
@@ -429,7 +435,7 @@
         $(document).on('click', '.openCopy', function() {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action("Copy")',
+                url: '@Url.Action(WaterInstallFeeController.ACTION_Copy)',
                 success: function (data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
@@ -438,6 +444,29 @@
                 error: function (request, options, err) {
                     console.log(err);
                     $("#divCopy").html('Failed to load more content');
+                }
+            });
+        });
+
+        $(document).on('click', '.calculation-button', function() {
+            let model = {};
+            model.yearId = $('#yearId').val();
+            model.organizationId = $('#organizationId').val();
+
+            console.log(model);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(WaterInstallFeeController.ACTION_Calculation)',
+                data: model,
+                success: function (data, status, settings) {
+                    $('#divCalc').html('');
+                    $('#divCalc').html(data);
+                    $('#CalculationModal').modal('show');
+                },
+                error: function (request, options, err) {
+                    console.log(err);
+                    $('#divCalc').html('failed to load content.');
                 }
             });
         });
