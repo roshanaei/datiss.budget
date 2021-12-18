@@ -115,6 +115,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to داده ای برای حذف وجود ندارد..
+        /// </summary>
+        public static string DeleteNullRecord {
+            get {
+                return ResourceManager.GetString("DeleteNullRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to بدلیل وجود داده های وابسته امکان حذف رکورد وجود ندارد..
         /// </summary>
         public static string DeleteRelatedData {

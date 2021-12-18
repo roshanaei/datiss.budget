@@ -270,6 +270,14 @@ namespace Datiss.Budget.Web.Controllers
                         result.Year)
                 });
             }
+            catch (DeleteNullRecordException)
+            {
+                return Json(new
+                {
+                    hasError = true ,
+                    message = ViewMessages.DeleteNullRecord
+                });
+            }
             catch(NullReferenceException) {
                 return Json(new {
                     hasError = true,
