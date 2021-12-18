@@ -208,30 +208,94 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task<PagedResult<ConsumeForcastDTO>> GetListAsync(ConsumeForcastFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var result = new PagedResult<ConsumeForcastDTO>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            result.TotalCount = await query.CountAsync();
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            query = query
+                    .Skip(filter.StartIndex)
+                    .Take(filter.PageSize);
+
+            result.Items = await query.Include(x => x.FinanceYear)
+                                        .Include(x => x.Organization)
+                                        .Include(x => x.UserType)
+                                        .Include(x => x.UsageLayer)
+                                        .Select(x => new ConsumeForcastDTO
+                                        {
+                                            Id = x.Id,
+                                            YearId = x.YearId,
+                                            Year = x.FinanceYear.Year,
+                                            OrganizationId = x.OrganizationId,
+                                            OrganizationDisplay = x.Organization.Title,
+                                            UserTypeId = x.UserTypeId,
+                                            UserTypeTitle = x.UserType.Title,
+                                            UsageLayerId = x.UsageLayerId,
+                                            UsageLayerTitle = x.UsageLayer.Title,
+                                            CountUser = x.CountUser,
+                                            UnitUser = x.UnitUser,
+                                            ConsumeUser = x.ConsumeUser,
+                                            AvgConsumeUser = x.AvgConsumeUser,
+                                            ConsumeUserForcast = x.ConsumeUserForcast
+                                        }).ToListAsync();
+            return await Task.FromResult(result);
+        }
+
         #region Privte Helper Methods
         private async Task<IQueryable<ConsumeForcast>> setFilter(
             IQueryable<ConsumeForcast> query,
-            ConsumeForcastDTO filter)
+            ConsumeForcastFilterDTO filter)
         {
+            query.CheckArgumentIsNull(nameof(query));
+            filter.CheckArgumentIsNull(nameof(filter));
+
             var predicate = PredicateBuilder.New<ConsumeForcast>();
 
-            //if (filter.YearId.Hasvalue)
-            //    query = query.Where(x => x.YearId == filter.YearId.Value);
+            if (filter.YearId.HasValue)
+                query = query.Where(x => x.YearId == filter.YearId.Value);
 
-            //if (filter.OrganizationId.HasValue)
-            //{
+            if (filter.OrganizationId.HasValue)
+            {
+                var organizations = await _organizationService
+                    .GetWithChildrenAsync(filter.OrganizationId.Value);
 
-            //}
+                foreach(var org in organizations)
+                {
+                    predicate.Or(x => x.OrganizationId == org.Id);
+                }
+
+                query = query.Where(predicate);
+            }
+
+            if (filter.Search.IsNotNullOrEmpty())
+            {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Where(x => x.Organization.Title.ToUpper().Contains(filter.Search) || 
+                                         x.UserType.Title.ToUpper().Contains(filter.Search));   
+            }
 
             return query;
         }
 
         private IQueryable<ConsumeForcast> setOrder(
             IQueryable<ConsumeForcast> query,
-            string orderBy = "organizationDisplay",
+            string orderBy = "id",
             bool desc = false){
             if (string.IsNullOrWhiteSpace(orderBy))
-                orderBy = "organizationDisplay";
+                orderBy = "id";
 
             orderBy = orderBy.ToLower();
             switch (orderBy)
@@ -257,10 +321,12 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.UsageLayer.DisplayOrder);
 
                 default:
-                    return desc
-                        ? query.OrderByDescending(x => x.Organization.DisplayOrder)
-                        : query.OrderBy(x => x.Organization.DisplayOrder);
-
+                    return query.Include(x => x.Organization)
+                                .Include(x => x.UserType)
+                                .Include(x => x.UsageLayer)
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.UserType.DisplayOrder)
+                                .ThenBy(x => x.UsageLayer.DisplayOrder);
             }
         }
 
