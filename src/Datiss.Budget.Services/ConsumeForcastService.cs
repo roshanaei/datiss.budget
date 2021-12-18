@@ -19,6 +19,8 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Mapster;
 using LinqKit;
 using Datiss.Budget.Security;
+using Microsoft.Data.SqlClient;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services
 {
@@ -172,6 +174,9 @@ namespace Datiss.Budget.Services
                                    .Where(x => x.OrganizationId == organizationId)
                                    .ToListAsync();
 
+            if (self.Count == 0)
+                throw new DeleteNullRecordException();
+
             _dbSet.RemoveRange(self);
             var childrens = await getChildren(organizationId, yearId);
             _dbSet.RemoveRange(childrens);
@@ -187,6 +192,8 @@ namespace Datiss.Budget.Services
 
             return await Task.FromResult(result);
         }
+
+
 
         #region Privte Helper Methods
         private async Task<IQueryable<ConsumeForcast>> setFilter(
