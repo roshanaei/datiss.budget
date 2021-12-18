@@ -135,6 +135,15 @@
   <data name="ImportExcelLogicError" xml:space="preserve">
     <value>داده سطر {0} در اکسل مشکل دارد. لطفاً ورودی ها را بررسی نمایید.</value>
   </data>
+  <data name="ImportExcelNotExistOrg" xml:space="preserve">
+    <value>سازمان به کد ({0}) در سیستم یافت نشد.</value>
+  </data>
+  <data name="ImportExcelOrgNotInExcel" xml:space="preserve">
+    <value>سازمان های ({0}) در فایل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</value>
+  </data>
+  <data name="ImportExcelSuccess" xml:space="preserve">
+    <value>ورود اطلاعات با موفقیت انجام گردید.</value>
+  </data>
   <data name="Logic_BranchFeeAmount" xml:space="preserve">
     <value>اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است</value>
   </data>

@@ -135,8 +135,14 @@
   <data name="DeleteMultipleDataForOrg" xml:space="preserve">
     <value>حذف رکورد برای سازمان {0} در سال {1} با موفقیت انجام شد.</value>
   </data>
+  <data name="DeleteNullRecord" xml:space="preserve">
+    <value>داده ای برای حذف وجود ندارد.</value>
+  </data>
   <data name="DeleteRelatedData" xml:space="preserve">
     <value>بدلیل وجود داده های وابسته امکان حذف رکورد وجود ندارد.</value>
+  </data>
+  <data name="DeleteRowSuccess" xml:space="preserve">
+    <value>حذف رکورد با موفقیت انجام شد.</value>
   </data>
   <data name="ImportExcelFileFormatInvalid" xml:space="preserve">
     <value>فرمت فایل اکسل نمی باشد.</value>
@@ -152,6 +158,9 @@
   </data>
   <data name="InvalidData" xml:space="preserve">
     <value>خطاهای داده ای را بررسی نمایید.</value>
+  </data>
+  <data name="InvalidUpdateData" xml:space="preserve">
+    <value>خطا در بروزرسانی اطلاعات. لطفاً دوباره سعی کنید.</value>
   </data>
   <data name="InvalidUsernameOrPassword" xml:space="preserve">
     <value>نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند.</value>
