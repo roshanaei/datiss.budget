@@ -115,11 +115,29 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to داده ای برای حذف وجود ندارد..
+        /// </summary>
+        public static string DeleteNullRecord {
+            get {
+                return ResourceManager.GetString("DeleteNullRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to بدلیل وجود داده های وابسته امکان حذف رکورد وجود ندارد..
         /// </summary>
         public static string DeleteRelatedData {
             get {
                 return ResourceManager.GetString("DeleteRelatedData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to حذف رکورد با موفقیت انجام شد..
+        /// </summary>
+        public static string DeleteRowSuccess {
+            get {
+                return ResourceManager.GetString("DeleteRowSuccess", resourceCulture);
             }
         }
         
@@ -165,6 +183,15 @@ namespace Datiss.Budget.Resources {
         public static string InvalidData {
             get {
                 return ResourceManager.GetString("InvalidData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to خطا در بروزرسانی اطلاعات. لطفاً دوباره سعی کنید..
+        /// </summary>
+        public static string InvalidUpdateData {
+            get {
+                return ResourceManager.GetString("InvalidUpdateData", resourceCulture);
             }
         }
         

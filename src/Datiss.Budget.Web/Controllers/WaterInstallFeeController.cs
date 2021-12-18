@@ -270,6 +270,14 @@ namespace Datiss.Budget.Web.Controllers
                         result.Year)
                 });
             }
+            catch (DeleteNullRecordException)
+            {
+                return Json(new
+                {
+                    hasError = true ,
+                    message = ViewMessages.DeleteNullRecord
+                });
+            }
             catch(NullReferenceException) {
                 return Json(new {
                     hasError = true,
@@ -293,13 +301,13 @@ namespace Datiss.Budget.Web.Controllers
                 _logger.LogError(ex.GetBaseException().Message);
                 return Json(new {
                     hasError = true,
-                    message = "خطا در بروزرسانی اطلاعات. لطفاً دوباره سعی کنید."
+                    message = ViewMessages.InvalidUpdateData
                 });
             }
 
             return Json(new {
                 hasError = false,
-                message = "حذف رکورد با موفقیت انجام شد."
+                message = ViewMessages.DeleteRowSuccess
             });
         }
 
