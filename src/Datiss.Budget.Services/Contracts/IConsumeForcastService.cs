@@ -11,6 +11,15 @@ namespace Datiss.Budget.Services.Contracts
 {
    public interface  IConsumeForcastService
     {
+
+        Task<ConsumeForcast> GetByIdAsync(int id);
+
+        Task<ValidationResult<ConsumeForcastDTO>> CreateAsync(CreateConsumeForcastDTO model);
+
+        Task<ValidationResult<ConsumeForcastDTO>> UpdateAsync(UpdateConsumeForcastDTO model);
+
         Task HardDeleteAsync(int Id);
+
+
     }
 }
