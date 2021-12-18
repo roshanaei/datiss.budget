@@ -23,5 +23,7 @@ namespace Datiss.Budget.Services.Contracts
         Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
         Task<int> CalculationAsync(int yearId, int organizationId);
+
+        Task<PagedResult<ConsumeForcastDTO>> GetListAsync(ConsumeForcastFilterDTO filter);
     }
 }
