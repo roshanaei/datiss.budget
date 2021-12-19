@@ -32,14 +32,14 @@ namespace Datiss.Budget.Web.Controllers
         public const string Name = "ConsumeForcast";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
-        public const string ACTION_Edit = nameof(Edit);
-        public const string ACTION_Copy = nameof(Copy);
-        public const string ACTION_Delete = nameof(Delete);
-        public const string ACTION_DeleteRecords = nameof(DeleteRecords);
-        public const string ACTION_ImportExcel = nameof(ImportExcel);
-        public const string ACTION_Calculation = nameof(Calculation);
-        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
-        public const string ACTION_ExportExcel = nameof(ExportExcel);
+        //public const string ACTION_Edit = nameof(Edit);
+        //public const string ACTION_Copy = nameof(Copy);
+        //public const string ACTION_Delete = nameof(Delete);
+        //public const string ACTION_DeleteRecords = nameof(DeleteRecords);
+        //public const string ACTION_ImportExcel = nameof(ImportExcel);
+        //public const string ACTION_Calculation = nameof(Calculation);
+        //public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
+        //public const string ACTION_ExportExcel = nameof(ExportExcel);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
@@ -95,7 +95,16 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            return Json(result.Result.Adapt<Consume>)
+            return Json(result.Result.Adapt<ConsumeForcastViewModel>());
         }
+
+
+        [HttpGet("{page?}")]
+        public async Task<IActionResult> Index(int page = 1)
+        {
+
+        }
+
+
     }
 }
