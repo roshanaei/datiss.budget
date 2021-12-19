@@ -74,7 +74,7 @@ namespace Datiss.Budget.Services
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
                 DWaterTypeId = model.DWaterTypeId,
-                WInstllFee = model.WInstallFee
+                WInstallFee = model.WInstallFee
             };
 
             if(await checkLogicAsync(model.YearId, model.OrganizationId, model.DWaterTypeId)) {
@@ -85,7 +85,7 @@ namespace Datiss.Budget.Services
                 result.DWaterTypeDisplay = (await _constSet.FindAsync(model.DWaterTypeId)).Title;
                 result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
                 result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-                result.WInstallFee = entity.WInstllFee;
+                result.WInstallFee = entity.WInstallFee;
 
                 return ValidationResult<WaterInstallFeeDTO>.Success(result);
             }
@@ -105,7 +105,7 @@ namespace Datiss.Budget.Services
                 entity.OrganizationId = model.OrganizationId;
                 entity.YearId = model.YearId;
                 entity.DWaterTypeId = model.DWaterTypeId;
-                entity.WInstllFee = model.WInstallFee;
+                entity.WInstallFee = model.WInstallFee;
 
                 await _uow.SaveChangesAsync();
 
@@ -213,7 +213,7 @@ namespace Datiss.Budget.Services
                                         DWaterTypeId = x.DWaterTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        WInstallFee = x.WInstllFee,
+                                        WInstallFee = x.WInstallFee,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -249,7 +249,7 @@ namespace Datiss.Budget.Services
                         DWaterTypeId = item.DWaterTypeId,
                         OrganizationId = item.OrganizationId,
                         YearId = destYearId,
-                        WInstllFee = item.WInstllFee
+                        WInstallFee = item.WInstallFee
                     };
                     result.Add(entity);
                 }
@@ -361,7 +361,7 @@ namespace Datiss.Budget.Services
                                         DWaterTypeId = x.DWaterTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        WInstallFee = x.WInstllFee,
+                                        WInstallFee = x.WInstallFee,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -388,7 +388,7 @@ namespace Datiss.Budget.Services
                                         DWaterTypeId = x.DWaterTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        WInstallFee = x.WInstllFee,
+                                        WInstallFee = x.WInstallFee,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -433,13 +433,13 @@ namespace Datiss.Budget.Services
             if (filter.WInstallFee.HasValue) {
                 switch (filter.FeeMode) {
                     case InstallFeeFilterMode.Exact:
-                        query = query.Where(x => x.WInstllFee == filter.WInstallFee.Value);
+                        query = query.Where(x => x.WInstallFee == filter.WInstallFee.Value);
                         break;
                     case InstallFeeFilterMode.GreaterThan:
-                        query = query.Where(x => x.WInstllFee >= filter.WInstallFee.Value);
+                        query = query.Where(x => x.WInstallFee >= filter.WInstallFee.Value);
                         break;
                     case InstallFeeFilterMode.LessThan:
-                        query = query.Where(x => x.WInstllFee <= filter.WInstallFee.Value);
+                        query = query.Where(x => x.WInstallFee <= filter.WInstallFee.Value);
                         break;
                 }
             }
@@ -512,7 +512,7 @@ namespace Datiss.Budget.Services
                         DWaterTypeId = item.DWaterTypeId,
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
-                        WInstllFee = item.WInstllFee
+                        WInstallFee = item.WInstallFee
                     };
 
                     result.Add(entity);
