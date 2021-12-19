@@ -23,10 +23,11 @@ using System.IO;
 using Datiss.Budget.Common;
 using Microsoft.Extensions.Logging;
 using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Services.Identity;
 
 namespace Datiss.Budget.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = ConstantPolicies.DynamicPermission)]
     [Route("[controller]")]
     public class WasteInstallFeeController : Controller
     {
@@ -58,8 +59,8 @@ namespace Datiss.Budget.Web.Controllers
             IWasteInstallFeeService wasteInstallFeeService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
-            IConstantService constantService
-            )
+            IConstantService constantService,
+            ISecurityTrimmingService securityTrimmingService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
@@ -67,6 +68,7 @@ namespace Datiss.Budget.Web.Controllers
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
+            _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
         private void showMessage(string type, string message)
         {

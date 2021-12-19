@@ -19,11 +19,13 @@ using Mapster;
 using Datiss.Budget.Services.Contracts.Identity;
 using Microsoft.Data.SqlClient;
 using Datiss.Budget.Extensions;
+using Datiss.Budget.Security;
 
 namespace Datiss.Budget.Services
 {
     public class WasteInstallFeeService : IWasteInstallFeeService
     {
+        private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
         private readonly IExcelService _excelService;
         private readonly IUserService _userService;
@@ -35,11 +37,13 @@ namespace Datiss.Budget.Services
         private readonly DbSet<Constant> _constSet;
 
         public WasteInstallFeeService(
+            IUserContext userContext,
             IUnitOfWork uow,
             IExcelService excelService,
             IUserService userService,
             IOrganizationService organizationService)
         {
+            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<WasteInstallFee>();
             _orgDbSet = _uow.Set<Organization>();
