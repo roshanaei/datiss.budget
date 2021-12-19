@@ -32,14 +32,14 @@ namespace Datiss.Budget.Web.Controllers
         public const string Name = "ConsumeForcast";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
-        //public const string ACTION_Edit = nameof(Edit);
-        //public const string ACTION_Copy = nameof(Copy);
-        //public const string ACTION_Delete = nameof(Delete);
-        //public const string ACTION_DeleteRecords = nameof(DeleteRecords);
-        //public const string ACTION_ImportExcel = nameof(ImportExcel);
-        //public const string ACTION_Calculation = nameof(Calculation);
-        //public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
-        //public const string ACTION_ExportExcel = nameof(ExportExcel);
+        public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Copy = nameof(Copy);
+        public const string ACTION_Delete = nameof(Delete);
+        public const string ACTION_DeleteRecords = nameof(DeleteRecords);
+        public const string ACTION_ImportExcel = nameof(ImportExcel);
+        public const string ACTION_Calculation = nameof(Calculation);
+        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
+        public const string ACTION_ExportExcel = nameof(ExportExcel);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
@@ -98,6 +98,30 @@ namespace Datiss.Budget.Web.Controllers
             return Json(result.Result.Adapt<ConsumeForcastViewModel>());
         }
 
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Edit(UpdateConsumeForcastViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+
+            var data = model.Adapt<UpdateConsumeForcastDTO>();
+            var result = await _consumeForcastService.UpdateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(
+                result.Result.Adapt<ConsumeForcastViewModel>()
+            );
+        }
 
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1)
@@ -244,170 +268,171 @@ namespace Datiss.Budget.Web.Controllers
             return RedirectToAction("Index");
         }
 
-    //    [HttpPost("records/delete")]
-    //    public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
-    //    {
-    //        try
-    //        {
-    //            var result = await _waterInstallFeeService.HardDeleteAsync(yearId, orgId);
+        [HttpPost("records/delete")]
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
+        {
+            try
+            {
+                var result = await _consumeForcastService.HardDeleteAsync(yearId, orgId);
 
-    //            return Json(new
-    //            {
-    //                success = true,
-    //                message = string.Format(
-    //                    ViewMessages.DeleteMultipleDataForOrg,
-    //                    result.OrganizationTitle,
-    //                    result.Year)
-    //            });
-    //        }
-    //        catch (DeleteNullRecordException)
-    //        {
-    //            return Json(new
-    //            {
-    //                hasError = true,
-    //                message = ViewMessages.DeleteNullRecord
-    //            });
-    //        }
-    //        catch (NullReferenceException)
-    //        {
-    //            return Json(new
-    //            {
-    //                hasError = true,
-    //                message = ViewMessages.NullRef
-    //            });
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            return Json(new
-    //            {
-    //                hasError = true,
-    //                message = ViewMessages.DeleteRelatedData
-    //            });
-    //        }
-    //    }
+                return Json(new
+                {
+                    success = true,
+                    message = string.Format(
+                        ViewMessages.DeleteMultipleDataForOrg,
+                        result.OrganizationTitle,
+                        result.Year)
+                });
+            }
+            catch (DeleteNullRecordException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteNullRecord
+                });
+            }
+            catch (NullReferenceException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.NullRef
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteRelatedData
+                });
+            }
+        }
 
-    //    [HttpPost("[action]/{id}")]
-    //    public async Task<IActionResult> Delete(int id)
-    //    {
-    //        try
-    //        {
-    //            await _waterInstallFeeService.HardDeleteAsync(id);
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            _logger.LogError(ex.GetBaseException().Message);
-    //            return Json(new
-    //            {
-    //                hasError = true,
-    //                message = ViewMessages.InvalidUpdateData
-    //            });
-    //        }
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _consumeForcastService.HardDeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.GetBaseException().Message);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.InvalidUpdateData
+                });
+            }
 
-    //        return Json(new
-    //        {
-    //            hasError = false,
-    //            message = ViewMessages.DeleteRowSuccess
-    //        });
-    //    }
+            return Json(new
+            {
+                hasError = false,
+                message = ViewMessages.DeleteRowSuccess
+            });
+        }
 
-    //    [HttpPost("[action]")]
-    //    public async Task<IActionResult> Calculation(CalculationInputViewModel model)
-    //    {
-    //        model.CheckArgumentIsNull(nameof(model));
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Calculation(CalculationInputViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
 
-    //        var result = await _waterInstallFeeService.CalculationAsync(
-    //            model.YearId,
-    //            model.OrganizationId);
+            var result = await _consumeForcastService.CalculationAsync(
+                model.YearId,
+                model.OrganizationId);
 
-    //        var output = new CalculationResultViewModel
-    //        {
-    //            Result = result,
-    //            Title = "WaterInstallFee calc" //TODO : change it to proper title
-    //        };
+            var output = new CalculationResultViewModel
+            {
+                Result = result,
+                Title = "ConsumeForcast calc" //TODO : change it to proper title
+            };
 
-    //        return PartialView("_calculationModal", output);
-    //    }
+            return PartialView("_calculationModal", output);
+        }
 
 
-    //    [HttpGet("[action]")]
-    //    public async Task<IActionResult> DownloadExcelTemplate()
-    //    {
-    //        var filePath = $"{_env.WebRootPath}\\Excel\\WaterInstallFeeImport.xlsx";
+        [HttpGet("[action]")]
+        public async Task<IActionResult> DownloadExcelTemplate()
+        {
+            var filePath = $"{_env.WebRootPath}\\Excel\\ConsumeForcastImport.xlsx";
 
-    //        var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-    //        return File(
-    //            stream,
-    //            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    //            "WaterInstallFee.xlsx");
-    //    }
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return File(
+                stream,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "ConsumeForcast.xlsx");
+        }
 
-    //    [HttpGet("[action]")]
-    //    public async Task<IActionResult> Copy()
-    //    {
-    //        var model = new CopyViewModel();
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Copy()
+        {
+            var model = new CopyViewModel();
 
-    //        model.SetOrganizationSource(
-    //            (await _organizationService.GetDropDownDataAsync())
-    //                .Adapt<IEnumerable<DropDownItemViewModel>>()
-    //        );
+            model.SetOrganizationSource(
+                (await _organizationService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
 
-    //        model.SetYearSource(
-    //            (await _financeYearService.GetDropDownDataAsync())
-    //                .Adapt<IEnumerable<DropDownItemViewModel>>()
-    //        );
+            model.SetYearSource(
+                (await _financeYearService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
 
-    //        return PartialView("_copyModal", model);
-    //    }
+            return PartialView("_copyModal", model);
+        }
 
-    //    [HttpPost("[action]")]
-    //    public async Task<IActionResult> Copy(CopyViewModel model)
-    //    {
-    //        model.CheckArgumentIsNull(nameof(model));
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Copy(CopyViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
 
-    //        try
-    //        {
-    //            await _waterInstallFeeService.CopyAsync(
-    //                                                model.SourceYearId,
-    //                                                model.SourceOrgId,
-    //                                                model.TargetYearId);
-    //            model.Succeed(ViewMessages.CopySuccess);
-    //        }
-    //        catch (CopySameYearException)
-    //        {
-    //            model.AddError(ViewMessages.CopySameYear);
-    //        }
-    //        catch (CopyDestYearExxeption)
-    //        {
-    //            model.AddError(ViewMessages.CopyErrorDestYear);
-    //        }
-    //        catch (CopyOrgNullDataException)
-    //        {
-    //            model.AddError(ViewMessages.CopySourceOrgNullData);
-    //        }
-    //        catch (CopyDestYearHasDataException)
-    //        {
-    //            model.AddError(ViewMessages.CopyDestYearHasData);
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            model.AddError(ViewMessages.SystemError);
-    //        }
+            try
+            {
+                await _consumeForcastService.CopyAsync(
+                                                    model.SourceYearId,
+                                                    model.SourceOrgId,
+                                                    model.TargetYearId);
+                model.Succeed(ViewMessages.CopySuccess);
+            }
+            catch (CopySameYearException)
+            {
+                model.AddError(ViewMessages.CopySameYear);
+            }
+            catch (CopyDestYearExxeption)
+            {
+                model.AddError(ViewMessages.CopyErrorDestYear);
+            }
+            catch (CopyOrgNullDataException)
+            {
+                model.AddError(ViewMessages.CopySourceOrgNullData);
+            }
+            catch (CopyDestYearHasDataException)
+            {
+                model.AddError(ViewMessages.CopyDestYearHasData);
+            }
+            catch (Exception ex)
+            {
+                model.AddError(ViewMessages.SystemError);
+            }
 
-    //        return Json(model);
-    //    }
+            return Json(model);
+        }
 
-    //    [HttpGet("[action]/{orgid}/{yearid}")]
-    //    public async Task<IActionResult> ExportExcel(int orgid, int yearid)
-    //    {
-    //        var result = await _waterInstallFeeService.GetExportItemsAsync(yearid, orgid);
-    //        if (result.Count() == 0)
-    //            return RedirectToAction("Index");
-    //        using var workbook = result.ExportExcel();
-    //        return workbook.Deliver("WatreInstallFee.xlsx");
-    //    }
+        public async Task<IActionResult> ExportExcel(int orgid,int yearid)
+        {
+            var result = await _consumeForcastService.GetExportItemsAsync (orgid,yearid);
 
-    //}
+            if (result.Count() == 0)
+                return RedirectToAction("Index");
 
+            using var workbook = result.ExportExcel();
+            return workbook.Deliver("ConsumeForcast.xlsx");
+
+        }
+
+    }
 
 }
-}
+
