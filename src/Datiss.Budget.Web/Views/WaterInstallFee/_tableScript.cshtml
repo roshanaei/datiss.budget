@@ -4,7 +4,10 @@
 
     function editRow(id) {
 
-        //do reset all row backgrand
+        //$('th,tr td').css('background-color', 'rgb(255 255 255)');
+        //resetTableBackColor("my-table");
+
+        //do reset all row background
 
         let row = $('#row_' + id);
         //row.css('background-color', '#7598f3');
@@ -210,7 +213,7 @@
     function addNewRow() {
         if (isNewRow) return;
 
-        //do reset all row backgrand
+        //do reset all row background
 
         var template = $('#rowTemplate').clone()
             .appendTo($('#my-table tbody'))
@@ -262,7 +265,7 @@
 
     //    for (i = 2; i < rows.length - 1; i++) {
     //        console.log(i);
-    //        rows[i].css.backgroundColor = rgb(230,247,228);
+    //        rows[i].style.backgroundColor = "#00000000"
     //    }
     //}
 
