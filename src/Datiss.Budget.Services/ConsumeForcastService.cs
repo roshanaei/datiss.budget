@@ -80,7 +80,7 @@ namespace Datiss.Budget.Services
                 AvgConsumeUser = model.AvgConsumeUser
             };
 
-            if(await checkLogitcAsync(model.YearId, model.OrganizationId, model.UserTypeId,model.UsageLayerId))
+            if(await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId,model.UsageLayerId))
             {
                 await _dbSet.AddAsync(entity);
                 await _uow.SaveChangesAsync();
@@ -109,7 +109,7 @@ namespace Datiss.Budget.Services
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            if(await checkLogitcAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.UsageLayerId))
+            if(await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.UsageLayerId))
             {
                 var entity = await _dbSet.FindAsync(model.Id);
                 entity.YearId = model.YearId;
@@ -254,6 +254,222 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task CopyAsync( int sourceYearId, int sourceOrgId,int destYearId)
+        {
+            if (sourceYearId == destYearId)
+                throw new CopySameYearException();
+            if (destYearId < sourceYearId)
+                throw new CopySameYearException();
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
+                throw new CopyOrgNullDataException();
+
+            var result = new List<ConsumeForcast>();
+
+            if (await Query()
+            .Where(_ => _.OrganizationId == sourceOrgId)
+            .Where(_ => _.YearId == destYearId).AnyAsync())
+                throw new CopyDestYearHasDataException();
+
+            var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
+                                        .Where(_ => _.YearId == sourceYearId)
+                                        .ToListAsync();
+
+            if (selfData.Any())
+            {
+                foreach (var item in selfData)
+                {
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.UserTypeId,item.UsageLayerId))
+                        throw new CopyDestYearHasDataException();
+
+                    var entity = new ConsumeForcast
+                    {
+                        YearId = destYearId,
+                        OrganizationId = item.OrganizationId,
+                        UserTypeId = item.UserTypeId,
+                        UsageLayerId = item.UsageLayerId,
+                        CountUser = item.CountUser,
+                        UnitUser = item.UnitUser,
+                        ConsumeUser = item.ConsumeUser,
+                        AvgConsumeUser = item.AvgConsumeUser
+                    };
+                    result.Add(entity);
+                }
+            }
+
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+
+            if (childrens.Any())
+            {
+                result.AddRange(childrens);
+            }
+
+            _dbSet.AddRange(result);
+
+            await _uow.SaveChangesAsync();
+        }
+
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false)
+        {
+            var data = await _excelService.ImportAsync<ConsumeForcastImportModel>(fileInfo);
+
+            var records = data.Adapt<List<ConsumeForcast>>();
+
+            int rowIndex = 1;
+
+            var descendents = await _organizationService
+                .GetAllDescendentsAsync(_userContext.OrganizationId);
+
+            List<int> notAllowedToInputOrgs = new List<int>();
+
+            foreach (var rec in records)
+            {
+                var org = await _orgDbSet.FindAsync(rec.OrganizationId);
+                if (org == null)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rec.Id)
+                        );
+                }
+                if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
+                {
+                    notAllowedToInputOrgs.Add(org.Id);
+                }
+            }
+
+            if (!continueIfAnyOrgMissing)
+            {
+                var missingOrgs = new List<Organization>();
+
+                foreach (var item in descendents)
+                {
+                    var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                    if (!existInExcel)
+                        missingOrgs.Add(item);
+                }
+
+                if (missingOrgs.Any())
+                {
+                    string orgNames = "";
+                    foreach (var item in missingOrgs)
+                    {
+                        orgNames += item.Title + ",";
+                    }
+
+                    return new ImportResult
+                    {
+                        Message = string.Format(ServiceMessages.ImportExcelOrgNotInExcel, orgNames),
+                        AskToImport = true
+                    };
+                }
+            }
+
+            foreach (var record in records)
+            {
+                //if organization type is not city or village then pass
+                if (notAllowedToInputOrgs.Contains(record.OrganizationId))
+                    continue;
+
+                if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
+                    return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelAccessError, rowIndex));
+
+                if (!await checkLogicAsync(
+                    record.YearId,
+                    record.OrganizationId,
+                    record.UserTypeId,
+                    record.UsageLayerId))
+                {
+                    return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelLogicError, rowIndex));
+                }
+
+                rowIndex++;
+            }
+
+            await _dbSet.AddRangeAsync(records);
+            await _uow.SaveChangesAsync();
+
+            return ImportResult.Succeed(ServiceMessages.ImportExcelSuccess);
+        }
+
+        public async Task<IEnumerable<ConsumeForcastDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        {
+            var filter = new ConsumeForcastFilterDTO
+            {
+                OrganizationId = organizationId,
+                YearId = yearId
+            };
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.UserType)
+                                    .Include(x => x.UsageLayer)
+                                    .Select(x => new ConsumeForcastDTO
+                                    {
+                                        Id = x.Id,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        UserTypeTitle = x.UserType.Title,
+                                        UserTypeId = x.UserTypeId,
+                                        UsageLayerTitle = x.UsageLayer.Title,
+                                        CountUser = x.CountUser,
+                                        UnitUser = x.UnitUser,
+                                        ConsumeUser = x.ConsumeUser,
+                                        AvgConsumeUser = x.AvgConsumeUser,
+                                        ConsumeUserForcast = x.ConsumeUserForcast
+                                    }).ToListAsync();
+
+            return items;
+        }
+
+        public async Task<Stream> ExportExcelAsync(ConsumeForcastFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.UserType)
+                                    .Include(x => x.UsageLayer)
+                                    .Select(x => new ConsumeForcastDTO
+                                    {
+                                        Id = x.Id,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        UserTypeTitle = x.UserType.Title,
+                                        UserTypeId = x.UserTypeId,
+                                        UsageLayerTitle = x.UsageLayer.Title,
+                                        CountUser = x.CountUser,
+                                        UnitUser = x.UnitUser,
+                                        ConsumeUser = x.ConsumeUser,
+                                        AvgConsumeUser = x.AvgConsumeUser
+                                    }).ToListAsync();
+
+            var ms = new MemoryStream();
+            var result = _excelService.Export(items, ms);
+
+            var mem1 = new MemoryStream(ms.ToArray());
+
+            return mem1;
+        }
+
+
         #region Privte Helper Methods
         private async Task<IQueryable<ConsumeForcast>> setFilter(
             IQueryable<ConsumeForcast> query,
@@ -355,7 +571,7 @@ namespace Datiss.Budget.Services
                                 .ToListAsync();
 
                 foreach(var item in data){
-                    if (!await checkLogitcAsync(targetYearId, org.Id, item.UserTypeId, item.UsageLayerId))
+                    if (!await checkLogicAsync(targetYearId, org.Id, item.UserTypeId, item.UsageLayerId))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new ConsumeForcast
@@ -429,7 +645,7 @@ namespace Datiss.Budget.Services
         #endregion
 
         #region Logics
-        private async Task<bool> checkLogitcAsync(
+        private async Task<bool> checkLogicAsync(
              int yearId,
              int organizationId,
              int userTypeId,

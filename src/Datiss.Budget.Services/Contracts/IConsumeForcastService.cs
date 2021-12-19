@@ -25,5 +25,13 @@ namespace Datiss.Budget.Services.Contracts
         Task<int> CalculationAsync(int yearId, int organizationId);
 
         Task<PagedResult<ConsumeForcastDTO>> GetListAsync(ConsumeForcastFilterDTO filter);
+
+        Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
+
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false);
+
+        Task<IEnumerable<ConsumeForcastDTO>> GetExportItemsAsync(int yearId, int organizationId);
+
+        Task<Stream> ExportExcelAsync(ConsumeForcastFilterDTO filter);
     }
 }

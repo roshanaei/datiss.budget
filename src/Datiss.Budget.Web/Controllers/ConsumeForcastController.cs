@@ -89,7 +89,7 @@ namespace Datiss.Budget.Web.Controllers
 
             var result = await _consumeForcastService.CreateAsync(data);
 
-            if(!result.IsValid)
+            if (!result.IsValid)
             {
                 model.AddError(result.Message);
                 return Json(model);
@@ -102,9 +102,312 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1)
         {
+            var filter = new ConsumeForcastFilterDTO();
 
+            var myfilter = TempData.Get<ConsumeForcastFilterViewModel>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<ConsumeForcastFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<List<DropDownItemViewModel>>();
+            int firstOrgId = orgSource.FirstOrDefault().Id;
+
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<List<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(x => x.Id);
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+                .Adapt<List<DropDownItemViewModel>>();
+
+            filter.PageNumber = page;
+            filter.YearId = maxYear;
+            filter.OrganizationId = firstOrgId;
+
+            var result = await _consumeForcastService.GetListAsync(filter);
+            var model = result.Adapt<ConsumeForcastIndexViewModel>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+
+            model.SetFinanceYearFilterSource(yearSource, maxYear);
+            model.SetOrganizationFilterSource(orgSource);
+
+            model.Filter.YearId = filter.YearId;
+            model.Filter.OrganizationId = filter.OrganizationId;
+
+            return View(model);
         }
 
+        [HttpPost("{page?}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(ConsumeForcastIndexViewModel model,int page = 1)
+        {
+            model.Filter.PageNumber = page;
+            var filter = model.Filter.Adapt<ConsumeForcastFilterDTO>();
 
-    }
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _consumeForcastService.GetListAsync(filter);
+            model = result.Adapt<ConsumeForcastIndexViewModel>();
+            model.Filter = filter.Adapt<ConsumeForcastFilterViewModel>();
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+                .Adapt<List<DropDownItemViewModel>>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetFinanceYearFilterSource(yearSource);
+            model.SetOrganizationFilterSource(orgSource);
+
+            return View(model);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            if (model.ExcelFile == null ||
+                model.ExcelFile.Length == 0)
+                return RedirectToAction("Index");
+
+            try
+            {
+                var result = await _consumeForcastService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
+                if (result.AskToImport)
+                {
+                    return Json(new
+                    {
+                        ask = true,
+                        message = result.Message
+                    });
+                }
+
+                if (!result.Success)
+                {
+                    return Json(new
+                    {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
+            }
+            catch (ImportExcelFileFormatInvalidException ex)
+            {
+                showMessage(CssClassNames.Error,
+                    ViewMessages.ImportExcelFileFormatInvalid);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileFormatInvalid
+                });
+            }
+            catch (ImportExcelFileSizeInvalidException ex)
+            {
+                showMessage(CssClassNames.Error,
+                    ViewMessages.ImportExcelFileSizeInvalid);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileSizeInvalid
+                });
+            }
+            catch (ImportExcelFileException ex)
+            {
+                showMessage(CssClassNames.Error,
+                    string.Format(
+                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
+                    );
+                return Json(new
+                {
+                    hasError = true,
+                    message = string.Format(
+                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
+                });
+            }
+
+            showMessage(CssClassNames.Success,
+                ViewMessages.ImportExcelSuccess);
+
+            return RedirectToAction("Index");
+        }
+
+    //    [HttpPost("records/delete")]
+    //    public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
+    //    {
+    //        try
+    //        {
+    //            var result = await _waterInstallFeeService.HardDeleteAsync(yearId, orgId);
+
+    //            return Json(new
+    //            {
+    //                success = true,
+    //                message = string.Format(
+    //                    ViewMessages.DeleteMultipleDataForOrg,
+    //                    result.OrganizationTitle,
+    //                    result.Year)
+    //            });
+    //        }
+    //        catch (DeleteNullRecordException)
+    //        {
+    //            return Json(new
+    //            {
+    //                hasError = true,
+    //                message = ViewMessages.DeleteNullRecord
+    //            });
+    //        }
+    //        catch (NullReferenceException)
+    //        {
+    //            return Json(new
+    //            {
+    //                hasError = true,
+    //                message = ViewMessages.NullRef
+    //            });
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            return Json(new
+    //            {
+    //                hasError = true,
+    //                message = ViewMessages.DeleteRelatedData
+    //            });
+    //        }
+    //    }
+
+    //    [HttpPost("[action]/{id}")]
+    //    public async Task<IActionResult> Delete(int id)
+    //    {
+    //        try
+    //        {
+    //            await _waterInstallFeeService.HardDeleteAsync(id);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            _logger.LogError(ex.GetBaseException().Message);
+    //            return Json(new
+    //            {
+    //                hasError = true,
+    //                message = ViewMessages.InvalidUpdateData
+    //            });
+    //        }
+
+    //        return Json(new
+    //        {
+    //            hasError = false,
+    //            message = ViewMessages.DeleteRowSuccess
+    //        });
+    //    }
+
+    //    [HttpPost("[action]")]
+    //    public async Task<IActionResult> Calculation(CalculationInputViewModel model)
+    //    {
+    //        model.CheckArgumentIsNull(nameof(model));
+
+    //        var result = await _waterInstallFeeService.CalculationAsync(
+    //            model.YearId,
+    //            model.OrganizationId);
+
+    //        var output = new CalculationResultViewModel
+    //        {
+    //            Result = result,
+    //            Title = "WaterInstallFee calc" //TODO : change it to proper title
+    //        };
+
+    //        return PartialView("_calculationModal", output);
+    //    }
+
+
+    //    [HttpGet("[action]")]
+    //    public async Task<IActionResult> DownloadExcelTemplate()
+    //    {
+    //        var filePath = $"{_env.WebRootPath}\\Excel\\WaterInstallFeeImport.xlsx";
+
+    //        var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+    //        return File(
+    //            stream,
+    //            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    //            "WaterInstallFee.xlsx");
+    //    }
+
+    //    [HttpGet("[action]")]
+    //    public async Task<IActionResult> Copy()
+    //    {
+    //        var model = new CopyViewModel();
+
+    //        model.SetOrganizationSource(
+    //            (await _organizationService.GetDropDownDataAsync())
+    //                .Adapt<IEnumerable<DropDownItemViewModel>>()
+    //        );
+
+    //        model.SetYearSource(
+    //            (await _financeYearService.GetDropDownDataAsync())
+    //                .Adapt<IEnumerable<DropDownItemViewModel>>()
+    //        );
+
+    //        return PartialView("_copyModal", model);
+    //    }
+
+    //    [HttpPost("[action]")]
+    //    public async Task<IActionResult> Copy(CopyViewModel model)
+    //    {
+    //        model.CheckArgumentIsNull(nameof(model));
+
+    //        try
+    //        {
+    //            await _waterInstallFeeService.CopyAsync(
+    //                                                model.SourceYearId,
+    //                                                model.SourceOrgId,
+    //                                                model.TargetYearId);
+    //            model.Succeed(ViewMessages.CopySuccess);
+    //        }
+    //        catch (CopySameYearException)
+    //        {
+    //            model.AddError(ViewMessages.CopySameYear);
+    //        }
+    //        catch (CopyDestYearExxeption)
+    //        {
+    //            model.AddError(ViewMessages.CopyErrorDestYear);
+    //        }
+    //        catch (CopyOrgNullDataException)
+    //        {
+    //            model.AddError(ViewMessages.CopySourceOrgNullData);
+    //        }
+    //        catch (CopyDestYearHasDataException)
+    //        {
+    //            model.AddError(ViewMessages.CopyDestYearHasData);
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            model.AddError(ViewMessages.SystemError);
+    //        }
+
+    //        return Json(model);
+    //    }
+
+    //    [HttpGet("[action]/{orgid}/{yearid}")]
+    //    public async Task<IActionResult> ExportExcel(int orgid, int yearid)
+    //    {
+    //        var result = await _waterInstallFeeService.GetExportItemsAsync(yearid, orgid);
+    //        if (result.Count() == 0)
+    //            return RedirectToAction("Index");
+    //        using var workbook = result.ExportExcel();
+    //        return workbook.Deliver("WatreInstallFee.xlsx");
+    //    }
+
+    //}
+
+
+}
 }

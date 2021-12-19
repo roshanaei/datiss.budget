@@ -143,15 +143,22 @@ public class ConsumeForcastIndexViewModel
                    Value = x.Id.ToString()
                }).ToList();
 
-        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source)
+        public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+                => InputOrganizationSource = source.Select(x => new SelectListItem
+                {
+                    Text = x.Title,
+                    Value = x.Id.ToString()
+                }).ToList();
+
+        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
                 => Filter.YearSource = source.Select(x => new SelectListItem
                 {
                     Selected = x.Id == selectedYearId,
                     Text = x.Title,
                     Value = x.Id.ToString()
-                }).Tolist();
+                }).ToList();
 
-        public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source)
+        public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
             => Filter.OrganizationSource = source.Select(x => new SelectListItem
             {
                 Selected = x.Id == selectedOrgId,
