@@ -10,9 +10,9 @@ namespace Datiss.Budget.ViewModels
     public class CreateWasteInstallFeeViewModel : BaseViewModel
     {
         public int YearId { get; set; }
-
+        public string YearDisplay { get; set; }
         public int OrganizationId { get; set; }
-
+        public string OrganizationDisplay { get; set; }
         public int DWasteTypeId { get; set; }
 
         [Required(ErrorMessage = "*")]
@@ -83,6 +83,7 @@ namespace Datiss.Budget.ViewModels
 
         //public string DWasteTypeSourceArray => DWasteTypeSource.ToStringArray();
 
+        public IList<SelectListItem> InputOrganizationSource { get; set; }
         public IFormFile ExcelFile { get; set; }
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
@@ -98,7 +99,12 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-
+        public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+           => InputOrganizationSource = source.Select(x => new SelectListItem
+           {
+               Text = x.Title,
+               Value = x.Id.ToString()
+           }).ToList();
 
         public void SetDWasteTypeSource(IEnumerable<DropDownItemViewModel> source)
             => DWasteTypeSource = source.Select(x => new SelectListItem
