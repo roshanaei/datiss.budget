@@ -18,6 +18,7 @@ using Datiss.Budget.Services.Excel;
 using Mapster;
 using Datiss.Budget.Services.Contracts.Identity;
 using Microsoft.Data.SqlClient;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services
 {
@@ -296,8 +297,13 @@ namespace Datiss.Budget.Services
             return mem1;
         }
 
-        public async Task<IEnumerable<WasteInstallFeeDTO>> GetExportItemsAsync(WasteInstallFeeFilterDTO filter)
+        public async Task<IEnumerable<WasteInstallFeeDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
+            var filter = new WasteInstallFeeFilterDTO
+            {
+                OrganizationId = organizationId,
+                YearId = yearId
+            };
             filter.CheckArgumentIsNull(nameof(filter));
 
             var query = Query();
@@ -325,7 +331,7 @@ namespace Datiss.Budget.Services
             return items;
         }
 
-        public async Task ImportExcelAsync(IFormFile fileInfo)
+        public async Task ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<WasteInstallFeeImportModel>(fileInfo);
 
@@ -356,6 +362,8 @@ namespace Datiss.Budget.Services
             IQueryable<WasteInstallFee> query,
             WasteInstallFeeFilterDTO filter)
         {
+            query.CheckArgumentIsNull(nameof(query));
+            filter.CheckArgumentIsNull(nameof(filter));
 
             var predicate = LinqKit.PredicateBuilder.New<WasteInstallFee>();
 
@@ -393,6 +401,13 @@ namespace Datiss.Budget.Services
                 }
             }
 
+            if (filter.Search.IsNotNullOrEmpty())
+            {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
+                                    _.DWasteType.Title.ToUpper().Contains(filter.Search));
+            }
+
             return query;
         }
         private IQueryable<WasteInstallFee> setOrder(
@@ -406,11 +421,6 @@ namespace Datiss.Budget.Services
             orderBy = orderBy.ToLower();
             switch (orderBy)
             {
-                case "year":
-                    return desc
-                        ? query.OrderByDescending(x => x.FinanceYear.Year)
-                        : query.OrderBy(x => x.FinanceYear.Year);
-
                 case "organization":
                     return desc
                         ? query.OrderByDescending(x => x.Organization.Title)
@@ -422,9 +432,10 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.DWasteType.DisplayOrder);
 
                 default:
-                    return desc
-                        ? query.OrderByDescending(x => x.Id)
-                        : query.OrderBy(x => x.Id);
+                    return query.Include(x => x.Organization)
+                                .Include(x => x.DWasteType)
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.DWasteType.DisplayOrder);
             }
         }
         private async Task<IEnumerable<WasteInstallFee>> getChildrenData(

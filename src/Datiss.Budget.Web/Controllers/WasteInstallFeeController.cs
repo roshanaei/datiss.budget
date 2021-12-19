@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Datiss.Budget.Common;
 using Microsoft.Extensions.Logging;
+using Datiss.Budget.Services.Contracts.Identity;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -37,9 +38,11 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
-        //public const string ACTION_Calculation = nameof(Calculation);
+        public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
+
+        private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
         private readonly ILogger<WasteInstallFeeController> _logger;
         private readonly IWebHostEnvironment _env;
@@ -47,6 +50,7 @@ namespace Datiss.Budget.Web.Controllers
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
+        private readonly ISecurityTrimmingService _securityTrimmingService;
 
         public WasteInstallFeeController(
             ILogger<WasteInstallFeeController> logger,
@@ -73,6 +77,11 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWasteInstallFeeViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
             var data = model.Adapt<CreateWasteInstallFeeDTO>();
 
             var result = await _wasteInstallFeeService.CreateAsync(data);
@@ -91,7 +100,7 @@ namespace Datiss.Budget.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                model.AddError("خطاهای داده ای را بررسی نمایید.");
+                model.AddError(ViewMessages.InvalidData);
                 return Json(model);
             }
 
@@ -112,6 +121,14 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1)
         {
+            var filter = new WasteInstallFeeFilterDTO();
+
+            var myfilter = TempData.Get<WasteInstallFeeFilterViewModel>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<WasteInstallFeeFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
@@ -123,26 +140,26 @@ namespace Datiss.Budget.Web.Controllers
             var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var filterInput = new WasteInstallFeeFilterDTO
-            {
-                OrderBy = "dwastetype",
-                PageNumber = page,
-                YearId = maxYear,
-                OrganizationId = firstOrgId
-            };
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
 
-            var result = await _wasteInstallFeeService.GetListAsync(filterInput);
+            filter.PageNumber = page;
+            filter.YearId = maxYear;
+            filter.OrganizationId = firstOrgId;
+
+            var result = await _wasteInstallFeeService.GetListAsync(filter);
             var model = result.Adapt<WasteInstallFeeIndexViewModel>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
             model.SetDWasteTypeSource(dwasteSource);
 
             model.SetFinanceYearFilterSource(yearSource, maxYear);
             model.SetOrganizationFilterSource(orgSource);
 
-            model.Filter.YearId = filterInput.YearId;
-            model.Filter.OrganizationId = filterInput.OrganizationId;
+            model.Filter.YearId = filter.YearId;
+            model.Filter.OrganizationId = filter.OrganizationId;
 
             return View(model);
         }
@@ -152,10 +169,13 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Index(WasteInstallFeeIndexViewModel model, int page = 1)
         {
             model.Filter.PageNumber = page;
-            var filterInput = model.Filter.Adapt<WasteInstallFeeFilterDTO>();
+            var filter = model.Filter.Adapt<WasteInstallFeeFilterDTO>();
 
-            var result = await _wasteInstallFeeService.GetListAsync(filterInput);
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _wasteInstallFeeService.GetListAsync(filter);
             model = result.Adapt<WasteInstallFeeIndexViewModel>();
+            model.Filter = filter.Adapt<WasteInstallFeeFilterViewModel>();
 
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
@@ -166,8 +186,12 @@ namespace Datiss.Budget.Web.Controllers
             var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
+
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
             model.SetFinanceYearFilterSource(yearSource);
             model.SetOrganizationFilterSource(orgSource);
             model.SetDWasteTypeSource(dwasteSource);
@@ -228,6 +252,14 @@ namespace Datiss.Budget.Web.Controllers
                         result.Year)
                 });
             }
+            catch (DeleteNullRecordException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteNullRecord
+                });
+            }
             catch (NullReferenceException)
             {
                 return Json(new
@@ -259,15 +291,32 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(new
                 {
                     hasError = true,
-                    message = "خطا در بروزرسانی اطلاعات. لطفاً دوباره سعی کنید."
+                    message = ViewMessages.InvalidUpdateData
                 });
             }
 
             return Json(new
             {
                 hasError = false,
-                message = "حذف رکورد با موفقیت انجام شد."
+                message = ViewMessages.DeleteRowSuccess
             });
+        }
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Calculation(CalculationInputViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var result = await _wasteInstallFeeService.CalculationAsync(
+                model.YearId,
+                model.OrganizationId);
+
+            var output = new CalculationResultViewModel
+            {
+                Result = result,
+                Title = "WasteInstallFee calc" //TODO : change it to proper title
+            };
+
+            return PartialView("_calculationModal", output);
         }
 
         [HttpGet("[action]")]
@@ -311,26 +360,38 @@ namespace Datiss.Budget.Web.Controllers
                                                     model.SourceYearId,
                                                     model.SourceOrgId,
                                                     model.TargetYearId);
+                model.Succeed(ViewMessages.CopySuccess);
             }
-            catch (CopySameYearException ex)
+            catch (CopySameYearException)
             {
                 model.AddError(ViewMessages.CopySameYear);
-                return View(model);
             }
-            catch (CopyDestYearHasDataException ex)
+            catch (CopyDestYearExxeption)
+            {
+                model.AddError(ViewMessages.CopyErrorDestYear);
+            }
+            catch (CopyOrgNullDataException)
+            {
+                model.AddError(ViewMessages.CopySourceOrgNullData);
+            }
+            catch (CopyDestYearHasDataException)
             {
                 model.AddError(ViewMessages.CopyDestYearHasData);
-                return View();
+            }
+            catch (Exception ex)
+            {
+                model.AddError(ViewMessages.SystemError);
             }
 
-            return RedirectToAction("Index");
+            return Json(model);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IActionResult> ExportExcel(WasteInstallFeeIndexViewModel viewModel)
+        [HttpGet("[action]/{orgid}/{yearid}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
-            var filter = viewModel.Filter.Adapt<WasteInstallFeeFilterDTO>();
-            var result = await _wasteInstallFeeService.GetExportItemsAsync(filter);
+            var result = await _wasteInstallFeeService.GetExportItemsAsync(yearid, orgid);
+            if (result.Count() == 0)
+                return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
             return workbook.Deliver("WasteInstallFee.xlsx");
         }
