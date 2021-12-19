@@ -150,10 +150,13 @@ namespace Datiss.Budget.Services
                                     .Where(_ => _.OrganizationId == organizationId)
                                     .ToListAsync();
             _dbSet.RemoveRange(self);
+
             var childrens = await getChildren(organizationId, yearId);
             _dbSet.RemoveRange(childrens);
+
             if (self.Count() == 0 && childrens.Count()==0)
                 throw new DeleteNullRecordException();
+
             var result = new OrganizationDeleteDataResult
             {
                 OrganizationTitle = organization.Title,
@@ -337,8 +340,8 @@ namespace Datiss.Budget.Services
         public async Task<IEnumerable<WaterInstallFeeDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
             var filter = new WaterInstallFeeFilterDTO { 
-            OrganizationId=organizationId,
-            YearId=yearId
+                OrganizationId = organizationId,
+                YearId = yearId
             };
             filter.CheckArgumentIsNull(nameof(filter));
 
