@@ -203,9 +203,11 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> ImportExcel(ImportExcelViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
 
-            if (model.ExcelFile == null ||
-                model.ExcelFile.Length == 0)
-                    return RedirectToAction("Index");
+            if (model.ExcelFile == null || model.ExcelFile.Length == 0)
+                return Json(new {
+                    hasError = true,
+                    message = "فایل انتخاب شده معتبر نیست."
+                });
 
             try {
                 var result = await _waterInstallFeeService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
