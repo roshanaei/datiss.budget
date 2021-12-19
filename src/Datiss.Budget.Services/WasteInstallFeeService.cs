@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using Datiss.Budget.Services.Excel;
 using Mapster;
 using Datiss.Budget.Services.Contracts.Identity;
+using Microsoft.Data.SqlClient;
 
 namespace Datiss.Budget.Services
 {
@@ -160,17 +161,17 @@ namespace Datiss.Budget.Services
 
         public async Task<int> CalculationAsync(int yearId, int organizationId)
         {
-            //var sum = _dbSet.Where(_ => _.YearId == yearId)
-            //                        .Where(_ => _.OrganizationId == organizationId)
-            //                        .GroupBy(_ => _.DWasteTypeId)
-            //                        .Select(_ => new {
-            //                            _.Key,
-            //                            Sum = _.Sum(_ => _.WsInstallFee)
-            //                        });
+            List<SqlParameter> sqlParams = new List<SqlParameter>
+            {
+                new SqlParameter("YearId", yearId),
+                new SqlParameter("OrganizationId", organizationId)
+            };
 
-            return await _dbSet.Where(_ => _.YearId == yearId)
-                               .Where(_ => _.OrganizationId == organizationId)
-                               .SumAsync(_ => _.WsInstallFee);
+            var result = await _uow.ExecuteScalarAsync<int>(
+                "[dbo].[WasteInstallFees_Cal1] @YearId, @OrganizationId",
+                parameters: sqlParams.ToArray());
+
+            return await Task.FromResult(result);
         }
 
         public async Task<PagedResult<WasteInstallFeeDTO>> GetListAsync(WasteInstallFeeFilterDTO filter)
@@ -216,14 +217,28 @@ namespace Datiss.Budget.Services
         {
             if (sourceYearId == destYearId)
                 throw new CopySameYearException();
+            if (destYearId < sourceYearId)
+                throw new CopyDestYearExxeption();
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
+                throw new CopyOrgNullDataException();
             var result = new List<WasteInstallFee>();
+
+            if (await Query()
+                        .Where(_ => _.OrganizationId == sourceOrgId)
+                        .Where(_ => _.YearId == destYearId).AnyAsync())
+                throw new CopyDestYearHasDataException();
+
             var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
                                         .Where(_ => _.YearId == sourceYearId)
                                         .ToListAsync();
+
             if (selfData.Any())
             {
                 foreach (var item in selfData)
                 {
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.DWasteTypeId))
+                        throw new CopyDestYearHasDataException();
+
                     var entity = new WasteInstallFee
                     {
                         DWasteTypeId = item.DWasteTypeId,
@@ -478,6 +493,30 @@ namespace Datiss.Budget.Services
                 result.AddRange(await getChildren(org.Id, yearId));
             }
             return result;
+        }
+        private async Task<bool> hasAnyDataAsync(int orgid, int yearid)
+        {
+            bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
+                                                x.YearId == yearid);
+            if (any)
+            {
+                return true;
+            }
+            else
+            {
+                if (await Query().Include(x => x.Organization)
+                                 .AnyAsync(x => x.Organization.ParentId == orgid &&
+                                                x.YearId == yearid))
+                {
+                    return true;
+                }
+                var childs = await _orgDbSet.Where(x => x.ParentId == orgid).ToListAsync();
+                foreach (var child in childs)
+                    return await hasAnyDataAsync(child.Id, yearid);
+            }
+
+            return false;
+
         }
         #endregion
 
