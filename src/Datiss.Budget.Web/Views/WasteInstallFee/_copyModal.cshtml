@@ -9,9 +9,7 @@
                     <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
                 </button>
             </div>
-            <form asp-controller="WasteInstallFee"
-                  asp-action="Copy"
-                  asp-antiforgery="true">
+            <form>
                 <div class="modal-body">
                     <p class="my-font-bold">انتخاب اطلاعات مبدا</p>
 
@@ -65,7 +63,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
-                    <button type="submit" class="btn btn-warning bg-light-warning mr-1 my-font">ثبت</button>
+                    <button type="submit" class="btn btn-warning bg-light-warning mr-1 my-font" id="btnDoCopy">ثبت</button>
                 </div>
             </form>
             
