@@ -355,13 +355,12 @@ namespace Datiss.Budget.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet("[action]")]
-        public async Task<IActionResult> ExportExcel(WasteSalesSplitIndexViewModel viewModel)
+        [HttpGet("[action]/{orgid}/{yearid}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
-            var filter = viewModel.Filter.Adapt<WasteSalesSplitFilterDTO>();
-
-            var result = await _wasteSalesSplitService.GetExportItemsAsync(filter);
-            //var stream = new MemoryStream();
+            var result = await _wasteSalesSplitService.GetExportItemsAsync(yearid, orgid);
+            if (result.Count() == 0)
+                return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
 
             return workbook.Deliver("WasteSalesSplit.xlsx");
