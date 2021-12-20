@@ -367,7 +367,8 @@
                 }
             });
 
-            btnSaveEdit.addEventListener('click', function(evenrt) {
+            btnSaveEdit.addEventListener('click', function(event) {
+                event.preventDefault();
                 $(btnSaveEdit).attr('disabled', true);
             });
 
