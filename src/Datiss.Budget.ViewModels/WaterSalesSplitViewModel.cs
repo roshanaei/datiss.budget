@@ -17,12 +17,12 @@ namespace Datiss.Budget.ViewModels
 
         public int WPipeDiameterId { get; set; }
 
-        [Required(ErrorMessage ="*")]
-        [Range(0,int.MaxValue,ErrorMessage ="تعداد انشعاب باید بصورتی عددی وارد شود")]
+        [Required(ErrorMessage = "*")]
+        [Range(0, int.MaxValue, ErrorMessage = "تعداد انشعاب باید بصورتی عددی وارد شود")]
         public int NumberSales { get; set; }
 
-        [Required(ErrorMessage ="*")]
-        [Range(0,int.MaxValue,ErrorMessage ="آحاد انشعاب باید بصورت عددی وارد شود")]
+        [Required(ErrorMessage = "*")]
+        [Range(0, int.MaxValue, ErrorMessage = "آحاد انشعاب باید بصورت عددی وارد شود")]
         public int UnitSales { get; set; }
 
         public IEnumerable<SelectListItem> UserTypeSource { get; set; }
@@ -39,9 +39,9 @@ namespace Datiss.Budget.ViewModels
     }
 
     public class UpdateWaterSalesSplitViewModel : CreateWaterSalesSplitViewModel
-       {
+    {
         public int Id { get; set; }
-       }
+    }
 
 
     public class WaterSalesSplitViewModel
@@ -53,7 +53,7 @@ namespace Datiss.Budget.ViewModels
         public string OrganizationDisplay { get; set; }
         public int UserTypeId { get; set; }
         public string UserTypeDisplay { get; set; }
-        public int  WPipeDiameterId { get; set; }
+        public int WPipeDiameterId { get; set; }
         public string WPipeDiameterDisplay { get; set; }
         public int NumberSales { get; set; }
         public int UnitSales { get; set; }
@@ -69,10 +69,6 @@ namespace Datiss.Budget.ViewModels
 
         public int? WPipeDiameterId { get; set; }
 
-        public int? NumberSales { get; set; }
-
-        public int? UnitSales { get; set; }
-
         public IList<SelectListItem> YearSource { get; set; }
 
         public IList<SelectListItem> OrganizationSource { get; set; }
@@ -81,15 +77,16 @@ namespace Datiss.Budget.ViewModels
 
     public class WaterSalesSplitIndexViewModel : PagedViewModel<WaterSalesSplitViewModel>
     {
-        public WaterSalesSplitIndexViewModel() 
+        public WaterSalesSplitIndexViewModel()
         {
             Filter = new WaterSalesSplitFilterViewModel();
         }
         public WaterSalesSplitFilterViewModel Filter { get; set; }
         public IList<SelectListItem> YearSource { get; set; }
-        //public string YearSourceArray => YearSource.ToStringArray();
         public IList<SelectListItem> OrganizationSource { get; set; }
-        //public string OrganizationSourceArray => OrganizationSource.ToStringArray();
+        public IList<SelectListItem> InputOrganizationSource { get; set; }
+        public IList<SelectListItem> UserTypeSource { get; set; }
+        public IList<SelectListItem> WaterDiameterSource { get; set; }
         public IFormFile ExcelFile { get; set; }
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
             => YearSource = source.Select(x => new SelectListItem
@@ -104,6 +101,24 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
+        public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => InputOrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+        public void SetUserTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => UserTypeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+        public void SetWaterDiameterSource(IEnumerable<DropDownItemViewModel> source)
+            => WaterDiameterSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
 
         public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
             => Filter.OrganizationSource = source.Select(x => new SelectListItem
@@ -111,7 +126,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
+            }).ToList();
 
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
@@ -120,7 +135,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedYearId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
+            }).ToList();
 
     }
 

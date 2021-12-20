@@ -153,8 +153,11 @@ namespace Datiss.Budget.Services
             var self = await _dbSet.Where(_ => _.YearId == yearId)
                                     .Where(_ => _.OrganizationId == organizationId)
                                     .ToListAsync();
-            _dbSet.RemoveRange(self);
             var childrens = await getChildren(organizationId, yearId);
+            if (self.Count() == 0 && childrens.Count() == 0)
+                throw new DeleteNullRecordException();
+
+            _dbSet.RemoveRange(self);
             _dbSet.RemoveRange(childrens);
 
             var result = new OrganizationDeleteDataResult
@@ -177,7 +180,7 @@ namespace Datiss.Budget.Services
             };
 
             var result = await _uow.ExecuteScalarAsync<int>(
-                "[dbo].[WaterInstallFees_Cal1] @YearId, @OrganizationId",
+                "[dbo].[WaterSalesSplit_Cal1] @YearId, @OrganizationId",
                 parameters: sqlParams.ToArray());
 
             return await Task.FromResult(result);
