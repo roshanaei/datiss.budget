@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Datiss.Budget.Entities.AuditableEntity;
 using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Entities.Identity;
 using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Entities
@@ -14,6 +15,10 @@ namespace Datiss.Budget.Entities
         {
             Childrens = new HashSet<Constant>();
             WaterInstallFees = new HashSet<WaterInstallFee>();
+            UserPositions = new HashSet<User>();
+            WasteInstallFees = new HashSet<WasteInstallFee>();
+            WaterPipeDiameterSalessplit = new HashSet<WaterSalesSplit>();
+            //TODO : Add initializers for the rest of the collections
         }
 
         #region Properties
@@ -89,7 +94,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<IncomeCurrentOperational> IncomeCurrentOperationals { get; set; }
 
-
+        public ICollection<User> UserPositions { get; set; }
 
         #endregion
     }
