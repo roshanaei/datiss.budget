@@ -20,7 +20,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
     [Authorize(Roles = ConstantRoles.Admin)]
     [Area(AreaConstants.IdentityArea)]
     [BreadCrumb(Title = "تغییر کلمه‌ی عبور كاربر توسط مدير سيستم", UseDefaultRouteUrl = true, Order = 0)]
-    [Route("[area]")]
+    [Route("[area]/[controller]")]
     public class ChangeUserPasswordController : Controller
     {
         private readonly IEmailSender _emailSender;
