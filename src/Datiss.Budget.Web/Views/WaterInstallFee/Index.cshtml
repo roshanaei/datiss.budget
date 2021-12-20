@@ -182,6 +182,9 @@
 }
 
 @section footSection {
+    <div id="divCopy">
+
+    </div>
 
     <partial name="_excelModal" model="new ImportExcelViewModel()" />
 
@@ -189,9 +192,7 @@
 
     </div>
 
-    <div id="divCopy">
-
-    </div>
+    
 
     <div id="divCalc">
 
@@ -345,19 +346,9 @@
 
         }
 
-        function calculation(e) {
-            //$('#toolForm').attr('action', '@Url.Action("Calculation")');
-            //$('#toolForm').submit();
-
-
-
-            return true;
-        }
-
         function openImportExcelForm() {
             $('#ExcellModal').modal('show');
         }
-
 
         $(document).on('click', '#btnCreate', function () {
             addNewRow();
@@ -440,11 +431,21 @@
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
                     $('#CopyModal').modal('show');
+                    $('#CopyModal').on('hidden.bs.modal', function() {
+                        $('#divCopy').html('');
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (request, options, err) {
                     console.log(err);
                     $("#divCopy").html('Failed to load more content');
                 }
+            });
+        });
+
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal', function() {
+                $('.modal-backdrop').remove();
             });
         });
 
@@ -463,6 +464,10 @@
                     $('#divCalc').html('');
                     $('#divCalc').html(data);
                     $('#CalculationModal').modal('show');
+                    $('#CalculationModal').on('hidden.bs.modal', function() {
+                        $('#divCalc').html('');
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (request, options, err) {
                     console.log(err);
@@ -514,7 +519,7 @@
                                     contentType: false,
                                     success: function(data, status, settings) {
                                         if(data.hasError) {
-                                            //TODO : show read message
+                                            //TODO : show real message
                                             alert(data.message);
                                             return;
                                         }

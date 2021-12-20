@@ -14,23 +14,23 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<WaterSalesSplit> GetByIdAsync(int id);
 
-        Task<ValidationResult> CreateAsync(CreateWaterSalesSplitDTO model);
+        Task<ValidationResult<WaterSalesSplitDTO>> CreateAsync(CreateWaterSalesSplitDTO model);
 
-        Task<ValidationResult> UpdateAsync(UpdateWaterSalesSplitDTO model);
+        Task<ValidationResult<WaterSalesSplitDTO>> UpdateAsync(UpdateWaterSalesSplitDTO model);
 
         Task HardDeleteAsync(int Id);
 
         Task<PagedResult<WaterSalesSplitDTO>> GetListAsync(WaterSalesSplitFilterDTO filter);
 
-        Task HardDeleteAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
-        //Task<int> CalculationAsync(int yearId, int organizationId);
+        Task<int> CalculationAsync(int yearId, int organizationId);
 
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
 
         Task<Stream> ExportExcelAsync(WaterSalesSplitFilterDTO filter);
 
-        Task<IEnumerable<WaterSalesSplitDTO>> GetExportItemsAsync(WaterSalesSplitFilterDTO filter);
+        Task<IEnumerable<WaterSalesSplitDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
         Task ImportExcelAsync(IFormFile fileInfo);
 

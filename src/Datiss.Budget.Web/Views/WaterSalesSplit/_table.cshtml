@@ -1,13 +1,15 @@
-﻿@model WasteInstallFeeIndexViewModel
+﻿@model WaterSalesSplitIndexViewModel
 
 <div class="table-responsive">
-    <table id="my-table" class=" table table-hover table-bordered m-0 my-font ">
+    <table id="my-table" class="table table-hover table-bordered m-0 my-font">
         <thead class="thead-light">
             <tr>
                 <th>سال</th>
                 <th>سازمان</th>
                 <th>کاربری</th>
-                <th>قیمت</th>
+                <th>قطر لوله آب</th>
+                <th>تعداد انشعاب</th>
+                <th>آحاد انشعاب</th>
                 <th>مدیریت</th>
             </tr>
         </thead>
@@ -41,21 +43,39 @@
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_DWasteType_">
-                        <input id="hidDWasteTypeId_" type="hidden" />
-                        <select class="form-control" id="inputDWasteType_" asp-items="Model.DWasteTypeSource">
+                    <div id="divInput_UserType_">
+                        <input id="hidUserTypeId_" type="hidden" />
+                        <select class="form-control selectUserType" id="inputUserType_" asp-items="Model.UserTypeSource">
                         </select>
                     </div>
-                    <div id="divOutput_DWasteType_" style="display: none">
-                        <span id="spanDWasteType_"> </span>
+                    <div id="divOutput_UserType_" style="display: none">
+                        <span id="spanUserType_"> </span>
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_WsInstallFee_">
-                        <input class="form-control" id="inputWsInstallFee_" type="number" />
+                    <div id="divInput_WaterDiameter_">
+                        <input id="hidWaterDiameterId_" type="hidden" />
+                        <select class="form-control selectWaterDiameter" id="inputWaterDiameter_" asp-items="Model.WaterDiameterSource">
+                        </select>
                     </div>
-                    <div id="divOutput_WsInstallFee_" style="display: none">
-                        <span id="spanWsInstallFee_"> </span>
+                    <div id="divOutput_WaterDiameter_" style="display: none">
+                        <span id="spanWaterDiameter_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_NumberSales_">
+                        <input class="form-control" id="inputNumberSales_" type="number" />
+                    </div>
+                    <div id="divOutput_NumberSales_" style="display: none">
+                        <span id="spanNumberSales_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_UnitSales_">
+                        <input class="form-control" id="inputUnitSales_" type="number" />
+                    </div>
+                    <div id="divOutput_UnitSales_" style="display: none">
+                        <span id="spanUnitSales_"> </span>
                     </div>
                 </td>
                 <td>
@@ -90,7 +110,7 @@
                     <td>
                         <div id="divInput_Year_@item.Id" style="display: none">
                             <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
-                            <select class="form-control" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
                             </select>
                             <script>
                                 $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
@@ -115,24 +135,45 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_DWasteType_@item.Id" style="display: none">
-                            <input id="hidDWasteTypeId_@item.Id" type="hidden" value="@item.DWasteTypeId" />
-                            <select class="form-control" id="inputDWasteType_@item.Id" asp-items="Model.DWasteTypeSource">
+                        <div id="divInput_UserType_@item.Id" style="display: none">
+                            <input id="hidUserTypeId_@item.Id" type="hidden" value="@item.UserTypeId" />
+                            <select class="form-control selectUserType" id="inputUserType_@item.Id" asp-items="Model.UserTypeSource">
                             </select>
                             <script>
-                                $('select#inputDWasteType_' + @item.Id + ' option[value=' + @item.DWasteTypeId + ']').attr('selected', true);
+                                $('select#inputUserType_' + @item.Id + ' option[value=' + @item.UserTypeId + ']').attr('selected', true);
                             </script>
                         </div>
-                        <div id="divOutput_DWasteType_@item.Id">
-                            <span id="spanDWasteType_@item.Id">@item.DWasteTypeDisplay </span>
+                        <div id="divOutput_UserType_@item.Id">
+                            <span id="spanUserType_@item.Id">@item.UserTypeDisplay </span>
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_WsInstallFee_@item.Id" style="display: none">
-                            <input class="form-control" id="inputWsInstallFee_@item.Id" value="@item.WsInstallFee" type="number" />
+                        <div id="divInput_WaterDiameter_@item.Id" style="display: none">
+                            <input id="hidWaterDiameterId_@item.Id" type="hidden" value="@item.WPipeDiameterId" />
+                            <select class="form-control selectWaterDiameter" id="inputWaterDiameter_@item.Id" asp-items="Model.WaterDiameterSource">
+                            </select>
+                            <script>
+                                $('select#inputWaterDiameter_' + @item.Id + ' option[value=' + @item.WPipeDiameterId + ']').attr('selected', true);
+                            </script>
                         </div>
-                        <div id="divOutput_WsInstallFee_@item.Id">
-                            <span id="spanWsInstallFee_@item.Id">@item.WsInstallFeeDisplay </span>
+                        <div id="divOutput_WaterDiameter_@item.Id">
+                            <span id="spanWaterDiameter_@item.Id">@item.WPipeDiameterDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_NumberSales_@item.Id" style="display: none">
+                            <input class="form-control" id="inputNumberSales_@item.Id" value="@item.NumberSales" type="number" />
+                        </div>
+                        <div id="divOutput_NumberSales_@item.Id">
+                            <span id="spanNumberSales_@item.Id">@item.NumberSales </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_UnitSales_@item.Id" style="display: none">
+                            <input class="form-control" id="inputUnitSales_@item.Id" value="@item.UnitSales" type="number" />
+                        </div>
+                        <div id="divOutput_UnitSales_@item.Id">
+                            <span id="spanUnitSales_@item.Id">@item.UnitSales </span>
                         </div>
                     </td>
                     <td>
@@ -158,7 +199,7 @@
         <tfoot style="background-color: #eee; font-size: 9px;">
             <tr>
                 <td>کل رکوردها: @Model.TotalCount</td>
-                <td colspan="4">صفحه @Model.PageNumber از @Model.PagesCount</td>
+                <td colspan="6">صفحه @Model.PageNumber از @Model.PagesCount</td>
             </tr>
         </tfoot>
     </table>
@@ -185,14 +226,16 @@
                 <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
                     <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
                 </button>
-                <span data-toggle="modal" data-target="#success">
-                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" onclick="return calculation(this.click);" class="btn btn-info  bg-light-info mr-1 my-font">
+                <span data-toggle="modal" data-target="#CalculationModal">
+                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
                         <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
                     </button>
                 </span>
             </form>
+
         </div>
         <!--Pagination-->
+
         @if (Model.PagesCount > 1)
         {
             <nav aria-label="Page navigation">
@@ -201,12 +244,10 @@
                     {
                         <li class="page-item">
                             <a class="page-link"
-                                    asp-controller="@WasteInstallFeeController.Name"
-                                    asp-action="@WasteInstallFeeController.ACTION_Index"
-                                    asp-route-page="@Model.PreviousPage"
-                                    aria-label="Previous">
-                                «
-                            </a>
+                               asp-controller="@WaterSalesSplitController.Name"
+                               asp-action="@WaterSalesSplitController.ACTION_Index"
+                               asp-route-page="@Model.PreviousPage"
+                               aria-label="Previous">«</a>
                         </li>
                     }
 
@@ -220,25 +261,21 @@
                         {
                             <li class="page-item">
                                 <a class="page-link"
-                                        asp-controller="@WasteInstallFeeController.Name"
-                                        asp-action="@WasteInstallFeeController.ACTION_Index"
-                                        asp-route-page="@i">
-                                    @i.ToString()
-                                    </a>
-                                </li>
-                            }
+                                   asp-controller="@WaterSalesSplitController.Name"
+                                   asp-action="@WaterSalesSplitController.ACTION_Index"
+                                   asp-route-page="@i">@i.ToString() </a>
+                            </li>
                         }
+                    }
 
                     @if (Model.PageNumber < Model.PagesCount)
                     {
                         <li class="page-item">
                             <a class="page-link"
-                                    asp-controller="@WasteInstallFeeController.Name"
-                                    asp-action="@WasteInstallFeeController.ACTION_Index"
-                                    asp-route-page="@Model.NextPage"
-                                    aria-label="Next">
-                                »
-                            </a>
+                               asp-controller="@WaterSalesSplitController.Name"
+                               asp-action="@WaterSalesSplitController.ACTION_Index"
+                               asp-route-page="@Model.NextPage"
+                               aria-label="Next">»</a>
                         </li>
                     }
 

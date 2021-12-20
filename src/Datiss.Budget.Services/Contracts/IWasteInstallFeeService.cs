@@ -22,13 +22,13 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
-        //Task<int> CalculationAsync(int yearId, int organizationId);
+        Task<int> CalculationAsync(int yearId, int organizationId);
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
 
         Task<Stream> ExportExcelAsync(WasteInstallFeeFilterDTO filter);
 
-        Task<IEnumerable<WasteInstallFeeDTO>> GetExportItemsAsync(WasteInstallFeeFilterDTO filter);
+        Task<IEnumerable<WasteInstallFeeDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
-        Task ImportExcelAsync(IFormFile fileInfo);
+        Task ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false);
     }
 }
