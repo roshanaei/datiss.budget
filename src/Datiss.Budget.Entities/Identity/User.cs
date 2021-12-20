@@ -56,6 +56,8 @@ namespace Datiss.Budget.Entities.Identity
 
         public int? OrganizationId { get; set; }
 
+        public int? PositionId { get; set; }
+
         public EntityStatus Status { get; set; }
 
         #endregion
@@ -64,6 +66,8 @@ namespace Datiss.Budget.Entities.Identity
 
         public virtual Organization Organization { get; set; }
 
+        public Constant Position { get; set; }
+        
         public ICollection<UserUsedPassword> UserUsedPasswords { get; set; }
 
         public ICollection<UserToken> UserTokens { get; set; }
