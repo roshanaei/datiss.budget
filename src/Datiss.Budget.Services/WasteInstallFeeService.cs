@@ -17,11 +17,15 @@ using Microsoft.AspNetCore.Http;
 using Datiss.Budget.Services.Excel;
 using Mapster;
 using Datiss.Budget.Services.Contracts.Identity;
+using Microsoft.Data.SqlClient;
+using Datiss.Budget.Extensions;
+using Datiss.Budget.Security;
 
 namespace Datiss.Budget.Services
 {
     public class WasteInstallFeeService : IWasteInstallFeeService
     {
+        private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
         private readonly IExcelService _excelService;
         private readonly IUserService _userService;
@@ -33,11 +37,13 @@ namespace Datiss.Budget.Services
         private readonly DbSet<Constant> _constSet;
 
         public WasteInstallFeeService(
+            IUserContext userContext,
             IUnitOfWork uow,
             IExcelService excelService,
             IUserService userService,
             IOrganizationService organizationService)
         {
+            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<WasteInstallFee>();
             _orgDbSet = _uow.Set<Organization>();
@@ -160,17 +166,17 @@ namespace Datiss.Budget.Services
 
         public async Task<int> CalculationAsync(int yearId, int organizationId)
         {
-            //var sum = _dbSet.Where(_ => _.YearId == yearId)
-            //                        .Where(_ => _.OrganizationId == organizationId)
-            //                        .GroupBy(_ => _.DWasteTypeId)
-            //                        .Select(_ => new {
-            //                            _.Key,
-            //                            Sum = _.Sum(_ => _.WsInstallFee)
-            //                        });
+            List<SqlParameter> sqlParams = new List<SqlParameter>
+            {
+                new SqlParameter("YearId", yearId),
+                new SqlParameter("OrganizationId", organizationId)
+            };
 
-            return await _dbSet.Where(_ => _.YearId == yearId)
-                               .Where(_ => _.OrganizationId == organizationId)
-                               .SumAsync(_ => _.WsInstallFee);
+            var result = await _uow.ExecuteScalarAsync<int>(
+                "[dbo].[WasteInstallFees_Cal1] @YearId, @OrganizationId",
+                parameters: sqlParams.ToArray());
+
+            return await Task.FromResult(result);
         }
 
         public async Task<PagedResult<WasteInstallFeeDTO>> GetListAsync(WasteInstallFeeFilterDTO filter)
@@ -216,14 +222,28 @@ namespace Datiss.Budget.Services
         {
             if (sourceYearId == destYearId)
                 throw new CopySameYearException();
+            if (destYearId < sourceYearId)
+                throw new CopyDestYearExxeption();
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
+                throw new CopyOrgNullDataException();
             var result = new List<WasteInstallFee>();
+
+            if (await Query()
+                        .Where(_ => _.OrganizationId == sourceOrgId)
+                        .Where(_ => _.YearId == destYearId).AnyAsync())
+                throw new CopyDestYearHasDataException();
+
             var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
                                         .Where(_ => _.YearId == sourceYearId)
                                         .ToListAsync();
+
             if (selfData.Any())
             {
                 foreach (var item in selfData)
                 {
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.DWasteTypeId))
+                        throw new CopyDestYearHasDataException();
+
                     var entity = new WasteInstallFee
                     {
                         DWasteTypeId = item.DWasteTypeId,
@@ -281,8 +301,13 @@ namespace Datiss.Budget.Services
             return mem1;
         }
 
-        public async Task<IEnumerable<WasteInstallFeeDTO>> GetExportItemsAsync(WasteInstallFeeFilterDTO filter)
+        public async Task<IEnumerable<WasteInstallFeeDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
+            var filter = new WasteInstallFeeFilterDTO
+            {
+                OrganizationId = organizationId,
+                YearId = yearId
+            };
             filter.CheckArgumentIsNull(nameof(filter));
 
             var query = Query();
@@ -310,7 +335,7 @@ namespace Datiss.Budget.Services
             return items;
         }
 
-        public async Task ImportExcelAsync(IFormFile fileInfo)
+        public async Task ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<WasteInstallFeeImportModel>(fileInfo);
 
@@ -341,6 +366,8 @@ namespace Datiss.Budget.Services
             IQueryable<WasteInstallFee> query,
             WasteInstallFeeFilterDTO filter)
         {
+            query.CheckArgumentIsNull(nameof(query));
+            filter.CheckArgumentIsNull(nameof(filter));
 
             var predicate = LinqKit.PredicateBuilder.New<WasteInstallFee>();
 
@@ -378,6 +405,13 @@ namespace Datiss.Budget.Services
                 }
             }
 
+            if (filter.Search.IsNotNullOrEmpty())
+            {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
+                                    _.DWasteType.Title.ToUpper().Contains(filter.Search));
+            }
+
             return query;
         }
         private IQueryable<WasteInstallFee> setOrder(
@@ -391,11 +425,6 @@ namespace Datiss.Budget.Services
             orderBy = orderBy.ToLower();
             switch (orderBy)
             {
-                case "year":
-                    return desc
-                        ? query.OrderByDescending(x => x.FinanceYear.Year)
-                        : query.OrderBy(x => x.FinanceYear.Year);
-
                 case "organization":
                     return desc
                         ? query.OrderByDescending(x => x.Organization.Title)
@@ -407,9 +436,10 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.DWasteType.DisplayOrder);
 
                 default:
-                    return desc
-                        ? query.OrderByDescending(x => x.Id)
-                        : query.OrderBy(x => x.Id);
+                    return query.Include(x => x.Organization)
+                                .Include(x => x.DWasteType)
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.DWasteType.DisplayOrder);
             }
         }
         private async Task<IEnumerable<WasteInstallFee>> getChildrenData(
@@ -478,6 +508,30 @@ namespace Datiss.Budget.Services
                 result.AddRange(await getChildren(org.Id, yearId));
             }
             return result;
+        }
+        private async Task<bool> hasAnyDataAsync(int orgid, int yearid)
+        {
+            bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
+                                                x.YearId == yearid);
+            if (any)
+            {
+                return true;
+            }
+            else
+            {
+                if (await Query().Include(x => x.Organization)
+                                 .AnyAsync(x => x.Organization.ParentId == orgid &&
+                                                x.YearId == yearid))
+                {
+                    return true;
+                }
+                var childs = await _orgDbSet.Where(x => x.ParentId == orgid).ToListAsync();
+                foreach (var child in childs)
+                    return await hasAnyDataAsync(child.Id, yearid);
+            }
+
+            return false;
+
         }
         #endregion
 

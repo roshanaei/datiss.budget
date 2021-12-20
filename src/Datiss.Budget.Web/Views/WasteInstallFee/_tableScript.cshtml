@@ -98,10 +98,17 @@
             dataType: 'json',
             success: function (data, status, settings) {
                 if (data._HasError) {
-                    alert(data._ErrorMessage);
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
                     return;
                 }
-
                 //Year
                 $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
                 $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
@@ -177,12 +184,19 @@
     function addNewRow() {
         if (isNewRow) return;
 
-        var template = $('#rowTemplate')
-            .clone()
+        var template = $('#rowTemplate').clone()
             .appendTo($('#my-table tbody'))
             .attr('id', 'newRow')
             .css('background-color', 'rgb(230 247 228)')
             .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.selectDWaterType:last').select2({
+            dir: 'rtl'
+        });
 
         isNewRow = true;
     }
