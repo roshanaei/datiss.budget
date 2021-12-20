@@ -35,7 +35,7 @@ namespace Datiss.Budget.Services
         private readonly DbSet<ConsumeForcast> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
         private readonly DbSet<FinanceYear> _yearSet;
-        private readonly DbSet<Constant> _ConstSet;
+        private readonly DbSet<Constant> _constSet;
 
         public ConsumeForcastService(
             IUserContext userContext,
@@ -49,7 +49,7 @@ namespace Datiss.Budget.Services
             _dbSet = _uow.Set<ConsumeForcast>();
             _orgDbSet = _uow.Set<Organization>();
             _yearSet = _uow.Set<FinanceYear>();
-            _ConstSet = _uow.Set<Constant>();
+            _constSet = _uow.Set<Constant>();
             _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
@@ -86,8 +86,8 @@ namespace Datiss.Budget.Services
                 await _uow.SaveChangesAsync();
 
                 var result = entity.Adapt<ConsumeForcastDTO>();
-                result.UsageLayerTitle = (await _ConstSet.FindAsync(model.UsageLayerId)).Title;
-                result.UserTypeTitle = (await _ConstSet.FindAsync(model.UserTypeId)).Title;
+                result.UsageLayerTitle = (await _constSet.FindAsync(model.UsageLayerId)).Title;
+                result.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
                 result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
                 result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                 result.CountUser = entity.CountUser;
@@ -137,8 +137,8 @@ namespace Datiss.Budget.Services
                     ConsumeUserForcast = model.ConsumeUserForcast,
                     Year = (await _yearSet.FindAsync(model.YearId)).Year,
                     OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
-                    UserTypeTitle = (await _ConstSet.FindAsync(model.UserTypeId)).Title,
-                    UsageLayerTitle = (await _ConstSet.FindAsync(model.UsageLayerId)).Title
+                    UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title,
+                    UsageLayerTitle = (await _constSet.FindAsync(model.UsageLayerId)).Title
                 };
 
                 return ValidationResult<ConsumeForcastDTO>.Success(result);
@@ -251,6 +251,7 @@ namespace Datiss.Budget.Services
                                             AvgConsumeUser = x.AvgConsumeUser,
                                             ConsumeUserForcast = x.ConsumeUserForcast
                                         }).ToListAsync();
+
             return await Task.FromResult(result);
         }
 

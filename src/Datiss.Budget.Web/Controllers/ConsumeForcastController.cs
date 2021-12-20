@@ -1,32 +1,30 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using System.IO;
-using Mapster;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+﻿using ClosedXML.Extensions;
+using Datiss.Budget.Common;
+using Datiss.Budget.Common.Exceptions;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Reports.Excel;
+using Datiss.Budget.Resources;
 using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Services.Identity;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Datiss.Budget.Services.Identity;
-using Datiss.Budget.Services.Contracts.Identity;
-using Microsoft.AspNetCore.Http;
-using Datiss.Budget.Common.Exceptions;
-using Microsoft.AspNetCore.Hosting;
-using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Web.Helpers;
-using Datiss.Budget.Resources;
-using ClosedXML.Extensions;
-using Datiss.Budget.Reports.Excel;
+using Mapster;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Datiss.Budget.Common;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Datiss.Budget.Web.Controllers
 {
     [Authorize(Policy = ConstantPolicies.DynamicPermission)]
-    [Route("[Controller]")]
+    [Route("[controller]")]
     public class ConsumeForcastController : Controller
     {
         public const string Name = "ConsumeForcast";
@@ -147,6 +145,12 @@ namespace Datiss.Budget.Web.Controllers
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                 .Adapt<List<DropDownItemViewModel>>();
 
+            var userTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var usageLayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
             filter.PageNumber = page;
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
@@ -157,6 +161,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
+            model.SetUserTypeSource(userTypeSource);
+            model.SetUsageLayerSource(usageLayerSource);
 
             model.SetFinanceYearFilterSource(yearSource, maxYear);
             model.SetOrganizationFilterSource(orgSource);
@@ -169,7 +175,7 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(ConsumeForcastIndexViewModel model,int page = 1)
+        public async Task<IActionResult> Index(ConsumeForcastIndexViewModel model, int page = 1)
         {
             model.Filter.PageNumber = page;
             var filter = model.Filter.Adapt<ConsumeForcastFilterDTO>();
@@ -420,9 +426,9 @@ namespace Datiss.Budget.Web.Controllers
             return Json(model);
         }
 
-        public async Task<IActionResult> ExportExcel(int orgid,int yearid)
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
-            var result = await _consumeForcastService.GetExportItemsAsync (orgid,yearid);
+            var result = await _consumeForcastService.GetExportItemsAsync(yearid, orgid);
 
             if (result.Count() == 0)
                 return RedirectToAction("Index");

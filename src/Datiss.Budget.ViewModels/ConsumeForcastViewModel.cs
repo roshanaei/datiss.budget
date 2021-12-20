@@ -112,7 +112,7 @@ namespace Datiss.Budget.ViewModels
         public IList<SelectListItem> OrganizationSource { get; set; }
     }
 
-public class ConsumeForcastIndexViewModel
+    public class ConsumeForcastIndexViewModel : PagedViewModel<ConsumeForcastViewModel>
     {
         public ConsumeForcastIndexViewModel()
         {
@@ -126,6 +126,10 @@ public class ConsumeForcastIndexViewModel
         public IList<SelectListItem> OrganizationSource { get; set; }
 
         public IList<SelectListItem> InputOrganizationSource { get; set; }
+
+        public IList<SelectListItem> UserTypeSource { get; set; }
+
+        public IList<SelectListItem> UsageLayerSource { get; set; }
 
         public IFormFile ExcelFile { get; set; }
 
@@ -149,6 +153,19 @@ public class ConsumeForcastIndexViewModel
                     Text = x.Title,
                     Value = x.Id.ToString()
                 }).ToList();
+
+        public void SetUserTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => UserTypeSource = source.Select(x => new SelectListItem {
+                   Text = x.Title,
+                   Value = x.Id.ToString()
+               }).ToList();
+
+        public void SetUsageLayerSource(IEnumerable<DropDownItemViewModel> source)
+             => UsageLayerSource = source.Select(x => new SelectListItem
+             {
+                 Text = x.Title,
+                 Value = x.Id.ToString()
+             }).ToList();
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
                 => Filter.YearSource = source.Select(x => new SelectListItem

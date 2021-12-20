@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 
 namespace Datiss.Budget.Services.Contracts
-{
+{ 
    public interface  IConsumeForcastService
     {
 
