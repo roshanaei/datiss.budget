@@ -3,6 +3,12 @@
     let isNewRow = false;
 
     function editRow(id) {
+
+        //$('th,tr td').css('background-color', 'rgb(255 255 255)');
+        //resetTableBackColor("my-table");
+
+        //do reset all row background
+
         let row = $('#row_' + id);
         //row.css('background-color', '#7598f3');
 
@@ -89,7 +95,8 @@
                 $('#spanYear_' + id).text(data.year);
                 $('#spanDWaterType_' + id).text(data.dWaterTypeDisplay);
                 $('#spanWInstallFee_' + id).text(data.wInstallFee);
-                
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
                 cancelEditRow(id);
             },
             error: function (request, options, err) {
@@ -194,8 +201,7 @@
                 $('#btnDelete_' + data.id).show();
 
                 $('#inputOrg_' + data.id).select2();
-
-                $(e).css('background-color', '');
+                $(e).css('background-color', 'rgb(245 245 246)');
                 isNewRow = false;
             },
             error: function (request, options, err) {
@@ -206,6 +212,8 @@
 
     function addNewRow() {
         if (isNewRow) return;
+
+        //do reset all row background
 
         var template = $('#rowTemplate').clone()
             .appendTo($('#my-table tbody'))
@@ -249,5 +257,16 @@
             }
         });
     }
+
+    //function resetTableBackColor(id) {
+    //    var table = document.getElementById(id);
+
+    //    var rows = table.getElementsByTagName("tr");
+
+    //    for (i = 2; i < rows.length - 1; i++) {
+    //        console.log(i);
+    //        rows[i].style.backgroundColor = "#00000000"
+    //    }
+    //}
 
 </script>
