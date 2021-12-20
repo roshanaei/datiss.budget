@@ -485,7 +485,6 @@
                 contentType: false,
                 success: function (data, status, settings) {
                     console.log(data);
-                    alert(data.ask);
                     if(data.ask) {
                         Swal.fire({
                             title: data.message,
@@ -517,6 +516,7 @@
                                         if(data.hasError) {
                                             //TODO : show read message
                                             alert(data.message);
+                                            return;
                                         }
 
                                         if(data.succes) {
