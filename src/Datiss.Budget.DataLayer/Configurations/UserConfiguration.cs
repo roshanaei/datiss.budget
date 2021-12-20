@@ -28,6 +28,12 @@ namespace Datiss.Budget.DataLayer.Mappings
                 .WithMany(x => x.Users)
                 .HasForeignKey(x => x.OrganizationId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.Position)
+                .WithMany(x => x.UserPositions)
+                .HasForeignKey(x => x.PositionId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
