@@ -25,7 +25,6 @@ using Datiss.Budget.Common;
 
 namespace Datiss.Budget.Web.Controllers
 {
-    [Authorize]
     [Authorize(Policy = ConstantPolicies.DynamicPermission)]
     [Route("[controller]")]
     public class WaterSalesSplitController : Controller

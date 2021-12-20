@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Http;
 using Mapster;
 using Datiss.Budget.Security;
 using Microsoft.Data.SqlClient;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services
 {
@@ -74,7 +75,7 @@ namespace Datiss.Budget.Services
                 NumberSales = model.NumberSales,
                 UnitSales = model.UnitSales
             };
-            if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId,model.WPipeDiameterId))
+            if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.WPipeDiameterId))
             {
                 await _dbSet.AddAsync(entity);
                 await _uow.SaveChangesAsync();
@@ -92,7 +93,7 @@ namespace Datiss.Budget.Services
 
             return ValidationResult<WaterSalesSplitDTO>.Failed(
                 string.Format(ServiceMessages.Logic_WaterSalesSplit,
-                                model.UserTypeTitle,model.WPipeDiameterTitle)
+                                model.UserTypeTitle, model.WPipeDiameterTitle)
                 );
         }
 
@@ -119,7 +120,8 @@ namespace Datiss.Budget.Services
                     UserTypeId = model.UserTypeId,
                     WPipeDiameterId = model.WPipeDiameterId,
                     OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
-                    UserTypeDisplay = (await _constSet.FindAsync(model.UserTypeTitle)).Title,
+                    UserTypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title,
+                    WPipeDiameterDisplay = (await _constSet.FindAsync(model.WPipeDiameterId)).Title,
                     Year = (await _yearSet.FindAsync(model.YearId)).Year,
                     NumberSales = model.NumberSales,
                     UnitSales = model.UnitSales
@@ -219,17 +221,17 @@ namespace Datiss.Budget.Services
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
                                         WPipeDiameterDisplay = x.WPipeDiameter.Title,
-                                        WPipeDiameterId=x.WPipeDiameterId,
+                                        WPipeDiameterId = x.WPipeDiameterId,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId,
-                                        NumberSales=x.NumberSales,
-                                        UnitSales=x.UnitSales,
+                                        NumberSales = x.NumberSales,
+                                        UnitSales = x.UnitSales,
                                         AverageCapacity = x.AverageCapacity
                                     }).ToListAsync();
 
             return await Task.FromResult(result);
         }
-        
+
         public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
         {
             if (sourceYearId == destYearId)
@@ -253,7 +255,7 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.UserTypeId,item.WPipeDiameterId))
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.UserTypeId, item.WPipeDiameterId))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new WaterSalesSplit
@@ -388,12 +390,14 @@ namespace Datiss.Budget.Services
         private IQueryable<WaterSalesSplit> setOrder(
             IQueryable<WaterSalesSplit> query,
             string orderBy = "id",
-            bool desc = false) {
+            bool desc = false)
+        {
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "id";
 
             orderBy = orderBy.ToLower();
-            switch (orderBy) {
+            switch (orderBy)
+            {
                 case "organization":
                     return desc
                         ? query.OrderByDescending(x => x.Organization.Title)
@@ -404,11 +408,18 @@ namespace Datiss.Budget.Services
                         ? query.OrderByDescending(x => x.UserType.DisplayOrder)
                         : query.OrderBy(x => x.UserType.DisplayOrder);
 
+                case "waterdiameter":
+                    return desc
+                        ? query.OrderByDescending(x => x.WPipeDiameter.DisplayOrder)
+                        : query.OrderBy(x => x.WPipeDiameter.DisplayOrder);
+
                 default:
                     return query.Include(x => x.Organization)
                                 .Include(x => x.UserType)
+                                .Include(x => x.WPipeDiameter)
                                 .OrderBy(x => x.Organization.DisplayOrder)
-                                .ThenBy(x => x.UserType.DisplayOrder);
+                                .ThenBy(x => x.UserType.DisplayOrder)
+                                .ThenBy(x => x.WPipeDiameter.DisplayOrder);
             }
         }
         private async Task<IQueryable<WaterSalesSplit>> setFilter(
@@ -437,12 +448,21 @@ namespace Datiss.Budget.Services
                 query = query.Where(x => x.UserTypeId == filter.UserTypeId.Value);
             if (filter.WPipeDiameterId.HasValue)
                 query = query.Where(x => x.WPipeDiameterId == filter.WPipeDiameterId.Value);
+
+            if (filter.Search.IsNotNullOrEmpty())
+            {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
+                                    _.UserType.Title.ToUpper().Contains(filter.Search) ||
+                                    _.WPipeDiameter.Title.ToUpper().Contains(filter.Search));
+            }
             return query;
         }
         private async Task<IEnumerable<WaterSalesSplit>> getChildrenData(
             int parentOrganizationId,
             int yearId,
-            int targetYearId){
+            int targetYearId)
+        {
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
@@ -465,13 +485,13 @@ namespace Datiss.Budget.Services
                 {
                     var entity = new WaterSalesSplit
                     {
-                        UserTypeId= item.UserTypeId,
+                        UserTypeId = item.UserTypeId,
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
                         WPipeDiameterId = item.WPipeDiameterId,
-                        UnitSales=item.UnitSales,
-                        NumberSales=item.NumberSales,
-                        AverageCapacity=item.AverageCapacity
+                        UnitSales = item.UnitSales,
+                        NumberSales = item.NumberSales,
+                        AverageCapacity = item.AverageCapacity
                     };
 
                     result.Add(entity);
@@ -557,4 +577,4 @@ namespace Datiss.Budget.Services
         #endregion
     }
 }
-    
+
