@@ -122,16 +122,8 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Index(int page = 1) 
         {
             var filter = new WaterInstallFeeFilterDTO();
-
-            var myfilter = TempData.Get<WaterInstallFeeFilterViewModel>(_indexFilterKey);
-            if(myfilter != null) 
-            {
-                filter = myfilter.Adapt<WaterInstallFeeFilterDTO>();
-                TempData.Put(_indexFilterKey, myfilter);
-            }
-            
             var orgSource = (await _organizationService.GetDropDownDataAsync())
-               .Adapt<List<DropDownItemViewModel>>();
+              .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
 
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
@@ -144,9 +136,17 @@ namespace Datiss.Budget.Web.Controllers
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                .Adapt<List<DropDownItemViewModel>>();
 
-            filter.PageNumber = page;
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
+
+            var myfilter = TempData.Get<WaterInstallFeeFilterViewModel>(_indexFilterKey);
+            if(myfilter != null) 
+            {
+                filter = myfilter.Adapt<WaterInstallFeeFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
 
             var result = await _waterInstallFeeService.GetListAsync(filter);
             var model = result.Adapt<WaterInstallFeeIndexViewModel>();
@@ -156,8 +156,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetDWaterTypeSource(dwaterSource);
 
-            model.SetFinanceYearFilterSource(yearSource, maxYear);
-            model.SetOrganizationFilterSource(orgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
             
             model.Filter.YearId = filter.YearId;
             model.Filter.OrganizationId = filter.OrganizationId;
@@ -192,11 +192,11 @@ namespace Datiss.Budget.Web.Controllers
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetFinanceYearFilterSource(yearSource);
-            model.SetOrganizationFilterSource(orgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
             model.SetDWaterTypeSource(dwaterSource);
             
-             return View(model);
+            return View(model);
         }
 
         [HttpPost("[action]")]
