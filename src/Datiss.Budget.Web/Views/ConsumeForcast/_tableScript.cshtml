@@ -89,15 +89,15 @@
         model.id = id;
         model.yearId = $('#inputYear_' + id).val();
         model.organizationId = $('#inputOrg_' + id).val();
-        model.userTypeId = $('#divInput_UserType_' + id).val();
-        model.usageLayerId = $('#divInput_UsageLayerType_' + id).val();
-        model.countUser = $('#divInput_CountUser_' + id).val();
-        model.unitUser = $('#divInput_UnitUser_' + id).val();
-        model.consumeUser = $('#divInput_ConsumeUser_' + id).val();
-        model.avgConsumeUser = $('#divInput_AvgConsumeUser_' + id).val();
-        model.consumeUserForcast = $('#divInput_ConsumeUserForcast_' + id).val();
+        model.userTypeId = $('#inputUserType_' + id).val();
+        model.usageLayerId = $('#inputUsageLayerType_' + id).val();
+        model.countUser = $('#inputCountUser_' + id).val();
+        model.unitUser = $('#inputUnitUser_' + id).val();
+        model.consumeUser = $('#inputConsumeUser_' + id).val();
+        model.avgConsumeUser = $('#inputAvgConsumeUser_' + id).val();
+        model.consumeUserForcast = $('#inputConsumeUserForcast_' + id).val();
 
-
+        
         $.ajax({
             url: '@Url.Action(ConsumeForcastController.ACTION_Edit)',
             type: 'POST',
@@ -146,13 +146,13 @@
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
-        model.userTypeId = $(e).find('#divInput_UserType_').val();
-        model.usageLayerId = $(e).find('#divInput_UsageLayerType_').val();
-        model.countUser = $(e).find('#divInput_CountUser_').val();
-        model.unitUser = $(e).find('#divInput_UnitUser_').val();
-        model.consumeUser = $(e).find('#divInput_ConsumeUser_').val();
-        model.avgConsumeUser = $(e).find('#divInput_AvgConsumeUser_').val();
-        model.consumeUserForcast = $(e).find('#divInput_ConsumeUserForcast_').val();
+        model.userTypeId = $(e).find('#inputUserType_').val();
+        model.usageLayerId = $(e).find('#inputUsageLayerType_').val();
+        model.countUser = $(e).find('#inputCountUser_').val();
+        model.unitUser = $(e).find('#inputUnitUser_').val();
+        model.consumeUser = $(e).find('#inputConsumeUser_').val();
+        model.avgConsumeUser = $(e).find('#inputAvgConsumeUser_').val();
+        model.consumeUserForcast = $(e).find('#inputConsumeUserForcast_').val();
 
         console.log(model);
 
@@ -319,6 +319,10 @@
 
         $('.selectUserType:last').select2({
             dir : 'rtl'
+        });
+
+        $('.select:last').select2({
+            dir: 'rtl'
         });
 
         isNewRow = true;

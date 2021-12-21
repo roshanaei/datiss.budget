@@ -109,7 +109,7 @@ namespace Datiss.Budget.Services
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            if(await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.UsageLayerId))
+            if(await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.UsageLayerId,model.Id))
             {
                 var entity = await _dbSet.FindAsync(model.Id);
                 entity.YearId = model.YearId;

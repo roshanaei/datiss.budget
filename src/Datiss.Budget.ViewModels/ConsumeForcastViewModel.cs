@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using Datiss.Budget.ViewModels;
+using System.Globalization;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -58,6 +59,8 @@ namespace Datiss.Budget.ViewModels
     public class UpdateConsumeForcastViewModel : CreateConsumeForcastViewModel
     {
         public int Id { get; set; }
+
+        public decimal ConsumeUserForcast { get; set; }
     }
 
     public class ConsumeForcastViewModel
@@ -82,23 +85,23 @@ namespace Datiss.Budget.ViewModels
 
         public decimal CountUser { get; set; }
 
-        public string CountUserDisplay => CountUser.ToString("NO");
+        public string CountUserDisplay => CountUser.ToString(CultureInfo.CreateSpecificCulture("en-GB"));
 
         public decimal UnitUser { get; set; }
 
-        public string UnitUserDisplay => UnitUser.ToString("NO");
+        public string UnitUserDisplay => UnitUser.ToString(CultureInfo.CreateSpecificCulture("en-GB"));
 
         public decimal ConsumeUser { get; set; }
 
-        public string ConsumeUserDisplay => ConsumeUser.ToString("NO");
+        public string ConsumeUserDisplay => ConsumeUser.ToString(CultureInfo.CreateSpecificCulture("en-GB"));
 
         public decimal AvgConsumeUser { get; set; }
 
-        public string AvgConsumeUserDisplay => AvgConsumeUser.ToString("NO");
+        public string AvgConsumeUserDisplay => AvgConsumeUser.ToString(CultureInfo.CreateSpecificCulture("en-GB"));
 
         public decimal ConsumeUserForcast { get; set; }
 
-        public string ConsumeUserForcastDisplay => ConsumeUserForcast.ToString("NO");
+        public string ConsumeUserForcastDisplay => ConsumeUserForcast.ToString(CultureInfo.CreateSpecificCulture("en-GB"));
     }
 
     public class ConsumeForcastFilterViewModel : FilterViewModel
