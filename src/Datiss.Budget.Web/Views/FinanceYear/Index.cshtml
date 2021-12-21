@@ -1,0 +1,331 @@
+﻿@model FinanceYearIndexViewModel
+@{ ViewData["Title"] = "سال"; }
+
+
+
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                @if (ViewData["message"] != null)
+                {
+                    <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                        </button>
+                        <span>@ViewData["message"]</span>
+                    </div>
+                }
+                <div class="card-content">
+                    <div class="card-body">
+                        <!--Filters-->
+                        <form method="post" class="" asp-controller="FinanceYear" asp-action="Index" asp-antiforgery="true" id="">
+                            <div class="class=" rowACJSB"">
+                                <fieldset class="">
+                                    <input asp-for="Filter.OrderBy" type="hidden" />
+                                    <input asp-for="Filter.OrderDesc" type="hidden" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="rowACJE">
+                                        <span data-toggle="modal" data-target="#CreateModal">
+                                            <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" name="btnCreate" class="btn btn-success bg-light-success mr-1 my-font modallink openCreate">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="form-group">
+                                    <label class="my-font rowAC">
+                                        <span style="margin-left:5px">شروع سال:</span>
+                                        <input asp-for="StartPersianDate" class="form-control form-control-sm d-inline-block" autocomplete="off" datepicker="datepicker" />
+                                    </label>
+                                </fieldset>
+                            </div>
+                        </form>
+                        <hr />
+                        <!--SearchBox-->
+                        <!--DataTable-->
+                        <div class="table-responsive">
+                            <table id="" class=" table table-hover table-bordered m-0 my-font">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>نام</th>
+                                        <th>وضعیت</th>
+                                        <th>مدیریت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Items)
+                                    {
+                                        <tr>
+                                            <td>@item.Title</td>
+                                            <td>@item.StatusDisplay</td>
+                                            <td>
+                                                <span data-toggle="modal" data-target="#EditModal">
+                                                    <button value="@item.Id" data-toggle="tooltip" data-placement="top" title="ویرایش اطلاعات" type="button" name="btnEdit" class="btn bg-light-info btn-info mr-1 my-font modallink" onclick="Edit(@item.Id)">
+                                                        <i _ngcontent-dpj-c129="" class="fa fa-edit"></i>
+                                                    </button>
+                                                </span>
+                                                <span data-toggle="modal" data-target="#DeleteModal">
+                                                    <button id="btnDelete_@item.Id" data-id="@item.Id" value="@item.Id" data-toggle="tooltip" data-placement="top" title="حذف رکورد" type="button" name="btnDelete" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" onclick="Delete(@item.Id)">
+                                                        <i _ngcontent-dpj-c129="" class="fa fa-trash-o"></i>
+                                                    </button>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="rowACJSB" style="margin-top:20px">
+                                <!--Tools-->
+                                <!--Pagination-->
+                                @if (Model.PagesCount > 1)
+                                {
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination justify-content-center">
+                                            @if (Model.PageNumber > 1)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-controller="FinanceYear"
+                                                       asp-action="Index"
+                                                       asp-route-page="@Model.PreviousPage"
+                                                       aria-label="Previous">«</a>
+                                                </li>
+                                            }
+
+                                            @for (int i = 1; i <= Model.PagesCount; i++)
+                                            {
+                                                if (i == Model.PageNumber)
+                                                {
+                                                    <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                                                }
+                                                else
+                                                {
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                           asp-controller="FinanceYear"
+                                                           asp-action="Index"
+                                                           asp-route-page="@i">@i.ToString() </a>
+                                                    </li>
+                                                }
+                                            }
+
+                                            @if (Model.PageNumber < Model.PagesCount)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-controller="FinanceYear"
+                                                       asp-action="Index"
+                                                       asp-route-page="@Model.NextPage"
+                                                       aria-label="Next">»</a>
+                                                </li>
+                                            }
+
+                                        </ul>
+                                    </nav>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+@section headSection{
+
+    <link rel="stylesheet" type="text/css" href="~/css/plugin/persian-datepicker-cheerup.min.css">
+}
+
+@section footSection {
+    <script src="~/js/plugin/waitMe.min.js" type="text/javascript" asp-append-version="true"></script>
+    <script src="~/js/plugin/persian-date.min.js" type="text/javascript" asp-append-version="true"></script>
+    <script src="~/js/plugin/persian-datepicker.min.js" type="text/javascript" asp-append-version="true"></script>
+    <script src="~/js/plugin/myDatepicker.js" type="text/javascript" asp-append-version="true"></script>
+
+    <partial name="_createModal" model="new CreateFinanceYearViewModel()" />
+
+    <div id="editmodaldiv">
+
+    </div>
+
+    <script>
+
+        function Edit(yearid) {
+            let myurl = '@Url.Action("Edit")';
+            myurl = myurl + "/" + yearid;
+            $.ajax({
+                type: 'GET',
+                url: myurl,
+                success: function (data, status, settings) {
+
+                    $("#modaldiv").html(data);
+                    $('#EditModal').modal('show');
+                },
+                error: function (ajaxrequest, ajaxOptions, thrownError) {
+
+                    $("#modaldiv").html('Failed to load more content');
+                }
+            });
+        }
+
+        $(document).on('click', '.openCreate', function () {
+
+            $('#CreateModal').modal('show');
+            $('#CreateModal').on('hidden.bs.modal', function () {
+                $('#modaldiv').html('');
+                $('.modal-backdrop').remove();
+            });
+
+            @*$.ajax({
+                type: 'GET',
+                url: '@Url.Action(FinanceYearController.ACTION_Create)',
+                success: function (data, status, settings) {
+                    //$('#modaldiv').html('');
+                    //$("#modaldiv").html(data);
+                    $('#CreateModal').modal('show');
+                    $('#CreateModal').on('hidden.bs.modal', function() {
+                        $('#modaldiv').html('');
+                        $('.modal-backdrop').remove();
+                    });
+                },
+                error: function (request, options, err) {
+                    console.log(err);
+                    $("#modaldiv").html('Failed to load more content');
+                }
+            });*@
+        });
+        $(document).on('click', '#btnDoCreate', function () {
+            let model = {};
+            model.year = $('#Year').val();
+            model.startPersianDate = $('#StartPersianDate').val();
+            model.endPrsianDate = $('#EndPrsianDate').val();
+
+            console.log(model);
+            alert('bro jolo');
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(FinanceYearController.ACTION_Create)',
+                data: model,
+                dataType: 'json',
+                success: function (data, status, settings) {
+                    if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
+
+                    Swal.fire({
+                        title: '<span class="my-font">عملیات موفق</span>',
+                        html: '<span class="my-font">عملیات کپی اطلاعات با موفقیت انجام شد.</span>',
+                        type: 'success',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: true,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                        buttonsStyling: false,
+                    }).then(function(result) {
+                        $('#CopyModal').modal('hide');
+                    });
+                },
+                error: function (request, options, err) {
+                    console.log(err);
+                    alert('عملیات کپی با خطا مواجه شد.');
+                }
+            });
+        });
+        function Delete(yearid) {
+            let myurl = '@Url.Action("Delete")';
+            myurl = myurl + "/" + yearid;
+            $.ajax({
+                type: 'GET',
+                url: myurl,
+                success: function (data, status, settings) {
+
+                    $("#modaldiv").html(data);
+                    $('#DeleteModal').modal('show');
+                },
+                error: function (ajaxrequest, ajaxOptions, thrownError) {
+
+                    $("#modaldiv").html('Failed to load more content');
+                }
+            });
+        }
+        $(document).on('click', '.delete-row', function () {
+            let id = $(this).data('id');
+            let btn = this;
+
+            Swal.fire({
+                title: 'برای حذف اطمینان دارید؟',
+                text: "",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2F8BE6',
+                animation: false,
+                customClass: 'animated flipInX',
+                cancelButtonColor: '#F55252',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+
+                confirmButtonClass: 'btn btn-warning my-font',
+                cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.value) {
+                    deleteRow(btn, id);
+
+                    return true;
+                }
+                else {
+
+                    return false;
+                }
+            });
+        });
+        function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(FinanceYearController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    alert(data.message);
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                console.log(err);
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    </script>
+
+}

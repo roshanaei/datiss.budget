@@ -44,7 +44,7 @@ namespace Datiss.Budget.Services
 
             var entity = new FinanceYear
             {
-                Title = model.Title,
+                Title = "سال "+model.Year,
                 Year = model.Year,
                 StartDate = model.StartDate,
                 EndDate = model.EndDate,
@@ -88,7 +88,7 @@ namespace Datiss.Budget.Services
                 await checkLogicAsync(model.Year, model.StartDate, model.EndDate,model.Id);
 
                 var entity = await _dbSet.FindAsync(model.Id);
-                entity.Title = model.Title;
+                entity.Title = "سال " + model.Year;
                 entity.Year = model.Year;
                 entity.StartDate = model.StartDate;
                 entity.EndDate = model.EndDate;

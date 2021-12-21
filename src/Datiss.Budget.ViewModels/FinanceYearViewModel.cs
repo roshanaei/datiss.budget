@@ -41,6 +41,7 @@ namespace Datiss.Budget.ViewModels
             Filter = new FinanceYearFilterViewModel();
         }
 
+        public string StartPersianDate { get; set; }
         public FinanceYearFilterViewModel Filter { get; set; }
 
     }

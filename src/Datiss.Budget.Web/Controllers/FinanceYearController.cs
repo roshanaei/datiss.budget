@@ -64,6 +64,12 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Create()
+        {
+            var model = new CreateFinanceYearViewModel();
+            return PartialView("_createModal", model);
+        }
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateFinanceYearViewModel model)
         {
@@ -96,8 +102,8 @@ namespace Datiss.Budget.Web.Controllers
             var model = entity.Adapt<UpdateFinanceYearViewModel>();
             return PartialView("_editModal", model);
         }
-        [HttpPost("[action]/{id}")]
-        public async Task<IActionResult> Edit(int id, UpdateFinanceYearViewModel model)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Edit(UpdateFinanceYearViewModel model)
         {
             if (!ModelState.IsValid)
             {
