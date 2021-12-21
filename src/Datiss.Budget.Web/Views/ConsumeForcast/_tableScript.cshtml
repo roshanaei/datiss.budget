@@ -15,14 +15,25 @@
         //Hide output elements
         $('#divOutput_Year_' + id).hide();
         $('#divOutput_Org_' + id).hide();
-        $('#divOutput_DWaterType_' + id).hide();
-        $('#divOutput_WInstallFee_' + id).hide();
+        $('#divOutput_UserType_' + id).hide();
+        $('#divOutput_UsageLayerType_' + id).hide();
+        $('#divOutput_CountUser_' + id).hide();
+        $('#divOutput_UnitUser_' + id).hide();
+        $('#divOutput_ConsumeUser_' + id).hide();
+        $('#divOutput_AvgConsumeUser_' + id).hide();
+        $('#divOutput_ConsumeUserForcast_' + id).hide();
 
         //show input elements
         $('#divInput_Year_' + id).show();
         $('#divInput_Org_' + id).show();
-        $('#divInput_DWaterType_' + id).show();
-        $('#divInput_WInstallFee_' + id).show();
+        $('#divInput_UserType_' + id).show();
+        $('#divInput_UsageLayerType_' + id).show();
+        $('#divInput_CountUser_' + id).show();
+        $('#divInput_UnitUser_' + id).show();
+        $('#divInput_ConsumeUser_' + id).show();
+        $('#divInput_AvgConsumeUser_' + id).show();
+        $('#divInput_ConsumeUserForcast_' + id).show();
+
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -37,14 +48,25 @@
         //Hide input elements
         $('#divInput_Year_' + id).hide();
         $('#divInput_Org_' + id).hide();
-        $('#divInput_DWaterType_' + id).hide();
-        $('#divInput_WInstallFee_' + id).hide();
+        $('#divInput_UserType_' + id).hide();
+        $('#divInput_UsageLayerType_' + id).hide();
+        $('#divInput_CountUser_' + id).hide();
+        $('#divInput_UnitUser_' + id).hide();
+        $('#divInput_ConsumeUser_' + id).hide();
+        $('#divInput_AvgConsumeUser_' + id).hide();
+        $('#divInput_ConsumeUserForcast_' + id).hide();
+
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
         $('#divOutput_Org_' + id).show();
-        $('#divOutput_DWaterType_' + id).show();
-        $('#divOutput_WInstallFee_' + id).show();
+        $('#divOutput_UserType_' + id).show();
+        $('#divOutput_UsageLayerType_' + id).show();
+        $('#divOutput_CountUser_' + id).show();
+        $('#divOutput_UnitUser_' + id).show();
+        $('#divOutput_ConsumeUser_' + id).show();
+        $('#divOutput_AvgConsumeUser_' + id).show();
+        $('#divOutput_ConsumeUserForcast_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -67,8 +89,14 @@
         model.id = id;
         model.yearId = $('#inputYear_' + id).val();
         model.organizationId = $('#inputOrg_' + id).val();
-        model.dWaterTypeId = $('#inputDWaterType_' + id).val();
-        model.wInstallFee = $('#inputWInstallFee_' + id).val();
+        model.userTypeId = $('#divInput_UserType_' + id).val();
+        model.usageLayerId = $('#divInput_UsageLayerType_' + id).val();
+        model.countUser = $('#divInput_CountUser_' + id).val();
+        model.unitUser = $('#divInput_UnitUser_' + id).val();
+        model.consumeUser = $('#divInput_ConsumeUser_' + id).val();
+        model.avgConsumeUser = $('#divInput_AvgConsumeUser_' + id).val();
+        model.consumeUserForcast = $('#divInput_ConsumeUserForcast_' + id).val();
+
 
         $.ajax({
             url: '@Url.Action(ConsumeForcastController.ACTION_Edit)',
@@ -93,8 +121,13 @@
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
-                $('#spanDWaterType_' + id).text(data.dWaterTypeDisplay);
-                $('#spanWInstallFee_' + id).text(data.wInstallFee);
+                $('#spanUserType_' + id).text(data.userTypeDisplay);
+                $('#spanUsageLayerType_' + id).text(data.usageLayerTypeDisplay);
+                $('#spanCountUser_' + id).text(data.countUser);
+                $('#spanUnitUser_' + id).text(data.unitUser);
+                $('#spanConsumeUser_' + id).text(data.consumeUser);
+                $('#spanAvgConsumeUser_' + id).text(data.avgConsumeUser);
+                $('#spanConsumeUserForcast_' + id).text(data.consumeUserForcast);
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
                 cancelEditRow(id);
@@ -113,8 +146,13 @@
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
-        model.dWaterTypeId = $(e).find('#inputDWaterType_').val();
-        model.wInstallFee = $(e).find('#inputWInstallFee_').val();
+        model.userTypeId = $(e).find('#divInput_UserType_').val();
+        model.usageLayerId = $(e).find('#divInput_UsageLayerType_').val();
+        model.countUser = $(e).find('#divInput_CountUser_').val();
+        model.unitUser = $(e).find('#divInput_UnitUser_').val();
+        model.consumeUser = $(e).find('#divInput_ConsumeUser_').val();
+        model.avgConsumeUser = $(e).find('#divInput_AvgConsumeUser_').val();
+        model.consumeUserForcast = $(e).find('#divInput_ConsumeUserForcast_').val();
 
         console.log(model);
 
@@ -159,26 +197,80 @@
                 $('#spanOrg_' + data.id).text(data.organizationDisplay);
                 $('#divOutput_Org_' + data.id).show();
 
-                //DWaterType
-                $(e).find('#divInput_DWaterType_').attr('id', 'divInput_DWaterType_' + data.id);
-                $(e).find('#hidDWaterTypeId_').attr('id', 'hidDWaterTypeId_' + data.id);
-                $(e).find('#inputDWaterType_').attr('id', 'inputDWaterType_' + data.id);
-                $(e).find('#divOutput_DWaterType_').attr('id', 'divOutput_DWaterType_' + data.id);
-                $(e).find('#spanDWaterType_').attr('id', 'spanDWaterType_' + data.id);
+                //UserType
+                $(e).find('#divInput_UserType_').attr('id', 'divInput_UserType_' + data.id);
+                $(e).find('#hidUserTypeId_').attr('id', 'hidUserTypeId_' + data.id);
+                $(e).find('#inputUserType_').attr('id', 'inputUserType_' + data.id);
+                $(e).find('#divOutput_UserType_').attr('id', 'divOutput_UserType_' + data.id);
+                $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
 
-                $('#divInput_DWaterType_' + data.id).hide();
-                $('#spanDWaterType_' + data.id).text(data.dWaterTypeDisplay);
-                $('#divOutput_DWaterType_' + data.id).show();
+                $('#divInput_UserType_' + data.id).hide();
+                $('#spanUserType_' + data.id).text(data.userTypeDisplay);
+                $('#divOutput_UserType_' + data.id).show();
 
-                //WInstallFee
-                $(e).find('#divInput_WInstallFee_').attr('id', 'divInput_WInstallFee_' + data.id);
-                $(e).find('#inputWInstallFee_').attr('id', 'inputWInstallFee_' + data.id);
-                $(e).find('#divOutput_WInstallFee_').attr('id', 'divOutput_WInstallFee_' + data.id);
-                $(e).find('#spanWInstallFee_').attr('id', 'spanWInstallFee_' + data.id);
 
-                $('#divInput_WInstallFee_' + data.id).hide();
-                $('#spanWInstallFee_' + data.id).text(data.wInstallFee);
-                $('#divOutput_WInstallFee_' + data.id).show();
+                //UsageLayerType
+                $(e).find('#divInput_UsageLayerType_').attr('id', 'divInput_UsageLayerType_' + data.id);
+                $(e).find('#hidUsageLayerTypeId_').attr('id', 'hidUsageLayerTypeId_' + data.id);
+                $(e).find('#inputUsageLayerType_').attr('id', 'inputUsageLayerType_' + data.id);
+                $(e).find('#divOutput_UsageLayerType_').attr('id', 'divOutput_UsageLayerType_' + data.id);
+                $(e).find('#spanUsageLayerType_').attr('id', 'spanUsageLayerType_' + data.id);
+
+                $('#divInput_UsageLayerType_' + data.id).hide();
+                $('#spanUsageLayerType_' + data.id).text(data.usageLayerTypeDisplay);
+                $('#divOutput_UsageLayerType_' + data.id).show();
+
+                //CountUser
+                $(e).find('#divInput_CountUser_').attr('id', 'divInput_CountUser_' + data.id);
+                $(e).find('#inputCountUser_').attr('id', 'inputCountUser_' + data.id);
+                $(e).find('#divOutput_CountUser_').attr('id', 'divOutput_CountUser_' + data.id);
+                $(e).find('#spanCountUser_').attr('id', 'spanCountUser_' + data.id);
+
+                $('#divInput_CountUser_' + data.id).hide();
+                $('#spanCountUser_' + data.id).text(data.countUser);
+                $('#divOutput_CountUser_' + data.id).show();
+
+                //UnitUser
+                $(e).find('#divInput_UnitUser_').attr('id', 'divInput_UnitUser_' + data.id);
+                $(e).find('#inputUnitUser_').attr('id', 'inputUnitUser_' + data.id);
+                $(e).find('#divOutput_UnitUser_').attr('id', 'divOutput_UnitUser_' + data.id);
+                $(e).find('#spanUnitUser_').attr('id', 'spanUnitUser_' + data.id);
+
+                $('#divInput_UnitUser_' + data.id).hide();
+                $('#spanUnitUser_' + data.id).text(data.unitUser);
+                $('#divOutput_UnitUser_' + data.id).show();
+
+
+                //ConsumeUser
+                $(e).find('#divInput_ConsumeUser_').attr('id', 'divInput_ConsumeUser_' + data.id);
+                $(e).find('#inputConsumeUser_').attr('id', 'inputConsumeUser_' + data.id);
+                $(e).find('#divOutput_ConsumeUser_').attr('id', 'divOutput_ConsumeUser_' + data.id);
+                $(e).find('#spanConsumeUser_').attr('id', 'spanConsumeUser_' + data.id);
+
+                $('#divInput_ConsumeUser_' + data.id).hide();
+                $('#spanConsumeUser_' + data.id).text(data.consumeUser);
+                $('#divOutput_ConsumeUser_' + data.id).show();
+
+                //AvgConsumeUser
+                $(e).find('#divInput_AvgConsumeUser_').attr('id', 'divInput_AvgConsumeUser_' + data.id);
+                $(e).find('#inputAvgConsumeUser_').attr('id', 'inputAvgConsumeUser_' + data.id);
+                $(e).find('#divOutput_AvgConsumeUser_').attr('id', 'divOutput_AvgConsumeUser_' + data.id);
+                $(e).find('#spanAvgConsumeUser_').attr('id', 'spanAvgConsumeUser_' + data.id);
+
+                $('#divInput_AvgConsumeUser_' + data.id).hide();
+                $('#spanAvgConsumeUser_' + data.id).text(data.avgConsumeUser);
+                $('#divOutput_AvgConsumeUser_' + data.id).show();
+
+
+                //ConsumeUserForcast
+                $(e).find('#divInput_ConsumeUserForcast_').attr('id', 'divInput_ConsumeUserForcast_' + data.id);
+                $(e).find('#inputConsumeUserForcast_').attr('id', 'inputConsumeUserForcast_' + data.id);
+                $(e).find('#divOutput_ConsumeUserForcast_').attr('id', 'divOutput_ConsumeUserForcast_' + data.id);
+                $(e).find('#spanConsumeUserForcast_').attr('id', 'spanConsumeUserForcast_' + data.id);
+
+                $('#divInput_ConsumeUserForcast_' + data.id).hide();
+                $('#spanConsumeUserForcast_' + data.id).text(data.consumeUserForcast);
+                $('#divOutput_ConsumeUserForcast_' + data.id).show();
 
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);
@@ -225,7 +317,7 @@
             dir: 'rtl'
         });
 
-        $('.selectDWaterType:last').select2({
+        $('.selectUserType:last').select2({
             dir : 'rtl'
         });
 
