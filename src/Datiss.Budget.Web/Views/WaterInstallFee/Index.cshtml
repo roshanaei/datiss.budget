@@ -57,6 +57,7 @@
                                 </fieldset>
                                 <fieldset>
                                     <div class="rowACJE">
+                                        
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
@@ -93,8 +94,12 @@
                                             <span style="margin-right:10px">رکورد</span>
 
                                         </label>
+
+                                        
                                     </fieldset>
                                     @* drop down menu *@
+                                    
+                                    
                                     <div class="btn-group dropdown form-group">
                                         <button type="button"
                                                 class="btn btn-light my-font dropdown-toggle"
@@ -156,6 +161,9 @@
                                 </div>
                                 <fieldset>
                                     <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i> به روز رسانی
+                                        </button>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WaterInstallFeeController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
