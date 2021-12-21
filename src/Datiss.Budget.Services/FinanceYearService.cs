@@ -38,8 +38,10 @@ namespace Datiss.Budget.Services
             var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
             return await Task.FromResult(entity);
         }
-        public async Task<ValidationResult<FinanceYearDTO>> CreateAsync(CreateFinanceYearDTO model)
+        public async Task<ValidationResult> CreateAsync(CreateFinanceYearDTO model)
         {
+            model.CheckArgumentIsNull(nameof(model));
+
             var entity = new FinanceYear
             {
                 Title = model.Title,
@@ -49,30 +51,42 @@ namespace Datiss.Budget.Services
                 Status = EntityStatus.Enabled
             };
 
-            if (await checkLogicAsync(model.Year,model.StartDate,model.EndDate))
+            try
             {
+                await checkLogicAsync(model.Year , model.StartDate , model.EndDate);
+
                 await _dbSet.AddAsync(entity);
                 await _uow.SaveChangesAsync();
-                var result = entity.Adapt<FinanceYearDTO>();
-                result.Title = entity.Title;
-                result.Year = entity.Year;
-                result.Status = entity.Status;
-                result.StartDate = entity.StartDate;
-                result.EndDate = entity.EndDate;
-
-                return ValidationResult<FinanceYearDTO>.Success(result);
+                return ValidationResult.Success();
             }
-            return ValidationResult<FinanceYearDTO>.Failed(
-              string.Format(ServiceMessages.DuplicateNames,
-                              model.Title)
-              );
+            catch (CopySameYearException)
+            {
+                return ValidationResult.Failed(ViewMessages.CopySameYear);
+            }
+            catch (CopyDestYearExxeption)
+            {
+                return ValidationResult.Failed(ViewMessages.CopyErrorDestYear);
+            }
+            catch (CopyOrgNullDataException)
+            {
+                return ValidationResult.Failed(ViewMessages.CopySourceOrgNullData);
+            }
+            catch (CopyDestYearHasDataException)
+            {
+                return ValidationResult.Failed(ViewMessages.CopyDestYearHasData);
+            }
+            catch (Exception ex)
+            {
+                return ValidationResult.Failed(ViewMessages.SystemError);
+            }
         }
-        public async Task<ValidationResult<FinanceYearDTO>> UpdateAsync(UpdateFinanceYearDTO model)
+        public async Task<ValidationResult> UpdateAsync(UpdateFinanceYearDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
-
-            if (await checkLogicAsync(model.Id,model.StartDate,model.EndDate))
+            try
             {
+                await checkLogicAsync(model.Year, model.StartDate, model.EndDate,model.Id);
+
                 var entity = await _dbSet.FindAsync(model.Id);
                 entity.Title = model.Title;
                 entity.Year = model.Year;
@@ -82,26 +96,32 @@ namespace Datiss.Budget.Services
                                 ? EntityStatus.Enabled
                                 : EntityStatus.Disbaled;
 
+
+                await _dbSet.AddAsync(entity);
                 await _uow.SaveChangesAsync();
 
-                var result = new FinanceYearDTO
-                {
-                    Title = model.Title,
-                    Year = model.Year,
-                    StartDate = model.StartDate,
-                    EndDate = model.EndDate,
-                    Status = model.Enabled
-                                ? EntityStatus.Enabled
-                                : EntityStatus.Disbaled
-                };
-
-                return ValidationResult<FinanceYearDTO>.Success(result);
+                return ValidationResult.Success();
             }
-
-            return ValidationResult<FinanceYearDTO>.Failed(
-                string.Format(ServiceMessages.DuplicateNames,
-                                model.Title)
-                );
+            catch (CopySameYearException)
+            {
+                return ValidationResult.Failed(ViewMessages.CopySameYear);
+            }
+            catch (CopyDestYearExxeption)
+            {
+                return ValidationResult.Failed(ViewMessages.CopyErrorDestYear);
+            }
+            catch (CopyOrgNullDataException)
+            {
+                return ValidationResult.Failed(ViewMessages.CopySourceOrgNullData);
+            }
+            catch (CopyDestYearHasDataException)
+            {
+                return ValidationResult.Failed(ViewMessages.CopyDestYearHasData);
+            }
+            catch (Exception ex)
+            {
+                return ValidationResult.Failed(ViewMessages.SystemError);
+            }
         }
 
         public async Task<ValidationResult> SoftDeleteAsync(int id)
@@ -170,26 +190,53 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.Year);
             }
         }
+        private async Task<bool> isInLenght(DateTime startdate, DateTime enddate, int? id = null)
+            => id == null
+            ? await Query().AnyAsync(x => (x.StartDate <= startdate && x.EndDate >= startdate) ||
+                                          (x.StartDate <= enddate && x.EndDate >= enddate))
+            : await Query().Where(x=>x.Id!=id)
+                           .AnyAsync(x => (x.StartDate <= startdate && x.EndDate >= startdate) ||
+                                    (x.StartDate <= enddate && x.EndDate >= enddate));
 
         #endregion
         #region Logics
 
-        private async Task<bool> checkLogicAsync(
+        private async Task checkLogicAsync(
             int year,
             DateTime startDate,
             DateTime endDate,
             int? id = null)
         {
-            //if (endDate <= startDate)
-            //    throw new CopyDestYearExxeption;
+            if (endDate <= startDate)
+                throw new CopySameYearException();
 
+            if (DateTime.IsLeapYear(startDate.Year))
+            {
+                if ((endDate - startDate).Days != 365)
+                    throw new CopyDestYearExxeption();
+            }
+            else
+            {
+                if ((endDate - startDate).Days != 364)
+                    throw new CopyDestYearExxeption();
+            }
 
-            var result = id == null
-                ? await Query().AnyAsync(x => x.Year == year)
+            if (await isInLenght(startDate, endDate, id))
+                throw new CopyOrgNullDataException();
 
-                : await Query().AnyAsync(x => x.Year == year &&
-                                            x.Id != id);
-            return !result;
+            if (id.HasValue)
+            {
+                if (await Query().AnyAsync(x => x.Year == year &&
+                                             x.Id != id))
+                    throw new CopyDestYearHasDataException();
+
+            }
+            else
+            {
+                if (await Query().AnyAsync(x => x.Year == year &&
+                                             x.Id != id))
+                    throw new CopyDestYearHasDataException();
+            }
         }
 
         #endregion

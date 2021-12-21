@@ -1,9 +1,10 @@
 ﻿using Datiss.Budget.Enum;
+using Datiss.Budget.ViewModels;
 using System;
 
 namespace Datiss.Budget.Services.Models
 {
-    public class CreateFinanceYearDTO
+    public class CreateFinanceYearDTO : BaseViewModel
     {
         public string Title { get; set; }
 
