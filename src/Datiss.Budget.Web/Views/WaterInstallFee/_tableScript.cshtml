@@ -108,8 +108,6 @@
     function saveNewRow(e) {
         console.log(e);
 
-
-
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
@@ -228,6 +226,23 @@
         $('.selectDWaterType:last').select2({
             dir : 'rtl'
         });
+
+        let input = document.getElementById('inputWInstallFee_');
+        let btnSave = document.getElementById('btnSaveCreate_');
+
+        console.log(input);
+        console.log(btnSave);
+
+        input.addEventListener('keyup', function(event) {
+            event.preventDefault();
+            if(event.keycode === 13) {
+                btnSave.click();
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        input.focus();
 
         isNewRow = true;
     }
