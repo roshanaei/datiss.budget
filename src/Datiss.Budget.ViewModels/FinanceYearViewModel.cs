@@ -20,7 +20,10 @@ namespace Datiss.Budget.ViewModels
     public class UpdateFinanceYearViewModel : CreateFinanceYearViewModel
     {
         public int Id { get; set; }
+        public string Title { get; set; }
         public bool Enable { get; set; }
+
+
     }
     public class FinanceYearViewModel
     {

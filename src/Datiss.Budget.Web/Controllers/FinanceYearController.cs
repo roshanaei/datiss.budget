@@ -13,6 +13,8 @@ using Mapster;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Resources;
+using Datiss.Budget.Enum;
+using DNTPersianUtils.Core;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -99,7 +101,16 @@ namespace Datiss.Budget.Web.Controllers
             {
                 return RedirectToAction("Index");
             }
-            var model = entity.Adapt<UpdateFinanceYearViewModel>();
+            var model = new UpdateFinanceYearViewModel
+            {
+                Year = entity.Year,
+                Title = entity.Title,
+                StartPersianDate = entity.StartDate.ToShortPersianDateString(),
+                EndPrsianDate = entity.EndDate.ToShortPersianDateString(),
+                Enable = entity.Status == EntityStatus.Enabled ? true : false
+            };
+
+
             return PartialView("_editModal", model);
         }
         [HttpPost("[action]")]

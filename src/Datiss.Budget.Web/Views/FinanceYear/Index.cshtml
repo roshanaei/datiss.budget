@@ -76,7 +76,7 @@
                                                     </button>
                                                 </span>
                                                 <span data-toggle="modal" data-target="#DeleteModal">
-                                                    <button id="btnDelete_@item.Id" data-id="@item.Id" value="@item.Id" data-toggle="tooltip" data-placement="top" title="حذف رکورد" type="button" name="btnDelete" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" onclick="Delete(@item.Id)">
+                                                    <button id="btnDelete_@item.Id" data-id="@item.Id" value="@item.Id" data-toggle="tooltip" data-placement="top" title="حذف رکورد" type="button" name="btnDelete" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
                                                         <i _ngcontent-dpj-c129="" class="fa fa-trash-o"></i>
                                                     </button>
                                                 </span>
@@ -157,7 +157,7 @@
 
     <partial name="_createModal" model="new CreateFinanceYearViewModel()" />
 
-    <div id="editmodaldiv">
+    <div id="modaldiv">
 
     </div>
 
@@ -257,23 +257,7 @@
                 }
             });
         });
-        function Delete(yearid) {
-            let myurl = '@Url.Action("Delete")';
-            myurl = myurl + "/" + yearid;
-            $.ajax({
-                type: 'GET',
-                url: myurl,
-                success: function (data, status, settings) {
 
-                    $("#modaldiv").html(data);
-                    $('#DeleteModal').modal('show');
-                },
-                error: function (ajaxrequest, ajaxOptions, thrownError) {
-
-                    $("#modaldiv").html('Failed to load more content');
-                }
-            });
-        }
         $(document).on('click', '.delete-row', function () {
             let id = $(this).data('id');
             let btn = this;
