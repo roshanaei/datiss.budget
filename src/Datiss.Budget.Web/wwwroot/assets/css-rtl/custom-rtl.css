@@ -156,3 +156,12 @@ body .sidebar-content .ps__rail-y
     font-family: 'Vazir';
     font-size:12px;
 }
+th:last-child, td:last-child {
+    position: sticky;
+    left: 0px;
+    background-color: white;
+}
+table {
+    display: block;
+    white-space: nowrap;
+}
