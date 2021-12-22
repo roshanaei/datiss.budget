@@ -92,6 +92,7 @@
                             </select>
                             <script>
                                 $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                $('#inputYear_'+ @item.Id).attr('disabled', true);
                             </script>
                         </div>
                         <div id="divOutput_Year_@item.Id">
