@@ -132,14 +132,23 @@
   <data name="ImportExcelAccessError" xml:space="preserve">
     <value>دسترسی شما برای تغییر اطلاعات سازمان وجود ندارد. خطا در سطر {0} فایل اکسل</value>
   </data>
+  <data name="ImportExcelInvalidDWaterType" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد کاربری "{1}" معتبر نیست .</value>
+  </data>
+  <data name="ImportExcelInvalidFinanceYear" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد سال "{1}" معتبر نیست .</value>
+  </data>
   <data name="ImportExcelLogicError" xml:space="preserve">
     <value>داده سطر {0} در اکسل مشکل دارد. لطفاً ورودی ها را بررسی نمایید.</value>
   </data>
+  <data name="ImportExcelNotAllowedOrg" xml:space="preserve">
+    <value>شما مجاز به ورود اطلاعات برای " {0} " نیستید.[سطر {1} فایل اکسل]</value>
+  </data>
   <data name="ImportExcelNotExistOrg" xml:space="preserve">
-    <value>سازمان به کد ({0}) در سیستم یافت نشد.</value>
+    <value>در سطر {0} فایل اکسل، کد سازمان "{1}" معتبر نیست .</value>
   </data>
   <data name="ImportExcelOrgNotInExcel" xml:space="preserve">
-    <value>سازمان های ({0}) در فایل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</value>
+    <value>سازمان های ({0}) در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</value>
   </data>
   <data name="ImportExcelSuccess" xml:space="preserve">
     <value>ورود اطلاعات با موفقیت انجام گردید.</value>

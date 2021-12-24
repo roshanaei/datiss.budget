@@ -499,6 +499,21 @@
                 contentType: false,
                 success: function (data, status, settings) {
                     console.log(data);
+                    if (data.hasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data.message}</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
+
                     if(data.ask) {
                         Swal.fire({
                             title: data.message,
@@ -533,7 +548,7 @@
                                             return;
                                         }
 
-                                        if(data.succes) {
+                                        if (!data.hasError) {
                                             alert('success');
                                         }
 
@@ -553,6 +568,9 @@
                             }
                         });
                     }
+
+                    if (!data.hasError && !data.ask)
+                        alert('Job is Succes :)');
 
                 },
                 error: function(request, options, err) {

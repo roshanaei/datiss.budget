@@ -211,6 +211,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try {
                 var result = await _waterInstallFeeService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
+
                 if(result.AskToImport) {
                     return Json(new {
                         ask = true,
@@ -221,6 +222,14 @@ namespace Datiss.Budget.Web.Controllers
                 if(!result.Success) {
                     return Json(new {
                         hasError = true,
+                        message = result.Message
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        hasError = false,
                         message = result.Message
                     });
                 }
@@ -241,22 +250,22 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.ImportExcelFileSizeInvalid
                 });
             }
-            catch (ImportExcelFileException ex) {
-                showMessage(CssClassNames.Error,
-                    string.Format(
-                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
-                    );
-                return Json(new {
-                    hasError = true,
-                    message = string.Format(
-                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
-                });
-            }
+            //catch (ImportExcelFileException ex) {
+            //    showMessage(CssClassNames.Error,
+            //        string.Format(
+            //            ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
+            //        );
+            //    return Json(new {
+            //        hasError = true,
+            //        message = string.Format(
+            //            ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
+            //    });
+            //}
 
-            showMessage(CssClassNames.Success,
-                ViewMessages.ImportExcelSuccess);
+            //showMessage(CssClassNames.Success,
+            //    ViewMessages.ImportExcelSuccess);
 
-            return RedirectToAction("Index");
+            //return RedirectToAction("Index");
         }
 
         [HttpPost("records/delete")]
