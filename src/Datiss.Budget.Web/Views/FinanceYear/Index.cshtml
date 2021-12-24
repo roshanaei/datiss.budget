@@ -43,12 +43,6 @@
                                         </span>
                                     </div>
                                 </fieldset>
-                                <fieldset class="form-group">
-                                    <label class="my-font rowAC">
-                                        <span style="margin-left:5px">شروع سال:</span>
-                                        <input asp-for="StartPersianDate" class="form-control form-control-sm d-inline-block" autocomplete="off" datepicker="datepicker" />
-                                    </label>
-                                </fieldset>
                             </div>
                         </form>
                         <hr />
@@ -155,11 +149,12 @@
     <script src="~/js/plugin/persian-datepicker.min.js" type="text/javascript" asp-append-version="true"></script>
     <script src="~/js/plugin/myDatepicker.js" type="text/javascript" asp-append-version="true"></script>
 
-    <partial name="_createModal" model="new CreateFinanceYearViewModel()" />
-
     <div id="modaldiv">
 
     </div>
+
+    <partial name="_createModal" model="new CreateFinanceYearViewModel()" />
+
 
     <script>
 
@@ -170,9 +165,13 @@
                 type: 'GET',
                 url: myurl,
                 success: function (data, status, settings) {
-
+                    $('#modaldiv').html('');
                     $("#modaldiv").html(data);
                     $('#EditModal').modal('show');
+                    $('#EditModal').on('hidden.bs.modal', function () {
+                        $('#modaldiv').html('');
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (ajaxrequest, ajaxOptions, thrownError) {
 
@@ -180,6 +179,61 @@
                 }
             });
         }
+
+        $(document).on('click', '#btnDoEdit', function () {
+            let model = {};
+
+            model.id = $('#Id').val();
+            model.title = $('#Title').val();
+            model.year = $('#Year').val();
+            model.enable = $('#Enable').val();
+            model.startPersianDate = $('#StartPersianDate').val();
+            model.endPrsianDate = $('#EndPrsianDate').val();
+
+            console.log(model);
+            alert('bro jolo');
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(FinanceYearController.ACTION_Edit)',
+                data: model,
+                dataType: 'json',
+                success: function (data, status, settings) {
+                    if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
+
+                    Swal.fire({
+                        title: '<span class="my-font">عملیات موفق</span>',
+                        html: '<span class="my-font">عملیات ویرایش سال مالی با موفقیت انجام شد.</span>',
+                        type: 'success',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: true,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                        buttonsStyling: false,
+                    }).then(function(result) {
+                        $('#CopyModal').modal('hide');
+                    });
+                },
+                error: function (request, options, err) {
+                    console.log(err);
+                    alert('عملیات ویرایش سال مالی با خطا مواجه شد.');
+                }
+            });
+        });
 
         $(document).on('click', '.openCreate', function () {
 
@@ -214,7 +268,6 @@
             model.endPrsianDate = $('#EndPrsianDate').val();
 
             console.log(model);
-            alert('bro jolo');
 
             $.ajax({
                 type: 'POST',
@@ -239,7 +292,7 @@
 
                     Swal.fire({
                         title: '<span class="my-font">عملیات موفق</span>',
-                        html: '<span class="my-font">عملیات کپی اطلاعات با موفقیت انجام شد.</span>',
+                        html: '<span class="my-font">عملیات افزودن سال مالی جدید با موفقیت انجام شد.</span>',
                         type: 'success',
                         confirmButtonColor: '#2F8BE6',
                         animation: true,
@@ -253,7 +306,7 @@
                 },
                 error: function (request, options, err) {
                     console.log(err);
-                    alert('عملیات کپی با خطا مواجه شد.');
+                    alert('عملیات افزودن سال مالی جدید با خطا مواجه شد.');
                 }
             });
         });

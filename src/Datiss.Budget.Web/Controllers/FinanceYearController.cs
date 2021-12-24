@@ -110,7 +110,6 @@ namespace Datiss.Budget.Web.Controllers
                 Enable = entity.Status == EntityStatus.Enabled ? true : false
             };
 
-
             return PartialView("_editModal", model);
         }
         [HttpPost("[action]")]
