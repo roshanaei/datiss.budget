@@ -132,26 +132,6 @@ namespace Datiss.Budget.Services
                 return true;
 
             return await IsDescendentOfAsync(parentId, targetOrg.ParentId.Value);
-
-            //var isMyChild = await isChildOfAsync(parentId, targetOrganizationId);
-
-            //if (isMyChild)
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    var childs = await query.Where(x => x.ParentId == parentId).ToListAsync();
-
-            //    foreach (var child in childs) {
-            //        var any = await isChildOfAsync(child.Id, targetOrganizationId);
-            //        if (any)
-            //            return true;
-            //    }
-                    
-            //}
-
-            //return false;
         }
 
 
