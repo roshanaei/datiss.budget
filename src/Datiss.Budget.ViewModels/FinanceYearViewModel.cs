@@ -3,6 +3,7 @@ using DNTPersianUtils.Core;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace Datiss.Budget.ViewModels
@@ -10,9 +11,10 @@ namespace Datiss.Budget.ViewModels
     public class CreateFinanceYearViewModel : BaseViewModel
     {
         public int Year { get; set; }
-        //set required
+        [Required(ErrorMessage = "لطفا شروع سال مالی را انتخاب کنید .")]
         public string StartPersianDate { get; set; }
         public DateTime StartDate => (DateTime)StartPersianDate.ToGregorianDateTime();
+        [Required(ErrorMessage = "لطفا شروع سال مالی را انتخاب کنید .")]
         public string EndPrsianDate { get; set; }
         public DateTime EndDate => (DateTime)EndPrsianDate.ToGregorianDateTime();
     }

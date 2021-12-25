@@ -54,7 +54,7 @@
                                     <tr>
                                         <th>نام</th>
                                         <th>وضعیت</th>
-                                        <th>مدیریت</th>
+                                        <th style="width:10%">مدیریت</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -189,6 +189,16 @@
             model.enable = $('#Enable').val();
             model.startPersianDate = $('#StartPersianDate').val();
             model.endPrsianDate = $('#EndPrsianDate').val();
+
+            console.log(model);
+            if ($('#Enable').is(":checked")) {
+                alert('True');
+            }
+            else
+            {
+                alert('False');
+            }
+
 
             $.ajax({
                 type: 'POST',
