@@ -15,7 +15,8 @@
         <div class="col-12">
             <div class="card">
 
-                @if (ViewData["message"] != null) {
+                @if (ViewData["message"] != null)
+                {
                     <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
@@ -32,14 +33,14 @@
                               asp-controller="@WaterInstallFeeController.Name"
                               asp-action="@WaterInstallFeeController.ACTION_Index"
                               asp-antiforgery="true">
-
-                            <div class="class=" rowACJSB"">
+                            <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
+                            <div class="rowACJSB">
                                 <fieldset class="form-group mt-3">
                                     <label asp-for="Filter.YearId" class="my-font">
                                         سال:
                                         <select asp-for="Filter.YearId"
                                                 asp-items="Model.Filter.YearSource"
-                                                class="form-control d-inline-block width-100" 
+                                                class="form-control d-inline-block width-100"
                                                 id="yearId">
                                         </select>
                                     </label>
@@ -47,8 +48,8 @@
                                         سازمان:
                                         <select asp-for="Filter.OrganizationId"
                                                 asp-items="Model.Filter.OrganizationSource"
-                                                class="form-control d-inline-block width-300" 
-                                                id="organizationId"  >
+                                                class="form-control d-inline-block width-300"
+                                                id="organizationId">
                                         </select>
                                     </label>
                                     <input asp-for="Filter.OrderBy" type="hidden" />
@@ -56,6 +57,7 @@
                                 </fieldset>
                                 <fieldset>
                                     <div class="rowACJE">
+                                        
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
@@ -65,18 +67,18 @@
                                     </div>
                                 </fieldset>
                             </div>
-
                             <hr />
+                            <fieldset class="form-group position-relative has-icon-left">
+                                <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
+                                <div class="form-control-position">
+                                    <i class="ft-search font-medium-4"></i>
+                                </div>
+                            </fieldset>
                             <!--SearchBox-->
                             <div class="rowACJSB">
-                                <div class="rowAC" style="flex:1">
-                                    <fieldset class="form-group">
-                                        <label for="ngx-filter-ref" class="my-font">
-                                            جستجو:
-                                            <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
-                                        </label>
-                                    </fieldset>
-                                    <fieldset class="form-group" style="margin-right:10px">
+                                <div class="d-flex flex-row-reverse align-items-center">
+
+                                    <fieldset class="form-group" style="margin-right:20px">
                                         <label class="my-font rowAC">
                                             <span>نمایش</span>
 
@@ -92,11 +94,77 @@
                                             <span style="margin-right:10px">رکورد</span>
 
                                         </label>
+
+                                        
                                     </fieldset>
+                                    @* drop down menu *@
+                                    
+                                    
+                                    <div class="btn-group dropdown form-group">
+                                        <button type="button"
+                                                class="btn btn-light my-font dropdown-toggle"
+                                                data-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                            ستون ها
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <div id="columnSelector">
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-1"
+                                                               id="col-1" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-1"><span>سال</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-2"
+                                                               id="col-2" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-2"><span>سازمان</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-3"
+                                                               id="col-3" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-3"><span>کاربری</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-4"
+                                                               id="col-4" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-4"><span>قیمت</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
                                 <fieldset>
                                     <div class="rowACJE">
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WaterInstallFeeController.ACTION_ExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i> به روز رسانی
+                                        </button>
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WaterInstallFeeController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" asp-action="@WaterInstallFeeController.ACTION_DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
@@ -105,42 +173,26 @@
                                     </div>
                                 </fieldset>
                             </div>
-                        </form>
 
+                        </form>
                         <!--DataTable-->
                         <partial name="_table" model="Model" />
-
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
-
 </section>
 
 @section headSection {
-    @*<link href="~/assets/js/select2/dist/css/select2.min.css" rel="stylesheet" />*@
     <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
     <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
-    <style>
-        .select2-results__options{
-            font-family: Vazir;
-            font-size:14px !important;
-        }
-        .select2-selection__rendered {
-            font-family: Vazir;
-            font-size: 12px;
-        }
-        .select2-container--krajee .select2-dropdown--below{
-            width: 600px !important;
-            margin-left: -70px !important;
-        }
-    </style>
-
 }
 
 @section footSection {
+    <div id="divCopy">
+
+    </div>
 
     <partial name="_excelModal" model="new ImportExcelViewModel()" />
 
@@ -148,38 +200,100 @@
 
     </div>
 
-    <div id="divCopy">
+    
+
+    <div id="divCalc">
 
     </div>
-
-    @*<script type="texttext/javascript" src="~/assets/js/select2/dist/js/select2.min.js" />*@
-
-    
 
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        
+        let allColumns = '1,2,3,4';
+        let columnIndices = allColumns.split(',');
+        console.log(columnIndices);
+        let showingColmuns = "1,2,3,4,";
+    </script>
+
+    @if(Model.Filter.Columns.IsNotNullOrEmpty()) {
+        <script type="text/javascript">
+            showingColmuns = '@Model.Filter.Columns' ;
+        </script>
+    }
+
+<script type="text/javascript">
+
         $(document).ready(function () {
             console.log('ready');
-            $('#organizationId').select2();
+            //fill input hidden with initial columns showing
+            document.getElementById("hidColumns").value = showingColmuns;
+
+            setDataColumns();
+
+            $(".dropdown-menu").click(function (e) {
+                e.stopPropagation();
+            });
+
+            $("#columnSelector input:checkbox:checked").change(function () {
+                let index = parseInt($(this)[0].id.split('-')[1]);
+                console.log(`showing or hiding col : ${index}`);
+                let checked = $(this)[0].checked;
+                if (checked) {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                    showingColmuns = showingColmuns + `${index},`
+                    document.getElementById("hidColumns").value = showingColmuns ;
+                } else {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+                    showingColmuns = showingColmuns.replace(`${index},`, '');
+                    document.getElementById("hidColumns").value = showingColmuns;
+                }
+            });
+
+            $('#organizationId').select2({
+                dir: 'rtl'
+            });
         });
+
+        function resetDataColumns() {
+            $('th,tr td').show();
+            let inputs = $("#columnSelector input:checkbox");
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].checked = true
+            }
+        }
+
+        function setDataColumns() {
+            let columnsToShow = document.getElementById("hidColumns").value.split(',');
+            console.log('ColumnsToShow ');
+            console.log(columnsToShow);
+            let checkBoxes = $("#columnSelector input:checkbox");
+            for(let i = 0; i < columnIndices.length; i++) {
+                let index = parseInt(columnIndices[i]);
+                let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
+                console.log(`Column : ${index} show = ${showColumn}`);
+                checkBoxes[i].checked = showColumn;
+                if(showColumn)
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                else
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+            }
+
+        }
 
         function hardDelete(e) {
             Swal.fire({
-                title: 'برای حذف اطمینان دارید؟',
-                text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
-                type: 'warning',
+                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
+                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
+                type: 'error',
                 showCancelButton: true,
-                confirmButtonColor: '#2F8BE6',
+                //confirmButtonColor: '#2F8BE6',
                 animation: false,
                 customClass: 'animated flipInX',
-                cancelButtonColor: '#F55252',
+                //cancelButtonColor: '#F55252',
                 cancelButtonText: 'انصراف',
                 confirmButtonText: 'حذف اطلاعات!',
-
-                confirmButtonClass: 'btn btn-warning my-font',
-                cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                cancelButtonClass:  'btn btn-outline-secondary mr-1 my-font',
                 buttonsStyling: false,
             }).then(function (result) {
                 if (result.value) {
@@ -198,28 +312,28 @@
                             console.log(status);
                             if(data.hasError) {
                                 Swal.fire({
-                                    title: 'خطا',
-                                    text: data.message,
+                                    title: '<span class="my-font">خطا</span>',
+                                    html: `<span class="my-font">${data.message}</span>`,
                                     type: 'error',
                                     confirmButtonColor: '#2F8BE6',
                                     animation: false,
                                     customClass: 'animated flipInX',
                                     confirmButtonText: 'بستن',
-                                    confirmButtonClass: 'btn btn-warning my-font',
+                                    confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
                                     buttonsStyling: false,
                                 });
                                 return;
                             }
 
                             Swal.fire({
-                                title: 'عملیات موفق',
-                                text: data.message,
-                                type: 'info',
+                                title: '<span class="my-font">عملیات موفق</span>',
+                                html: `<span class="my-font">${data.message}</span>`,
+                                type: 'success',
                                 confirmButtonColor: '#2F8BE6',
-                                animation: false,
+                                animation: true,
                                 customClass: 'animated flipInX',
                                 confirmButtonText: 'بستن',
-                                confirmButtonClass: 'btn btn-warning my-font',
+                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
                                 document.location.href = '@Url.Action(WaterInstallFeeController.ACTION_Index)';
@@ -238,30 +352,18 @@
                 }
             });
 
-            
-        }
-
-        function calculation(e) {
-            $('#toolForm').attr('action', '@Url.Action("Calculation")');
-            $('#toolForm').submit();
-
-            return true;
         }
 
         function openImportExcelForm() {
-            //$('#importExcelForm').attr(
-            //    'action',
-            //    '@Url.Action(WaterInstallFeeController.ACTION_ImportExcel)'
-            //);
             $('#ExcellModal').modal('show');
         }
-
 
         $(document).on('click', '#btnCreate', function () {
             addNewRow();
         });
 
         $(document).on('click', '.edit-row', function () {
+            resetDataColumns()
             let id = $(this).data('id');
             let input = document.getElementById('inputWInstallFee_' + id);
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
@@ -272,6 +374,12 @@
                     btnSaveEdit.click();
                 }
             });
+
+            btnSaveEdit.addEventListener('click', function(event) {
+                event.preventDefault();
+                $(btnSaveEdit).attr('disabled', true);
+            });
+
             editRow(id);
         });
 
@@ -280,19 +388,16 @@
             let btn = this;
 
             Swal.fire({
-                title: 'برای حذف اطمینان دارید؟',
-                text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
-                type: 'warning',
+                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
+                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
+                type: 'error',
                 showCancelButton: true,
-                confirmButtonColor: '#2F8BE6',
                 animation: false,
                 customClass: 'animated flipInX',
-                cancelButtonColor: '#F55252',
                 cancelButtonText: 'انصراف',
                 confirmButtonText: 'حذف اطلاعات!',
-
-                confirmButtonClass: 'btn btn-warning my-font',
-                cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
                 buttonsStyling: false,
             }).then(function(result) {
                 if(result.value) {
@@ -318,6 +423,7 @@
         });
 
         $(document).on('click', '.save-new-row', function () {
+            $(this).attr('disabled', true);
             let row = $(this).closest('tr');
             saveNewRow(row);
         });
@@ -327,21 +433,56 @@
         });
 
         $(document).on('click', '.openCopy', function() {
-
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action("Copy")',
+                url: '@Url.Action(WaterInstallFeeController.ACTION_Copy)',
                 success: function (data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
                     $('#CopyModal').modal('show');
+                    $('#CopyModal').on('hidden.bs.modal', function() {
+                        $('#divCopy').html('');
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (request, options, err) {
                     console.log(err);
                     $("#divCopy").html('Failed to load more content');
                 }
             });
+        });
 
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal', function() {
+                $('.modal-backdrop').remove();
+            });
+        });
+
+        $(document).on('click', '.calculation-button', function() {
+            let model = {};
+            model.yearId = $('#yearId').val();
+            model.organizationId = $('#organizationId').val();
+
+            console.log(model);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(WaterInstallFeeController.ACTION_Calculation)',
+                data: model,
+                success: function (data, status, settings) {
+                    $('#divCalc').html('');
+                    $('#divCalc').html(data);
+                    $('#CalculationModal').modal('show');
+                    $('#CalculationModal').on('hidden.bs.modal', function() {
+                        $('#divCalc').html('');
+                        $('.modal-backdrop').remove();
+                    });
+                },
+                error: function (request, options, err) {
+                    console.log(err);
+                    $('#divCalc').html('failed to load content.');
+                }
+            });
         });
 
         $(document).on('click', '#btnDoImportExcel', function() {
@@ -356,11 +497,27 @@
                 data: fdata,
                 processData: false,
                 contentType: false,
-                success: function(data, status, settings) {
-                    if(data.ask) {
+                success: function (data, status, settings) {
+                    console.log(data);
+                    if (data.hasError) {
                         Swal.fire({
-                            title: data.message,
-                            text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data.message}</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
+
+                    if (data.ask) {
+                        Swal.fire({
+                            html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
+                            //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
                             type: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#2F8BE6',
@@ -372,31 +529,55 @@
                             confirmButtonClass: 'btn btn-warning my-font',
                             cancelButtonClass: 'btn btn-danger  my-font ml-1',
                             buttonsStyling: false,
-                        }).then(function(result) {
-                            if(result.value) {
+                        }).then(function (result) {
+
+                            if (result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
+                                console.log(fdata);
 
                                 $.ajax({
-                                    url: '@WaterInstallFeeController.ACTION_ImportExcel',
+                                    url: '@Url.Action(WaterInstallFeeController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
                                     contentType: false,
-                                    success: function(data, status, settings) {
-                                        if(data.hasError) {
-                                            //TODO : show read message
-                                            alert(data.message);
+                                    success: function (data, status, settings) {
+                                        if (data.hasError) {
+                                            Swal.fire({
+                                                title: '<span class="my-font">خطا</span>',
+                                                html: `<span class="my-font">${data.message}</span>`,
+                                                type: 'error',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: false,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                                                buttonsStyling: false,
+                                            });
+                                            return;
                                         }
 
-                                        if(data.succes) {
-                                            alert('success');
+                                        if (!data.hasError) {
+                                            Swal.fire({
+                                                title: '<span class="my-font">عملیات موفق</span>',
+                                                html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                                                type: 'success',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: true,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                                                buttonsStyling: false,
+                                            }).then(function (result) {
+                                                document.location.href = '@Url.Action(WaterInstallFeeController.ACTION_Index)';
+                                            });
                                         }
 
-                                        if(data.ask) {
+                                        if (data.ask) {
                                             alert('dont ask again');
                                         }
                                     },
-                                    error: function(request, options, err) {
+                                    error: function (request, options, err) {
                                         console.log(err);
                                     }
                                 });
@@ -409,12 +590,28 @@
                         });
                     }
 
+                    if (!data.hasError && !data.ask) {
+                        Swal.fire({
+                            title: '<span class="my-font">عملیات موفق</span>',
+                            html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                            type: 'success',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: true,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                            buttonsStyling: false,
+                        }).then(function (result) {
+                            document.location.href = '@Url.Action(WaterInstallFeeController.ACTION_Index)';
+                        });
+                    }
+
                 },
                 error: function(request, options, err) {
                     console.log(err);
                     alert(err);
                 }
-            })
+            });
 
         });
 
@@ -434,28 +631,28 @@
                 success: function (data, status, settings) {
                     if (data._HasError) {
                         Swal.fire({
-                            title: 'خطا',
-                            text: data._ErrorMessage,
-                            type: 'warning',
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
                             confirmButtonColor: '#2F8BE6',
                             animation: false,
                             customClass: 'animated flipInX',
                             confirmButtonText: 'بستن',
-                            confirmButtonClass: 'btn btn-warning my-font',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
                             buttonsStyling: false,
                         });
                         return;
                     }
 
                     Swal.fire({
-                        title: 'عملیات موفق',
-                        text: "عملیات کپی اطلاعات با موفقیت انجام شد.",
-                        type: 'info',
+                        title: '<span class="my-font">عملیات موفق</span>',
+                        html: '<span class="my-font">عملیات کپی اطلاعات با موفقیت انجام شد.</span>',
+                        type: 'success',
                         confirmButtonColor: '#2F8BE6',
-                        animation: false,
+                        animation: true,
                         customClass: 'animated flipInX',
                         confirmButtonText: 'بستن',
-                        confirmButtonClass: 'btn btn-warning my-font',
+                        confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                         buttonsStyling: false,
                     }).then(function(result) {
                         $('#CopyModal').modal('hide');
@@ -473,22 +670,8 @@
             let pageSize = $('#ddlPageSize').attr('value');
             console.log(pageSize);
             $('#filterForm').submit();
-        }
-
-         function exportExcel() {
-
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action(WaterInstallFeeController.ACTION_ExportExcel)',
-                success: function (data, status, settings) {
-                    console.log(data);
-                },
-                error: function (ajaxrequest, ajaxOptions, thrownError) {
-                    console.log('erorr');
-                }
-            });
         };
 
-    </script>
+</script>
 
 }

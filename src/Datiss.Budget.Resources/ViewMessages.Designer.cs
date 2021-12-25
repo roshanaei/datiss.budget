@@ -61,7 +61,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to سال هدف نباید دیتا داشته باشد.
+        ///   Looks up a localized string similar to سال هدف نباید دیتا داشته باشد..
         /// </summary>
         public static string CopyDestYearHasData {
             get {
@@ -70,7 +70,16 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to سال ها یکی نباشد.
+        ///   Looks up a localized string similar to نمی توانید کپی اطلاعات را برای سال های قبلی انجام دهید..
+        /// </summary>
+        public static string CopyErrorDestYear {
+            get {
+                return ResourceManager.GetString("CopyErrorDestYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سال ها یکی نباشد..
         /// </summary>
         public static string CopySameYear {
             get {
@@ -88,7 +97,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to کپی اطلاعات با موفقیت انجام شد.
+        ///   Looks up a localized string similar to کپی اطلاعات با موفقیت انجام شد..
         /// </summary>
         public static string CopySuccess {
             get {
@@ -97,11 +106,20 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to حذف رکورد برای سازمان {0} در سال {1} با موفقیت انجام شد..
+        ///   Looks up a localized string similar to حذف رکورد برای سازمان &quot;{0}&quot; در &quot;سال {1}&quot; با موفقیت انجام شد..
         /// </summary>
         public static string DeleteMultipleDataForOrg {
             get {
                 return ResourceManager.GetString("DeleteMultipleDataForOrg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to داده ای برای حذف وجود ندارد..
+        /// </summary>
+        public static string DeleteNullRecord {
+            get {
+                return ResourceManager.GetString("DeleteNullRecord", resourceCulture);
             }
         }
         
@@ -115,6 +133,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to حذف رکورد با موفقیت انجام شد..
+        /// </summary>
+        public static string DeleteRowSuccess {
+            get {
+                return ResourceManager.GetString("DeleteRowSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to فرمت فایل اکسل نمی باشد..
         /// </summary>
         public static string ImportExcelFileFormatInvalid {
@@ -124,7 +151,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to رکورد سطر {0} از قبل وجود دارد.
+        ///   Looks up a localized string similar to رکورد سطر {0} از قبل وجود دارد..
         /// </summary>
         public static string ImportExcelFileItemExist {
             get {
@@ -142,7 +169,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to عملیات ورود فایل اکسل با موفقیت انجام گردید.
+        ///   Looks up a localized string similar to عملیات ورود فایل اکسل با موفقیت انجام گردید..
         /// </summary>
         public static string ImportExcelSuccess {
             get {
@@ -151,7 +178,25 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند.
+        ///   Looks up a localized string similar to خطاهای داده ای را بررسی نمایید..
+        /// </summary>
+        public static string InvalidData {
+            get {
+                return ResourceManager.GetString("InvalidData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to خطا در بروزرسانی اطلاعات. لطفاً دوباره سعی کنید..
+        /// </summary>
+        public static string InvalidUpdateData {
+            get {
+                return ResourceManager.GetString("InvalidUpdateData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند..
         /// </summary>
         public static string InvalidUsernameOrPassword {
             get {

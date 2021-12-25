@@ -19,7 +19,7 @@ namespace Datiss.Budget.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class ServiceMessages {
@@ -106,6 +106,24 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد کاربری &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidDWaterType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidDWaterType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد سال &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidFinanceYear {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidFinanceYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to داده سطر {0} در اکسل مشکل دارد. لطفاً ورودی ها را بررسی نمایید..
         /// </summary>
         public static string ImportExcelLogicError {
@@ -115,11 +133,56 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to شما مجاز به ورود اطلاعات برای &quot; {0} &quot; نیستید.[سطر {1} فایل اکسل].
+        /// </summary>
+        public static string ImportExcelNotAllowedOrg {
+            get {
+                return ResourceManager.GetString("ImportExcelNotAllowedOrg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد سازمان &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelNotExistOrg {
+            get {
+                return ResourceManager.GetString("ImportExcelNotExistOrg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سازمان های ({0}) در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟.
+        /// </summary>
+        public static string ImportExcelOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ورود اطلاعات با موفقیت انجام گردید..
+        /// </summary>
+        public static string ImportExcelSuccess {
+            get {
+                return ResourceManager.GetString("ImportExcelSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است.
         /// </summary>
         public static string Logic_BranchFeeAmount {
             get {
                 return ResourceManager.GetString("Logic_BranchFeeAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است.
+        /// </summary>
+        public static string Logic_ConsumeForcast {
+            get {
+                return ResourceManager.GetString("Logic_ConsumeForcast", resourceCulture);
             }
         }
         

@@ -42,6 +42,8 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
 
+        private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
+
         private readonly ILogger<WaterInstallFeeController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly IWaterInstallFeeService _waterInstallFeeService;
@@ -77,6 +79,11 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWaterInstallFeeViewModel model) 
         {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
             var data = model.Adapt<CreateWaterInstallFeeDTO>();
 
             var result = await _waterInstallFeeService.CreateAsync(data);
@@ -94,7 +101,7 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Edit(UpdateWaterInstallFeeViewModel model) {
 
             if (!ModelState.IsValid) {
-                model.AddError("خطاهای داده ای را بررسی نمایید.");
+                model.AddError(ViewMessages.InvalidData);
                 return Json(model);
             }
 
@@ -114,8 +121,9 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1) 
         {
+            var filter = new WaterInstallFeeFilterDTO();
             var orgSource = (await _organizationService.GetDropDownDataAsync())
-               .Adapt<List<DropDownItemViewModel>>();
+              .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
 
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
@@ -125,25 +133,34 @@ namespace Datiss.Budget.Web.Controllers
             var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var filterInput = new WaterInstallFeeFilterDTO {
-                OrderBy = "dwatertype",
-                PageNumber = page,
-                YearId = maxYear,
-                OrganizationId = firstOrgId
-            };
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
 
-            var result = await _waterInstallFeeService.GetListAsync(filterInput);
+            filter.YearId = maxYear;
+            filter.OrganizationId = firstOrgId;
+
+            var myfilter = TempData.Get<WaterInstallFeeFilterViewModel>(_indexFilterKey);
+            if(myfilter != null) 
+            {
+                filter = myfilter.Adapt<WaterInstallFeeFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
+
+            var result = await _waterInstallFeeService.GetListAsync(filter);
             var model = result.Adapt<WaterInstallFeeIndexViewModel>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
             model.SetDWaterTypeSource(dwaterSource);
 
-            model.SetFinanceYearFilterSource(yearSource, maxYear);
-            model.SetOrganizationFilterSource(orgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
             
-            model.Filter.YearId = filterInput.YearId;
-            model.Filter.OrganizationId = filterInput.OrganizationId;
+            model.Filter.YearId = filter.YearId;
+            model.Filter.OrganizationId = filter.OrganizationId;
 
             return View(model);
         }
@@ -151,11 +168,14 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(WaterInstallFeeIndexViewModel model, int page = 1) {
-            var filterInput = model.Filter.Adapt<WaterInstallFeeFilterDTO>();
+            model.Filter.PageNumber = 1;
+            var filter = model.Filter.Adapt<WaterInstallFeeFilterDTO>();
 
-            var result = await _waterInstallFeeService.GetListAsync(filterInput);
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _waterInstallFeeService.GetListAsync(filter);
             model = result.Adapt<WaterInstallFeeIndexViewModel>();
-            model.Filter = filterInput.Adapt<WaterInstallFeeFilterViewModel>();
+            model.Filter = filter.Adapt<WaterInstallFeeFilterViewModel>();
 
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
@@ -166,10 +186,14 @@ namespace Datiss.Budget.Web.Controllers
             var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
+
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
-            model.SetFinanceYearFilterSource(yearSource);
-            model.SetOrganizationFilterSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
             model.SetDWaterTypeSource(dwaterSource);
             
             return View(model);
@@ -179,12 +203,15 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> ImportExcel(ImportExcelViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
 
-            if (model.ExcelFile == null ||
-                model.ExcelFile.Length == 0)
-                    return RedirectToAction("Index");
+            if (model.ExcelFile == null || model.ExcelFile.Length == 0)
+                return Json(new {
+                    hasError = true,
+                    message = "فایل انتخاب شده معتبر نیست."
+                });
 
             try {
-                var result = await _waterInstallFeeService.ImportExcelAsync(model.ExcelFile);
+                var result = await _waterInstallFeeService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
+
                 if(result.AskToImport) {
                     return Json(new {
                         ask = true,
@@ -192,8 +219,19 @@ namespace Datiss.Budget.Web.Controllers
                     });
                 }
 
-                if(!result.Success) {
-                    return Json(new {
+                if(result.Success) 
+                {
+                    return Json(new
+                    {
+                        hasError = false,
+                        message = result.Message
+                    });
+
+                }
+                else
+                {
+                    return Json(new
+                    {
                         hasError = true,
                         message = result.Message
                     });
@@ -215,22 +253,7 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.ImportExcelFileSizeInvalid
                 });
             }
-            catch (ImportExcelFileException ex) {
-                showMessage(CssClassNames.Error,
-                    string.Format(
-                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
-                    );
-                return Json(new {
-                    hasError = true,
-                    message = string.Format(
-                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
-                });
-            }
 
-            showMessage(CssClassNames.Success,
-                ViewMessages.ImportExcelSuccess);
-
-            return RedirectToAction("Index");
         }
 
         [HttpPost("records/delete")]
@@ -244,6 +267,14 @@ namespace Datiss.Budget.Web.Controllers
                         ViewMessages.DeleteMultipleDataForOrg,
                         result.OrganizationTitle,
                         result.Year)
+                });
+            }
+            catch (DeleteNullRecordException)
+            {
+                return Json(new
+                {
+                    hasError = true ,
+                    message = ViewMessages.DeleteNullRecord
                 });
             }
             catch(NullReferenceException) {
@@ -269,24 +300,31 @@ namespace Datiss.Budget.Web.Controllers
                 _logger.LogError(ex.GetBaseException().Message);
                 return Json(new {
                     hasError = true,
-                    message = "خطا در بروزرسانی اطلاعات. لطفاً دوباره سعی کنید."
+                    message = ViewMessages.InvalidUpdateData
                 });
             }
 
             return Json(new {
                 hasError = false,
-                message = "حذف رکورد با موفقیت انجام شد."
+                message = ViewMessages.DeleteRowSuccess
             });
         }
 
-        [HttpPost("[action]"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Calculation(IFormCollection form) {
-            var yearId = int.Parse(form["filterYearId"].ToString());
-            var orgId = int.Parse(form["filterOrganizationId"].ToString());
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Calculation(CalculationInputViewModel model) {
+            model.CheckArgumentIsNull(nameof(model));
 
-            var result = await _waterInstallFeeService.CalculationAsync(yearId, orgId);
+            var result = await _waterInstallFeeService.CalculationAsync(
+                model.YearId, 
+                model.OrganizationId);
 
-            return RedirectToAction("Index");
+            var output = new CalculationResultViewModel
+            {
+                Result = result,
+                Title = "WaterInstallFee calc" //TODO : change it to proper title
+            };
+
+            return PartialView("_calculationModal", output);
         }
 
 
@@ -332,6 +370,9 @@ namespace Datiss.Budget.Web.Controllers
             catch(CopySameYearException) {
                 model.AddError(ViewMessages.CopySameYear);
             }
+            catch (CopyDestYearExxeption) {
+                model.AddError(ViewMessages.CopyErrorDestYear);
+            }
             catch (CopyOrgNullDataException)
             {
                 model.AddError(ViewMessages.CopySourceOrgNullData);
@@ -346,13 +387,12 @@ namespace Datiss.Budget.Web.Controllers
             return Json(model);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IActionResult> ExportExcel(WaterInstallFeeIndexViewModel viewModel) {
-            var filter = viewModel.Filter.Adapt<WaterInstallFeeFilterDTO>();
-
-            var result = await _waterInstallFeeService.GetExportItemsAsync(filter);
+        [HttpGet("[action]/{orgid}/{yearid}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid) {
+            var result = await _waterInstallFeeService.GetExportItemsAsync(yearid,orgid);
+            if (result.Count() == 0)
+                return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
-
             return workbook.Deliver("WatreInstallFee.xlsx");
         }
 

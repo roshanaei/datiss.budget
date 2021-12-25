@@ -43,7 +43,7 @@ namespace Datiss.Budget.IocConfig
                 setApplicationCookieOptions(provider, identityOptionsCookies, siteSettings);
             });
 
-            services.enableImmediateLogout();
+            //services.enableImmediateLogout();
 
             return services;
         }

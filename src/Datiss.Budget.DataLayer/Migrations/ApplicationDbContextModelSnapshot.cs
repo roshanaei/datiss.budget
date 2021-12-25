@@ -1688,7 +1688,7 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<int>("OrganizationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("WsInstllFee")
+                    b.Property<int>("WsInstallFee")
                         .HasColumnType("int");
 
                     b.Property<int>("YearId")
@@ -1817,7 +1817,7 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<int>("OrganizationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("WInstllFee")
+                    b.Property<int>("WInstallFee")
                         .HasColumnType("int");
 
                     b.Property<int>("YearId")
@@ -2289,6 +2289,9 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("PositionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -2315,6 +2318,8 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("OrganizationId");
+
+                    b.HasIndex("PositionId");
 
                     b.ToTable("AppUsers");
                 });
@@ -3464,7 +3469,14 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Datiss.Budget.Entities.Constant", "Position")
+                        .WithMany("UserPositions")
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Organization");
+
+                    b.Navigation("Position");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.Identity.UserClaim", b =>
@@ -3592,6 +3604,8 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("UsageLayerIncomeCurrentWsH");
 
                     b.Navigation("UsageLayerWWsFee");
+
+                    b.Navigation("UserPositions");
 
                     b.Navigation("UserTypeAverageCapacities");
 

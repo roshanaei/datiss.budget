@@ -17,7 +17,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
     [Authorize(Roles = ConstantRoles.Admin)]
     [Area(AreaConstants.IdentityArea)]
     [BreadCrumb(Title = "مدیریت نقش‌های پویا", UseDefaultRouteUrl = true, Order = 0)]
-    [Route("[area]")]
+    [Route("[area]/[controller]")]
     public class DynamicRoleClaimsManagerController : Controller
     {
         private readonly IMvcActionsDiscoveryService _mvcActionsDiscoveryService;

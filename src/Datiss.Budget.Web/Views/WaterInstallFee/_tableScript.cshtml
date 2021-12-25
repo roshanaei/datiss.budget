@@ -3,6 +3,23 @@
     let isNewRow = false;
 
     function editRow(id) {
+
+        //$('th,tr td').hide();
+        //showingColmuns.split(',').forEach((value, index) => {
+        //    if (value !== '') {
+        //        $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+        //    }
+        //})
+        //$(`th:last-child, tr td:last-child`).show();
+        
+        //$('th,tr td').css('background-color', 'rgb(255 255 255)');
+       
+
+
+        //resetTableBackColor("my-table");
+
+        //do reset all row background
+
         let row = $('#row_' + id);
         //row.css('background-color', '#7598f3');
 
@@ -44,6 +61,14 @@
         $('#btnDelete_' + id).show();
         $('#btnSaveEdit_' + id).hide();
         $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
     }
 
     function saveEditRow(id) {
@@ -63,8 +88,16 @@
             dataType: 'json',
             success: function (data, status, settings) {
                 if (data._HasError) {
-                    alert(data._ErrorMessage);
-                    return;
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
                 }
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
@@ -73,7 +106,8 @@
                 $('#spanYear_' + id).text(data.year);
                 $('#spanDWaterType_' + id).text(data.dWaterTypeDisplay);
                 $('#spanWInstallFee_' + id).text(data.wInstallFee);
-                
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
                 cancelEditRow(id);
             },
             error: function (request, options, err) {
@@ -91,6 +125,8 @@
         model.dWaterTypeId = $(e).find('#inputDWaterType_').val();
         model.wInstallFee = $(e).find('#inputWInstallFee_').val();
 
+        console.log(model);
+
         $.ajax({
             url: '@Url.Action(WaterInstallFeeController.ACTION_Create)',
             type: 'POST',
@@ -98,7 +134,15 @@
             dataType: 'json',
             success: function (data, status, settings) {
                 if (data._HasError) {
-                    alert(data._ErrorMessage);
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
                     return;
                 }
 
@@ -165,7 +209,8 @@
                 $('#btnEdit_' + data.id).show();
                 $('#btnDelete_' + data.id).show();
 
-                $(e).css('background-color', '');
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
                 isNewRow = false;
             },
             error: function (request, options, err) {
@@ -177,12 +222,38 @@
     function addNewRow() {
         if (isNewRow) return;
 
-        var template = $('#rowTemplate')
-            .clone()
+        //do reset all row background
+
+        var template = $('#rowTemplate').clone()
             .appendTo($('#my-table tbody'))
             .attr('id', 'newRow')
             .css('background-color', 'rgb(230 247 228)')
             .show();
+        
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.selectDWaterType:last').select2({
+            dir : 'rtl'
+        });
+
+        let input = document.getElementById('inputWInstallFee_');
+        let btnSave = document.getElementById('btnSaveCreate_');
+
+        console.log(input);
+        console.log(btnSave);
+
+        input.addEventListener('keyup', function(event) {
+            event.preventDefault();
+            if(event.keycode === 13) {
+                btnSave.click();
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        input.focus();
 
         isNewRow = true;
     }
@@ -211,6 +282,18 @@
                 alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
             }
         });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+
+        
+        var rows = table.getElementsByTagName("tr");
+
+        for (i = 2; i < rows.length - 1; i++) {
+            console.log(i);
+            rows[i].style.backgroundColor = "#00000000"
+        }
     }
 
 </script>

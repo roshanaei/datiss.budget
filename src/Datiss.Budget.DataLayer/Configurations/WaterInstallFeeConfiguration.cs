@@ -23,7 +23,7 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.DWaterTypeId).IsRequired();
 
-            builder.Property(x => x.WInstllFee).IsRequired();
+            builder.Property(x => x.WInstallFee).IsRequired();
 
             builder.HasOne(x => x.FinanceYear)
                 .WithMany(x => x.WaterInstallFees)

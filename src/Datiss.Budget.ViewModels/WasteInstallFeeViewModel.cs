@@ -10,14 +10,14 @@ namespace Datiss.Budget.ViewModels
     public class CreateWasteInstallFeeViewModel : BaseViewModel
     {
         public int YearId { get; set; }
-
+        public string YearDisplay { get; set; }
         public int OrganizationId { get; set; }
-
+        public string OrganizationDisplay { get; set; }
         public int DWasteTypeId { get; set; }
 
         [Required(ErrorMessage = "*")]
         [Range(0, int.MaxValue, ErrorMessage = "Please dorost vared kon")] //TODO : use resources
-        public int WInstllFee { get; set; }
+        public int WsInstallFee { get; set; }
 
         public IEnumerable<SelectListItem> DWasteTypeSource { get; set; }
 
@@ -48,6 +48,7 @@ namespace Datiss.Budget.ViewModels
         public int DWasteTypeId { get; set; }
         public string DWasteTypeDisplay { get; set; }
         public int WsInstallFee { get; set; }
+        public string WsInstallFeeDisplay => WsInstallFee.ToString("N0");
     }
 
     public class WasteInstallFeeFilterViewModel: FilterViewModel
@@ -78,10 +79,11 @@ namespace Datiss.Budget.ViewModels
 
         //public string OrganizationSourceArray => OrganizationSource.ToStringArray();
 
-        public IList<SelectListItem> DWaterTypeSource { get; set; }
+        public IList<SelectListItem> DWasteTypeSource { get; set; }
 
-        //public string DWaterTypeSourceArray => DWaterTypeSource.ToStringArray();
+        //public string DWasteTypeSourceArray => DWasteTypeSource.ToStringArray();
 
+        public IList<SelectListItem> InputOrganizationSource { get; set; }
         public IFormFile ExcelFile { get; set; }
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
@@ -97,10 +99,15 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
+        public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+           => InputOrganizationSource = source.Select(x => new SelectListItem
+           {
+               Text = x.Title,
+               Value = x.Id.ToString()
+           }).ToList();
 
-
-        public void SetDWaterTypeSource(IEnumerable<DropDownItemViewModel> source)
-            => DWaterTypeSource = source.Select(x => new SelectListItem
+        public void SetDWasteTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => DWasteTypeSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
@@ -112,7 +119,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
+            }).ToList();
 
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
@@ -121,7 +128,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedYearId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
+            }).ToList();
     }
     
 }

@@ -83,10 +83,11 @@ namespace Datiss.Budget.DataLayer.Context
         }
 
         public void ExecuteSqlRawCommand(string query, params object[] parameters)
-        {
-            Database.ExecuteSqlRaw(query, parameters);
-        }
-
+            => Database.ExecuteSqlRaw(query, parameters);
+        
+        public async Task ExecuteSqlRawCommandAsync(string query, params object[] parameters) 
+            => await Database.ExecuteSqlRawAsync(query, parameters);
+        
         public T GetShadowPropertyValue<T>(object entity, string propertyName) where T : IConvertible
         {
             var value = this.Entry(entity).Property(propertyName).CurrentValue;
@@ -156,6 +157,25 @@ namespace Datiss.Budget.DataLayer.Context
             var result = base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
             ChangeTracker.AutoDetectChangesEnabled = true;
             return result;
+        }
+
+        public async Task<T> ExecuteScalarAsync<T>(string sql, params object[] parameters) {
+            var con = this.Database.GetDbConnection();
+            using (var command = con.CreateCommand()) {
+                command.CommandText = sql;
+                if (parameters != null) {
+                    foreach (var p in parameters)
+                        command.Parameters.Add(p);
+                }
+                await con.OpenAsync();
+
+                var result = await command.ExecuteScalarAsync();
+
+                if (result is DBNull)
+                    return default(T);
+
+                return (T)await command.ExecuteScalarAsync();
+            }
         }
 
         private void beforeSaveTriggers()

@@ -24,7 +24,9 @@ namespace Datiss.Budget.DataLayer.Context
 
         void ExecuteSqlInterpolatedCommand(FormattableString query);
         void ExecuteSqlRawCommand(string query, params object[] parameters);
+        Task<T> ExecuteScalarAsync<T>(string sql, params object[] parameters);
 
+        Task ExecuteSqlRawCommandAsync(string query, params object[] parameters);
         void BeginTransaction();
         void RollbackTransaction();
         void CommitTransaction();
