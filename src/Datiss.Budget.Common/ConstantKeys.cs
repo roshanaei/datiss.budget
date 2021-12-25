@@ -4,5 +4,7 @@
     {
         public const string __UserType = "[UserType]";
         public const string __WaterDiameter = "[WaterDiameter]";
+        public const string __UsageLayerType = "[UsageLayer]";
+
     }
 }

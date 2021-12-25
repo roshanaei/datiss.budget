@@ -22,12 +22,12 @@
 
         public decimal AvgConsumeUser { get; set; }
 
-        public decimal ConsumeUserForcast { get; set; }
     }
 
     public class UpdateConsumeForcastDTO : CreateConsumeForcastDTO
     {
         public int Id { get; set; }
+        public decimal ConsumeUserForcast { get; set; }
 
     }
 

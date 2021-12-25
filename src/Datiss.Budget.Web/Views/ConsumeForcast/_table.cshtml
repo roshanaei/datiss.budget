@@ -1,0 +1,338 @@
+﻿@model ConsumeForcastIndexViewModel
+<div class="table-responsive">
+    <table id="my-table" class="table table-hover table-bordered m-0 my-font">
+        <thead class="thead-light">
+            <tr>
+
+                <th style="min-width:200px">سال</th>
+                <th>سازمان</th>
+                <th style="min-width:200px">کاربری</th>
+                <th>طبقه مصرف</th>
+                <th>توزیع تعدادی</th>
+                <th>توزیع آحادی</th>
+                <th>توزیع مصرف</th>
+                <th>میانگین مصرف</th>
+                <th>پیش بینی توزیع مصرف</th>
+                 <th>مدیریت</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowTemplate" style="display: none">
+                <td>
+                    <div id="divInput_Year_">
+                        <input id="hidYearId_" type="hidden" />
+                        <select class="form-control selectYear" id="inputYear_" asp-items="Model.YearSource">
+                        </select>
+                        <script>
+                            $('select#inputYear_ option[value=' + $('#yearId').val() + ']').attr('selected', true);
+                            $('#inputYear_').attr('disabled', true);
+                        </script>
+                    </div>
+                    <div id="divOutput_Year_" style="display: none">
+                        <span id="spanYear_"></span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Org_">
+                        <input id="hidOrgId_" type="hidden" />
+                        <select class="form-control selectOrganization" id="inputOrg_" asp-items="Model.InputOrganizationSource">
+                        </select>
+                        <script>
+                            $('select#inputOrg_ option[value=' + $('#organizationId').val() + ']').attr('selected', true);
+                        </script>
+                    </div>
+                    <div id="divOutput_Org_">
+                        <span id="spanOrg_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_UserType_">
+                        <input id="hidUserTypeId_" type="hidden" />
+                        <select class="form-control selectUserType" id="inputUserType_" asp-items="Model.UserTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_UserType_" style="display: none">
+                        <span id="spanUserType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_UsageLayerType_">
+                        <input id="hidUsageLayerTypeId_" type="hidden" />
+                        <select class="form-control selectUsageLayerType" id="inputUsageLayerType_" asp-items="Model.UsageLayerSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_UsageLayerType_" style="display: none">
+                        <span id="spanUsageLayerType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_CountUser_">
+                        <input class="form-control" id="inputCountUser_" type="number" />
+                    </div>
+                    <div id="divOutput_CountUser_" style="display: none">
+                        <span id="spanCountUser_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_UnitUser_">
+                        <input class="form-control" id="inputUnitUser_" type="number" />
+                    </div>
+                    <div id="divOutput_UnitUser_" style="display: none">
+                        <span id="spanUnitUser_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ConsumeUser_">
+                        <input class="form-control" id="inputConsumeUser_" type="number" />
+                    </div>
+                    <div id="divOutput_ConsumeUser_" style="display: none">
+                        <span id="spanConsumeUser_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_AvgConsumeUser_">
+                        <input class="form-control" id="inputAvgConsumeUser_" type="number" />
+                    </div>
+                    <div id="divOutput_AvgConsumeUser_" style="display: none">
+                        <span id="spanAvgConsumeUser_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ConsumeUserForcast_">
+                        <input class="form-control" id="inputConsumeUserForcast_" type="number" />
+                    </div>
+                    <div id="divOutput_ConsumeUserForcast_" style="display: none">
+                        <span id="spanConsumeUserForcast_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
+                        <i class="fa ft-edit fa-1x"></i>
+                    </a>
+
+                    <a id="btnDelete_" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" style="display: none">
+                        <i class="fa ft-trash-2"></i>
+                    </a>
+
+                    <a id="btnSaveEdit_" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+                    <a id="btnCancelEdit_" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                    <a id="btnSaveCreate_" class="save-new-row btn btn-success my-font mr-1">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+
+                    <a id="btnCancelCreate_" class="cancel-new-row btn btn-danger my-font">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                </td>
+            </tr>
+            @foreach (var item in Model.Items)
+            {
+                <tr id="row_@item.Id">
+                    <td>
+                        <div id="divInput_Year_@item.Id" style="display: none">
+                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            </select>
+                            <script>
+                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                            </script>
+                        </div>
+                        <div id="divOutput_Year_@item.Id">
+                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Org_@item.Id" style="display: none">
+                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
+                            </select>
+                            <script>
+                                $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
+                            </script>
+                        </div>
+                        <div id="divOutput_Org_@item.Id">
+                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_UserType_@item.Id" style="display: none">
+                            <input id="hidUserTypeId_@item.Id" type="hidden" value="@item.UserTypeId" />
+                            <select class="form-control selectUserType" id="inputUserType_@item.Id" asp-items="Model.UserTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputUserType_' + @item.Id + ' option[value=' + @item.UserTypeId + ']').attr('selected', true);
+                                $('#inputUserType_' + @item.Id).select2({ dir : 'rtl' });
+                            </script>
+                        </div>
+                        <div id="divOutput_UserType_@item.Id">
+                            <span id="spanUserType_@item.Id">@item.UserTypeTitle </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_UsageLayerType_@item.Id" style="display: none">
+                            <input id="hidUsageLayerTypeId_@item.Id" type="hidden" value="@item.UsageLayerId" />
+                            <select class="form-control selectUsageLayerType" id="inputUsageLayerType_@item.Id" asp-items="Model.UsageLayerSource">
+                            </select>
+                            <script>
+                        $('select#inputUsageLayerType_' + @item.Id + ' option[value=' + @item.UsageLayerId + ']').attr('selected', true);
+                        $('#inputUsageLayerType_' + @item.Id).select2({ dir : 'rtl' });
+                            </script>
+                        </div>
+                        <div id="divOutput_UsageLayerType_@item.Id">
+                            <span id="spanUsageLayerType_@item.Id">@item.UsageLayerTitle </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_CountUser_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCountUser_@item.Id" value="@item.CountUser" type="number" />
+                        </div>
+                        <div id="divOutput_CountUser_@item.Id">
+                            <span id="spanCountUser_@item.Id">@item.CountUserDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_UnitUser_@item.Id" style="display: none">
+                            <input class="form-control" id="inputUnitUser_@item.Id" value="@item.UnitUser" type="number" />
+                        </div>
+                        <div id="divOutput_UnitUser_@item.Id">
+                            <span id="spanUnitUser_@item.Id">@item.UnitUserDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ConsumeUser_@item.Id" style="display: none">
+                            <input class="form-control" id="inputConsumeUser_@item.Id" value="@item.ConsumeUser" type="number" />
+                        </div>
+                        <div id="divOutput_ConsumeUser_@item.Id">
+                            <span id="spanConsumeUser_@item.Id">@item.ConsumeUserDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_AvgConsumeUser_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAvgConsumeUser_@item.Id" value="@item.AvgConsumeUser" type="number" />
+                        </div>
+                        <div id="divOutput_AvgConsumeUser_@item.Id">
+                            <span id="spanAvgConsumeUser_@item.Id">@item.AvgConsumeUserDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ConsumeUserForcast_@item.Id" style="display: none">
+                            <input class="form-control" id="inputConsumeUserForcast_@item.Id" value="@item.ConsumeUserForcast" type="number" />
+                        </div>
+                        <div id="divOutput_ConsumeUserForcast_@item.Id">
+                            <span id="spanConsumeUserForcast_@item.Id">@item.ConsumeUserForcastDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
+
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
+
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
+
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+            @*<input asp-for="ExcelFile" type="file" />*@
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                </button>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                </button>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <span data-toggle="modal" data-target="#CalculationModal">
+                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                </button>
+            </span>
+        </form>
+
+    </div>
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">(صفحه <b class="font-medium-2">@Model.PageNumber</b> از <b class="font-medium-2">@Model.PagesCount</b>)</div>
+    </div>
+        @if (Model.PagesCount > 1)
+        {
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    @if (Model.PageNumber > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-controller="@ConsumeForcastController.Name"
+                               asp-action="@ConsumeForcastController.ACTION_Index"
+                               asp-route-page="@Model.PreviousPage"
+                               aria-label="Previous">«</a>
+                        </li>
+                    }
+
+                    @for (int i = 1; i <= Model.PagesCount; i++)
+                    {
+                        if (i == Model.PageNumber)
+                        {
+                            <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                <a class="page-link"
+                                   asp-controller="@ConsumeForcastController.Name"
+                                   asp-action="@ConsumeForcastController.ACTION_Index"
+                                   asp-route-page="@i">@i.ToString() </a>
+                            </li>
+                        }
+                    }
+
+                    @if (Model.PageNumber < Model.PagesCount)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-controller="@ConsumeForcastController.Name"
+                               asp-action="@ConsumeForcastController.ACTION_Index"
+                               asp-route-page="@Model.NextPage"
+                               aria-label="Next">»</a>
+                        </li>
+                    }
+
+                </ul>
+            </nav>
+        }
+</div>
+</div>
