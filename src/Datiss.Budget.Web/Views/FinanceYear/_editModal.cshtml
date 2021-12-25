@@ -19,7 +19,7 @@
                         <div class="my-font">
                             <fieldset class="form-group">
                                 <label class="my-font rowAC">
-                                    <span style="margin-left:5px">نام سال:</span>
+                                    <span style="margin-left:5px;width:65px">نام سال:</span>
                                     <input asp-for="Title" type="text" class="form-control form-control-sm d-inline-block" />
                                 </label>
                             </fieldset>
@@ -28,18 +28,19 @@
                         <div class="my-font">
                             <fieldset class="form-group">
                                 <label class="my-font rowAC">
-                                    <span style="margin-left:5px">سال به عدد:</span>
+                                    <span style="margin-left:5px;width:110px">سال به عدد:</span>
                                     <input asp-for="Year" type="number" class="form-control form-control-sm d-inline-block" />
                                 </label>
                             </fieldset>
                         </div>
+
                     </div>
                     <div class="rowAC">
                         <div class="my-font">
                             <fieldset class="form-group">
-                                <label class="rowAC">
+                                <label class="my-font rowAC">
                                     <span style="margin-left:5px">وضعیت:</span>
-                                    <input asp-for="Enable" type="checkbox" value="" class="form-check-input form-control form-control-sm d-inline-block" />
+                                    <input asp-for="Enable" type="checkbox" value="" class="form-check-input form-control form-control-sm" />
                                 </label>
                             </fieldset>
                         </div>
@@ -48,15 +49,14 @@
                         <div class="my-font">
                             <fieldset class="form-group">
                                 <label class="my-font rowAC">
-                                    <span style="margin-left:5px">شروع سال:</span>
+                                    <span style="margin-left:5px;width:90px">شروع سال:</span>
                                     <input asp-for="StartPersianDate" class="form-control form-control-sm d-inline-block" autocomplete="off" datepicker="datepicker" />
                                 </label>
                             </fieldset>
                         </div>
-                        <div class="my-font" style="flex:0.25" />
                         <div class="form-group">
                             <label class="my-font rowAC">
-                                <span style="margin-left:5px">شروع سال:</span>
+                                <span style="margin-left:5px;width:85px">پایان سال:</span>
                                 <input asp-for="EndPrsianDate" class="form-control form-control-sm d-inline-block" autocomplete="off" datepicker="datepicker" />
                             </label>
                         </div>

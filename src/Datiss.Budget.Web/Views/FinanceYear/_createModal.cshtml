@@ -14,36 +14,24 @@
             <form id="financeYearForm">
                 <div class="modal-body">
                     <div class="rowAC">
-                        @*<div class="my-font">
-                                <fieldset class="form-group">
-                                    <label class="my-font rowAC">
-                                        <span style="margin-left:5px"> عنوان:</span>
-                                        <input asp-for="Title" type="text" class="form-control form-control-sm d-inline-block" />
-                                    </label>
-                                </fieldset>
-                            </div>*@
-                        <div class="my-font" style="flex:0.25" />
                         <fieldset class="form-group">
-                            <label class="my-font rowAC">
+                            <label class="my-font">
                                 <span style="margin-left:5px">سال به عدد:</span>
-                                <input asp-for="Year" type="number" class="form-control form-control-sm d-inline-block" />
+                                <input asp-for="Year" type="number" class="form-control form-control-sm d-inline-block" style="width:100px" />
                             </label>
                         </fieldset>
-                    </div>
-                    <div class="rowAC">
                         <div class="my-font">
                             <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left:5px">شروع سال:</span>
-                                    <input asp-for="StartPersianDate" class="form-control form-control-sm d-inline-block" autocomplete="off" datepicker="datepicker" />
+                                <label class="my-font">
+                                    <span style="margin-right: -29px">شروع سال:</span>
+                                    <input asp-for="StartPersianDate" class="form-control form-control-sm d-inline-block" autocomplete="off" datepicker="datepicker" style="margin-right:-30px;width:160px" />
                                 </label>
                             </fieldset>
                         </div>
-                        <div class="my-font" style="flex:0.25" />
                         <div class="form-group">
-                            <label class="my-font rowAC">
-                                <span style="margin-left:5px">شروع سال:</span>
-                                <input asp-for="EndPrsianDate" class="form-control form-control-sm d-inline-block" autocomplete="off" datepicker="datepicker" />
+                            <label class="my-font">
+                                <span style="margin-left:5px">پایان سال:</span>
+                                <input asp-for="EndPrsianDate" class="form-control form-control-sm d-inline-block" autocomplete="off" datepicker="datepicker" style="width:160px"/>
                             </label>
                         </div>
                     </div>

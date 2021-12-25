@@ -190,9 +190,6 @@
             model.startPersianDate = $('#StartPersianDate').val();
             model.endPrsianDate = $('#EndPrsianDate').val();
 
-            console.log(model);
-            alert('bro jolo');
-
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action(FinanceYearController.ACTION_Edit)',
