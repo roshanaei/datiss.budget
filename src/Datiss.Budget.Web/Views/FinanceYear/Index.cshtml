@@ -1,5 +1,5 @@
 ﻿@model FinanceYearIndexViewModel
-@{ ViewData["Title"] = "سال"; }
+@{ ViewData["Title"] = "سال مالی"; }
 
 
 
@@ -186,18 +186,11 @@
             model.id = $('#Id').val();
             model.title = $('#Title').val();
             model.year = $('#Year').val();
-            model.enable = $('#Enable').val();
+            model.enable = $('input[name="Enable"]:checked').val();
             model.startPersianDate = $('#StartPersianDate').val();
             model.endPrsianDate = $('#EndPrsianDate').val();
 
             console.log(model);
-            if ($('#Enable').is(":checked")) {
-                alert('True');
-            }
-            else
-            {
-                alert('False');
-            }
 
 
             $.ajax({
@@ -232,7 +225,7 @@
                         confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                         buttonsStyling: false,
                     }).then(function(result) {
-                        $('#CopyModal').modal('hide');
+                        document.location.href = '@Url.Action(FinanceYearController.ACTION_Index)';
                     });
                 },
                 error: function (request, options, err) {
@@ -308,7 +301,7 @@
                         confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                         buttonsStyling: false,
                     }).then(function(result) {
-                        $('#CopyModal').modal('hide');
+                        document.location.href = '@Url.Action(FinanceYearController.ACTION_Index)';
                     });
                 },
                 error: function (request, options, err) {
@@ -323,7 +316,7 @@
             let btn = this;
 
             Swal.fire({
-                title: 'برای حذف اطمینان دارید؟',
+                title: '<span class="my-font">برای حذف اطمینان دارید ؟</span>',
                 text: "",
                 type: 'warning',
                 showCancelButton: true,
