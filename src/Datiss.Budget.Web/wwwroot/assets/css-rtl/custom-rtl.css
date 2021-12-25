@@ -165,3 +165,7 @@ table {
     display: block;
     white-space: nowrap;
 }
+table thead th {
+    position: sticky;
+    top:0;
+}
