@@ -97,6 +97,42 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to بازه سال مالی وارد شده تکراری است ..
+        /// </summary>
+        public static string FinanceYearCopyLength {
+            get {
+                return ResourceManager.GetString("FinanceYearCopyLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سال مالی وارد شده تکراری است ..
+        /// </summary>
+        public static string FinanceYearDuplicateYear {
+            get {
+                return ResourceManager.GetString("FinanceYearDuplicateYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to پایان سال مالی نباید کوچکتر از شروع آن باشد ..
+        /// </summary>
+        public static string FinanceYearInvalidEndYear {
+            get {
+                return ResourceManager.GetString("FinanceYearInvalidEndYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to بازه سال مالی وارد شده نامعتبر است ..
+        /// </summary>
+        public static string FinanceYearLengthYear {
+            get {
+                return ResourceManager.GetString("FinanceYearLengthYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to دسترسی شما برای تغییر اطلاعات سازمان وجود ندارد. خطا در سطر {0} فایل اکسل.
         /// </summary>
         public static string ImportExcelAccessError {
@@ -237,6 +273,15 @@ namespace Datiss.Budget.Resources {
         public static string Succeed {
             get {
                 return ResourceManager.GetString("Succeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to خطای سیستمی. لطفاً با پشتیبانی تماس بگیرید..
+        /// </summary>
+        public static string SystemError {
+            get {
+                return ResourceManager.GetString("SystemError", resourceCulture);
             }
         }
     }
