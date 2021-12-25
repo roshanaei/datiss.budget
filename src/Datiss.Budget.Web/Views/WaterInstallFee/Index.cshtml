@@ -221,7 +221,7 @@
         </script>
     }
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function () {
             console.log('ready');
@@ -274,7 +274,7 @@
                 checkBoxes[i].checked = showColumn;
                 if(showColumn)
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
-                else 
+                else
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
             }
 
@@ -569,7 +569,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                $('#ExcelModal').modal('hide');
+                                                document.location.href = '@Url.Action(WaterInstallFeeController.ACTION_Index)';
                                             });
                                         }
 
@@ -602,7 +602,7 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            $('#ExcelModal').modal('hide');
+                            document.location.href = '@Url.Action(WaterInstallFeeController.ACTION_Index)';
                         });
                     }
 
@@ -672,6 +672,6 @@
             $('#filterForm').submit();
         };
 
-    </script>
+</script>
 
 }
