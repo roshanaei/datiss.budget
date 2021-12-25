@@ -514,10 +514,10 @@
                         return;
                     }
 
-                    if(data.ask) {
+                    if (data.ask) {
                         Swal.fire({
-                            title: data.message,
-                            text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
+                            html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
+                            //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
                             type: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#2F8BE6',
@@ -531,7 +531,7 @@
                             buttonsStyling: false,
                         }).then(function (result) {
 
-                            if(result.value) {
+                            if (result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
                                 console.log(fdata);
 
@@ -541,22 +541,43 @@
                                     data: fdata,
                                     processData: false,
                                     contentType: false,
-                                    success: function(data, status, settings) {
-                                        if(data.hasError) {
-                                            //TODO : show real message
-                                            alert(data.message);
+                                    success: function (data, status, settings) {
+                                        if (data.hasError) {
+                                            Swal.fire({
+                                                title: '<span class="my-font">خطا</span>',
+                                                html: `<span class="my-font">${data.message}</span>`,
+                                                type: 'error',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: false,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                                                buttonsStyling: false,
+                                            });
                                             return;
                                         }
 
                                         if (!data.hasError) {
-                                            alert('success');
+                                            Swal.fire({
+                                                title: '<span class="my-font">عملیات موفق</span>',
+                                                html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                                                type: 'success',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: true,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                                                buttonsStyling: false,
+                                            }).then(function (result) {
+                                                $('#ExcelModal').modal('hide');
+                                            });
                                         }
 
-                                        if(data.ask) {
+                                        if (data.ask) {
                                             alert('dont ask again');
                                         }
                                     },
-                                    error: function(request, options, err) {
+                                    error: function (request, options, err) {
                                         console.log(err);
                                     }
                                 });
@@ -569,8 +590,21 @@
                         });
                     }
 
-                    if (!data.hasError && !data.ask)
-                        alert('Job is Succes :)');
+                    if (!data.hasError && !data.ask) {
+                        Swal.fire({
+                            title: '<span class="my-font">عملیات موفق</span>',
+                            html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                            type: 'success',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: true,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                            buttonsStyling: false,
+                        }).then(function (result) {
+                            $('#ExcelModal').modal('hide');
+                        });
+                    }
 
                 },
                 error: function(request, options, err) {

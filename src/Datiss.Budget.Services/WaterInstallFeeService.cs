@@ -23,6 +23,7 @@ using Datiss.Budget.Security;
 using Microsoft.Data.SqlClient;
 using Datiss.Budget.Extensions;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Common;
 
 namespace Datiss.Budget.Services
 {
@@ -291,13 +292,14 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
+            var dwatertype = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
+
             //List<int> notAllowedToInputOrgs = new List<int>();
 
             foreach (var rec in records)
             {
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
                 var year = await _yearSet.FindAsync(rec.YearId);
-                var dwatertype = await _constSet.FindAsync(rec.DWaterTypeId);
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return new ImportResult
@@ -319,7 +321,7 @@ namespace Datiss.Budget.Services
                     //    string.Format(ServiceMessages.ImportExcelNotExistOrg, rec.Id)
                     //    );
                 }
-                if(dwatertype == null)
+                if(!await dwatertype.AnyAsync(x=>x.Id == rec.DWaterTypeId))
                 {
                     return new ImportResult
                     {
@@ -360,12 +362,12 @@ namespace Datiss.Budget.Services
                     string orgNames = "";
                     foreach (var item in missingOrgs)
                     {
-                        orgNames += item.Title + ",";
+                        orgNames += "- "+item.Title + "<br>";
                     }
 
                     return new ImportResult
                     {
-                        Message = string.Format(ServiceMessages.ImportExcelOrgNotInExcel, orgNames),
+                        Message = orgNames,
                         AskToImport = true
                     };
                 }
