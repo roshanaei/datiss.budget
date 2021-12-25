@@ -210,7 +210,7 @@
         </script>
     }
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function () {
             console.log('ready');
@@ -428,6 +428,10 @@
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
                     $('#CopyModal').modal('show');
+                    $('#CopyModal').on('hidden.bs.modal', function () {
+                        $('#divCopy').html('');
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (request, options, err) {
                     console.log(err);
@@ -436,8 +440,14 @@
             });
 
         });
+    
+        $(document).ready(function () {
+            $('.modal').on('hidden.bs.modal', function () {
+                $('.modal-backdrop').remove();
+            });
+        });
 
-        $(document).on('click', '.calculation-button', function() {
+       $(document).on('click', '.calculation-button', function() {
             let model = {};
             model.yearId = $('#yearId').val();
             model.organizationId = $('#organizationId').val();
@@ -452,6 +462,10 @@
                     $('#divCalc').html('');
                     $('#divCalc').html(data);
                     $('#CalculationModal').modal('show');
+                    $('#CalculationModal').on('hidden.bs.modal', function() {
+                        $('#divCalc').html('');
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (request, options, err) {
                     console.log(err);
@@ -604,6 +618,6 @@
             });
         };*@
 
-    </script>
+</script>
 
 }
