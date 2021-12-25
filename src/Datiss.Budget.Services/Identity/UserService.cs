@@ -33,10 +33,14 @@ namespace Datiss.Budget.Services.Identity
         }
 
         public async Task<bool> HasAccessToOrganizationAsync(int organizationId) {
-            if (_userContext.OrganizationId == organizationId)
-                return true;
+            if(_userContext.OrganizationId == null 
+                || _userContext.OrganizationId == organizationId)
+                    return true;
 
-            return await _organizationService.IsDescendentAsync(organizationId);
+            return await _organizationService.IsDescendentOfAsync(
+                _userContext.OrganizationId.Value, 
+                organizationId
+            );
         }
     }
 }
