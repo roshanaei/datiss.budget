@@ -106,6 +106,24 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد کاربری &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidDWaterType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidDWaterType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد سال &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidFinanceYear {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidFinanceYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to داده سطر {0} در اکسل مشکل دارد. لطفاً ورودی ها را بررسی نمایید..
         /// </summary>
         public static string ImportExcelLogicError {
@@ -115,7 +133,16 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to سازمان به کد ({0}) در سیستم یافت نشد..
+        ///   Looks up a localized string similar to شما مجاز به ورود اطلاعات برای &quot; {0} &quot; نیستید.[سطر {1} فایل اکسل].
+        /// </summary>
+        public static string ImportExcelNotAllowedOrg {
+            get {
+                return ResourceManager.GetString("ImportExcelNotAllowedOrg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد سازمان &quot;{1}&quot; معتبر نیست ..
         /// </summary>
         public static string ImportExcelNotExistOrg {
             get {
@@ -124,7 +151,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to سازمان های ({0}) در فایل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟.
+        ///   Looks up a localized string similar to سازمان های ({0}) در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟.
         /// </summary>
         public static string ImportExcelOrgNotInExcel {
             get {
