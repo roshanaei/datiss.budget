@@ -292,9 +292,8 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
-            var dwatertype = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
+            var dwatertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
 
-            //List<int> notAllowedToInputOrgs = new List<int>();
 
             foreach (var rec in records)
             {
@@ -302,43 +301,27 @@ namespace Datiss.Budget.Services
                 var year = await _yearSet.FindAsync(rec.YearId);
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
-                    return new ImportResult
-                    {
-                        Message = string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 1, rec.YearId),
-                        AskToImport = false,
-                        Success = false
-                    };
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 1, rec.YearId)
+                        );
                 }
                 if (org == null)
                 {
-                    return new ImportResult
-                    {
-                        Message = string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId),
-                        AskToImport = false,
-                        Success = false
-                    };
-                    //return ImportResult.Failed(
-                    //    string.Format(ServiceMessages.ImportExcelNotExistOrg, rec.Id)
-                    //    );
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId)
+                        );
                 }
-                if(!await dwatertype.AnyAsync(x=>x.Id == rec.DWaterTypeId))
+                if(!await dwatertypes.AnyAsync(x=>x.Id == rec.DWaterTypeId))
                 {
-                    return new ImportResult
-                    {
-                        Message = string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 1, rec.DWaterTypeId),
-                        AskToImport = false,
-                        Success = false
-                    };
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 1, rec.DWaterTypeId)
+                        );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
-                    //notAllowedToInputOrgs.Add(org.Id);
-                    return new ImportResult
-                    {
-                        Message = string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 1),
-                        AskToImport = false,
-                        Success = false
-                    };
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 1)
+                        );
                 }
 
                 rowIndex++;
@@ -375,31 +358,21 @@ namespace Datiss.Budget.Services
 
             foreach (var record in records)
             {
-                //if organization type is not city or village then pass
-                //if (notAllowedToInputOrgs.Contains(record.OrganizationId))
-                //    continue;
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
-                    return new ImportResult
-                    {
-                        Message = string.Format(ServiceMessages.ImportExcelAccessError, rowIndex+1),
-                        AskToImport = false,
-                        Success =false
-                    };
-                    //return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelAccessError, rowIndex));
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 1)
+                    );
 
                 if (!await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
                     record.DWaterTypeId))
                 {
-                    return new ImportResult
-                    {
-                        Message = string.Format(ServiceMessages.ImportExcelLogicError, rowIndex+1),
-                        AskToImport = false,
-                        Success = false
-                    };
-                    //return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelLogicError, rowIndex));
+                   
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 1)
+                        );
                 }
 
                 rowIndex++;
@@ -408,12 +381,9 @@ namespace Datiss.Budget.Services
             await _dbSet.AddRangeAsync(records);
             await _uow.SaveChangesAsync();
 
-            return new ImportResult
-            {
-                Message = string.Format(ServiceMessages.ImportExcelSuccess),
-                AskToImport = false,
-                Success = true
-            };
+            return ImportResult.Succeed(
+                string.Format(ServiceMessages.ImportExcelSuccess)
+                );
         }
 
         public async Task<IEnumerable<WaterInstallFeeDTO>> GetExportItemsAsync(int yearId, int organizationId)

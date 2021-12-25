@@ -19,7 +19,7 @@
                         </select>
                         <script>
                             $('select#inputYear_ option[value=' + $('#yearId').val() + ']').attr('selected', true);
-                            $('#inputYear_').attr('disabled', true);
+                            $('#inputYear_').attr('disabled', 'disabled');                         
                         </script>
                     </div>
                     <div id="divOutput_Year_" style="display: none">
@@ -92,7 +92,7 @@
                             </select>
                             <script>
                                 $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
-                                $('#inputYear_'+ @item.Id).attr('disabled', true);
+                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_Year_@item.Id">

@@ -219,17 +219,20 @@ namespace Datiss.Budget.Web.Controllers
                     });
                 }
 
-                if(!result.Success) {
-                    return Json(new {
-                        hasError = true,
+                if(result.Success) 
+                {
+                    return Json(new
+                    {
+                        hasError = false,
                         message = result.Message
                     });
+
                 }
                 else
                 {
                     return Json(new
                     {
-                        hasError = false,
+                        hasError = true,
                         message = result.Message
                     });
                 }
@@ -250,22 +253,7 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.ImportExcelFileSizeInvalid
                 });
             }
-            //catch (ImportExcelFileException ex) {
-            //    showMessage(CssClassNames.Error,
-            //        string.Format(
-            //            ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
-            //        );
-            //    return Json(new {
-            //        hasError = true,
-            //        message = string.Format(
-            //            ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
-            //    });
-            //}
 
-            //showMessage(CssClassNames.Success,
-            //    ViewMessages.ImportExcelSuccess);
-
-            //return RedirectToAction("Index");
         }
 
         [HttpPost("records/delete")]
