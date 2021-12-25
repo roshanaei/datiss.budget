@@ -133,7 +133,7 @@
     <value>کپی اطلاعات با موفقیت انجام شد.</value>
   </data>
   <data name="DeleteMultipleDataForOrg" xml:space="preserve">
-    <value>حذف رکورد برای سازمان {0} در سال {1} با موفقیت انجام شد.</value>
+    <value>حذف رکورد برای سازمان "{0}" در "سال {1}" با موفقیت انجام شد.</value>
   </data>
   <data name="DeleteNullRecord" xml:space="preserve">
     <value>داده ای برای حذف وجود ندارد.</value>

@@ -106,7 +106,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to حذف رکورد برای سازمان {0} در سال {1} با موفقیت انجام شد..
+        ///   Looks up a localized string similar to حذف رکورد برای سازمان &quot;{0}&quot; در &quot;سال {1}&quot; با موفقیت انجام شد..
         /// </summary>
         public static string DeleteMultipleDataForOrg {
             get {
