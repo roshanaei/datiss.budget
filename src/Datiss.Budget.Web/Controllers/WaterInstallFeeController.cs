@@ -393,7 +393,7 @@ namespace Datiss.Budget.Web.Controllers
             if (result.Count() == 0)
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
-            return workbook.Deliver("WatreInstallFee.xlsx");
+            return workbook.Deliver("WaterInstallFee.xlsx");
         }
 
     }
