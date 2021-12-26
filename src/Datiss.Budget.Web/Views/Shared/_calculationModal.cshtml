@@ -13,24 +13,25 @@
             </div>
             <div class="modal-content">
                 <div class="modal-body">
-                    <div class="table-responsive" >
+                    <div class="table-responsive">
                         <table class="table">
                             <tr class="thead-light">
-                                <th class="my-font-bold" width="10%">عنوان</th>
-                                <th class="my-font-bold" width="30%">مقدار</th>
+                                <th class="my-font-bold" width="80%">عنوان</th>
+                                <th class="my-font-bold" width="20%">مقدار</th>
                             </tr>
                             <tbody>
-                                <tr>
-                                    @foreach (var item in Model)
-                                    {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
                                         <td class="my-font-light">
                                             @item.Title
                                         </td>
                                         <td class="my-font-light">
                                             @item.Result
                                         </td>
-                                    }
-                                </tr>
+
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
