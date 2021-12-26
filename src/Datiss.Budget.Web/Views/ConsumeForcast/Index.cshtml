@@ -76,9 +76,6 @@
                             <!--SearchBox-->
                             <div class="rowACJSB">
                                 <div class="d-flex flex-row-reverse align-items-center">
-                                    <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
-                                    </button>
 
                                     <fieldset class="form-group" style="margin-right:20px">
                                         <label class="my-font rowAC">
@@ -213,6 +210,9 @@
                                 </div>
                                 <fieldset>
                                     <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
+                                        </button>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@ConsumeForcastController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
