@@ -24,7 +24,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
-        Task<int> CalculationAsync(int yearId, int organizationId);
+        Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId);
 
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
 
@@ -32,7 +32,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<IEnumerable<WaterSalesSplitDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
-        Task ImportExcelAsync(IFormFile fileInfo);
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false);
 
     }
     

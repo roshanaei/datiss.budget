@@ -199,7 +199,7 @@
         <tfoot style="background-color: #eee; font-size: 9px;">
             <tr>
                 <td>کل رکوردها: @Model.TotalCount</td>
-                <td colspan="6">صفحه @Model.PageNumber از @Model.PagesCount</td>
+                <td colspan="6">صفحه @Model.PageNumber از @if (Model.PagesCount == 0) {<span>1</span>} else {<span>@Model.PagesCount</span>}
             </tr>
         </tfoot>
     </table>

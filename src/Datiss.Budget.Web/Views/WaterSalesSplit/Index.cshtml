@@ -177,6 +177,9 @@
                                 </div>
                                 <fieldset>
                                     <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i> به روز رسانی
+                                        </button>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WaterSalesSplitController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
@@ -296,10 +299,8 @@
                 html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
                 type: 'error',
                 showCancelButton: true,
-                //confirmButtonColor: '#2F8BE6',
                 animation: false,
                 customClass: 'animated flipInX',
-                //cancelButtonColor: '#F55252',
                 cancelButtonText: 'انصراف',
                 confirmButtonText: 'حذف اطلاعات!',
                 confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
@@ -468,11 +469,21 @@
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
                     $('#CopyModal').modal('show');
+                    $('#CopyModal').on('hidden.bs.modal', function () {
+                        $('#divCopy').html('');
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (request, options, err) {
                     console.log(err);
                     $("#divCopy").html('Failed to load more content');
                 }
+            });
+        });
+
+        $(document).ready(function () {
+            $('.modal').on('hidden.bs.modal', function () {
+                $('.modal-backdrop').remove();
             });
         });
 
@@ -491,6 +502,10 @@
                     $('#divCalc').html('');
                     $('#divCalc').html(data);
                     $('#CalculationModal').modal('show');
+                    $('#CalculationModal').on('hidden.bs.modal', function () {
+                        $('#divCalc').html('');
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (request, options, err) {
                     console.log(err);
@@ -512,11 +527,26 @@
                 processData: false,
                 contentType: false,
                 success: function (data, status, settings) {
-                    console.log(data);
-                    if(data.ask) {
+                                        console.log(data);
+                    if (data.hasError) {
                         Swal.fire({
-                            title: data.message,
-                            text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data.message}</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
+
+                    if (data.ask) {
+                        Swal.fire({
+                            html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
+                            //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
                             type: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#2F8BE6',
@@ -530,7 +560,7 @@
                             buttonsStyling: false,
                         }).then(function (result) {
 
-                            if(result.value) {
+                            if (result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
                                 console.log(fdata);
 
@@ -540,22 +570,43 @@
                                     data: fdata,
                                     processData: false,
                                     contentType: false,
-                                    success: function(data, status, settings) {
-                                        if(data.hasError) {
-                                            //TODO : show read message
-                                            alert(data.message);
+                                    success: function (data, status, settings) {
+                                        if (data.hasError) {
+                                            Swal.fire({
+                                                title: '<span class="my-font">خطا</span>',
+                                                html: `<span class="my-font">${data.message}</span>`,
+                                                type: 'error',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: false,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                                                buttonsStyling: false,
+                                            });
                                             return;
                                         }
 
-                                        if(data.succes) {
-                                            alert('success');
+                                        if (!data.hasError) {
+                                            Swal.fire({
+                                                title: '<span class="my-font">عملیات موفق</span>',
+                                                html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                                                type: 'success',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: true,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                                                buttonsStyling: false,
+                                            }).then(function (result) {
+                                                document.location.href = '@Url.Action(WaterSalesSplitController.ACTION_Index)';
+                                            });
                                         }
 
-                                        if(data.ask) {
+                                        if (data.ask) {
                                             alert('dont ask again');
                                         }
                                     },
-                                    error: function(request, options, err) {
+                                    error: function (request, options, err) {
                                         console.log(err);
                                     }
                                 });
@@ -568,6 +619,21 @@
                         });
                     }
 
+                    if (!data.hasError && !data.ask) {
+                        Swal.fire({
+                            title: '<span class="my-font">عملیات موفق</span>',
+                            html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                            type: 'success',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: true,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                            buttonsStyling: false,
+                        }).then(function (result) {
+                            document.location.href = '@Url.Action(WaterSalesSplitController.ACTION_Index)';
+                        });
+                    }
                 },
                 error: function(request, options, err) {
                     console.log(err);
@@ -628,11 +694,11 @@
         });
 
 
-        function changePageSize() {
-            let pageSize = $('#ddlPageSize').attr('value');
-            console.log(pageSize);
-            $('#filterForm').submit();
-        };
+    function changePageSize() {
+        let pageSize = $('#ddlPageSize').attr('value');
+        console.log(pageSize);
+        $('#filterForm').submit();
+    };
 
 </script>
 
