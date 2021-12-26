@@ -174,7 +174,9 @@ namespace Datiss.Budget.DataLayer.Context
                 if (result is DBNull)
                     return default(T);
 
-                return (T)await command.ExecuteScalarAsync();
+                command.Parameters.Clear();
+
+                return (T)result;
             }
         }
 
