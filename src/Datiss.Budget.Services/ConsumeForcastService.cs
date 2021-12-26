@@ -532,7 +532,10 @@ namespace Datiss.Budget.Services
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
                 query = query.Where(x => x.Organization.Title.ToUpper().Contains(filter.Search) || 
-                                         x.UserType.Title.ToUpper().Contains(filter.Search));   
+                                         x.UserType.Title.ToUpper().Contains(filter.Search) ||
+                                         x.UsageLayer.Title.ToUpper().Contains(filter.Search) ||
+                                         x.UnitUser.ToString().ToUpper().Contains(filter.Search)
+                                         );   
             }
 
             return query;

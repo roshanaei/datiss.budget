@@ -126,13 +126,6 @@ namespace Datiss.Budget.Web.Controllers
         {
             var filter = new ConsumeForcastFilterDTO();
 
-            var myfilter = TempData.Get<ConsumeForcastFilterViewModel>(_indexFilterKey);
-            if (myfilter != null)
-            {
-                filter = myfilter.Adapt<ConsumeForcastFilterDTO>();
-                TempData.Put(_indexFilterKey, myfilter);
-            }
-
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
@@ -142,18 +135,26 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<List<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(x => x.Id);
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-                .Adapt<List<DropDownItemViewModel>>();
-
             var userTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var usageLayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            filter.PageNumber = page;
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+                .Adapt<List<DropDownItemViewModel>>();
+
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
+
+            var myfilter = TempData.Get<ConsumeForcastFilterViewModel>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<ConsumeForcastFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
 
             var result = await _consumeForcastService.GetListAsync(filter);
             var model = result.Adapt<ConsumeForcastIndexViewModel>();
@@ -164,8 +165,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetUserTypeSource(userTypeSource);
             model.SetUsageLayerSource(usageLayerSource);
 
-            model.SetFinanceYearFilterSource(yearSource, maxYear);
-            model.SetOrganizationFilterSource(orgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
 
             model.Filter.YearId = filter.YearId;
             model.Filter.OrganizationId = filter.OrganizationId;
@@ -177,7 +178,7 @@ namespace Datiss.Budget.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(ConsumeForcastIndexViewModel model, int page = 1)
         {
-            model.Filter.PageNumber = page;
+            model.Filter.PageNumber = 1;
             var filter = model.Filter.Adapt<ConsumeForcastFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
@@ -192,6 +193,12 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
+            var userTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var usageLayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                 .Adapt<List<DropDownItemViewModel>>();
 
@@ -200,6 +207,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetFinanceYearFilterSource(yearSource);
             model.SetOrganizationFilterSource(orgSource);
+            model.SetUserTypeSource(userTypeSource);
+            model.SetUsageLayerSource(usageLayerSource);
 
             return View(model);
         }
@@ -211,7 +220,11 @@ namespace Datiss.Budget.Web.Controllers
 
             if (model.ExcelFile == null ||
                 model.ExcelFile.Length == 0)
-                return RedirectToAction("Index");
+                return Json(new
+                {
+                    hasError = true,
+                    message = "فایل انتخاب شده معتبر نیست."
+                });
 
             try
             {
@@ -226,6 +239,14 @@ namespace Datiss.Budget.Web.Controllers
                 }
 
                 if (!result.Success)
+                {
+                    return Json(new
+                    {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
+                else
                 {
                     return Json(new
                     {
@@ -254,24 +275,6 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.ImportExcelFileSizeInvalid
                 });
             }
-            catch (ImportExcelFileException ex)
-            {
-                showMessage(CssClassNames.Error,
-                    string.Format(
-                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
-                    );
-                return Json(new
-                {
-                    hasError = true,
-                    message = string.Format(
-                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
-                });
-            }
-
-            showMessage(CssClassNames.Success,
-                ViewMessages.ImportExcelSuccess);
-
-            return RedirectToAction("Index");
         }
 
         [HttpPost("records/delete")]
@@ -426,6 +429,7 @@ namespace Datiss.Budget.Web.Controllers
             return Json(model);
         }
 
+        [HttpGet("[action]/{orgid}/{yearid}")]
         public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
             var result = await _consumeForcastService.GetExportItemsAsync(yearid, orgid);
