@@ -129,6 +129,18 @@
   <data name="DuplicateNames" xml:space="preserve">
     <value>عنوان ({0}) تکراری است.</value>
   </data>
+  <data name="FinanceYearCopyLength" xml:space="preserve">
+    <value>بازه سال مالی وارد شده تکراری است .</value>
+  </data>
+  <data name="FinanceYearDuplicateYear" xml:space="preserve">
+    <value>سال مالی وارد شده تکراری است .</value>
+  </data>
+  <data name="FinanceYearInvalidEndYear" xml:space="preserve">
+    <value>پایان سال مالی نباید کوچکتر از شروع آن باشد .</value>
+  </data>
+  <data name="FinanceYearLengthYear" xml:space="preserve">
+    <value>بازه سال مالی وارد شده نامعتبر است .</value>
+  </data>
   <data name="ImportExcelAccessError" xml:space="preserve">
     <value>دسترسی شما برای تغییر اطلاعات سازمان وجود ندارد. خطا در سطر {0} فایل اکسل</value>
   </data>
@@ -176,5 +188,8 @@
   </data>
   <data name="Succeed" xml:space="preserve">
     <value>عملیات با موفقیت انجام شد.</value>
+  </data>
+  <data name="SystemError" xml:space="preserve">
+    <value>خطای سیستمی. لطفاً با پشتیبانی تماس بگیرید.</value>
   </data>
 </root>
