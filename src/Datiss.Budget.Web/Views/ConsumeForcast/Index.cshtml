@@ -94,7 +94,7 @@
 
                                         </label>
                                     </fieldset>
-                                    @* drop down menu *@
+                                    <!--DropDown Menu-->
                                     <div class="btn-group dropdown form-group">
                                         <button type="button"
                                                 class="btn btn-light my-font dropdown-toggle"
@@ -190,7 +190,7 @@
                                                                name="col-8"
                                                                id="col-8" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-"><span>میانگین مصرف</span></label>
+                                                               for="col-8"><span>میانگین مصرف</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -210,6 +210,9 @@
                                 </div>
                                 <fieldset>
                                     <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
+                                        </button>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@ConsumeForcastController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
@@ -237,15 +240,16 @@
 
 @section footSection {
 
+    <div id="divCopy">
+
+    </div>
+
     <partial name="_excelModal" model="new ImportExcelViewModel()" />
 
     <div id="divCreate">
 
     </div>
 
-    <div id="divCopy" class="bg-primary">
-
-    </div>
 
     <div id="divCalc">
 
@@ -260,13 +264,14 @@
         let showingColmuns = "1,2,3,4,5,6,7,8,9,";
     </script>
 
-    @if(Model.Filter.Columns.IsNotNullOrEmpty()) {
+    @if (Model.Filter.Columns.IsNotNullOrEmpty())
+    {
         <script type="text/javascript">
             showingColmuns = '@Model.Filter.Columns' ;
         </script>
     }
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function () {
             console.log('ready');
@@ -319,7 +324,7 @@
                 checkBoxes[i].checked = showColumn;
                 if(showColumn)
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
-                else 
+                else
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
             }
 
@@ -399,15 +404,6 @@
 
         }
 
-        function calculation(e) {
-            //$('#toolForm').attr('action', '@Url.Action("Calculation")');
-            //$('#toolForm').submit();
-
-
-
-            return true;
-        }
-
         function openImportExcelForm() {
             $('#ExcellModal').modal('show');
         }
@@ -420,7 +416,7 @@
         $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
-            let input = document.getElementById('inputCountUser_' + id);
+            let input = document.getElementById('inputAvgConsumeUser_' + id);
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
             input.addEventListener("keyup", function (event) {
                 event.preventDefault();
@@ -430,7 +426,8 @@
                 }
             });
 
-            btnSaveEdit.addEventListener('click', function(evenrt) {
+            btnSaveEdit.addEventListener('click', function (evenrt) {
+                event.preventDefault();
                 $(btnSaveEdit).attr('disabled', true);
             });
 
@@ -494,11 +491,21 @@
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
                     $('#CopyModal').modal('show');
+                    $('#CopyModal').on('hidden.bs.modal', function () {
+                        $('#divCopy').html('');
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (request, options, err) {
                     console.log(err);
                     $("#divCopy").html('Failed to load more content');
                 }
+            });
+        });
+
+        $(document).ready(function () {
+            $('.modal').on('hidden.bs.modal', function () {
+                $('.modal-backdrop').remove();
             });
         });
 
@@ -517,6 +524,10 @@
                     $('#divCalc').html('');
                     $('#divCalc').html(data);
                     $('#CalculationModal').modal('show');
+                    $('#CalculationModal').on('hidden.bs.modal', function () {
+                        $('#divCalc').html('');
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (request, options, err) {
                     console.log(err);
@@ -539,10 +550,25 @@
                 contentType: false,
                 success: function (data, status, settings) {
                     console.log(data);
-                    if(data.ask) {
+                    if (data.hasError) {
                         Swal.fire({
-                            title: data.message,
-                            text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data.message}</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
+
+                    if (data.ask) {
+                        Swal.fire({
+                            html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
+                            //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
                             type: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#2F8BE6',
@@ -568,13 +594,34 @@
                                     contentType: false,
                                     success: function(data, status, settings) {
                                         if(data.hasError) {
-                                            //TODO : show read message
-                                            alert(data.message);
+                                            Swal.fire({
+                                                title: '<span class="my-font">خطا</span>',
+                                                html: `<span class="my-font">${data.message}</span>`,
+                                                type: 'error',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: false,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                                                buttonsStyling: false,
+                                            });
                                             return;
                                         }
 
-                                        if(data.succes) {
-                                            alert('success');
+                                        if(!data.hasError) {
+                                          Swal.fire({
+                                                title: '<span class="my-font">عملیات موفق</span>',
+                                                html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                                                type: 'success',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: true,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                                                buttonsStyling: false,
+                                            }).then(function (result) {
+                                                document.location.href = '@Url.Action(ConsumeForcastController.ACTION_Index)';
+                                            });
                                         }
 
                                         if(data.ask) {
@@ -591,6 +638,21 @@
                             else {
                                 return false;
                             }
+                        });
+                    }
+                    if (!data.hasError && !data.ask) {
+                        Swal.fire({
+                            title: '<span class="my-font">عملیات موفق</span>',
+                            html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                            type: 'success',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: true,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                            buttonsStyling: false,
+                        }).then(function (result) {
+                            document.location.href = '@Url.Action(ConsumeForcastController.ACTION_Index)';
                         });
                     }
 
@@ -660,6 +722,6 @@
             $('#filterForm').submit();
         };
 
-    </script>
+</script>
 
 }

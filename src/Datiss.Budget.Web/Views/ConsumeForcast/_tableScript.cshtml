@@ -325,6 +325,23 @@
             dir: 'rtl'
         });
 
+        let input = document.getElementById('inputAvgConsumeUser_');
+        let btnSave = document.getElementById('btnSaveCreate_');
+
+        console.log(input);
+        console.log(btnSave);
+
+        input.addEventListener('keyup', function (event) {
+            event.preventDefault();
+            if (event.keycode === 13) {
+                btnSave.click();
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        input.focus();
+
         isNewRow = true;
     }
 
@@ -354,15 +371,16 @@
         });
     }
 
-    //function resetTableBackColor(id) {
-    //    var table = document.getElementById(id);
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
 
-    //    var rows = table.getElementsByTagName("tr");
 
-    //    for (i = 2; i < rows.length - 1; i++) {
-    //        console.log(i);
-    //        rows[i].style.backgroundColor = "#00000000"
-    //    }
-    //}
+        var rows = table.getElementsByTagName("tr");
+
+        for (i = 2; i < rows.length - 1; i++) {
+            console.log(i);
+            rows[i].style.backgroundColor = "#00000000"
+        }
+    }
 
 </script>
