@@ -36,7 +36,7 @@ namespace Datiss.Budget.Services
 
         public async Task<Constant> GetByIdAsync(int id)
         {
-            var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
+            var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 

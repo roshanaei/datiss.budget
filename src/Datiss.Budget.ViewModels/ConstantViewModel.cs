@@ -59,6 +59,7 @@ namespace Datiss.Budget.ViewModels
     {
         public ConstantIndexViewModel(){
             Filter = new ConstatntFilterViewModel();
+            Items = new List<ConstantViewModel>();
         }
 
         public ConstatntFilterViewModel Filter { get; set; }
