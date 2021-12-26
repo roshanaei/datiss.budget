@@ -8,7 +8,7 @@
                 <th>سازمان</th>
                 <th>کاربری</th>
                 <th>قیمت</th>
-                <th>مدیریت</th>
+                <th style="width:10%">مدیریت</th>
             </tr>
         </thead>
         <tbody>
@@ -20,7 +20,7 @@
                         </select>
                         <script>
                             $('select#inputYear_ option[value=' + $('#yearId').val() + ']').attr('selected', true);
-                            $('#inputYear_').attr('disabled', true);
+                            $('#inputYear_').attr('disabled', 'disabled');    
                         </script>
                     </div>
                     <div id="divOutput_Year_" style="display: none">
@@ -94,6 +94,7 @@
                             </select>
                             <script>
                                 $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_Year_@item.Id">
@@ -158,7 +159,7 @@
         <tfoot style="background-color: #eee; font-size: 9px;">
             <tr>
                 <td>کل رکوردها: @Model.TotalCount</td>
-                <td colspan="4">صفحه @Model.PageNumber از @Model.PagesCount</td>
+                <td colspan="4">صفحه @Model.PageNumber از @if (Model.PagesCount == 0) {<span>1</span>} else {<span>@Model.PagesCount</span>}
             </tr>
         </tfoot>
     </table>
@@ -185,8 +186,8 @@
                 <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
                     <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
                 </button>
-                <span data-toggle="modal" data-target="#success">
-                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" onclick="return calculation(this.click);" class="btn btn-info  bg-light-info mr-1 my-font">
+                <span data-toggle="modal" data-target="#CalculationModal">
+                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
                         <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
                     </button>
                 </span>

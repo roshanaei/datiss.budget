@@ -19,6 +19,6 @@ namespace Datiss.Budget.Services.Excel
         public int DWasteTypeId { get; set; }
 
         [Column(3, MappingDirections.Both, Letter = "D")]
-        public int WsInstllFee { get; set; }
+        public int WsInstallFee { get; set; }
     }
 }
