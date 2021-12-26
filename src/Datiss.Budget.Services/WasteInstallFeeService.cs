@@ -20,6 +20,8 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Microsoft.Data.SqlClient;
 using Datiss.Budget.Extensions;
 using Datiss.Budget.Security;
+using Datiss.Budget.Common;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Services
 {
@@ -335,7 +337,7 @@ namespace Datiss.Budget.Services
             return items;
         }
 
-        public async Task ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<WasteInstallFeeImportModel>(fileInfo);
 
@@ -343,24 +345,103 @@ namespace Datiss.Budget.Services
 
             int rowIndex = 1;
 
+            var descendents = await _organizationService
+                .GetAllDescendentsAsync(_userContext.OrganizationId);
+
+            var dwatertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
+
+
+            foreach (var rec in records)
+            {
+                var org = await _orgDbSet.FindAsync(rec.OrganizationId);
+                var year = await _yearSet.FindAsync(rec.YearId);
+                if (year == null || year.Status == EntityStatus.Disbaled)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 1, rec.YearId)
+                        );
+                }
+                if (org == null)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId)
+                        );
+                }
+                if (!await dwatertypes.AnyAsync(x => x.Id == rec.DWasteTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 1, rec.DWasteTypeId)
+                        );
+                }
+                if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 1)
+                        );
+                }
+
+                rowIndex++;
+            }
+
+            rowIndex = 1;
+
+            if (!continueIfAnyOrgMissing)
+            {
+                var missingOrgs = new List<Organization>();
+
+                foreach (var item in descendents)
+                {
+                    var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                    if (!existInExcel)
+                        missingOrgs.Add(item);
+                }
+
+                if (missingOrgs.Any())
+                {
+                    string orgNames = "";
+                    foreach (var item in missingOrgs)
+                    {
+                        orgNames += "- " + item.Title + "<br>";
+                    }
+
+                    return new ImportResult
+                    {
+                        Message = orgNames,
+                        AskToImport = true
+                    };
+                }
+            }
+
             foreach (var record in records)
             {
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
-                    throw new UserOrganizationAccessException(rowIndex);
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 1)
+                        );
 
                 if (!await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
                     record.DWasteTypeId))
-                    throw new ImportExcelFileException(rowIndex);
+                {
+
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 1)
+                        );
+                }
 
                 rowIndex++;
             }
 
             await _dbSet.AddRangeAsync(records);
             await _uow.SaveChangesAsync();
+
+            return ImportResult.Succeed(
+                string.Format(ServiceMessages.ImportExcelSuccess)
+                );
         }
+
         #region Private Helper Methods
         private async Task<IQueryable<WasteInstallFee>> setFilter(
             IQueryable<WasteInstallFee> query,

@@ -16,7 +16,7 @@
                     <input type="hidden" asp-for="_CurrentPage" />
 
                     <div class="rowAC">
-                        <div class="my-font">
+                        <div class="my-font" style="flex:1">
                             <fieldset class="form-group">
                                 <label class="my-font rowAC">
                                     <span style="margin-left:5px;width:65px">نام سال:</span>
@@ -25,7 +25,7 @@
                             </fieldset>
                         </div>
 
-                        <div class="my-font">
+                        <div class="my-font" style="flex:1">
                             <fieldset class="form-group">
                                 <label class="my-font rowAC">
                                     <span style="margin-left:5px;width:110px">سال به عدد:</span>
@@ -34,15 +34,22 @@
                             </fieldset>
                         </div>
 
-                    </div>
-                    <div class="rowAC">
-                        <div class="my-font">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left:5px">وضعیت:</span>
-                                    <input asp-for="Enable" type="checkbox" class="form-check-input form-control form-control-sm" />
-                                </label>
-                            </fieldset>
+
+                        @*<div class="rowAC">
+            <div class="my-font">
+                <fieldset class="form-group">
+                    <label class="my-font rowAC">
+                        <span style="margin-left:5px">وضعیت:</span>
+                        <input asp-for="Enable" type="checkbox" class="form-check-input form-control form-control-sm" />
+                    </label>
+                </fieldset>
+            </div>
+        </div>*@
+                        <div class="custom-control custom-checkbox" style="flex:1">
+                            <input class="custom-control-input" type="checkbox" asp-for="Enable" id="auth-ligin" />
+                            <label class="custom-control-label" for="auth-ligin">
+                                <span class="my-font">وضعیت :</span>
+                            </label>
                         </div>
                     </div>
                     <div class="rowAC">

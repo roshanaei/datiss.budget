@@ -125,12 +125,6 @@ namespace Datiss.Budget.Web.Controllers
         {
             var filter = new WasteInstallFeeFilterDTO();
 
-            var myfilter = TempData.Get<WasteInstallFeeFilterViewModel>(_indexFilterKey);
-            if (myfilter != null)
-            {
-                filter = myfilter.Adapt<WasteInstallFeeFilterDTO>();
-                TempData.Put(_indexFilterKey, myfilter);
-            }
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
@@ -145,9 +139,18 @@ namespace Datiss.Budget.Web.Controllers
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                .Adapt<List<DropDownItemViewModel>>();
 
-            filter.PageNumber = page;
+
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
+
+            var myfilter = TempData.Get<WasteInstallFeeFilterViewModel>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<WasteInstallFeeFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
 
             var result = await _wasteInstallFeeService.GetListAsync(filter);
             var model = result.Adapt<WasteInstallFeeIndexViewModel>();
@@ -170,7 +173,7 @@ namespace Datiss.Budget.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(WasteInstallFeeIndexViewModel model, int page = 1)
         {
-            model.Filter.PageNumber = page;
+            model.Filter.PageNumber = 1;
             var filter = model.Filter.Adapt<WasteInstallFeeFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
@@ -200,41 +203,71 @@ namespace Datiss.Budget.Web.Controllers
 
             return View(model);
         }
-        [HttpPost("[action]"), ValidateAntiForgeryToken]
+
+        [HttpPost("[action]")]
         public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            if (model.ExcelFile == null ||
-                model.ExcelFile.Length == 0)
-                return RedirectToAction("Index");
+            if (model.ExcelFile == null || model.ExcelFile.Length == 0)
+                return Json(new
+                {
+                    hasError = true,
+                    message = "فایل انتخاب شده معتبر نیست."
+                });
 
             try
             {
-                await _wasteInstallFeeService.ImportExcelAsync(model.ExcelFile);
+                var result = await _wasteInstallFeeService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
+
+                if (result.AskToImport)
+                {
+                    return Json(new
+                    {
+                        ask = true,
+                        message = result.Message
+                    });
+                }
+
+                if (result.Success)
+                {
+                    return Json(new
+                    {
+                        hasError = false,
+                        message = result.Message
+                    });
+
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
             }
             catch (ImportExcelFileFormatInvalidException ex)
             {
                 showMessage(CssClassNames.Error,
                     ViewMessages.ImportExcelFileFormatInvalid);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileFormatInvalid
+                });
             }
             catch (ImportExcelFileSizeInvalidException ex)
             {
                 showMessage(CssClassNames.Error,
                     ViewMessages.ImportExcelFileSizeInvalid);
-            }
-            catch (ImportExcelFileException ex)
-            {
-                showMessage(CssClassNames.Error,
-                    string.Format(
-                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
-                    );
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileSizeInvalid
+                });
             }
 
-            showMessage(CssClassNames.Success,
-                ViewMessages.ImportExcelSuccess);
-
-            return RedirectToAction("Index");
         }
 
 
