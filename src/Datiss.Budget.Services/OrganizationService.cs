@@ -122,22 +122,22 @@ namespace Datiss.Budget.Services
         {
             var query = Query();
 
-            var isMyChild = await query.AnyAsync(_ => _.ParentId == parentId && _.Id == targetOrganizationId);
+            var targetOrg = await _dbSet.FindAsync(targetOrganizationId);
+            targetOrg.CheckReferenceIsNull(nameof(targetOrg));
 
-            if (isMyChild)
-            {
+            if (targetOrg.ParentId == null)
+                return false;
+            
+            if (targetOrg.ParentId == parentId)
                 return true;
-            }
-            else
-            {
-                var childs = await query.Where(x => x.ParentId == parentId).ToListAsync();
 
-                foreach (var child in childs)
-                    return await IsDescendentOfAsync(child.Id, targetOrganizationId);
-            }
-
-            return false;
+            return await IsDescendentOfAsync(parentId, targetOrg.ParentId.Value);
         }
+
+
+        private async Task<bool> isChildOfAsync(int parentId, int targetOrganizationId)
+            => await Query().AnyAsync(_ => _.ParentId == parentId && _.Id == targetOrganizationId);
+        
 
         public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync(bool input=false)
             =>_userContext.OrganizationId.HasValue
