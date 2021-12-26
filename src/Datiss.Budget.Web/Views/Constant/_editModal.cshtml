@@ -1,0 +1,83 @@
+﻿@model UpdateConstantViewModel
+
+<script src="~/js/plugin/jquery.js"></script>
+
+<!--Modals-->
+<div class="modal fade text-left" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title my-font" id="myModalLabel2">ویرایش اطلاعات</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                </button>
+            </div>
+            <form asp-controller="@ConstantController.Name" ;
+                  asp-action="@ConstantController.ACTION_Edit"
+                  asp-antiforgery="true"
+                  id="EditConstantForm">
+                <div class="modal-body">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="rowAC">
+                        <div class="my-font">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left:5px">عنوان</span>
+                                    <input asp-for="Title" type="text" class="form-control form-control-sm d-inline-block" />
+                                </label>
+                            </fieldset>
+                        </div>
+
+                        <div class="my-font">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left:5px">ترتیب نمایش</span>
+                                    <input asp-for="DisplayOrder" type="number" class="form-control form-control-sm d-inline-block" />
+                                </label>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="rowAC">
+                        <div class="my-font">
+                            <fieldset class="form-group">
+                                <label class="rowAC">
+                                    <span style="margin-left:5px">وضعیت</span>
+                                    <input asp-for="Enabled"
+                                           style="flex:1"
+                                           class="form-control form-control-sm d-inline-block">
+                                    </input>
+                                </label>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="rowAC">
+                        <div class="my-font">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left:5px">کلید</span>
+                                    <input asp-for="ConstantKey" class="form-control form-control-sm d-inline-block" />
+                                </label>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
+                    <button type="submit" class="btn btn-info bg-light-info mr-1 my-font">ثبت</button>
+                </div>
+            </form>
+            @*@if (Model._HasError)
+        {
+            <p style="color: red">
+                @Model._ErrorMessage
+            </p>
+        }*@
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+</script>
