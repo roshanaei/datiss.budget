@@ -21,6 +21,7 @@ using LinqKit;
 using Datiss.Budget.Security;
 using Microsoft.Data.SqlClient;
 using Datiss.Budget.Extensions;
+using Datiss.Budget.Common;
 
 namespace Datiss.Budget.Services
 {
@@ -174,11 +175,12 @@ namespace Datiss.Budget.Services
                                    .Where(x => x.OrganizationId == organizationId)
                                    .ToListAsync();
 
-            if (self.Count == 0)
+            var childrens = await getChildren(organizationId, yearId);
+
+            if (self.Count() == 0 && childrens.Count() == 0)
                 throw new DeleteNullRecordException();
 
             _dbSet.RemoveRange(self);
-            var childrens = await getChildren(organizationId, yearId);
             _dbSet.RemoveRange(childrens);
 
             var result = new OrganizationDeleteDataResult
@@ -320,22 +322,48 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
-            List<int> notAllowedToInputOrgs = new List<int>();
+            var usertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
+
+            var usagelayers = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UsageLayerType);
 
             foreach (var rec in records)
             {
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
+                var year = await _yearSet.FindAsync(rec.YearId);
+                if (year == null || year.Status == Enum.EntityStatus.Disbaled)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 1, rec.YearId)
+                        );
+                }
                 if (org == null)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rec.Id)
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg,rowIndex + 1, rec.OrganizationId)
+                        );
+                }
+                if ( !await usertypes.AnyAsync(x => x.Id == rec.UserTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidDWaterType , rowIndex + 1 ,rec.UserTypeId )
+                        );
+                }
+                if (!await usagelayers.AnyAsync( x=> x.Id == rec.UsageLayerId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerType,rowIndex + 1,rec.UsageLayerId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
-                    notAllowedToInputOrgs.Add(org.Id);
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg,org.Title, rowIndex + 1)
+                        );
                 }
+
+                rowIndex++;
             }
+            rowIndex = 1;
 
             if (!continueIfAnyOrgMissing)
             {
@@ -353,12 +381,12 @@ namespace Datiss.Budget.Services
                     string orgNames = "";
                     foreach (var item in missingOrgs)
                     {
-                        orgNames += item.Title + ",";
+                        orgNames += "- " + item.Title + "<br>";
                     }
 
                     return new ImportResult
                     {
-                        Message = string.Format(ServiceMessages.ImportExcelOrgNotInExcel, orgNames),
+                        Message = orgNames ,
                         AskToImport = true
                     };
                 }
@@ -367,11 +395,10 @@ namespace Datiss.Budget.Services
             foreach (var record in records)
             {
                 //if organization type is not city or village then pass
-                if (notAllowedToInputOrgs.Contains(record.OrganizationId))
-                    continue;
-
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
-                    return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelAccessError, rowIndex));
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelAccessError,rowIndex + 1)
+                        );
 
                 if (!await checkLogicAsync(
                     record.YearId,
@@ -379,7 +406,9 @@ namespace Datiss.Budget.Services
                     record.UserTypeId,
                     record.UsageLayerId))
                 {
-                    return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelLogicError, rowIndex));
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 1)
+                        );
                 }
 
                 rowIndex++;
@@ -388,7 +417,9 @@ namespace Datiss.Budget.Services
             await _dbSet.AddRangeAsync(records);
             await _uow.SaveChangesAsync();
 
-            return ImportResult.Succeed(ServiceMessages.ImportExcelSuccess);
+            return ImportResult.Succeed(
+                string.Format(ServiceMessages.ImportExcelSuccess)
+                );
         }
 
         public async Task<IEnumerable<ConsumeForcastDTO>> GetExportItemsAsync(int yearId, int organizationId)
