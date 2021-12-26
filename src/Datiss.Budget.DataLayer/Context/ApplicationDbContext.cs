@@ -159,13 +159,33 @@ namespace Datiss.Budget.DataLayer.Context
             return result;
         }
 
+        public T ExecuteScalar<T>(string sql, params object[] parameters) {
+            var con = Database.GetDbConnection();
+            using (var command = con.CreateCommand()) {
+                command.CommandText = sql;
+                command.Parameters.Clear();
+
+                if (parameters != null) 
+                    command.Parameters.AddRange(parameters);
+                
+                if (con.State != System.Data.ConnectionState.Open)
+                    con.Open();
+
+                var result = command.ExecuteScalar();
+
+                if (result is DBNull)
+                    return default(T);
+
+                return (T)result;
+            }
+        }
+
         public async Task<T> ExecuteScalarAsync<T>(string sql, params object[] parameters) {
             var con = this.Database.GetDbConnection();
             using (var command = con.CreateCommand()) {
                 command.CommandText = sql;
                 if (parameters != null) {
-                    foreach (var p in parameters)
-                        command.Parameters.Add(p);
+                    command.Parameters.AddRange(parameters);
                 }
                 await con.OpenAsync();
 
