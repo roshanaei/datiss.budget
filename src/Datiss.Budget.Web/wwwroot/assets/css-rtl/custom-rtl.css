@@ -161,11 +161,7 @@ th:last-child, td:last-child {
     left: 0px;
     background-color: white;
 }
-table {
+.table-overflow {
     display: block;
     white-space: nowrap;
-}
-table thead th {
-    position: sticky;
-    top:0;
 }
