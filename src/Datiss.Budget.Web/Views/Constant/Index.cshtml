@@ -195,6 +195,10 @@
 
                     $("#modaldiv").html(data);
                     $('#EditModal').modal('show');
+                    $('#EditModal').on('hidden.bs.modal', function () {
+                        $('#modaldiv').html('');
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (ajaxrequest, ajaxOptions, thrownError) {
 
@@ -214,6 +218,10 @@
 
                     $("#modaldiv").html(data);
                     $('#CreateModal').modal('show');
+                    $('#CreateModal').on('hidden.bs.modal', function () {
+                        $('#modaldiv').html('');
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (ajaxrequest, ajaxOptions, thrownError) {
 
@@ -232,6 +240,10 @@
 
                     $("#modaldiv").html(data);
                     $('#DeleteModal').modal('show');
+                    $('#DeleteModal').on('hidden.bs.modal', function () {
+                        $('#modaldiv').html('');
+                        $('.modal-backdrop').remove();
+                    });
                 },
                 error: function (ajaxrequest, ajaxOptions, thrownError) {
 
