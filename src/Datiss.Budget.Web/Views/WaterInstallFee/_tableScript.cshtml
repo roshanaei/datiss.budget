@@ -3,21 +3,8 @@
     let isNewRow = false;
     function editRow(id) {
 
-        //$('th,tr td').hide();
-        //showingColmuns.split(',').forEach((value, index) => {
-        //    if (value !== '') {
-        //        $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
-        //    }
-        //})
-        //$(`th:last-child, tr td:last-child`).show();
-        
-        //$('th,tr td').css('background-color', 'rgb(255 255 255)');
-       
 
-
-        //resetTableBackColor("my-table");
-
-        //do reset all row background
+        resetTableBackColor("my-table");
 
         let row = $('#row_' + id);
         //row.css('background-color', '#7598f3');
@@ -221,7 +208,8 @@
     function addNewRow() {
         if (isNewRow) return;
 
-        //do reset all row background
+        resetTableBackColor("my-table");
+
 
         var template = $('#rowTemplate').clone()
             .appendTo($('#my-table tbody'))
@@ -285,13 +273,9 @@
 
     function resetTableBackColor(id) {
         var table = document.getElementById(id);
-
-        
         var rows = table.getElementsByTagName("tr");
-
         for (i = 2; i < rows.length - 1; i++) {
-            console.log(i);
-            rows[i].style.backgroundColor = "#00000000"
+            rows[i].style = "";
         }
     }
 
