@@ -156,13 +156,13 @@ namespace Datiss.Budget.Services
             var self = await _dbSet.Where(_ => _.YearId == yearId)
                                     .Where(_ => _.OrganizationId == organizationId)
                                     .ToListAsync();
-            _dbSet.RemoveRange(self);
-
             var childrens = await getChildren(organizationId, yearId);
-            _dbSet.RemoveRange(childrens);
 
             if (self.Count() == 0 && childrens.Count() == 0)
                 throw new DeleteNullRecordException();
+            _dbSet.RemoveRange(self);
+
+            _dbSet.RemoveRange(childrens);
 
             var result = new OrganizationDeleteDataResult
             {
