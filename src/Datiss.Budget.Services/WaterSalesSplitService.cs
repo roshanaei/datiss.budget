@@ -75,7 +75,8 @@ namespace Datiss.Budget.Services
                 UserTypeId = model.UserTypeId,
                 WPipeDiameterId = model.WPipeDiameterId,
                 NumberSales = model.NumberSales,
-                UnitSales = model.UnitSales
+                UnitSales = model.UnitSales,
+                AverageCapacity = model.AverageCapacity
             };
             if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.WPipeDiameterId))
             {
@@ -89,6 +90,7 @@ namespace Datiss.Budget.Services
                 result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                 result.NumberSales = entity.NumberSales;
                 result.UnitSales = model.UnitSales;
+                result.AverageCapacity = model.AverageCapacity;
 
                 return ValidationResult<WaterSalesSplitDTO>.Success(result);
             }
@@ -112,6 +114,7 @@ namespace Datiss.Budget.Services
                 entity.WPipeDiameterId = model.WPipeDiameterId;
                 entity.NumberSales = model.NumberSales;
                 entity.UnitSales = model.UnitSales;
+                entity.AverageCapacity = model.AverageCapacity;
 
                 await _uow.SaveChangesAsync();
 
@@ -126,7 +129,8 @@ namespace Datiss.Budget.Services
                     WPipeDiameterDisplay = (await _constSet.FindAsync(model.WPipeDiameterId)).Title,
                     Year = (await _yearSet.FindAsync(model.YearId)).Year,
                     NumberSales = model.NumberSales,
-                    UnitSales = model.UnitSales
+                    UnitSales = model.UnitSales,
+                    AverageCapacity = model.AverageCapacity
                 };
 
                 return ValidationResult<WaterSalesSplitDTO>.Success(result);
@@ -313,7 +317,8 @@ namespace Datiss.Budget.Services
                         OrganizationId = item.OrganizationId,
                         YearId = destYearId,
                         NumberSales = item.NumberSales,
-                        UnitSales = item.UnitSales
+                        UnitSales = item.UnitSales,
+                        AverageCapacity = item.AverageCapacity
                     };
                     result.Add(entity);
                 }

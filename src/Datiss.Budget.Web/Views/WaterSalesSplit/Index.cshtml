@@ -165,10 +165,21 @@
                                                         <input type="checkbox"
                                                                class="custom-control-input"
                                                                checked
-                                                               name="col-4"
-                                                               id="col-4" />
+                                                               name="col-6"
+                                                               id="col-6" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>آحاد انشعاب</span></label>
+                                                               for="col-6"><span>آحاد انشعاب</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-7"
+                                                               id="col-7" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-7"><span>میانگین ظرفیت</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -386,6 +397,7 @@
             let id = $(this).data('id');
             let inputNum = document.getElementById('inputNumberSales_' + id);
             let inputUnit = document.getElementById('inputUnitSales_' + id);
+            let inputAverage = document.getElementById('inputAverageCapacity_' + id);
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
             inputNum.addEventListener("keyup", function (event) {
@@ -396,6 +408,13 @@
                 }
             });
             inputUnit.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            inputAverage.addEventListener("keyup", function (event) {
                 event.preventDefault();
                 // Number 13 is the "Enter" key on the keyboard
                 if (event.keyCode === 13) {

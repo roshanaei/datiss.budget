@@ -12,6 +12,7 @@
         $('#divOutput_WaterDiameter_' + id).hide();
         $('#divOutput_NumberSales_' + id).hide();
         $('#divOutput_UnitSales_' + id).hide();
+        $('#divOutput_AverageCapacity_' + id).hide();
 
         //show input elements
         $('#divInput_Year_' + id).show();
@@ -20,6 +21,7 @@
         $('#divInput_WaterDiameter_' + id).show();
         $('#divInput_NumberSales_' + id).show();
         $('#divInput_UnitSales_' + id).show();
+        $('#divInput_AverageCapacity_' + id).show();
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -37,6 +39,7 @@
         $('#divInput_WaterDiameter_' + id).hide();
         $('#divInput_NumberSales_' + id).hide();
         $('#divInput_UnitSales_' + id).hide();
+        $('#divInput_AverageCapacity_' + id).hide();
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
@@ -45,6 +48,7 @@
         $('#divOutput_WaterDiameter_' + id).show();
         $('#divOutput_NumberSales_' + id).show();
         $('#divOutput_UnitSales_' + id).show();
+        $('#divOutput_AverageCapacity_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -73,6 +77,7 @@
         model.wPipeDiameterId = $('#inputWaterDiameter_' + id).val();
         model.numberSales = $('#inputNumberSales_' + id).val();
         model.unitSales = $('#inputUnitSales_' + id).val();
+        model.averageCapacity = $('#inputAverageCapacity_' + id).val();
 
         $.ajax({
             url: '@Url.Action(WaterSalesSplitController.ACTION_Edit)',
@@ -101,6 +106,7 @@
                 $('#spanWaterDiameter_' + id).text(data.wPipeDiameterDisplay);
                 $('#spanNumberSales_' + id).text(data.numberSales);
                 $('#spanUnitSales_' + id).text(data.unitSales);
+                $('#spanAverageCapacity_' + id).text(data.averageCapacity);
 
                 cancelEditRow(id);
             },
@@ -120,6 +126,7 @@
         model.wPipeDiameterId = $(e).find('#inputWaterDiameter_').val();
         model.numberSales = $(e).find('#inputNumberSales_').val();
         model.unitSales = $(e).find('#inputUnitSales_').val();
+        model.averageCapacity = $(e).find('#inputAverageCapacity_').val();
 
         console.log(model);
 
@@ -205,6 +212,16 @@
                 $('#divInput_UnitSales_' + data.id).hide();
                 $('#spanUnitSales_' + data.id).text(data.unitSales);
                 $('#divOutput_UnitSales_' + data.id).show();
+
+                //AverageCapacity
+                $(e).find('#divInput_AverageCapacity_').attr('id', 'divInput_AverageCapacity_' + data.id);
+                $(e).find('#inputAverageCapacity_').attr('id', 'inputAverageCapacity_' + data.id);
+                $(e).find('#divOutput_AverageCapacity_').attr('id', 'divOutput_AverageCapacity_' + data.id);
+                $(e).find('#spanAverageCapacity_').attr('id', 'spanAverageCapacity_' + data.id);
+
+                $('#divInput_AverageCapacity_' + data.id).hide();
+                $('#spanAverageCapacity_' + data.id).text(data.averageCapacity);
+                $('#divOutput_AverageCapacity_' + data.id).show();
 
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);

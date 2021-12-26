@@ -25,6 +25,9 @@ namespace Datiss.Budget.ViewModels
         [Range(0, int.MaxValue, ErrorMessage = "آحاد انشعاب باید بصورت عددی وارد شود")]
         public int UnitSales { get; set; }
 
+        [Required(ErrorMessage = "*")]
+        public decimal AverageCapacity { get; set; }
+
         public IEnumerable<SelectListItem> UserTypeSource { get; set; }
 
         public string UserTypeTitle
@@ -57,6 +60,7 @@ namespace Datiss.Budget.ViewModels
         public string WPipeDiameterDisplay { get; set; }
         public int NumberSales { get; set; }
         public int UnitSales { get; set; }
+        public decimal AverageCapacity { get; set; }
     }
 
     public class WaterSalesSplitFilterViewModel : FilterViewModel
