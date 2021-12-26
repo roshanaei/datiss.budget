@@ -95,10 +95,8 @@
 
                                         </label>
 
-                                        
                                     </fieldset>
                                     @* drop down menu *@
-                                    
                                     
                                     <div class="btn-group dropdown form-group">
                                         <button type="button"
@@ -367,17 +365,19 @@
             let id = $(this).data('id');
             let input = document.getElementById('inputWInstallFee_' + id);
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
-            input.addEventListener("keyup", function (event) {
+
+            btnSaveEdit.addEventListener('click', function(event) {
+                event.preventDefault();
+                $(btnSaveEdit).attr('disabled', true);
+                $(btnSaveEdit).unbind('keyup');
+            });
+
+            input.addEventListener('keyup', function (event) {
                 event.preventDefault();
                 // Number 13 is the "Enter" key on the keyboard
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
                 }
-            });
-
-            btnSaveEdit.addEventListener('click', function(event) {
-                event.preventDefault();
-                $(btnSaveEdit).attr('disabled', true);
             });
 
             editRow(id);
