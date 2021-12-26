@@ -32,7 +32,6 @@ namespace Datiss.Budget.Services.Models
     public class ConstantFilterDTO : FilterInputDTO
     {
         public int? ParentId { get; set; }
-        public string ConstantKey { get; set; }
     }
     public class FinanceYearFilterDTO : FilterInputDTO
     {
