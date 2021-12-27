@@ -238,11 +238,11 @@ namespace Datiss.Budget.Web.Controllers
                     });
                 }
 
-                if (!result.Success)
+                if (result.Success)
                 {
                     return Json(new
                     {
-                        hasError = true,
+                        hasError = false,
                         message = result.Message
                     });
                 }
