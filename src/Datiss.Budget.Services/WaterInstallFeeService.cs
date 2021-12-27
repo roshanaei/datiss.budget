@@ -289,9 +289,6 @@ namespace Datiss.Budget.Services
 
             int rowIndex = 1;
 
-            var descendents = await _organizationService
-                .GetAllDescendentsAsync(_userContext.OrganizationId);
-
             var dwatertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
 
 
@@ -329,6 +326,9 @@ namespace Datiss.Budget.Services
 
             rowIndex = 1;
 
+            var descendents = await _organizationService
+                .GetAllDescendentsAsync(_userContext.OrganizationId);
+
             if (!continueIfAnyOrgMissing)
             {
                 var missingOrgs = new List<Organization>();
@@ -337,7 +337,8 @@ namespace Datiss.Budget.Services
                 {
                     var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
                     if (!existInExcel)
-                        missingOrgs.Add(item);
+                        if(item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                            missingOrgs.Add(item);
                 }
 
                 if (missingOrgs.Any())

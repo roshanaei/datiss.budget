@@ -142,7 +142,7 @@
     <value>بازه سال مالی وارد شده نامعتبر است .</value>
   </data>
   <data name="ImportExcelAccessError" xml:space="preserve">
-    <value>دسترسی شما برای تغییر اطلاعات سازمان وجود ندارد. خطا در سطر {0} فایل اکسل</value>
+    <value>دسترسی شما برای وارد کردن اطلاعات سازمان وجود ندارد. [سطر {0} فایل اکسل]</value>
   </data>
   <data name="ImportExcelInvalidDWaterType" xml:space="preserve">
     <value>در سطر {0} فایل اکسل، کد کاربری "{1}" معتبر نیست .</value>
