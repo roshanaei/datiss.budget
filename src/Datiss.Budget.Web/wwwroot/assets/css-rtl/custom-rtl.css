@@ -165,3 +165,7 @@ th:last-child, td:last-child {
     display: block;
     white-space: nowrap;
 }
+.swal2-content {
+    max-height: 35vh;
+    overflow-y: auto;
+}
