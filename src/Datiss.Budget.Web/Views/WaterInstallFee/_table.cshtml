@@ -6,8 +6,8 @@
                 <th>سال</th>
                 <th>سازمان</th>
                 <th>کاربری</th>
-                <th >قیمت</th>
-                <th width="10%">مدیریت</th>
+                <th>قیمت</th>
+                <th>مدیریت</th>
 
             </tr>
         </thead>
@@ -156,13 +156,13 @@
                 </tr>
             }
         </tbody>
-        <tfoot style="background-color: #eee; font-size: 9px;">
+        @*<tfoot style="background-color: #eee; font-size: 9px;">
             <tr>
                 <td>کل رکوردها: @Model.TotalCount</td>
                 <td colspan="4">صفحه @Model.PageNumber از @if (Model.PagesCount == 0) {<span>1</span>} else {<span>@Model.PagesCount</span>}
                 </td>
             </tr>
-        </tfoot>
+        </tfoot>*@
     </table>
     <div class="rowACJSB" style="margin-top:20px">
         <!--Tools-->
@@ -197,10 +197,17 @@
 
         </div>
 
-        @if (Model.PagesCount > 1) {
+        <div class="rowAC">
+            <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+            <div class="my-font ml-2">(صفحه <b class="font-medium-2">@Model.PageNumber</b> از 
+            <b class="font-medium-2">@if (Model.PagesCount == 0) {<span>1</span>} else {<span>@Model.PagesCount</span>}</b>)</div>
+        </div>
+        @if (Model.PagesCount > 1)
+        {
             <nav aria-label="Page navigation">
                 <ul class="pagination justify-content-center">
-                    @if (Model.PageNumber > 1) {
+                    @if (Model.PageNumber > 1)
+                    {
                         <li class="page-item">
                             <a class="page-link"
                                asp-controller="@WaterInstallFeeController.Name"
@@ -210,11 +217,14 @@
                         </li>
                     }
 
-                    @for (int i = 1; i <= Model.PagesCount; i++) {
-                        if (i == Model.PageNumber) {
+                    @for (int i = 1; i <= Model.PagesCount; i++)
+                    {
+                        if (i == Model.PageNumber)
+                        {
                             <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
                         }
-                        else {
+                        else
+                        {
                             <li class="page-item">
                                 <a class="page-link"
                                    asp-controller="@WaterInstallFeeController.Name"
@@ -224,7 +234,8 @@
                         }
                     }
 
-                    @if (Model.PageNumber < Model.PagesCount) {
+                    @if (Model.PageNumber < Model.PagesCount)
+                    {
                         <li class="page-item">
                             <a class="page-link"
                                asp-controller="@WaterInstallFeeController.Name"

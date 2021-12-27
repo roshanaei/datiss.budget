@@ -133,7 +133,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to دسترسی شما برای تغییر اطلاعات سازمان وجود ندارد. خطا در سطر {0} فایل اکسل.
+        ///   Looks up a localized string similar to دسترسی شما برای وارد کردن اطلاعات سازمان وجود ندارد. [سطر {0} فایل اکسل].
         /// </summary>
         public static string ImportExcelAccessError {
             get {
