@@ -44,7 +44,7 @@ namespace Datiss.Budget.Services
 
             var entity = new FinanceYear
             {
-                Title = "سال "+model.Year,
+                Title = "سال " + model.Year,
                 Year = model.Year,
                 StartDate = model.StartDate,
                 EndDate = model.EndDate,
@@ -53,8 +53,9 @@ namespace Datiss.Budget.Services
 
             try
             {
-                await checkLogicAsync(model.Year , model.StartDate , model.EndDate);
+                await checkLogicAsync(model.Year, model.StartDate, model.EndDate);
 
+                await setDisbaled();
                 await _dbSet.AddAsync(entity);
                 await _uow.SaveChangesAsync();
                 return ValidationResult.Success();
@@ -85,7 +86,7 @@ namespace Datiss.Budget.Services
             model.CheckArgumentIsNull(nameof(model));
             try
             {
-                await checkLogicAsync(model.Year, model.StartDate, model.EndDate,model.Id);
+                await checkLogicAsync(model.Year, model.StartDate, model.EndDate, model.Id);
 
                 var entity = await _dbSet.FindAsync(model.Id);
                 entity.Title = model.Title;
@@ -192,9 +193,18 @@ namespace Datiss.Budget.Services
             => id == null
             ? await Query().AnyAsync(x => (x.StartDate <= startdate && x.EndDate >= startdate) ||
                                           (x.StartDate <= enddate && x.EndDate >= enddate))
-            : await Query().Where(x=>x.Id!=id)
+            : await Query().Where(x => x.Id != id)
                            .AnyAsync(x => (x.StartDate <= startdate && x.EndDate >= startdate) ||
                                     (x.StartDate <= enddate && x.EndDate >= enddate));
+        private async Task setDisbaled()
+        {
+            var entity = _dbSet.Where(x => x.Status == EntityStatus.Enabled);
+            foreach (var item in entity)
+            {
+                item.Status = EntityStatus.Disbaled;
+            }
+            await _uow.SaveChangesAsync();
+        }
 
         #endregion
         #region Logics
