@@ -117,85 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DuplicateData" xml:space="preserve">
-    <value>اطلاعات تکراری است.</value>
+  <data name="WaterSalesSplit_Cal1" xml:space="preserve">
+    <value>تعداد فروش انشعاب آب سالیانه مسکونی</value>
   </data>
-  <data name="DuplicateEmails" xml:space="preserve">
-    <value>ایمیل ({0}) تکراری است.</value>
+  <data name="WaterSalesSplit_Cal2" xml:space="preserve">
+    <value>تعداد فروش انشعاب آب سالیانه غیر مسکونی</value>
   </data>
-  <data name="DuplicateName" xml:space="preserve">
-    <value>عنوان وارد شده تکراری است.</value>
+  <data name="WaterSalesSplit_Cal3" xml:space="preserve">
+    <value>آحاد فروش انشعاب آب سالیانه مسکونی</value>
   </data>
-  <data name="DuplicateNames" xml:space="preserve">
-    <value>عنوان ({0}) تکراری است.</value>
+  <data name="WaterSalesSplit_Cal4" xml:space="preserve">
+    <value>آحاد فروش انشعاب آب سالیانه غیر مسکونی</value>
   </data>
-  <data name="FinanceYearCopyLength" xml:space="preserve">
-    <value>بازه سال مالی وارد شده تکراری است .</value>
+  <data name="WaterSalesSplit_Cal5" xml:space="preserve">
+    <value>تعداد کل فروش انشعاب آب سالیانه</value>
   </data>
-  <data name="FinanceYearDuplicateYear" xml:space="preserve">
-    <value>سال مالی وارد شده تکراری است .</value>
-  </data>
-  <data name="FinanceYearInvalidEndYear" xml:space="preserve">
-    <value>پایان سال مالی نباید کوچکتر از شروع آن باشد .</value>
-  </data>
-  <data name="FinanceYearLengthYear" xml:space="preserve">
-    <value>بازه سال مالی وارد شده نامعتبر است .</value>
-  </data>
-  <data name="ImportExcelAccessError" xml:space="preserve">
-    <value>دسترسی شما برای وارد کردن اطلاعات سازمان وجود ندارد. [سطر {0} فایل اکسل]</value>
-  </data>
-  <data name="ImportExcelInvalidDWaterType" xml:space="preserve">
-    <value>در سطر {0} فایل اکسل، کد کاربری "{1}" معتبر نیست .</value>
-  </data>
-  <data name="ImportExcelInvalidFinanceYear" xml:space="preserve">
-    <value>در سطر {0} فایل اکسل، کد سال "{1}" معتبر نیست .</value>
-  </data>
-  <data name="ImportExcelInvalidUsageLayerType" xml:space="preserve">
-    <value>در سطر {0} فایل اکسل، کد طبقه مصرف "{1}" معتبر نیست .</value>
-  </data>
-  <data name="ImportExcelInvalidWaterDiameter" xml:space="preserve">
-    <value>در سطر {0} فایل اکسل، کد قطر لوله آب "{1}" معتبر نیست .</value>
-  </data>
-  <data name="ImportExcelLogicError" xml:space="preserve">
-    <value>داده سطر {0} در اکسل مشکل دارد. لطفاً ورودی ها را بررسی نمایید.</value>
-  </data>
-  <data name="ImportExcelNotAllowedOrg" xml:space="preserve">
-    <value>شما مجاز به ورود اطلاعات برای " {0} " نیستید.[سطر {1} فایل اکسل]</value>
-  </data>
-  <data name="ImportExcelNotExistOrg" xml:space="preserve">
-    <value>در سطر {0} فایل اکسل، کد سازمان "{1}" معتبر نیست .</value>
-  </data>
-  <data name="ImportExcelOrgNotInExcel" xml:space="preserve">
-    <value>سازمان های ({0}) در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</value>
-  </data>
-  <data name="ImportExcelSuccess" xml:space="preserve">
-    <value>ورود اطلاعات با موفقیت انجام گردید.</value>
-  </data>
-  <data name="Logic_BranchFeeAmount" xml:space="preserve">
-    <value>اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است</value>
-  </data>
-  <data name="Logic_ConsumeForcast" xml:space="preserve">
-    <value>اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است</value>
-  </data>
-  <data name="Logic_DWasteType" xml:space="preserve">
-    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
-  </data>
-  <data name="Logic_DWaterType" xml:space="preserve">
-    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
-  </data>
-  <data name="Logic_WasteSalesSplit" xml:space="preserve">
-    <value>اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است</value>
-  </data>
-  <data name="Logic_WaterSalesSplit" xml:space="preserve">
-    <value>اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است</value>
-  </data>
-  <data name="RelationDataSoftDeleted" xml:space="preserve">
-    <value>به دلیل وجود داده وابسته امکان حذف نمی باشد.</value>
-  </data>
-  <data name="Succeed" xml:space="preserve">
-    <value>عملیات با موفقیت انجام شد.</value>
-  </data>
-  <data name="SystemError" xml:space="preserve">
-    <value>خطای سیستمی. لطفاً با پشتیبانی تماس بگیرید.</value>
+  <data name="WaterSalesSplit_Cal6" xml:space="preserve">
+    <value>آحاد کل فروش انشعاب آب سالیانه</value>
   </data>
 </root>

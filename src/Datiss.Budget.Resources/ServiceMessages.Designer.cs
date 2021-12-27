@@ -169,6 +169,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد قطر لوله آب &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidWaterDiameter {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidWaterDiameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to داده سطر {0} در اکسل مشکل دارد. لطفاً ورودی ها را بررسی نمایید..
         /// </summary>
         public static string ImportExcelLogicError {
