@@ -124,12 +124,6 @@ namespace Datiss.Budget.Web.Controllers
         {
             var filter = new WaterSalesSplitFilterDTO();
 
-            var myfilter = TempData.Get<WaterSalesSplitFilterViewModel>(_indexFilterKey);
-            if (myfilter != null)
-            {
-                filter = myfilter.Adapt<WaterSalesSplitFilterDTO>();
-                TempData.Put(_indexFilterKey, myfilter);
-            }
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
@@ -147,10 +141,17 @@ namespace Datiss.Budget.Web.Controllers
             var waterDiameterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-
-            filter.PageNumber = page;
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
+
+            var myfilter = TempData.Get<WaterSalesSplitFilterViewModel>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<WaterSalesSplitFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
 
             var result = await _waterSalesSplitService.GetListAsync(filter);
             var model = result.Adapt<WaterSalesSplitIndexViewModel>();
@@ -173,7 +174,7 @@ namespace Datiss.Budget.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(WaterSalesSplitIndexViewModel model, int page = 1)
         {
-            model.Filter.PageNumber = page;
+            model.Filter.PageNumber = 1;
             var filter = model.Filter.Adapt<WaterSalesSplitFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
@@ -205,7 +206,7 @@ namespace Datiss.Budget.Web.Controllers
 
             model.SetFinanceYearFilterSource(yearSource);
             model.SetOrganizationFilterSource(orgSource);
-            
+
             return View(model);
         }
 
@@ -215,38 +216,66 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            if (model.ExcelFile == null ||
-                model.ExcelFile.Length == 0)
-                return RedirectToAction("Index");
+            if (model.ExcelFile == null || model.ExcelFile.Length == 0)
+                return Json(new
+                {
+                    hasError = true,
+                    message = "فایل انتخاب شده معتبر نیست."
+                });
 
             try
             {
-                await _waterSalesSplitService.ImportExcelAsync(model.ExcelFile);
+                var result = await _waterSalesSplitService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
+
+                if (result.AskToImport)
+                {
+                    return Json(new
+                    {
+                        ask = true,
+                        message = result.Message
+                    });
+                }
+
+                if (result.Success)
+                {
+                    return Json(new
+                    {
+                        hasError = false,
+                        message = result.Message
+                    });
+
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
             }
             catch (ImportExcelFileFormatInvalidException ex)
             {
                 showMessage(CssClassNames.Error,
                     ViewMessages.ImportExcelFileFormatInvalid);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileFormatInvalid
+                });
             }
             catch (ImportExcelFileSizeInvalidException ex)
             {
                 showMessage(CssClassNames.Error,
                     ViewMessages.ImportExcelFileSizeInvalid);
-            }
-            catch (ImportExcelFileException ex)
-            {
-                showMessage(CssClassNames.Error,
-                    string.Format(
-                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
-                    );
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileSizeInvalid
+                });
             }
 
-            showMessage(CssClassNames.Success,
-                ViewMessages.ImportExcelSuccess);
-
-            return RedirectToAction("Index");
         }
-
 
         [HttpPost("records/delete")]
         public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
@@ -315,6 +344,17 @@ namespace Datiss.Budget.Web.Controllers
         }
 
 
+        private string getCalcTitle(string key)
+            => key switch {
+                "WaterSalesSplit_Cal1" => SPTitles.WaterSalesSplit_Cal1,
+                "WaterSalesSplit_Cal2" => SPTitles.WaterSalesSplit_Cal2,
+                "WaterSalesSplit_Cal3" => SPTitles.WaterSalesSplit_Cal3,
+                "WaterSalesSplit_Cal4" => SPTitles.WaterSalesSplit_Cal4,
+                "WaterSalesSplit_Cal5" => SPTitles.WaterSalesSplit_Cal5,
+                "WaterSalesSplit_Cal6" => SPTitles.WaterSalesSplit_Cal6,
+                _=> ""
+            };
+
         [HttpPost("[action]")]
         public async Task<IActionResult> Calculation(CalculationInputViewModel model)
         {
@@ -324,13 +364,19 @@ namespace Datiss.Budget.Web.Controllers
                 model.YearId,
                 model.OrganizationId);
 
-            var output = new CalculationResultViewModel
+            List<CalculationResultViewModel> viewModel = new List<CalculationResultViewModel>();
+            foreach(var item in result)
             {
-                Result = result,
-                Title = "WaterSalesSplit calc" //TODO : change it to proper title
-            };
+                viewModel.Add(
+                    new CalculationResultViewModel
+                    {
+                        Result = item.Value,
+                        Title = getCalcTitle(item.Key)
+                    }
+                );
+            }
 
-            return PartialView("_calculationModal", output);
+            return PartialView("_calculationModal", viewModel);
         }
 
 

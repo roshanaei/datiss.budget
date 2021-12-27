@@ -27,5 +27,8 @@ namespace Datiss.Budget.Services.Excel
         [Column(5, MappingDirections.Both, Letter = "F")]
         public int UnitSales { get; set; }
 
+        [Column(6, MappingDirections.Both, Letter = "G")]
+        public decimal AverageCapacity { get; set; }
+
     }
 }
