@@ -19,7 +19,6 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Mapster;
 using LinqKit;
 using Datiss.Budget.Security;
-//using System.Data.SqlClient;
 using Microsoft.Data.SqlClient;
 using Datiss.Budget.Extensions;
 using Datiss.Budget.Enum;
@@ -176,17 +175,21 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task<int> CalculationAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId)
         {
             List<SqlParameter> sqlParams = new List<SqlParameter>
             {
                 new SqlParameter("YearId", yearId),
                 new SqlParameter("OrganizationId", organizationId)
             };
-
-            var result = await _uow.ExecuteScalarAsync<int>(
-                "[dbo].[WaterInstallFees_Cal1] @YearId, @OrganizationId",
-                parameters: sqlParams.ToArray());
+            var result = new List<CalculationItemData>();
+            result.Add(new CalculationItemData
+            {
+                Key = "WaterInstallFees_Cal1",
+                Value = await _uow.ExecuteScalar<int>(
+                        "[dbo].[WaterInstallFees_Cal1] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
+            });
 
             return await Task.FromResult(result);
         }
