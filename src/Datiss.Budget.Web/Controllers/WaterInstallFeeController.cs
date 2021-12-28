@@ -355,7 +355,12 @@ namespace Datiss.Budget.Web.Controllers
             );
 
             model.SetYearSource(
-                (await _financeYearService.GetDropDownDataAsync())
+                (await _financeYearService.GetDropDownDataByStatusAsync(false))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            model.SetTargetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(true))
                     .Adapt<IEnumerable<DropDownItemViewModel>>()
             );
 

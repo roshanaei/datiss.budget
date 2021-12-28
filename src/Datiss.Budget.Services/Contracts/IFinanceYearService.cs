@@ -13,6 +13,7 @@ namespace Datiss.Budget.Services.Contracts
         Task<ValidationResult> UpdateAsync(UpdateFinanceYearDTO model);
         Task<ValidationResult> SoftDeleteAsync(int id);
         Task<IEnumerable<DropDownItem>> GetDropDownDataAsync();
+        Task<IEnumerable<DropDownItem>> GetDropDownDataByStatusAsync(bool enabled=false);
         Task<PagedResult<FinanceYearDTO>> GetListAsync(FinanceYearFilterDTO filter);
 
     }

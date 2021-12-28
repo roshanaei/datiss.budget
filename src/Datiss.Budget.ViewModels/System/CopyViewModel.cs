@@ -15,6 +15,8 @@ namespace Datiss.Budget.ViewModels
 
         public IEnumerable<SelectListItem> YearSource { get; protected set; }
 
+        public IEnumerable<SelectListItem> TargetYearSource { get; protected set; }
+
         public IEnumerable<SelectListItem> OrganizationSource { get; protected set; }
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
@@ -23,7 +25,13 @@ namespace Datiss.Budget.ViewModels
                 Value = _.Id.ToString(),
                 Selected = _.Selected
             });
-
+        public void SetTargetYearSource(IEnumerable<DropDownItemViewModel> source)
+            => TargetYearSource = source.Select(_ => new SelectListItem
+            {
+                Text = _.Title,
+                Value = _.Id.ToString(),
+                Selected = _.Selected
+            });
         public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
             => OrganizationSource = source.Select(_ => new SelectListItem {
                 Text = _.Title,
