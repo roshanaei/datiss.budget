@@ -144,7 +144,7 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(new
                 {
                     hasError = true,
-                    message = "خطایی به وجود آمده است ."
+                    message = "حتما باید سال مالی داشته باشید ."
                 });
             }
 

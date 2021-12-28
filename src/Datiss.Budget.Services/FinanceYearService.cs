@@ -132,8 +132,17 @@ namespace Datiss.Budget.Services
             var entity = await _dbSet.FindAsync(id);
             entity.CheckArgumentIsNull(nameof(entity));
             entity.Status = EntityStatus.Deleted;
-            await _uow.SaveChangesAsync();
-            return ValidationResult.Success();
+
+            try
+            {
+                await setEnabledForlastYear(id);
+                await _uow.SaveChangesAsync();
+                return ValidationResult.Success();
+            }
+            catch(Exception)
+            {
+                throw new Exception();
+            }
         }
 
         public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync()
@@ -212,6 +221,19 @@ namespace Datiss.Budget.Services
             foreach (var item in entity)
             {
                 item.Status = EntityStatus.Disbaled;
+            }
+            await _uow.SaveChangesAsync();
+        }
+        private async Task setEnabledForlastYear(int id)
+        {
+            var entity =await _dbSet.Where(x => x.Id != id && x.Status!=EntityStatus.Deleted).OrderBy(x=>x.Year).LastOrDefaultAsync();
+            if(entity == null)
+            {
+                throw new Exception();
+            }
+            else
+            {
+                entity.Status = EntityStatus.Enabled;
             }
             await _uow.SaveChangesAsync();
         }
