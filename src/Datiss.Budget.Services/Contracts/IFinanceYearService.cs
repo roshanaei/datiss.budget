@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Entities;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Services.Contracts
 {
@@ -13,6 +14,7 @@ namespace Datiss.Budget.Services.Contracts
         Task<ValidationResult> UpdateAsync(UpdateFinanceYearDTO model);
         Task<ValidationResult> SoftDeleteAsync(int id);
         Task<IEnumerable<DropDownItem>> GetDropDownDataAsync();
+        Task<IEnumerable<DropDownItem>> GetDropDownDataByStatusAsync(EntityStatus entityStatus);
         Task<PagedResult<FinanceYearDTO>> GetListAsync(FinanceYearFilterDTO filter);
 
     }

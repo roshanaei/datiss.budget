@@ -169,6 +169,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to فایل انتخاب شده معتبر نیست..
+        /// </summary>
+        public static string ImportExcelInvalidFile {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to عملیات ورود فایل اکسل با موفقیت انجام گردید..
         /// </summary>
         public static string ImportExcelSuccess {
