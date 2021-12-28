@@ -19,7 +19,6 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Mapster;
 using LinqKit;
 using Datiss.Budget.Security;
-//using System.Data.SqlClient;
 using Microsoft.Data.SqlClient;
 using Datiss.Budget.Extensions;
 using Datiss.Budget.Enum;
@@ -176,17 +175,21 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task<int> CalculationAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId)
         {
             List<SqlParameter> sqlParams = new List<SqlParameter>
             {
                 new SqlParameter("YearId", yearId),
                 new SqlParameter("OrganizationId", organizationId)
             };
-
-            var result = await _uow.ExecuteScalarAsync<int>(
-                "[dbo].[WaterInstallFees_Cal1] @YearId, @OrganizationId",
-                parameters: sqlParams.ToArray());
+            var result = new List<CalculationItemData>();
+            result.Add(new CalculationItemData
+            {
+                Key = "WaterInstallFees_Cal1",
+                Value = await _uow.ExecuteScalar<int>(
+                        "[dbo].[WaterInstallFees_Cal1] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
+            });
 
             return await Task.FromResult(result);
         }
@@ -308,7 +311,7 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId)
                         );
                 }
-                if(!await dwatertypes.AnyAsync(x=>x.Id == rec.DWaterTypeId))
+                if (!await dwatertypes.AnyAsync(x => x.Id == rec.DWaterTypeId))
                 {
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 1, rec.DWaterTypeId)
@@ -323,6 +326,28 @@ namespace Datiss.Budget.Services
 
                 rowIndex++;
             }
+
+
+            //Start DWaterType
+            var missingDWType = new List<Constant>();
+            foreach (var item in dwatertypes)
+            {
+                var existDWTypeInExcel = records.Any(_ => _.DWaterTypeId == item.Id);
+                if (!existDWTypeInExcel)
+                    missingDWType.Add(item);
+                
+            }
+            if(missingDWType.Any())
+            {
+                string dWaterTypeNames = "";
+                foreach (var item in missingDWType)
+                {
+                    dWaterTypeNames += "- " + item.Title + "<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelDWTypeNotInExcel, dWaterTypeNames));
+            }
+            //end
 
             rowIndex = 1;
 

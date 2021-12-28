@@ -344,17 +344,6 @@ namespace Datiss.Budget.Web.Controllers
         }
 
 
-        private string getCalcTitle(string key)
-            => key switch {
-                "WaterSalesSplit_Cal1" => SPTitles.WaterSalesSplit_Cal1,
-                "WaterSalesSplit_Cal2" => SPTitles.WaterSalesSplit_Cal2,
-                "WaterSalesSplit_Cal3" => SPTitles.WaterSalesSplit_Cal3,
-                "WaterSalesSplit_Cal4" => SPTitles.WaterSalesSplit_Cal4,
-                "WaterSalesSplit_Cal5" => SPTitles.WaterSalesSplit_Cal5,
-                "WaterSalesSplit_Cal6" => SPTitles.WaterSalesSplit_Cal6,
-                _=> ""
-            };
-
         [HttpPost("[action]")]
         public async Task<IActionResult> Calculation(CalculationInputViewModel model)
         {
@@ -456,6 +445,19 @@ namespace Datiss.Budget.Web.Controllers
             using var workbook = result.ExportExcel();
             return workbook.Deliver("WaterSalesSplit.xlsx");
         }
+        #region Private Helper Methods
+        private string getCalcTitle(string key)
+            => key switch
+            {
+                "WaterSalesSplit_Cal1" => SPTitles.WaterSalesSplit_Cal1,
+                "WaterSalesSplit_Cal2" => SPTitles.WaterSalesSplit_Cal2,
+                "WaterSalesSplit_Cal3" => SPTitles.WaterSalesSplit_Cal3,
+                "WaterSalesSplit_Cal4" => SPTitles.WaterSalesSplit_Cal4,
+                "WaterSalesSplit_Cal5" => SPTitles.WaterSalesSplit_Cal5,
+                "WaterSalesSplit_Cal6" => SPTitles.WaterSalesSplit_Cal6,
+                _ => ""
+            };
+        #endregion
     }
-    
+
 }

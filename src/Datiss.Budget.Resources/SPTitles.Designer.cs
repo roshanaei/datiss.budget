@@ -61,6 +61,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to WaterInstallFees_Cal1.
+        /// </summary>
+        public static string WaterInstallFees_Cal1 {
+            get {
+                return ResourceManager.GetString("WaterInstallFees_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to تعداد فروش انشعاب آب سالیانه مسکونی.
         /// </summary>
         public static string WaterSalesSplit_Cal1 {

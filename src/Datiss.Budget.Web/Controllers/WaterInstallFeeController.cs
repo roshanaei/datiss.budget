@@ -22,6 +22,7 @@ using ClosedXML.Extensions;
 using Datiss.Budget.Reports.Excel;
 using Microsoft.Extensions.Logging;
 using Datiss.Budget.Common;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -206,7 +207,7 @@ namespace Datiss.Budget.Web.Controllers
             if (model.ExcelFile == null || model.ExcelFile.Length == 0)
                 return Json(new {
                     hasError = true,
-                    message = "فایل انتخاب شده معتبر نیست."
+                    message = ViewMessages.ImportExcelInvalidFile
                 });
 
             try {
@@ -315,16 +316,22 @@ namespace Datiss.Budget.Web.Controllers
             model.CheckArgumentIsNull(nameof(model));
 
             var result = await _waterInstallFeeService.CalculationAsync(
-                model.YearId, 
+                model.YearId,
                 model.OrganizationId);
 
-            var output = new CalculationResultViewModel
+            List<CalculationResultViewModel> viewModel = new List<CalculationResultViewModel>();
+            foreach (var item in result)
             {
-                Result = result,
-                Title = "WaterInstallFee calc" //TODO : change it to proper title
-            };
+                viewModel.Add(
+                    new CalculationResultViewModel
+                    {
+                        Result = item.Value,
+                        Title = getCalcTitle(item.Key)
+                    }
+                );
+            }
 
-            return PartialView("_calculationModal", output);
+            return PartialView("_calculationModal", viewModel);
         }
 
 
@@ -349,7 +356,12 @@ namespace Datiss.Budget.Web.Controllers
             );
 
             model.SetYearSource(
-                (await _financeYearService.GetDropDownDataAsync())
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Disbaled))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            model.SetTargetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Enabled))
                     .Adapt<IEnumerable<DropDownItemViewModel>>()
             );
 
@@ -395,6 +407,15 @@ namespace Datiss.Budget.Web.Controllers
             using var workbook = result.ExportExcel();
             return workbook.Deliver("WaterInstallFee.xlsx");
         }
+
+        #region Private Helper Methods
+        private string getCalcTitle(string key)
+            => key switch
+            {
+                "WaterInstallFees_Cal1" => SPTitles.WaterInstallFees_Cal1,
+                _ => ""
+            };
+        #endregion
 
     }
 }

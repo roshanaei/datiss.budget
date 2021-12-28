@@ -142,6 +142,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to کاربری های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelDWTypeNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelDWTypeNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد کاربری &quot;{1}&quot; معتبر نیست ..
         /// </summary>
         public static string ImportExcelInvalidDWaterType {

@@ -138,6 +138,12 @@ namespace Datiss.Budget.Services
                 Id = x.Id,
                 Title = x.Year.ToString()
             }).ToListAsync();
+        public async Task<IEnumerable<DropDownItem>> GetDropDownDataByStatusAsync(EntityStatus entityStatus)
+            => await Query().Where(x => x.Status == entityStatus).Select(x => new DropDownItem
+            {
+                Id = x.Id,
+                Title = x.Year.ToString()
+            }).ToListAsync();
 
         public async Task<PagedResult<FinanceYearDTO>> GetListAsync(FinanceYearFilterDTO filter)
         {
