@@ -311,7 +311,7 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId)
                         );
                 }
-                if(!await dwatertypes.AnyAsync(x=>x.Id == rec.DWaterTypeId))
+                if (!await dwatertypes.AnyAsync(x => x.Id == rec.DWaterTypeId))
                 {
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 1, rec.DWaterTypeId)
@@ -326,6 +326,28 @@ namespace Datiss.Budget.Services
 
                 rowIndex++;
             }
+
+
+            //Start DWaterType
+            var missingDWType = new List<Constant>();
+            foreach (var item in dwatertypes)
+            {
+                var existDWTypeInExcel = records.Any(_ => _.DWaterTypeId == item.Id);
+                if (!existDWTypeInExcel)
+                    missingDWType.Add(item);
+                
+            }
+            if(missingDWType.Any())
+            {
+                string dWaterTypeNames = "";
+                foreach (var item in missingDWType)
+                {
+                    dWaterTypeNames += "- " + item.Title + "<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelDWTypeNotInExcel, dWaterTypeNames));
+            }
+            //end
 
             rowIndex = 1;
 
