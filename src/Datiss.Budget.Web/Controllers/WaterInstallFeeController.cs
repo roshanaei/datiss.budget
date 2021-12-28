@@ -22,6 +22,7 @@ using ClosedXML.Extensions;
 using Datiss.Budget.Reports.Excel;
 using Microsoft.Extensions.Logging;
 using Datiss.Budget.Common;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -206,7 +207,7 @@ namespace Datiss.Budget.Web.Controllers
             if (model.ExcelFile == null || model.ExcelFile.Length == 0)
                 return Json(new {
                     hasError = true,
-                    message = "فایل انتخاب شده معتبر نیست."
+                    message = ViewMessages.ImportExcelInvalidFile
                 });
 
             try {
@@ -355,12 +356,12 @@ namespace Datiss.Budget.Web.Controllers
             );
 
             model.SetYearSource(
-                (await _financeYearService.GetDropDownDataByStatusAsync(false))
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Disbaled))
                     .Adapt<IEnumerable<DropDownItemViewModel>>()
             );
 
             model.SetTargetYearSource(
-                (await _financeYearService.GetDropDownDataByStatusAsync(true))
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Enabled))
                     .Adapt<IEnumerable<DropDownItemViewModel>>()
             );
 

@@ -153,6 +153,9 @@
   <data name="ImportExcelFileSizeInvalid" xml:space="preserve">
     <value>سایز فایل بیش از حد مجاز است.</value>
   </data>
+  <data name="ImportExcelInvalidFile" xml:space="preserve">
+    <value>فایل انتخاب شده معتبر نیست.</value>
+  </data>
   <data name="ImportExcelSuccess" xml:space="preserve">
     <value>عملیات ورود فایل اکسل با موفقیت انجام گردید.</value>
   </data>
