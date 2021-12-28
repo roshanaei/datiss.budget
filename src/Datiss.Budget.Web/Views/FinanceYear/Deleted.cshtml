@@ -1,0 +1,199 @@
+﻿@model FinanceYearIndexViewModel
+@{ ViewData["Title"] = "سال های مالی حذف شده"; }
+
+
+
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <!--DataTable-->
+                        <fieldset>
+                            <span>
+                                <a asp-controller="FinanceYear" asp-action="index" data-toggle="tooltip" data-placement="top" title="بازگشت" type="button" class="btn btn-info bg-light-info mr-1 my-font">
+                                    بازگشت به صفحه اصلی
+                                </a>
+                            </span>
+                        </fieldset>
+                        <hr />
+                        <div class="table-responsive">
+                            <table id="" class=" table table-hover table-bordered m-0 my-font">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>نام</th>
+                                        <th>وضعیت</th>
+                                        <th>مدیریت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Items)
+                                    {
+                                        <tr>
+                                            <td>@item.Title</td>
+                                            <td>@item.StatusDisplay</td>
+                                            <td>
+                                                <span>
+                                                    <button data-id="@item.Id" value="@item.Id" data-toggle="tooltip" data-placement="top" title="غیرفعال کردن" type="button" name="btnReturn" class="return-row btn bg-light-info btn-info mr-1 my-font">
+                                                        <i _ngcontent-dpj-c129="" class="fa fa-info"></i>
+                                                    </button>
+                                                </span>
+                                                <span>
+                                                    <button data-id="@item.Id" value="@item.Id" data-toggle="tooltip" data-placement="top" title="حذف کلی" type="button" name="btnDelete" class="hard-delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                                                        <i _ngcontent-dpj-c129="" class="fa fa-trash-o"></i>
+                                                    </button>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="rowACJSB" style="margin-top:20px">
+                                <!--Tools-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+@section footSection{
+    <script>
+        $(document).on('click', '.return-row', function () {
+            let id = $(this).data('id');
+            let btn = this;
+
+            Swal.fire({
+                title: '<span class="my-font">هشدار</span>',
+                //text: "توجه داشته باشید که این عملیات غیر قابل بازگشت است !",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2F8BE6',
+                animation: false,
+                customClass: 'animated flipInX',
+                cancelButtonColor: '#F55252',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'بازگشت اطلاعات!',
+
+                confirmButtonClass: 'btn btn-warning my-font',
+                cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.value) {
+                    returnRow(btn, id);
+
+                    return true;
+                }
+                else {
+
+                    return false;
+                }
+            });
+        });
+        function returnRow(e, id) {
+
+            $.ajax({
+            url: '@Url.Action(FinanceYearController.ACTION_ReturnToDisbaled)' + '/' + id,
+            type: 'POST',
+                success: function (data, status, settings) {
+                    if (data.hasError) {
+                        alert(data.message);
+                        return;
+                    }
+                    Swal.fire({
+                        title: '<span class="my-font">عملیات موفق</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'success',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: true,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                        buttonsStyling: false,
+                    }).then(function (result) {
+                        document.location.href = '@Url.Action(FinanceYearController.ACTION_Deleted)';
+                    });
+            },
+            error: function (request, options, err) {
+                console.log(err);
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+        $(document).on('click', '.hard-delete-row', function () {
+            let id = $(this).data('id');
+            let btn = this;
+
+            Swal.fire({
+                title: '<span class="my-font">برای حذف اطمینان دارید ؟</span>',
+                text: "توجه داشته باشید که این عملیات غیر قابل بازگشت است !",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2F8BE6',
+                animation: false,
+                customClass: 'animated flipInX',
+                cancelButtonColor: '#F55252',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+
+                confirmButtonClass: 'btn btn-warning my-font',
+                cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.value) {
+                    harddeleteRow(btn, id);
+
+                    return true;
+                }
+                else {
+
+                    return false;
+                }
+            });
+        });
+        function harddeleteRow(e, id) {
+        console.log(e);
+
+            $.ajax({
+            url: '@Url.Action(FinanceYearController.ACTION_HardDelete)' + '/' + id,
+            type: 'POST',
+                success: function (data, status, settings) {
+                    if (data.hasError) {
+                        alert(data.message);
+                        return;
+                    }
+                    Swal.fire({
+                        title: '<span class="my-font">عملیات موفق</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'success',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: true,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                        buttonsStyling: false,
+                    }).then(function (result) {
+                        document.location.href = '@Url.Action(FinanceYearController.ACTION_Deleted)';
+                    });
+            },
+            error: function (request, options, err) {
+                console.log(err);
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+    </script>
+}

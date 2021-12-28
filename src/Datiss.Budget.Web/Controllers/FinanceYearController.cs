@@ -27,6 +27,9 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
         public const string ACTION_Delete = nameof(Delete);
+        public const string ACTION_Deleted = nameof(Deleted);
+        public const string ACTION_HardDelete = nameof(HardDelete);
+        public const string ACTION_ReturnToDisbaled = nameof(ReturnToDisbaled);
 
         private readonly IFinanceYearService _financeYearService;
 
@@ -132,6 +135,7 @@ namespace Datiss.Budget.Web.Controllers
 
             return Json(result);
         }
+
         [HttpPost("[action]/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -154,5 +158,66 @@ namespace Datiss.Budget.Web.Controllers
                 message = "حذف رکورد با موفقیت انجام شد."
             });
         }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Deleted()
+        {
+            var filterInput = new FinanceYearFilterDTO
+            {
+                OrderBy = "id",
+                OrderDesc = true,
+            };
+            var result = await _financeYearService.GetListDeletedAsync(filterInput);
+            var model = result.Adapt<FinanceYearIndexViewModel>();
+            return View(model);
+        }
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> HardDelete(int id)
+        {
+            try
+            {
+                await _financeYearService.HardDeleteAsync(id);
+
+                return Json(new
+                {
+                    hasError = false,
+                    message = "حذف رکورد با موفقیت انجام شد."
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = "حتما باید سال مالی داشته باشید ."
+                });
+            }
+        }
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> ReturnToDisbaled(int id)
+        {
+            try
+            {
+                await _financeYearService.SetDisbaledAsync(id);
+
+                return Json(new
+                {
+                    hasError = false,
+                    message = "بازشگت رکورد با موفقیت انجام شد."
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = "خطا پیش آمد ."
+                });
+            }
+        }
+
     }
+
 }

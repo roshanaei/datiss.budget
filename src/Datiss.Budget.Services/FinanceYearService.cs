@@ -144,6 +144,38 @@ namespace Datiss.Budget.Services
                 throw new Exception();
             }
         }
+        public async Task<ValidationResult> HardDeleteAsync(int id)
+        {
+            var entity = await _dbSet.FindAsync(id);
+            entity.CheckArgumentIsNull(nameof(entity));
+
+            try
+            {
+                _dbSet.RemoveRange(entity);
+                await _uow.SaveChangesAsync();
+                return ValidationResult.Success();
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
+        }
+        public async Task<ValidationResult> SetDisbaledAsync(int id)
+        {
+            var entity = await _dbSet.FindAsync(id);
+            entity.CheckArgumentIsNull(nameof(entity));
+            entity.Status = EntityStatus.Disbaled;
+
+            try
+            {
+                await _uow.SaveChangesAsync();
+                return ValidationResult.Success();
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
+        }
 
         public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync()
             => await Query().Select(x => new DropDownItem
@@ -173,6 +205,27 @@ namespace Datiss.Budget.Services
                 .Skip(filter.StartIndex)
                 .Take(filter.PageSize);
             result.Items = await query
+                                    .Select(x => new FinanceYearDTO
+                                    {
+                                        Id = x.Id,
+                                        Title = x.Title,
+                                        StartDate = x.StartDate,
+                                        EndDate = x.EndDate,
+                                        Year = x.Year,
+                                        Status = x.Status
+                                    }).ToListAsync();
+
+            return await Task.FromResult(result);
+        }
+        public async Task<PagedResult<FinanceYearDTO>> GetListDeletedAsync(FinanceYearFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+            var result = new PagedResult<FinanceYearDTO>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
+            result.Items = await _dbSet.Where(x=>x.Status==EntityStatus.Deleted)
                                     .Select(x => new FinanceYearDTO
                                     {
                                         Id = x.Id,
