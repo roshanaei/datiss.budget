@@ -334,7 +334,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(WaterInstallFeeController.ACTION_Index)';
+                                document.location.href = '@Url.Action(WaterInstallFeeController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
