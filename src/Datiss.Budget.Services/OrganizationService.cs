@@ -11,6 +11,7 @@ using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.Security;
+using Datiss.Budget.Resources;
 
 namespace Datiss.Budget.Services
 {
@@ -38,56 +39,66 @@ namespace Datiss.Budget.Services
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            //TODO : check logic
             var entity = new Organization
             {
                 Type = model.Type,
                 DisplayOrder = model.DisplayOrder,
                 ParentId = model.ParentId,
                 Title = model.Title,
-                SewageStatus = model.SewageStatus
+                SewageStatus = model.SewageStatus,
+                Status = model.Enabled
+                ? EntityStatus.Enabled
+                : EntityStatus.Disbaled
             };
 
-            entity.Status = model.Enabled
-                ? EntityStatus.Enabled
-                : EntityStatus.Disbaled;
+            if (await checkLogicAsync(model.Title))
+            {
+                await _dbSet.AddAsync(entity);
+                await _uow.SaveChangesAsync();
+                return ValidationResult.Success();
+            }
 
-            await _dbSet.AddAsync(entity);
-            await _uow.SaveChangesAsync();
-
-            return ValidationResult.Success();
+            return ValidationResult.Failed("کپی است سازمان مورد نظر.");
         }
 
         public async Task<ValidationResult> UpdateAsync(UpdateOrganizationDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            //TODO : check logic
-            var entity = await _dbSet.FindAsync(model.Id);
-            entity.ParentId = model.ParentId;
-            entity.Title = model.Title;
-            entity.Type = model.Type;
-            entity.DisplayOrder = model.DisplayOrder;
-            entity.SewageStatus = model.SewageStatus;
-            entity.Status = model.Enabled
-                ? EntityStatus.Enabled
-                : EntityStatus.Disbaled;
+            if (await checkLogicAsync(model.Title, model.Id))
+            {
+                var entity = await _dbSet.FindAsync(model.Id);
+                entity.ParentId = model.ParentId;
+                entity.Title = model.Title;
+                entity.Type = model.Type;
+                entity.DisplayOrder = model.DisplayOrder;
+                entity.SewageStatus = model.SewageStatus;
+                entity.Status = model.Enabled
+                    ? EntityStatus.Enabled
+                    : EntityStatus.Disbaled;
 
-            await _uow.SaveChangesAsync();
+                await _uow.SaveChangesAsync();
 
-            return ValidationResult.Success();
+                return ValidationResult.Success();
+            }
+
+            return ValidationResult.Failed("سازمانی وجود دارد");
         }
 
         public async Task<ValidationResult> SoftDeleteAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
             entity.CheckArgumentIsNull(nameof(entity));
-
-            entity.Status = EntityStatus.Deleted;
-
-            await _uow.SaveChangesAsync();
-
-            return ValidationResult.Success();
+            try
+            {
+                entity.Status = EntityStatus.Deleted;
+                await _uow.SaveChangesAsync();
+                return ValidationResult.Success();
+            }
+            catch(Exception)
+            {
+                return ValidationResult.Failed("مشکلی به وجود آمده است");
+            }
         }
 
         public async Task<IEnumerable<DropDownItem>> GetParentsAsync()
@@ -133,12 +144,7 @@ namespace Datiss.Budget.Services
 
             return await IsDescendentOfAsync(parentId, targetOrg.ParentId.Value);
         }
-
-
-        private async Task<bool> isChildOfAsync(int parentId, int targetOrganizationId)
-            => await Query().AnyAsync(_ => _.ParentId == parentId && _.Id == targetOrganizationId);
         
-
         public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync(bool input=false)
             =>_userContext.OrganizationId.HasValue
 
@@ -223,25 +229,15 @@ namespace Datiss.Budget.Services
 
             orderBy = orderBy.ToLower();
             switch (orderBy) {
-                case "parent":
+                case "organizationid":
                     return desc
                         ? query.OrderByDescending(x => x.Parent.Id)
                         : query.OrderBy(x => x.Parent.Id);
 
-                case "title":
-                    return desc
-                        ? query.OrderByDescending(x => x.Title)
-                        : query.OrderBy(x => x.Title);
-
-                case "sewagestatus":
-                    return desc
-                        ? query.OrderByDescending(x => x.SewageStatus)
-                        : query.OrderBy(x => x.SewageStatus);
-
                 default:
-                    return desc
-                        ? query.OrderByDescending(x => x.Id)
-                        : query.OrderBy(x => x.Id);
+                    return query.OrderBy(x => x.DisplayOrder)
+                                .ThenBy(x => x.Type)
+                                .ThenBy(x => x.ParentId);
             }
         }
 
@@ -319,6 +315,25 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+
+        private async Task<bool> isChildOfAsync(int parentId, int targetOrganizationId)
+            => await Query().AnyAsync(_ => _.ParentId == parentId && _.Id == targetOrganizationId);
+
+        #endregion
+
+        #region Logics
+
+        private async Task<bool> checkLogicAsync(
+            string title,
+            int? id = null)
+        {
+            var result = id == null
+                ? await Query().AnyAsync(x => x.Title.Trim() == title.Trim())
+
+                : await Query().AnyAsync(x => x.Title.Trim() == title.Trim() &&
+                                            x.Id != id);
+            return !result;
+        }
 
         #endregion
 
