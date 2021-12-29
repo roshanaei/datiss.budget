@@ -144,6 +144,21 @@
   <data name="DeleteRowSuccess" xml:space="preserve">
     <value>حذف رکورد با موفقیت انجام شد.</value>
   </data>
+  <data name="FinanceYearErrorHardDelete" xml:space="preserve">
+    <value>سال مالی داده وابسته دارد . ابتدا آن ها را پاک کنید !</value>
+  </data>
+  <data name="FinanceYearErrorSoftDelete" xml:space="preserve">
+    <value>حداقل یک سالی مالی باید داشته باشید .</value>
+  </data>
+  <data name="FinanceYearSuccessHardDelete" xml:space="preserve">
+    <value>سال مالی با موفقیت از روی سیستم پاک شد.</value>
+  </data>
+  <data name="FinanceYearSuccessReturnYear" xml:space="preserve">
+    <value>سال مالی از لیست حذف شده ها پاک شد .</value>
+  </data>
+  <data name="FinanceYearSuccessSoftDelete" xml:space="preserve">
+    <value>سال مالی با موفقیت حذف شد . امکان برگشت این عملیات وجود دارد . .</value>
+  </data>
   <data name="ImportExcelFileFormatInvalid" xml:space="preserve">
     <value>فرمت فایل اکسل نمی باشد.</value>
   </data>

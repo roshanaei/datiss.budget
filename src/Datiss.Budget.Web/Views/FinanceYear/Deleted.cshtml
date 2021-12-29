@@ -20,11 +20,9 @@
                     <div class="card-body">
                         <!--DataTable-->
                         <fieldset>
-                            <span>
-                                <a asp-controller="FinanceYear" asp-action="index" data-toggle="tooltip" data-placement="top" title="بازگشت" type="button" class="btn btn-info bg-light-info mr-1 my-font">
-                                    بازگشت به صفحه اصلی
-                                </a>
-                            </span>
+                            <a asp-controller="FinanceYear" asp-action="index" data-toggle="tooltip" data-placement="top" title="بازگشت به عقب" type="button" class="btn btn-info bg-light-info mr-1 my-font">
+                                <i _ngcontent-dpj-c129="" class="ft ft-arrow-right"></i>
+                            </a>
                         </fieldset>
                         <hr />
                         <div class="table-responsive">
@@ -41,11 +39,11 @@
                                     {
                                         <tr>
                                             <td>@item.Title</td>
-                                            <td>@item.StatusDisplay</td>
+                                            <td style="color:red">@item.StatusDisplay</td>
                                             <td>
                                                 <span>
                                                     <button data-id="@item.Id" value="@item.Id" data-toggle="tooltip" data-placement="top" title="غیرفعال کردن" type="button" name="btnReturn" class="return-row btn bg-light-info btn-info mr-1 my-font">
-                                                        <i _ngcontent-dpj-c129="" class="fa fa-info"></i>
+                                                        <i _ngcontent-dpj-c129="" class="icon-action-undo"></i>
                                                     </button>
                                                 </span>
                                                 <span>
@@ -75,34 +73,9 @@
         $(document).on('click', '.return-row', function () {
             let id = $(this).data('id');
             let btn = this;
-
-            Swal.fire({
-                title: '<span class="my-font">هشدار</span>',
-                //text: "توجه داشته باشید که این عملیات غیر قابل بازگشت است !",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#2F8BE6',
-                animation: false,
-                customClass: 'animated flipInX',
-                cancelButtonColor: '#F55252',
-                cancelButtonText: 'انصراف',
-                confirmButtonText: 'بازگشت اطلاعات!',
-
-                confirmButtonClass: 'btn btn-warning my-font',
-                cancelButtonClass: 'btn btn-danger  my-font ml-1',
-                buttonsStyling: false,
-            }).then(function (result) {
-                if (result.value) {
-                    returnRow(btn, id);
-
-                    return true;
-                }
-                else {
-
-                    return false;
-                }
-            });
+            returnRow(btn, id);
         });
+
         function returnRow(e, id) {
 
             $.ajax({
@@ -110,7 +83,17 @@
             type: 'POST',
                 success: function (data, status, settings) {
                     if (data.hasError) {
-                        alert(data.message);
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">مشکلی به وجود آمده است مجددا سعی نمایید.</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
                         return;
                     }
                     Swal.fire({
@@ -132,25 +115,26 @@
                 alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
             }
         });
-    }
+        }
+
         $(document).on('click', '.hard-delete-row', function () {
             let id = $(this).data('id');
             let btn = this;
 
             Swal.fire({
-                title: '<span class="my-font">برای حذف اطمینان دارید ؟</span>',
-                text: "توجه داشته باشید که این عملیات غیر قابل بازگشت است !",
-                type: 'warning',
+                title: '<span class="my-font">اخطار</span>',
+                html: '<span class="my-font">توجه داشته باشید که این عملیات غیر قابل بازگشت است ! </span>',
+                type: 'error',
                 showCancelButton: true,
                 confirmButtonColor: '#2F8BE6',
                 animation: false,
                 customClass: 'animated flipInX',
                 cancelButtonColor: '#F55252',
                 cancelButtonText: 'انصراف',
-                confirmButtonText: 'حذف اطلاعات!',
+                confirmButtonText: 'حذف سال!',
 
-                confirmButtonClass: 'btn btn-warning my-font',
-                cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                confirmButtonClass: 'btn btn-danger my-font',
+                cancelButtonClass: 'btn btn-secondary my-font ml-1',
                 buttonsStyling: false,
             }).then(function (result) {
                 if (result.value) {
@@ -172,7 +156,17 @@
             type: 'POST',
                 success: function (data, status, settings) {
                     if (data.hasError) {
-                        alert(data.message);
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data.message}</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
                         return;
                     }
                     Swal.fire({

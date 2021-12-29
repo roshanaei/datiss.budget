@@ -143,19 +143,19 @@ namespace Datiss.Budget.Web.Controllers
             {
                 await _financeYearService.SoftDeleteAsync(id);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json(new
                 {
                     hasError = true,
-                    message = "حتما باید سال مالی داشته باشید ."
+                    message = ViewMessages.FinanceYearErrorSoftDelete
                 });
             }
 
             return Json(new
             {
                 hasError = false,
-                message = "حذف رکورد با موفقیت انجام شد."
+                message = ViewMessages.FinanceYearSuccessSoftDelete
             });
         }
 
@@ -182,15 +182,15 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(new
                 {
                     hasError = false,
-                    message = "حذف رکورد با موفقیت انجام شد."
+                    message = ViewMessages.FinanceYearSuccessHardDelete
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json(new
                 {
                     hasError = true,
-                    message = "حتما باید سال مالی داشته باشید ."
+                    message = ViewMessages.FinanceYearErrorHardDelete
                 });
             }
         }
@@ -205,15 +205,15 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(new
                 {
                     hasError = false,
-                    message = "بازشگت رکورد با موفقیت انجام شد."
+                    message = ViewMessages.FinanceYearSuccessReturnYear
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json(new
                 {
                     hasError = true,
-                    message = "خطا پیش آمد ."
+                    message = ""
                 });
             }
         }
