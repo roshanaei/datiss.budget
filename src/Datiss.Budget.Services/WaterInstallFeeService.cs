@@ -144,9 +144,9 @@ namespace Datiss.Budget.Services
             }
             catch (RecordExistException)
             {
-                string str = string.Format(ServiceMessages.Logic_DWaterType,
-                    model.DWaterTypeTitle);
-                return ValidationResult<WaterInstallFeeDTO>.Failed(str
+                return ValidationResult<WaterInstallFeeDTO>.Failed(
+                    string.Format(ServiceMessages.Logic_DWaterType,
+                    model.DWaterTypeTitle)
                     );
             }
         }
