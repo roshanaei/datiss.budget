@@ -79,6 +79,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<IncomeCurrentOperational> IncomeCurrentOperationals { get; set; }
 
+        public ICollection<BranchingRateIncrease> BranchingRateIncrease { get; set; }
+
 
         #endregion
     }
