@@ -40,11 +40,11 @@ namespace Datiss.Budget.Entities
         #region Navigations
         public Constant Parent { get; set; }
         public ICollection<Constant> Childrens { get; set; }
-        
+
         public ICollection<WaterInstallFee> WaterInstallFees { get; set; }
-        
+
         public ICollection<WasteInstallFee> WasteInstallFees { get; set; }
-        
+
         public ICollection<WaterSalesSplit> WaterPipeDiameterSalessplit { get; set; }
         public ICollection<WaterSalesSplit> UserTypeWaterSalesSplit { get; set; }
 
@@ -95,6 +95,8 @@ namespace Datiss.Budget.Entities
         public ICollection<IncomeCurrentOperational> IncomeCurrentOperationals { get; set; }
 
         public ICollection<User> UserPositions { get; set; }
+
+        public ICollection<BranchingRateIncrease> BranchingRateIncrease { get;set;}
 
         #endregion
     }

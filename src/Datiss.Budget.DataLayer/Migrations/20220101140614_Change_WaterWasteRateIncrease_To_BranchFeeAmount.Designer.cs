@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220101140614_Change_WaterWasteRateIncrease_To_BranchFeeAmount")]
+    partial class Change_WaterWasteRateIncrease_To_BranchFeeAmount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -315,89 +317,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("BranchFeeAmount");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.BranchingRateIncrease", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("BranchingRateIncreaseId")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("CapacityFixAmount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FixAmountBusiness")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WasteFixNote2")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WastePersentIncrease")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WasteRateIncrease")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WaterFixNote2")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WaterInstallRateIncrease")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WaterRateIncrease")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WsInstalIncrease")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("UserTypeId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("BranchingRateIncrease");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.ConsumeForcast", b =>
@@ -1645,69 +1564,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("UserTypeAverageCapacity");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.WNHCo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("WNHCoId")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("FixCostCo")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("P1Capacity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("P1CostCo")
-                        .HasColumnType("int");
-
-                    b.Property<int>("P2CostCo")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("WNHCo");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.WWsFee", b =>
@@ -3015,33 +2871,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.BranchingRateIncrease", b =>
-                {
-                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                        .WithMany("BranchingRateIncrease")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.Constant", "UserType")
-                        .WithMany("BranchingRateIncrease")
-                        .HasForeignKey("UserTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("BranchingRateIncrease")
-                        .HasForeignKey("YearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FinanceYear");
-
-                    b.Navigation("Organization");
-
-                    b.Navigation("UserType");
-                });
-
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.ConsumeForcast", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
@@ -3465,25 +3294,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("UserType");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.WNHCo", b =>
-                {
-                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                        .WithMany("WNHCo")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("WNHCo")
-                        .HasForeignKey("YearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FinanceYear");
-
-                    b.Navigation("Organization");
-                });
-
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.WWsFee", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
@@ -3759,8 +3569,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                 {
                     b.Navigation("AverageContractedCapacityNHUses");
 
-                    b.Navigation("BranchingRateIncrease");
-
                     b.Navigation("Childrens");
 
                     b.Navigation("ConsumeForcast");
@@ -3831,8 +3639,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("BranchFeeAmounts");
 
-                    b.Navigation("BranchingRateIncrease");
-
                     b.Navigation("ConsumeForcast");
 
                     b.Navigation("ConsumeForcastWs");
@@ -3873,8 +3679,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("WaterSalesSplits");
 
-                    b.Navigation("WNHCo");
-
                     b.Navigation("WWsFee");
                 });
 
@@ -3903,8 +3707,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("AverageContractedCapacityNHUses");
 
                     b.Navigation("BranchFeeAmounts");
-
-                    b.Navigation("BranchingRateIncrease");
 
                     b.Navigation("Childrens");
 
@@ -3947,8 +3749,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("WaterInstallFees");
 
                     b.Navigation("WaterSalesSplits");
-
-                    b.Navigation("WNHCo");
 
                     b.Navigation("WWsFee");
                 });
