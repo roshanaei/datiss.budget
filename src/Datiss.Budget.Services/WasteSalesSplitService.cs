@@ -74,7 +74,8 @@ namespace Datiss.Budget.Services
                 UserTypeId = model.UserTypeId,
                 WsPipeDiameterId = model.WsPipeDiameterId,
                 NumberSales = model.NumberSales,
-                UnitSales = model.UnitSales
+                UnitSales = model.UnitSales,
+                AverageCapacity = model.AverageCapacity
             };
 
             if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.WsPipeDiameterId))
@@ -88,6 +89,7 @@ namespace Datiss.Budget.Services
                 result.WspipeDiameterDisplay = (await _constSet.FindAsync(entity.WsPipeDiameterId)).Title;
                 result.NumberSales = entity.NumberSales;
                 result.UnitSales = entity.UnitSales;
+                result.AverageCapacity = entity.AverageCapacity;
 
                 return ValidationResult<WasteSalesSplitDTO>.Success(result);
             }
@@ -110,6 +112,7 @@ namespace Datiss.Budget.Services
                 entity.WsPipeDiameterId = model.WsPipeDiameterId;
                 entity.NumberSales = model.NumberSales;
                 entity.UnitSales = model.UnitSales;
+                entity.AverageCapacity = model.AverageCapacity;
 
                 await _uow.SaveChangesAsync();
 
@@ -125,6 +128,7 @@ namespace Datiss.Budget.Services
                     WspipeDiameterDisplay = (await _constSet.FindAsync(model.WsPipeDiameterId)).Title,
                     NumberSales = model.NumberSales,
                     UnitSales = model.UnitSales,
+                    AverageCapacity = model.AverageCapacity
                 };
 
                 return ValidationResult<WasteSalesSplitDTO>.Success(result);
