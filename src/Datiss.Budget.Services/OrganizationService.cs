@@ -99,8 +99,8 @@ namespace Datiss.Budget.Services
                     Title = x.Title
                 }).ToListAsync();
 
-        public async Task<IEnumerable<Organization>> GetWithChildrenAsync(int organizationId)
-            => await getWithChildrenAsync(organizationId);
+        public async Task<IEnumerable<Organization>> GetWithChildrenAsync(int? organizationId, bool input = false)
+            => await getWithChildrenAsync(organizationId, input);
 
         public async Task<IEnumerable<Organization>> GetAllDescendentsAsync(int? parentId) {
             var result = new List<Organization>();
@@ -283,15 +283,18 @@ namespace Datiss.Budget.Services
             return result;
         }
 
-        private async Task<IEnumerable<Organization>> getWithChildrenAsync(int organizationId, bool input=false)
+        private async Task<IEnumerable<Organization>> getWithChildrenAsync(int? organizationId, bool input=false)
         {
+            if (!organizationId.HasValue)
+                organizationId = _userContext.OrganizationId;
+
             var result = new List<Organization>();
             var myself = await _dbSet.FirstOrDefaultAsync(_ => _.Id == organizationId);
 
-            if(!input)
+            if(myself != null && !input)
                 result.Add(myself);
 
-            var children = await getByParnetIdAsync(myself.Id,input);
+            var children = await getByParnetIdAsync(myself != null ? myself.Id : null, input);
 
             if (input)
             {

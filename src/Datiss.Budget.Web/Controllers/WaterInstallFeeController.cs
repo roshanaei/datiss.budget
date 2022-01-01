@@ -42,6 +42,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
+        public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
@@ -399,6 +400,32 @@ namespace Datiss.Budget.Web.Controllers
             }
             
             return Json(model);
+        }
+
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId) {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var dwaterTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
+
+            var items = new List<WaterInstallFeeDTO>();
+
+            foreach(var org in organizations) {
+                foreach(var dwt in dwaterTypes) {
+                    items.Add(new WaterInstallFeeDTO
+                    {
+                        DWaterTypeDisplay = dwt.Title,
+                        DWaterTypeId = dwt.Id,
+                        OrganizationId = org.Id,
+                        OrganizationDisplay = org.Title,
+                        Year = year.Year,
+                        YearId = year.Id
+                    });
+                }
+            }
+
+            using var workbook = items.GetImportTemplate(year.Year);
+            return workbook.Deliver("WaterInstallFee-Import-Template.xlsx");
         }
 
         [HttpGet("[action]/{orgid}/{yearid}")]

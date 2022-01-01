@@ -33,11 +33,15 @@ namespace Datiss.Budget.Services
         private IQueryable<FinanceYear> Query()
             => _dbSet.AsNoTracking()
                         .Where(x => x.Status != EntityStatus.Deleted);
+
         public async Task<FinanceYear> GetByIdAsync(int id)
         {
-            var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
-            return await Task.FromResult(entity);
+            var year = await Query().SingleOrDefaultAsync(x => x.Id == id);
+            year.CheckReferenceIsNull(nameof(year));
+
+            return await Task.FromResult(year);
         }
+
         public async Task<ValidationResult> CreateAsync(CreateFinanceYearDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
