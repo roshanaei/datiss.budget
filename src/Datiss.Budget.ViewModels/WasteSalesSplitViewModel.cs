@@ -25,6 +25,8 @@ namespace Datiss.Budget.ViewModels
         [Range(0,int.MaxValue,ErrorMessage ="آحاد انشعاب باید بصورت عددی وارد شود")]
         public int UnitSales { get; set; }
 
+        public decimal AverageCapacity { get; set; }
+
         public IEnumerable<SelectListItem> UserTypeSource { get; set; }
 
         public string UserTypeTitle
@@ -66,6 +68,8 @@ namespace Datiss.Budget.ViewModels
         public int NumberSales { get; set; }
 
         public int UnitSales { get; set; }
+
+        public decimal AverageCapacity { get; set; }
     }
 
     public class WasteSalesSplitFilterViewModel : FilterViewModel
@@ -77,10 +81,6 @@ namespace Datiss.Budget.ViewModels
         public int? UserTypeId { get; set; }
 
         public int? WsPipeDiameterId { get; set; }
-
-        public int? NumberSales { get; set; }
-
-        public int? UnitSales { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
 
@@ -97,16 +97,37 @@ namespace Datiss.Budget.ViewModels
         public WasteSalesSplitFilterViewModel Filter { get; set; }
         public IList<SelectListItem> YearSource { get; set; }
         public IList<SelectListItem> OrganizationSource { get; set; }
+        public IList<SelectListItem> InputOrganizationSource { get; set; }
+        public IList<SelectListItem> UserTypeSource { get; set; }
+        public IList<SelectListItem> WasteDiameterSource { get; set; }
         public IFormFile ExcelFile { get; set; }
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
-            => YearSource = source.Select(x => new SelectListItem
+    => YearSource = source.Select(x => new SelectListItem
+    {
+        Text = x.Title,
+        Value = x.Id.ToString()
+    }).ToList();
+
+        public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => OrganizationSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-
-        public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
-            => OrganizationSource = source.Select(x => new SelectListItem
+        public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => InputOrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+        public void SetUserTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => UserTypeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+        public void SetWasteDiameterSource(IEnumerable<DropDownItemViewModel> source)
+            => WasteDiameterSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
@@ -118,7 +139,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
+            }).ToList();
 
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
@@ -127,7 +148,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedYearId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
+            }).ToList();
 
     }
 }

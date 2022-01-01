@@ -16,7 +16,7 @@ namespace Datiss.Budget.Services.Contracts
         Task<ValidationResult<WasteSalesSplitDTO>> UpdateAsync(UpdateWasteSalesSplitDTO model);
         Task HardDeleteAsync(int Id);
         Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
-        Task<int> CalculationAsync(int yearId, int organizationId);
+        Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId);
         Task<PagedResult<WasteSalesSplitDTO>> GetListAsync(WasteSalesSplitFilterDTO filter);
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
         Task<Stream> ExportExcelAsync(WasteSalesSplitFilterDTO filter);

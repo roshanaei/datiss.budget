@@ -174,17 +174,62 @@ namespace Datiss.Budget.Services
 
             return await Task.FromResult(result);
         }
-        public async Task<int> CalculationAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId)
         {
+            var result = new List<CalculationItemData>();
             List<SqlParameter> sqlParams = new List<SqlParameter>
             {
                 new SqlParameter("YearId", yearId),
                 new SqlParameter("OrganizationId", organizationId)
             };
 
-            var result = await _uow.ExecuteScalarAsync<int>(
-                "[dbo].[WasteSalesSplit_Cal1] @YearId, @OrganizationId",
-                parameters: sqlParams.ToArray());
+            result.Add(new CalculationItemData
+            {
+                Key = "WasteSalesSplit_Cal1",
+                Value = await _uow.ExecuteScalar<int>(
+                                    "[dbo].[WasteSalesSplit_Cal1] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "WasteSalesSplit_Cal2",
+                Value = await _uow.ExecuteScalar<int>(
+                                    "[dbo].[WasteSalesSplit_Cal2] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "WasteSalesSplit_Cal3",
+                Value = await _uow.ExecuteScalar<int>(
+                         "[dbo].[WasteSalesSplit_Cal3] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "WasteSalesSplit_Cal4",
+                Value = await _uow.ExecuteScalar<int>(
+                         "[dbo].[WasteSalesSplit_Cal4] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "WasteSalesSplit_Cal5",
+                Value = await _uow.ExecuteScalar<int>(
+                         "[dbo].[WasteSalesSplit_Cal5] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "WasteSalesSplit_Cal6",
+                Value = await _uow.ExecuteScalar<int>(
+             "[dbo].[WasteSalesSplit_Cal6] @YearId, @OrganizationId",
+             parameters: sqlParams.ToArray())
+            });
 
             return await Task.FromResult(result);
         }
