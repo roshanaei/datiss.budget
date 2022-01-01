@@ -225,22 +225,17 @@
             dir : 'rtl'
         });
 
-        let input = document.getElementById('inputWInstallFee_');
-        let btnSave = document.getElementById('btnSaveCreate_');
-
-        console.log(input);
-        console.log(btnSave);
-
-        input.addEventListener('keyup', function(event) {
+        $('.default-input:last').keyup(function (event) {
             event.preventDefault();
-            if(event.keycode === 13) {
-                btnSave.click();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
             }
         });
 
         let newRowElement = document.getElementById('newRow');
         newRowElement.scrollIntoView();
-        input.focus();
+        $('.default-input:last').focus();
 
         isNewRow = true;
     }
