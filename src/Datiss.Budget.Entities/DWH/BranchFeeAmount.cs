@@ -2,6 +2,9 @@
 
 namespace Datiss.Budget.Entities.DWH
 {
+
+     //<!--WaterWasteBranchingAmount-->
+
     public class BranchFeeAmount:IAuditableEntity
     {
         public BranchFeeAmount() { }

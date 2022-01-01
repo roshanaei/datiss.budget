@@ -8,7 +8,7 @@ namespace Datiss.Budget.DataLayer.Mappings
     {
         public void Configure(EntityTypeBuilder<BranchFeeAmount> builder)
         {
-            builder.ToTable("WaterWasteBranchingAmount");
+            builder.ToTable("BranchFeeAmount");
 
             builder.HasKey(x => x.Id);
 
