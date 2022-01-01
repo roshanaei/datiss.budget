@@ -1,14 +1,11 @@
-﻿using System;
-using System.IO;
+﻿using System.Linq;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ClosedXML.Excel;
 using Datiss.Budget.Services.Models;
 
 namespace Datiss.Budget.Reports.Excel
 {
+
     public static class WaterInstallFeeExcel
     {
         private const string _sheetName = "WaterInstallFee";
@@ -25,16 +22,22 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 2).Value = "سازمان";
             sheet.Cell(1, 3).Value = "کاربری";
             sheet.Cell(1, 4).Value = "قیمت";
-            
-            for(int i = 0; i < items.Count(); i++) {
+
+            var totalCount = items.Count();
+            int row = 2;
+            for(int i = 0; i < totalCount; i++) {
                 var item = items.ElementAt(i);
-                var row = i + 2;
                 sheet.Cell(row, 1).Value = item.Year.ToString();
                 sheet.Cell(row, 2).Value = item.OrganizationDisplay;
                 sheet.Cell(row, 3).Value = item.DWaterTypeDisplay;
                 sheet.Cell(row, 4).Value = item.WInstallFee;
                 sheet.Cell(row, 4).DataType = XLDataType.Number;
+                row++;
             }
+            var range = sheet.Range(1, 1, row - 1, 4);
+            var table = range.CreateTable($"{_sheetName}_Table");
+            table.Theme = XLTableTheme.TableStyleMedium16;
+            sheet.Columns().AdjustToContents();
 
             return workbook;
         }
@@ -71,7 +74,7 @@ namespace Datiss.Budget.Reports.Excel
             range.Column(5).Style.NumberFormat.Format = "#,##0";
             range.Column(6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             var table = range.CreateTable($"{_sheetName}_Table");
-            table.Theme = XLTableTheme.TableStyleMedium12;
+            table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
 
             return workbook;
