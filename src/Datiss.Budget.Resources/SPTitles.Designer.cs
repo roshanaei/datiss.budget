@@ -61,6 +61,69 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to WasteInstallFees_Cal1.
+        /// </summary>
+        public static string WasteInstallFees_Cal1 {
+            get {
+                return ResourceManager.GetString("WasteInstallFees_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to تعداد فروش انشعاب فاضلاب سالیانه مسکونی.
+        /// </summary>
+        public static string WasteSalesSplit_Cal1 {
+            get {
+                return ResourceManager.GetString("WasteSalesSplit_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to تعداد فروش انشعاب فاضلاب سالیانه غیر مسکونی.
+        /// </summary>
+        public static string WasteSalesSplit_Cal2 {
+            get {
+                return ResourceManager.GetString("WasteSalesSplit_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to آحاد فروش انشعاب فاضلاب سالیانه مسکونی.
+        /// </summary>
+        public static string WasteSalesSplit_Cal3 {
+            get {
+                return ResourceManager.GetString("WasteSalesSplit_Cal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to آحاد فروش انشعاب فاضلاب سالیانه غیر مسکونی.
+        /// </summary>
+        public static string WasteSalesSplit_Cal4 {
+            get {
+                return ResourceManager.GetString("WasteSalesSplit_Cal4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to تعداد کل فروش انشعاب فاضلاب سالیانه.
+        /// </summary>
+        public static string WasteSalesSplit_Cal5 {
+            get {
+                return ResourceManager.GetString("WasteSalesSplit_Cal5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to آحاد کل فروش انشعاب فاضلاب سالیانه.
+        /// </summary>
+        public static string WasteSalesSplit_Cal6 {
+            get {
+                return ResourceManager.GetString("WasteSalesSplit_Cal6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WaterInstallFees_Cal1.
         /// </summary>
         public static string WaterInstallFees_Cal1 {

@@ -27,6 +27,7 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 4).Value = "قطر لوله فاضلاب";
             sheet.Cell(1, 5).Value = "تعداد انشعاب";
             sheet.Cell(1, 6).Value = "آحاد انشعاب";
+            sheet.Cell(1, 7).Value = "متوسط ظرفیت قراردادی";
 
             for (int i = 0; i < items.Count(); i++)
             {
@@ -38,7 +39,8 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 4).Value = item.WspipeDiameterDisplay;
                 sheet.Cell(row, 5).Value = item.NumberSales;
                 sheet.Cell(row, 6).Value = item.UnitSales;
-                sheet.Cell(row, 6).DataType = XLDataType.Number;
+                sheet.Cell(row, 7).Value = item.AverageCapacity;
+                sheet.Cell(row, 7).DataType = XLDataType.Number;
             }
 
             return workbook;
