@@ -10,7 +10,7 @@ namespace Datiss.Budget.Services.Models
 
         public int UserTypeId { get; set; }
 
-        public String UserTypeTitle { get; set; }
+        public string UserTypeTitle { get; set; }
 
         public int WsPipeDiameterId { get; set; }
 
@@ -19,6 +19,8 @@ namespace Datiss.Budget.Services.Models
         public int NumberSales { get; set; }
 
         public int UnitSales { get; set; }
+
+        public decimal AverageCapacity { get; set; }
 
     }
 
@@ -50,6 +52,7 @@ namespace Datiss.Budget.Services.Models
         public int NumberSales { get; set; }
 
         public int UnitSales { get; set; }
+
         public decimal AverageCapacity { get; set; }
     }
 }

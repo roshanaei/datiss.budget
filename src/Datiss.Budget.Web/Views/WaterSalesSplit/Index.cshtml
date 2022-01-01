@@ -179,7 +179,7 @@
                                                                name="col-7"
                                                                id="col-7" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-7"><span>میانگین ظرفیت</span></label>
+                                                               for="col-7"><span>متوسط ظرفیت قراردادی</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -233,10 +233,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6';
+        let allColumns = '1,2,3,4,5,6,7';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,";
+        let showingColmuns = "1,2,3,4,5,6,7,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
