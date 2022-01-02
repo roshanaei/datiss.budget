@@ -165,16 +165,8 @@ namespace Datiss.Budget.Services
             var entity = await _dbSet.FindAsync(id);
             entity.CheckArgumentIsNull(nameof(entity));
             entity.Status = EntityStatus.Disbaled;
-
-            try
-            {
-                await _uow.SaveChangesAsync();
-                return ValidationResult.Success();
-            }
-            catch (Exception)
-            {
-                throw new Exception();
-            }
+            await _uow.SaveChangesAsync();
+            return ValidationResult.Success();
         }
 
         public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync()
@@ -217,7 +209,7 @@ namespace Datiss.Budget.Services
 
             return await Task.FromResult(result);
         }
-        public async Task<PagedResult<FinanceYearDTO>> GetListDeletedAsync(FinanceYearFilterDTO filter)
+        public async Task<PagedResult<FinanceYearDTO>> GetDeletedListAsync(FinanceYearFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
             var result = new PagedResult<FinanceYearDTO>
@@ -280,14 +272,8 @@ namespace Datiss.Budget.Services
         private async Task setEnabledForlastYear(int id)
         {
             var entity =await _dbSet.Where(x => x.Id != id && x.Status!=EntityStatus.Deleted).OrderBy(x=>x.Year).LastOrDefaultAsync();
-            if(entity == null)
-            {
-                throw new Exception();
-            }
-            else
-            {
-                entity.Status = EntityStatus.Enabled;
-            }
+            entity.CheckReferenceIsNull(nameof(entity));
+            entity.Status = EntityStatus.Enabled;
             await _uow.SaveChangesAsync();
         }
 

@@ -18,7 +18,7 @@ namespace Datiss.Budget.Services.Contracts
         Task<IEnumerable<DropDownItem>> GetDropDownDataAsync();
         Task<IEnumerable<DropDownItem>> GetDropDownDataByStatusAsync(EntityStatus entityStatus);
         Task<PagedResult<FinanceYearDTO>> GetListAsync(FinanceYearFilterDTO filter);
-        Task<PagedResult<FinanceYearDTO>> GetListDeletedAsync(FinanceYearFilterDTO filter);
+        Task<PagedResult<FinanceYearDTO>> GetDeletedListAsync(FinanceYearFilterDTO filter);
 
     }
 }
