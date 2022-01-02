@@ -3,6 +3,8 @@ using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Entities.DWH
 {
+
+    //NonHouseCo مشارکت سرمایه ای غیر خانگی
     public class NHCo : IAuditableEntity
     {
         public NHCo() { }
