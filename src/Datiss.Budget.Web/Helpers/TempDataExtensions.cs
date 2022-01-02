@@ -13,11 +13,11 @@ namespace Datiss.Budget.Web
         {
             object o;
             //reset
-            tempData.ResetTempData(key);
+            resetTempData(tempData,key);
             tempData.TryGetValue(key, out o);
             return o == null ? null : JsonConvert.DeserializeObject<T>((string)o);
         }
-        private static void ResetTempData (this ITempDataDictionary tempData, string key)
+        private static void resetTempData (ITempDataDictionary tempData, string key)
         {
             foreach (var item in tempData)
             {
