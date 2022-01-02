@@ -311,7 +311,8 @@ namespace Datiss.Budget.Services
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<WaterInstallFeeImportModel>(fileInfo);
+            var data = await _excelService.ImportAsync<WaterInstallFeeImportModel>
+                (fileInfo);
 
             var records = data.Adapt<List<WaterInstallFee>>();
 
