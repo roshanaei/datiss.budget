@@ -269,7 +269,7 @@ namespace Datiss.Budget.Services
                 foreach (var child in item.Childrens) {
                     if (input)
                     {                       
-                        if (item.Type != OrganizationType.Root && item.Type != OrganizationType.County)
+                        if (child.Type != OrganizationType.Root && child.Type != OrganizationType.County)
                             result.Add(child);
                     }
                     else

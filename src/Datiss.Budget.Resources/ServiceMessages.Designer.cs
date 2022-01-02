@@ -268,6 +268,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_IncomeForcast {
+            get {
+                return ResourceManager.GetString("Logic_IncomeForcast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to  این عملیات را برای سال غیر فعال نمی توانید انجام دهید..
         /// </summary>
         public static string Logic_InputDisableYearData {
