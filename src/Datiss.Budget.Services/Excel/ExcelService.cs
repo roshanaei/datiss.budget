@@ -12,9 +12,15 @@ namespace Datiss.Budget.Services.Excel
 
     public interface IExcelService
     {
-        Task<IEnumerable<TResult>> ImportAsync<TResult>(IFormFile fileInfo) where TResult : class;
+        Task<IEnumerable<TResult>> ImportAsync<TResult>(
+            IFormFile fileInfo) where TResult : class;
 
         Stream Export<T>(IEnumerable<T> model, Stream stream) where T : class;
+
+        Task<IEnumerable<TResult>> ImportAsync<TResult>(
+            IFormFile fileInfo,
+            int sheetIndex,
+            int minRowNum) where TResult : class;
     }
 
     public class ExcelService : IExcelService 
@@ -49,7 +55,21 @@ namespace Datiss.Budget.Services.Excel
 
             using (var stream = new MemoryStream()) {
                 await fileInfo.CopyToAsync(stream);
-                var result = _mapper.Fetch<TResult>(stream,"Sheet1");
+                var result = _mapper.Fetch<TResult>(stream, 0);
+
+                return await Task.FromResult(result);
+            }
+        }
+
+        public async Task<IEnumerable<TResult>> ImportAsync<TResult>(
+            IFormFile fileInfo, 
+            int sheetIndex, 
+            int minRowNum) where TResult : class {
+
+            using (var stream = new MemoryStream()) {
+                await fileInfo.CopyToAsync(stream);
+                _mapper.MinRowNumber = minRowNum;
+                var result = _mapper.Fetch<TResult>(stream, sheetIndex);
 
                 return await Task.FromResult(result);
             }
