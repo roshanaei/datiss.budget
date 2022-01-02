@@ -214,6 +214,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to این عملیات را برای سال غیر فعال نمی توانید انجام دهید..
+        /// </summary>
+        public static string Logic_InputDisableYearData {
+            get {
+                return ResourceManager.GetString("Logic_InputDisableYearData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اجازه ورود به سیستم برای شما وجود ندارد..
         /// </summary>
         public static string LoginNotAllowed {

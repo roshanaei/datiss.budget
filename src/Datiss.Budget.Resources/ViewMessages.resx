@@ -168,6 +168,9 @@
   <data name="InvalidUsernameOrPassword" xml:space="preserve">
     <value>نام کاربری و یا کلمه‌ی عبور وارد شده معتبر نیستند.</value>
   </data>
+  <data name="Logic_InputDisableYearData" xml:space="preserve">
+    <value>این عملیات را برای سال غیر فعال نمی توانید انجام دهید.</value>
+  </data>
   <data name="LoginNotAllowed" xml:space="preserve">
     <value>اجازه ورود به سیستم برای شما وجود ندارد.</value>
   </data>

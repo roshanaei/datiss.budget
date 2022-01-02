@@ -273,6 +273,14 @@ namespace Datiss.Budget.Web.Controllers
                         result.Year)
                 });
             }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
             catch (DeleteNullRecordException)
             {
                 return Json(new
@@ -299,6 +307,14 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Delete(int id) {
             try {
                 await _waterInstallFeeService.HardDeleteAsync(id);
+            }
+            catch(DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
             }
             catch(Exception ex) {
                 _logger.LogError(ex.GetBaseException().Message);

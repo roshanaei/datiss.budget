@@ -63,7 +63,7 @@ namespace Datiss.Budget.Services
 
         public async Task<WaterInstallFee> GetByIdAsync(int id)
         {
-            var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
+            var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 
@@ -78,65 +78,87 @@ namespace Datiss.Budget.Services
                 DWaterTypeId = model.DWaterTypeId,
                 WInstallFee = model.WInstallFee
             };
+            model.DWaterTypeTitle = (await _constSet.FindAsync(model.DWaterTypeId)).Title;
 
-            if (await checkLogicAsync(model.YearId, model.OrganizationId, model.DWaterTypeId))
+            try
             {
-                await _dbSet.AddAsync(entity);
-                await _uow.SaveChangesAsync();
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.DWaterTypeId))
+                {
+                    await _dbSet.AddAsync(entity);
+                    await _uow.SaveChangesAsync();
 
-                var result = entity.Adapt<WaterInstallFeeDTO>();
-                result.DWaterTypeDisplay = (await _constSet.FindAsync(model.DWaterTypeId)).Title;
-                result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
-                result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-                result.WInstallFee = entity.WInstallFee;
+                    var result = entity.Adapt<WaterInstallFeeDTO>();
+                    result.DWaterTypeDisplay = (await _constSet.FindAsync(model.DWaterTypeId)).Title;
+                    result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.WInstallFee = entity.WInstallFee;
 
-                return ValidationResult<WaterInstallFeeDTO>.Success(result);
+                    return ValidationResult<WaterInstallFeeDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<WaterInstallFeeDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
             return ValidationResult<WaterInstallFeeDTO>.Failed(
                 string.Format(ServiceMessages.Logic_DWaterType,
-                                model.DWaterTypeTitle)
+                model.DWaterTypeTitle)
                 );
+
+
         }
 
         public async Task<ValidationResult<WaterInstallFeeDTO>> UpdateAsync(UpdateWaterInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
-
-            if (await checkLogicAsync(model.YearId, model.OrganizationId, model.DWaterTypeId, model.Id))
+            model.DWaterTypeTitle = (await _constSet.FindAsync(model.DWaterTypeId)).Title;
+            try
             {
-                var entity = await _dbSet.FindAsync(model.Id);
-                entity.OrganizationId = model.OrganizationId;
-                entity.YearId = model.YearId;
-                entity.DWaterTypeId = model.DWaterTypeId;
-                entity.WInstallFee = model.WInstallFee;
-
-                await _uow.SaveChangesAsync();
-
-                var result = new WaterInstallFeeDTO
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.DWaterTypeId, model.Id))
                 {
-                    OrganizationId = model.OrganizationId,
-                    YearId = model.YearId,
-                    DWaterTypeId = model.DWaterTypeId,
-                    WInstallFee = model.WInstallFee,
-                    OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
-                    DWaterTypeDisplay = (await _constSet.FindAsync(model.DWaterTypeId)).Title,
-                    Year = (await _yearSet.FindAsync(model.YearId)).Year
-                };
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.YearId = model.YearId;
+                    entity.DWaterTypeId = model.DWaterTypeId;
+                    entity.WInstallFee = model.WInstallFee;
 
-                return ValidationResult<WaterInstallFeeDTO>.Success(result);
+                    await _uow.SaveChangesAsync();
+
+                    var result = new WaterInstallFeeDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        DWaterTypeId = model.DWaterTypeId,
+                        WInstallFee = model.WInstallFee,
+                        OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
+                        DWaterTypeDisplay = (await _constSet.FindAsync(model.DWaterTypeId)).Title,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
+
+                    return ValidationResult<WaterInstallFeeDTO>.Success(result);
+                }
             }
-
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<WaterInstallFeeDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
             return ValidationResult<WaterInstallFeeDTO>.Failed(
                 string.Format(ServiceMessages.Logic_DWaterType,
-                                model.DWaterTypeTitle)
+                model.DWaterTypeTitle)
                 );
         }
 
         public async Task HardDeleteAsync(int Id)
         {
             var entity = await _dbSet.FindAsync(Id);
+            entity.CheckReferenceIsNull(nameof(entity));
 
+            var year = await _yearSet.FindAsync(entity.YearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
             entity.CheckArgumentIsNull(nameof(entity));
 
             _dbSet.Remove(entity);
@@ -151,6 +173,9 @@ namespace Datiss.Budget.Services
 
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
 
             var self = await _dbSet.Where(_ => _.YearId == yearId)
                                     .Where(_ => _.OrganizationId == organizationId)
@@ -335,9 +360,9 @@ namespace Datiss.Budget.Services
                 var existDWTypeInExcel = records.Any(_ => _.DWaterTypeId == item.Id);
                 if (!existDWTypeInExcel)
                     missingDWType.Add(item);
-                
+
             }
-            if(missingDWType.Any())
+            if (missingDWType.Any())
             {
                 string dWaterTypeNames = "";
                 foreach (var item in missingDWType)
@@ -362,7 +387,7 @@ namespace Datiss.Budget.Services
                 {
                     var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
                     if (!existInExcel)
-                        if(item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                        if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
                             missingOrgs.Add(item);
                 }
 
@@ -371,7 +396,7 @@ namespace Datiss.Budget.Services
                     string orgNames = "";
                     foreach (var item in missingOrgs)
                     {
-                        orgNames += "- "+item.Title + "<br>";
+                        orgNames += "- " + item.Title + "<br>";
                     }
 
                     return new ImportResult
@@ -386,16 +411,16 @@ namespace Datiss.Budget.Services
             {
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
-                return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 1)
-                    );
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 1)
+                        );
 
                 if (!await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
                     record.DWaterTypeId))
                 {
-                   
+
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 1)
                         );
@@ -671,6 +696,12 @@ namespace Datiss.Budget.Services
             int dwaterTypeId,
             int? id = null)
         {
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
             var result = id == null
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&
