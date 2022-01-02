@@ -127,46 +127,27 @@ namespace Datiss.Budget.Services
             }
         }
 
-        public async Task<ValidationResult> SoftDeleteAsync(int id)
+        public async Task SoftDeleteAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
-            entity.CheckArgumentIsNull(nameof(entity));
+            entity.CheckReferenceIsNull(nameof(entity));
             entity.Status = EntityStatus.Deleted;
-
-            try
-            {
-                await setEnabledForlastYear(id);
-                await _uow.SaveChangesAsync();
-                return ValidationResult.Success();
-            }
-            catch(Exception)
-            {
-                throw new Exception();
-            }
+            await setEnabledForlastYear(id);
+            await _uow.SaveChangesAsync();
         }
-        public async Task<ValidationResult> HardDeleteAsync(int id)
+        public async Task HardDeleteAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
-            entity.CheckArgumentIsNull(nameof(entity));
-
-            try
-            {
-                _dbSet.RemoveRange(entity);
-                await _uow.SaveChangesAsync();
-                return ValidationResult.Success();
-            }
-            catch (Exception)
-            {
-                throw new Exception();
-            }
+            entity.CheckReferenceIsNull(nameof(entity));
+            _dbSet.RemoveRange(entity);
+            await _uow.SaveChangesAsync();
         }
-        public async Task<ValidationResult> SetDisbaledAsync(int id)
+        public async Task SetDisbaledAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
-            entity.CheckArgumentIsNull(nameof(entity));
+            entity.CheckReferenceIsNull(nameof(entity));
             entity.Status = EntityStatus.Disbaled;
             await _uow.SaveChangesAsync();
-            return ValidationResult.Success();
         }
 
         public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync()

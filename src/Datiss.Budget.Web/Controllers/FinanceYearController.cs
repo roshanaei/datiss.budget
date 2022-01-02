@@ -167,7 +167,7 @@ namespace Datiss.Budget.Web.Controllers
                 OrderBy = "id",
                 OrderDesc = true,
             };
-            var result = await _financeYearService.GetListDeletedAsync(filterInput);
+            var result = await _financeYearService.GetDeletedListAsync(filterInput);
             var model = result.Adapt<FinanceYearIndexViewModel>();
             return View(model);
         }
