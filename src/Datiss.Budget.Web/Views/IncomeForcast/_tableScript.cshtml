@@ -1,0 +1,423 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    function editRow(id) {
+
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_UserType_' + id).hide();
+        $('#divOutput_NumberUser_' + id).hide();
+        $('#divOutput_UnitUser_' + id).hide();
+        $('#divOutput_WaterInstllIncome_' + id).hide();
+        $('#divOutput_WaterBranchIncome_' + id).hide();
+        $('#divOutput_WaterNote2Income_' + id).hide();
+        $('#divOutput_WaterNote3Income_' + id).hide();
+        $('#divOutput_WNote11Income_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_UserType_' + id).show();
+        $('#divInput_NumberUser_' + id).show();
+        $('#divInput_UnitUser_' + id).show();
+        $('#divInput_WaterInstllIncome_' + id).show();
+        $('#divInput_WaterBranchIncome_' + id).show();
+        $('#divInput_WaterNote2Income_' + id).show();
+        $('#divInput_WaterNote3Income_' + id).show();
+        $('#divInput_WNote11Income_' + id).show();
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_UserType_' + id).hide();
+        $('#divInput_NumberUser_' + id).hide();
+        $('#divInput_UnitUser_' + id).hide();
+        $('#divInput_WaterInstllIncome_' + id).hide();
+        $('#divInput_WaterBranchIncome_' + id).hide();
+        $('#divInput_WaterNote2Income_' + id).hide();
+        $('#divInput_WaterNote3Income_' + id).hide();
+        $('#divInput_WNote11Income_' + id).hide();
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_UserType_' + id).show();
+        $('#divOutput_NumberUser_' + id).show();
+        $('#divOutput_UnitUser_' + id).show();
+        $('#divOutput_WaterInstllIncome_' + id).show();
+        $('#divOutput_WaterBranchIncome_' + id).show();
+        $('#divOutput_WaterNote2Income_' + id).show();
+        $('#divOutput_WaterNote3Income_' + id).show();
+        $('#divOutput_WNote11Income_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.userTypeId = $('#inputUserType_' + id).val();
+        model.numberUser = $('#inputNumberUser_' + id).val();
+        model.unitUser = $('#inputUnitUser_' + id).val();
+        model.waterInstllIncome = $('#inputWaterInstllIncome_' + id).val();
+        model.waterBranchIncome = $('#inputWaterBranchIncome_' + id).val();
+        model.waterNote2Income = $('#inputWaterNote2Income_' + id).val();
+        model.waterNote3Income = $('#inputWaterNote3Income_' + id).val();
+        model.wNote11Income = $('#inputWNote11Income_' + id).val();
+
+        $.ajax({
+            url: '@Url.Action(IncomeForcastController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanUserType_' + id).text(data.userTypeDisplay);
+                $('#spanNumberUser_' + id).text(data.numberUser);
+                $('#spanUnitUser_' + id).text(data.unitUser);
+                $('#spanWaterInstllIncome_' + id).text(data.waterInstllIncome);
+                $('#spanWaterBranchIncome_' + id).text(data.waterBranchIncome);
+                $('#spanWaterNote2Income_' + id).text(data.waterNote2Income);
+                $('#spanWaterNote3Income_' + id).text(data.waterNote3Income);
+                $('#spanWNote11Income_' + id).text(data.wNote11Income);
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+        console.log(e);
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.userTypeId = $(e).find('#inputUserType_').val();
+        model.numberUser = $(e).find('#inputNumberUser_').val();
+        model.unitUser = $(e).find('#inputUnitUser_').val();
+        model.waterInstllIncome = $(e).find('#inputWaterInstllIncome_').val();
+        model.waterBranchIncome = $(e).find('#inputWaterBranchIncome_').val();
+        model.waterNote2Income = $(e).find('#inputWaterNote2Income_').val();
+        model.waterNote3Income = $(e).find('#inputWaterNote3Income_').val();
+        model.wNote11Income = $(e).find('#inputWNote11Income_').val();
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(IncomeForcastController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //UserType
+                $(e).find('#divInput_UserType_').attr('id', 'divInput_UserType_' + data.id);
+                $(e).find('#hidUserTypeId_').attr('id', 'hidUserTypeId_' + data.id);
+                $(e).find('#inputUserType_').attr('id', 'inputUserType_' + data.id);
+                $(e).find('#divOutput_UserType_').attr('id', 'divOutput_UserType_' + data.id);
+                $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
+
+                $('#divInput_UserType_' + data.id).hide();
+                $('#spanUserType_' + data.id).text(data.userTypeDisplay);
+                $('#divOutput_UserType_' + data.id).show();
+
+                //NumberUser
+                $(e).find('#divInput_NumberUser_').attr('id', 'divInput_NumberUser_' + data.id);
+                $(e).find('#inputNumberUser_').attr('id', 'inputNumberUser_' + data.id);
+                $(e).find('#divOutput_NumberUser_').attr('id', 'divOutput_NumberUser_' + data.id);
+                $(e).find('#spanNumberUser_').attr('id', 'spanNumberUser_' + data.id);
+
+                $('#divInput_NumberUser_' + data.id).hide();
+                $('#spanNumberUser_' + data.id).text(data.numberUser);
+                $('#divOutput_NumberUser_' + data.id).show();
+
+                //UnitUser
+                $(e).find('#divInput_UnitUser_').attr('id', 'divInput_UnitUser_' + data.id);
+                $(e).find('#inputUnitUser_').attr('id', 'inputUnitUser_' + data.id);
+                $(e).find('#divOutput_UnitUser_').attr('id', 'divOutput_UnitUser_' + data.id);
+                $(e).find('#spanUnitUser_').attr('id', 'spanUnitUser_' + data.id);
+
+                $('#divInput_UnitUser_' + data.id).hide();
+                $('#spanUnitUser_' + data.id).text(data.unitUser);
+                $('#divOutput_UnitUser_' + data.id).show();
+
+                //WaterInstllIncome
+                $(e).find('#divInput_WaterInstllIncome_').attr('id', 'divInput_WaterInstllIncome_' + data.id);
+                $(e).find('#inputWaterInstllIncome_').attr('id', 'inputWaterInstllIncome_' + data.id);
+                $(e).find('#divOutput_WaterInstllIncome_').attr('id', 'divOutput_WaterInstllIncome_' + data.id);
+                $(e).find('#spanWaterInstllIncome_').attr('id', 'spanWaterInstllIncome_' + data.id);
+
+                $('#divInput_WaterInstllIncome_' + data.id).hide();
+                $('#spanWaterInstllIncome_' + data.id).text(data.waterInstllIncome);
+                $('#divOutput_WaterInstllIncome_' + data.id).show();
+
+                //WaterBranchIncome
+                $(e).find('#divInput_WaterBranchIncome_').attr('id', 'divInput_WaterBranchIncome_' + data.id);
+                $(e).find('#inputWaterBranchIncome_').attr('id', 'inputWaterBranchIncome_' + data.id);
+                $(e).find('#divOutput_WaterBranchIncome_').attr('id', 'divOutput_WaterBranchIncome_' + data.id);
+                $(e).find('#spanWaterBranchIncome_').attr('id', 'spanWaterBranchIncome_' + data.id);
+
+                $('#divInput_WaterBranchIncome_' + data.id).hide();
+                $('#spanWaterBranchIncome_' + data.id).text(data.waterBranchIncome);
+                $('#divOutput_WaterBranchIncome_' + data.id).show();
+
+                //WaterNote2Income
+                $(e).find('#divInput_WaterNote2Income_').attr('id', 'divInput_WaterNote2Income_' + data.id);
+                $(e).find('#inputWaterNote2Income_').attr('id', 'inputWaterNote2Income_' + data.id);
+                $(e).find('#divOutput_WaterNote2Income_').attr('id', 'divOutput_WaterNote2Income_' + data.id);
+                $(e).find('#spanWaterNote2Income_').attr('id', 'spanWaterNote2Income_' + data.id);
+
+                $('#divInput_WaterNote2Income_' + data.id).hide();
+                $('#spanWaterNote2Income_' + data.id).text(data.waterNote2Income);
+                $('#divOutput_WaterNote2Income_' + data.id).show();
+
+                //WaterNote3Income
+                $(e).find('#divInput_WaterNote3Income_').attr('id', 'divInput_WaterNote3Income_' + data.id);
+                $(e).find('#inputWaterNote3Income_').attr('id', 'inputWaterNote3Income_' + data.id);
+                $(e).find('#divOutput_WaterNote3Income_').attr('id', 'divOutput_WaterNote3Income_' + data.id);
+                $(e).find('#spanWaterNote3Income_').attr('id', 'spanWaterNote3Income_' + data.id);
+
+                $('#divInput_WaterNote3Income_' + data.id).hide();
+                $('#spanWaterNote3Income_' + data.id).text(data.waterNote3Income);
+                $('#divOutput_WaterNote3Income_' + data.id).show();
+
+                //WNote11Income
+                $(e).find('#divInput_WNote11Income_').attr('id', 'divInput_WNote11Income_' + data.id);
+                $(e).find('#inputWNote11Income_').attr('id', 'inputWNote11Income_' + data.id);
+                $(e).find('#divOutput_WNote11Income_').attr('id', 'divOutput_WNote11Income_' + data.id);
+                $(e).find('#spanWNote11Income_').attr('id', 'spanWNote11Income_' + data.id);
+
+                $('#divInput_WNote11Income_' + data.id).hide();
+                $('#spanWNote11Income_' + data.id).text(data.wNote11Income);
+                $('#divOutput_WNote11Income_' + data.id).show();
+
+
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        resetTableBackColor("my-table");
+
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.selectUserType:last').select2({
+            dir : 'rtl'
+        });
+
+        $('.input1:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+        $('.input2:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+        $('.input3:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+        $('.input4:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+        $('.input5:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+        $('.input6:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+        $('.input7:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(IncomeForcastController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    alert(data.message);
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                console.log(err);
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+</script>

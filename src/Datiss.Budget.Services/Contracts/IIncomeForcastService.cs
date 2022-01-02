@@ -15,15 +15,15 @@ namespace Datiss.Budget.Services.Contracts
     {
         Task<IncomeForcast> GetByIdAsync(int id);
 
-        //Task<ValidationResult> AddAsync(CreateIncomeForcastDTO model);
+        Task<ValidationResult<IncomeForcastDTO>> CreateAsync(CreateIncomeForcastDTO model);
 
-        //Task<ValidationResult> UpdateAsync(UpdateIncomeForcastDTO model);
+        Task<ValidationResult<IncomeForcastDTO>> UpdateAsync(UpdateIncomeForcastDTO model);
 
         Task HardDeleteAsync(int Id);
 
-        Task HardDeleteAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
-        //Task<int> CalculationAsync(int yearId, int organizationId);
+        Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId);
 
         Task<PagedResult<IncomeForcastDTO>> GetListAsync(IncomeForcastFilterDTO filter);
 
@@ -31,8 +31,8 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<Stream> ExportExcelAsync(IncomeForcastFilterDTO filter);
 
-        Task<IEnumerable<IncomeForcastDTO>> GetExportItemsAsync(IncomeForcastFilterDTO filter);
+        Task<IEnumerable<IncomeForcastDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
-        Task ImportExcelAsync(IFormFile fileInfo);
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false);
     }
 }

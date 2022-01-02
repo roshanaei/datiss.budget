@@ -186,6 +186,9 @@
   <data name="Logic_DWaterType" xml:space="preserve">
     <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
   </data>
+  <data name="Logic_IncomeForcast" xml:space="preserve">
+    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
+  </data>
   <data name="Logic_InputDisableYearData" xml:space="preserve">
     <value> این عملیات را برای سال غیر فعال نمی توانید انجام دهید.</value>
   </data>
