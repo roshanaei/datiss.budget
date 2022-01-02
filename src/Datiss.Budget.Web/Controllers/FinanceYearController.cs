@@ -27,6 +27,9 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
         public const string ACTION_Delete = nameof(Delete);
+        public const string ACTION_Deleted = nameof(Deleted);
+        public const string ACTION_HardDelete = nameof(HardDelete);
+        public const string ACTION_UndoDelete = nameof(UndoDelete);
 
         private readonly IFinanceYearService _financeYearService;
 
@@ -132,6 +135,7 @@ namespace Datiss.Budget.Web.Controllers
 
             return Json(result);
         }
+
         [HttpPost("[action]/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -139,20 +143,81 @@ namespace Datiss.Budget.Web.Controllers
             {
                 await _financeYearService.SoftDeleteAsync(id);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json(new
                 {
                     hasError = true,
-                    message = "خطایی به وجود آمده است ."
+                    message = ViewMessages.FinanceYearErrorSoftDelete
                 });
             }
 
             return Json(new
             {
                 hasError = false,
-                message = "حذف رکورد با موفقیت انجام شد."
+                message = ViewMessages.FinanceYearSuccessSoftDelete
             });
         }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Deleted()
+        {
+            var filterInput = new FinanceYearFilterDTO
+            {
+                OrderBy = "id",
+                OrderDesc = true,
+            };
+            var result = await _financeYearService.GetDeletedListAsync(filterInput);
+            var model = result.Adapt<FinanceYearIndexViewModel>();
+            return View(model);
+        }
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> HardDelete(int id)
+        {
+            try
+            {
+                await _financeYearService.HardDeleteAsync(id);
+
+                return Json(new
+                {
+                    hasError = false,
+                    message = ViewMessages.FinanceYearSuccessHardDelete
+                });
+            }
+            catch (Exception)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.FinanceYearErrorHardDelete
+                });
+            }
+        }
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> UndoDelete(int id)
+        {
+            try
+            {
+                await _financeYearService.SetDisbaledAsync(id);
+
+                return Json(new
+                {
+                    hasError = false,
+                    message = ViewMessages.FinanceYearSuccessReturnYear
+                });
+            }
+            catch (Exception)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ""
+                });
+            }
+        }
+
     }
+
 }

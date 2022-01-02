@@ -142,6 +142,51 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to سال مالی داده وابسته دارد . ابتدا آن ها را پاک کنید !.
+        /// </summary>
+        public static string FinanceYearErrorHardDelete {
+            get {
+                return ResourceManager.GetString("FinanceYearErrorHardDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to حداقل یک سالی مالی باید داشته باشید ..
+        /// </summary>
+        public static string FinanceYearErrorSoftDelete {
+            get {
+                return ResourceManager.GetString("FinanceYearErrorSoftDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سال مالی با موفقیت از روی سیستم پاک شد..
+        /// </summary>
+        public static string FinanceYearSuccessHardDelete {
+            get {
+                return ResourceManager.GetString("FinanceYearSuccessHardDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سال مالی از لیست حذف شده ها پاک شد ..
+        /// </summary>
+        public static string FinanceYearSuccessReturnYear {
+            get {
+                return ResourceManager.GetString("FinanceYearSuccessReturnYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سال مالی با موفقیت حذف شد . امکان برگشت این عملیات وجود دارد . ..
+        /// </summary>
+        public static string FinanceYearSuccessSoftDelete {
+            get {
+                return ResourceManager.GetString("FinanceYearSuccessSoftDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to فرمت فایل اکسل نمی باشد..
         /// </summary>
         public static string ImportExcelFileFormatInvalid {
