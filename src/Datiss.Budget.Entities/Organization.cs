@@ -88,7 +88,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<BranchingRateIncrease> BranchingRateIncrease { get; set; }
 
-        public ICollection<WNHCo> WNHCo { get; set; }
+        public ICollection<NHCo> NHCo { get; set; }
 
 
         #endregion

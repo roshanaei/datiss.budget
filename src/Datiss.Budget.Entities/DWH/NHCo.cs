@@ -1,10 +1,11 @@
 ﻿using Datiss.Budget.Entities.AuditableEntity;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Entities.DWH
 {
-    public class WNHCo : IAuditableEntity
+    public class NHCo : IAuditableEntity
     {
-        public WNHCo() { }
+        public NHCo() { }
 
         #region Properties
         public int Id { get; set; }
@@ -12,6 +13,8 @@ namespace Datiss.Budget.Entities.DWH
         public int YearId { get; set; }
 
         public int OrganizationId { get; set; }
+
+        public ActivityType ActivityType { get; set; }
 
         public int P1Capacity { get; set; }
 
