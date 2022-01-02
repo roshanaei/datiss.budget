@@ -79,7 +79,7 @@
         function returnRow(e, id) {
 
             $.ajax({
-            url: '@Url.Action(FinanceYearController.ACTION_ReturnToDisbaled)' + '/' + id,
+            url: '@Url.Action(FinanceYearController.ACTION_UndoDelete)' + '/' + id,
             type: 'POST',
                 success: function (data, status, settings) {
                     if (data.hasError) {

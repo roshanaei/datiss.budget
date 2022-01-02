@@ -29,7 +29,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_Deleted = nameof(Deleted);
         public const string ACTION_HardDelete = nameof(HardDelete);
-        public const string ACTION_ReturnToDisbaled = nameof(ReturnToDisbaled);
+        public const string ACTION_UndoDelete = nameof(UndoDelete);
 
         private readonly IFinanceYearService _financeYearService;
 
@@ -196,7 +196,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]/{id}")]
-        public async Task<IActionResult> ReturnToDisbaled(int id)
+        public async Task<IActionResult> UndoDelete(int id)
         {
             try
             {
