@@ -5,6 +5,7 @@ using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Entities;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Extensions;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
@@ -209,16 +210,16 @@ namespace Datiss.Budget.Services
             {
                 Key = "IncomeForcast_Cal1",
                 Value = await _uow.ExecuteScalar<int>(
-                                    "[dbo].[IncomeForcast_Cal1] @YearId, @OrganizationId",
-                                    parameters: sqlParams.ToArray())
+                          "[dbo].[IncomeForcast_Cal1] @YearId, @OrganizationId",
+                          parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
                 Key = "IncomeForcast_Cal2",
                 Value = await _uow.ExecuteScalar<int>(
-                                    "[dbo].[IncomeForcast_Cal2] @YearId, @OrganizationId",
-                                    parameters: sqlParams.ToArray())
+                          "[dbo].[IncomeForcast_Cal2] @YearId, @OrganizationId",
+                          parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
@@ -243,14 +244,6 @@ namespace Datiss.Budget.Services
                 Value = await _uow.ExecuteScalar<int>(
                          "[dbo].[IncomeForcast_Cal5] @YearId, @OrganizationId",
                          parameters: sqlParams.ToArray())
-            });
-
-            result.Add(new CalculationItemData
-            {
-                Key = "IncomeForcast_Cal6",
-                Value = await _uow.ExecuteScalar<int>(
-             "[dbo].[IncomeForcast_Cal6] @YearId, @OrganizationId",
-             parameters: sqlParams.ToArray())
             });
 
             return await Task.FromResult(result);
@@ -576,6 +569,9 @@ namespace Datiss.Budget.Services
             IncomeForcastFilterDTO filter)
         {
 
+            query.CheckArgumentIsNull(nameof(query));
+            filter.CheckArgumentIsNull(nameof(filter));
+
             var predicate = PredicateBuilder.New<IncomeForcast>();
 
             if (filter.YearId.HasValue)
@@ -585,6 +581,7 @@ namespace Datiss.Budget.Services
             {
                 var organizations = await _organizationService
                     .GetWithChildrenAsync(filter.OrganizationId.Value);
+
                 foreach (var org in organizations)
                 {
                     predicate.Or(_ => _.OrganizationId == org.Id);
@@ -595,6 +592,13 @@ namespace Datiss.Budget.Services
 
             if (filter.UserTypeId.HasValue)
                 query = query.Where(x => x.UserTypeId == filter.UserTypeId.Value);
+
+            if (filter.Search.IsNotNullOrEmpty())
+            {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
+                                    _.UserType.Title.ToUpper().Contains(filter.Search));
+            }
 
             return query;
         }

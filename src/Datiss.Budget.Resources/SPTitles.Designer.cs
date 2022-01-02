@@ -61,7 +61,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to درآمد هزینه نصب انشعاب آب سالیانه.
+        ///   Looks up a localized string similar to درآمد ماده 11 آب سالیانه.
         /// </summary>
         public static string IncomeForcast_Cal1 {
             get {
@@ -70,7 +70,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to درآمد ماده 11 آب سالیانه.
+        ///   Looks up a localized string similar to درآمد هزینه لوله گذاری آب سالیانه.
         /// </summary>
         public static string IncomeForcast_Cal2 {
             get {
@@ -79,7 +79,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to درآمد هزینه لوله گذاری آب سالیانه.
+        ///   Looks up a localized string similar to درآمد تبصره 3 ماده واحده آب سالیانه.
         /// </summary>
         public static string IncomeForcast_Cal3 {
             get {
@@ -88,7 +88,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to درآمد تبصره 3 آب سالیانه.
+        ///   Looks up a localized string similar to درآمد تبصره 2 ماده واحده آب سالیانه.
         /// </summary>
         public static string IncomeForcast_Cal4 {
             get {
@@ -97,20 +97,11 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to درآمد تبصره 2 ماده واحده آب سالیانه.
+        ///   Looks up a localized string similar to درآمد حق انشعاب آب سالیانه.
         /// </summary>
         public static string IncomeForcast_Cal5 {
             get {
                 return ResourceManager.GetString("IncomeForcast_Cal5", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to درآمد حق انشعاب آب سالیانه.
-        /// </summary>
-        public static string IncomeForcast_Cal6 {
-            get {
-                return ResourceManager.GetString("IncomeForcast_Cal6", resourceCulture);
             }
         }
         

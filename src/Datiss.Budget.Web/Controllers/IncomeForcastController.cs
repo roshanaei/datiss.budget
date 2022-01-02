@@ -482,7 +482,6 @@ namespace Datiss.Budget.Web.Controllers
                 "IncomeForcast_Cal3" => SPTitles.IncomeForcast_Cal3,
                 "IncomeForcast_Cal4" => SPTitles.IncomeForcast_Cal4,
                 "IncomeForcast_Cal5" => SPTitles.IncomeForcast_Cal5,
-                "IncomeForcast_Cal6" => SPTitles.IncomeForcast_Cal6,
                 _ => ""
             };
         #endregion

@@ -47,10 +47,10 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 8).Value = item.WaterNote2Income;
                 sheet.Cell(row, 9).Value = item.WaterNote3Income;
                 sheet.Cell(row, 10).Value = item.WNote11Income;
-                sheet.Cell(row, 11).DataType = XLDataType.Number;
+                sheet.Cell(row, 10).DataType = XLDataType.Number;
                 row++;
             }
-            var range = sheet.Range(1, 1, row - 1, 4);
+            var range = sheet.Range(1, 1, row - 1, 10);
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
@@ -68,19 +68,19 @@ namespace Datiss.Budget.Reports.Excel
 
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
-            sheet.Range(1, 1, 1, 5).Merge();
+            sheet.Range(1, 1, 1, 11).Merge();
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
             sheet.Cell(2, 2).Value = "کد سازمان";
             sheet.Cell(2, 3).Value = "عنوان کاربری";
             sheet.Cell(2, 4).Value = "کد کاربری";
-            sheet.Cell(1, 5).Value = "تعداد انشعاب";
-            sheet.Cell(1, 6).Value = "آحاد انشعاب";
-            sheet.Cell(1, 7).Value = "درآمد هزینه لوله گذاری آب";
-            sheet.Cell(1, 8).Value = "درآمد حق انشعاب آب";
-            sheet.Cell(1, 9).Value = "درآمد تبصره 2 ماده واحده آب";
-            sheet.Cell(1, 10).Value = "درآمد تبصره 3 ماده واحده آب";
-            sheet.Cell(1, 11).Value = "درآمد ماده 11 آب";
+            sheet.Cell(2, 5).Value = "تعداد انشعاب";
+            sheet.Cell(2, 6).Value = "آحاد انشعاب";
+            sheet.Cell(2, 7).Value = "درآمد هزینه لوله گذاری آب";
+            sheet.Cell(2, 8).Value = "درآمد حق انشعاب آب";
+            sheet.Cell(2, 9).Value = "درآمد تبصره 2 ماده واحده آب";
+            sheet.Cell(2, 10).Value = "درآمد تبصره 3 ماده واحده آب";
+            sheet.Cell(2, 11).Value = "درآمد ماده 11 آب";
 
             var totalCount = items.Count();
             int row = 3;
@@ -94,7 +94,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(2, 1, row - 1, 5);
+            var range = sheet.Range(2, 1, row - 1, 11);
             range.Column(5).Style.NumberFormat.Format = "#,##0";
             range.Column(6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             var table = range.CreateTable($"{_sheetName}_Table");

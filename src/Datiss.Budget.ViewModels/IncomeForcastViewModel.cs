@@ -55,12 +55,19 @@ namespace Datiss.Budget.ViewModels
         public int UserTypeId { get; set; }
         public string UserTypeDisplay { get; set; }
         public int NumberUser { get; set; }
+        public string NumberUserDisplay => NumberUser.ToString("N0");
         public int UnitUser { get; set; }
+        public string UnitUserDisplay => UnitUser.ToString("N0");
         public int WaterInstllIncome { get; set; }
+        public string WaterInstllIncomeDisplay => WaterInstllIncome.ToString("N0");
         public int WaterBranchIncome { get; set; }
+        public string WaterBranchIncomeDisplay => WaterBranchIncome.ToString("N0");
         public int WaterNote2Income { get; set; }
+        public string WaterNote2IncomeDisplay => WaterNote2Income.ToString("N0");
         public int WaterNote3Income { get; set; }
+        public string WaterNote3IncomeDisplay => WaterNote3Income.ToString("N0");
         public int WNote11Income { get; set; }
+        public string WNote11IncomeDisplay => WNote11Income.ToString("N0");
     }
     public class IncomeForcastFilterViewModel : FilterViewModel
     {
