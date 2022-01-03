@@ -1,30 +1,34 @@
-﻿using Datiss.Budget.DataLayer.Context;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Datiss.Budget.Entities.DWH;
-using Datiss.Budget.Services.Contracts;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Datiss.Budget.ViewModels;
+using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.Resources;
+using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Services.Excel;
-using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Entities;
-using LinqKit;
 using Datiss.Budget.Common.Exceptions;
-using System.IO;
-using Microsoft.AspNetCore.Http;
+using Datiss.Budget.DataLayer.Context;
+using Datiss.Budget.Services.Contracts.Identity;
 using Mapster;
+using LinqKit;
+using Datiss.Budget.Security;
+using Microsoft.Data.SqlClient;
+using Datiss.Budget.Extensions;
+using Datiss.Budget.Enum;
+using Datiss.Budget.Common;
 
 namespace Datiss.Budget.Services
 {
     public class BranchFeeAmountService : IBranchFeeAmountService
     {
+        private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
         private readonly IExcelService _excelService;
         private readonly IUserService _userService;
@@ -32,16 +36,20 @@ namespace Datiss.Budget.Services
 
         private readonly DbSet<BranchFeeAmount> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
+        private readonly DbSet<FinanceYear> _yearSet;
 
         public BranchFeeAmountService(
+            IUserContext userContext,
             IUnitOfWork uow,
             IExcelService excelService,
             IUserService userService,
             IOrganizationService organizationService)
         {
+            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<BranchFeeAmount>();
             _orgDbSet = _uow.Set<Organization>();
+            _yearSet = _uow.Set<FinanceYear>();
             _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
@@ -52,13 +60,14 @@ namespace Datiss.Budget.Services
 
         public async Task<BranchFeeAmount> GetByIdAsync(int id)
         {
-            var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
+            var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult> CreateAsync(CreateBranchFeeAmountDTO model)
+        public async Task<ValidationResult<BranchFeeAmountDTO>> CreateAsync(CreateBranchFeeAmountDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
+
             var entity = new BranchFeeAmount
             {
                 YearId = model.YearId,
@@ -78,19 +87,43 @@ namespace Datiss.Budget.Services
                 WsTubingCost = model.WsTubingCost
             };
 
-            if(await checkLogicAsync(model.YearId, model.OrganizationId))
+            try
             {
-                await _dbSet.AddAsync(entity); 
-                await _uow.SaveChangesAsync();
+                if (await checkLogicAsync(model.YearId, model.OrganizationId))
+                {
+                    await _dbSet.AddAsync(entity);
+                    await _uow.SaveChangesAsync();
 
-                return ValidationResult.Success();
+                    var result = entity.Adapt<BranchFeeAmountDTO>();
+                    result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.UrbanAdjustmentFactor = entity.UrbanAdjustmentFactor;
+                    result.WasteRateInWater = entity.WasteRateInWater;
+                    result.WaterBranchingPerHousing = entity.WaterBranchingPerHousing;
+                    result.TubingCost = entity.TubingCost;
+                    result.WaterPartnershipAmountDomestic = entity.WaterPartnershipAmountDomestic;
+                    result.WaterPartnershipAmountNDomestic = entity.WaterPartnershipAmountNDomestic;
+                    result.WastePartnershipAmountDomestic = entity.WastePartnershipAmountDomestic;
+                    result.WastePartnershipAmountNDomestic = entity.WastePartnershipAmountNDomestic;
+                    result.FixCostNote11H = entity.FixCostNote11H;
+                    result.FixCostNote11NH = entity.FixCostNote11NH;
+                    result.FixCostNote11HWs = entity.FixCostNote11HWs;
+                    result.FixCostNote11NHWs = entity.FixCostNote11NHWs;
+                    result.WsTubingCost = entity.WsTubingCost;
+
+                    return ValidationResult<BranchFeeAmountDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<BranchFeeAmountDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
-            return ValidationResult.Failed(
-                string.Format(ServiceMessages.Logic_BranchFeeAmount,
-                                    model.YearId, model.OrganizationId)
-                );
-        }
+            return ValidationResult<BranchFeeAmountDTO>.Failed(
+                  string.Format(ServiceMessages.Logic_BranchFeeAmount,
+                  model.YearId, model.OrganizationId)
+                  );
+            }
 
         public async Task<ValidationResult> UpdateAsync(UpdateBranchFeeAmountDTO model)
         {
