@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -14,15 +15,15 @@ namespace Datiss.Budget.Services.Contracts
     {
         Task<IncomeForcastWs> GetByIdAsync(int id);
 
-        //Task<ValidationResult> AddAsync(CreateIncomeForcastWsDTO model);
+        Task<ValidationResult<IncomeForcastWsDTO>> CreateAsync(CreateIncomeForcastWsDTO model);
 
-        //Task<ValidationResult> UpdateAsync(UpdateIncomeForcasWstDTO model);
+        Task<ValidationResult<IncomeForcastWsDTO>> UpdateAsync(UpdateIncomeForcastWsDTO model);
 
         Task HardDeleteAsync(int Id);
 
-        Task HardDeleteAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
-        //Task<int> CalculationAsync(int yearId, int organizationId);
+        Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId);
 
         Task<PagedResult<IncomeForcastWsDTO>> GetListAsync(IncomeForcastWsFilterDTO filter);
 
@@ -30,8 +31,9 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<Stream> ExportExcelAsync(IncomeForcastWsFilterDTO filter);
 
-        Task<IEnumerable<IncomeForcastWsDTO>> GetExportItemsAsync(IncomeForcastWsFilterDTO filter);
+        Task<IEnumerable<IncomeForcastWsDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
-        Task ImportExcelAsync(IFormFile fileInfo);
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false);
+
     }
 }

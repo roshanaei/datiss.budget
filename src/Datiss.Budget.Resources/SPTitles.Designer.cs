@@ -106,6 +106,42 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to درآمد هزینه لوله گذاری سرمایه ای حجم دفع سالیانه.
+        /// </summary>
+        public static string IncomeForcastWs_Cal1 {
+            get {
+                return ResourceManager.GetString("IncomeForcastWs_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to درآمد حق انشعاب سرمایه ای حجم دفع سالیانه.
+        /// </summary>
+        public static string IncomeForcastWs_Cal2 {
+            get {
+                return ResourceManager.GetString("IncomeForcastWs_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to درآمد تبصره 3 سرمایه ای حجم دفع سالیانه.
+        /// </summary>
+        public static string IncomeForcastWs_Cal3 {
+            get {
+                return ResourceManager.GetString("IncomeForcastWs_Cal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to درآمد ماده 11 سرمایه ای حجم دفع سالیانه.
+        /// </summary>
+        public static string IncomeForcastWs_Cal4 {
+            get {
+                return ResourceManager.GetString("IncomeForcastWs_Cal4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WasteInstallFees_Cal1.
         /// </summary>
         public static string WasteInstallFees_Cal1 {
