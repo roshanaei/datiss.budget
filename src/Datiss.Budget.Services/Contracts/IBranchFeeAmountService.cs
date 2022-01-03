@@ -28,9 +28,9 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false);
 
-        Task<Stream> ExportExcelAsync(BranchFeeAmountFilterDTO filter);
+        Task<IEnumerable<BranchFeeAmountDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
-        Task<IEnumerable<BranchFeeAmountDTO>> GetExportItemsAsync(BranchFeeAmountFilterDTO filter);
+        Task<Stream> ExportExcelAsync(BranchFeeAmountFilterDTO filter);
 
     }
 }

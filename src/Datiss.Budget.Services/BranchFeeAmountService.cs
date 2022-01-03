@@ -440,22 +440,10 @@ namespace Datiss.Budget.Services
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelAccessError,rowIndex +1)
                         );
+
                 if (!await checkLogicAsync(
                     record.YearId,
-                    record.OrganizationId,
-                    record.UrbanAdjustmentFactor,
-                    record.WasteRateInWater,
-                    record.WaterBranchingPerHousing,
-                    record.TubingCost,
-                    record.WaterPartnershipAmountDomestic,
-                    record.WaterPartnershipAmountNDomestic,
-                    record.WastePartnershipAmountDomestic,
-                    record.WastePartnershipAmountNDomestic,
-                    record.FixCostNote11H,
-                    record.FixCostNote11NH,
-                    record.FixCostNote11HWs,
-                    record.FixCostNote11NHWs,
-                    record.WsTubingCost))
+                    record.OrganizationId))
                 {
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 1)
@@ -624,7 +612,7 @@ namespace Datiss.Budget.Services
                                        x.FixCostNote11NH.ToString().ToUpper().Contains(filter.Search) ||
                                        x.FixCostNote11HWs.ToString().ToUpper().Contains(filter.Search) ||
                                        x.FixCostNote11NHWs.ToString().ToUpper().Contains(filter.Search) ||
-                                       x.WsTubingCost.ToString().ToUpper().Contains(filter.Search) ||);
+                                       x.WsTubingCost.ToString().ToUpper().Contains(filter.Search));
             }
 
             return query;
