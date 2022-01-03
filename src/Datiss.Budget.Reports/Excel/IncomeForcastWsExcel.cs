@@ -48,7 +48,7 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 9).DataType = XLDataType.Number;
                 row++;
             }
-            var range = sheet.Range(1, 1, row - 1, 10);
+            var range = sheet.Range(1, 1, row - 1, 9);
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
@@ -74,10 +74,10 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(2, 4).Value = "کد کاربری";
             sheet.Cell(2, 5).Value = "تعداد انشعاب";
             sheet.Cell(2, 6).Value = "آحاد انشعاب";
-            sheet.Cell(2, 7).Value = "درآمد هزینه لوله گذاری آب";
-            sheet.Cell(2, 8).Value = "درآمد حق انشعاب آب";
-            sheet.Cell(2, 9).Value = "درآمد تبصره 3 ماده واحده آب";
-            sheet.Cell(2, 10).Value = "درآمد ماده 11 آب";
+            sheet.Cell(2, 7).Value = "درآمد هزینه لوله گذاری فاضلاب";
+            sheet.Cell(2, 8).Value = "درآمد حق انشعاب فاضلاب";
+            sheet.Cell(2, 9).Value = "درآمد تبصره 3 ماده واحده فاضلاب";
+            sheet.Cell(2, 10).Value = "درآمد ماده 11 فاضلاب";
 
             var totalCount = items.Count();
             int row = 3;
@@ -91,7 +91,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(2, 1, row - 1, 11);
+            var range = sheet.Range(2, 1, row - 1, 10);
             range.Column(5).Style.NumberFormat.Format = "#,##0";
             range.Column(6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             var table = range.CreateTable($"{_sheetName}_Table");

@@ -234,14 +234,6 @@ namespace Datiss.Budget.Services
                          parameters: sqlParams.ToArray())
             });
 
-            result.Add(new CalculationItemData
-            {
-                Key = "IncomeForcastWs_Cal5",
-                Value = await _uow.ExecuteScalar<int>(
-                         "[dbo].[IncomeForcastWs_Cal5] @YearId, @OrganizationId",
-                         parameters: sqlParams.ToArray())
-            });
-
             return await Task.FromResult(result);
         }
 
