@@ -286,6 +286,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات برای {0} قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_NHCo {
+            get {
+                return ResourceManager.GetString("Logic_NHCo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است.
         /// </summary>
         public static string Logic_WasteSalesSplit {
