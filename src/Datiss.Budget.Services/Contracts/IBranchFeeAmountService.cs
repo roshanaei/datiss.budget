@@ -14,7 +14,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<ValidationResult<BranchFeeAmountDTO>> CreateAsync(CreateBranchFeeAmountDTO model);
 
-        Task<ValidationResult> UpdateAsync(UpdateBranchFeeAmountDTO model);
+        Task<ValidationResult<BranchFeeAmountDTO>> UpdateAsync(UpdateBranchFeeAmountDTO model);
 
         Task HardDeleteAsync(int Id);
 

@@ -125,37 +125,64 @@ namespace Datiss.Budget.Services
                   );
             }
 
-        public async Task<ValidationResult> UpdateAsync(UpdateBranchFeeAmountDTO model)
+        public async Task<ValidationResult<BranchFeeAmountDTO>> UpdateAsync(UpdateBranchFeeAmountDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            if (await checkLogicAsync(model.YearId,model.OrganizationId))
+            try
             {
-                var entity = await _dbSet.FindAsync(model.Id);
-                entity.OrganizationId = model.OrganizationId;
-                entity.YearId = model.YearId;
-                entity.UrbanAdjustmentFactor = model.UrbanAdjustmentFactor;
-                entity.WasteRateInWater = model.WasteRateInWater;
-                entity.WaterBranchingPerHousing = model.WaterBranchingPerHousing;
-                entity.TubingCost = model.TubingCost;
-                entity.WaterPartnershipAmountDomestic = model.WaterPartnershipAmountDomestic;
-                entity.WaterPartnershipAmountNDomestic = model.WaterPartnershipAmountNDomestic;
-                entity.WastePartnershipAmountDomestic = model.WastePartnershipAmountDomestic;
-                entity.WastePartnershipAmountNDomestic = model.WastePartnershipAmountNDomestic;
-                entity.FixCostNote11H = model.FixCostNote11H;
-                entity.FixCostNote11NH = model.FixCostNote11NH;
-                entity.FixCostNote11HWs = model.FixCostNote11HWs;
-                entity.FixCostNote11NHWs = model.FixCostNote11NHWs;
-                entity.WsTubingCost = model.WsTubingCost;
+                if (await checkLogicAsync(model.YearId, model.OrganizationId,model.Id))
+                {
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.YearId = model.YearId;
+                    entity.UrbanAdjustmentFactor = model.UrbanAdjustmentFactor;
+                    entity.WasteRateInWater = model.WasteRateInWater;
+                    entity.WaterBranchingPerHousing = model.WaterBranchingPerHousing;
+                    entity.TubingCost = model.TubingCost;
+                    entity.WaterPartnershipAmountDomestic = model.WaterPartnershipAmountDomestic;
+                    entity.WaterPartnershipAmountNDomestic = model.WaterPartnershipAmountNDomestic;
+                    entity.WastePartnershipAmountDomestic = model.WastePartnershipAmountDomestic;
+                    entity.WastePartnershipAmountNDomestic = model.WastePartnershipAmountNDomestic;
+                    entity.FixCostNote11H = model.FixCostNote11H;
+                    entity.FixCostNote11NH = model.FixCostNote11NH;
+                    entity.FixCostNote11HWs = model.FixCostNote11HWs;
+                    entity.FixCostNote11NHWs = model.FixCostNote11NHWs;
+                    entity.WsTubingCost = model.WsTubingCost;
 
-                await _uow.SaveChangesAsync();
+                    await _uow.SaveChangesAsync();
 
-                return ValidationResult.Success();
+                    var result = new BranchFeeAmountDTO
+                    {
+                        OrganizationId=model.OrganizationId,
+                        YearId=model.YearId,
+                        UrbanAdjustmentFactor = model.UrbanAdjustmentFactor,
+                        WasteRateInWater = model.WasteRateInWater,
+                        WaterBranchingPerHousing = model.WaterBranchingPerHousing,
+                        TubingCost = model.TubingCost,
+                        WaterPartnershipAmountDomestic = model.WaterPartnershipAmountDomestic,
+                        WaterPartnershipAmountNDomestic = model.WaterPartnershipAmountNDomestic,
+                        WastePartnershipAmountDomestic = model.WastePartnershipAmountDomestic,
+                        WastePartnershipAmountNDomestic = model.WastePartnershipAmountNDomestic,
+                        FixCostNote11H = model.FixCostNote11H,
+                        FixCostNote11NH = model.FixCostNote11NH,
+                        FixCostNote11HWs = model.FixCostNote11HWs,
+                        FixCostNote11NHWs = model.FixCostNote11NHWs,
+                        WsTubingCost = model.WsTubingCost
+                    };
+
+                    return ValidationResult<BranchFeeAmountDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<BranchFeeAmountDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
-            return ValidationResult.Failed(
+            return ValidationResult<BranchFeeAmountDTO>.Failed(
                 string.Format(ServiceMessages.Logic_BranchFeeAmount,
-                                model.YearId, model.OrganizationId)
+                model.YearId, 
+                model.OrganizationId)
                 );
         }
 
