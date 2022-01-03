@@ -113,6 +113,7 @@ namespace Datiss.Budget.Services
                 entity.NumberSales = model.NumberSales;
                 entity.UnitSales = model.UnitSales;
                 entity.AverageCapacity = model.AverageCapacity;
+                entity.WsInstallationCosts = model.WsInstallationCosts;
 
                 await _uow.SaveChangesAsync();
 
@@ -128,7 +129,8 @@ namespace Datiss.Budget.Services
                     WspipeDiameterDisplay = (await _constSet.FindAsync(model.WsPipeDiameterId)).Title,
                     NumberSales = model.NumberSales,
                     UnitSales = model.UnitSales,
-                    AverageCapacity = model.AverageCapacity
+                    AverageCapacity = model.AverageCapacity,
+                    WsInstallationCosts = model.WsInstallationCosts
                 };
 
                 return ValidationResult<WasteSalesSplitDTO>.Success(result);
@@ -276,7 +278,8 @@ namespace Datiss.Budget.Services
                                         UnitSales = x.UnitSales,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId,
-                                        AverageCapacity = x.AverageCapacity
+                                        AverageCapacity = x.AverageCapacity,
+                                        WsInstallationCosts = x.WsInstallationCosts
                                     }).ToListAsync();
 
             return await Task.FromResult(result);
@@ -448,7 +451,8 @@ namespace Datiss.Budget.Services
                                         YearId = x.YearId,
                                         NumberSales = x.NumberSales,
                                         UnitSales = x.UnitSales,
-                                        AverageCapacity = x.AverageCapacity
+                                        AverageCapacity = x.AverageCapacity,
+                                        WsInstallationCosts = x.WsInstallationCosts
                                     }).ToListAsync();
 
             return items;
@@ -481,7 +485,8 @@ namespace Datiss.Budget.Services
                                         YearId = x.YearId,
                                         NumberSales = x.NumberSales,
                                         UnitSales = x.UnitSales,
-                                        AverageCapacity = x.AverageCapacity
+                                        AverageCapacity = x.AverageCapacity,
+                                        WsInstallationCosts = x.WsInstallationCosts
                                     }).ToListAsync();
 
             var ms = new MemoryStream();

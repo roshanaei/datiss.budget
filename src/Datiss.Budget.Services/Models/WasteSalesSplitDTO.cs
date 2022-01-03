@@ -27,6 +27,7 @@ namespace Datiss.Budget.Services.Models
     public class UpdateWasteSalesSplitDTO : CreateWasteSalesSplitDTO
     {
         public int Id { get; set; }
+        public int WsInstallationCosts { get; set; }
     }
 
     public class WasteSalesSplitDTO
@@ -54,5 +55,7 @@ namespace Datiss.Budget.Services.Models
         public int UnitSales { get; set; }
 
         public decimal AverageCapacity { get; set; }
+
+        public int WsInstallationCosts { get; set; }
     }
 }

@@ -44,6 +44,7 @@ namespace Datiss.Budget.ViewModels
     public class UpdateWaterSalesSplitViewModel : CreateWaterSalesSplitViewModel
     {
         public int Id { get; set; }
+        public int WInstallationCosts { get; set; }
     }
 
 
@@ -59,8 +60,13 @@ namespace Datiss.Budget.ViewModels
         public int WPipeDiameterId { get; set; }
         public string WPipeDiameterDisplay { get; set; }
         public int NumberSales { get; set; }
+        public string NumberSalesDisplay => NumberSales.ToString("N0");
         public int UnitSales { get; set; }
+        public string UnitSalesDisplay => UnitSales.ToString("N0");
         public decimal AverageCapacity { get; set; }
+        public string AverageCapacityDisplay => AverageCapacity.ToString("F2");
+        public int WInstallationCosts { get; set; }
+        public string WInstallationCostsDisplay => WInstallationCosts.ToString("N0");
     }
 
     public class WaterSalesSplitFilterViewModel : FilterViewModel
@@ -98,7 +104,6 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-
         public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
             => OrganizationSource = source.Select(x => new SelectListItem
             {
@@ -123,7 +128,6 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-
         public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
             => Filter.OrganizationSource = source.Select(x => new SelectListItem
             {
@@ -131,8 +135,6 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-
-
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
             => Filter.YearSource = source.Select(x => new SelectListItem
             {
