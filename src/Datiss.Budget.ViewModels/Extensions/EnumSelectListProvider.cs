@@ -30,5 +30,21 @@ namespace Datiss.Budget.Extensions
                         Selected = status == EntityStatus.Deleted
                     }
                 };
+        public static IEnumerable<SelectListItem> GetActivityTypeItems(ActivityType? activity)
+            => new List<SelectListItem>
+                {
+                    new SelectListItem
+                    {
+                        Text = EnumText.ActivityType_Water,
+                        Value = ((int)ActivityType.Water).ToString(),
+                        Selected = activity == ActivityType.Water
+                    },
+                    new SelectListItem
+                    {
+                        Text = EnumText.ActivityType_Waste,
+                        Value = ((int)ActivityType.Waste).ToString(),
+                        Selected = activity == ActivityType.Waste
+                    },
+                };
     }
 }
