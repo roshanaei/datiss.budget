@@ -43,7 +43,7 @@ namespace Datiss.Budget.Web.Controllers
 
         private readonly ILogger<NHCoController> _logger;
         private readonly IWebHostEnvironment _env;
-        private readonly INHCoService _waterInstallFeeService;
+        private readonly INHCoService _nHCoService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
         private readonly ISecurityTrimmingService _securityTrimmingService;
@@ -51,14 +51,14 @@ namespace Datiss.Budget.Web.Controllers
         public NHCoController(
             ILogger<NHCoController> logger,
             IWebHostEnvironment environment,
-            INHCoService waterInstallFeeService,
+            INHCoService nHCoService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             ISecurityTrimmingService securityTrimmingService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
-            _waterInstallFeeService = waterInstallFeeService ?? throw new ArgumentNullException(nameof(waterInstallFeeService));
+            _nHCoService = nHCoService ?? throw new ArgumentNullException(nameof(nHCoService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
@@ -81,7 +81,7 @@ namespace Datiss.Budget.Web.Controllers
             }
             var data = model.Adapt<CreateNHCoDTO>();
 
-            var result = await _waterInstallFeeService.CreateAsync(data);
+            var result = await _nHCoService.CreateAsync(data);
 
             if (!result.IsValid)
             {
@@ -104,7 +104,7 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             var data = model.Adapt<UpdateNHCoDTO>();
-            var result = await _waterInstallFeeService.UpdateAsync(data);
+            var result = await _nHCoService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
@@ -134,6 +134,7 @@ namespace Datiss.Budget.Web.Controllers
 
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
+            filter.ActivityType = ActivityType.Water;
 
             var myfilter = TempData.Get<NHCoFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
@@ -144,7 +145,7 @@ namespace Datiss.Budget.Web.Controllers
 
             filter.PageNumber = page;
 
-            var result = await _waterInstallFeeService.GetListAsync(filter);
+            var result = await _nHCoService.GetListAsync(filter);
             var model = result.Adapt<NHCoIndexViewModel>();
 
             model.SetYearSource(yearSource);
@@ -158,7 +159,7 @@ namespace Datiss.Budget.Web.Controllers
             model.Filter.OrganizationId = filter.OrganizationId;
             model.PageNumber = filter.PageNumber;
             model.PageSize = filter.PageSize;
-
+            model.Filter.ActivityType = filter.ActivityType;
             return View(model);
         }
 
@@ -171,7 +172,7 @@ namespace Datiss.Budget.Web.Controllers
 
             TempData.Put(_indexFilterKey, filter);
 
-            var result = await _waterInstallFeeService.GetListAsync(filter);
+            var result = await _nHCoService.GetListAsync(filter);
             model = result.Adapt<NHCoIndexViewModel>();
             model.Filter = filter.Adapt<NHCoFilterViewModel>();
 
@@ -207,7 +208,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _waterInstallFeeService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
+                var result = await _nHCoService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
 
                 if (result.AskToImport)
                 {
@@ -260,11 +261,11 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("records/delete")]
-        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId ,ActivityType activityType)
         {
             try
             {
-                var result = await _waterInstallFeeService.HardDeleteAsync(yearId, orgId);
+                var result = await _nHCoService.HardDeleteAsync(yearId, orgId,activityType);
 
                 return Json(new
                 {
@@ -314,7 +315,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             try
             {
-                await _waterInstallFeeService.HardDeleteAsync(id);
+                await _nHCoService.HardDeleteAsync(id);
             }
             catch (DisbaledYearDataInputException)
             {
@@ -377,16 +378,17 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Copy(CopyViewModel model)
+        public async Task<IActionResult> Copy(CopyViewModel model,ActivityType activityType)
         {
             model.CheckArgumentIsNull(nameof(model));
 
             try
             {
-                await _waterInstallFeeService.CopyAsync(
+                await _nHCoService.CopyAsync(
                                                     model.SourceYearId,
                                                     model.SourceOrgId,
-                                                    model.TargetYearId);
+                                                    model.TargetYearId,
+                                                    activityType);
                 model.Succeed(ViewMessages.CopySuccess);
             }
             catch (CopySameYearException)
@@ -414,7 +416,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("import/template/{yearId}/{activity}/{orgId?}")]
-        public async Task<IActionResult> GetExcelTemplate(int yearId, string activity, int? orgId)
+        public async Task<IActionResult> GetExcelTemplate(int yearId,ActivityType activity, int? orgId)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
@@ -431,7 +433,6 @@ namespace Datiss.Budget.Web.Controllers
                     YearId = year.Id
                 });
             }
-
             using var workbook = items.GetImportTemplate(year.Year, activity);
             return workbook.Deliver("NHCo-Import-Template.xlsx");
         }
@@ -439,7 +440,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("[action]/{orgid}/{yearid}")]
         public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
-            var result = await _waterInstallFeeService.GetExportItemsAsync(yearid, orgid);
+            var result = await _nHCoService.GetExportItemsAsync(yearid, orgid);
             if (result.Count() == 0)
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();

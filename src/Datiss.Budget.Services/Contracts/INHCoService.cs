@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Microsoft.AspNetCore.Http;
@@ -21,13 +22,13 @@ namespace Datiss.Budget.Services.Contracts
 
         Task HardDeleteAsync(int Id);
 
-        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId, ActivityType activityType);
 
         Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId);
 
         Task<PagedResult<NHCoDTO>> GetListAsync(NHCoFilterDTO filter);
 
-        Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
+        Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId, ActivityType activityType);
 
         Task<Stream> ExportExcelAsync(NHCoFilterDTO filter);
 

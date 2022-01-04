@@ -13,6 +13,7 @@ using Datiss.Budget.Services.Excel;
 using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
 using LinqKit;
 using Mapster;
 using Microsoft.AspNetCore.Http;
@@ -82,7 +83,7 @@ namespace Datiss.Budget.Services
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId,model.ActivityType))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ActivityType))
                 {
                     await _dbSet.AddAsync(entity);
                     await _uow.SaveChangesAsync();
@@ -106,7 +107,7 @@ namespace Datiss.Budget.Services
 
             return ValidationResult<NHCoDTO>.Failed(
                 string.Format(ServiceMessages.Logic_NHCo,
-                model.ActivityType)
+                model.ActivityType.ToDisplay())
                 );
 
 
@@ -152,7 +153,7 @@ namespace Datiss.Budget.Services
             }
             return ValidationResult<NHCoDTO>.Failed(
                 string.Format(ServiceMessages.Logic_NHCo,
-                model.ActivityType)
+                model.ActivityType.ToDisplay())
                 );
         }
 
@@ -173,7 +174,7 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId)
+        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId, ActivityType activityType)
         {
             var organization = await _orgDbSet.FindAsync(organizationId);
             organization.CheckReferenceIsNull(nameof(organization));
@@ -185,9 +186,10 @@ namespace Datiss.Budget.Services
                 throw new DisbaledYearDataInputException();
 
             var self = await _dbSet.Where(_ => _.YearId == yearId)
-                                    .Where(_ => _.OrganizationId == organizationId)
-                                    .ToListAsync();
-            var childrens = await getChildren(organizationId, yearId);
+                                   .Where(_ => _.OrganizationId == organizationId)
+                                   .Where(_ => _.ActivityType == activityType)
+                                   .ToListAsync();
+            var childrens = await getChildren(organizationId, yearId, activityType);
 
             if (self.Count() == 0 && childrens.Count() == 0)
                 throw new DeleteNullRecordException();
@@ -267,31 +269,34 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId, ActivityType activityType)
         {
 
             if (sourceYearId == destYearId)
                 throw new CopySameYearException();
             if (destYearId < sourceYearId)
                 throw new CopyDestYearExxeption();
-            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId, activityType))
                 throw new CopyOrgNullDataException();
             var result = new List<NHCo>();
 
             if (await Query()
                         .Where(_ => _.OrganizationId == sourceOrgId)
-                        .Where(_ => _.YearId == destYearId).AnyAsync())
+                        .Where(_ => _.YearId == destYearId)
+                        .Where(_ => _.ActivityType == activityType)
+                        .AnyAsync())
                 throw new CopyDestYearHasDataException();
 
             var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
                                         .Where(_ => _.YearId == sourceYearId)
+                                        .Where(_ => _.ActivityType == activityType)
                                         .ToListAsync();
 
             if (selfData.Any())
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.ActivityType))
+                    if (!await checkLogicAsync(destYearId, item.OrganizationId, item.ActivityType))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new NHCo
@@ -308,7 +313,7 @@ namespace Datiss.Budget.Services
                 }
             }
 
-            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId, activityType);
 
             if (childrens.Any())
             {
@@ -431,7 +436,7 @@ namespace Datiss.Budget.Services
 
             query = await setFilter(query, filter);
 
-            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+            query = setOrder(query,"getexport", filter.OrderDesc);
 
             var items = await query
                                     .Include(x => x.FinanceYear)
@@ -515,6 +520,8 @@ namespace Datiss.Budget.Services
 
                 query = query.Where(predicate);
             }
+            if (filter.ActivityType.HasValue)
+                query = query.Where(x => x.ActivityType == filter.ActivityType.Value);
 
             if (filter.Search.IsNotNullOrEmpty())
             {
@@ -541,7 +548,10 @@ namespace Datiss.Budget.Services
                     return desc
                         ? query.OrderByDescending(x => x.Organization.Title)
                         : query.OrderBy(x => x.Organization.Title);
-
+                case "getexport":
+                    return query.Include(x => x.Organization)
+                                .OrderBy(x=>x.ActivityType)
+                                .ThenBy(x => x.Organization.DisplayOrder);
                 default:
                     return query.Include(x => x.Organization)
                                 .OrderBy(x => x.Organization.DisplayOrder);
@@ -551,7 +561,8 @@ namespace Datiss.Budget.Services
         private async Task<IEnumerable<NHCo>> getChildrenData(
             int parentOrganizationId,
             int yearId,
-            int targetYearId)
+            int targetYearId,
+            ActivityType activityType)
         {
 
             var children = await _orgDbSet
@@ -564,7 +575,8 @@ namespace Datiss.Budget.Services
             {
                 if (await Query()
                             .Where(_ => _.OrganizationId == org.Id)
-                            .Where(_ => _.YearId == targetYearId).AnyAsync())
+                            .Where(_ => _.YearId == targetYearId)
+                            .Where(_ => _.ActivityType == activityType).AnyAsync())
                 {
                     throw new CopyDestYearHasDataException();
                 }
@@ -572,11 +584,12 @@ namespace Datiss.Budget.Services
                 var data = await Query()
                                 .Where(_ => _.YearId == yearId)
                                 .Where(_ => _.OrganizationId == org.Id)
+                                .Where(_ => _.ActivityType == activityType)
                                 .ToListAsync();
 
                 foreach (var item in data)
                 {
-                    if (!await checkLogicAsync(targetYearId, org.Id, item.ActivityType))
+                    if (!await checkLogicAsync(targetYearId, item.OrganizationId, item.ActivityType))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new NHCo
@@ -593,14 +606,15 @@ namespace Datiss.Budget.Services
                     result.Add(entity);
                 }
 
-                result.AddRange(await getChildrenData(org.Id, yearId, targetYearId));
+                result.AddRange(await getChildrenData(org.Id, yearId, targetYearId, activityType));
             }
 
             return result;
         }
         private async Task<IEnumerable<NHCo>> getChildren(
             int parentOrganizationId,
-            int yearId)
+            int yearId,
+            ActivityType activityType)
         {
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
@@ -611,20 +625,22 @@ namespace Datiss.Budget.Services
                 var data = await Query()
                                 .Where(_ => _.YearId == yearId)
                                 .Where(_ => _.OrganizationId == org.Id)
+                                .Where(_ => _.ActivityType == activityType)
                                 .ToListAsync();
 
                 foreach (var item in data)
                 {
                     result.Add(item);
                 }
-                result.AddRange(await getChildren(org.Id, yearId));
+                result.AddRange(await getChildren(org.Id, yearId, activityType));
             }
             return result;
         }
-        private async Task<bool> hasAnyDataAsync(int orgid, int yearid)
+        private async Task<bool> hasAnyDataAsync(int orgid, int yearid, ActivityType activityType)
         {
             bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
-                                                x.YearId == yearid);
+                                                x.YearId == yearid &&
+                                                x.ActivityType == activityType);
             if (any)
             {
                 return true;
@@ -633,13 +649,14 @@ namespace Datiss.Budget.Services
             {
                 if (await Query().Include(x => x.Organization)
                                  .AnyAsync(x => x.Organization.ParentId == orgid &&
-                                                x.YearId == yearid))
+                                                x.YearId == yearid &&
+                                                x.ActivityType == activityType))
                 {
                     return true;
                 }
                 var childs = await _orgDbSet.Where(x => x.ParentId == orgid).ToListAsync();
                 foreach (var child in childs)
-                    return await hasAnyDataAsync(child.Id, yearid);
+                    return await hasAnyDataAsync(child.Id, yearid, activityType);
             }
 
             return false;

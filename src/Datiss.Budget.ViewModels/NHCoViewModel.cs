@@ -17,14 +17,14 @@ namespace Datiss.Budget.ViewModels
         public string YearDisplay { get; set; }
         public int OrganizationId { get; set; }
         public string OrganizationDisplay { get; set; }
-
-        [Required(ErrorMessage = "*")]
-        [Range(0, int.MaxValue, ErrorMessage = "لطفاً مبلغ را بصورت صحیح وارد نمایید.")]
-        public int WInstallFee { get; set; }
         public ActivityType ActivityType { get; set; }
+        [Required(ErrorMessage = "*")]
         public int P1Capacity { get; set; }
+        [Required(ErrorMessage = "*")]
         public int FixCostCo { get; set; }
+        [Required(ErrorMessage = "*")]
         public int P1CostCo { get; set; }
+        [Required(ErrorMessage = "*")]
         public int P2CostCo { get; set; }
         public IEnumerable<SelectListItem> ActivityTypeSource => EnumSelectListProvider.GetActivityTypeItems(ActivityType);
     }
@@ -57,10 +57,11 @@ namespace Datiss.Budget.ViewModels
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
+        public ActivityType? ActivityType { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
-
         public IList<SelectListItem> OrganizationSource { get; set; }
+        public IList<SelectListItem> ActivityTypeSource => EnumSelectListProvider.GetActivityTypeItems(ActivityType).ToList();
     }
 
     public class NHCoIndexViewModel : PagedViewModel<NHCoViewModel>
@@ -72,6 +73,8 @@ namespace Datiss.Budget.ViewModels
         }
 
         public NHCoFilterViewModel Filter { get; set; }
+
+        public ActivityType activityType { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
 
@@ -107,7 +110,6 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-        //AddEmptySelectListItem()
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
             => Filter.YearSource = source.Select(x => new SelectListItem
@@ -116,6 +118,5 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-
     }
 }

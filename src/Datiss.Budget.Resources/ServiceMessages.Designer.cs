@@ -286,7 +286,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات برای {0} قبلا ثبت شده است..
+        ///   Looks up a localized string similar to اطلاعات برای فعالیت {0} قبلا ثبت شده است..
         /// </summary>
         public static string Logic_NHCo {
             get {
