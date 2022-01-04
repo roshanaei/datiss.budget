@@ -106,7 +106,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu">
+                                        <div class="dropdown-menu" style="width:300%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -709,7 +709,7 @@
             fdata.append('ExcelFile', file);
 
             $.ajax({
-                url: '@Url.Action(@BranchFeeAmountController.ACTION_ImportExcel)',
+                url: '@Url.Action(BranchFeeAmountController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,

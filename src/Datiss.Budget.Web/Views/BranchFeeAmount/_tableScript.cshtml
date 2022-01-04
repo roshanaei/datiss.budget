@@ -201,7 +201,7 @@
         console.log(model);
 
         $.ajax({
-            url: '@Url.Action(WaterInstallFeeController.ACTION_Create)',
+            url: '@Url.Action(BranchFeeAmountController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -249,7 +249,7 @@
                 $(e).find('#spanUrbanAdjustmentFactor_').attr('id', 'spanUrbanAdjustmentFactor_' + data.id);
 
                 $('#divInput_UrbanAdjustmentFactor_' + data.id).hide();
-                $('#spanUrbanAdjustmentFactor_' + data.id).text(data.wInstallFee);
+                $('#spanUrbanAdjustmentFactor_' + data.id).text(data.urbanAdjustmentFactor);
                 $('#divOutput_UrbanAdjustmentFactor_' + data.id).show();
 
                 //WasteRateInWater
@@ -537,7 +537,7 @@
 
         let newRowElement = document.getElementById('newRow');
         newRowElement.scrollIntoView();
-        $('.default-input:last').focus();
+        $('.input2:last').focus();
 
         isNewRow = true;
     }
@@ -551,7 +551,7 @@
         console.log(e);
 
         $.ajax({
-            url: '@Url.Action(WaterInstallFeeController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(BranchFeeAmountController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {
