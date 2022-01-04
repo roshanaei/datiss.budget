@@ -14,6 +14,7 @@
         $('#divOutput_NumberSales_' + id).hide();
         $('#divOutput_UnitSales_' + id).hide();
         $('#divOutput_AverageCapacity_' + id).hide();
+        $('#divOutput_WsInstallationCosts_' + id).hide();
 
         //show input elements
         $('#divInput_Year_' + id).show();
@@ -23,13 +24,18 @@
         $('#divInput_NumberSales_' + id).show();
         $('#divInput_UnitSales_' + id).show();
         $('#divInput_AverageCapacity_' + id).show();
+        $('#divInput_WsInstallationCosts_' + id).show();
+
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
     }
+
     function cancelEditRow(id) {
+
         let row = $('#row_' + id);
+
         //Hide input elements
         $('#divInput_Year_' + id).hide();
         $('#divInput_Org_' + id).hide();
@@ -38,6 +44,8 @@
         $('#divInput_NumberSales_' + id).hide();
         $('#divInput_UnitSales_' + id).hide();
         $('#divInput_AverageCapacity_' + id).hide();
+        $('#divInput_WsInstallationCosts_' + id).hide();
+
         //Show output elements
         $('#divOutput_Year_' + id).show();
         $('#divOutput_Org_' + id).show();
@@ -46,6 +54,8 @@
         $('#divOutput_NumberSales_' + id).show();
         $('#divOutput_UnitSales_' + id).show();
         $('#divOutput_AverageCapacity_' + id).show();
+        $('#divOutput_WsInstallationCosts_' + id).show();
+
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
         $('#btnSaveEdit_' + id).hide();
@@ -59,6 +69,7 @@
         })
         $(`th:last-child, tr td:last-child`).show();
     }
+
     function saveEditRow(id) {
         let row = $('#row_' + id);
         var model = {};
@@ -70,6 +81,8 @@
         model.numberSales = $('#inputNumberSales_' + id).val();
         model.unitSales = $('#inputUnitSales_' + id).val();
         model.averageCapacity = $('#inputAverageCapacity_' + id).val();
+        model.wsInstallationCosts = $('#inputWsInstallationCosts_' + id).val();
+
         $.ajax({
             url: '@Url.Action(WasteSalesSplitController.ACTION_Edit)',
             type: 'POST',
@@ -99,6 +112,7 @@
                 $('#spanNumberSales_' + id).text(data.numberSales);
                 $('#spanUnitSales_' + id).text(data.unitSales);
                 $('#spanAverageCapacity_' + id).text(data.averageCapacity);
+                $('#spanWsInstallationCosts_' + id).text(data.wsInstallationCosts);
 
                 cancelEditRow(id);
             },
@@ -107,6 +121,7 @@
             }
         });
     }
+
     function saveNewRow(e) {
 
         var model = {};
@@ -117,6 +132,7 @@
         model.numberSales = $(e).find('#inputNumberSales_').val();
         model.unitSales = $(e).find('#inputUnitSales_').val();
         model.averageCapacity = $(e).find('#inputAverageCapacity_').val();
+        model.wsInstallationCosts = $(e).find('#inputWsInstallationCosts_').val();
 
         $.ajax({
             url: '@Url.Action(WasteSalesSplitController.ACTION_Create)',
@@ -203,6 +219,15 @@
                 $('#spanAverageCapacity_' + data.id).text(data.averageCapacity);
                 $('#divOutput_AverageCapacity_' + data.id).show();
 
+                //WsInstallationCosts
+                $(e).find('#divInput_WsInstallationCosts_').attr('id', 'divInput_WsInstallationCosts_' + data.id);
+                $(e).find('#inputWsInstallationCosts_').attr('id', 'inputWsInstallationCosts_' + data.id);
+                $(e).find('#divOutput_WsInstallationCosts_').attr('id', 'divOutput_WsInstallationCosts_' + data.id);
+                $(e).find('#spanWsInstallationCosts_').attr('id', 'spanWsInstallationCosts_' + data.id);
+                $('#divInput_WsInstallationCosts_' + data.id).hide();
+                $('#spanWsInstallationCosts_' + data.id).text(0);
+                $('#divOutput_WsInstallationCosts_' + data.id).show();
+
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);
                 $(e).find('#btnDelete_').data('id', data.id);
@@ -251,21 +276,7 @@
             dir: 'rtl'
         });
 
-        $('.input1:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-        $('.input2:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-        $('.input3:last').keyup(function (event) {
+        $('.input-keyup').keyup(function (event) {
             event.preventDefault();
             if (event.keyCode === 13) {
                 let row = $(this).closest('tr');

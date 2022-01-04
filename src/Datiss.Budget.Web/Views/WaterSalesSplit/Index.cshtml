@@ -14,16 +14,6 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <!--Alert-->
-                @if (ViewData["message"] != null)
-                {
-                    <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
-                        </button>
-                        <span>@ViewData["message"]</span>
-                    </div>
-                }
                 <div class="card-content">
                     <div class="card-body">
                         <!--Filters-->
@@ -94,7 +84,7 @@
 
                                         </label>
                                     </fieldset>
-                                    @* drop down menu *@
+                                    <!--drop down menu-->
                                     <div class="btn-group dropdown form-group">
                                         <button type="button"
                                                 class="btn btn-light my-font dropdown-toggle"
@@ -182,6 +172,17 @@
                                                                for="col-7"><span>متوسط ظرفیت قراردادی</span></label>
                                                     </div>
                                                 </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-8"
+                                                               id="col-8" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-8"><span>هزینه نصب انشعاب</span></label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -189,7 +190,7 @@
                                 <fieldset>
                                     <div class="rowACJE">
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i> به روز رسانی
+                                            <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WaterSalesSplitController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
@@ -233,10 +234,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7';
+        let allColumns = '1,2,3,4,5,6,7,8';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,";
+        let showingColmuns = "1,2,3,4,5,6,7,8,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -376,14 +377,11 @@
 
         }
 
-        function calculation(e) {
-            //$('#toolForm').attr('action', '@Url.Action("Calculation")');
-            //$('#toolForm').submit();
-
-
-
-            return true;
-        }
+        $(window).keydown(function (event) {
+            if (event.altKey && event.keyCode == 78) {
+                addNewRow();
+            }
+        });
 
         function openImportExcelForm() {
             $('#ExcellModal').modal('show');
@@ -395,28 +393,32 @@
         $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
-            let inputNum = document.getElementById('inputNumberSales_' + id);
-            let inputUnit = document.getElementById('inputUnitSales_' + id);
-            let inputAverage = document.getElementById('inputAverageCapacity_' + id);
+            let input1 = document.getElementById('inputNumberSales_' + id);
+            let input2 = document.getElementById('inputUnitSales_' + id);
+            let input3 = document.getElementById('inputAverageCapacity_' + id);
+            let input4 = document.getElementById('inputWInstallationCosts_' + id);
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
-            inputNum.addEventListener("keyup", function (event) {
+            input1.addEventListener("keyup", function (event) {
                 event.preventDefault();
-                // Number 13 is the "Enter" key on the keyboard
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
                 }
             });
-            inputUnit.addEventListener("keyup", function (event) {
+            input2.addEventListener("keyup", function (event) {
                 event.preventDefault();
-                // Number 13 is the "Enter" key on the keyboard
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
                 }
             });
-            inputAverage.addEventListener("keyup", function (event) {
+            input3.addEventListener("keyup", function (event) {
                 event.preventDefault();
-                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input4.addEventListener("keyup", function (event) {
+                event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
                 }

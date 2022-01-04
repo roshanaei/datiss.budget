@@ -1,16 +1,18 @@
 ﻿@model WasteSalesSplitIndexViewModel
+
 <div class="table-responsive">
-    <table id="my-table" class="table table-hover table-bordered m-0 my-font">
+    <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
         <thead class="thead-light">
             <tr>
                 <th>سال</th>
-                <th>سازمان</th>
-                <th>کاربری</th>
-                <th style="width:160px">قطر لوله فاضلاب</th>
-                <th style="width:145px">تعداد انشعاب</th>
-                <th style="width:135px">آحاد انشعاب</th>
-                <th style="width:199px">متوسط ظرفیت قراردادی</th>
-                <th>مدیریت</th>
+                <th style="min-width:250px">سازمان</th>
+                <th style="min-width:240px">کاربری</th>
+                <th style="min-width:124px">قطر لوله</th>
+                <th style="min-width:145px">تعداد انشعاب</th>
+                <th style="min-width:135px">آحاد انشعاب</th>
+                <th style="min-width:199px">متوسط ظرفیت قراردادی</th>
+                <th style="min-width:180px">هزینه نصب انشعاب</th>
+                <th style="min-width:190px">مدیریت</th>
             </tr>
         </thead>
         <tbody>
@@ -64,7 +66,7 @@
                 </td>
                 <td>
                     <div id="divInput_NumberSales_">
-                        <input class="form-control input1" id="inputNumberSales_" type="number" />
+                        <input class="form-control input-keyup" id="inputNumberSales_" type="number" />
                     </div>
                     <div id="divOutput_NumberSales_" style="display: none">
                         <span id="spanNumberSales_"> </span>
@@ -72,7 +74,7 @@
                 </td>
                 <td>
                     <div id="divInput_UnitSales_">
-                        <input class="form-control input2" id="inputUnitSales_" type="number" />
+                        <input class="form-control input-keyup" id="inputUnitSales_" type="number" />
                     </div>
                     <div id="divOutput_UnitSales_" style="display: none">
                         <span id="spanUnitSales_"> </span>
@@ -80,10 +82,18 @@
                 </td>
                 <td>
                     <div id="divInput_AverageCapacity_">
-                        <input class="form-control input3" id="inputAverageCapacity_" type="number" />
+                        <input class="form-control input-keyup" id="inputAverageCapacity_" type="number" />
                     </div>
                     <div id="divOutput_AverageCapacity_" style="display: none">
                         <span id="spanAverageCapacity_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_WsInstallationCosts_">
+                        <input class="form-control input-keyup" id="inputWsInstallationCosts_" type="number" />
+                    </div>
+                    <div id="divOutput_WsInstallationCosts_" style="display: none">
+                        <span id="spanWsInstallationCosts_"> </span>
                     </div>
                 </td>
                 <td>
@@ -152,7 +162,6 @@
                             </select>
                             <script>
                                 $('select#inputUserType_' + @item.Id + ' option[value=' + @item.UserTypeId + ']').attr('selected', true);
-                                $('#inputUserType_' + @item.Id).select2({ dir : 'rtl' });
                             </script>
                         </div>
                         <div id="divOutput_UserType_@item.Id">
@@ -168,7 +177,6 @@
                             </select>
                             <script>
                                 $('select#inputWsPipeDiameter_' + @item.Id + ' option[value=' + @item.WsPipeDiameterId + ']').attr('selected', true);
-                                $('#inputWsPipeDiameter_' + @item.Id).select2({ dir : 'rtl' });
                             </script>
                         </div>
                         <div id="divOutput_WsPipeDiameter_@item.Id">
@@ -180,7 +188,7 @@
                             <input class="form-control" id="inputNumberSales_@item.Id" value="@item.NumberSales" type="number" />
                         </div>
                         <div id="divOutput_NumberSales_@item.Id">
-                            <span id="spanNumberSales_@item.Id">@item.NumberSales </span>
+                            <span id="spanNumberSales_@item.Id">@item.NumberSalesDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -188,7 +196,7 @@
                             <input class="form-control" id="inputUnitSales_@item.Id" value="@item.UnitSales" type="number" />
                         </div>
                         <div id="divOutput_UnitSales_@item.Id">
-                            <span id="spanUnitSales_@item.Id">@item.UnitSales </span>
+                            <span id="spanUnitSales_@item.Id">@item.UnitSalesDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -196,7 +204,15 @@
                             <input class="form-control" id="inputAverageCapacity_@item.Id" value="@item.AverageCapacity" type="number" />
                         </div>
                         <div id="divOutput_AverageCapacity_@item.Id">
-                            <span id="spanAverageCapacity_@item.Id">@item.AverageCapacity </span>
+                            <span id="spanAverageCapacity_@item.Id">@item.AverageCapacityDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_WsInstallationCosts_@item.Id" style="display: none">
+                            <input class="form-control" id="inputWsInstallationCosts_@item.Id" value="@item.WsInstallationCosts" type="number" />
+                        </div>
+                        <div id="divOutput_WsInstallationCosts_@item.Id">
+                            <span id="spanWsInstallationCosts_@item.Id">@item.WsInstallationCostsDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -220,98 +236,99 @@
             }
         </tbody>
     </table>
-    <div class="rowACJSB" style="margin-top:20px">
-        <!--Tools-->
-        <div class="rowACJS">
-            <form id="toolForm"
-                  enctype="multipart/form-data"
-                  method="post"
-                  asp-antiforgery="true">
-                <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
-                <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
-                <span data-toggle="modal" data-target="#backdrop">
-                    <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                        <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
-                    </button>
-                </span>
-                <span data-toggle="modal" data-target="#CopyModal">
-                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
-                        <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
-                    </button>
-                </span>
-                <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+</div>
+
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
                 </button>
-                <span data-toggle="modal" data-target="#CalculationModal">
-                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
-                        <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                    </button>
-                </span>
-                <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
                 </button>
-            </form>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <span data-toggle="modal" data-target="#CalculationModal">
+                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                </button>
+            </span>
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </button>
+        </form>
 
-        </div>
-
-        <div class="rowAC">
-            <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
-            <div class="my-font ml-2">
-                (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
-                <b class="font-medium-2">
-                    @if (Model.PagesCount == 0)
-                    {<span>1</span>}
-                    else
-                    {<span>@Model.PagesCount</span>}
-                </b>)
-            </div>
-        </div>
-
-        @if (Model.PagesCount > 1)
-        {
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    @if (Model.PageNumber > 1)
-                    {
-                        <li class="page-item">
-                            <a class="page-link"
-                               asp-controller="@WasteSalesSplitController.Name"
-                               asp-action="@WasteSalesSplitController.ACTION_Index"
-                               asp-route-page="@Model.PreviousPage"
-                               aria-label="Previous">«</a>
-                        </li>
-                    }
-
-                    @for (int i = 1; i <= Model.PagesCount; i++)
-                    {
-                        if (i == Model.PageNumber)
-                        {
-                            <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
-                        }
-                        else
-                        {
-                            <li class="page-item">
-                                <a class="page-link"
-                                   asp-controller="@WasteSalesSplitController.Name"
-                                   asp-action="@WasteSalesSplitController.ACTION_Index"
-                                   asp-route-page="@i">@i.ToString() </a>
-                            </li>
-                        }
-                    }
-
-                    @if (Model.PageNumber < Model.PagesCount)
-                    {
-                        <li class="page-item">
-                            <a class="page-link"
-                               asp-controller="@WasteSalesSplitController.Name"
-                               asp-action="@WasteSalesSplitController.ACTION_Index"
-                               asp-route-page="@Model.NextPage"
-                               aria-label="Next">»</a>
-                        </li>
-                    }
-
-                </ul>
-            </nav>
-        }
     </div>
+
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">
+            (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
+            <b class="font-medium-2">
+                @if (Model.PagesCount == 0)
+                {<span>1</span>}
+                else
+                {<span>@Model.PagesCount</span>}
+            </b>)
+        </div>
+    </div>
+
+    @if (Model.PagesCount > 1)
+    {
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                @if (Model.PageNumber > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-controller="@WasteSalesSplitController.Name"
+                           asp-action="@WasteSalesSplitController.ACTION_Index"
+                           asp-route-page="@Model.PreviousPage"
+                           aria-label="Previous">«</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.PagesCount; i++)
+                {
+                    if (i == Model.PageNumber)
+                    {
+                        <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-controller="@WasteSalesSplitController.Name"
+                               asp-action="@WasteSalesSplitController.ACTION_Index"
+                               asp-route-page="@i">@i.ToString() </a>
+                        </li>
+                    }
+                }
+
+                @if (Model.PageNumber < Model.PagesCount)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-controller="@WasteSalesSplitController.Name"
+                           asp-action="@WasteSalesSplitController.ACTION_Index"
+                           asp-route-page="@Model.NextPage"
+                           aria-label="Next">»</a>
+                    </li>
+                }
+
+            </ul>
+        </nav>
+    }
 </div>
