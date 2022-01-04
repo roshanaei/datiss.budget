@@ -59,55 +59,55 @@ namespace Datiss.Budget.ViewModels
 
 
         public decimal UrbanAdjustmentFactor { get; set; }
-        public string UrbanAdjustmentFactorDisplay => UrbanAdjustmentFactor.ToString("NO");
+        public string UrbanAdjustmentFactorDisplay => UrbanAdjustmentFactor.ToString("N0");
 
 
         public decimal WasteRateInWater { get; set; }
-        public string WasteRateInWaterDisplay => WasteRateInWater.ToString("NO");
+        public string WasteRateInWaterDisplay => WasteRateInWater.ToString("N0");
 
 
         public int WaterBranchingPerHousing { get; set; }
-        public string WaterBranchingPerHousingDisplay => WaterBranchingPerHousing.ToString("NO");
+        public string WaterBranchingPerHousingDisplay => WaterBranchingPerHousing.ToString("N0");
 
 
         public int TubingCost { get; set; }
-        public string TubingCostDisplay => TubingCost.ToString("NO");
+        public string TubingCostDisplay => TubingCost.ToString("N0");
 
 
         public int WaterPartnershipAmountDomestic { get; set; }
-        public string WaterPartnershipAmountDomesticDisplay => WaterPartnershipAmountDomestic.ToString("NO");
+        public string WaterPartnershipAmountDomesticDisplay => WaterPartnershipAmountDomestic.ToString("N0");
 
 
         public int WaterPartnershipAmountNDomestic { get; set; }
-        public string WaterPartnershipAmountNDomesticDisplay => WaterPartnershipAmountNDomestic.ToString("NO");
+        public string WaterPartnershipAmountNDomesticDisplay => WaterPartnershipAmountNDomestic.ToString("N0");
 
 
         public int WastePartnershipAmountDomestic { get; set; }
-        public string WastePartnershipAmountDomesticDisplay => WastePartnershipAmountDomestic.ToString("NO");
+        public string WastePartnershipAmountDomesticDisplay => WastePartnershipAmountDomestic.ToString("N0");
 
 
         public int WastePartnershipAmountNDomestic { get; set; }
-        public string WastePartnershipAmountNDomesticDisplay => WastePartnershipAmountNDomestic.ToString("NO");
+        public string WastePartnershipAmountNDomesticDisplay => WastePartnershipAmountNDomestic.ToString("N0");
 
 
         public int FixCostNote11H { get; set; }
-        public string FixCostNote11HDisplay => FixCostNote11H.ToString("NO");
+        public string FixCostNote11HDisplay => FixCostNote11H.ToString("N0");
 
 
         public int FixCostNote11NH { get; set; }
-        public string FixCostNote11NHDisplay => FixCostNote11NH.ToString("NO");
+        public string FixCostNote11NHDisplay => FixCostNote11NH.ToString("N0");
 
 
         public int FixCostNote11HWs { get; set; }
-        public string FixCostNote11HWsDisplay => FixCostNote11HWs.ToString("NO");
+        public string FixCostNote11HWsDisplay => FixCostNote11HWs.ToString("N0");
 
 
         public int FixCostNote11NHWs { get; set; }
-        public string FixCostNote11NHWsDisplay => FixCostNote11NHWs.ToString("NO");
+        public string FixCostNote11NHWsDisplay => FixCostNote11NHWs.ToString("N0");
 
 
         public int WsTubingCost { get; set; }
-        public string WsTubingCostDisplay => WsTubingCost.ToString("NO");
+        public string WsTubingCostDisplay => WsTubingCost.ToString("N0");
 
     }
 

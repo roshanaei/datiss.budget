@@ -184,8 +184,19 @@
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
-        model.dWaterTypeId = $(e).find('#inputDWaterType_').val();
-        model.wInstallFee = $(e).find('#inputWInstallFee_').val();
+        model.urbanAdjustmentFactor = $(e).find('#inputUrbanAdjustmentFactor_').val();
+        model.wasteRateInWater = $(e).find('#inputWasteRateInWater_').val();
+        model.waterBranchingPerHousing = $(e).find('#inputWaterBranchingPerHousing_').val();
+        model.tubingCost = $(e).find('#inputTubingCost_').val();
+        model.waterPartnershipAmountDomestic = $(e).find('#inputWaterPartnershipAmountDomestic_').val();
+        model.waterPartnershipAmountNDomestic = $(e).find('#inputWaterPartnershipAmountNDomestic_').val();
+        model.wastePartnershipAmountDomestic = $(e).find('#inputWastePartnershipAmountDomestic_').val();
+        model.wastePartnershipAmountNDomestic = $(e).find('#inputWastePartnershipAmountNDomestic_').val();
+        model.fixCostNote11H = $(e).find('#inputFixCostNote11H_').val();
+        model.fixCostNote11NH = $(e).find('#inputFixCostNote11NH_').val();
+        model.fixCostNote11HWs = $(e).find('#inputFixCostNote11HWs_').val();
+        model.fixCostNote11NHWs = $(e).find('#inputFixCostNote11NHWs_').val();
+        model.wsTubingCost = $(e).find('#inputWsTubingCost_').val();
 
         console.log(model);
 
@@ -420,7 +431,103 @@
         });
 
 
-        $('.default-input:last').keyup(function (event) {
+        $('.input1:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input2:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input3:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input4:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input5:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input6:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input7:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input8:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input9:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input10:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input11:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input12:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input13:last').keyup(function (event) {
             event.preventDefault();
             if (event.keyCode === 13) {
                 let row = $(this).closest('tr');

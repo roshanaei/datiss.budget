@@ -138,7 +138,7 @@
                                                                name="col-3"
                                                                id="col-3" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-3"><span>قیمت</span></label>
+                                                               for="col-3"><span>ضریب تعدیل شهری</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -149,7 +149,7 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>قیمت</span></label>
+                                                               for="col-4"><span>هزینه لوله گذاری آب</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -160,7 +160,7 @@
                                                                name="col-5"
                                                                id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>قیمت</span></label>
+                                                               for="col-5"><span>هزینه لوله گذاری فاضلاب</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -171,7 +171,7 @@
                                                                name="col-6"
                                                                id="col-6" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-6"><span>قیمت</span></label>
+                                                               for="col-6"><span>حق انشعاب آب هر واحد مسکونی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -182,7 +182,7 @@
                                                                name="col-7"
                                                                id="col-7" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-7"><span>قیمت</span></label>
+                                                               for="col-7"><span>ضریب حق انشعاب فاضلاب نسبت به آب</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -193,7 +193,7 @@
                                                                name="col-8"
                                                                id="col-8" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-8"><span>قیمت</span></label>
+                                                               for="col-8"><span>مبلغ مشارکت آب خانگی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -204,7 +204,7 @@
                                                                name="col-9"
                                                                id="col-9" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-9"><span>قیمت</span></label>
+                                                               for="col-9"><span>مبلغ مشارکت آب غیر خانگی </span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -215,7 +215,7 @@
                                                                name="col-10"
                                                                id="col-10" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-10"><span>قیمت</span></label>
+                                                               for="col-10"><span>مبلغ مشارکت فاضلاب خانگی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -226,7 +226,7 @@
                                                                name="col-11"
                                                                id="col-11" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-11"><span>قیمت</span></label>
+                                                               for="col-11"><span>مبلغ مشارکت فاضلاب غیر خانگی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -237,7 +237,7 @@
                                                                name="col-12"
                                                                id="col-12" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-12"><span>قیمت</span></label>
+                                                               for="col-12"><span>مبلغ ثابت ریالی ماده 11 خانگی آب</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -248,7 +248,7 @@
                                                                name="col-13"
                                                                id="col-13" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-13"><span>قیمت</span></label>
+                                                               for="col-13"><span>مبلغ ثابت ریالی ماده 11 غیر خانگی آب</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -259,7 +259,7 @@
                                                                name="col-14"
                                                                id="col-14" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-14"><span>قیمت</span></label>
+                                                               for="col-14"><span>مبلغ ثابت ریالی ماده 11 خانگی فاضلاب</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -270,7 +270,7 @@
                                                                name="col-15"
                                                                id="col-15" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-15"><span>قیمت</span></label>
+                                                               for="col-15"><span>مبلغ ثابت ریالی ماده 11 غیرخانگی فاضلاب</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -497,7 +497,20 @@
         $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
-            let input = document.getElementById('inputWsTubingCost_' + id);
+            let input1 = document.getElementById('inputUrbanAdjustmentFactor_' + id);
+            let input2 = document.getElementById('inputWasteRateInWater_' + id);
+            let input3 = document.getElementById('inputWaterBranchingPerHousing_' + id);
+            let input4 = document.getElementById('inputTubingCost_' + id);
+            let input5 = document.getElementById('inputWaterPartnershipAmountDomestic_' + id);
+            let input6 = document.getElementById('inputWaterPartnershipAmountNDomestic_' + id);
+            let input7 = document.getElementById('inputWastePartnershipAmountDomestic_' + id);
+            let input8 = document.getElementById('inputWastePartnershipAmountNDomestic_' + id);
+            let input9 = document.getElementById('inputFixCostNote11H_' + id);
+            let input10 = document.getElementById('inputFixCostNote11NH_' + id);
+            let input11 = document.getElementById('inputFixCostNote11HWs_' + id);
+            let input12 = document.getElementById('inputFixCostNote11NHWs_' + id);
+            let input13 = document.getElementById('inputWsTubingCost_' + id);
+
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
             btnSaveEdit.addEventListener('click', function(event) {
@@ -506,13 +519,110 @@
                 $(btnSaveEdit).unbind('keyup');
             });
 
-            input.addEventListener('keyup', function (event) {
+            input1.addEventListener('keyup', function (event) {
                 event.preventDefault();
                 // Number 13 is the "Enter" key on the keyboard
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
                 }
             });
+
+            input2.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
+            input3.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
+            input4.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
+            input5.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
+            input6.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
+            input7.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
+            input8.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
+            input9.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
+            input10.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
+            input11.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
+            input12.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
+            input13.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
 
             editRow(id);
         });
