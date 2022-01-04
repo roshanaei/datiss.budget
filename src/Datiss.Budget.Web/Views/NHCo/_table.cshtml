@@ -29,7 +29,7 @@
                 </td>
                 <td>
                     <div id="divInput_P1Capacity_">
-                        <input class="form-control input1" id="inputP1Capacity_" type="number" min="0" />
+                        <input class="form-control input-keyup" id="inputP1Capacity_" type="number" min="0" />
                     </div>
                     <div id="divOutput_P1Capacity_" style="display: none">
                         <span id="spanP1Capacity_"> </span>
@@ -37,7 +37,7 @@
                 </td>
                 <td>
                     <div id="divInput_FixCostCo_">
-                        <input class="form-control input2" id="inputFixCostCo_" type="number" min="0" />
+                        <input class="form-control input-keyup" id="inputFixCostCo_" type="number" min="0" />
                     </div>
                     <div id="divOutput_FixCostCo_" style="display: none">
                         <span id="spanFixCostCo_"> </span>
@@ -45,7 +45,7 @@
                 </td>
                 <td>
                     <div id="divInput_P1CostCo_">
-                        <input class="form-control input3" id="inputP1CostCo_" type="number" min="0" />
+                        <input class="form-control input-keyup" id="inputP1CostCo_" type="number" min="0" />
                     </div>
                     <div id="divOutput_P1CostCo_" style="display: none">
                         <span id="spanP1CostCo_"> </span>
@@ -53,7 +53,7 @@
                 </td>
                 <td>
                     <div id="divInput_P2CostCo_">
-                        <input class="form-control input4" id="inputP2CostCo_" type="number" min="0" />
+                        <input class="form-control input-keyup" id="inputP2CostCo_" type="number" min="0" />
                     </div>
                     <div id="divOutput_P2CostCo_" style="display: none">
                         <span id="spanP2CostCo_"> </span>
@@ -88,14 +88,6 @@
             @foreach (var item in Model.Items)
             {
                 <tr id="row_@item.Id">
-                    @*<td>
-                            <div id="divInput_Year_@item.Id" style="display: none">
-                                <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
-                            </div>
-                            <div id="divOutput_Year_@item.Id">
-                                <span id="spanYear_@item.Id">@item.Year.ToString()</span>
-                            </div>
-                        </td>*@
                     <td>
                         <div id="divInput_Org_@item.Id" style="display: none">
                             <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
@@ -110,14 +102,6 @@
                             <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
                         </div>
                     </td>
-                    @*<td>
-                            <div id="divInput_ActivityType_@item.Id" style="display: none">
-                                <input id="hidActivityTypeId_@item.Id" type="hidden" value="@item.ActivityType" />
-                            </div>
-                            <div id="divOutput_ActivityType_@item.Id">
-                                <span id="spanActivityType_@item.Id">@item.ActivityTypeDisplay </span>
-                            </div>
-                        </td>*@
                     <td>
                         <div id="divInput_P1Capacity_@item.Id" style="display: none">
                             <input class="form-control" id="inputP1Capacity_@item.Id" value="@item.P1Capacity" type="number" />
