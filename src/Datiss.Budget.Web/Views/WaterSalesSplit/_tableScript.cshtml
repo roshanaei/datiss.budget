@@ -283,28 +283,7 @@
             dir: 'rtl'
         });
 
-        $('.input1:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-        $('.input2:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-        $('.input3:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-        $('.input4:last').keyup(function (event) {
+        $('.input-keyup').keyup(function (event) {
             event.preventDefault();
             if (event.keyCode === 13) {
                 let row = $(this).closest('tr');
