@@ -1,36 +1,19 @@
-﻿@model WasteSalesSplitIndexViewModel
+﻿@model NHCoIndexViewModel
 
 <div class="table-responsive">
     <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
         <thead class="thead-light">
             <tr>
-                <th>سال</th>
-                <th style="min-width:250px">سازمان</th>
-                <th style="min-width:240px">کاربری</th>
-                <th style="min-width:124px">قطر لوله</th>
-                <th style="min-width:145px">تعداد انشعاب</th>
-                <th style="min-width:135px">آحاد انشعاب</th>
-                <th style="min-width:199px">متوسط ظرفیت قراردادی</th>
-                <th style="min-width:180px">هزینه نصب انشعاب</th>
-                <th style="min-width:190px">مدیریت</th>
+                <th style="min-width:230px">سازمان</th>
+                <th style="min-width:215px">حد ظرفیت برای متغیر اول</th>
+                <th style="min-width:210px">مبلغ ثابت هزینه مشارکت</th>
+                <th style="min-width:240px">مبلغ هزینه مشارکت متغیر اول</th>
+                <th style="min-width:240px">مبلغ هزینه مشارکت متغیر دوم</th>
+                <th style="min-width:189px">مدیریت</th>
             </tr>
         </thead>
         <tbody>
             <tr id="rowTemplate" style="display: none">
-                <td>
-                    <div id="divInput_Year_">
-                        <input id="hidYearId_" type="hidden" />
-                        <select class="form-control selectYear" id="inputYear_" asp-items="Model.YearSource">
-                        </select>
-                        <script>
-                            $('select#inputYear_ option[value=' + $('#yearId').val() + ']').attr('selected', true);
-                            $('#inputYear_').attr('disabled', 'disabled');
-                        </script>
-                    </div>
-                    <div id="divOutput_Year_" style="display: none">
-                        <span id="spanYear_"></span>
-                    </div>
-                </td>
                 <td>
                     <div id="divInput_Org_">
                         <input id="hidOrgId_" type="hidden" />
@@ -45,55 +28,35 @@
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_UserType_">
-                        <input id="hidUserTypeId_" type="hidden" />
-                        <select class="form-control" id="inputUserType_" asp-items="Model.UserTypeSource">
-                        </select>
+                    <div id="divInput_P1Capacity_">
+                        <input class="form-control input-keyup" id="inputP1Capacity_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_UserType_" style="display: none">
-                        <span id="spanUserType_"> </span>
+                    <div id="divOutput_P1Capacity_" style="display: none">
+                        <span id="spanP1Capacity_"> </span>
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_WsPipeDiameter_">
-                        <input id="hidWsPipeDiameterId_" type="hidden" />
-                        <select class="form-control" id="inputWsPipeDiameter_" asp-items="Model.WasteDiameterSource">
-                        </select>
+                    <div id="divInput_FixCostCo_">
+                        <input class="form-control input-keyup" id="inputFixCostCo_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_WsPipeDiameter_" style="display: none">
-                        <span id="spanWsPipeDiameter_"> </span>
+                    <div id="divOutput_FixCostCo_" style="display: none">
+                        <span id="spanFixCostCo_"> </span>
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_NumberSales_">
-                        <input class="form-control input-keyup" id="inputNumberSales_" type="number" />
+                    <div id="divInput_P1CostCo_">
+                        <input class="form-control input-keyup" id="inputP1CostCo_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_NumberSales_" style="display: none">
-                        <span id="spanNumberSales_"> </span>
-                    </div>
-                </td>
-                <td>
-                    <div id="divInput_UnitSales_">
-                        <input class="form-control input-keyup" id="inputUnitSales_" type="number" />
-                    </div>
-                    <div id="divOutput_UnitSales_" style="display: none">
-                        <span id="spanUnitSales_"> </span>
+                    <div id="divOutput_P1CostCo_" style="display: none">
+                        <span id="spanP1CostCo_"> </span>
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_AverageCapacity_">
-                        <input class="form-control input-keyup" id="inputAverageCapacity_" type="number" />
+                    <div id="divInput_P2CostCo_">
+                        <input class="form-control input-keyup" id="inputP2CostCo_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_AverageCapacity_" style="display: none">
-                        <span id="spanAverageCapacity_"> </span>
-                    </div>
-                </td>
-                <td>
-                    <div id="divInput_WsInstallationCosts_">
-                        <input class="form-control input-keyup" id="inputWsInstallationCosts_" type="number" />
-                    </div>
-                    <div id="divOutput_WsInstallationCosts_" style="display: none">
-                        <span id="spanWsInstallationCosts_"> </span>
+                    <div id="divOutput_P2CostCo_" style="display: none">
+                        <span id="spanP2CostCo_"> </span>
                     </div>
                 </td>
                 <td>
@@ -126,20 +89,6 @@
             {
                 <tr id="row_@item.Id">
                     <td>
-                        <div id="divInput_Year_@item.Id" style="display: none">
-                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
-                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
-                            </select>
-                            <script>
-                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
-                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
-                            </script>
-                        </div>
-                        <div id="divOutput_Year_@item.Id">
-                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
-                        </div>
-                    </td>
-                    <td>
                         <div id="divInput_Org_@item.Id" style="display: none">
                             <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
                             <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
@@ -153,66 +102,36 @@
                             <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
                         </div>
                     </td>
-
-
                     <td>
-                        <div id="divInput_UserType_@item.Id" style="display: none">
-                            <input id="hidUserTypeId_@item.Id" type="hidden" value="@item.UserTypeId" />
-                            <select class="form-control" id="inputUserType_@item.Id" asp-items="Model.UserTypeSource">
-                            </select>
-                            <script>
-                                $('select#inputUserType_' + @item.Id + ' option[value=' + @item.UserTypeId + ']').attr('selected', true);
-                            </script>
+                        <div id="divInput_P1Capacity_@item.Id" style="display: none">
+                            <input class="form-control" id="inputP1Capacity_@item.Id" value="@item.P1Capacity" type="number" />
                         </div>
-                        <div id="divOutput_UserType_@item.Id">
-                            <span id="spanUserType_@item.Id">@item.UserTypeDisplay </span>
-                        </div>
-                    </td>
-
-
-                    <td>
-                        <div id="divInput_WsPipeDiameter_@item.Id" style="display: none">
-                            <input id="hidWsPipeDiameterId_@item.Id" type="hidden" value="@item.WsPipeDiameterId" />
-                            <select class="form-control" id="inputWsPipeDiameter_@item.Id" asp-items="Model.WasteDiameterSource">
-                            </select>
-                            <script>
-                                $('select#inputWsPipeDiameter_' + @item.Id + ' option[value=' + @item.WsPipeDiameterId + ']').attr('selected', true);
-                            </script>
-                        </div>
-                        <div id="divOutput_WsPipeDiameter_@item.Id">
-                            <span id="spanWsPipeDiameter_@item.Id">@item.WspipeDiameterDisplay </span>
+                        <div id="divOutput_P1Capacity_@item.Id">
+                            <span id="spanP1Capacity_@item.Id">@item.P1CapacityDisplay </span>
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_NumberSales_@item.Id" style="display: none">
-                            <input class="form-control" id="inputNumberSales_@item.Id" value="@item.NumberSales" type="number" />
+                        <div id="divInput_FixCostCo_@item.Id" style="display: none">
+                            <input class="form-control" id="inputFixCostCo_@item.Id" value="@item.FixCostCo" type="number" />
                         </div>
-                        <div id="divOutput_NumberSales_@item.Id">
-                            <span id="spanNumberSales_@item.Id">@item.NumberSalesDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_UnitSales_@item.Id" style="display: none">
-                            <input class="form-control" id="inputUnitSales_@item.Id" value="@item.UnitSales" type="number" />
-                        </div>
-                        <div id="divOutput_UnitSales_@item.Id">
-                            <span id="spanUnitSales_@item.Id">@item.UnitSalesDisplay </span>
+                        <div id="divOutput_FixCostCo_@item.Id">
+                            <span id="spanFixCostCo_@item.Id">@item.FixCostCoDisplay </span>
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_AverageCapacity_@item.Id" style="display: none">
-                            <input class="form-control" id="inputAverageCapacity_@item.Id" value="@item.AverageCapacity" type="number" />
+                        <div id="divInput_P1CostCo_@item.Id" style="display: none">
+                            <input class="form-control" id="inputP1CostCo_@item.Id" value="@item.P1CostCo" type="number" />
                         </div>
-                        <div id="divOutput_AverageCapacity_@item.Id">
-                            <span id="spanAverageCapacity_@item.Id">@item.AverageCapacityDisplay </span>
+                        <div id="divOutput_P1CostCo_@item.Id">
+                            <span id="spanP1CostCo_@item.Id">@item.P1CostCoDisplay </span>
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_WsInstallationCosts_@item.Id" style="display: none">
-                            <input class="form-control" id="inputWsInstallationCosts_@item.Id" value="@item.WsInstallationCosts" type="number" />
+                        <div id="divInput_P2CostCo_@item.Id" style="display: none">
+                            <input class="form-control" id="inputP2CostCo_@item.Id" value="@item.P2CostCo" type="number" />
                         </div>
-                        <div id="divOutput_WsInstallationCosts_@item.Id">
-                            <span id="spanWsInstallationCosts_@item.Id">@item.WsInstallationCostsDisplay </span>
+                        <div id="divOutput_P2CostCo_@item.Id">
+                            <span id="spanP2CostCo_@item.Id">@item.P2CostCoDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -237,7 +156,6 @@
         </tbody>
     </table>
 </div>
-
 <div class="rowACJSB" style="margin-top:20px">
     <!--Tools-->
     <div class="rowACJS">
@@ -247,6 +165,7 @@
               asp-antiforgery="true">
             <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
             <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
             <span data-toggle="modal" data-target="#backdrop">
                 <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                     <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
@@ -260,11 +179,6 @@
             <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
                 <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
             </button>
-            <span data-toggle="modal" data-target="#CalculationModal">
-                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                </button>
-            </span>
             <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
                 <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
             </button>
@@ -284,7 +198,6 @@
             </b>)
         </div>
     </div>
-
     @if (Model.PagesCount > 1)
     {
         <nav aria-label="Page navigation">
@@ -293,8 +206,8 @@
                 {
                     <li class="page-item">
                         <a class="page-link"
-                           asp-controller="@WasteSalesSplitController.Name"
-                           asp-action="@WasteSalesSplitController.ACTION_Index"
+                           asp-controller="@NHCoController.Name"
+                           asp-action="@NHCoController.ACTION_Index"
                            asp-route-page="@Model.PreviousPage"
                            aria-label="Previous">«</a>
                     </li>
@@ -310,8 +223,8 @@
                     {
                         <li class="page-item">
                             <a class="page-link"
-                               asp-controller="@WasteSalesSplitController.Name"
-                               asp-action="@WasteSalesSplitController.ACTION_Index"
+                               asp-controller="@NHCoController.Name"
+                               asp-action="@NHCoController.ACTION_Index"
                                asp-route-page="@i">@i.ToString() </a>
                         </li>
                     }
@@ -321,8 +234,8 @@
                 {
                     <li class="page-item">
                         <a class="page-link"
-                           asp-controller="@WasteSalesSplitController.Name"
-                           asp-action="@WasteSalesSplitController.ACTION_Index"
+                           asp-controller="@NHCoController.Name"
+                           asp-action="@NHCoController.ACTION_Index"
                            asp-route-page="@Model.NextPage"
                            aria-label="Next">»</a>
                     </li>

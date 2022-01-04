@@ -175,6 +175,17 @@
                                                         <label class="custom-control-label my-font"
                                                                for="col-7"><span>متوسط ظرفیت قراردادی</span></label>
                                                     </div>
+                                                </div> 
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-8"
+                                                               id="col-8" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-8"><span>هزینه نصب انشعاب</span></label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -236,10 +247,10 @@
 
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7';
+        let allColumns = '1,2,3,4,5,6,7,8';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,";
+        let showingColmuns = "1,2,3,4,5,6,7,8,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -380,6 +391,12 @@
 
         }
 
+        $(window).keydown(function (event) {
+            if (event.altKey && event.keyCode == 78) {
+                addNewRow();
+            }
+        });
+
         function openImportExcelForm() {
             $('#ExcellModal').modal('show');
         }
@@ -396,9 +413,10 @@
 
         $(document).on('click', '.edit-row', function () {
             let id = $(this).data('id');
-            let inputNS = document.getElementById('inputNumberSales_' + id);
-            let inputUS = document.getElementById('inputUnitSales_' + id);
-            let inputAC = document.getElementById('inputAverageCapacity_' + id);
+            let input1 = document.getElementById('inputNumberSales_' + id);
+            let input2 = document.getElementById('inputUnitSales_' + id);
+            let input3 = document.getElementById('inputAverageCapacity_' + id);
+            let input4 = document.getElementById('inputWsInstallationCosts_' + id);
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
             btnSaveEdit.addEventListener('click', function (event) {
@@ -407,19 +425,25 @@
                 $(btnSaveEdit).unbind('keyup');
             });
 
-            inputNS.addEventListener("keyup", function (event) {
+            input1.addEventListener("keyup", function (event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
                 }
             });
-            inputUS.addEventListener("keyup", function (event) {
+            input2.addEventListener("keyup", function (event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
                 }
             });
-            inputAC.addEventListener("keyup", function (event) {
+            input3.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input4.addEventListener("keyup", function (event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
