@@ -1,0 +1,296 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    function editRow(id) {
+
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+        //row.css('background-color', '#7598f3');
+
+        //Hide output elements
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_P1Capacity_' + id).hide();
+        $('#divOutput_FixCostCo_' + id).hide();
+        $('#divOutput_P1CostCo_' + id).hide();
+        $('#divOutput_P2CostCo_' + id).hide();
+
+        //show input elements
+        $('#divInput_Org_' + id).show();
+        $('#divInput_P1Capacity_' + id).show();
+        $('#divInput_FixCostCo_' + id).show();
+        $('#divInput_P1CostCo_' + id).show();
+        $('#divInput_P2CostCo_' + id).show();
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_P1Capacity_' + id).hide();
+        $('#divInput_FixCostCo_' + id).hide();
+        $('#divInput_P1CostCo_' + id).hide();
+        $('#divInput_P2CostCo_' + id).hide();
+
+        //Show output elements
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_P1Capacity_' + id).show();
+        $('#divOutput_FixCostCo_' + id).show();
+        $('#divOutput_P1CostCo_' + id).show();
+        $('#divOutput_P2CostCo_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#yearId option:selected').val();
+        model.activityType = $('#activityType option:selected').val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.p1Capacity = $('#inputP1Capacity_' + id).val();
+        model.fixCostCo = $('#inputFixCostCo_' + id).val();
+        model.p1CostCo = $('#inputP1CostCo_' + id).val();
+        model.p2CostCo = $('#inputP2CostCo_' + id).val();
+
+        $.ajax({
+            url: '@Url.Action(NHCoController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanP1Capacity_' + id).text(data.p1Capacity);
+                $('#spanFixCostCo_' + id).text(data.fixCostCo);
+                $('#spanP1CostCo_' + id).text(data.p1CostCo);
+                $('#spanP2CostCo_' + id).text(data.p2CostCo);
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        var model = {};
+        model.yearId = $('#yearId option:selected').val();
+        model.activityType = $('#activityType option:selected').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.p1Capacity = $(e).find('#inputP1Capacity_').val();
+        model.fixCostCo = $(e).find('#inputFixCostCo_').val();
+        model.p1CostCo = $(e).find('#inputP1CostCo_').val();
+        model.p2CostCo = $(e).find('#inputP2CostCo_').val();
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(NHCoController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //P1Capacity
+                $(e).find('#divInput_P1Capacity_').attr('id', 'divInput_P1Capacity_' + data.id);
+                $(e).find('#inputP1Capacity_').attr('id', 'inputP1Capacity_' + data.id);
+                $(e).find('#divOutput_P1Capacity_').attr('id', 'divOutput_P1Capacity_' + data.id);
+                $(e).find('#spanP1Capacity_').attr('id', 'spanP1Capacity_' + data.id);
+
+                $('#divInput_P1Capacity_' + data.id).hide();
+                $('#spanP1Capacity_' + data.id).text(data.p1Capacity);
+                $('#divOutput_P1Capacity_' + data.id).show();
+
+                //FixCostCo
+                $(e).find('#divInput_FixCostCo_').attr('id', 'divInput_FixCostCo_' + data.id);
+                $(e).find('#inputFixCostCo_').attr('id', 'inputFixCostCo_' + data.id);
+                $(e).find('#divOutput_FixCostCo_').attr('id', 'divOutput_FixCostCo_' + data.id);
+                $(e).find('#spanFixCostCo_').attr('id', 'spanFixCostCo_' + data.id);
+
+                $('#divInput_FixCostCo_' + data.id).hide();
+                $('#spanFixCostCo_' + data.id).text(data.fixCostCo);
+                $('#divOutput_FixCostCo_' + data.id).show();
+
+                //P1CostCo
+                $(e).find('#divInput_P1CostCo_').attr('id', 'divInput_P1CostCo_' + data.id);
+                $(e).find('#inputP1CostCo_').attr('id', 'inputP1CostCo_' + data.id);
+                $(e).find('#divOutput_P1CostCo_').attr('id', 'divOutput_P1CostCo_' + data.id);
+                $(e).find('#spanP1CostCo_').attr('id', 'spanP1CostCo_' + data.id);
+
+                $('#divInput_P1CostCo_' + data.id).hide();
+                $('#spanP1CostCo_' + data.id).text(data.p1CostCo);
+                $('#divOutput_P1CostCo_' + data.id).show();
+
+                //P2CostCo
+                $(e).find('#divInput_P2CostCo_').attr('id', 'divInput_P2CostCo_' + data.id);
+                $(e).find('#inputP2CostCo_').attr('id', 'inputP2CostCo_' + data.id);
+                $(e).find('#divOutput_P2CostCo_').attr('id', 'divOutput_P2CostCo_' + data.id);
+                $(e).find('#spanP2CostCo_').attr('id', 'spanP2CostCo_' + data.id);
+
+                $('#divInput_P2CostCo_' + data.id).hide();
+                $('#spanP2CostCo_' + data.id).text(data.p2CostCo);
+                $('#divOutput_P2CostCo_' + data.id).show();
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        resetTableBackColor("my-table");
+
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(NHCoController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                console.log(err);
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+</script>

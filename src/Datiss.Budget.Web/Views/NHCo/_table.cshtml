@@ -1,0 +1,247 @@
+﻿@model NHCoIndexViewModel
+
+<div class="table-responsive">
+    <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
+        <thead class="thead-light">
+            <tr>
+                <th style="min-width:230px">سازمان</th>
+                <th style="min-width:215px">حد ظرفیت برای متغیر اول</th>
+                <th style="min-width:210px">مبلغ ثابت هزینه مشارکت</th>
+                <th style="min-width:240px">مبلغ هزینه مشارکت متغیر اول</th>
+                <th style="min-width:240px">مبلغ هزینه مشارکت متغیر دوم</th>
+                <th style="min-width:189px">مدیریت</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowTemplate" style="display: none">
+                <td>
+                    <div id="divInput_Org_">
+                        <input id="hidOrgId_" type="hidden" />
+                        <select class="form-control selectOrganization" id="inputOrg_" asp-items="Model.InputOrganizationSource">
+                        </select>
+                        <script>
+                            $('select#inputOrg_ option[value=' + $('#organizationId').val() + ']').attr('selected', true);
+                        </script>
+                    </div>
+                    <div id="divOutput_Org_">
+                        <span id="spanOrg_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_P1Capacity_">
+                        <input class="form-control input-keyup" id="inputP1Capacity_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_P1Capacity_" style="display: none">
+                        <span id="spanP1Capacity_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_FixCostCo_">
+                        <input class="form-control input-keyup" id="inputFixCostCo_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_FixCostCo_" style="display: none">
+                        <span id="spanFixCostCo_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_P1CostCo_">
+                        <input class="form-control input-keyup" id="inputP1CostCo_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_P1CostCo_" style="display: none">
+                        <span id="spanP1CostCo_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_P2CostCo_">
+                        <input class="form-control input-keyup" id="inputP2CostCo_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_P2CostCo_" style="display: none">
+                        <span id="spanP2CostCo_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
+                        <i class="fa ft-edit fa-1x"></i>
+                    </a>
+
+                    <a id="btnDelete_" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" style="display: none">
+                        <i class="fa ft-trash-2"></i>
+                    </a>
+
+                    <a id="btnSaveEdit_" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+                    <a id="btnCancelEdit_" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                    <a id="btnSaveCreate_" class="save-new-row btn btn-success my-font mr-1">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+
+                    <a id="btnCancelCreate_" class="cancel-new-row btn btn-danger my-font">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                </td>
+            </tr>
+            @foreach (var item in Model.Items)
+            {
+                <tr id="row_@item.Id">
+                    <td>
+                        <div id="divInput_Org_@item.Id" style="display: none">
+                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
+                            </select>
+                            <script>
+                                $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
+                            </script>
+                        </div>
+                        <div id="divOutput_Org_@item.Id">
+                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_P1Capacity_@item.Id" style="display: none">
+                            <input class="form-control" id="inputP1Capacity_@item.Id" value="@item.P1Capacity" type="number" />
+                        </div>
+                        <div id="divOutput_P1Capacity_@item.Id">
+                            <span id="spanP1Capacity_@item.Id">@item.P1CapacityDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_FixCostCo_@item.Id" style="display: none">
+                            <input class="form-control" id="inputFixCostCo_@item.Id" value="@item.FixCostCo" type="number" />
+                        </div>
+                        <div id="divOutput_FixCostCo_@item.Id">
+                            <span id="spanFixCostCo_@item.Id">@item.FixCostCoDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_P1CostCo_@item.Id" style="display: none">
+                            <input class="form-control" id="inputP1CostCo_@item.Id" value="@item.P1CostCo" type="number" />
+                        </div>
+                        <div id="divOutput_P1CostCo_@item.Id">
+                            <span id="spanP1CostCo_@item.Id">@item.P1CostCoDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_P2CostCo_@item.Id" style="display: none">
+                            <input class="form-control" id="inputP2CostCo_@item.Id" value="@item.P2CostCo" type="number" />
+                        </div>
+                        <div id="divOutput_P2CostCo_@item.Id">
+                            <span id="spanP2CostCo_@item.Id">@item.P2CostCoDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
+
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
+
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
+
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                </button>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                </button>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </button>
+        </form>
+
+    </div>
+
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">
+            (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
+            <b class="font-medium-2">
+                @if (Model.PagesCount == 0)
+                {<span>1</span>}
+                else
+                {<span>@Model.PagesCount</span>}
+            </b>)
+        </div>
+    </div>
+    @if (Model.PagesCount > 1)
+    {
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                @if (Model.PageNumber > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-controller="@NHCoController.Name"
+                           asp-action="@NHCoController.ACTION_Index"
+                           asp-route-page="@Model.PreviousPage"
+                           aria-label="Previous">«</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.PagesCount; i++)
+                {
+                    if (i == Model.PageNumber)
+                    {
+                        <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-controller="@NHCoController.Name"
+                               asp-action="@NHCoController.ACTION_Index"
+                               asp-route-page="@i">@i.ToString() </a>
+                        </li>
+                    }
+                }
+
+                @if (Model.PageNumber < Model.PagesCount)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-controller="@NHCoController.Name"
+                           asp-action="@NHCoController.ACTION_Index"
+                           asp-route-page="@Model.NextPage"
+                           aria-label="Next">»</a>
+                    </li>
+                }
+
+            </ul>
+        </nav>
+    }
+</div>
