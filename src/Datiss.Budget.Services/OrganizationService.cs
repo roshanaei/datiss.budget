@@ -283,7 +283,7 @@ namespace Datiss.Budget.Services
             return result;
         }
 
-        private async Task<IEnumerable<Organization>> getWithChildrenAsync(int? organizationId, bool input=false)
+        private async Task<IEnumerable<Organization>> getWithChildrenAsync(int? organizationId, bool input = false)
         {
             if (!organizationId.HasValue)
                 organizationId = _userContext.OrganizationId;
@@ -291,8 +291,15 @@ namespace Datiss.Budget.Services
             var result = new List<Organization>();
             var myself = await _dbSet.FirstOrDefaultAsync(_ => _.Id == organizationId);
 
-            if(myself != null && !input)
-                result.Add(myself);
+            if(myself != null) {
+                if(input) {
+                    if(myself.UserCanInput)
+                        result.Add(myself);
+                }
+                else {
+                    result.Add(myself);
+                }
+            }
 
             var children = await getByParnetIdAsync(myself != null ? myself.Id : null, input);
 
@@ -300,10 +307,10 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in children)
                 {
-                    if (item.Type != OrganizationType.Root && item.Type != OrganizationType.County)
+                    if (item.UserCanInput)
                         result.Add(item);
                 }
-            }   
+            }
             else
             {
                 result.AddRange(children);
