@@ -32,6 +32,14 @@ namespace Datiss.Budget.Entities
         public bool SewageStatus { get; set; }
 
         public EntityStatus Status { get; set; }
+
+        /// <summary>
+        /// The <see cref="User"/> can only enter data for an <see cref="Organization"/> that this property return true.
+        /// This property is not going to save to the database because it will caluclated based on a condition.
+        /// </summary>
+        [NotMapped]
+        public bool UserCanInput => Type != OrganizationType.Root && Type != OrganizationType.County;
+
         #endregion
 
         #region Navigations
