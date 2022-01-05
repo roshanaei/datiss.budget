@@ -12,25 +12,25 @@ namespace Datiss.Budget.Services.Contracts
     {
         Task<BranchFeeAmount> GetByIdAsync(int id);
 
-        Task<ValidationResult> CreateAsync(CreateBranchFeeAmountDTO model);
+        Task<ValidationResult<BranchFeeAmountDTO>> CreateAsync(CreateBranchFeeAmountDTO model);
 
-        Task<ValidationResult> UpdateAsync(UpdateBranchFeeAmountDTO model);
+        Task<ValidationResult<BranchFeeAmountDTO>> UpdateAsync(UpdateBranchFeeAmountDTO model);
 
         Task HardDeleteAsync(int Id);
 
-        Task HardDeleteAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
-        //Task<int> CalculationAsync(int yearId, int organizationId);
+        Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId);
 
         Task<PagedResult<BranchFeeAmountDTO>> GetListAsync(BranchFeeAmountFilterDTO filter);
 
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
 
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false);
+
+        Task<IEnumerable<BranchFeeAmountDTO>> GetExportItemsAsync(int yearId, int organizationId);
+
         Task<Stream> ExportExcelAsync(BranchFeeAmountFilterDTO filter);
-
-        Task<IEnumerable<BranchFeeAmountDTO>> GetExportItemsAsync(BranchFeeAmountFilterDTO filter);
-
-        Task ImportExcelAsync(IFormFile fileInfo);
 
     }
 }
