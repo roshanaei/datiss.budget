@@ -1,0 +1,427 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    function editRow(id) {
+
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+        //row.css('background-color', '#7598f3');
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_UserType_' + id).hide();
+        $('#divOutput_WaterRateIncrease_' + id).hide();
+        $('#divOutput_WasteRateIncrease_' + id).hide();
+        $('#divOutput_WastePersentIncrease_' + id).hide();
+        $('#divOutput_FixAmountBusiness_' + id).hide();
+        $('#divOutput_CapacityFixAmount_' + id).hide();
+        $('#divOutput_WaterInstallRateIncrease_' + id).hide();
+        $('#divOutput_WsInstalIncrease_' + id).hide();
+        $('#divOutput_WaterFixNote2_' + id).hide();
+        $('#divOutput_WasteFixNote2_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_UserType_' + id).show();
+        $('#divInput_WaterRateIncrease_' + id).show();
+        $('#divInput_WasteRateIncrease_' + id).show();
+        $('#divInput_WastePersentIncrease_' + id).show();
+        $('#divInput_FixAmountBusiness_' + id).show();
+        $('#divInput_CapacityFixAmount_' + id).show();
+        $('#divInput_WaterInstallRateIncrease_' + id).show();
+        $('#divInput_WsInstalIncrease_' + id).show();
+        $('#divInput_WaterFixNote2_' + id).show();
+        $('#divInput_WasteFixNote2_' + id).show();
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_UserType_' + id).hide();
+        $('#divInput_WaterRateIncrease_' + id).hide();
+        $('#divInput_WasteRateIncrease_' + id).hide();
+        $('#divInput_WastePersentIncrease_' + id).hide();
+        $('#divInput_FixAmountBusiness_' + id).hide();
+        $('#divInput_CapacityFixAmount_' + id).hide();
+        $('#divInput_WaterInstallRateIncrease_' + id).hide();
+        $('#divInput_WsInstalIncrease_' + id).hide();
+        $('#divInput_WaterFixNote2_' + id).hide();
+        $('#divInput_WasteFixNote2_' + id).hide();
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_UserType_' + id).show();
+        $('#divOutput_WaterRateIncrease_' + id).show();
+        $('#divOutput_WasteRateIncrease_' + id).show();
+        $('#divOutput_WastePersentIncrease_' + id).show();
+        $('#divOutput_FixAmountBusiness_' + id).show();
+        $('#divOutput_CapacityFixAmount_' + id).show();
+        $('#divOutput_WaterInstallRateIncrease_' + id).show();
+        $('#divOutput_WsInstalIncrease_' + id).show();
+        $('#divOutput_WaterFixNote2_' + id).show();
+        $('#divOutput_WasteFixNote2_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.userTypeId = $('#inputUserType_' + id).val();
+        model.waterRateIncrease = $('#inputWaterRateIncrease_' + id).val();
+        model.wasteRateIncrease = $('#inputWasteRateIncrease_' + id).val();
+        model.wastePersentIncrease = $('#inputWastePersentIncrease_' + id).val();
+        model.fixAmountBusiness = $('#inputFixAmountBusiness_' + id).val();
+        model.capacityFixAmount = $('#inputCapacityFixAmount_' + id).val();
+        model.waterInstallRateIncrease = $('#inputWaterInstallRateIncrease_' + id).val();
+        model.wsInstalIncrease = $('#inputWsInstalIncrease_' + id).val();
+        model.waterFixNote2 = $('#inputWaterFixNote2_' + id).val();
+        model.wasteFixNote2 = $('#inputWasteFixNote2_' + id).val();
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(WaterInstallFeeController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+                console.log(data);
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanUserType_' + id).text(data.userTypeDisplay);
+                $('#spanWaterRateIncrease_' + id).text(data.waterRateIncrease);
+                $('#spanWasteRateIncrease_' + id).text(data.wasteRateIncrease);
+                $('#spanWastePersentIncrease_' + id).text(data.wastePersentIncrease);
+                $('#spanFixAmountBusiness_' + id).text(data.fixAmountBusiness);
+                $('#spanCapacityFixAmount_' + id).text(data.capacityFixAmount);
+                $('#spanWaterInstallRateIncrease_' + id).text(data.waterInstallRateIncrease);
+                $('#spanWsInstalIncrease_' + id).text(data.wsInstalIncrease);
+                $('#spanWaterFixNote2_' + id).text(data.waterFixNote2);
+                $('#inputWasteFixNote2_' + id).text(data.wasteFixNote2);
+
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+        console.log(e);
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.userTypeId = $(e).find('#inputUserType_').val();
+        model.waterRateIncrease = $(e).find('#inputWaterRateIncrease_').val();
+        model.wasteRateIncrease = $(e).find('#inputWasteRateIncrease_').val();
+        model.wastePersentIncrease = $(e).find('#inputWastePersentIncrease_').val();
+        model.fixAmountBusiness = $(e).find('#inputFixAmountBusiness_').val();
+        model.capacityFixAmount = $(e).find('#inputCapacityFixAmount_').val();
+        model.waterInstallRateIncrease = $(e).find('#inputWaterInstallRateIncrease_').val();
+        model.wsInstalIncrease = $(e).find('#inputWsInstalIncrease_').val();
+        model.waterFixNote2 = $(e).find('#inputWaterFixNote2_').val();
+        model.wasteFixNote2 = $(e).find('#inputWasteFixNote2_').val();
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(WaterInstallFeeController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //UserType
+                $(e).find('#divInput_UserType_').attr('id', 'divInput_UserType_' + data.id);
+                $(e).find('#hidUserTypeId_').attr('id', 'hidUserTypeId_' + data.id);
+                $(e).find('#inputUserType_').attr('id', 'inputUserType_' + data.id);
+                $(e).find('#divOutput_UserType_').attr('id', 'divOutput_UserType_' + data.id);
+                $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
+
+                $('#divInput_UserType_' + data.id).hide();
+                $('#spanUserType_' + data.id).text(data.userTypeDisplay);
+                $('#divOutput_UserType_' + data.id).show();
+
+                //WaterRateIncrease
+                $(e).find('#divInput_WaterRateIncrease_').attr('id', 'divInput_WaterRateIncrease_' + data.id);
+                $(e).find('#inputWaterRateIncrease_').attr('id', 'inputWaterRateIncrease_' + data.id);
+                $(e).find('#divOutput_WaterRateIncrease_').attr('id', 'divOutput_WaterRateIncrease_' + data.id);
+                $(e).find('#spanWaterRateIncrease_').attr('id', 'spanWaterRateIncrease_' + data.id);
+
+                $('#divInput_WaterRateIncrease_' + data.id).hide();
+                $('#spanWaterRateIncrease_' + data.id).text(data.waterRateIncrease);
+                $('#divOutput_WaterRateIncrease_' + data.id).show();
+
+                //WasteRateIncrease
+                $(e).find('#divInput_WasteRateIncrease_').attr('id', 'divInput_WasteRateIncrease_' + data.id);
+                $(e).find('#inputWasteRateIncrease_').attr('id', 'inputWasteRateIncrease_' + data.id);
+                $(e).find('#divOutput_WasteRateIncrease_').attr('id', 'divOutput_WasteRateIncrease_' + data.id);
+                $(e).find('#spanWasteRateIncrease_').attr('id', 'spanWasteRateIncrease_' + data.id);
+
+                $('#divInput_WasteRateIncrease_' + data.id).hide();
+                $('#spanWasteRateIncrease_' + data.id).text(data.wasteRateIncrease);
+                $('#divOutput_WasteRateIncrease_' + data.id).show();
+
+                //WastePersentIncrease
+                $(e).find('#divInput_WastePersentIncrease_').attr('id', 'divInput_WastePersentIncrease_' + data.id);
+                $(e).find('#inputWastePersentIncrease_').attr('id', 'inputWastePersentIncrease_' + data.id);
+                $(e).find('#divOutput_WastePersentIncrease_').attr('id', 'divOutput_WastePersentIncrease_' + data.id);
+                $(e).find('#spanWastePersentIncrease_').attr('id', 'spanWastePersentIncrease_' + data.id);
+
+                $('#divInput_WastePersentIncrease_' + data.id).hide();
+                $('#spanWastePersentIncrease_' + data.id).text(data.wastePersentIncrease);
+                $('#divOutput_WastePersentIncrease_' + data.id).show();
+
+                //FixAmountBusiness
+                $(e).find('#divInput_FixAmountBusiness_').attr('id', 'divInput_FixAmountBusiness_' + data.id);
+                $(e).find('#inputFixAmountBusiness_').attr('id', 'inputFixAmountBusiness_' + data.id);
+                $(e).find('#divOutput_FixAmountBusiness_').attr('id', 'divOutput_FixAmountBusiness_' + data.id);
+                $(e).find('#spanFixAmountBusiness_').attr('id', 'spanFixAmountBusiness_' + data.id);
+
+                $('#divInput_FixAmountBusiness_' + data.id).hide();
+                $('#spanFixAmountBusiness_' + data.id).text(data.fixAmountBusiness);
+                $('#divOutput_FixAmountBusiness_' + data.id).show();
+
+                //CapacityFixAmount
+                $(e).find('#divInput_CapacityFixAmount_').attr('id', 'divInput_CapacityFixAmount_' + data.id);
+                $(e).find('#inputCapacityFixAmount_').attr('id', 'inputCapacityFixAmount_' + data.id);
+                $(e).find('#divOutput_CapacityFixAmount_').attr('id', 'divOutput_CapacityFixAmount_' + data.id);
+                $(e).find('#spanCapacityFixAmount_').attr('id', 'spanCapacityFixAmount_' + data.id);
+
+                $('#divInput_CapacityFixAmount_' + data.id).hide();
+                $('#spanCapacityFixAmount_' + data.id).text(data.capacityFixAmount);
+                $('#divOutput_CapacityFixAmount_' + data.id).show();
+
+                //WaterInstallRateIncrease
+                $(e).find('#divInput_WaterInstallRateIncrease_').attr('id', 'divInput_WaterInstallRateIncrease_' + data.id);
+                $(e).find('#inputWaterInstallRateIncrease_').attr('id', 'inputWaterInstallRateIncrease_' + data.id);
+                $(e).find('#divOutput_WaterInstallRateIncrease_').attr('id', 'divOutput_WaterInstallRateIncrease_' + data.id);
+                $(e).find('#spanWaterInstallRateIncrease_').attr('id', 'spanWaterInstallRateIncrease_' + data.id);
+
+                $('#divInput_WaterInstallRateIncrease_' + data.id).hide();
+                $('#spanWaterInstallRateIncrease_' + data.id).text(data.waterInstallRateIncrease);
+                $('#divOutput_WaterInstallRateIncrease_' + data.id).show();
+
+                //WsInstalIncrease
+                $(e).find('#divInput_WsInstalIncrease_').attr('id', 'divInput_WsInstalIncrease_' + data.id);
+                $(e).find('#inputWsInstalIncrease_').attr('id', 'inputWsInstalIncrease_' + data.id);
+                $(e).find('#divOutput_WsInstalIncrease_').attr('id', 'divOutput_WsInstalIncrease_' + data.id);
+                $(e).find('#spanWsInstalIncrease_').attr('id', 'spanWsInstalIncrease_' + data.id);
+
+                $('#divInput_WsInstalIncrease_' + data.id).hide();
+                $('#spanWsInstalIncrease_' + data.id).text(data.wsInstalIncrease);
+                $('#divOutput_WsInstalIncrease_' + data.id).show();
+
+                //WaterFixNote2
+                $(e).find('#divInput_WaterFixNote2_').attr('id', 'divInput_WaterFixNote2_' + data.id);
+                $(e).find('#inputWaterFixNote2_').attr('id', 'inputWaterFixNote2_' + data.id);
+                $(e).find('#divOutput_WaterFixNote2_').attr('id', 'divOutput_WaterFixNote2_' + data.id);
+                $(e).find('#spanWaterFixNote2_').attr('id', 'spanWaterFixNote2_' + data.id);
+
+                $('#divInput_WaterFixNote2_' + data.id).hide();
+                $('#spanWaterFixNote2_' + data.id).text(data.waterFixNote2);
+                $('#divOutput_WaterFixNote2_' + data.id).show();
+
+                //WasteFixNote2
+                $(e).find('#divInput_WasteFixNote2_').attr('id', 'divInput_WasteFixNote2_' + data.id);
+                $(e).find('#inputWasteFixNote2_').attr('id', 'inputWasteFixNote2_' + data.id);
+                $(e).find('#divOutput_WasteFixNote2_').attr('id', 'divOutput_WasteFixNote2_' + data.id);
+                $(e).find('#spanWasteFixNote2_').attr('id', 'spanWasteFixNote2_' + data.id);
+
+                $('#divInput_WasteFixNote2_' + data.id).hide();
+                $('#spanWasteFixNote2_' + data.id).text(data.wasteFixNote2);
+                $('#divOutput_WasteFixNote2_' + data.id).show();
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        resetTableBackColor("my-table");
+
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.selectUserType:last').select2({
+            dir : 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(WaterInstallFeeController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                console.log(err);
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+</script>
