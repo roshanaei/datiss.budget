@@ -165,6 +165,7 @@ namespace Datiss.Budget.Services
                         WaterInstallRateIncrease = model.WaterInstallRateIncrease,
                         WsInstalIncrease = model.WsInstalIncrease,
                         WaterFixNote2 = model.WaterFixNote2,
+                        WasteFixNote2 = model.WasteFixNote2
                     };
 
                     return ValidationResult<BranchingRateIncreaseDTO>.Success(result);

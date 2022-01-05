@@ -12,13 +12,8 @@ namespace Datiss.Budget.ViewModels
     public class CreateBranchingRateIncreaseViewModel : BaseViewModel
     {
         public int YearId { get; set; }
-        public string YearDisplay { get; set; }
-
         public int OrganizationId { get; set; }
-        public string OrganizationDisplay { get; set; }
-
         public int UserTypeId { get; set; }
-
         public string UserTypeTitle
         {
             get
@@ -56,8 +51,6 @@ namespace Datiss.Budget.ViewModels
 
         [Required(ErrorMessage = "*")]
         public int WasteFixNote2 { get; set; }
-
-        [Required(ErrorMessage = "*")]
         public IEnumerable<SelectListItem> UserTypeSource { get; set; }
 
     }
@@ -84,7 +77,7 @@ namespace Datiss.Budget.ViewModels
         public string WasteRateIncreaseDisplay => WasteRateIncrease.ToString("N0");
 
         public int WastePersentIncrease { get; set; }
-        public string WWastePersentIncreaseDisplay => WastePersentIncrease.ToString("N0");
+        public string WastePersentIncreaseDisplay => WastePersentIncrease.ToString("N0");
 
         public int FixAmountBusiness { get; set; }
         public string FixAmountBusinessDisplay => FixAmountBusiness.ToString("N0");
