@@ -77,9 +77,9 @@ namespace Datiss.Budget.Services
                 OrganizationId = model.OrganizationId,
                 UserTypeId = model.UserTypeId,
                 AverageCapacityW = model.AverageCapacityW,
-                AverageCapacityWsIncome = model.AverageCapacityWIncome,
+                AverageCapacityWIncome = model.AverageCapacityWIncome,
                 AverageCapacityWs = model.AverageCapacityWs,
-                AverageCapacityWIncome = model.AverageCapacityWsIncome
+                AverageCapacityWsIncome = model.AverageCapacityWsIncome
             };
             model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
 
@@ -95,9 +95,9 @@ namespace Datiss.Budget.Services
                     result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.AverageCapacityW = entity.AverageCapacityW;
-                    result.AverageCapacityWsIncome = entity.AverageCapacityWIncome;
+                    result.AverageCapacityWIncome = entity.AverageCapacityWIncome;
                     result.AverageCapacityWs = entity.AverageCapacityWs;
-                    result.AverageCapacityWIncome = entity.AverageCapacityWsIncome;
+                    result.AverageCapacityWsIncome = entity.AverageCapacityWsIncome;
 
                     return ValidationResult<UserTypeAverageCapacityDTO>.Success(result);
                 }
@@ -128,9 +128,9 @@ namespace Datiss.Budget.Services
                     entity.YearId = model.YearId;
                     entity.UserTypeId = model.UserTypeId;
                     entity.AverageCapacityW = model.AverageCapacityW;
-                    entity.AverageCapacityWsIncome = model.AverageCapacityWIncome;
+                    entity.AverageCapacityWIncome = model.AverageCapacityWIncome;
                     entity.AverageCapacityWs = model.AverageCapacityWs;
-                    entity.AverageCapacityWIncome = model.AverageCapacityWsIncome;
+                    entity.AverageCapacityWsIncome = model.AverageCapacityWsIncome;
 
                     await _uow.SaveChangesAsync();
 
@@ -140,9 +140,9 @@ namespace Datiss.Budget.Services
                         YearId = model.YearId,
                         UserTypeId = model.UserTypeId,
                         AverageCapacityW = model.AverageCapacityW,
-                        AverageCapacityWsIncome = model.AverageCapacityWIncome,
+                        AverageCapacityWIncome = model.AverageCapacityWIncome,
                         AverageCapacityWs = model.AverageCapacityWs,
-                        AverageCapacityWIncome = model.AverageCapacityWsIncome,
+                        AverageCapacityWsIncome = model.AverageCapacityWsIncome,
                         OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
                         UserTypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
@@ -245,9 +245,9 @@ namespace Datiss.Budget.Services
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
                                         AverageCapacityW = x.AverageCapacityW,
-                                        AverageCapacityWsIncome = x.AverageCapacityWIncome,
+                                        AverageCapacityWIncome = x.AverageCapacityWIncome,
                                         AverageCapacityWs = x.AverageCapacityWs,
-                                        AverageCapacityWIncome = x.AverageCapacityWsIncome,
+                                        AverageCapacityWsIncome = x.AverageCapacityWsIncome,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -288,9 +288,9 @@ namespace Datiss.Budget.Services
                         OrganizationId = item.OrganizationId,
                         YearId = destYearId,
                         AverageCapacityW = item.AverageCapacityW,
-                        AverageCapacityWsIncome = item.AverageCapacityWIncome,
+                        AverageCapacityWIncome = item.AverageCapacityWIncome,
                         AverageCapacityWs = item.AverageCapacityWs,
-                        AverageCapacityWIncome = item.AverageCapacityWsIncome
+                        AverageCapacityWsIncome = item.AverageCapacityWsIncome
                     };
                     result.Add(entity);
                 }
@@ -464,9 +464,9 @@ namespace Datiss.Budget.Services
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
                                         AverageCapacityW = x.AverageCapacityW,
-                                        AverageCapacityWsIncome = x.AverageCapacityWIncome,
+                                        AverageCapacityWIncome = x.AverageCapacityWIncome,
                                         AverageCapacityWs = x.AverageCapacityWs,
-                                        AverageCapacityWIncome = x.AverageCapacityWsIncome,
+                                        AverageCapacityWsIncome = x.AverageCapacityWsIncome,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -496,9 +496,9 @@ namespace Datiss.Budget.Services
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
                                         AverageCapacityW = x.AverageCapacityW,
-                                        AverageCapacityWsIncome = x.AverageCapacityWIncome,
+                                        AverageCapacityWIncome = x.AverageCapacityWIncome,
                                         AverageCapacityWs = x.AverageCapacityWs,
-                                        AverageCapacityWIncome = x.AverageCapacityWsIncome,
+                                        AverageCapacityWsIncome = x.AverageCapacityWsIncome,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -619,9 +619,9 @@ namespace Datiss.Budget.Services
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
                         AverageCapacityW = item.AverageCapacityW,
-                        AverageCapacityWsIncome = item.AverageCapacityWIncome,
+                        AverageCapacityWIncome = item.AverageCapacityWIncome,
                         AverageCapacityWs = item.AverageCapacityWs,
-                        AverageCapacityWIncome = item.AverageCapacityWsIncome,
+                        AverageCapacityWsIncome = item.AverageCapacityWsIncome,
                     };
 
                     result.Add(entity);

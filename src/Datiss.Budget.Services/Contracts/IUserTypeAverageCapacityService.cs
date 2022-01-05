@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Contracts
 {
-    interface IUserTypeAverageCapacityService
+    public interface IUserTypeAverageCapacityService
     {
         Task<UserTypeAverageCapacity> GetByIdAsync(int id);
 
