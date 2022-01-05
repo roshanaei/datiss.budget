@@ -1,0 +1,589 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    function editRow(id) {
+
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+        //row.css('background-color', '#7598f3');
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_UrbanAdjustmentFactor_' + id).hide();
+        $('#divOutput_WasteRateInWater_' + id).hide();
+        $('#divOutput_WaterBranchingPerHousing_' + id).hide();
+        $('#divOutput_TubingCost_' + id).hide();
+        $('#divOutput_WaterPartnershipAmountDomestic_' + id).hide();
+        $('#divOutput_WaterPartnershipAmountNDomestic_' + id).hide();
+        $('#divOutput_WastePartnershipAmountDomestic_' + id).hide();
+        $('#divOutput_WastePartnershipAmountNDomestic_' + id).hide();
+        $('#divOutput_FixCostNote11H_' + id).hide();
+        $('#divOutput_FixCostNote11NH_' + id).hide();
+        $('#divOutput_FixCostNote11HWs_' + id).hide();
+        $('#divOutput_FixCostNote11NHWs_' + id).hide();
+        $('#divOutput_WsTubingCost_' + id).hide();
+
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_UrbanAdjustmentFactor_' + id).show();
+        $('#divInput_WasteRateInWater_' + id).show();
+        $('#divInput_WaterBranchingPerHousing_' + id).show();
+        $('#divInput_TubingCost_' + id).show();
+        $('#divInput_WaterPartnershipAmountDomestic_' + id).show();
+        $('#divInput_WaterPartnershipAmountNDomestic_' + id).show();
+        $('#divInput_WastePartnershipAmountDomestic_' + id).show();
+        $('#divInput_WastePartnershipAmountNDomestic_' + id).show();
+        $('#divInput_FixCostNote11H_' + id).show();
+        $('#divInput_FixCostNote11NH_' + id).show();
+        $('#divInput_FixCostNote11HWs_' + id).show();
+        $('#divInput_FixCostNote11NHWs_' + id).show();
+        $('#divInput_WsTubingCost_' + id).show();
+
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_UrbanAdjustmentFactor_' + id).hide();
+        $('#divInput_WasteRateInWater_' + id).hide();
+        $('#divInput_WaterBranchingPerHousing_' + id).hide();
+        $('#divInput_TubingCost_' + id).hide();
+        $('#divInput_WaterPartnershipAmountDomestic_' + id).hide();
+        $('#divInput_WaterPartnershipAmountNDomestic_' + id).hide();
+        $('#divInput_WastePartnershipAmountDomestic_' + id).hide();
+        $('#divInput_WastePartnershipAmountNDomestic_' + id).hide();
+        $('#divInput_FixCostNote11H_' + id).hide();
+        $('#divInput_FixCostNote11NH_' + id).hide();
+        $('#divInput_FixCostNote11HWs_' + id).hide();
+        $('#divInput_FixCostNote11NHWs_' + id).hide();
+        $('#divInput_WsTubingCost_' + id).hide();
+
+
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_UrbanAdjustmentFactor_' + id).show();
+        $('#divOutput_WasteRateInWater_' + id).show();
+        $('#divOutput_WaterBranchingPerHousing_' + id).show();
+        $('#divOutput_TubingCost_' + id).show();
+        $('#divOutput_WaterPartnershipAmountDomestic_' + id).show();
+        $('#divOutput_WaterPartnershipAmountNDomestic_' + id).show();
+        $('#divOutput_WastePartnershipAmountDomestic_' + id).show();
+        $('#divOutput_WastePartnershipAmountNDomestic_' + id).show();
+        $('#divOutput_FixCostNote11H_' + id).show();
+        $('#divOutput_FixCostNote11NH_' + id).show();
+        $('#divOutput_FixCostNote11HWs_' + id).show();
+        $('#divOutput_FixCostNote11HWs_' + id).show();
+        $('#divOutput_FixCostNote11NHWs_' + id).show();
+        $('#divOutput_WsTubingCost_' + id).show();
+
+
+
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.urbanAdjustmentFactor = $('#inputUrbanAdjustmentFactor_' + id).val();
+        model.wasteRateInWater = $('#inputWasteRateInWater_' + id).val();
+        model.waterBranchingPerHousing = $('#inputWaterBranchingPerHousing_' + id).val();
+        model.tubingCost = $('#inputTubingCost_' + id).val();
+        model.waterPartnershipAmountDomestic = $('#inputWaterPartnershipAmountDomestic_' + id).val();
+        model.waterPartnershipAmountNDomestic = $('#inputWaterPartnershipAmountNDomestic_' + id).val();
+        model.wastePartnershipAmountDomestic = $('#inputWastePartnershipAmountDomestic_' + id).val();
+        model.wastePartnershipAmountNDomestic = $('#inputWastePartnershipAmountNDomestic_' + id).val();
+        model.fixCostNote11H = $('#inputFixCostNote11H_' + id).val();
+        model.fixCostNote11NH = $('#inputFixCostNote11NH_' + id).val();
+        model.fixCostNote11HWs = $('#inputFixCostNote11HWs_' + id).val();
+        model.fixCostNote11NHWs = $('#inputFixCostNote11NHWs_' + id).val();
+        model.wsTubingCost = $('#inputWsTubingCost_' + id).val();
+
+
+        $.ajax({
+            url: '@Url.Action(BranchFeeAmountController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanUrbanAdjustmentFactor_' + id).text(data.urbanAdjustmentFactor);
+                $('#spanWasteRateInWater_' + id).text(data.wasteRateInWater);
+                $('#spanWaterBranchingPerHousing_' + id).text(data.waterBranchingPerHousing);
+                $('#spanTubingCost_' + id).text(data.tubingCost);
+                $('#spanWaterPartnershipAmountDomestic_' + id).text(data.waterPartnershipAmountDomestic);
+                $('#spanWaterPartnershipAmountNDomestic_' + id).text(data.waterPartnershipAmountNDomestic);
+                $('#spanWastePartnershipAmountDomestic_' + id).text(data.wastePartnershipAmountDomestic);
+                $('#spanWastePartnershipAmountNDomestic_' + id).text(data.wastePartnershipAmountNDomestic);
+                $('#spanFixCostNote11H_' + id).text(data.fixCostNote11H);
+                $('#spanFixCostNote11NH_' + id).text(data.fixCostNote11NH);
+                $('#spanFixCostNote11HWs_' + id).text(data.fixCostNote11HWs);
+                $('#spanFixCostNote11NHWs_' + id).text(data.fixCostNote11NHWs);
+                $('#spanWsTubingCost_' + id).text(data.wsTubingCost);
+
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+        console.log(e);
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.urbanAdjustmentFactor = $(e).find('#inputUrbanAdjustmentFactor_').val();
+        model.wasteRateInWater = $(e).find('#inputWasteRateInWater_').val();
+        model.waterBranchingPerHousing = $(e).find('#inputWaterBranchingPerHousing_').val();
+        model.tubingCost = $(e).find('#inputTubingCost_').val();
+        model.waterPartnershipAmountDomestic = $(e).find('#inputWaterPartnershipAmountDomestic_').val();
+        model.waterPartnershipAmountNDomestic = $(e).find('#inputWaterPartnershipAmountNDomestic_').val();
+        model.wastePartnershipAmountDomestic = $(e).find('#inputWastePartnershipAmountDomestic_').val();
+        model.wastePartnershipAmountNDomestic = $(e).find('#inputWastePartnershipAmountNDomestic_').val();
+        model.fixCostNote11H = $(e).find('#inputFixCostNote11H_').val();
+        model.fixCostNote11NH = $(e).find('#inputFixCostNote11NH_').val();
+        model.fixCostNote11HWs = $(e).find('#inputFixCostNote11HWs_').val();
+        model.fixCostNote11NHWs = $(e).find('#inputFixCostNote11NHWs_').val();
+        model.wsTubingCost = $(e).find('#inputWsTubingCost_').val();
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(BranchFeeAmountController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+
+                //UrbanAdjustmentFactor
+                $(e).find('#divInput_UrbanAdjustmentFactor_').attr('id', 'divInput_UrbanAdjustmentFactor_' + data.id);
+                $(e).find('#inputUrbanAdjustmentFactor_').attr('id', 'inputUrbanAdjustmentFactor_' + data.id);
+                $(e).find('#divOutput_UrbanAdjustmentFactor_').attr('id', 'divOutput_UrbanAdjustmentFactor_' + data.id);
+                $(e).find('#spanUrbanAdjustmentFactor_').attr('id', 'spanUrbanAdjustmentFactor_' + data.id);
+
+                $('#divInput_UrbanAdjustmentFactor_' + data.id).hide();
+                $('#spanUrbanAdjustmentFactor_' + data.id).text(data.urbanAdjustmentFactor);
+                $('#divOutput_UrbanAdjustmentFactor_' + data.id).show();
+
+                //WasteRateInWater
+                $(e).find('#divInput_WasteRateInWater_').attr('id', 'divInput_WasteRateInWater_' + data.id);
+                $(e).find('#inputWasteRateInWater_').attr('id', 'inputWasteRateInWater_' + data.id);
+                $(e).find('#divOutput_WasteRateInWater_').attr('id', 'divOutput_WasteRateInWater_' + data.id);
+                $(e).find('#spanWasteRateInWater_').attr('id', 'spanWasteRateInWater_' + data.id);
+
+                $('#divInput_WasteRateInWater_' + data.id).hide();
+                $('#spanWasteRateInWater_' + data.id).text(data.wasteRateInWater);
+                $('#divOutput_WasteRateInWater_' + data.id).show();
+
+               
+                //WaterBranchingPerHousing
+                $(e).find('#divInput_WaterBranchingPerHousing_').attr('id', 'divInput_WaterBranchingPerHousing_' + data.id);
+                $(e).find('#inputWaterBranchingPerHousing_').attr('id', 'inputWaterBranchingPerHousing_' + data.id);
+                $(e).find('#divOutput_WaterBranchingPerHousing_').attr('id', 'divOutput_WaterBranchingPerHousing_' + data.id);
+                $(e).find('#spanWaterBranchingPerHousing_').attr('id', 'spanWaterBranchingPerHousing_' + data.id);
+
+                $('#divInput_WaterBranchingPerHousing_' + data.id).hide();
+                $('#spanWaterBranchingPerHousing_' + data.id).text(data.waterBranchingPerHousing);
+                $('#divOutput_WaterBranchingPerHousing_' + data.id).show();
+                
+
+                //TubingCost
+                $(e).find('#divInput_TubingCost_').attr('id', 'divInput_TubingCost_' + data.id);
+                $(e).find('#inputTubingCost_').attr('id', 'inputTubingCost_' + data.id);
+                $(e).find('#divOutput_TubingCost_').attr('id', 'divOutput_TubingCost_' + data.id);
+                $(e).find('#spanTubingCost_').attr('id', 'spanTubingCost_' + data.id);
+
+                $('#divInput_TubingCost_' + data.id).hide();
+                $('#spanTubingCost_' + data.id).text(data.tubingCost);
+                $('#divOutput_TubingCost_' + data.id).show();
+
+                //WaterPartnershipAmountDomestic
+                $(e).find('#divInput_WaterPartnershipAmountDomestic_').attr('id', 'divInput_WaterPartnershipAmountDomestic_' + data.id);
+                $(e).find('#inputWaterPartnershipAmountDomestic_').attr('id', 'inputWaterPartnershipAmountDomestic_' + data.id);
+                $(e).find('#divOutput_WaterPartnershipAmountDomestic_').attr('id', 'divOutput_WaterPartnershipAmountDomestic_' + data.id);
+                $(e).find('#spanWaterPartnershipAmountDomestic_').attr('id', 'spanWaterPartnershipAmountDomestic_' + data.id);
+
+                $('#divInput_WaterPartnershipAmountDomestic_' + data.id).hide();
+                $('#spanWaterPartnershipAmountDomestic_' + data.id).text(data.waterPartnershipAmountDomestic);
+                $('#divOutput_WaterPartnershipAmountDomestic_' + data.id).show();
+
+
+                //WaterPartnershipAmountNDomestic
+                $(e).find('#divInput_WaterPartnershipAmountNDomestic_').attr('id', 'divInput_WaterPartnershipAmountNDomestic_' + data.id);
+                $(e).find('#inputWaterPartnershipAmountNDomestic_').attr('id', 'inputWaterPartnershipAmountNDomestic_' + data.id);
+                $(e).find('#divOutput_WaterPartnershipAmountNDomestic_').attr('id', 'divOutput_WaterPartnershipAmountNDomestic_' + data.id);
+                $(e).find('#spanWaterPartnershipAmountNDomestic_').attr('id', 'spanWaterPartnershipAmountNDomestic_' + data.id);
+
+                $('#divInput_WaterPartnershipAmountNDomestic_' + data.id).hide();
+                $('#spanWaterPartnershipAmountNDomestic_' + data.id).text(data.waterPartnershipAmountNDomestic);
+                $('#divOutput_WaterPartnershipAmountNDomestic_' + data.id).show();
+
+
+                //WastePartnershipAmountDomestic
+                $(e).find('#divInput_WastePartnershipAmountDomestic_').attr('id', 'divInput_WastePartnershipAmountDomestic_' + data.id);
+                $(e).find('#inputWastePartnershipAmountDomestic_').attr('id', 'inputWastePartnershipAmountDomestic_' + data.id);
+                $(e).find('#divOutput_WastePartnershipAmountDomestic_').attr('id', 'divOutput_WastePartnershipAmountDomestic_' + data.id);
+                $(e).find('#spanWastePartnershipAmountDomestic_').attr('id', 'spanWastePartnershipAmountDomestic_' + data.id);
+
+                $('#divInput_WastePartnershipAmountDomestic_' + data.id).hide();
+                $('#spanWastePartnershipAmountDomestic_' + data.id).text(data.wastePartnershipAmountDomestic);
+                $('#divOutput_WastePartnershipAmountDomestic_' + data.id).show();
+
+                //WastePartnershipAmountNDomestic
+                $(e).find('#divInput_WastePartnershipAmountNDomestic_').attr('id', 'divInput_WastePartnershipAmountNDomestic_' + data.id);
+                $(e).find('#inputWastePartnershipAmountNDomestic_').attr('id', 'inputWastePartnershipAmountNDomestic_' + data.id);
+                $(e).find('#divOutput_WastePartnershipAmountNDomestic_').attr('id', 'divOutput_WastePartnershipAmountNDomestic_' + data.id);
+                $(e).find('#spanWastePartnershipAmountNDomestic_').attr('id', 'spanWastePartnershipAmountNDomestic_' + data.id);
+
+                $('#divInput_WastePartnershipAmountNDomestic_' + data.id).hide();
+                $('#spanWastePartnershipAmountNDomestic_' + data.id).text(data.wastePartnershipAmountNDomestic);
+                $('#divOutput_WastePartnershipAmountNDomestic_' + data.id).show();
+
+
+                //FixCostNote11H
+                $(e).find('#divInput_FixCostNote11H_').attr('id', 'divInput_FixCostNote11H_' + data.id);
+                $(e).find('#inputFixCostNote11H_').attr('id', 'inputFixCostNote11H_' + data.id);
+                $(e).find('#divOutput_FixCostNote11H_').attr('id', 'divOutput_FixCostNote11H_' + data.id);
+                $(e).find('#spanFixCostNote11H_').attr('id', 'spanFixCostNote11H_' + data.id);
+
+                $('#divInput_FixCostNote11H_' + data.id).hide();
+                $('#spanFixCostNote11H_' + data.id).text(data.fixCostNote11H);
+                $('#divOutput_FixCostNote11H_' + data.id).show();
+
+                //FixCostNote11NH
+                $(e).find('#divInput_FixCostNote11NH_').attr('id', 'divInput_FixCostNote11NH_' + data.id);
+                $(e).find('#inputFixCostNote11NH_').attr('id', 'inputFixCostNote11NH_' + data.id);
+                $(e).find('#divOutput_FixCostNote11NH_').attr('id', 'divOutput_FixCostNote11NH_' + data.id);
+                $(e).find('#spanFixCostNote11NH_').attr('id', 'spanFixCostNote11NH_' + data.id);
+
+                $('#divInput_FixCostNote11NH_' + data.id).hide();
+                $('#spanFixCostNote11NH_' + data.id).text(data.fixCostNote11NH);
+                $('#divOutput_FixCostNote11NH_' + data.id).show();
+
+
+                //FixCostNote11HWs
+                $(e).find('#divInput_FixCostNote11HWs_').attr('id', 'divInput_FixCostNote11HWs_' + data.id);
+                $(e).find('#inputFixCostNote11HWs_').attr('id', 'inputFixCostNote11HWs_' + data.id);
+                $(e).find('#divOutput_FixCostNote11HWs_').attr('id', 'divOutput_FixCostNote11HWs_' + data.id);
+                $(e).find('#spanFixCostNote11HWs_').attr('id', 'spanFixCostNote11HWs_' + data.id);
+
+                $('#divInput_FixCostNote11HWs_' + data.id).hide();
+                $('#spanFixCostNote11HWs_' + data.id).text(data.fixCostNote11HWs);
+                $('#divOutput_FixCostNote11HWs_' + data.id).show();
+
+
+                //FixCostNote11NHWs
+                $(e).find('#divInput_FixCostNote11NHWs_').attr('id', 'divInput_FixCostNote11NHWs_' + data.id);
+                $(e).find('#inputFixCostNote11NHWs_').attr('id', 'inputFixCostNote11NHWs_' + data.id);
+                $(e).find('#divOutput_FixCostNote11NHWs_').attr('id', 'divOutput_FixCostNote11NHWs_' + data.id);
+                $(e).find('#spanFixCostNote11NHWs_').attr('id', 'spanFixCostNote11NHWs_' + data.id);
+
+                $('#divInput_FixCostNote11NHWs_' + data.id).hide();
+                $('#spanFixCostNote11NHWs_' + data.id).text(data.fixCostNote11NHWs);
+                $('#divOutput_FixCostNote11NHWs_' + data.id).show();
+
+
+
+                //WsTubingCost
+                $(e).find('#divInput_WsTubingCost_').attr('id', 'divInput_WsTubingCost_' + data.id);
+                $(e).find('#inputWsTubingCost_').attr('id', 'inputWsTubingCost_' + data.id);
+                $(e).find('#divOutput_WsTubingCost_').attr('id', 'divOutput_WsTubingCost_' + data.id);
+                $(e).find('#spanWsTubingCost_').attr('id', 'spanWsTubingCost_' + data.id);
+
+                $('#divInput_WsTubingCost_' + data.id).hide();
+                $('#spanWsTubingCost_' + data.id).text(data.wsTubingCost);
+                $('#divOutput_WsTubingCost_' + data.id).show();
+
+
+
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        resetTableBackColor("my-table");
+
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+        
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+
+        $('.input1:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input2:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input3:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input4:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input5:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input6:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input7:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input8:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input9:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input10:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input11:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input12:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        $('.input13:last').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.input2:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(BranchFeeAmountController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                console.log(err);
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+</script>

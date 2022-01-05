@@ -1,0 +1,211 @@
+﻿@model BranchFeeAmountIndexViewModel
+@{ 
+    ViewData["Title"] = "مبلغ حق انشعاب"; 
+}
+
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            @*<i class="ft-settings mr-1"></i>*@
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <!--Alert-->
+                <div class="alert bg-light-warning alert-dismissible m-2" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                    </button>
+                    <span class="my-font">این یه پیغام جدید است!</span>
+                </div>
+                <div class="card-content">
+                    <div class="card-body">
+                        <!--Filters-->
+                        <form method="post" asp-controller="BranchFeeAmount" asp-action="Index" asp-antiforgery="true">
+                            <fieldset class="form-group">
+                                <label asp-for="Filter.YearId" class="my-font">
+                                    سال:
+                                    <select class="form-control form-control-sm d-inline-block width-100" id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
+                                    سازمان:
+                                    <select class="form-control form-control-sm d-inline-block width-300" id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()">
+                                    </select>
+                                </label>
+                                <input asp-for="Filter.OrderBy" type="hidden" />
+                                <input asp-for="Filter.OrderDesc" type="hidden" />
+                            </fieldset>
+                            <fieldset>
+                                <div class="rowACJE">
+                                    <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 mb-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+                                    </button>
+                                    <button data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="submit" name="btnCreate" class="btn btn-success bg-light-success mb-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                    </button>
+                                </div>
+                            </fieldset>
+                        </form>
+                        <hr />
+                        <!--SearchBox-->
+                        <div class="rowACJSB">
+                            <div class="rowAC" style="flex:1">
+                                <fieldset class="form-group">
+                                    <label for="ngx-filter-ref" class="my-font">
+                                        جستجو:
+                                        <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
+                                    </label>
+                                </fieldset>
+                                <fieldset class="form-group" style="margin-right:10px">
+                                    <label class="my-font rowAC">
+                                        <span>نمایش</span>
+
+                                        <select style="margin-right:10px" class="form-control" id="basicSelect">
+                                            <option>10</option>
+                                            <option>20</option>
+                                            <option>30</option>
+                                        </select>
+                                        <span style="margin-right:10px">رکورد</span>
+
+                                    </label>
+                                </fieldset>
+                            </div>
+                            <fieldset>
+                                <div class="rowACJE">
+                                    <button data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" type="submit" name="btnExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
+                                    </button>
+                                    <a data-toggle="tooltip" data-placement="top" asp-action="DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
+                                    </a>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <!--DataTable-->
+                        <div class="table-responsive">
+                            <table id="" class=" table table-hover table-bordered m-0 my-font">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>سال</th>
+                                        <th>سازمان</th>
+                                        <th>کاربری</th>
+                                        <th>قیمت</th>
+                                        <th>مدیریت</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Items)
+                                    {
+                                        <tr>
+                                            <td>@item.Year.ToString()</td>
+                                            <td>@item.OrganizationDisplay </td>
+                                            <td>@item.WastePartnershipAmountDomestic </td>
+                                            <td>@item.WasteRateInWater </td>
+                                            <td>
+                                                <a asp-controller="BranchFeeAmount" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="rowACJSB" style="margin-top:20px">
+                                <!--Tools-->
+                                <div class="rowACJS">
+                                    <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="submit" name="btnCreate" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                                    </button>
+                                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="submit" name="btnFilter" class="btn btn-warning bg-light-warning mr-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                                    </button>
+                                    <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="submit" name="btnCreate" class="btn btn-danger  bg-light-danger mr-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+                                    </button>
+                                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="submit" name="btnReport" class="btn btn-info bg-light-info mr-1 my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                                    </button>
+                                </div>
+                                <!--Pagination-->
+                                @*<p>
+                    Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
+                </p>*@
+                                @if (Model.PagesCount > 1)
+                                {
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination justify-content-center">
+                                            @if (Model.PageNumber > 1)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-controller="BranchFeeAmount"
+                                                       asp-action="Index"
+                                                       asp-route-page="@Model.PreviousPage"
+                                                       aria-label="Previous">«</a>
+                                                </li>
+                                            }
+
+                                            @for (int i = 1; i <= Model.PagesCount; i++)
+                                            {
+                                                if (i == Model.PageNumber)
+                                                {
+                                                    <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                                                }
+                                                else
+                                                {
+                                                    <li class="page-item">
+                                                        <a class="page-link"
+                                                           asp-controller="BranchFeeAmount"
+                                                           asp-action="Index"
+                                                           asp-route-page="@i">@i.ToString() </a>
+                                                    </li>
+                                                }
+                                            }
+
+                                            @if (Model.PageNumber < Model.PagesCount)
+                                            {
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                       asp-controller="BranchFeeAmount"
+                                                       asp-action="Index"
+                                                       asp-route-page="@Model.NextPage"
+                                                       aria-label="Next">»</a>
+                                                </li>
+                                            }
+
+                                        </ul>
+                                    </nav>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section footSection {
+    <script>
+
+        function loadCreateLink() {
+            var a = document.getElementById("createLink");
+            var organizationId = document.getElementById('organizationId').value;
+
+            var yearId = document.getElementById('yearId').value;
+
+            var url = 'branchfeeamount/create'
+
+            a.href = url + "/" + organizationId + "/" + yearId;
+        }
+
+        loadCreateLink();
+    </script>
+
+} 
