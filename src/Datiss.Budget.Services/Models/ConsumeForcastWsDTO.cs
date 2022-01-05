@@ -41,6 +41,8 @@
 
         public int UsageLayerId { get; set; }
 
+        public string UsageLayerDisplay { get; set; }
+
         public decimal CountUser { get; set; }
 
         public decimal UnitUser { get; set; }
