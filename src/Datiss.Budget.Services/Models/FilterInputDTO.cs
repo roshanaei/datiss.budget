@@ -223,4 +223,10 @@ namespace Datiss.Budget.Services.Models
         public ActivityType? ActivityType { get; set; }
 
     }
+    public class BranchingRateIncreaseFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
+    }
 }
