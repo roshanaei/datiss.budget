@@ -1,5 +1,6 @@
 ﻿using System;
 using Datiss.Budget.Entities.AuditableEntity;
+using Datiss.Budget.Entities.Identity;
 
 namespace Datiss.Budget.Entities 
 {

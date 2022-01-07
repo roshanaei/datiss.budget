@@ -33,6 +33,8 @@ namespace Datiss.Budget.Entities.Identity
         public  ICollection<UserRole> Users { get; set; }
 
         public  ICollection<RoleClaim> Claims { get; set; }
+
+        public ICollection<DataEntryTimeLimit> DataEntryTimeLimits { get; set; }
         #endregion
     }
 }

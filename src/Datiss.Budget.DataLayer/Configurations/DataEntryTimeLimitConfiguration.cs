@@ -23,6 +23,16 @@ namespace Datiss.Budget.DataLayer.Configurations
                 .WithMany(x => x.DataEntryTimeLimits)
                 .HasForeignKey(x => x.YearId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(x => x.User)
+                .WithMany(x => x.DataEntryTimeLimits)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(x => x.Role)
+                .WithMany(x => x.DataEntryTimeLimits)
+                .HasForeignKey(x => x.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
