@@ -20,6 +20,10 @@ namespace Datiss.Budget.Entities
 
         public int? YearId { get; set; }
 
+        public int? RoleId { get; set; }
+
+        public int? UserId { get; set; }
+
         public DateTime StartDate { get; set; }
 
         public DateTime FinishDate { get; set; }
@@ -33,6 +37,9 @@ namespace Datiss.Budget.Entities
         public Organization Organization { get; set; }
 
         public FinanceYear Year { get; set; }
+
+        public Role Role { get; set; }
+        public User User { get; set; }
 
         #endregion
     }
