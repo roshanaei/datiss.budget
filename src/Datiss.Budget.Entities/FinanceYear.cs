@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Datiss.Budget.Entities.AuditableEntity;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Enum;
@@ -32,6 +30,8 @@ namespace Datiss.Budget.Entities
         #endregion
 
         #region Navigation
+
+        public ICollection<DataEntryTimeLimit> DataEntryTimeLimits { get; set; }
 
         public ICollection<WaterInstallFee> WaterInstallFees { get; set; }
 

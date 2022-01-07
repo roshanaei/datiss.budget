@@ -47,6 +47,8 @@ namespace Datiss.Budget.Entities
         public Organization Parent { get; set; }
 
         public ICollection<Organization> Childrens { get; set; }
+
+        public ICollection<DataEntryTimeLimit> DataEntryTimeLimits { get; set; }
         
         public ICollection<WaterInstallFee> WaterInstallFees { get; set; }
         

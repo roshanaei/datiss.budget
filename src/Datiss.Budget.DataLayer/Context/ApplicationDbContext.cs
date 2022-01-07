@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Datiss.Budget.Common.EFCoreToolkit;
 using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.DataLayer.Configurations;
 
 namespace Datiss.Budget.DataLayer.Context
 {
@@ -266,7 +267,8 @@ namespace Datiss.Budget.DataLayer.Context
                 .ApplyConfiguration(new WasteSalesSplitConfiguration())
                 .ApplyConfiguration(new WaterSalesSplitConfiguration())
                 .ApplyConfiguration(new ReportConfiguration())
-                .ApplyConfiguration(new ReportParamConfiguration());
+                .ApplyConfiguration(new ReportParamConfiguration())
+                .ApplyConfiguration(new DataEntryTimeLimitConfiguration());
 
         }
     }
