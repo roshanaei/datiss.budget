@@ -13,7 +13,7 @@ using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Services.Models;
 using Mapster;
 
-namespace Datiss.Budget.Services.System
+namespace Datiss.Budget.Services
 {
     public class DataEntryTimeLimitService : IDataEntryTimeLimitService
     {
