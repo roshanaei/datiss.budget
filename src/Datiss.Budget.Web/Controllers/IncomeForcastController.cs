@@ -189,7 +189,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+            var userSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -200,7 +200,7 @@ namespace Datiss.Budget.Web.Controllers
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
-            model.SetUserTypeSource(dwaterSource);
+            model.SetUserTypeSource(userSource);
 
             return View(model);
         }
@@ -219,7 +219,10 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _incomeForcastService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
+                var result = await _incomeForcastService.ImportExcelAsync(
+                                                                    model.ExcelFile,
+                                                                    model.YearId,
+                                                                    model.ContinueIfAnyOrgMissing);
 
                 if (result.AskToImport)
                 {

@@ -45,7 +45,7 @@ namespace Datiss.Budget.Web.Controllers
 
         private readonly ILogger<IncomeForcastWsController> _logger;
         private readonly IWebHostEnvironment _env;
-        private readonly IIncomeForcastWsService _incomeForcastService;
+        private readonly IIncomeForcastWsService _incomeForcastWsService;
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
@@ -54,7 +54,7 @@ namespace Datiss.Budget.Web.Controllers
         public IncomeForcastWsController(
             ILogger<IncomeForcastWsController> logger,
             IWebHostEnvironment environment,
-            IIncomeForcastWsService incomeForcastService,
+            IIncomeForcastWsService incomeForcastWsService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             IConstantService constantService,
@@ -62,7 +62,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
-            _incomeForcastService = incomeForcastService ?? throw new ArgumentNullException(nameof(incomeForcastService));
+            _incomeForcastWsService = incomeForcastWsService ?? throw new ArgumentNullException(nameof(incomeForcastWsService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
@@ -84,7 +84,7 @@ namespace Datiss.Budget.Web.Controllers
             }
             var data = model.Adapt<CreateIncomeForcastWsDTO>();
 
-            var result = await _incomeForcastService.CreateAsync(data);
+            var result = await _incomeForcastWsService.CreateAsync(data);
 
             if (!result.IsValid)
             {
@@ -107,7 +107,7 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             var data = model.Adapt<UpdateIncomeForcastWsDTO>();
-            var result = await _incomeForcastService.UpdateAsync(data);
+            var result = await _incomeForcastWsService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
@@ -150,7 +150,7 @@ namespace Datiss.Budget.Web.Controllers
 
             filter.PageNumber = page;
 
-            var result = await _incomeForcastService.GetListAsync(filter);
+            var result = await _incomeForcastWsService.GetListAsync(filter);
             var model = result.Adapt<IncomeForcastWsIndexViewModel>();
 
             model.SetYearSource(yearSource);
@@ -178,7 +178,7 @@ namespace Datiss.Budget.Web.Controllers
 
             TempData.Put(_indexFilterKey, filter);
 
-            var result = await _incomeForcastService.GetListAsync(filter);
+            var result = await _incomeForcastWsService.GetListAsync(filter);
             model = result.Adapt<IncomeForcastWsIndexViewModel>();
             model.Filter = filter.Adapt<IncomeForcastWsFilterViewModel>();
 
@@ -188,7 +188,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+            var userSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -199,7 +199,7 @@ namespace Datiss.Budget.Web.Controllers
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
-            model.SetUserTypeSource(dwaterSource);
+            model.SetUserTypeSource(userSource);
 
             return View(model);
         }
@@ -218,7 +218,10 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _incomeForcastService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
+                var result = await _incomeForcastWsService.ImportExcelAsync(
+                                                                    model.ExcelFile,
+                                                                    model.YearId,
+                                                                    model.ContinueIfAnyOrgMissing);
 
                 if (result.AskToImport)
                 {
@@ -275,7 +278,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             try
             {
-                var result = await _incomeForcastService.HardDeleteAsync(yearId, orgId);
+                var result = await _incomeForcastWsService.HardDeleteAsync(yearId, orgId);
 
                 return Json(new
                 {
@@ -317,7 +320,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             try
             {
-                await _incomeForcastService.HardDeleteAsync(id);
+                await _incomeForcastWsService.HardDeleteAsync(id);
             }
             catch (Exception ex)
             {
@@ -341,7 +344,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var result = await _incomeForcastService.CalculationAsync(
+            var result = await _incomeForcastWsService.CalculationAsync(
                 model.YearId,
                 model.OrganizationId);
 
@@ -403,7 +406,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                await _incomeForcastService.CopyAsync(
+                await _incomeForcastWsService.CopyAsync(
                                                     model.SourceYearId,
                                                     model.SourceOrgId,
                                                     model.TargetYearId);
@@ -465,7 +468,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("[action]/{orgid}/{yearid}")]
         public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
-            var result = await _incomeForcastService.GetExportItemsAsync(yearid, orgid);
+            var result = await _incomeForcastWsService.GetExportItemsAsync(yearid, orgid);
             if (result.Count() == 0)
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();

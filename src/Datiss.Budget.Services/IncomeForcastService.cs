@@ -352,21 +352,24 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<IncomeForcastImportModel>(fileInfo);
+            var data = await _excelService.ImportAsync<IncomeForcastImportModel>
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
 
             var records = data.Adapt<List<IncomeForcast>>();
 
             int rowIndex = 1;
 
-            var dwatertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
+            var usertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
 
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
 
             foreach (var rec in records)
             {
+                rec.YearId = yearId;
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
-                var year = await _yearSet.FindAsync(rec.YearId);
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
@@ -379,7 +382,7 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId)
                         );
                 }
-                if (!await dwatertypes.AnyAsync(x => x.Id == rec.UserTypeId))
+                if (!await usertypes.AnyAsync(x => x.Id == rec.UserTypeId))
                 {
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 1, rec.UserTypeId)
@@ -396,24 +399,24 @@ namespace Datiss.Budget.Services
             }
 
 
-            //Start DWaterType
-            var missingDWType = new List<Constant>();
-            foreach (var item in dwatertypes)
+            //Start UserType
+            var missingUserType = new List<Constant>();
+            foreach (var item in usertypes)
             {
                 var existDWTypeInExcel = records.Any(_ => _.UserTypeId == item.Id);
                 if (!existDWTypeInExcel)
-                    missingDWType.Add(item);
+                    missingUserType.Add(item);
 
             }
-            if (missingDWType.Any())
+            if (missingUserType.Any())
             {
-                string dWaterTypeNames = "";
-                foreach (var item in missingDWType)
+                string userTypeNames = "";
+                foreach (var item in missingUserType)
                 {
-                    dWaterTypeNames += "- " + item.Title + "<br>";
+                    userTypeNames += "- " + item.Title + "<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelDWTypeNotInExcel, dWaterTypeNames));
+                    string.Format(ServiceMessages.ImportExcelDWTypeNotInExcel, userTypeNames));
             }
             //end
 
@@ -614,25 +617,22 @@ namespace Datiss.Budget.Services
             orderBy = orderBy.ToLower();
             switch (orderBy)
             {
-                case "year":
-                    return desc
-                        ? query.OrderByDescending(x => x.FinanceYear.Year)
-                        : query.OrderBy(x => x.FinanceYear.Year);
 
                 case "organization":
                     return desc
                         ? query.OrderByDescending(x => x.Organization.Title)
                         : query.OrderBy(x => x.Organization.Title);
 
-                case "dwatertype":
+                case "usertype":
                     return desc
                         ? query.OrderByDescending(x => x.UserType.DisplayOrder)
                         : query.OrderBy(x => x.UserType.DisplayOrder);
 
                 default:
-                    return desc
-                        ? query.OrderByDescending(x => x.Id)
-                        : query.OrderBy(x => x.Id);
+                    return query.Include(x => x.Organization)
+                                .Include(x => x.UserType)
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.UserType.DisplayOrder);
             }
         }
 

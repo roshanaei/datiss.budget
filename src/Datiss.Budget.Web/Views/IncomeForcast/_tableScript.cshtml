@@ -138,7 +138,9 @@
     }
 
     function saveNewRow(e) {
-        console.log(e);
+
+        resetTableBackColor("my-table");
+
 
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
@@ -328,60 +330,17 @@
             dir : 'rtl'
         });
 
-        $('.input1:last').keyup(function (event) {
+        $('.input-keyup').keyup(function (event) {
             event.preventDefault();
             if (event.keyCode === 13) {
                 let row = $(this).closest('tr');
                 saveNewRow(row);
             }
         });
-        $('.input2:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-        $('.input3:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-        $('.input4:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-        $('.input5:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-        $('.input6:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-        $('.input7:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-
 
         let newRowElement = document.getElementById('newRow');
         newRowElement.scrollIntoView();
-        $('.default-input:last').focus();
+        $('.default-input').focus();
 
         isNewRow = true;
     }
