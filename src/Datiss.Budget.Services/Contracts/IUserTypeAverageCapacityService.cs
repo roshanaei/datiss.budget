@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -10,19 +11,17 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Contracts
 {
-    interface IUserTypeAverageCapacityService
+    public interface IUserTypeAverageCapacityService
     {
         Task<UserTypeAverageCapacity> GetByIdAsync(int id);
 
-        //Task<ValidationResult> AddAsync(CreateUserTypeAverageCapacityDTO model);
+        Task<ValidationResult<UserTypeAverageCapacityDTO>> CreateAsync(CreateUserTypeAverageCapacityDTO model);
 
-        //Task<ValidationResult> UpdateAsync(UpdateUserTypeAverageCapacityDTO model);
+        Task<ValidationResult<UserTypeAverageCapacityDTO>> UpdateAsync(UpdateUserTypeAverageCapacityDTO model);
 
         Task HardDeleteAsync(int Id);
 
-        Task HardDeleteAsync(int yearId, int organizationId);
-
-        //Task<int> CalculationAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
         Task<PagedResult<UserTypeAverageCapacityDTO>> GetListAsync(UserTypeAverageCapacityFilterDTO filter);
 
@@ -30,8 +29,8 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<Stream> ExportExcelAsync(UserTypeAverageCapacityFilterDTO filter);
 
-        Task<IEnumerable<UserTypeAverageCapacityDTO>> GetExportItemsAsync(UserTypeAverageCapacityFilterDTO filter);
+        Task<IEnumerable<UserTypeAverageCapacityDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
-        Task ImportExcelAsync(IFormFile fileInfo);
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false);
     }
 }

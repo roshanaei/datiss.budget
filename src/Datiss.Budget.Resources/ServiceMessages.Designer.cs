@@ -304,6 +304,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_UserTypeAverageCapacity {
+            get {
+                return ResourceManager.GetString("Logic_UserTypeAverageCapacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است.
         /// </summary>
         public static string Logic_WasteSalesSplit {

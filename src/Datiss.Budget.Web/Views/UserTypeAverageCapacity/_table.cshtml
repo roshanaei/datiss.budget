@@ -1,0 +1,303 @@
+﻿@model UserTypeAverageCapacityIndexViewModel
+<div class="table-responsive">
+    <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
+        <thead class="thead-light">
+            <tr>
+                <th>سال</th>
+                <th style="min-width:250px">سازمان</th>
+                <th style="min-width:250px">کاربری</th>
+                <th style="min-width:220px">متوسط ظرفیت قراردادی آب</th>
+                <th style="min-width:220px">متوسط ظرفیت قراردادی فاضلاب</th>
+                <th style="min-width:220px">متوسط ظرفیت قراردادی آب - درآمد سرمایه ای</th>
+                <th style="min-width:220px">متوسط ظرفیت قراردادی فاضلاب - درآمد سرمایه ای</th>
+                <th style="min-width:190px">مدیریت</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowTemplate" style="display: none">
+                <td>
+                    <div id="divInput_Year_">
+                        <input id="hidYearId_" type="hidden" />
+                        <select class="form-control selectYear" id="inputYear_" asp-items="Model.YearSource">
+                        </select>
+                        <script>
+                            $('select#inputYear_ option[value=' + $('#yearId').val() + ']').attr('selected', true);
+                            $('#inputYear_').attr('disabled', 'disabled');
+                        </script>
+                    </div>
+                    <div id="divOutput_Year_" style="display: none">
+                        <span id="spanYear_"></span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Org_">
+                        <input id="hidOrgId_" type="hidden" />
+                        <select class="form-control selectOrganization" id="inputOrg_" asp-items="Model.InputOrganizationSource">
+                        </select>
+                        <script>
+                            $('select#inputOrg_ option[value=' + $('#organizationId').val() + ']').attr('selected', true);
+                        </script>
+                    </div>
+                    <div id="divOutput_Org_">
+                        <span id="spanOrg_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_UserType_">
+                        <input id="hidUserTypeId_" type="hidden" />
+                        <select class="form-control selectUserType" id="inputUserType_" asp-items="Model.UserTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_UserType_" style="display: none">
+                        <span id="spanUserType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_AverageCapacityW_">
+                        <input class="form-control input-keyup" id="inputAverageCapacityW_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_AverageCapacityW_" style="display: none">
+                        <span id="spanAverageCapacityW_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_AverageCapacityWs_">
+                        <input class="form-control input-keyup" id="inputAverageCapacityWs_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_AverageCapacityWs_" style="display: none">
+                        <span id="spanAverageCapacityWs_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_AverageCapacityWIncome_">
+                        <input class="form-control input-keyup" id="inputAverageCapacityWIncome_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_AverageCapacityWIncome_" style="display: none">
+                        <span id="spanAverageCapacityWIncome_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_AverageCapacityWsIncome_">
+                        <input class="form-control input-keyup" id="inputAverageCapacityWsIncome_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_AverageCapacityWsIncome_" style="display: none">
+                        <span id="spanAverageCapacityWsIncome_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
+                        <i class="fa ft-edit fa-1x"></i>
+                    </a>
+
+                    <a id="btnDelete_" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" style="display: none">
+                        <i class="fa ft-trash-2"></i>
+                    </a>
+
+                    <a id="btnSaveEdit_" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+                    <a id="btnCancelEdit_" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                    <a id="btnSaveCreate_" class="save-new-row btn btn-success my-font mr-1">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+
+                    <a id="btnCancelCreate_" class="cancel-new-row btn btn-danger my-font">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                </td>
+            </tr>
+            @foreach (var item in Model.Items)
+            {
+                <tr id="row_@item.Id">
+                    <td>
+                        <div id="divInput_Year_@item.Id" style="display: none">
+                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            </select>
+                            <script>
+                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Year_@item.Id">
+                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Org_@item.Id" style="display: none">
+                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
+                            </select>
+                            <script>
+                                $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
+                            </script>
+                        </div>
+                        <div id="divOutput_Org_@item.Id">
+                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_UserType_@item.Id" style="display: none">
+                            <input id="hidUserTypeId_@item.Id" type="hidden" value="@item.UserTypeId" />
+                            <select class="form-control selectUserType" id="inputUserType_@item.Id" asp-items="Model.UserTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputUserType_' + @item.Id + ' option[value=' + @item.UserTypeId + ']').attr('selected', true);
+                                $('#inputUserType_' + @item.Id).select2({ dir : 'rtl' });
+                            </script>
+                        </div>
+                        <div id="divOutput_UserType_@item.Id">
+                            <span id="spanUserType_@item.Id">@item.UserTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_AverageCapacityW_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAverageCapacityW_@item.Id" value="@item.AverageCapacityW" type="number" />
+                        </div>
+                        <div id="divOutput_AverageCapacityW_@item.Id">
+                            <span id="spanAverageCapacityW_@item.Id">@item.AverageCapacityWDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_AverageCapacityWs_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAverageCapacityWs_@item.Id" value="@item.AverageCapacityWs" type="number" />
+                        </div>
+                        <div id="divOutput_AverageCapacityWs_@item.Id">
+                            <span id="spanAverageCapacityWs_@item.Id">@item.AverageCapacityWsDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_AverageCapacityWIncome_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAverageCapacityWIncome_@item.Id" value="@item.AverageCapacityWIncome" type="number" />
+                        </div>
+                        <div id="divOutput_AverageCapacityWIncome_@item.Id">
+                            <span id="spanAverageCapacityWIncome_@item.Id">@item.AverageCapacityWIncomeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_AverageCapacityWsIncome_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAverageCapacityWsIncome_@item.Id" value="@item.AverageCapacityWsIncome" type="number" />
+                        </div>
+                        <div id="divOutput_AverageCapacityWsIncome_@item.Id">
+                            <span id="spanAverageCapacityWsIncome_@item.Id">@item.AverageCapacityWsIncomeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
+
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
+
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
+
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+            @*<input asp-for="ExcelFile" type="file" />*@
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                </button>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                </button>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </button>
+        </form>
+
+    </div>
+
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">
+            (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
+            <b class="font-medium-2">
+                @if (Model.PagesCount == 0)
+                {<span>1</span>}
+                else
+                {<span>@Model.PagesCount</span>}
+            </b>)
+        </div>
+    </div>
+    @if (Model.PagesCount > 1)
+    {
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                @if (Model.PageNumber > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-controller="@UserTypeAverageCapacityController.Name"
+                           asp-action="@UserTypeAverageCapacityController.ACTION_Index"
+                           asp-route-page="@Model.PreviousPage"
+                           aria-label="Previous">«</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.PagesCount; i++)
+                {
+                    if (i == Model.PageNumber)
+                    {
+                        <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-controller="@UserTypeAverageCapacityController.Name"
+                               asp-action="@UserTypeAverageCapacityController.ACTION_Index"
+                               asp-route-page="@i">@i.ToString() </a>
+                        </li>
+                    }
+                }
+
+                @if (Model.PageNumber < Model.PagesCount)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-controller="@UserTypeAverageCapacityController.Name"
+                           asp-action="@UserTypeAverageCapacityController.ACTION_Index"
+                           asp-route-page="@Model.NextPage"
+                           aria-label="Next">»</a>
+                    </li>
+                }
+
+            </ul>
+        </nav>
+    }
+</div>
