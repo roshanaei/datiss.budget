@@ -1,5 +1,5 @@
-﻿@model WasteInstallFeeIndexViewModel
-@{ ViewData["Title"] = "تعرفه نصب انشعاب فاضلاب";}
+﻿@model UserTypeAverageCapacityIndexViewModel
+@{ ViewData["Title"] = "متوسط ظرفیت قراردادی کاربری های غیرخانگی به تفکیک شهر سال"; }
 
 <!--Title-->
 <div class="row">
@@ -9,28 +9,19 @@
         </div>
     </div>
 </div>
+
 <section>
     <div class="row">
         <div class="col-12">
             <div class="card">
-                @if (ViewData["message"] != null)
-                {
-                    <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
-                        </button>
-                        <span>@ViewData["message"]</span>
-                    </div>
-                }
                 <div class="card-content">
                     <div class="card-body">
                         <!--Filters-->
                         <form method="post"
                               id="filterForm"
-                              asp-controller="@WasteInstallFeeController.Name"
-                              asp-action="@WasteInstallFeeController.ACTION_Index"
+                              asp-controller="@UserTypeAverageCapacityController.Name"
+                              asp-action="@UserTypeAverageCapacityController.ACTION_Index"
                               asp-antiforgery="true">
-
                             <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
                             <div class="rowACJSB">
                                 <fieldset class="form-group mt-3">
@@ -55,6 +46,7 @@
                                 </fieldset>
                                 <fieldset>
                                     <div class="rowACJE">
+
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
@@ -91,8 +83,10 @@
                                             <span style="margin-right:10px">رکورد</span>
 
                                         </label>
+
                                     </fieldset>
                                     @* drop down menu *@
+
                                     <div class="btn-group dropdown form-group">
                                         <button type="button"
                                                 class="btn btn-light my-font dropdown-toggle"
@@ -101,7 +95,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu">
+                                        <div class="dropdown-menu" style="width:320px">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -144,7 +138,40 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>قیمت</span></label>
+                                                               for="col-4"><span>متوسط ظرفیت قراردادی آب</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-5"
+                                                               id="col-5" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-5"><span>متوسط ظرفیت قراردادی فاضلاب</span></label>
+                                                    </div>
+                                                </div>           
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-6"
+                                                               id="col-6" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-6"><span>متوسط ظرفیت قراردادی آب - درآمد سرمایه ای</span></label>
+                                                    </div>
+                                                </div>                   
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-7"
+                                                               id="col-7" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-7"><span>متوسط ظرفیت قراردادی فاضلاب - درآمد سرمایه ای</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -157,12 +184,12 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WasteInstallFeeController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@UserTypeAverageCapacityController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
-                                           asp-asp-controller="@WasteInstallFeeController.Name"
-                                           asp-action="@WasteInstallFeeController.ACTION_GetExcelTemplate"
+                                           asp-asp-controller="@UserTypeAverageCapacityController.Name"
+                                           asp-action="@UserTypeAverageCapacityController.ACTION_GetExcelTemplate"
                                            asp-route-yearId="@Model.Filter.YearId"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
@@ -170,22 +197,26 @@
                                     </div>
                                 </fieldset>
                             </div>
-                        </form>
 
+                        </form>
                         <!--DataTable-->
                         <partial name="_table" model="Model" />
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 </section>
+
 @section headSection {
     <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
     <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
 }
+
 @section footSection {
+    <div id="divCopy">
+
+    </div>
 
     <partial name="_excelModal" model="new ImportExcelViewModel()" />
 
@@ -193,9 +224,7 @@
 
     </div>
 
-    <div id="divCopy">
 
-    </div>
 
     <div id="divCalc">
 
@@ -204,10 +233,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4';
+        let allColumns = '1,2,3,4,5,6,7';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,";
+        let showingColmuns = "1,2,3,4,5,6,7,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -217,7 +246,7 @@
         </script>
     }
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
             console.log('ready');
@@ -237,7 +266,7 @@
                 if (checked) {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
                     showingColmuns = showingColmuns + `${index},`
-                    document.getElementById("hidColumns").value = showingColmuns;
+                    document.getElementById("hidColumns").value = showingColmuns ;
                 } else {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
                     showingColmuns = showingColmuns.replace(`${index},`, '');
@@ -263,12 +292,12 @@
             console.log('ColumnsToShow ');
             console.log(columnsToShow);
             let checkBoxes = $("#columnSelector input:checkbox");
-            for (let i = 0; i < columnIndices.length; i++) {
+            for(let i = 0; i < columnIndices.length; i++) {
                 let index = parseInt(columnIndices[i]);
                 let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
                 console.log(`Column : ${index} show = ${showColumn}`);
                 checkBoxes[i].checked = showColumn;
-                if (showColumn)
+                if(showColumn)
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
                 else
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
@@ -287,7 +316,7 @@
                 cancelButtonText: 'انصراف',
                 confirmButtonText: 'حذف اطلاعات!',
                 confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
-                cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
+                cancelButtonClass:  'btn btn-outline-secondary mr-1 my-font',
                 buttonsStyling: false,
             }).then(function (result) {
                 if (result.value) {
@@ -295,7 +324,7 @@
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
                     console.log(params);
-                    let deleteUrl = '@Url.Action(WasteInstallFeeController.ACTION_DeleteRecords)';
+                    let deleteUrl = '@Url.Action(UserTypeAverageCapacityController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
 
                     $.ajax({
@@ -309,6 +338,7 @@
                                     title: '<span class="my-font">خطا</span>',
                                     html: `<span class="my-font">${data.message}</span>`,
                                     type: 'error',
+                                    confirmButtonColor: '#2F8BE6',
                                     animation: false,
                                     customClass: 'animated flipInX',
                                     confirmButtonText: 'بستن',
@@ -329,7 +359,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(WasteInstallFeeController.ACTION_Index, new {  page = 1})';
+                                document.location.href = '@Url.Action(UserTypeAverageCapacityController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
@@ -345,9 +375,7 @@
                 }
             });
 
-
         }
-
 
         function openImportExcelForm() {
             $('#ExcellModal').modal('show');
@@ -359,22 +387,52 @@
             }
         });
 
-
         $(document).on('click', '#btnCreate', function () {
             addNewRow();
         });
 
         $(document).on('click', '.edit-row', function () {
+            resetDataColumns()
             let id = $(this).data('id');
-            let input = document.getElementById('inputWsInstallFee_' + id);
+
+            let input1 = document.getElementById('inputAverageCapacityW_' + id);
+            let input2 = document.getElementById('inputAverageCapacityWs_' + id);
+            let input3 = document.getElementById('inputAverageCapacityWIncome_' + id);
+            let input4 = document.getElementById('inputAverageCapacityWsIncome_' + id);
+
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
-            input.addEventListener("keyup", function (event) {
+
+            btnSaveEdit.addEventListener('click', function(event) {
                 event.preventDefault();
-                // Number 13 is the "Enter" key on the keyboard
+                $(btnSaveEdit).attr('disabled', true);
+                $(btnSaveEdit).unbind('keyup');
+            });
+
+            input1.addEventListener('keyup', function (event) {
+                event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
                 }
             });
+            input2.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input3.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input4.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
             editRow(id);
         });
 
@@ -418,6 +476,7 @@
         });
 
         $(document).on('click', '.save-new-row', function () {
+            $(this).attr('disabled', true);
             let row = $(this).closest('tr');
             saveNewRow(row);
         });
@@ -427,15 +486,14 @@
         });
 
         $(document).on('click', '.openCopy', function() {
-
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action(WasteInstallFeeController.ACTION_Copy)',
+                url: '@Url.Action(UserTypeAverageCapacityController.ACTION_Copy)',
                 success: function (data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
                     $('#CopyModal').modal('show');
-                    $('#CopyModal').on('hidden.bs.modal', function () {
+                    $('#CopyModal').on('hidden.bs.modal', function() {
                         $('#divCopy').html('');
                         $('.modal-backdrop').remove();
                     });
@@ -445,23 +503,22 @@
                     $("#divCopy").html('Failed to load more content');
                 }
             });
-
         });
 
-        $(document).ready(function () {
-            $('.modal').on('hidden.bs.modal', function () {
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal', function() {
                 $('.modal-backdrop').remove();
             });
         });
 
-       $(document).on('click', '#btnDoImportExcel', function() {
+        $(document).on('click', '#btnDoImportExcel', function() {
             var fdata = new FormData();
             var fileInput = $('#ExcelFile')[0];
             var file = fileInput.files[0];
             fdata.append('ExcelFile', file);
 
             $.ajax({
-                url: '@Url.Action(WasteInstallFeeController.ACTION_ImportExcel)',
+                url: '@Url.Action(UserTypeAverageCapacityController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
@@ -505,7 +562,7 @@
                                 console.log(fdata);
 
                                 $.ajax({
-                                    url: '@Url.Action(WasteInstallFeeController.ACTION_ImportExcel)',
+                                    url: '@Url.Action(UserTypeAverageCapacityController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
@@ -538,7 +595,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                document.location.href = '@Url.Action(WasteInstallFeeController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(UserTypeAverageCapacityController.ACTION_Index)';
                                             });
                                         }
 
@@ -571,14 +628,14 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(WasteInstallFeeController.ACTION_Index)';
+                            document.location.href = '@Url.Action(UserTypeAverageCapacityController.ACTION_Index)';
                         });
                     }
 
                 },
                 error: function(request, options, err) {
                     console.log(err);
-                    alert(err);
+                    alert('مشکلی پیش آمده است ، کمی بعد سعی کنید . با تشکر');
                 }
             });
 
@@ -591,9 +648,10 @@
             model.targetYearId = $('#TargetYearId option:selected').val();
 
             console.log(model);
+
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(WasteInstallFeeController.ACTION_Copy)',
+                url: '@Url.Action(UserTypeAverageCapacityController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
                 success: function (data, status, settings) {
@@ -622,7 +680,7 @@
                         confirmButtonText: 'بستن',
                         confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                         buttonsStyling: false,
-                    }).then(function (result) {
+                    }).then(function(result) {
                         $('#CopyModal').modal('hide');
                     });
                 },
@@ -638,8 +696,8 @@
             let pageSize = $('#ddlPageSize').attr('value');
             console.log(pageSize);
             $('#filterForm').submit();
-        }
+        };
 
-</script>
+    </script>
 
 }

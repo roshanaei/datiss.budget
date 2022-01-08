@@ -198,6 +198,9 @@
   <data name="Logic_NHCo" xml:space="preserve">
     <value>اطلاعات برای فعالیت {0} قبلا ثبت شده است.</value>
   </data>
+  <data name="Logic_UserTypeAverageCapacity" xml:space="preserve">
+    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
+  </data>
   <data name="Logic_WasteSalesSplit" xml:space="preserve">
     <value>اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است</value>
   </data>

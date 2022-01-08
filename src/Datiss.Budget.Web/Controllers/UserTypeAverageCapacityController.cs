@@ -1,38 +1,35 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Mapster;
-using Microsoft.AspNetCore.Authorization;
-using Datiss.Budget.Services.Contracts;
-using Datiss.Budget.Services.Models;
-using Datiss.Budget.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Hosting;
-using Stimulsoft.Report;
-using Stimulsoft.Report.Mvc;
-using Datiss.Budget.Reports.Excel;
-using ClosedXML.Extensions;
-using Datiss.Budget.Common.GuardToolkit;
+﻿using Datiss.Budget.Common;
 using Datiss.Budget.Common.Exceptions;
-using Datiss.Budget.Web.Helpers;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Resources;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using Datiss.Budget.Common;
-using Microsoft.Extensions.Logging;
+using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Identity;
-using Datiss.Budget.Enum;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
+using Datiss.Budget.Web.Helpers;
+using Mapster;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Datiss.Budget.Reports.Excel;
+using ClosedXML.Extensions;
 
 namespace Datiss.Budget.Web.Controllers
 {
     [Authorize(Policy = ConstantPolicies.DynamicPermission)]
     [Route("[controller]")]
-    public class WasteInstallFeeController : Controller
+    public class UserTypeAverageCapacityController : Controller
     {
-        public const string Name = "WasteInstallFee";
+
+        public const string Name = "UserTypeAverageCapacity";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
@@ -46,18 +43,18 @@ namespace Datiss.Budget.Web.Controllers
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
-        private readonly ILogger<WasteInstallFeeController> _logger;
+        private readonly ILogger<UserTypeAverageCapacityController> _logger;
         private readonly IWebHostEnvironment _env;
-        private readonly IWasteInstallFeeService _wasteInstallFeeService;
+        private readonly IUserTypeAverageCapacityService _userTypeAverageCapacityService;
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
         private readonly ISecurityTrimmingService _securityTrimmingService;
 
-        public WasteInstallFeeController(
-            ILogger<WasteInstallFeeController> logger,
+        public UserTypeAverageCapacityController(
+            ILogger<UserTypeAverageCapacityController> logger,
             IWebHostEnvironment environment,
-            IWasteInstallFeeService wasteInstallFeeService,
+            IUserTypeAverageCapacityService userTypeAverageCapacityService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             IConstantService constantService,
@@ -65,12 +62,14 @@ namespace Datiss.Budget.Web.Controllers
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
-            _wasteInstallFeeService = wasteInstallFeeService ?? throw new ArgumentNullException(nameof(wasteInstallFeeService));
+            _userTypeAverageCapacityService = userTypeAverageCapacityService ?? throw new ArgumentNullException(nameof(userTypeAverageCapacityService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
+
+
         private void showMessage(string type, string message)
         {
             ViewData["type"] = type;
@@ -78,16 +77,16 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(CreateWasteInstallFeeViewModel model)
+        public async Task<IActionResult> Create(CreateUserTypeAverageCapacityViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 model.AddError(ViewMessages.InvalidData);
                 return Json(model);
             }
-            var data = model.Adapt<CreateWasteInstallFeeDTO>();
+            var data = model.Adapt<CreateUserTypeAverageCapacityDTO>();
 
-            var result = await _wasteInstallFeeService.CreateAsync(data);
+            var result = await _userTypeAverageCapacityService.CreateAsync(data);
 
             if (!result.IsValid)
             {
@@ -95,10 +94,12 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            return Json(result.Result.Adapt<WasteInstallFeeViewModel>());
+            return Json(result.Result.Adapt<UserTypeAverageCapacityViewModel>());
         }
+
+
         [HttpPost("[action]")]
-        public async Task<IActionResult> Edit(UpdateWasteInstallFeeViewModel model)
+        public async Task<IActionResult> Edit(UpdateUserTypeAverageCapacityViewModel model)
         {
 
             if (!ModelState.IsValid)
@@ -107,8 +108,8 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            var data = model.Adapt<UpdateWasteInstallFeeDTO>();
-            var result = await _wasteInstallFeeService.UpdateAsync(data);
+            var data = model.Adapt<UpdateUserTypeAverageCapacityDTO>();
+            var result = await _userTypeAverageCapacityService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
@@ -117,52 +118,50 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(
-                result.Result.Adapt<WasteInstallFeeViewModel>()
+                result.Result.Adapt<UserTypeAverageCapacityViewModel>()
             );
         }
 
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var filter = new WasteInstallFeeFilterDTO();
-
+            var filter = new UserTypeAverageCapacityFilterDTO();
             var orgSource = (await _organizationService.GetDropDownDataAsync())
-               .Adapt<List<DropDownItemViewModel>>();
+              .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
 
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                .Adapt<List<DropDownItemViewModel>>();
 
-
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
 
-            var myfilter = TempData.Get<WasteInstallFeeFilterViewModel>(_indexFilterKey);
+            var myfilter = TempData.Get<UserTypeAverageCapacityFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
             {
-                filter = myfilter.Adapt<WasteInstallFeeFilterDTO>();
+                filter = myfilter.Adapt<UserTypeAverageCapacityFilterDTO>();
                 TempData.Put(_indexFilterKey, myfilter);
             }
 
             filter.PageNumber = page;
 
-            var result = await _wasteInstallFeeService.GetListAsync(filter);
-            var model = result.Adapt<WasteInstallFeeIndexViewModel>();
+            var result = await _userTypeAverageCapacityService.GetListAsync(filter);
+            var model = result.Adapt<UserTypeAverageCapacityIndexViewModel>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetDWasteTypeSource(dwasteSource);
+            model.SetUserTypeSource(dwaterSource);
 
-            model.SetFinanceYearFilterSource(yearSource, maxYear);
-            model.SetOrganizationFilterSource(orgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
 
             model.Filter.YearId = filter.YearId;
             model.Filter.OrganizationId = filter.OrganizationId;
@@ -174,16 +173,16 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(WasteInstallFeeIndexViewModel model, int page = 1)
+        public async Task<IActionResult> Index(UserTypeAverageCapacityIndexViewModel model, int page = 1)
         {
             model.Filter.PageNumber = 1;
-            var filter = model.Filter.Adapt<WasteInstallFeeFilterDTO>();
+            var filter = model.Filter.Adapt<UserTypeAverageCapacityFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
 
-            var result = await _wasteInstallFeeService.GetListAsync(filter);
-            model = result.Adapt<WasteInstallFeeIndexViewModel>();
-            model.Filter = filter.Adapt<WasteInstallFeeFilterViewModel>();
+            var result = await _userTypeAverageCapacityService.GetListAsync(filter);
+            model = result.Adapt<UserTypeAverageCapacityIndexViewModel>();
+            model.Filter = filter.Adapt<UserTypeAverageCapacityFilterViewModel>();
 
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
@@ -191,7 +190,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -200,9 +199,9 @@ namespace Datiss.Budget.Web.Controllers
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetFinanceYearFilterSource(yearSource);
-            model.SetOrganizationFilterSource(orgSource);
-            model.SetDWasteTypeSource(dwasteSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+            model.SetUserTypeSource(dwaterSource);
 
             return View(model);
         }
@@ -216,12 +215,12 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(new
                 {
                     hasError = true,
-                    message = "فایل انتخاب شده معتبر نیست."
+                    message = ViewMessages.ImportExcelInvalidFile
                 });
 
             try
             {
-                var result = await _wasteInstallFeeService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
+                var result = await _userTypeAverageCapacityService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
 
                 if (result.AskToImport)
                 {
@@ -273,13 +272,12 @@ namespace Datiss.Budget.Web.Controllers
 
         }
 
-
         [HttpPost("records/delete")]
         public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
         {
             try
             {
-                var result = await _wasteInstallFeeService.HardDeleteAsync(yearId, orgId);
+                var result = await _userTypeAverageCapacityService.HardDeleteAsync(yearId, orgId);
 
                 return Json(new
                 {
@@ -329,7 +327,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             try
             {
-                await _wasteInstallFeeService.HardDeleteAsync(id);
+                await _userTypeAverageCapacityService.HardDeleteAsync(id);
             }
             catch (DisbaledYearDataInputException)
             {
@@ -356,16 +354,17 @@ namespace Datiss.Budget.Web.Controllers
             });
         }
 
+
         [HttpGet("[action]")]
         public async Task<IActionResult> DownloadExcelTemplate()
         {
-            var filePath = $"{_env.WebRootPath}\\Excel\\WasteInstallFeeImport.xlsx";
+            var filePath = $"{_env.WebRootPath}\\Excel\\UserTypeAverageCapacityImport.xlsx";
 
             var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             return File(
                 stream,
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "WasteInstallFee.xlsx");
+                "UserTypeAverageCapacity.xlsx");
         }
 
         [HttpGet("[action]")]
@@ -398,7 +397,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                await _wasteInstallFeeService.CopyAsync(
+                await _userTypeAverageCapacityService.CopyAsync(
                                                     model.SourceYearId,
                                                     model.SourceOrgId,
                                                     model.TargetYearId);
@@ -435,16 +434,16 @@ namespace Datiss.Budget.Web.Controllers
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
             var dwaterTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
 
-            var items = new List<WasteInstallFeeDTO>();
+            var items = new List<UserTypeAverageCapacityDTO>();
 
             foreach (var org in organizations)
             {
                 foreach (var dwt in dwaterTypes)
                 {
-                    items.Add(new WasteInstallFeeDTO
+                    items.Add(new UserTypeAverageCapacityDTO
                     {
-                        DWasteTypeDisplay = dwt.Title,
-                        DWasteTypeId = dwt.Id,
+                        UserTypeDisplay = dwt.Title,
+                        UserTypeId = dwt.Id,
                         OrganizationId = org.Id,
                         OrganizationDisplay = org.Title,
                         Year = year.Year,
@@ -454,17 +453,17 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             using var workbook = items.GetImportTemplate(year.Year);
-            return workbook.Deliver("WasteInstallFee-Import-Template.xlsx");
+            return workbook.Deliver("UserTypeAverageCapacity-Import-Template.xlsx");
         }
 
         [HttpGet("[action]/{orgid}/{yearid}")]
         public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
-            var result = await _wasteInstallFeeService.GetExportItemsAsync(yearid, orgid);
+            var result = await _userTypeAverageCapacityService.GetExportItemsAsync(yearid, orgid);
             if (result.Count() == 0)
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
-            return workbook.Deliver("WasteInstallFee.xlsx");
+            return workbook.Deliver("UserTypeAverageCapacity.xlsx");
         }
 
     }

@@ -1,8 +1,8 @@
 ﻿<script type="text/javascript">
 
     let isNewRow = false;
-
     function editRow(id) {
+
 
         resetTableBackColor("my-table");
 
@@ -11,14 +11,20 @@
         //Hide output elements
         $('#divOutput_Year_' + id).hide();
         $('#divOutput_Org_' + id).hide();
-        $('#divOutput_DWasteType_' + id).hide();
-        $('#divOutput_WsInstallFee_' + id).hide();
+        $('#divOutput_UserType_' + id).hide();
+        $('#divOutput_AverageCapacityW_' + id).hide();
+        $('#divOutput_AverageCapacityWs_' + id).hide();
+        $('#divOutput_AverageCapacityWIncome_' + id).hide();
+        $('#divOutput_AverageCapacityWsIncome_' + id).hide();
 
         //show input elements
         $('#divInput_Year_' + id).show();
         $('#divInput_Org_' + id).show();
-        $('#divInput_DWasteType_' + id).show();
-        $('#divInput_WsInstallFee_' + id).show();
+        $('#divInput_UserType_' + id).show();
+        $('#divInput_AverageCapacityW_' + id).show();
+        $('#divInput_AverageCapacityWs_' + id).show();
+        $('#divInput_AverageCapacityWIncome_' + id).show();
+        $('#divInput_AverageCapacityWsIncome_' + id).show();
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -33,19 +39,33 @@
         //Hide input elements
         $('#divInput_Year_' + id).hide();
         $('#divInput_Org_' + id).hide();
-        $('#divInput_DWasteType_' + id).hide();
-        $('#divInput_WsInstallFee_' + id).hide();
+        $('#divInput_UserType_' + id).hide();
+        $('#divInput_AverageCapacityW_' + id).hide();
+        $('#divInput_AverageCapacityWs_' + id).hide();
+        $('#divInput_AverageCapacityWIncome_' + id).hide();
+        $('#divInput_AverageCapacityWsIncome_' + id).hide();
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
         $('#divOutput_Org_' + id).show();
-        $('#divOutput_DWasteType_' + id).show();
-        $('#divOutput_WsInstallFee_' + id).show();
+        $('#divOutput_UserType_' + id).show();
+        $('#divOutput_AverageCapacityW_' + id).show();
+        $('#divOutput_AverageCapacityWs_' + id).show();
+        $('#divOutput_AverageCapacityWIncome_' + id).show();
+        $('#divOutput_AverageCapacityWsIncome_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
         $('#btnSaveEdit_' + id).hide();
         $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
     }
 
     function saveEditRow(id) {
@@ -55,34 +75,40 @@
         model.id = id;
         model.yearId = $('#inputYear_' + id).val();
         model.organizationId = $('#inputOrg_' + id).val();
-        model.dWasteTypeId = $('#inputDWasteType_' + id).val();
-        model.WsInstallFee = $('#inputWsInstallFee_' + id).val();
+        model.userTypeId = $('#inputUserType_' + id).val();
+        model.averageCapacityW = $('#inputAverageCapacityW_' + id).val();
+        model.averageCapacityWs = $('#inputAverageCapacityWs_' + id).val();
+        model.averageCapacityWIncome = $('#inputAverageCapacityWIncome_' + id).val();
+        model.averageCapacityWsIncome = $('#inputAverageCapacityWsIncome_' + id).val();
 
         $.ajax({
-            url: '@Url.Action(WasteInstallFeeController.ACTION_Edit)',
+            url: '@Url.Action(UserTypeAverageCapacityController.ACTION_Edit)',
             type: 'POST',
             data: model,
             dataType: 'json',
             success: function (data, status, settings) {
                 if (data._HasError) {
-                    Swal.fire({
-                        title: '<span class="my-font">خطا</span>',
-                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
-                        type: 'error',
-                        animation: false,
-                        confirmButtonText: 'بستن',
-                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
-                        buttonsStyling: false,
-                    });
-                    return;
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
                 }
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
-                $('#spanDWasteType_' + id).text(data.dWasteTypeDisplay);
-                $('#spanWsInstallFee_' + id).text(data.WsInstallFee);
+                $('#spanUserType_' + id).text(data.userTypeDisplay);
+                $('#spanAverageCapacityW_' + id).text(data.averageCapacityW);
+                $('#spanAverageCapacityWs_' + id).text(data.averageCapacityWs);
+                $('#spanAverageCapacityWIncome_' + id).text(data.averageCapacityWIncome);
+                $('#spanAverageCapacityWsIncome_' + id).text(data.averageCapacityWsIncome);
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
@@ -95,15 +121,21 @@
     }
 
     function saveNewRow(e) {
+        console.log(e);
 
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
-        model.dWasteTypeId = $(e).find('#inputDWasteType_').val();
-        model.wsInstallFee = $(e).find('#inputWsInstallFee_').val();
+        model.userTypeId = $(e).find('#inputUserType_').val();
+        model.averageCapacityW = $(e).find('#inputAverageCapacityW_').val();
+        model.averageCapacityWs = $(e).find('#inputAverageCapacityWs_').val();
+        model.averageCapacityWIncome = $(e).find('#inputAverageCapacityWIncome_').val();
+        model.averageCapacityWsIncome = $(e).find('#inputAverageCapacityWsIncome_').val();
+
+        console.log(model);
 
         $.ajax({
-            url: '@Url.Action(WasteInstallFeeController.ACTION_Create)',
+            url: '@Url.Action(UserTypeAverageCapacityController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -120,6 +152,7 @@
                     });
                     return;
                 }
+
                 //Year
                 $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
                 $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
@@ -142,26 +175,56 @@
                 $('#spanOrg_' + data.id).text(data.organizationDisplay);
                 $('#divOutput_Org_' + data.id).show();
 
-                //DWasteType
-                $(e).find('#divInput_DWasteType_').attr('id', 'divInput_DWasteType_' + data.id);
-                $(e).find('#hidDWasteTypeId_').attr('id', 'hidDWasteTypeId_' + data.id);
-                $(e).find('#inputDWasteType_').attr('id', 'inputDWasteType_' + data.id);
-                $(e).find('#divOutput_DWasteType_').attr('id', 'divOutput_DWasteType_' + data.id);
-                $(e).find('#spanDWasteType_').attr('id', 'spanDWasteType_' + data.id);
+                //UserType
+                $(e).find('#divInput_UserType_').attr('id', 'divInput_UserType_' + data.id);
+                $(e).find('#hidUserTypeId_').attr('id', 'hidUserTypeId_' + data.id);
+                $(e).find('#inputUserType_').attr('id', 'inputUserType_' + data.id);
+                $(e).find('#divOutput_UserType_').attr('id', 'divOutput_UserType_' + data.id);
+                $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
 
-                $('#divInput_DWasteType_' + data.id).hide();
-                $('#spanDWasteType_' + data.id).text(data.dWasteTypeDisplay);
-                $('#divOutput_DWasteType_' + data.id).show();
+                $('#divInput_UserType_' + data.id).hide();
+                $('#spanUserType_' + data.id).text(data.userTypeDisplay);
+                $('#divOutput_UserType_' + data.id).show();
 
-                //WsInstallFee
-                $(e).find('#divInput_WsInstallFee_').attr('id', 'divInput_WsInstallFee_' + data.id);
-                $(e).find('#inputWsInstallFee_').attr('id', 'inputWsInstallFee_' + data.id);
-                $(e).find('#divOutput_WsInstallFee_').attr('id', 'divOutput_WsInstallFee_' + data.id);
-                $(e).find('#spanWsInstallFee_').attr('id', 'spanWsInstallFee_' + data.id);
+                //AverageCapacityW
+                $(e).find('#divInput_AverageCapacityW_').attr('id', 'divInput_AverageCapacityW_' + data.id);
+                $(e).find('#inputAverageCapacityW_').attr('id', 'inputAverageCapacityW_' + data.id);
+                $(e).find('#divOutput_AverageCapacityW_').attr('id', 'divOutput_AverageCapacityW_' + data.id);
+                $(e).find('#spanAverageCapacityW_').attr('id', 'spanAverageCapacityW_' + data.id);
 
-                $('#divInput_WsInstallFee_' + data.id).hide();
-                $('#spanWsInstallFee_' + data.id).text(data.wsInstallFee);
-                $('#divOutput_WsInstallFee_' + data.id).show();
+                $('#divInput_AverageCapacityW_' + data.id).hide();
+                $('#spanAverageCapacityW_' + data.id).text(data.averageCapacityW);
+                $('#divOutput_AverageCapacityW_' + data.id).show();
+
+                //AverageCapacityWs
+                $(e).find('#divInput_AverageCapacityWs_').attr('id', 'divInput_AverageCapacityWs_' + data.id);
+                $(e).find('#inputAverageCapacityWs_').attr('id', 'inputAverageCapacityWs_' + data.id);
+                $(e).find('#divOutput_AverageCapacityWs_').attr('id', 'divOutput_AverageCapacityWs_' + data.id);
+                $(e).find('#spanAverageCapacityWs_').attr('id', 'spanAverageCapacityWs_' + data.id);
+
+                $('#divInput_AverageCapacityWs_' + data.id).hide();
+                $('#spanAverageCapacityWs_' + data.id).text(data.averageCapacityWs);
+                $('#divOutput_AverageCapacityWs_' + data.id).show();
+
+                //AverageCapacityWIncome
+                $(e).find('#divInput_AverageCapacityWIncome_').attr('id', 'divInput_AverageCapacityWIncome_' + data.id);
+                $(e).find('#inputAverageCapacityWIncome_').attr('id', 'inputAverageCapacityWIncome_' + data.id);
+                $(e).find('#divOutput_AverageCapacityWIncome_').attr('id', 'divOutput_AverageCapacityWIncome_' + data.id);
+                $(e).find('#spanAverageCapacityWIncome_').attr('id', 'spanAverageCapacityWIncome_' + data.id);
+
+                $('#divInput_AverageCapacityWIncome_' + data.id).hide();
+                $('#spanAverageCapacityWIncome_' + data.id).text(data.averageCapacityWIncome);
+                $('#divOutput_AverageCapacityWIncome_' + data.id).show();
+
+                //AverageCapacityWsIncome
+                $(e).find('#divInput_AverageCapacityWsIncome_').attr('id', 'divInput_AverageCapacityWsIncome_' + data.id);
+                $(e).find('#inputAverageCapacityWsIncome_').attr('id', 'inputAverageCapacityWsIncome_' + data.id);
+                $(e).find('#divOutput_AverageCapacityWsIncome_').attr('id', 'divOutput_AverageCapacityWsIncome_' + data.id);
+                $(e).find('#spanAverageCapacityWsIncome_').attr('id', 'spanAverageCapacityWsIncome_' + data.id);
+
+                $('#divInput_AverageCapacityWsIncome_' + data.id).hide();
+                $('#spanAverageCapacityWsIncome_' + data.id).text(data.averageCapacityWsIncome);
+                $('#divOutput_AverageCapacityWsIncome_' + data.id).show();
 
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);
@@ -183,9 +246,8 @@
                 $('#btnEdit_' + data.id).show();
                 $('#btnDelete_' + data.id).show();
 
-
+                $('#inputOrg_' + data.id).select2();
                 $(e).css('background-color', 'rgb(245 245 246)');
-
                 isNewRow = false;
             },
             error: function (request, options, err) {
@@ -197,6 +259,9 @@
     function addNewRow() {
         if (isNewRow) return;
 
+        resetTableBackColor("my-table");
+
+
         var template = $('#rowTemplate').clone()
             .appendTo($('#my-table tbody'))
             .attr('id', 'newRow')
@@ -207,11 +272,11 @@
             dir: 'rtl'
         });
 
-        $('.selectDWaterType:last').select2({
-            dir: 'rtl'
+        $('.selectUserType:last').select2({
+            dir : 'rtl'
         });
 
-        $('.default-input:last').keyup(function (event) {
+        $('.input-keyup').keyup(function (event) {
             event.preventDefault();
             if (event.keyCode === 13) {
                 let row = $(this).closest('tr');
@@ -235,7 +300,7 @@
         console.log(e);
 
         $.ajax({
-            url: '@Url.Action(WasteInstallFeeController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(UserTypeAverageCapacityController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {

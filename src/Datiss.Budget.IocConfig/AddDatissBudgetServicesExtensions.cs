@@ -32,6 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IIncomeForcastWsService, IncomeForcastWsService>();
             services.AddScoped<INHCoService, NHCoService>();
             services.AddScoped<IBranchingRateIncreaseService, BranchingRateIncreaseService>();
+            services.AddScoped<IUserTypeAverageCapacityService, UserTypeAverageCapacityService>();
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IPerformanceEvaluationService, PerformanceEvaluationService>();
             services.AddScoped<IReportEngine, ReportEngine>();

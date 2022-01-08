@@ -22,7 +22,6 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
-        Task<int> CalculationAsync(int yearId, int organizationId);
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
 
         Task<Stream> ExportExcelAsync(WasteInstallFeeFilterDTO filter);
