@@ -61,7 +61,7 @@ namespace Datiss.Budget.Services
 
         public async Task<WasteInstallFee> GetByIdAsync(int id)
         {
-            var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
+            var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 
@@ -77,66 +77,89 @@ namespace Datiss.Budget.Services
                 WsInstallFee = model.WsInstallFee
             };
 
-            if (await checkLogicAsync(model.YearId, model.OrganizationId, model.DWasteTypeId))
+            model.DWasteTypeTitle = (await _constSet.FindAsync(model.DWasteTypeId)).Title;
+
+            try
             {
-                await _dbSet.AddAsync(entity);
-                await _uow.SaveChangesAsync();
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.DWasteTypeId))
+                {
+                    await _dbSet.AddAsync(entity);
+                    await _uow.SaveChangesAsync();
 
-                var result = entity.Adapt<WasteInstallFeeDTO>();
-                result.DWasteTypeDisplay = (await _constSet.FindAsync(model.DWasteTypeId)).Title;
-                result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
-                result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-                result.WsInstallFee = entity.WsInstallFee;
+                    var result = entity.Adapt<WasteInstallFeeDTO>();
+                    result.DWasteTypeDisplay = (await _constSet.FindAsync(model.DWasteTypeId)).Title;
+                    result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.WsInstallFee = entity.WsInstallFee;
 
-                return ValidationResult<WasteInstallFeeDTO>.Success(result);
+                    return ValidationResult<WasteInstallFeeDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<WasteInstallFeeDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
             return ValidationResult<WasteInstallFeeDTO>.Failed(
                 string.Format(ServiceMessages.Logic_DWasteType,
-                                model.DWasteTypeTitle)
+                model.DWasteTypeTitle)
                 );
         }
 
         public async Task<ValidationResult<WasteInstallFeeDTO>> UpdateAsync(UpdateWasteInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
-
-            if (await checkLogicAsync(model.YearId, model.OrganizationId, model.DWasteTypeId, model.Id))
+            model.DWasteTypeTitle = (await _constSet.FindAsync(model.DWasteTypeId)).Title;
+            try
             {
-                var entity = await _dbSet.FindAsync(model.Id);
-                entity.OrganizationId = model.OrganizationId;
-                entity.YearId = model.YearId;
-                entity.DWasteTypeId = model.DWasteTypeId;
-                entity.WsInstallFee = model.WsInstallFee;
-
-                await _uow.SaveChangesAsync();
-
-                var result = new WasteInstallFeeDTO
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.DWasteTypeId, model.Id))
                 {
-                    OrganizationId = model.OrganizationId,
-                    YearId = model.YearId,
-                    DWasteTypeId = model.DWasteTypeId,
-                    WsInstallFee = model.WsInstallFee,
-                    OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
-                    DWasteTypeDisplay = (await _constSet.FindAsync(model.DWasteTypeId)).Title,
-                    Year = (await _yearSet.FindAsync(model.YearId)).Year
-                };
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.YearId = model.YearId;
+                    entity.DWasteTypeId = model.DWasteTypeId;
+                    entity.WsInstallFee = model.WsInstallFee;
 
-                return ValidationResult<WasteInstallFeeDTO>.Success(result);
+                    await _uow.SaveChangesAsync();
+
+                    var result = new WasteInstallFeeDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        DWasteTypeId = model.DWasteTypeId,
+                        WsInstallFee = model.WsInstallFee,
+                        OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
+                        DWasteTypeDisplay = (await _constSet.FindAsync(model.DWasteTypeId)).Title,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
+
+                    return ValidationResult<WasteInstallFeeDTO>.Success(result);
+                }
             }
-
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<WasteInstallFeeDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
             return ValidationResult<WasteInstallFeeDTO>.Failed(
                 string.Format(ServiceMessages.Logic_DWasteType,
-                                model.DWasteTypeTitle)
+                model.DWasteTypeTitle)
                 );
         }
 
         public async Task HardDeleteAsync(int Id)
         {
             var entity = await _dbSet.FindAsync(Id);
+            entity.CheckReferenceIsNull(nameof(entity));
+
+            var year = await _yearSet.FindAsync(entity.YearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
             entity.CheckArgumentIsNull(nameof(entity));
 
             _dbSet.Remove(entity);
+
             await _uow.SaveChangesAsync();
         }
         public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId)
@@ -147,11 +170,20 @@ namespace Datiss.Budget.Services
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull(nameof(year));
 
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
+
             var self = await _dbSet.Where(_ => _.YearId == yearId)
                                     .Where(_ => _.OrganizationId == organizationId)
                                     .ToListAsync();
-            _dbSet.RemoveRange(self);
+
             var childrens = await getChildren(organizationId, yearId);
+
+            if (self.Count() == 0 && childrens.Count() == 0)
+                throw new DeleteNullRecordException();
+
+            _dbSet.RemoveRange(self);
             _dbSet.RemoveRange(childrens);
 
             var result = new OrganizationDeleteDataResult
@@ -162,21 +194,6 @@ namespace Datiss.Budget.Services
             };
 
             await _uow.SaveChangesAsync();
-
-            return await Task.FromResult(result);
-        }
-
-        public async Task<int> CalculationAsync(int yearId, int organizationId)
-        {
-            List<SqlParameter> sqlParams = new List<SqlParameter>
-            {
-                new SqlParameter("YearId", yearId),
-                new SqlParameter("OrganizationId", organizationId)
-            };
-
-            var result = await _uow.ExecuteScalarAsync<int>(
-                "[dbo].[WasteInstallFees_Cal1] @YearId, @OrganizationId",
-                parameters: sqlParams.ToArray());
 
             return await Task.FromResult(result);
         }
@@ -600,15 +617,10 @@ namespace Datiss.Budget.Services
             }
             else
             {
-                if (await Query().Include(x => x.Organization)
-                                 .AnyAsync(x => x.Organization.ParentId == orgid &&
-                                                x.YearId == yearid))
-                {
-                    return true;
-                }
-                var childs = await _orgDbSet.Where(x => x.ParentId == orgid).ToListAsync();
+                var childs = await _organizationService.GetWithChildrenAsync(orgid);
                 foreach (var child in childs)
-                    return await hasAnyDataAsync(child.Id, yearid);
+                    if (await Query().AnyAsync(x => x.YearId == yearid && x.OrganizationId == child.Id))
+                        return true;
             }
 
             return false;
@@ -624,6 +636,12 @@ namespace Datiss.Budget.Services
             int dwasteTypeId,
             int? id = null)
         {
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
             var result = id == null
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&

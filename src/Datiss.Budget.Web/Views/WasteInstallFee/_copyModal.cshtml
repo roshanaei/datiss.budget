@@ -35,6 +35,11 @@
                                             asp-items="Model.OrganizationSource"
                                             class="form-control form-control-sm d-inline-block">
                                     </select>
+                                    <script>
+                                        $('#SourceOrgId').select2( {
+                                            dir: 'rtl'
+                                        });
+                                    </script>
                                 </label>
                             </fieldset>
                         </div>
@@ -49,7 +54,7 @@
                                 <label class="my-font rowAC">
                                     <span style="margin-left:5px">سال:</span>
                                     <select asp-for="TargetYearId"
-                                            asp-items="Model.YearSource"
+                                            asp-items="Model.TargetYearSource"
                                             style="flex:1"
                                             class="form-control form-control-sm d-inline-block width-100">
                                     </select>
