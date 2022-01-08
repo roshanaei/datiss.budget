@@ -228,8 +228,10 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _waterSalesSplitService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
-
+                var result = await _waterSalesSplitService.ImportExcelAsync(
+                                                                    model.ExcelFile,
+                                                                    model.YearId,
+                                                                    model.ContinueIfAnyOrgMissing);
                 if (result.AskToImport)
                 {
                     return Json(new

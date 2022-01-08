@@ -134,10 +134,10 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var userTypeSource = (await _constantService.GetByConstantKeyAsync("[UserType]"))
+            var userTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var wsPipeDiameterSource = (await _constantService.GetByConstantKeyAsync("WastewaterDiameter"))
+            var wsPipeDiameterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -194,10 +194,10 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var userTypeSource = (await _constantService.GetByConstantKeyAsync("[UserType]"))
+            var userTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var wsPipeDiameterSource = (await _constantService.GetByConstantKeyAsync("WastewaterDiameter"))
+            var wsPipeDiameterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -215,41 +215,71 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-        [HttpPost("[action]"), ValidateAntiForgeryToken]
+        [HttpPost("[action]")]
         public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            if (model.ExcelFile == null ||
-                model.ExcelFile.Length == 0)
-                return RedirectToAction("Index");
+            if (model.ExcelFile == null || model.ExcelFile.Length == 0)
+                return Json(new
+                {
+                    hasError = true,
+                    message = "فایل انتخاب شده معتبر نیست."
+                });
 
             try
             {
-                await _wasteSalesSplitService.ImportExcelAsync(model.ExcelFile);
+                var result = await _wasteSalesSplitService.ImportExcelAsync(
+                                                                    model.ExcelFile,
+                                                                    model.YearId,
+                                                                    model.ContinueIfAnyOrgMissing);
+                if (result.AskToImport)
+                {
+                    return Json(new
+                    {
+                        ask = true,
+                        message = result.Message
+                    });
+                }
+
+                if (result.Success)
+                {
+                    return Json(new
+                    {
+                        hasError = false,
+                        message = result.Message
+                    });
+
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
             }
             catch (ImportExcelFileFormatInvalidException ex)
             {
                 showMessage(CssClassNames.Error,
                     ViewMessages.ImportExcelFileFormatInvalid);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileFormatInvalid
+                });
             }
             catch (ImportExcelFileSizeInvalidException ex)
             {
                 showMessage(CssClassNames.Error,
                     ViewMessages.ImportExcelFileSizeInvalid);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileSizeInvalid
+                });
             }
-            catch (ImportExcelFileException ex)
-            {
-                showMessage(CssClassNames.Error,
-                    string.Format(
-                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
-                    );
-            }
-
-            showMessage(CssClassNames.Success,
-                ViewMessages.ImportExcelSuccess);
-
-            return RedirectToAction("Index");
         }
 
         [HttpPost("records/delete")]
@@ -424,24 +454,24 @@ namespace Datiss.Budget.Web.Controllers
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
             var userTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
-            var waterDiameter = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter);
+            var wasteDiameter = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter);
 
-            var items = new List<WaterSalesSplitDTO>();
+            var items = new List<WasteSalesSplitDTO>();
 
             foreach (var org in organizations)
             {
                 foreach (var usert in userTypes)
                 {
-                    foreach (var waterd in waterDiameter)
+                    foreach (var wasted in wasteDiameter)
                     {
-                        items.Add(new WaterSalesSplitDTO
+                        items.Add(new WasteSalesSplitDTO
                         {
                             UserTypeDisplay = usert.Title,
                             UserTypeId = usert.Id,
                             OrganizationId = org.Id,
                             OrganizationDisplay = org.Title,
-                            WPipeDiameterId = waterd.Id,
-                            WPipeDiameterDisplay = waterd.Title,
+                            WsPipeDiameterId = wasted.Id,
+                            WspipeDiameterDisplay = wasted.Title,
                             Year = year.Year,
                             YearId = year.Id
                         });
@@ -450,7 +480,7 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             using var workbook = items.GetImportTemplate(year.Year);
-            return workbook.Deliver("WaterSalesSplit-Import-Template.xlsx");
+            return workbook.Deliver("WasteSalesSplit-Import-Template.xlsx");
         }
 
         [HttpGet("[action]/{orgid}/{yearid}")]

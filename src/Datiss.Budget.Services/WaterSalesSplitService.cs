@@ -444,9 +444,10 @@ namespace Datiss.Budget.Services
             return items;
         }
 
-        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<WaterSalesSplitImportModel>(fileInfo);
+            var data = await _excelService.ImportAsync<WaterSalesSplitImportModel>
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
 
             var records = data.Adapt<List<WaterSalesSplit>>();
 
@@ -459,11 +460,14 @@ namespace Datiss.Budget.Services
 
             var waterdiameters = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__WaterDiameter);
 
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
 
             foreach (var rec in records)
             {
+                rec.YearId = yearId;
+
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
-                var year = await _yearSet.FindAsync(rec.YearId);
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
@@ -498,6 +502,41 @@ namespace Datiss.Budget.Services
                 rowIndex++;
             }
 
+            //Start
+            var missingUserType = new List<Constant>();
+            foreach (var item in usertypes)
+            {
+                var existUserTypeInExcel = records.Any(_ => _.UserTypeId == item.Id);
+                if (!existUserTypeInExcel)
+                    missingUserType.Add(item);
+
+            }
+
+            var missingWPDiameters = new List<Constant>();
+            foreach (var item in waterdiameters)
+            {
+                var existWPDiametersInExcel = records.Any(_ => _.WPipeDiameterId == item.Id);
+                if (!existWPDiametersInExcel)
+                    missingWPDiameters.Add(item);
+            }
+
+            if (missingWPDiameters.Any() || missingUserType.Any())
+            {
+                string userTypeNames = "";
+                string wPDiametersNames = "";
+                foreach (var item in missingUserType)
+                {
+                    userTypeNames += "- " + item.Title + "<br>";
+                }
+                foreach (var item in missingWPDiameters)
+                {
+                    wPDiametersNames += "- " + item.Title + "<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelTypeWPDiameterNotInExcel, userTypeNames , wPDiametersNames));
+            }
+            //end
+
             rowIndex = 1;
 
             if (!continueIfAnyOrgMissing)
@@ -508,7 +547,8 @@ namespace Datiss.Budget.Services
                 {
                     var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
                     if (!existInExcel)
-                        missingOrgs.Add(item);
+                        if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                            missingOrgs.Add(item);
                 }
 
                 if (missingOrgs.Any())

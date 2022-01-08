@@ -9,22 +9,31 @@ namespace Datiss.Budget.Services.Excel.Models
 {
     public class WasteSalesSplitImportModel
     {
-        [Column(0, MappingDirections.Both, Letter = "A")]
-        public int YearId { get; set; }
+        [Column(MappingDirections.Both, Letter = "A")]
+        public string OrganizationDisplay { get; set; }
 
-        [Column(1, MappingDirections.Both, Letter = "B")]
+        [Column(MappingDirections.Both, Letter = "B")]
         public int OrganizationId { get; set; }
 
-        [Column(2, MappingDirections.Both, Letter = "C")]
+        [Column(MappingDirections.Both, Letter = "C")]
+        public string UserTypeDisplay { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "D")]
         public int UserTypeId { get; set; }
 
-        [Column(3, MappingDirections.Both, Letter = "D")]
+        [Column(MappingDirections.Both, Letter = "E")]
+        public string WspipeDiameterDisplay { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "F")]
         public int WsPipeDiameterId { get; set; }
 
-        [Column(4, MappingDirections.Both, Letter = "E")]
+        [Column(MappingDirections.Both, Letter = "G")]
         public int NumberSales { get; set; }
 
-        [Column(5, MappingDirections.Both, Letter = "F")]
+        [Column(MappingDirections.Both, Letter = "H")]
         public int UnitSales { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "I")]
+        public decimal AverageCapacity { get; set; }
     }
 }
