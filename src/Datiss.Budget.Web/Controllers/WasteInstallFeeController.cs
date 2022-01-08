@@ -24,6 +24,7 @@ using Datiss.Budget.Common;
 using Microsoft.Extensions.Logging;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Identity;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -39,9 +40,9 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
-        public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
+        public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
@@ -165,6 +166,8 @@ namespace Datiss.Budget.Web.Controllers
 
             model.Filter.YearId = filter.YearId;
             model.Filter.OrganizationId = filter.OrganizationId;
+            model.PageNumber = filter.PageNumber;
+            model.PageSize = filter.PageSize;
 
             return View(model);
         }
@@ -287,6 +290,14 @@ namespace Datiss.Budget.Web.Controllers
                         result.Year)
                 });
             }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
             catch (DeleteNullRecordException)
             {
                 return Json(new
@@ -320,6 +331,14 @@ namespace Datiss.Budget.Web.Controllers
             {
                 await _wasteInstallFeeService.HardDeleteAsync(id);
             }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex.GetBaseException().Message);
@@ -335,23 +354,6 @@ namespace Datiss.Budget.Web.Controllers
                 hasError = false,
                 message = ViewMessages.DeleteRowSuccess
             });
-        }
-        [HttpPost("[action]")]
-        public async Task<IActionResult> Calculation(CalculationInputViewModel model)
-        {
-            model.CheckArgumentIsNull(nameof(model));
-
-            var result = await _wasteInstallFeeService.CalculationAsync(
-                model.YearId,
-                model.OrganizationId);
-
-            var output = new CalculationResultViewModel
-            {
-                Result = result,
-                Title = "WasteInstallFee calc" //TODO : change it to proper title
-            };
-
-            return PartialView("_calculationModal", output);
         }
 
         [HttpGet("[action]")]
@@ -377,7 +379,12 @@ namespace Datiss.Budget.Web.Controllers
             );
 
             model.SetYearSource(
-                (await _financeYearService.GetDropDownDataAsync())
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Disbaled))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            model.SetTargetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Enabled))
                     .Adapt<IEnumerable<DropDownItemViewModel>>()
             );
 
@@ -419,6 +426,35 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(model);
+        }
+
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var dwaterTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
+
+            var items = new List<WasteInstallFeeDTO>();
+
+            foreach (var org in organizations)
+            {
+                foreach (var dwt in dwaterTypes)
+                {
+                    items.Add(new WasteInstallFeeDTO
+                    {
+                        DWasteTypeDisplay = dwt.Title,
+                        DWasteTypeId = dwt.Id,
+                        OrganizationId = org.Id,
+                        OrganizationDisplay = org.Title,
+                        Year = year.Year,
+                        YearId = year.Id
+                    });
+                }
+            }
+
+            using var workbook = items.GetImportTemplate(year.Year);
+            return workbook.Deliver("WasteInstallFee-Import-Template.xlsx");
         }
 
         [HttpGet("[action]/{orgid}/{yearid}")]
