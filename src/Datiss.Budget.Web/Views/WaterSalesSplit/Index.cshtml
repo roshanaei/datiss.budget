@@ -93,7 +93,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu">
+                                        <div class="dropdown-menu" style="width:170%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -195,7 +195,11 @@
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WaterSalesSplitController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
-                                        <a data-toggle="tooltip" data-placement="top" asp-action="@WaterSalesSplitController.ACTION_DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
+                                           asp-asp-controller="@WaterSalesSplitController.Name"
+                                           asp-action="@WaterSalesSplitController.ACTION_GetExcelTemplate"
+                                           asp-route-yearId="@Model.Filter.YearId"
+                                           asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
                                         </a>
                                     </div>
@@ -247,7 +251,7 @@
         </script>
     }
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
             console.log('ready');
@@ -359,7 +363,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(WaterInstallFeeController.ACTION_Index)';
+                                document.location.href ='@Url.Action(WaterSalesSplitController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
@@ -721,6 +725,6 @@
         $('#filterForm').submit();
     };
 
-</script>
+    </script>
 
 }

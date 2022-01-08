@@ -22,6 +22,7 @@ using Datiss.Budget.Services.Identity;
 using Microsoft.Extensions.Logging;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Common;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -38,8 +39,8 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
-        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
+        public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
@@ -167,6 +168,8 @@ namespace Datiss.Budget.Web.Controllers
 
             model.Filter.YearId = filter.YearId;
             model.Filter.OrganizationId = filter.OrganizationId;
+            model.PageNumber = filter.PageNumber;
+            model.PageSize = filter.PageSize;
 
             return View(model);
         }
@@ -293,6 +296,14 @@ namespace Datiss.Budget.Web.Controllers
                         result.Year)
                 });
             }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
             catch (DeleteNullRecordException)
             {
                 return Json(new
@@ -325,6 +336,14 @@ namespace Datiss.Budget.Web.Controllers
             try
             {
                 await _waterSalesSplitService.HardDeleteAsync(id);
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
             }
             catch (Exception ex)
             {
@@ -368,19 +387,6 @@ namespace Datiss.Budget.Web.Controllers
             return PartialView("_calculationModal", viewModel);
         }
 
-
-        [HttpGet("[action]")]
-        public async Task<IActionResult> DownloadExcelTemplate()
-        {
-            var filePath = $"{_env.WebRootPath}\\Excel\\WaterSalesSplitImport.xlsx";
-
-            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return File(
-                stream,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "WaterSalesSplit.xlsx");
-        }
-
         [HttpGet("[action]")]
         public async Task<IActionResult> Copy()
         {
@@ -392,10 +398,14 @@ namespace Datiss.Budget.Web.Controllers
             );
 
             model.SetYearSource(
-                (await _financeYearService.GetDropDownDataAsync())
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Disbaled))
                     .Adapt<IEnumerable<DropDownItemViewModel>>()
             );
 
+            model.SetTargetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Enabled))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
             return PartialView("_copyModal", model);
         }
 
@@ -434,6 +444,41 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(model);
+        }
+
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var userTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
+            var waterDiameter = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter);
+
+            var items = new List<WaterSalesSplitDTO>();
+
+            foreach (var org in organizations)
+            {
+                foreach (var usert in userTypes)
+                {
+                    foreach (var waterd in waterDiameter)
+                    {
+                        items.Add(new WaterSalesSplitDTO
+                        {
+                            UserTypeDisplay = usert.Title,
+                            UserTypeId = usert.Id,
+                            OrganizationId = org.Id,
+                            OrganizationDisplay = org.Title,
+                            WPipeDiameterId = waterd.Id,
+                            WPipeDiameterDisplay =waterd.Title,
+                            Year = year.Year,
+                            YearId = year.Id
+                        });
+                    }
+                }
+            }
+
+            using var workbook = items.GetImportTemplate(year.Year);
+            return workbook.Deliver("WaterSalesSplit-Import-Template.xlsx");
         }
 
         [HttpGet("[action]/{orgid}/{yearid}")]

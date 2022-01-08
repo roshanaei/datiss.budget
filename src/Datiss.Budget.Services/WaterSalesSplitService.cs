@@ -61,7 +61,7 @@ namespace Datiss.Budget.Services
 
         public async Task<WaterSalesSplit> GetByIdAsync(int id)
         {
-            var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
+            var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 
@@ -78,22 +78,33 @@ namespace Datiss.Budget.Services
                 UnitSales = model.UnitSales,
                 AverageCapacity = model.AverageCapacity
             };
-            if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.WPipeDiameterId))
+
+            model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
+            
+            try
             {
-                await _dbSet.AddAsync(entity);
-                await _uow.SaveChangesAsync();
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.WPipeDiameterId))
+                {
+                    await _dbSet.AddAsync(entity);
+                    await _uow.SaveChangesAsync();
 
-                var result = entity.Adapt<WaterSalesSplitDTO>();
-                result.UserTypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title;
-                result.WPipeDiameterDisplay = (await _constSet.FindAsync(model.WPipeDiameterId)).Title;
-                result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
-                result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-                result.NumberSales = entity.NumberSales;
-                result.UnitSales = model.UnitSales;
-                result.AverageCapacity = model.AverageCapacity;
+                    var result = entity.Adapt<WaterSalesSplitDTO>();
+                    result.UserTypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title;
+                    result.WPipeDiameterDisplay = (await _constSet.FindAsync(model.WPipeDiameterId)).Title;
+                    result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.NumberSales = entity.NumberSales;
+                    result.UnitSales = model.UnitSales;
+                    result.AverageCapacity = model.AverageCapacity;
 
-                return ValidationResult<WaterSalesSplitDTO>.Success(result);
+                    return ValidationResult<WaterSalesSplitDTO>.Success(result);
+                }
             }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<WaterSalesSplitDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
 
             return ValidationResult<WaterSalesSplitDTO>.Failed(
                 string.Format(ServiceMessages.Logic_WaterSalesSplit,
@@ -105,37 +116,46 @@ namespace Datiss.Budget.Services
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.WPipeDiameterId, model.Id))
+            model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
+
+            try
             {
-                var entity = await _dbSet.FindAsync(model.Id);
-                entity.OrganizationId = model.OrganizationId;
-                entity.YearId = model.YearId;
-                entity.UserTypeId = model.UserTypeId;
-                entity.WPipeDiameterId = model.WPipeDiameterId;
-                entity.NumberSales = model.NumberSales;
-                entity.UnitSales = model.UnitSales;
-                entity.AverageCapacity = model.AverageCapacity;
-                entity.WInstallationCosts = model.WInstallationCosts;
-
-                await _uow.SaveChangesAsync();
-
-                var result = new WaterSalesSplitDTO
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.WPipeDiameterId, model.Id))
                 {
-                    OrganizationId = model.OrganizationId,
-                    YearId = model.YearId,
-                    UserTypeId = model.UserTypeId,
-                    WPipeDiameterId = model.WPipeDiameterId,
-                    OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
-                    UserTypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title,
-                    WPipeDiameterDisplay = (await _constSet.FindAsync(model.WPipeDiameterId)).Title,
-                    Year = (await _yearSet.FindAsync(model.YearId)).Year,
-                    NumberSales = model.NumberSales,
-                    UnitSales = model.UnitSales,
-                    AverageCapacity = model.AverageCapacity,
-                    WInstallationCosts = model.WInstallationCosts
-                };
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.YearId = model.YearId;
+                    entity.UserTypeId = model.UserTypeId;
+                    entity.WPipeDiameterId = model.WPipeDiameterId;
+                    entity.NumberSales = model.NumberSales;
+                    entity.UnitSales = model.UnitSales;
+                    entity.AverageCapacity = model.AverageCapacity;
+                    entity.WInstallationCosts = model.WInstallationCosts;
 
-                return ValidationResult<WaterSalesSplitDTO>.Success(result);
+                    await _uow.SaveChangesAsync();
+
+                    var result = new WaterSalesSplitDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        UserTypeId = model.UserTypeId,
+                        WPipeDiameterId = model.WPipeDiameterId,
+                        OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
+                        UserTypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title,
+                        WPipeDiameterDisplay = (await _constSet.FindAsync(model.WPipeDiameterId)).Title,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year,
+                        NumberSales = model.NumberSales,
+                        UnitSales = model.UnitSales,
+                        AverageCapacity = model.AverageCapacity,
+                        WInstallationCosts = model.WInstallationCosts
+                    };
+
+                    return ValidationResult<WaterSalesSplitDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<WaterSalesSplitDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
             return ValidationResult<WaterSalesSplitDTO>.Failed(
@@ -148,6 +168,12 @@ namespace Datiss.Budget.Services
             var entity = await _dbSet.FindAsync(Id);
             entity.CheckArgumentIsNull(nameof(entity));
 
+            var year = await _yearSet.FindAsync(entity.YearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
             _dbSet.Remove(entity);
             await _uow.SaveChangesAsync();
 
@@ -159,6 +185,9 @@ namespace Datiss.Budget.Services
 
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
 
             var self = await _dbSet.Where(_ => _.YearId == yearId)
                                     .Where(_ => _.OrganizationId == organizationId)
@@ -679,15 +708,10 @@ namespace Datiss.Budget.Services
             }
             else
             {
-                if (await Query().Include(x => x.Organization)
-                                 .AnyAsync(x => x.Organization.ParentId == orgid &&
-                                                x.YearId == yearid))
-                {
-                    return true;
-                }
-                var childs = await _orgDbSet.Where(x => x.ParentId == orgid).ToListAsync();
+                var childs = await _organizationService.GetWithChildrenAsync(orgid);
                 foreach (var child in childs)
-                    return await hasAnyDataAsync(child.Id, yearid);
+                    if (await Query().AnyAsync(x => x.YearId == yearid && x.OrganizationId == child.Id))
+                        return true;
             }
 
             return false;
@@ -704,6 +728,12 @@ namespace Datiss.Budget.Services
             int wPipeDiameterId,
             int? id = null)
         {
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
             var result = id == null
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&
