@@ -85,23 +85,30 @@ namespace Datiss.Budget.Services
                 WsNote11Income = model.WsNote11Income
             };
             model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
-            if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId))
+            try
             {
-                await _dbSet.AddAsync(entity);
-                await _uow.SaveChangesAsync();
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId))
+                {
+                    await _dbSet.AddAsync(entity);
+                    await _uow.SaveChangesAsync();
 
-                var result = entity.Adapt<IncomeForcastWsDTO>();
-                result.UserTypeDisplay = model.UserTypeTitle;
-                result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
-                result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-                result.NumberUser = entity.NumberUser;
-                result.UnitUser = entity.UnitUser;
-                result.WasteBranchIncome = entity.WasteBranchIncome;
-                result.WasteInstallIncome = entity.WasteInstallIncome;
-                result.WasteNote3Income = entity.WasteNote3Income;
-                result.WsNote11Income = entity.WsNote11Income;
+                    var result = entity.Adapt<IncomeForcastWsDTO>();
+                    result.UserTypeDisplay = model.UserTypeTitle;
+                    result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.NumberUser = entity.NumberUser;
+                    result.UnitUser = entity.UnitUser;
+                    result.WasteBranchIncome = entity.WasteBranchIncome;
+                    result.WasteInstallIncome = entity.WasteInstallIncome;
+                    result.WasteNote3Income = entity.WasteNote3Income;
+                    result.WsNote11Income = entity.WsNote11Income;
 
-                return ValidationResult<IncomeForcastWsDTO>.Success(result);
+                    return ValidationResult<IncomeForcastWsDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<IncomeForcastWsDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
             return ValidationResult<IncomeForcastWsDTO>.Failed(
@@ -114,35 +121,42 @@ namespace Datiss.Budget.Services
         {
             model.CheckArgumentIsNull(nameof(model));
             model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
-            if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.Id))
+            try
             {
-                var entity = await _dbSet.FindAsync(model.Id);
-                entity.OrganizationId = model.OrganizationId;
-                entity.YearId = model.YearId;
-                entity.UserTypeId = model.UserTypeId;
-                entity.NumberUser = model.NumberUser;
-                entity.UnitUser = model.UnitUser;
-                entity.WasteBranchIncome = model.WasteBranchIncome;
-                entity.WasteInstallIncome = model.WasteInstallIncome;
-                entity.WasteNote3Income = model.WasteNote3Income;
-                entity.WsNote11Income = model.WsNote11Income;
-
-                await _uow.SaveChangesAsync();
-
-                var result = new IncomeForcastWsDTO
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.Id))
                 {
-                    UserTypeDisplay = model.UserTypeTitle,
-                    OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
-                    Year = (await _yearSet.FindAsync(model.YearId)).Year,
-                    NumberUser = entity.NumberUser,
-                    UnitUser = entity.UnitUser,
-                    WasteBranchIncome = entity.WasteBranchIncome,
-                    WasteInstallIncome = entity.WasteInstallIncome,
-                    WasteNote3Income = entity.WasteNote3Income,
-                    WsNote11Income = entity.WsNote11Income
-                };
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.YearId = model.YearId;
+                    entity.UserTypeId = model.UserTypeId;
+                    entity.NumberUser = model.NumberUser;
+                    entity.UnitUser = model.UnitUser;
+                    entity.WasteBranchIncome = model.WasteBranchIncome;
+                    entity.WasteInstallIncome = model.WasteInstallIncome;
+                    entity.WasteNote3Income = model.WasteNote3Income;
+                    entity.WsNote11Income = model.WsNote11Income;
 
-                return ValidationResult<IncomeForcastWsDTO>.Success(result);
+                    await _uow.SaveChangesAsync();
+
+                    var result = new IncomeForcastWsDTO
+                    {
+                        UserTypeDisplay = model.UserTypeTitle,
+                        OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year,
+                        NumberUser = entity.NumberUser,
+                        UnitUser = entity.UnitUser,
+                        WasteBranchIncome = entity.WasteBranchIncome,
+                        WasteInstallIncome = entity.WasteInstallIncome,
+                        WasteNote3Income = entity.WasteNote3Income,
+                        WsNote11Income = entity.WsNote11Income
+                    };
+
+                    return ValidationResult<IncomeForcastWsDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<IncomeForcastWsDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
             return ValidationResult<IncomeForcastWsDTO>.Failed(
@@ -154,11 +168,15 @@ namespace Datiss.Budget.Services
         public async Task HardDeleteAsync(int Id)
         {
             var entity = await _dbSet.FindAsync(Id);
-
             entity.CheckArgumentIsNull(nameof(entity));
 
-            _dbSet.Remove(entity);
+            var year = await _yearSet.FindAsync(entity.YearId);
+            year.CheckReferenceIsNull(nameof(year));
 
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
+            _dbSet.Remove(entity);
             await _uow.SaveChangesAsync();
         }
 
@@ -169,6 +187,9 @@ namespace Datiss.Budget.Services
 
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
 
             var self = await _dbSet.Where(_ => _.YearId == yearId)
                                     .Where(_ => _.OrganizationId == organizationId)
@@ -701,15 +722,10 @@ namespace Datiss.Budget.Services
             }
             else
             {
-                if (await Query().Include(x => x.Organization)
-                                 .AnyAsync(x => x.Organization.ParentId == orgid &&
-                                                x.YearId == yearid))
-                {
-                    return true;
-                }
-                var childs = await _orgDbSet.Where(x => x.ParentId == orgid).ToListAsync();
+                var childs = await _organizationService.GetWithChildrenAsync(orgid);
                 foreach (var child in childs)
-                    return await hasAnyDataAsync(child.Id, yearid);
+                    if (await Query().AnyAsync(x => x.YearId == yearid && x.OrganizationId == child.Id))
+                        return true;
             }
 
             return false;
@@ -726,6 +742,12 @@ namespace Datiss.Budget.Services
             int UserTypeId,
             int? id = null)
         {
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
             var result = id == null
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&
