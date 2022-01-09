@@ -7,7 +7,6 @@
         resetTableBackColor("my-table");
 
         let row = $('#row_' + id);
-        //row.css('background-color', '#7598f3');
 
         //Hide output elements
         $('#divOutput_Org_' + id).hide();
@@ -120,7 +119,7 @@
         model.p1CostCo = $(e).find('#inputP1CostCo_').val();
         model.p2CostCo = $(e).find('#inputP2CostCo_').val();
 
-        console.log(model);
+        resetTableBackColor("my-table");
 
         $.ajax({
             url: '@Url.Action(NHCoController.ACTION_Create)',
@@ -245,6 +244,10 @@
                 saveNewRow(row);
             }
         });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input').focus();
 
         isNewRow = true;
     }

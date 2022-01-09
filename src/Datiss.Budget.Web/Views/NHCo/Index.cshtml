@@ -511,7 +511,11 @@
             var fdata = new FormData();
             var fileInput = $('#ExcelFile')[0];
             var file = fileInput.files[0];
+            var yearId = $('#yearId').val();
+            var activityType = $('#activityType').val();
             fdata.append('ExcelFile', file);
+            fdata.append('yearId', yearId); 
+            fdata.append('activityType', activityType); 
 
             $.ajax({
                 url: '@Url.Action(NHCoController.ACTION_ImportExcel)',
