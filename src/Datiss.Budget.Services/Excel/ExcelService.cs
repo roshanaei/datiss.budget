@@ -68,6 +68,7 @@ namespace Datiss.Budget.Services.Excel
 
             using (var stream = new MemoryStream()) {
                 await fileInfo.CopyToAsync(stream);
+                _mapper.HeaderRow = false;
                 _mapper.MinRowNumber = minRowNum;
                 var result = _mapper.Fetch<TResult>(stream, sheetIndex);
 
