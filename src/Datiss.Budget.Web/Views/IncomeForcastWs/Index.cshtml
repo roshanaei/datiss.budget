@@ -573,7 +573,9 @@
             var fdata = new FormData();
             var fileInput = $('#ExcelFile')[0];
             var file = fileInput.files[0];
+            var yearId = $('#yearId').val();
             fdata.append('ExcelFile', file);
+            fdata.append('yearId', yearId);
 
             $.ajax({
                 url: '@Url.Action(IncomeForcastWsController.ACTION_ImportExcel)',
