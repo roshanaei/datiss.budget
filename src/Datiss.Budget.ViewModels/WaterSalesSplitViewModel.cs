@@ -64,7 +64,7 @@ namespace Datiss.Budget.ViewModels
         public int UnitSales { get; set; }
         public string UnitSalesDisplay => UnitSales.ToString("N0");
         public decimal AverageCapacity { get; set; }
-        public string AverageCapacityDisplay => AverageCapacity.ToString("F2");
+        public string AverageCapacityDisplay => AverageCapacity.ToString("N2");
         public int WInstallationCosts { get; set; }
         public string WInstallationCostsDisplay => WInstallationCosts.ToString("N0");
     }

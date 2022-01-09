@@ -9,28 +9,27 @@ namespace Datiss.Budget.Services.Excel.Models
 {
     public class IncomeForcastImportModel
     {
-        [Column(0, MappingDirections.Both, Letter = "A")]
-        public int YearId { get; set; }
-
-        [Column(1, MappingDirections.Both, Letter = "B")]
+        [Column(MappingDirections.Both, Letter = "A")]
+        public string OrganizationDisplay { get; set; }
+        [Column(MappingDirections.Both, Letter = "B")]
         public int OrganizationId { get; set; }
-
-        [Column(2, MappingDirections.Both, Letter = "C")]
-        public int DWaterTypeId { get; set; }
-
-        [Column(3, MappingDirections.Both, Letter = "D")]
+        [Column(MappingDirections.Both, Letter = "C")]
+        public string UserTypeDisplay { get; set; }
+        [Column(MappingDirections.Both, Letter = "D")]
+        public int UserTypeId { get; set; }
+        [Column(MappingDirections.Both, Letter = "E")]
         public int NumberUser { get; set; }
-        [Column(4, MappingDirections.Both, Letter = "E")]
+        [Column(MappingDirections.Both, Letter = "F")]
         public int UnitUser { get; set; }
-        [Column(5, MappingDirections.Both, Letter = "F")]
+        [Column(MappingDirections.Both, Letter = "G")]
         public int WaterBranchIncome { get; set; }
-        [Column(6, MappingDirections.Both, Letter = "G")]
+        [Column(MappingDirections.Both, Letter = "H")]
         public int WaterInstllIncome { get; set; }
-        [Column(7, MappingDirections.Both, Letter = "H")]
+        [Column(MappingDirections.Both, Letter = "I")]
         public int WaterNote2Income { get; set; }
-        [Column(8, MappingDirections.Both, Letter = "I")]
+        [Column(MappingDirections.Both, Letter = "K")]
         public int WaterNote3Income { get; set; }
-        [Column(9, MappingDirections.Both, Letter = "J")]
+        [Column(MappingDirections.Both, Letter = "L")]
         public int WNote11Income { get; set; }
     }
 }

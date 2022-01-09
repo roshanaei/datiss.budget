@@ -337,10 +337,10 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<BranchingRateIncreaseImportModel>
-                (fileInfo);
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
 
             var records = data.Adapt<List<BranchingRateIncrease>>();
 
@@ -348,11 +348,13 @@ namespace Datiss.Budget.Services
 
             var usertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
 
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
 
             foreach (var rec in records)
             {
+                rec.YearId = yearId;
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
-                var year = await _yearSet.FindAsync(rec.YearId);
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
@@ -383,18 +385,18 @@ namespace Datiss.Budget.Services
 
 
             //Start UserType
-            var missingDWType = new List<Constant>();
+            var missingUserType = new List<Constant>();
             foreach (var item in usertypes)
             {
                 var existDWTypeInExcel = records.Any(_ => _.UserTypeId == item.Id);
                 if (!existDWTypeInExcel)
-                    missingDWType.Add(item);
+                    missingUserType.Add(item);
 
             }
-            if (missingDWType.Any())
+            if (missingUserType.Any())
             {
                 string userTypeNames = "";
-                foreach (var item in missingDWType)
+                foreach (var item in missingUserType)
                 {
                     userTypeNames += "- " + item.Title + "<br>";
                 }
