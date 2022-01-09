@@ -35,7 +35,6 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
-        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
@@ -195,7 +194,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model, ActivityType activityType)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -208,7 +207,11 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _nHCoService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
+                var result = await _nHCoService.ImportExcelAsync(
+                                                                    model.ExcelFile,
+                                                                    model.YearId,
+                                                                    activityType,
+                                                                    model.ContinueIfAnyOrgMissing);
 
                 if (result.AskToImport)
                 {
@@ -340,18 +343,6 @@ namespace Datiss.Budget.Web.Controllers
                 hasError = false,
                 message = ViewMessages.DeleteRowSuccess
             });
-        }
-
-        [HttpGet("[action]")]
-        public async Task<IActionResult> DownloadExcelTemplate()
-        {
-            var filePath = $"{_env.WebRootPath}\\Excel\\NHCoImport.xlsx";
-
-            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return File(
-                stream,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "NHCo.xlsx");
         }
 
         [HttpGet("[action]")]

@@ -325,19 +325,23 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, ActivityType activityType, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<NHCoImportModel>
-                (fileInfo);
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
 
             var records = data.Adapt<List<NHCo>>();
 
             int rowIndex = 1;
 
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
+
             foreach (var rec in records)
             {
+                rec.YearId = yearId;
+                rec.ActivityType = activityType;
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
-                var year = await _yearSet.FindAsync(rec.YearId);
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
@@ -436,7 +440,7 @@ namespace Datiss.Budget.Services
 
             query = await setFilter(query, filter);
 
-            query = setOrder(query,"getexport", filter.OrderDesc);
+            query = setOrder(query, "getexport", filter.OrderDesc);
 
             var items = await query
                                     .Include(x => x.FinanceYear)
@@ -550,7 +554,7 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.Organization.Title);
                 case "getexport":
                     return query.Include(x => x.Organization)
-                                .OrderBy(x=>x.ActivityType)
+                                .OrderBy(x => x.ActivityType)
                                 .ThenBy(x => x.Organization.DisplayOrder);
                 default:
                     return query.Include(x => x.Organization)
