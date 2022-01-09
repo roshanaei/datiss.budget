@@ -60,16 +60,16 @@ namespace Datiss.Budget.ViewModels
         public string UserTypeDisplay { get; set; }
 
         public decimal AverageCapacityW { get; set; }
-        public string AverageCapacityWDisplay => AverageCapacityW.ToString("F2");
+        public string AverageCapacityWDisplay => AverageCapacityW.ToString("N2");
 
         public decimal AverageCapacityWs { get; set; }
-        public string AverageCapacityWsDisplay => AverageCapacityWs.ToString("F2");
+        public string AverageCapacityWsDisplay => AverageCapacityWs.ToString("N2");
 
         public decimal AverageCapacityWIncome { get; set; }
-        public string AverageCapacityWIncomeDisplay => AverageCapacityWIncome.ToString("F2");
+        public string AverageCapacityWIncomeDisplay => AverageCapacityWIncome.ToString("N2");
 
         public decimal AverageCapacityWsIncome { get; set; }
-        public string AverageCapacityWsIncomeDisplay => AverageCapacityWsIncome.ToString("F2");
+        public string AverageCapacityWsIncomeDisplay => AverageCapacityWsIncome.ToString("N2");
     }
 
     public class UserTypeAverageCapacityFilterViewModel : FilterViewModel
