@@ -155,7 +155,8 @@
     }
 
     function saveNewRow(e) {
-        console.log(e);
+
+        resetTableBackColor("my-table");
 
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
