@@ -232,6 +232,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to کاربری های :&lt;br&gt;{0}قطرلوله های :&lt;br&gt;{1} در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelTypeWPDiameterNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelTypeWPDiameterNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است.
         /// </summary>
         public static string Logic_BranchFeeAmount {
