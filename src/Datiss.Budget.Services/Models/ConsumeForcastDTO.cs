@@ -21,7 +21,6 @@
         public decimal ConsumeUser { get; set; }
 
         public decimal AvgConsumeUser { get; set; }
-
     }
 
     public class UpdateConsumeForcastDTO : CreateConsumeForcastDTO

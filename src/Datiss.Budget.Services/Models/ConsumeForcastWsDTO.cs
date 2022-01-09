@@ -8,7 +8,11 @@
 
         public int UserTypeId { get; set; }
 
+        public string UserTypeTitle { get; set; }
+
         public int UsageLayerId { get; set; }
+
+        public string UsageLayerTitle { get; set; }
 
         public decimal CountUser { get; set; }
 
@@ -31,17 +35,20 @@
         public int Id { get; set; }
 
         public int YearId { get; set; }
+
         public int Year { get; set; }
 
         public int OrganizationId { get; set; }
+
         public string OrganizationDisplay { get; set; }
 
         public int UserTypeId { get; set; }
-        public string UserTypeDisplay { get; set; }
+
+        public string UserTypeTitle { get; set; }
 
         public int UsageLayerId { get; set; }
 
-        public string UsageLayerDisplay { get; set; }
+        public string UsageLayerTitle { get; set; }
 
         public decimal CountUser { get; set; }
 
