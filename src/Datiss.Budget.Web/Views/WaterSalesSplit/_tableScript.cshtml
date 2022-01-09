@@ -3,6 +3,9 @@
     let isNewRow = false;
 
     function editRow(id) {
+
+        resetTableBackColor("my-table");
+
         let row = $('#row_' + id);
 
         //Hide output elements
@@ -114,6 +117,9 @@
                 $('#spanAverageCapacity_' + id).text(data.averageCapacity);
                 $('#spanWInstallationCosts_' + id).text(data.wInstallationCosts);
 
+
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
                 cancelEditRow(id);
             },
             error: function (request, options, err) {
@@ -123,6 +129,8 @@
     }
 
     function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
 
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
@@ -261,7 +269,7 @@
 
                 $('#inputOrg_' + data.id).select2();
 
-                $(e).css('background-color', '');
+                $(e).css('background-color', 'rgb(245 245 246)');
                 isNewRow = false;
             },
             error: function (request, options, err) {
@@ -311,7 +319,17 @@
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {
-                    alert(data.message);
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
                     return;
                 }
 
@@ -322,6 +340,14 @@
                 alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
             }
         });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
     }
 
 </script>

@@ -93,7 +93,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu">
+                                        <div class="dropdown-menu" style="width:170%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -195,7 +195,11 @@
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WaterSalesSplitController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
-                                        <a data-toggle="tooltip" data-placement="top" asp-action="@WaterSalesSplitController.ACTION_DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
+                                           asp-asp-controller="@WaterSalesSplitController.Name"
+                                           asp-action="@WaterSalesSplitController.ACTION_GetExcelTemplate"
+                                           asp-route-yearId="@Model.Filter.YearId"
+                                           asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
                                         </a>
                                     </div>
@@ -247,7 +251,7 @@
         </script>
     }
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
             console.log('ready');
@@ -359,7 +363,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(WaterInstallFeeController.ACTION_Index)';
+                                document.location.href ='@Url.Action(WaterSalesSplitController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
@@ -539,7 +543,9 @@
             var fdata = new FormData();
             var fileInput = $('#ExcelFile')[0];
             var file = fileInput.files[0];
+            var yearId = $('#yearId').val();
             fdata.append('ExcelFile', file);
+            fdata.append('yearId', yearId);
 
             $.ajax({
                 url: '@Url.Action(WaterSalesSplitController.ACTION_ImportExcel)',
@@ -567,7 +573,6 @@
                     if (data.ask) {
                         Swal.fire({
                             html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
-                            //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
                             type: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#2F8BE6',
@@ -657,11 +662,9 @@
                     }
                 },
                 error: function(request, options, err) {
-                    console.log(err);
-                    alert(err);
+                    alert('مشکلی پیش آمده است ، کمی بعد سعی کنید . با تشکر');
                 }
             });
-
         });
 
         $(document).on('click', '#btnDoCopy', function () {
@@ -721,6 +724,6 @@
         $('#filterForm').submit();
     };
 
-</script>
+    </script>
 
 }
