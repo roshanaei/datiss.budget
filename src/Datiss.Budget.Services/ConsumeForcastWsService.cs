@@ -171,6 +171,184 @@ namespace Datiss.Budget.Services
                 );
             }
         
+        public async Task HardDeleteAsync(int Id)
+        {
+            var entity = await _dbSet.FindAsync(Id);
+
+            entity.CheckReferenceIsNull(nameof(entity));
+
+            var year = await _yearSet.FindAsync(entity.YearId);
+            year.CheckReferenceIsNull(nameof(entity));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+            entity.CheckArgumentIsNull(nameof(entity));
+
+            _dbSet.Remove(entity);
+
+            await _uow.SaveChangesAsync();
+        }
+
+        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId,int organizationId)
+        {
+            var organization = await _orgDbSet.FindAsync(organizationId);
+            organization.CheckReferenceIsNull(nameof(organization));
+
+
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
+            var self = await _dbSet.Where(x => x.YearId == yearId)
+                                   .Where(x => x.OrganizationId == organizationId)
+                                   .ToListAsync();
+
+            var childrens = await getChildren(organizationId, yearId);
+
+            if (self.Count() == 0 && childrens.Count() == 0)
+                throw new DeleteNullRecordException();
+
+            _dbSet.RemoveRange(self);
+
+            _dbSet.RemoveRange(childrens);
+
+            var result = new OrganizationDeleteDataResult
+            {
+                OrganizationTitle = organization.Title,
+                Year = year.Year,
+                YearTitle = year.Title
+            };
+
+            await _uow.SaveChangesAsync();
+
+            return await Task.FromResult(result);
+        }
+
+        public async Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId,int organizationId)
+        {
+            List<SqlParameter> sqlParams = new List<SqlParameter>
+            {
+                new SqlParameter("YearId",yearId),
+                new SqlParameter("OrganizationId",organizationId)
+            };
+
+            var result = new List<CalculationItemData>();
+
+            result.Add(new CalculationItemData { 
+                Key = "ConsumeForcastWs_Cal1",
+                Value = await _uow.ExecuteScalar<int>(
+                    "[dbo].[ConsumeForcastWs_Cal1] @YearId, @OrganizationId",
+                    parameters :sqlParams.ToArray())
+            });
+
+            return await Task.FromResult(result);
+        }
+
+        public async Task<PagedResult<ConsumeForcastWsDTO>> GetListAsync (ConsumeForcastWsFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var result = new PagedResult<ConsumeForcastWsDTO>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            result.TotalCount = await query.CountAsync();
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            query = query
+                    .Skip(filter.StartIndex)
+                    .Take(filter.PageSize);
+
+            result.Items = await query.Include(x => x.FinanceYear)
+                                      .Include(x => x.Organization)
+                                      .Include(x => x.UserType)
+                                      .Include(x => x.UsageLayer)
+                                      .Select(x => new ConsumeForcastWsDTO 
+                                      {
+                                          Id = x.Id,
+                                          Year = x.FinanceYear.Year,
+                                          YearId = x.YearId,
+                                          OrganizationDisplay = x.Organization.Title,
+                                          OrganizationId = x.OrganizationId,
+                                          UserTypeTitle = x.UserType.Title,
+                                          UserTypeId = x.UserTypeId,
+                                          UsageLayerTitle = x.UsageLayer.Title,
+                                          UsageLayerId = x.UsageLayerId,
+                                          CountUser = x.CountUser,
+                                          UnitUser = x.UnitUser,
+                                          ConsumeUser = x.ConsumeUser,
+                                          AvgConsumeUser = x.AvgConsumeUser,
+                                          ConsumeUserForcast = x.ConsumeUserForcast
+
+                                      }).ToListAsync();
+            
+            return await Task.FromResult(result);
+        }
+
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
+        {
+            if (sourceYearId == destYearId)
+                throw new CopySameYearException();
+
+            if (destYearId < sourceYearId)
+                throw new CopyDestYearExxeption();
+
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
+                throw new CopyOrgNullDataException();
+            
+            var result = new List<ConsumeForcastWs>();
+
+            if (await Query()
+                        .Where(x => x.OrganizationId == sourceOrgId)
+                        .Where(x => x.YearId == destYearId).AnyAsync())
+                throw new CopyDestYearHasDataException();
+
+            var selfData = await Query().Where(x => x.OrganizationId == sourceOrgId)
+                                        .Where(x => x.YearId == sourceYearId)
+                                        .ToListAsync();
+            if (selfData.Any())
+            {
+                foreach(var item in selfData)
+                {
+                    if (!await checkLogicAsync(destYearId, sourceYearId, item.UserTypeId, item.UsageLayerId))
+                        throw new CopyDestYearHasDataException();
+
+                    var entity = new ConsumeForcastWs
+                    {
+                        YearId = destYearId,
+                        OrganizationId = item.OrganizationId,
+                        UserTypeId = item.UserTypeId,
+                        UsageLayerId = item.UsageLayerId,
+                        CountUser = item.CountUser,
+                        UnitUser = item.UnitUser,
+                        ConsumeUser = item.ConsumeUser,
+                        AvgConsumeUser = item.AvgConsumeUser                       
+                    };
+
+                    result.Add(entity);
+                }
+            }
+
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+
+            if (childrens.Any())
+            {
+                result.AddRange(childrens);
+            }
+            
+            _dbSet.AddRange(result);
+
+            await _uow.SaveChangesAsync();
+        }
 
         #region Private Helper Methods
         private async Task<IQueryable<ConsumeForcastWs>> setFilter(
@@ -286,6 +464,32 @@ namespace Datiss.Budget.Services
                     result.Add(entity);
                 }
                 result.AddRange(await getChildrenData(org.Id, yearId, targetYearId));
+            }
+            return result;
+        }
+
+        private async Task<IEnumerable<ConsumeForcastWs>> getChildren(
+            int parentOrganizationId,
+            int yearId)
+        {
+            var children = await _orgDbSet
+                .Where(x => x.ParentId == parentOrganizationId)
+                .ToListAsync();
+
+            var result = new List<ConsumeForcastWs>();
+
+            foreach(var org in children)
+            {
+                var data = await Query()
+                                    .Where(x => x.YearId == yearId)
+                                    .Where(x => x.OrganizationId == org.Id)
+                                    .ToListAsync();
+                foreach(var item in data)
+                {
+                    result.Add(item);
+                }
+
+                result.AddRange(await getChildren(org.Id, yearId));
             }
             return result;
         }
