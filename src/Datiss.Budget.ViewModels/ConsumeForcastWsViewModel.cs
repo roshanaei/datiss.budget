@@ -109,7 +109,7 @@ namespace Datiss.Budget.ViewModels
         public string ConsumeUserForcastDisplay => ConsumeUserForcast.ToString("N2");
     }
 
-    public class ConsumeForcastWsFilterViewModel
+    public class ConsumeForcastWsFilterViewModel :FilterViewModel
     {
         public int? YearId { get; set; }
 
