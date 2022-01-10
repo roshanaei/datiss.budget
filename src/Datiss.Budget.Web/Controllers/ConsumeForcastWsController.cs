@@ -215,74 +215,225 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-        //[HttpPost("[action]")]
-        //public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
-        //{
-        //    model.CheckArgumentIsNull(nameof(model));
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
 
-        //    if (model.ExcelFile == null || model.ExcelFile.Length == 0)
-        //        return Json(new
-        //        {
-        //            hasError = true,
-        //            message = ViewMessages.ImportExcelInvalidFile
-        //        });
+            if (model.ExcelFile == null || model.ExcelFile.Length == 0)
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelInvalidFile
+                });
 
-        //    try
-        //    {
-        //        var result = await _consumeForcastWsService.ImportExcelAsync(
-        //                                                            model.ExcelFile,
-        //                                                            model.YearId,
-        //                                                            model.ContinueIfAnyOrgMissing);
+            try
+            {
+                var result = await _consumeForcastWsService.ImportExcelAsync(
+                                                                    model.ExcelFile,
+                                                                    model.YearId,
+                                                                    model.ContinueIfAnyOrgMissing);
 
-        //        if (result.AskToImport)
-        //        {
-        //            return Json(new
-        //            {
-        //                ask = true,
-        //                message = result.Message
-        //            });
-        //        }
+                if (result.AskToImport)
+                {
+                    return Json(new
+                    {
+                        ask = true,
+                        message = result.Message
+                    });
+                }
 
-        //        if (result.Success)
-        //        {
-        //            return Json(new
-        //            {
-        //                hasError = false,
-        //                message = result.Message
-        //            });
+                if (result.Success)
+                {
+                    return Json(new
+                    {
+                        hasError = false,
+                        message = result.Message
+                    });
 
-        //        }
-        //        else
-        //        {
-        //            return Json(new
-        //            {
-        //                hasError = true,
-        //                message = result.Message
-        //            });
-        //        }
-        //    }
-        //    catch (ImportExcelFileFormatInvalidException ex)
-        //    {
-        //        showMessage(CssClassNames.Error,
-        //            ViewMessages.ImportExcelFileFormatInvalid);
-        //        return Json(new
-        //        {
-        //            hasError = true,
-        //            message = ViewMessages.ImportExcelFileFormatInvalid
-        //        });
-        //    }
-        //    catch (ImportExcelFileSizeInvalidException ex)
-        //    {
-        //        showMessage(CssClassNames.Error,
-        //            ViewMessages.ImportExcelFileSizeInvalid);
-        //        return Json(new
-        //        {
-        //            hasError = true,
-        //            message = ViewMessages.ImportExcelFileSizeInvalid
-        //        });
-        //    }
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
+            }
+            catch (ImportExcelFileFormatInvalidException ex)
+            {
+                showMessage(CssClassNames.Error,
+                    ViewMessages.ImportExcelFileFormatInvalid);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileFormatInvalid
+                });
+            }
+            catch (ImportExcelFileSizeInvalidException ex)
+            {
+                showMessage(CssClassNames.Error,
+                    ViewMessages.ImportExcelFileSizeInvalid);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileSizeInvalid
+                });
+            }
 
-        //}
+        }
 
+
+        [HttpPost("records/delete")]
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
+        {
+            try
+            {
+                var result = await _consumeForcastWsService.HardDeleteAsync(yearId, orgId);
+
+                return Json(new
+                {
+                    success = true,
+                    message = string.Format(
+                        ViewMessages.DeleteMultipleDataForOrg,
+                        result.OrganizationTitle,
+                        result.Year)
+                });
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
+            catch (DeleteNullRecordException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteNullRecord
+                });
+            }
+            catch (NullReferenceException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.NullRef
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteRelatedData
+                });
+            }
+        }
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _consumeForcastWsService.HardDeleteAsync(id);
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.GetBaseException().Message);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.InvalidUpdateData
+                });
+            }
+
+            return Json(new
+            {
+                hasError = false,
+                message = ViewMessages.DeleteRowSuccess
+            });
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Calculation(CalculationInputViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var result = await _consumeForcastWsService.CalculationAsync(
+                model.YearId,
+                model.OrganizationId);
+
+            List<CalculationResultViewModel> viewModel = new List<CalculationResultViewModel>();
+            foreach (var item in result)
+            {
+                viewModel.Add(
+                    new CalculationResultViewModel
+                    {
+                        Result = item.Value,
+                        Title = getCalcTitle(item.Key)
+                    }
+                );
+            }
+
+            return PartialView("_calculationModal", viewModel);
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> DownloadExcelTemplate()
+        {
+            var filePath = $"{_env.WebRootPath}\\Excel\\ConsumeForcastWsImport.xlsx";
+
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return File(
+                stream,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "ConsumeForcastWs.xlsx");
+        }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Copy()
+        {
+            var model = new CopyViewModel();
+
+            model.SetOrganizationSource(
+                (await _organizationService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            model.SetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Disbaled))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            model.SetTargetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Enabled))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            return PartialView("_copyModal", model);
+        }
+
+
+        #region Private Helper Methods
+        private string getCalcTitle(string key)
+            => key switch
+            {
+                "ConsumeForcastWs_Cal1" => SPTitles.ConsumeForcastWs_Cal1,
+                _ => ""
+            };
+        #endregion
     }
 }
