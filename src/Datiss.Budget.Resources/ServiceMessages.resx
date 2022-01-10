@@ -157,13 +157,13 @@
     <value>در سطر {0} فایل اکسل، کد طبقه مصرف "{1}" معتبر نیست .</value>
   </data>
   <data name="ImportExcelInvalidWaterDiameter" xml:space="preserve">
-    <value>در سطر {0} فایل اکسل، کد قطر لوله آب "{1}" معتبر نیست .</value>
+    <value>در سطر {0} فایل اکسل، کد قطر لوله "{1}" معتبر نیست .</value>
   </data>
   <data name="ImportExcelLogicError" xml:space="preserve">
     <value>داده سطر {0} در اکسل مشکل دارد. لطفاً ورودی ها را بررسی نمایید.</value>
   </data>
   <data name="ImportExcelNotAllowedOrg" xml:space="preserve">
-    <value>شما مجاز به ورود اطلاعات برای " {0} " نیستید.[سطر {1} فایل اکسل]</value>
+    <value>شما مجاز به ورود اطلاعات برای سازمان " {0} " نیستید.[سطر {1} فایل اکسل]</value>
   </data>
   <data name="ImportExcelNotExistOrg" xml:space="preserve">
     <value>در سطر {0} فایل اکسل، کد سازمان "{1}" معتبر نیست .</value>
@@ -177,6 +177,9 @@
   <data name="ImportExcelTypeWPDiameterNotInExcel" xml:space="preserve">
     <value>کاربری های :&lt;br&gt;{0}قطرلوله های :&lt;br&gt;{1} در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
+  <data name="ImportExcelWaterDiameterNotInExcel" xml:space="preserve">
+    <value>قطر لوله های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
   <data name="Logic_BranchFeeAmount" xml:space="preserve">
     <value>اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است</value>
   </data>
@@ -187,9 +190,6 @@
     <value>اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است</value>
   </data>
   <data name="Logic_DWasteType" xml:space="preserve">
-    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
-  </data>
-  <data name="Logic_DWaterType" xml:space="preserve">
     <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
   </data>
   <data name="Logic_IncomeForcast" xml:space="preserve">
@@ -209,6 +209,9 @@
   </data>
   <data name="Logic_WasteSalesSplit" xml:space="preserve">
     <value>اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است</value>
+  </data>
+  <data name="Logic_WaterDiameter" xml:space="preserve">
+    <value>اطلاعات قطر لوله "{0}" برای سازمان "{1}" قبلا ثبت شده است.</value>
   </data>
   <data name="Logic_WaterSalesSplit" xml:space="preserve">
     <value>اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است</value>

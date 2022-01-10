@@ -178,7 +178,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد قطر لوله آب &quot;{1}&quot; معتبر نیست ..
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد قطر لوله &quot;{1}&quot; معتبر نیست ..
         /// </summary>
         public static string ImportExcelInvalidWaterDiameter {
             get {
@@ -196,7 +196,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to شما مجاز به ورود اطلاعات برای &quot; {0} &quot; نیستید.[سطر {1} فایل اکسل].
+        ///   Looks up a localized string similar to شما مجاز به ورود اطلاعات برای سازمان &quot; {0} &quot; نیستید.[سطر {1} فایل اکسل].
         /// </summary>
         public static string ImportExcelNotAllowedOrg {
             get {
@@ -241,6 +241,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to قطر لوله های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelWaterDiameterNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelWaterDiameterNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است.
         /// </summary>
         public static string Logic_BranchFeeAmount {
@@ -273,15 +282,6 @@ namespace Datiss.Budget.Resources {
         public static string Logic_DWasteType {
             get {
                 return ResourceManager.GetString("Logic_DWasteType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
-        /// </summary>
-        public static string Logic_DWaterType {
-            get {
-                return ResourceManager.GetString("Logic_DWaterType", resourceCulture);
             }
         }
         
@@ -336,6 +336,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_WasteSalesSplit {
             get {
                 return ResourceManager.GetString("Logic_WasteSalesSplit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات قطر لوله &quot;{0}&quot; برای سازمان &quot;{1}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_WaterDiameter {
+            get {
+                return ResourceManager.GetString("Logic_WaterDiameter", resourceCulture);
             }
         }
         
