@@ -426,6 +426,88 @@ namespace Datiss.Budget.Web.Controllers
             return PartialView("_copyModal", model);
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Copy(CopyViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            try
+            {
+                await _consumeForcastWsService.CopyAsync(
+                                                    model.SourceYearId,
+                                                    model.SourceOrgId,
+                                                    model.TargetYearId);
+                model.Succeed(ViewMessages.CopySuccess);
+            }
+            catch (CopySameYearException)
+            {
+                model.AddError(ViewMessages.CopySameYear);
+            }
+            catch (CopyDestYearExxeption)
+            {
+                model.AddError(ViewMessages.CopyErrorDestYear);
+            }
+            catch (CopyOrgNullDataException)
+            {
+                model.AddError(ViewMessages.CopySourceOrgNullData);
+            }
+            catch (CopyDestYearHasDataException)
+            {
+                model.AddError(ViewMessages.CopyDestYearHasData);
+            }
+            catch (Exception ex)
+            {
+                model.AddError(ViewMessages.SystemError);
+            }
+
+            return Json(model);
+        }
+
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var userTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
+            var usageLayerTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType);
+
+
+            var items = new List<ConsumeForcastWsDTO>();
+
+            foreach (var org in organizations)
+            {
+                foreach (var usr in userTypes)
+                {
+                    foreach(var usl in usageLayerTypes)
+                    {
+                        items.Add(new ConsumeForcastWsDTO
+                        {
+                            UsageLayerTitle = usl.Title,
+                            UsageLayerId = usl.Id,
+                            UserTypeTitle = usr.Title,
+                            UserTypeId = usr.Id,
+                            OrganizationId = org.Id,
+                            OrganizationDisplay = org.Title,
+                            Year = year.Year,
+                            YearId = year.Id
+                        });
+                    }
+                }
+            }
+
+            using var workbook = items.GetImportTemplate(year.Year);
+            return workbook.Deliver("ConsumeForcastWs-Import-Template.xlsx");
+        }
+
+        [HttpGet("[action]/{orgid}/{yearid}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
+        {
+            var result = await _consumeForcastWsService.GetExportItemsAsync(yearid, orgid);
+            if (result.Count() == 0)
+                return RedirectToAction("Index");
+            using var workbook = result.ExportExcel();
+            return workbook.Deliver("ConsumeForcastWs.xlsx");
+        }
 
         #region Private Helper Methods
         private string getCalcTitle(string key)
