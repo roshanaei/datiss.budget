@@ -78,6 +78,7 @@ namespace Datiss.Budget.Services
             };
 
             model.DWasteTypeTitle = (await _constSet.FindAsync(model.DWasteTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
             {
@@ -87,8 +88,8 @@ namespace Datiss.Budget.Services
                     await _uow.SaveChangesAsync();
 
                     var result = entity.Adapt<WasteInstallFeeDTO>();
-                    result.DWasteTypeDisplay = (await _constSet.FindAsync(model.DWasteTypeId)).Title;
-                    result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+                    result.DWasteTypeDisplay = model.DWasteTypeTitle;
+                    result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.WsInstallFee = entity.WsInstallFee;
 
@@ -101,15 +102,18 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<WasteInstallFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_DWasteType,
-                model.DWasteTypeTitle)
+                string.Format(ServiceMessages.Logic_WWsDiameter,
+                model.DWasteTypeTitle , organizationDisplay)
                 );
         }
 
         public async Task<ValidationResult<WasteInstallFeeDTO>> UpdateAsync(UpdateWasteInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
+
             model.DWasteTypeTitle = (await _constSet.FindAsync(model.DWasteTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
             try
             {
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.DWasteTypeId, model.Id))
@@ -128,9 +132,9 @@ namespace Datiss.Budget.Services
                         YearId = model.YearId,
                         DWasteTypeId = model.DWasteTypeId,
                         WsInstallFee = model.WsInstallFee,
-                        OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
-                        DWasteTypeDisplay = (await _constSet.FindAsync(model.DWasteTypeId)).Title,
-                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                        DWasteTypeDisplay = model.DWasteTypeTitle,
+                        OrganizationDisplay = organizationDisplay,
+                    Year = (await _yearSet.FindAsync(model.YearId)).Year
                     };
 
                     return ValidationResult<WasteInstallFeeDTO>.Success(result);
@@ -141,8 +145,8 @@ namespace Datiss.Budget.Services
                 return ValidationResult<WasteInstallFeeDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
             return ValidationResult<WasteInstallFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_DWasteType,
-                model.DWasteTypeTitle)
+                string.Format(ServiceMessages.Logic_WWsDiameter,
+                model.DWasteTypeTitle , organizationDisplay)
                 );
         }
 
@@ -354,9 +358,10 @@ namespace Datiss.Budget.Services
             return items;
         }
 
-        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<WasteInstallFeeImportModel>(fileInfo);
+            var data = await _excelService.ImportAsync<WasteInstallFeeImportModel>
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
 
             var records = data.Adapt<List<WasteInstallFee>>();
 
@@ -365,13 +370,16 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
-            var dwatertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
+            var dwastetypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__WasteDiameter);
 
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
 
             foreach (var rec in records)
             {
+                rec.YearId = yearId;
+
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
-                var year = await _yearSet.FindAsync(rec.YearId);
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
@@ -384,10 +392,10 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId)
                         );
                 }
-                if (!await dwatertypes.AnyAsync(x => x.Id == rec.DWasteTypeId))
+                if (!await dwastetypes.AnyAsync(x => x.Id == rec.DWasteTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 1, rec.DWasteTypeId)
+                        string.Format(ServiceMessages.ImportExcelWWsDiameterNotInExcel, rowIndex + 1, rec.DWasteTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -399,6 +407,27 @@ namespace Datiss.Budget.Services
 
                 rowIndex++;
             }
+
+            //Start DWasteType
+            var missingDWsType = new List<Constant>();
+            foreach (var item in dwastetypes)
+            {
+                var existDWTypeInExcel = records.Any(_ => _.DWasteTypeId == item.Id);
+                if (!existDWTypeInExcel)
+                    missingDWsType.Add(item);
+
+            }
+            if (missingDWsType.Any())
+            {
+                string dWasteTypeNames = "";
+                foreach (var item in missingDWsType)
+                {
+                    dWasteTypeNames += "- [" + item.Title + "]<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelWWsDiameterNotInExcel, dWasteTypeNames));
+            }
+            //end
 
             rowIndex = 1;
 
@@ -487,27 +516,13 @@ namespace Datiss.Budget.Services
             if (filter.DWasteTypeId.HasValue)
                 query = query.Where(x => x.DWasteTypeId == filter.DWasteTypeId.Value);
 
-            if (filter.WsInstallFee.HasValue)
-            {
-                switch (filter.FeeMode)
-                {
-                    case InstallFeeFilterMode.Exact:
-                        query = query.Where(x => x.WsInstallFee == filter.WsInstallFee.Value);
-                        break;
-                    case InstallFeeFilterMode.GreaterThan:
-                        query = query.Where(x => x.WsInstallFee >= filter.WsInstallFee.Value);
-                        break;
-                    case InstallFeeFilterMode.LessThan:
-                        query = query.Where(x => x.WsInstallFee <= filter.WsInstallFee.Value);
-                        break;
-                }
-            }
 
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
                 query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                    _.DWasteType.Title.ToUpper().Contains(filter.Search));
+                                    _.DWasteType.Title.ToUpper().Contains(filter.Search) ||
+                                    _.WsInstallFee.ToString().Contains(filter.Search));
             }
 
             return query;

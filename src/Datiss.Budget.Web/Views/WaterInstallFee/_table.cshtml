@@ -5,8 +5,8 @@
             <tr>
                 <th>سال</th>
                 <th>سازمان</th>
-                <th>کاربری</th>
-                <th>قیمت</th>
+                <th>قطر انشعاب</th>
+                <th>تعرفه نصب انشعاب</th>
                 <th>مدیریت</th>
 
             </tr>
@@ -43,7 +43,7 @@
                 <td>
                     <div id="divInput_DWaterType_">
                         <input id="hidDWaterTypeId_" type="hidden" />
-                        <select class="form-control selectDWaterType" id="inputDWaterType_" asp-items="Model.DWaterTypeSource">
+                        <select class="form-control" id="inputDWaterType_" asp-items="Model.DWaterTypeSource">
                         </select>
                     </div>
                     <div id="divOutput_DWaterType_" style="display: none">
@@ -122,7 +122,6 @@
                             </select>
                             <script>
                                 $('select#inputDWaterType_' + @item.Id + ' option[value=' + @item.DWaterTypeId + ']').attr('selected', true);
-                                $('#inputDWaterType_' + @item.Id).select2({ dir : 'rtl' });
                             </script>
                         </div>
                         <div id="divOutput_DWaterType_@item.Id">

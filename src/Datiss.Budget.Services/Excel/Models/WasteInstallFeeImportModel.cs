@@ -9,16 +9,19 @@ namespace Datiss.Budget.Services.Excel
 {
     public class WasteInstallFeeImportModel
     {
-        [Column(0, MappingDirections.Both, Letter = "A")]
-        public int YearId { get; set; }
+        [Column(MappingDirections.Both, Letter = "A")]
+        public string OrganizationDisplay { get; set; }
 
-        [Column(1, MappingDirections.Both, Letter = "B")]
+        [Column(MappingDirections.Both, Letter = "B")]
         public int OrganizationId { get; set; }
 
-        [Column(2, MappingDirections.Both, Letter = "C")]
+        [Column(MappingDirections.Both, Letter = "C")]
+        public string DWasteTypeTypeDisplay { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "D")]
         public int DWasteTypeId { get; set; }
 
-        [Column(3, MappingDirections.Both, Letter = "D")]
+        [Column(MappingDirections.Both, Letter = "E")]
         public int WsInstallFee { get; set; }
     }
 }

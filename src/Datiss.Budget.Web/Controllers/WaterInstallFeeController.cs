@@ -132,7 +132,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -187,7 +187,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -425,7 +425,7 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId) {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var dwaterTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
+            var dwaterTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter);
 
             var items = new List<WaterInstallFeeDTO>();
 
