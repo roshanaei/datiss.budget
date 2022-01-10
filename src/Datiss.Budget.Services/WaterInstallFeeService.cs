@@ -103,7 +103,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<WaterInstallFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_WaterDiameter,
+                string.Format(ServiceMessages.Logic_WWsDiameter,
                 model.DWaterTypeTitle, organizationDisplay)
                 );
 
@@ -149,7 +149,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<WaterInstallFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_WaterDiameter,
+                string.Format(ServiceMessages.Logic_WWsDiameter,
                 model.DWaterTypeTitle, organizationDisplay)
                 );
         }
@@ -378,7 +378,7 @@ namespace Datiss.Budget.Services
                     dWaterTypeNames += "- [" + item.Title + "]<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelWaterDiameterNotInExcel, dWaterTypeNames));
+                    string.Format(ServiceMessages.ImportExcelWWsDiameterNotInExcel, dWaterTypeNames));
             }
             //end
 

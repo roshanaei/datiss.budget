@@ -243,9 +243,9 @@ namespace Datiss.Budget.Resources {
         /// <summary>
         ///   Looks up a localized string similar to قطر لوله های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
-        public static string ImportExcelWaterDiameterNotInExcel {
+        public static string ImportExcelWWsDiameterNotInExcel {
             get {
-                return ResourceManager.GetString("ImportExcelWaterDiameterNotInExcel", resourceCulture);
+                return ResourceManager.GetString("ImportExcelWWsDiameterNotInExcel", resourceCulture);
             }
         }
         
@@ -340,20 +340,20 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات قطر لوله &quot;{0}&quot; برای سازمان &quot;{1}&quot; قبلا ثبت شده است..
-        /// </summary>
-        public static string Logic_WaterDiameter {
-            get {
-                return ResourceManager.GetString("Logic_WaterDiameter", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است.
         /// </summary>
         public static string Logic_WaterSalesSplit {
             get {
                 return ResourceManager.GetString("Logic_WaterSalesSplit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات قطر لوله &quot;{0}&quot; برای سازمان &quot;{1}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_WWsDiameter {
+            get {
+                return ResourceManager.GetString("Logic_WWsDiameter", resourceCulture);
             }
         }
         

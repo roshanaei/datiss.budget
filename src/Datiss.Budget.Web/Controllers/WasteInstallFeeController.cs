@@ -40,7 +40,6 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
-        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
@@ -134,7 +133,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+            var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -191,7 +190,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+            var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -221,7 +220,10 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _wasteInstallFeeService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
+                var result = await _wasteInstallFeeService.ImportExcelAsync(
+                                                                    model.ExcelFile,
+                                                                    model.YearId,
+                                                                    model.ContinueIfAnyOrgMissing);
 
                 if (result.AskToImport)
                 {
@@ -357,18 +359,6 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> DownloadExcelTemplate()
-        {
-            var filePath = $"{_env.WebRootPath}\\Excel\\WasteInstallFeeImport.xlsx";
-
-            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return File(
-                stream,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "WasteInstallFee.xlsx");
-        }
-
-        [HttpGet("[action]")]
         public async Task<IActionResult> Copy()
         {
             var model = new CopyViewModel();
@@ -433,13 +423,13 @@ namespace Datiss.Budget.Web.Controllers
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var dwaterTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
+            var dwasteTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteDiameter);
 
             var items = new List<WasteInstallFeeDTO>();
 
             foreach (var org in organizations)
             {
-                foreach (var dwt in dwaterTypes)
+                foreach (var dwt in dwasteTypes)
                 {
                     items.Add(new WasteInstallFeeDTO
                     {

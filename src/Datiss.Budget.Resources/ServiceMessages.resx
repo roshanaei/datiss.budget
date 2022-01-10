@@ -177,7 +177,7 @@
   <data name="ImportExcelTypeWPDiameterNotInExcel" xml:space="preserve">
     <value>کاربری های :&lt;br&gt;{0}قطرلوله های :&lt;br&gt;{1} در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
-  <data name="ImportExcelWaterDiameterNotInExcel" xml:space="preserve">
+  <data name="ImportExcelWWsDiameterNotInExcel" xml:space="preserve">
     <value>قطر لوله های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
   <data name="Logic_BranchFeeAmount" xml:space="preserve">
@@ -210,11 +210,11 @@
   <data name="Logic_WasteSalesSplit" xml:space="preserve">
     <value>اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است</value>
   </data>
-  <data name="Logic_WaterDiameter" xml:space="preserve">
-    <value>اطلاعات قطر لوله "{0}" برای سازمان "{1}" قبلا ثبت شده است.</value>
-  </data>
   <data name="Logic_WaterSalesSplit" xml:space="preserve">
     <value>اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است</value>
+  </data>
+  <data name="Logic_WWsDiameter" xml:space="preserve">
+    <value>اطلاعات قطر لوله "{0}" برای سازمان "{1}" قبلا ثبت شده است.</value>
   </data>
   <data name="RelationDataSoftDeleted" xml:space="preserve">
     <value>به دلیل وجود داده وابسته امکان حذف نمی باشد.</value>
