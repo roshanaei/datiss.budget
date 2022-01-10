@@ -106,6 +106,24 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to تعداد کل .
+        /// </summary>
+        public static string IncomeForcastOthers_Cal1 {
+            get {
+                return ResourceManager.GetString("IncomeForcastOthers_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to درآمد کل.
+        /// </summary>
+        public static string IncomeForcastOthers_Cal2 {
+            get {
+                return ResourceManager.GetString("IncomeForcastOthers_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to درآمد هزینه لوله گذاری سرمایه ای حجم دفع سالیانه.
         /// </summary>
         public static string IncomeForcastWs_Cal1 {
