@@ -315,6 +315,15 @@ namespace Datiss.Budget.Resources {
         /// <summary>
         ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
         /// </summary>
+        public static string Logic_UserType {
+            get {
+                return ResourceManager.GetString("Logic_UserType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
+        /// </summary>
         public static string Logic_UserTypeAverageCapacity {
             get {
                 return ResourceManager.GetString("Logic_UserTypeAverageCapacity", resourceCulture);

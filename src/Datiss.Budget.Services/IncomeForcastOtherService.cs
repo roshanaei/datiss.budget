@@ -1,4 +1,11 @@
-﻿using Datiss.Budget.Common.Exceptions;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Datiss.Budget.Common;
+using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Entities;
@@ -13,22 +20,15 @@ using Datiss.Budget.Services.Excel;
 using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
-using Datiss.Budget.ViewModels;
 using LinqKit;
 using Mapster;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services
 {
-    public class NHCoService : INHCoService
+    public class IncomeForcastOtherService : IIncomeForcastOtherService
     {
         private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
@@ -36,11 +36,12 @@ namespace Datiss.Budget.Services
         private readonly IUserService _userService;
         private readonly IOrganizationService _organizationService;
 
-        private readonly DbSet<NHCo> _dbSet;
+        private readonly DbSet<IncomeForcastOther> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
         private readonly DbSet<FinanceYear> _yearSet;
+        private readonly DbSet<Constant> _constSet;
 
-        public NHCoService(
+        public IncomeForcastOtherService(
             IUserContext userContext,
             IUnitOfWork uow,
             IExcelService excelService,
@@ -49,111 +50,111 @@ namespace Datiss.Budget.Services
         {
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _dbSet = _uow.Set<NHCo>();
+            _dbSet = _uow.Set<IncomeForcastOther>();
             _orgDbSet = _uow.Set<Organization>();
             _yearSet = _uow.Set<FinanceYear>();
+            _constSet = _uow.Set<Constant>();
             _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
-        private IQueryable<NHCo> Query()
+        private IQueryable<IncomeForcastOther> Query()
             => _dbSet.AsNoTracking();
 
-        public async Task<NHCo> GetByIdAsync(int id)
+        public async Task<IncomeForcastOther> GetByIdAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult<NHCoDTO>> CreateAsync(CreateNHCoDTO model)
+        public async Task<ValidationResult<IncomeForcastOtherDTO>> CreateAsync(CreateIncomeForcastOtherDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var entity = new NHCo
+            var entity = new IncomeForcastOther
             {
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
-                ActivityType = model.ActivityType,
-                P1Capacity = model.P1Capacity,
-                FixCostCo = model.FixCostCo,
-                P1CostCo = model.P1CostCo,
-                P2CostCo = model.P2CostCo
+                OIFTypeId = model.OIFTypeId,
+                ActivityId = model.ActivityId,
+                OIFCount = model.OIFCount,
+                OIFPrice = model.OIFPrice
             };
+            model.OIFTypeTitle = (await _constSet.FindAsync(model.OIFTypeId)).Title;
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ActivityType))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.OIFTypeId, model.ActivityId))
                 {
                     await _dbSet.AddAsync(entity);
                     await _uow.SaveChangesAsync();
 
-                    var result = entity.Adapt<NHCoDTO>();
+                    var result = entity.Adapt<IncomeForcastOtherDTO>();
+                    result.OIFTypeDisplay = (await _constSet.FindAsync(model.OIFTypeId)).Title;
                     result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-                    result.ActivityType = entity.ActivityType;
-                    result.P1Capacity = entity.P1Capacity;
-                    result.FixCostCo = entity.FixCostCo;
-                    result.P1CostCo = entity.P1CostCo;
-                    result.P2CostCo = entity.P2CostCo;
+                    result.ActivityId = model.ActivityId;
+                    result.OIFCount = model.OIFCount;
+                    result.OIFPrice = model.OIFPrice;
 
-                    return ValidationResult<NHCoDTO>.Success(result);
+                    return ValidationResult<IncomeForcastOtherDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<NHCoDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<IncomeForcastOtherDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
-            return ValidationResult<NHCoDTO>.Failed(
-                string.Format(ServiceMessages.Logic_NHCo,
-                model.ActivityType.ToDisplay())
+            return ValidationResult<IncomeForcastOtherDTO>.Failed(
+                string.Format(ServiceMessages.Logic_UserType,
+                model.OIFTypeTitle)
                 );
 
 
         }
 
-        public async Task<ValidationResult<NHCoDTO>> UpdateAsync(UpdateNHCoDTO model)
+        public async Task<ValidationResult<IncomeForcastOtherDTO>> UpdateAsync(UpdateIncomeForcastOtherDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
+            model.OIFTypeTitle = (await _constSet.FindAsync(model.OIFTypeId)).Title;
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ActivityType, model.Id))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.OIFTypeId, model.ActivityId, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.OrganizationId = model.OrganizationId;
                     entity.YearId = model.YearId;
-                    entity.ActivityType = model.ActivityType;
-                    entity.P1Capacity = model.P1Capacity;
-                    entity.FixCostCo = model.FixCostCo;
-                    entity.P1CostCo = model.P1CostCo;
-                    entity.P2CostCo = model.P2CostCo;
+                    entity.OIFTypeId = model.OIFTypeId;
+                    entity.ActivityId = model.ActivityId;
+                    entity.OIFCount = model.OIFCount;
+                    entity.OIFPrice = model.OIFPrice;
 
                     await _uow.SaveChangesAsync();
 
-                    var result = new NHCoDTO
+                    var result = new IncomeForcastOtherDTO
                     {
                         OrganizationId = model.OrganizationId,
                         YearId = model.YearId,
-                        ActivityType = model.ActivityType,
-                        P1Capacity = model.P1Capacity,
-                        FixCostCo = model.FixCostCo,
-                        P1CostCo = model.P1CostCo,
-                        P2CostCo = model.P2CostCo,
+                        OIFTypeId = model.OIFTypeId,
+                        ActivityId = model.ActivityId,
+                        OIFCount = model.OIFCount,
+                        OIFPrice = model.OIFPrice,
                         OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
+                        OIFTypeDisplay = (await _constSet.FindAsync(model.OIFTypeId)).Title,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
                     };
 
-                    return ValidationResult<NHCoDTO>.Success(result);
+                    return ValidationResult<IncomeForcastOtherDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<NHCoDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<IncomeForcastOtherDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
-            return ValidationResult<NHCoDTO>.Failed(
-                string.Format(ServiceMessages.Logic_NHCo,
-                model.ActivityType.ToDisplay())
+            return ValidationResult<IncomeForcastOtherDTO>.Failed(
+                string.Format(ServiceMessages.Logic_UserType,
+                model.OIFTypeTitle)
                 );
         }
 
@@ -174,7 +175,7 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId, ActivityType activityType)
+        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId)
         {
             var organization = await _orgDbSet.FindAsync(organizationId);
             organization.CheckReferenceIsNull(nameof(organization));
@@ -186,10 +187,9 @@ namespace Datiss.Budget.Services
                 throw new DisbaledYearDataInputException();
 
             var self = await _dbSet.Where(_ => _.YearId == yearId)
-                                   .Where(_ => _.OrganizationId == organizationId)
-                                   .Where(_ => _.ActivityType == activityType)
-                                   .ToListAsync();
-            var childrens = await getChildren(organizationId, yearId, activityType);
+                                    .Where(_ => _.OrganizationId == organizationId)
+                                    .ToListAsync();
+            var childrens = await getChildren(organizationId, yearId);
 
             if (self.Count() == 0 && childrens.Count() == 0)
                 throw new DeleteNullRecordException();
@@ -217,22 +217,31 @@ namespace Datiss.Budget.Services
                 new SqlParameter("OrganizationId", organizationId)
             };
             var result = new List<CalculationItemData>();
+
             result.Add(new CalculationItemData
             {
-                Key = "NHCos_Cal1",
+                Key = "IncomeForcastOther_Cal1",
                 Value = await _uow.ExecuteScalar<int>(
-                        "[dbo].[NHCos_Cal1] @YearId, @OrganizationId",
-                        parameters: sqlParams.ToArray())
+                                    "[dbo].[IncomeForcastOther_Cal1] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "IncomeForcastOther_Cal2",
+                Value = await _uow.ExecuteScalar<int>(
+                                    "[dbo].[IncomeForcastOther_Cal2] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
             });
 
             return await Task.FromResult(result);
         }
 
-        public async Task<PagedResult<NHCoDTO>> GetListAsync(NHCoFilterDTO filter)
+        public async Task<PagedResult<IncomeForcastOtherDTO>> GetListAsync(IncomeForcastOtherFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var result = new PagedResult<NHCoDTO>
+            var result = new PagedResult<IncomeForcastOtherDTO>
             {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -252,68 +261,65 @@ namespace Datiss.Budget.Services
 
             result.Items = await query.Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
-                                    .Select(x => new NHCoDTO
+                                    .Include(x => x.OIFType)
+                                    .Select(x => new IncomeForcastOtherDTO
                                     {
                                         Id = x.Id,
+                                        OIFTypeDisplay = x.OIFType.Title,
+                                        OIFTypeId = x.OIFTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
+                                        ActivityId = x.ActivityId,
+                                        OIFCount = x.OIFCount,
+                                        OIFPrice = x.OIFPrice,
                                         Year = x.FinanceYear.Year,
-                                        YearId = x.YearId,
-                                        ActivityType = x.ActivityType,
-                                        P1Capacity = x.P1Capacity,
-                                        FixCostCo = x.FixCostCo,
-                                        P1CostCo = x.P1CostCo,
-                                        P2CostCo = x.P2CostCo
+                                        YearId = x.YearId
                                     }).ToListAsync();
 
             return await Task.FromResult(result);
         }
 
-        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId, ActivityType activityType)
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
         {
 
             if (sourceYearId == destYearId)
                 throw new CopySameYearException();
             if (destYearId < sourceYearId)
                 throw new CopyDestYearExxeption();
-            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId, activityType))
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
                 throw new CopyOrgNullDataException();
-            var result = new List<NHCo>();
+            var result = new List<IncomeForcastOther>();
 
             if (await Query()
                         .Where(_ => _.OrganizationId == sourceOrgId)
-                        .Where(_ => _.YearId == destYearId)
-                        .Where(_ => _.ActivityType == activityType)
-                        .AnyAsync())
+                        .Where(_ => _.YearId == destYearId).AnyAsync())
                 throw new CopyDestYearHasDataException();
 
             var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
                                         .Where(_ => _.YearId == sourceYearId)
-                                        .Where(_ => _.ActivityType == activityType)
                                         .ToListAsync();
 
             if (selfData.Any())
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, item.OrganizationId, item.ActivityType))
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.OIFTypeId, item.ActivityId))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new NHCo
+                    var entity = new IncomeForcastOther
                     {
+                        OIFTypeId = item.OIFTypeId,
                         OrganizationId = item.OrganizationId,
                         YearId = destYearId,
-                        ActivityType = item.ActivityType,
-                        P1Capacity = item.P1Capacity,
-                        FixCostCo = item.FixCostCo,
-                        P1CostCo = item.P1CostCo,
-                        P2CostCo = item.P2CostCo,
+                        ActivityId = item.ActivityId,
+                        OIFCount = item.OIFCount,
+                        OIFPrice = item.OIFPrice
                     };
                     result.Add(entity);
                 }
             }
 
-            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId, activityType);
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
 
             if (childrens.Any())
             {
@@ -325,14 +331,25 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, ActivityType activityType, bool continueIfAnyOrgMissing = false)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<NHCoImportModel>
+            var data = await _excelService.ImportAsync<IncomeForcastOtherImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
 
-            var records = data.Adapt<List<NHCo>>();
+            var records = data.Adapt<List<IncomeForcastOther>>();
+
+            var datalist = data.ToList();
+            for (int i = 0; i < datalist.Count(); i++)
+            {
+                if (datalist[i].ActivityId == 0)
+                    records[i].ActivityId = ActivityType.Water;
+                if (datalist[i].ActivityId == 1)
+                    records[i].ActivityId = ActivityType.Waste;
+            }
 
             int rowIndex = 1;
+
+            var oiftypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__OIFType);
 
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull($"Year not found with id: {yearId}");
@@ -340,8 +357,8 @@ namespace Datiss.Budget.Services
             foreach (var rec in records)
             {
                 rec.YearId = yearId;
-                rec.ActivityType = activityType;
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
+
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
@@ -354,6 +371,12 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId)
                         );
                 }
+                if (!await oiftypes.AnyAsync(x => x.Id == rec.OIFTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 1, rec.OIFTypeId)
+                        );
+                }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
                     return ImportResult.Failed(
@@ -363,6 +386,27 @@ namespace Datiss.Budget.Services
 
                 rowIndex++;
             }
+
+            //Start OIFType
+            var missingDWType = new List<Constant>();
+            foreach (var item in oiftypes)
+            {
+                var existDWTypeInExcel = records.Any(_ => _.OIFTypeId == item.Id);
+                if (!existDWTypeInExcel)
+                    missingDWType.Add(item);
+
+            }
+            if (missingDWType.Any())
+            {
+                string oIFTypeNames = "";
+                foreach (var item in missingDWType)
+                {
+                    oIFTypeNames += "- " + item.Title + "<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelDWTypeNotInExcel, oIFTypeNames));
+            }
+            //end
 
             rowIndex = 1;
 
@@ -408,7 +452,8 @@ namespace Datiss.Budget.Services
                 if (!await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
-                    record.ActivityType))
+                    record.OIFTypeId,
+                    record.ActivityId))
                 {
 
                     return ImportResult.Failed(
@@ -427,9 +472,9 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<IEnumerable<NHCoDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<IncomeForcastOtherDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
-            var filter = new NHCoFilterDTO
+            var filter = new IncomeForcastOtherFilterDTO
             {
                 OrganizationId = organizationId,
                 YearId = yearId
@@ -440,28 +485,30 @@ namespace Datiss.Budget.Services
 
             query = await setFilter(query, filter);
 
-            query = setOrder(query, "getexport", filter.OrderDesc);
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
 
             var items = await query
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
-                                    .Select(x => new NHCoDTO
+                                    .Include(x => x.OIFType)
+                                    .Select(x => new IncomeForcastOtherDTO
                                     {
                                         Id = x.Id,
+                                        OIFTypeDisplay = x.OIFType.Title,
+                                        OIFTypeId = x.OIFTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId,
-                                        ActivityType = x.ActivityType,
-                                        P1Capacity = x.P1Capacity,
-                                        FixCostCo = x.FixCostCo,
-                                        P1CostCo = x.P1CostCo,
-                                        P2CostCo = x.P2CostCo
+                                        ActivityId = x.ActivityId,
+                                        OIFCount = x.OIFCount,
+                                        OIFPrice = x.OIFPrice
                                     }).ToListAsync();
+
             return items;
         }
 
-        public async Task<Stream> ExportExcelAsync(NHCoFilterDTO filter)
+        public async Task<Stream> ExportExcelAsync(IncomeForcastOtherFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 
@@ -474,18 +521,19 @@ namespace Datiss.Budget.Services
             var items = await query
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
-                                    .Select(x => new NHCoDTO
+                                    .Include(x => x.OIFType)
+                                    .Select(x => new IncomeForcastOtherDTO
                                     {
                                         Id = x.Id,
+                                        OIFTypeDisplay = x.OIFType.Title,
+                                        OIFTypeId = x.OIFTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
+                                        ActivityId = x.ActivityId,
+                                        OIFCount = x.OIFCount,
+                                        OIFPrice = x.OIFPrice,
                                         Year = x.FinanceYear.Year,
-                                        YearId = x.YearId,
-                                        ActivityType = x.ActivityType,
-                                        P1Capacity = x.P1Capacity,
-                                        FixCostCo = x.FixCostCo,
-                                        P1CostCo = x.P1CostCo,
-                                        P2CostCo = x.P2CostCo
+                                        YearId = x.YearId
                                     }).ToListAsync();
 
             var ms = new MemoryStream();
@@ -499,14 +547,14 @@ namespace Datiss.Budget.Services
 
         #region Private Helper Methods
 
-        private async Task<IQueryable<NHCo>> setFilter(
-            IQueryable<NHCo> query,
-            NHCoFilterDTO filter)
+        private async Task<IQueryable<IncomeForcastOther>> setFilter(
+            IQueryable<IncomeForcastOther> query,
+            IncomeForcastOtherFilterDTO filter)
         {
             query.CheckArgumentIsNull(nameof(query));
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var predicate = PredicateBuilder.New<NHCo>();
+            var predicate = PredicateBuilder.New<IncomeForcastOther>();
 
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
@@ -523,20 +571,27 @@ namespace Datiss.Budget.Services
 
                 query = query.Where(predicate);
             }
-            if (filter.ActivityType.HasValue)
-                query = query.Where(x => x.ActivityType == filter.ActivityType.Value);
+
+            if (filter.OIFTypeId.HasValue)
+                query = query.Where(x => x.OIFTypeId == filter.OIFTypeId.Value);
+
+            if (filter.Type.HasValue)
+                query = query.Where(x => x.ActivityId == filter.Type.Value);
 
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search));
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
+                                    _.OIFType.Title.ToUpper().Contains(filter.Search) ||
+                                    _.OIFPrice.ToString().Contains(filter.Search) ||
+                                    _.OIFPrice.ToString().Contains(filter.Search));
             }
 
             return query;
         }
 
-        private IQueryable<NHCo> setOrder(
-           IQueryable<NHCo> query,
+        private IQueryable<IncomeForcastOther> setOrder(
+           IQueryable<IncomeForcastOther> query,
            string orderBy = "id",
            bool desc = false)
         {
@@ -551,35 +606,38 @@ namespace Datiss.Budget.Services
                     return desc
                         ? query.OrderByDescending(x => x.Organization.Title)
                         : query.OrderBy(x => x.Organization.Title);
-                case "getexport":
-                    return query.Include(x => x.Organization)
-                                .OrderBy(x => x.ActivityType)
-                                .ThenBy(x => x.Organization.DisplayOrder);
+
+                case "oiftype":
+                    return desc
+                        ? query.OrderByDescending(x => x.OIFType.DisplayOrder)
+                        : query.OrderBy(x => x.OIFType.DisplayOrder);
+
                 default:
                     return query.Include(x => x.Organization)
-                                .OrderBy(x => x.Organization.DisplayOrder);
+                                .Include(x => x.OIFType)
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x=>x.ActivityId)
+                                .ThenBy(x => x.OIFType.DisplayOrder);
             }
         }
 
-        private async Task<IEnumerable<NHCo>> getChildrenData(
+        private async Task<IEnumerable<IncomeForcastOther>> getChildrenData(
             int parentOrganizationId,
             int yearId,
-            int targetYearId,
-            ActivityType activityType)
+            int targetYearId)
         {
 
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
 
-            var result = new List<NHCo>();
+            var result = new List<IncomeForcastOther>();
 
             foreach (var org in children)
             {
                 if (await Query()
                             .Where(_ => _.OrganizationId == org.Id)
-                            .Where(_ => _.YearId == targetYearId)
-                            .Where(_ => _.ActivityType == activityType).AnyAsync())
+                            .Where(_ => _.YearId == targetYearId).AnyAsync())
                 {
                     throw new CopyDestYearHasDataException();
                 }
@@ -587,79 +645,68 @@ namespace Datiss.Budget.Services
                 var data = await Query()
                                 .Where(_ => _.YearId == yearId)
                                 .Where(_ => _.OrganizationId == org.Id)
-                                .Where(_ => _.ActivityType == activityType)
                                 .ToListAsync();
 
                 foreach (var item in data)
                 {
-                    if (!await checkLogicAsync(targetYearId, item.OrganizationId, item.ActivityType))
+                    if (!await checkLogicAsync(targetYearId, org.Id, item.OIFTypeId, item.ActivityId))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new NHCo
+                    var entity = new IncomeForcastOther
                     {
+                        OIFTypeId = item.OIFTypeId,
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
-                        ActivityType = item.ActivityType,
-                        P1Capacity = item.P1Capacity,
-                        FixCostCo = item.FixCostCo,
-                        P1CostCo = item.P1CostCo,
-                        P2CostCo = item.P2CostCo
+                        ActivityId = item.ActivityId,
+                        OIFCount = item.OIFCount,
+                        OIFPrice = item.OIFPrice
                     };
 
                     result.Add(entity);
                 }
 
-                result.AddRange(await getChildrenData(org.Id, yearId, targetYearId, activityType));
+                result.AddRange(await getChildrenData(org.Id, yearId, targetYearId));
             }
 
             return result;
         }
-        private async Task<IEnumerable<NHCo>> getChildren(
+        private async Task<IEnumerable<IncomeForcastOther>> getChildren(
             int parentOrganizationId,
-            int yearId,
-            ActivityType activityType)
+            int yearId)
         {
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
-            var result = new List<NHCo>();
+            var result = new List<IncomeForcastOther>();
             foreach (var org in children)
             {
                 var data = await Query()
                                 .Where(_ => _.YearId == yearId)
                                 .Where(_ => _.OrganizationId == org.Id)
-                                .Where(_ => _.ActivityType == activityType)
                                 .ToListAsync();
 
                 foreach (var item in data)
                 {
                     result.Add(item);
                 }
-                result.AddRange(await getChildren(org.Id, yearId, activityType));
+                result.AddRange(await getChildren(org.Id, yearId));
             }
             return result;
         }
-        private async Task<bool> hasAnyDataAsync(int orgid, int yearid, ActivityType activityType)
+        private async Task<bool> hasAnyDataAsync(int orgid, int yearid)
         {
             bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
-                                                x.YearId == yearid &&
-                                                x.ActivityType == activityType);
+                                                x.YearId == yearid);
             if (any)
             {
                 return true;
             }
             else
             {
-                if (await Query().Include(x => x.Organization)
-                                 .AnyAsync(x => x.Organization.ParentId == orgid &&
-                                                x.YearId == yearid &&
-                                                x.ActivityType == activityType))
-                {
-                    return true;
-                }
-                var childs = await _orgDbSet.Where(x => x.ParentId == orgid).ToListAsync();
+                var childs = await _organizationService.GetWithChildrenAsync(orgid);
                 foreach (var child in childs)
-                    return await hasAnyDataAsync(child.Id, yearid, activityType);
+                    if (await Query().AnyAsync(x => x.YearId == yearid && x.OrganizationId == child.Id))
+                        return true;
             }
 
             return false;
@@ -672,6 +719,7 @@ namespace Datiss.Budget.Services
         private async Task<bool> checkLogicAsync(
             int yearId,
             int organizationId,
+            int oIFTypeId,
             ActivityType activityType,
             int? id = null)
         {
@@ -684,11 +732,13 @@ namespace Datiss.Budget.Services
             var result = id == null
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&
-                                                x.ActivityType == activityType)
+                                                x.OIFTypeId == oIFTypeId &&
+                                                x.ActivityId == activityType)
 
                 : await Query().AnyAsync(x => x.YearId == yearId &&
                                             x.OrganizationId == organizationId &&
-                                            x.ActivityType == activityType &&
+                                            x.OIFTypeId == oIFTypeId &&
+                                            x.ActivityId == activityType &&
                                             x.Id != id);
             return !result;
         }
