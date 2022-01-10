@@ -1,4 +1,4 @@
-﻿@model ConstantIndexViewModel
+﻿@model OrganizationIndexViewModel
 @{ ViewData["Title"] = "سازمان"; }
 
 <!--Title-->
@@ -94,44 +94,45 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @*@foreach (var item in Model.Model.Items)
+                                    @foreach (var item in Model.Items)
                                     {
                                         <tr>
-                                            <td>@item.Year.ToString()</td>
-                                            <td>@item.OrganizationDisplay </td>
-                                            <td>@item.DWaterTypeDisplay </td>
-                                            <td>@item.WInstallFee.ToString() </td>
+                                            <td>@item.Title.ToString()</td>
+                                            <td>@item.Type </td>
+                                            <td>@item.DisplayOrder </td>
+                                            <td>@item.SewageStatus </td>
+                                            <td>@item.Status </td>
                                             <td>
                                                 <a asp-controller="Organization" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a>
                                             </td>
                                         </tr>
-                                    }*@
+                                    }
                                 </tbody>
                             </table>
                             <div class="rowACJSB" style="margin-top:20px">
                                 <!--Pagination-->
-                                @*<p>
-                                        Total count : @Model.Model.TotalCount - Page @Model.Model.PageNumber of @Model.Model.PagesCount
-                                    </p>*@
+                                <p>
+                                        Total count : @Model.TotalCount - Page @Model.PageNumber of @Model.PagesCount
+                                    </p>
 
-                                @*@if (Model.Model.PagesCount > 1)
+                                @if (Model.PagesCount > 1)
                                 {
                                     <nav aria-label="Page navigation">
                                         <ul class="pagination justify-content-center">
-                                            @if (Model.Model.PageNumber > 1)
+                                            @if (Model.PageNumber > 1)
                                             {
                                                 <li class="page-item">
                                                     <a class="page-link"
                                                        asp-controller="Organization"
                                                        asp-action="Index"
-                                                       asp-route-page="@Model.Model.PreviousPage"
+                                                       asp-route-page="@Model.PreviousPage"
                                                        aria-label="Previous">«</a>
                                                 </li>
                                             }
 
-                                            @for (int i = 1; i <= Model.Model.PagesCount; i++)
+                                            @for (int i = 1; i <= Model.PagesCount; i++)
                                             {
-                                                if (i == Model.Model.PageNumber)
+                                                if (i == Model.PageNumber)
                                                 {
                                                     <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
                                                 }
@@ -146,20 +147,20 @@
                                                 }
                                             }
 
-                                            @if (Model.Model.PageNumber < Model.Model.PagesCount)
+                                            @if (Model.PageNumber < Model.PagesCount)
                                             {
                                                 <li class="page-item">
                                                     <a class="page-link"
                                                        asp-controller="Organization"
                                                        asp-action="Index"
-                                                       asp-route-page="@Model.Model.NextPage"
+                                                       asp-route-page="@Model.NextPage"
                                                        aria-label="Next">»</a>
                                                 </li>
                                             }
 
                                         </ul>
                                     </nav>
-                                }*@
+                                }
                             </div>
                         </div>
                     </div>

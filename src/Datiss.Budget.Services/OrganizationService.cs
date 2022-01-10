@@ -35,6 +35,15 @@ namespace Datiss.Budget.Services
             => _dbSet.AsNoTracking()
                         .Where(x => x.Status != EntityStatus.Deleted);
 
+
+        public async Task<Organization> GetByIdAsync(int id)
+        {
+            var year = await _dbSet.FindAsync(id);
+            year.CheckReferenceIsNull(nameof(year));
+
+            return await Task.FromResult(year);
+        }
+
         public async Task<ValidationResult> CreateAsync(CreateOrganizationDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));

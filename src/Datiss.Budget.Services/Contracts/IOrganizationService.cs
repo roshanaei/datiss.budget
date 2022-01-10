@@ -8,6 +8,8 @@ namespace Datiss.Budget.Services.Contracts
 {
     public interface IOrganizationService
     {
+        Task<Organization> GetByIdAsync(int id);
+
         Task<ValidationResult> CreateAsync(CreateOrganizationDTO model);
 
         Task<ValidationResult> UpdateAsync(UpdateOrganizationDTO model);

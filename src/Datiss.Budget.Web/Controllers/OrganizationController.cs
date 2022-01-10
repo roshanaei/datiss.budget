@@ -28,6 +28,12 @@ namespace Datiss.Budget.Web.Controllers
     [Route("[controller]/[action]")]
     public class OrganizationController : Controller
     {
+        public const string Name = "Organization";
+        //public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Index = nameof(Index);
+        //public const string ACTION_Edit = nameof(Edit);
+        //public const string ACTION_Delete = nameof(Delete);
+
 
         private readonly IWebHostEnvironment _env;
         private readonly ISecurityTrimmingService _securityTrimmingService;
@@ -47,13 +53,15 @@ namespace Datiss.Budget.Web.Controllers
         public  async Task<IActionResult> Index(int page = 1)
         {
             var filterInput = new OrganizationFilterDTO {
-                OrderBy = "DisplayOrder",
-                PageNumber = page,
-                PageSize = 10
+                OrderBy = "id",
+                OrderDesc = true,
+                PageNumber = page
             };
 
             var result = await _organizationService.GetListAsync(filterInput);
             var model = new OrganizationIndexViewModel();
+            model = result.Adapt<OrganizationIndexViewModel>();
+
             model.SetParentOrganizationFilterSource(
                 (await _organizationService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>()
