@@ -91,7 +91,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<PerformanceEvaluationDTO>.Failed(
-                string.Format(ServiceMessages.Logic_DWaterType,
+                string.Format(ServiceMessages.Logic_UserType,
                                 model.TableFieldId)
                 );
         }
@@ -127,7 +127,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<PerformanceEvaluationDTO>.Failed(
-                string.Format(ServiceMessages.Logic_DWaterType,
+                string.Format(ServiceMessages.Logic_UserType,
                                 model.TableFieldId)
                 );
         }

@@ -71,7 +71,7 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(2, 2).Value = "کد سازمان";
             sheet.Cell(2, 3).Value = "عنوان کاربری";
             sheet.Cell(2, 4).Value = "کد کاربری";
-            sheet.Cell(2, 5).Value = "عنوان قطر لوله";
+            sheet.Cell(2, 5).Value = "قطر لوله";
             sheet.Cell(2, 6).Value = "کد قطر لوله";
             sheet.Cell(2, 7).Value = "تعداد انشعاب";
             sheet.Cell(2, 8).Value = "آحاد انشعاب";
@@ -92,8 +92,8 @@ namespace Datiss.Budget.Reports.Excel
             }
 
             var range = sheet.Range(2, 1, row - 1, 9);
-            range.Column(5).Style.NumberFormat.Format = "#,##0";
-            range.Column(6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(6).Style.NumberFormat.Format = "#,##0";
+            range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();

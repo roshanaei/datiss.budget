@@ -78,8 +78,9 @@ namespace Datiss.Budget.Services
                 DWaterTypeId = model.DWaterTypeId,
                 WInstallFee = model.WInstallFee
             };
-            model.DWaterTypeTitle = (await _constSet.FindAsync(model.DWaterTypeId)).Title;
 
+            model.DWaterTypeTitle = (await _constSet.FindAsync(model.DWaterTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
             try
             {
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.DWaterTypeId))
@@ -88,8 +89,8 @@ namespace Datiss.Budget.Services
                     await _uow.SaveChangesAsync();
 
                     var result = entity.Adapt<WaterInstallFeeDTO>();
-                    result.DWaterTypeDisplay = (await _constSet.FindAsync(model.DWaterTypeId)).Title;
-                    result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+                    result.DWaterTypeDisplay = model.DWaterTypeTitle;
+                    result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.WInstallFee = entity.WInstallFee;
 
@@ -102,8 +103,8 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<WaterInstallFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_DWaterType,
-                model.DWaterTypeTitle)
+                string.Format(ServiceMessages.Logic_WWsDiameter,
+                model.DWaterTypeTitle, organizationDisplay)
                 );
 
 
@@ -112,7 +113,10 @@ namespace Datiss.Budget.Services
         public async Task<ValidationResult<WaterInstallFeeDTO>> UpdateAsync(UpdateWaterInstallFeeDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
+
             model.DWaterTypeTitle = (await _constSet.FindAsync(model.DWaterTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
             try
             {
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.DWaterTypeId, model.Id))
@@ -131,8 +135,8 @@ namespace Datiss.Budget.Services
                         YearId = model.YearId,
                         DWaterTypeId = model.DWaterTypeId,
                         WInstallFee = model.WInstallFee,
-                        OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
-                        DWaterTypeDisplay = (await _constSet.FindAsync(model.DWaterTypeId)).Title,
+                        OrganizationDisplay = organizationDisplay,
+                        DWaterTypeDisplay = model.DWaterTypeTitle,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
                     };
 
@@ -143,9 +147,10 @@ namespace Datiss.Budget.Services
             {
                 return ValidationResult<WaterInstallFeeDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
+
             return ValidationResult<WaterInstallFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_DWaterType,
-                model.DWaterTypeTitle)
+                string.Format(ServiceMessages.Logic_WWsDiameter,
+                model.DWaterTypeTitle, organizationDisplay)
                 );
         }
 
@@ -318,7 +323,7 @@ namespace Datiss.Budget.Services
 
             int rowIndex = 1;
 
-            var dwatertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
+            var dwatertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__WaterDiameter);
 
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull($"Year not found with id: {yearId}");
@@ -343,7 +348,7 @@ namespace Datiss.Budget.Services
                 if (!await dwatertypes.AnyAsync(x => x.Id == rec.DWaterTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 1, rec.DWaterTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidWaterDiameter, rowIndex + 1, rec.DWaterTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -370,10 +375,10 @@ namespace Datiss.Budget.Services
                 string dWaterTypeNames = "";
                 foreach (var item in missingDWType)
                 {
-                    dWaterTypeNames += "- " + item.Title + "<br>";
+                    dWaterTypeNames += "- [" + item.Title + "]<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelDWTypeNotInExcel, dWaterTypeNames));
+                    string.Format(ServiceMessages.ImportExcelWWsDiameterNotInExcel, dWaterTypeNames));
             }
             //end
 
@@ -559,7 +564,8 @@ namespace Datiss.Budget.Services
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
                 query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                    _.DWaterType.Title.ToUpper().Contains(filter.Search));
+                                    _.DWaterType.Title.ToUpper().Contains(filter.Search) ||
+                                    _.WInstallFee.ToString().Contains(filter.Search));
             }
 
             return query;

@@ -28,6 +28,6 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<IEnumerable<WasteInstallFeeDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
-        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false);
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
     }
 }
