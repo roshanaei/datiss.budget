@@ -8,7 +8,7 @@ namespace Datiss.Budget.Extensions
     public static class EnumSelectListProvider
     {
 
-        public static IEnumerable<SelectListItem> GetEntityStatusItems(EntityStatus? status)
+        public static IEnumerable<SelectListItem> GetEntityStatusItems(EntityStatus? status = null)
             => new List<SelectListItem>
                 {
                     new SelectListItem
@@ -30,7 +30,7 @@ namespace Datiss.Budget.Extensions
                         Selected = status == EntityStatus.Deleted
                     }
                 };
-        public static IEnumerable<SelectListItem> GetActivityTypeItems(ActivityType? activity)
+        public static IEnumerable<SelectListItem> GetActivityTypeItems(ActivityType? activity = null)
             => new List<SelectListItem>
                 {
                     new SelectListItem

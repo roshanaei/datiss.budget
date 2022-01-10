@@ -39,8 +39,6 @@ namespace Datiss.Budget.ViewModels
 
         public IEnumerable<SelectListItem> OIFTypeSource { get; set; }
 
-        public IEnumerable<SelectListItem> ActivitySource => EnumSelectListProvider.GetActivityTypeItems(ActivityId);
-
     }
 
     public class UpdateIncomeForcastOtherViewModel : CreateIncomeForcastOtherViewModel
@@ -63,6 +61,7 @@ namespace Datiss.Budget.ViewModels
         public string OIFCountDisplay => OIFCount.ToString("N0");
         public int OIFPrice { get; set; }
         public string OIFPriceDisplay => OIFPrice.ToString("N0");
+        public IEnumerable<SelectListItem> ActivitySource => EnumSelectListProvider.GetActivityTypeItems(ActivityId);
     }
 
     public class IncomeForcastOtherFilterViewModel : FilterViewModel
@@ -70,10 +69,9 @@ namespace Datiss.Budget.ViewModels
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
         public int? OIFTypeId { get; set; }
-        public ActivityType? ActivityId { get; set; }
         public IList<SelectListItem> YearSource { get; set; }
         public IList<SelectListItem> OrganizationSource { get; set; }
-        public IEnumerable<SelectListItem> ActivitySource => EnumSelectListProvider.GetActivityTypeItems(ActivityId);
+        public IEnumerable<SelectListItem> ActivitySource => EnumSelectListProvider.GetActivityTypeItems();
     }
 
     public class IncomeForcastOtherIndexViewModel : PagedViewModel<IncomeForcastOtherViewModel>
@@ -93,6 +91,10 @@ namespace Datiss.Budget.ViewModels
         public IList<SelectListItem> InputOrganizationSource { get; set; }
 
         public IList<SelectListItem> OIFTypeSource { get; set; }
+
+        public ActivityType ActivityId { get; set; }
+
+        public IEnumerable<SelectListItem> ActivitySource => EnumSelectListProvider.GetActivityTypeItems(ActivityId);
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
             => YearSource = source.Select(x => new SelectListItem

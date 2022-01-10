@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Enum;
+using Datiss.Budget.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,7 @@ namespace Datiss.Budget.Services.Models
         public int OIFTypeId{ get; set; }
         public string OIFTypeDisplay { get; set; }
         public ActivityType ActivityId { get; set; }
+        public string ActivityDisplay => ActivityId.ToDisplay();
         public int OIFCount { get; set; }
         public int OIFPrice { get; set; }
     }

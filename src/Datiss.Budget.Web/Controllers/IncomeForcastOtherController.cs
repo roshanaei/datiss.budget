@@ -21,6 +21,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Datiss.Budget.Reports.Excel;
 using ClosedXML.Extensions;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -190,7 +191,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var oIFSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+            var oIFSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__OIFType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -446,23 +447,28 @@ namespace Datiss.Budget.Web.Controllers
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var oIFTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
+            var oIFTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__OIFType);
+            var activity = EnumSelectListProvider.GetActivityTypeItems();
 
             var items = new List<IncomeForcastOtherDTO>();
 
             foreach (var org in organizations)
             {
-                foreach (var dwt in oIFTypes)
+                foreach (var act in activity) 
                 {
-                    items.Add(new IncomeForcastOtherDTO
+                    foreach (var oif in oIFTypes)
                     {
-                        OIFTypeDisplay = dwt.Title,
-                        OIFTypeId = dwt.Id,
-                        OrganizationId = org.Id,
-                        OrganizationDisplay = org.Title,
-                        Year = year.Year,
-                        YearId = year.Id
-                    });
+                        items.Add(new IncomeForcastOtherDTO
+                        {
+                            OIFTypeDisplay = oif.Title,
+                            OIFTypeId = oif.Id,
+                            OrganizationId = org.Id,
+                            OrganizationDisplay = org.Title,
+                            Year = year.Year,
+                            YearId = year.Id,
+                            ActivityId = act.Value=="0" ? ActivityType.Water : ActivityType.Waste
+                        });
+                    }
                 }
             }
 
@@ -484,8 +490,8 @@ namespace Datiss.Budget.Web.Controllers
         private string getCalcTitle(string key)
             => key switch
             {
-                "IncomeForcastOthers_Cal1" => SPTitles.IncomeForcastOthers_Cal1,
-                "IncomeForcastOthers_Cal2" => SPTitles.IncomeForcastOthers_Cal2,
+                "IncomeForcastOther_Cal1" => SPTitles.IncomeForcastOthers_Cal1,
+                "IncomeForcastOther_Cal2" => SPTitles.IncomeForcastOthers_Cal2,
                 _ => ""
             };
         #endregion

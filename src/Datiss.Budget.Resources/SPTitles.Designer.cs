@@ -106,7 +106,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to تعداد .
+        ///   Looks up a localized string similar to تعداد کل .
         /// </summary>
         public static string IncomeForcastOthers_Cal1 {
             get {
@@ -115,7 +115,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to درآمد.
+        ///   Looks up a localized string similar to درآمد کل.
         /// </summary>
         public static string IncomeForcastOthers_Cal2 {
             get {

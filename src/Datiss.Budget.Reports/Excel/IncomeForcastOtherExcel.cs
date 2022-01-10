@@ -1,5 +1,7 @@
 ﻿using ClosedXML.Excel;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +38,7 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 1).Value = item.Year.ToString();
                 sheet.Cell(row, 2).Value = item.OrganizationDisplay;
                 sheet.Cell(row, 3).Value = item.OIFTypeDisplay;
-                sheet.Cell(row, 4).Value = item.ActivityId;
+                sheet.Cell(row, 4).Value = item.ActivityDisplay;
                 sheet.Cell(row, 5).Value = item.OIFCount;
                 sheet.Cell(row, 6).Value = item.OIFPrice;
                 sheet.Cell(row, 6).DataType = XLDataType.Number;
@@ -60,15 +62,16 @@ namespace Datiss.Budget.Reports.Excel
 
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
-            sheet.Range(1, 1, 1, 7).Merge();
+            sheet.Range(1, 1, 1, 8).Merge();
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
             sheet.Cell(2, 2).Value = "کد سازمان";
             sheet.Cell(2, 3).Value = "عنوان درآمدهای سرمایه ای";
             sheet.Cell(2, 4).Value = "کد درآمدهای سرمایه ای";
-            sheet.Cell(2, 5).Value = "فعالیت";
-            sheet.Cell(2, 6).Value = "تعداد";
-            sheet.Cell(2, 7).Value = "درآمد";
+            sheet.Cell(2, 5).Value = "عنوان فعالیت";
+            sheet.Cell(2, 6).Value = "کد فعالیت";
+            sheet.Cell(2, 7).Value = "تعداد";
+            sheet.Cell(2, 8).Value = "درآمد";
 
             var totalCount = items.Count();
             int row = 3;
@@ -79,13 +82,14 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 2).Value = item.OrganizationId;
                 sheet.Cell(row, 3).Value = item.OIFTypeDisplay;
                 sheet.Cell(row, 4).Value = item.OIFTypeId;
-                sheet.Cell(row, 5).Value = item.ActivityId;
-                sheet.Cell(row, 6).Value = item.OIFCount;
-                sheet.Cell(row, 7).Value = item.OIFPrice;
+                sheet.Cell(row, 5).Value = item.ActivityDisplay;
+                sheet.Cell(row, 6).Value = item.ActivityId == ActivityType.Water ? 0: 1;
+                sheet.Cell(row, 7).Value = item.OIFCount;
+                sheet.Cell(row, 8).Value = item.OIFPrice;
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(2, 1, row - 1, 7);
+            var range = sheet.Range(2, 1, row - 1, 8);
             range.Column(6).Style.NumberFormat.Format = "#,##0";
             range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             var table = range.CreateTable($"{_sheetName}_Table");

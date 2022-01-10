@@ -232,7 +232,7 @@ namespace Datiss.Budget.Services
                 Value = await _uow.ExecuteScalar<int>(
                                     "[dbo].[IncomeForcastOther_Cal2] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
-            });          
+            });
 
             return await Task.FromResult(result);
         }
@@ -337,6 +337,15 @@ namespace Datiss.Budget.Services
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
 
             var records = data.Adapt<List<IncomeForcastOther>>();
+
+            var datalist = data.ToList();
+            for (int i = 0; i < datalist.Count(); i++)
+            {
+                if (datalist[i].ActivityId == 0)
+                    records[i].ActivityId = ActivityType.Water;
+                if (datalist[i].ActivityId == 1)
+                    records[i].ActivityId = ActivityType.Waste;
+            }
 
             int rowIndex = 1;
 
@@ -606,8 +615,8 @@ namespace Datiss.Budget.Services
                 default:
                     return query.Include(x => x.Organization)
                                 .Include(x => x.OIFType)
-                                .OrderBy(x => x.ActivityId)
-                                .ThenBy(x => x.Organization.DisplayOrder)
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x=>x.ActivityId)
                                 .ThenBy(x => x.OIFType.DisplayOrder);
             }
         }

@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="IncomeForcastOthers_Cal1" xml:space="preserve">
-    <value>تعداد </value>
+    <value>تعداد کل </value>
   </data>
   <data name="IncomeForcastOthers_Cal2" xml:space="preserve">
-    <value>درآمد</value>
+    <value>درآمد کل</value>
   </data>
   <data name="IncomeForcastWs_Cal1" xml:space="preserve">
     <value>درآمد هزینه لوله گذاری سرمایه ای حجم دفع سالیانه</value>

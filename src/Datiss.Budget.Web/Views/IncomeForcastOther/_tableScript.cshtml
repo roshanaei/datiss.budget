@@ -1,0 +1,324 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    function editRow(id) {
+
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_OIFType_' + id).hide();
+        $('#divOutput_ActivityId_' + id).hide();
+        $('#divOutput_OIFCount_' + id).hide();
+        $('#divOutput_OIFPrice_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_OIFType_' + id).show();
+        $('#divInput_ActivityId_' + id).show();
+        $('#divInput_OIFCount_' + id).show();
+        $('#divInput_OIFPrice_' + id).show();
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_OIFType_' + id).hide();
+        $('#divInput_ActivityId_' + id).hide();
+        $('#divInput_OIFCount_' + id).hide();
+        $('#divInput_OIFPrice_' + id).hide();
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_OIFType_' + id).show();
+        $('#divOutput_ActivityId_' + id).show();
+        $('#divOutput_OIFCount_' + id).show();
+        $('#divOutput_OIFPrice_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.oifTypeId = $('#inputOIFType_' + id).val();
+        model.activityId = $('#inputActivityId_' + id).val();
+        model.oifCount = $('#inputOIFCount_' + id).val();
+        model.oifPrice = $('#inputOIFPrice_' + id).val();
+
+        $.ajax({
+            url: '@Url.Action(WaterInstallFeeController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanOIFType_' + id).text(data.oifTypeDisplay);
+                $('#spanActivityId_' + id).text(data.activityDisplay);
+                $('#spanOIFCount_' + id).text(data.oifCount);
+                $('#spanOIFPrice_' + id).text(data.oifPrice);
+
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.oifTypeId = $(e).find('#inputOIFType_').val();
+        model.activityId = $(e).find('#inputActivityId_').val();
+        model.oifCount = $(e).find('#inputOIFCount_').val();
+        model.oifPrice = $(e).find('#inputOIFPrice_').val();
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(WaterInstallFeeController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //OIFType
+                $(e).find('#divInput_OIFType_').attr('id', 'divInput_OIFType_' + data.id);
+                $(e).find('#hidOIFTypeId_').attr('id', 'hidOIFTypeId_' + data.id);
+                $(e).find('#inputOIFType_').attr('id', 'inputOIFType_' + data.id);
+                $(e).find('#divOutput_OIFType_').attr('id', 'divOutput_OIFType_' + data.id);
+                $(e).find('#spanOIFType_').attr('id', 'spanOIFType_' + data.id);
+
+                $('#divInput_OIFType_' + data.id).hide();
+                $('#spanOIFType_' + data.id).text(data.oifTypeDisplay);
+                $('#divOutput_OIFType_' + data.id).show();
+
+                //ActivityId
+                $(e).find('#divInput_ActivityId_').attr('id', 'divInput_ActivityId_' + data.id);
+                $(e).find('#inputActivityId_').attr('id', 'inputActivityId_' + data.id);
+                $(e).find('#divOutput_ActivityId_').attr('id', 'divOutput_ActivityId_' + data.id);
+                $(e).find('#spanActivityId_').attr('id', 'spanActivityId_' + data.id);
+
+                $('#divInput_ActivityId_' + data.id).hide();
+                $('#spanActivityId_' + data.id).text(data.activityDisplay);
+                $('#divOutput_ActivityId_' + data.id).show();
+
+                //OIFCount
+                $(e).find('#divInput_OIFCount_').attr('id', 'divInput_OIFCount_' + data.id);
+                $(e).find('#inputOIFCount_').attr('id', 'inputOIFCount_' + data.id);
+                $(e).find('#divOutput_OIFCount_').attr('id', 'divOutput_OIFCount_' + data.id);
+                $(e).find('#spanOIFCount_').attr('id', 'spanOIFCount_' + data.id);
+
+                $('#divInput_OIFCount_' + data.id).hide();
+                $('#spanOIFCount_' + data.id).text(data.oifCount);
+                $('#divOutput_OIFCount_' + data.id).show();
+
+                //OIFPrice
+                $(e).find('#divInput_OIFPrice_').attr('id', 'divInput_OIFPrice_' + data.id);
+                $(e).find('#inputOIFPrice_').attr('id', 'inputOIFPrice_' + data.id);
+                $(e).find('#divOutput_OIFPrice_').attr('id', 'divOutput_OIFPrice_' + data.id);
+                $(e).find('#spanOIFPrice_').attr('id', 'spanOIFPrice_' + data.id);
+
+                $('#divInput_OIFPrice_' + data.id).hide();
+                $('#spanOIFPrice_' + data.id).text(data.oifPrice);
+                $('#divOutput_OIFPrice_' + data.id).show();
+
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        resetTableBackColor("my-table");
+
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.selectOIFType:last').select2({
+            dir : 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(WaterInstallFeeController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                console.log(err);
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+</script>

@@ -23,12 +23,15 @@ namespace Datiss.Budget.Services.Excel.Models
         public int OIFTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
-        public ActivityType ActivityId { get; set; }
+        public string ActivityDisplay { get; set; }
 
         [Column(MappingDirections.Both, Letter = "F")]
-        public int OIFCount { get; set; }
+        public int ActivityId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "G")]
+        public int OIFCount { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "H")]
         public int OIFPrice { get; set; }
     }
 }
