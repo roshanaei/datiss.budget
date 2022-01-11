@@ -381,7 +381,7 @@ namespace Datiss.Budget.Services
 
             var usertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
 
-            var wastediameters = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__WaterDiameter);
+            var wastediameters = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__WasteDiameter);
 
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull($"Year not found with id: {yearId}");
@@ -663,13 +663,16 @@ namespace Datiss.Budget.Services
                 query = query.Where(x => x.UserTypeId == filter.UserTypeId.Value);
             if (filter.WsPipeDiameterId.HasValue)
                 query = query.Where(x => x.WsPipeDiameterId == filter.WsPipeDiameterId.Value);
-            
+
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
                 query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
                                     _.UserType.Title.ToUpper().Contains(filter.Search) ||
-                                    _.WsPipeDiameter.Title.ToUpper().Contains(filter.Search));
+                                    _.WsPipeDiameter.Title.ToUpper().Contains(filter.Search) ||
+                                    _.NumberSales.ToString().Contains(filter.Search) ||
+                                    _.UnitSales.ToString().Contains(filter.Search) ||
+                                    _.WsInstallationCosts.ToString().Contains(filter.Search));
             }
             return query;
         }
