@@ -137,7 +137,7 @@ namespace Datiss.Budget.Web.Controllers
             var userTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var wsPipeDiameterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter))
+            var wsPipeDiameterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -197,7 +197,7 @@ namespace Datiss.Budget.Web.Controllers
             var userTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var wsPipeDiameterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter))
+            var wsPipeDiameterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -454,7 +454,7 @@ namespace Datiss.Budget.Web.Controllers
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
             var userTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
-            var wasteDiameter = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter);
+            var wasteDiameter = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteDiameter);
 
             var items = new List<WasteSalesSplitDTO>();
 
