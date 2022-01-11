@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Datiss.Budget.Entities;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 
@@ -21,6 +22,7 @@ namespace Datiss.Budget.Services.Contracts
         Task<IEnumerable<Organization>> GetWithChildrenAsync(int? organizationId, bool input = false);
 
         Task<IEnumerable<DropDownItem>> GetDropDownDataAsync(bool input = false);
+        Task<IEnumerable<DropDownItem>> GetDropDownTypeOrgDataAsync(OrganizationType type,int? selectedId = null);
 
         Task<bool> IsDescendentOfAsync(int parentId, int targetOrganizationId);
 

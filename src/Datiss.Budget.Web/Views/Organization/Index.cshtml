@@ -5,7 +5,6 @@
 <div class="row">
     <div class="col-12">
         <div class="content-header">
-            @*<i class="ft-settings mr-1"></i>*@
             <span class="my-font-bold">@ViewData["Title"]</span>
         </div>
     </div>
@@ -25,6 +24,14 @@
                                     <select class="form-control d-inline-block width-300" id="organizationId" onchange="loadCreateLink()">
                                     </select>
                                 </label>
+                                <label asp-for="@Model.Filter.ParentId" class="my-font" style="margin-right:20px">
+                                    سازمان:
+                                    <select asp-for="@Model.Filter.ParentId"
+                                            asp-items="Model.Filter.OrganizationTypeSource"
+                                            class="form-control d-inline-block width-300"
+                                            id="organizationId">
+                                    </select>
+                                </label>
                                 <label class="my-font" style="margin-right:20px">
                                     نوع سازمان:
                                     <select class="form-control d-inline-block width-100" id="yearId" onchange="loadCreateLink()">
@@ -36,7 +43,7 @@
                                     </select>
                                 </label>
                                 <label class="my-font" style="margin-right:20px">
-                                     وضعیت:
+                                    وضعیت:
                                     <select class="form-control d-inline-block width-100" id="yearId" onchange="loadCreateLink()">
                                     </select>
                                 </label>
@@ -113,7 +120,7 @@
                                 <!--Pagination-->
                                 <p>
                                         Total count : @Model.TotalCount - Page @Model.PageNumber of @Model.PagesCount
-                                    </p>
+                                </p>
 
                                 @if (Model.PagesCount > 1)
                                 {

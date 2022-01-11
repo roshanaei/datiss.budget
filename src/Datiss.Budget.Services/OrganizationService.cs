@@ -172,6 +172,14 @@ namespace Datiss.Budget.Services
                         Title = x.Title,
                         Selected = x.Id == _userContext.OrganizationId
                     }).ToList();
+        public async Task<IEnumerable<DropDownItem>> GetDropDownTypeOrgDataAsync(OrganizationType type,int? selectedId = null)
+            => Query().Where(x => x.Type == type)
+            .Select(x => new DropDownItem
+            {
+                Id = x.Id ,
+                Title = x.Title,
+                Selected = x.Id == selectedId
+            }).ToList();
 
         public async Task<PagedResult<OrganizationDTO>> GetListAsync(OrganizationFilterDTO filter)
         {

@@ -20,6 +20,7 @@ using Datiss.Budget.Common.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Datiss.Budget.Common.GuardToolkit;
 using Mapster;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -52,6 +53,8 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public  async Task<IActionResult> Index(int page = 1)
         {
+            var orgSource = (await _organizationService.GetDropDownTypeOrgDataAsync(OrganizationType.County))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
             var filterInput = new OrganizationFilterDTO {
                 OrderBy = "id",
                 OrderDesc = true,
@@ -62,10 +65,9 @@ namespace Datiss.Budget.Web.Controllers
             var model = new OrganizationIndexViewModel();
             model = result.Adapt<OrganizationIndexViewModel>();
 
-            model.SetParentOrganizationFilterSource(
-                (await _organizationService.GetDropDownDataAsync())
-                .Adapt<IEnumerable<DropDownItemViewModel>>()
-            );
+            //Fill DropDown
+            model.SetParentOrganizationFilterSource(orgSource);
+
 
             return View(model);
         }
