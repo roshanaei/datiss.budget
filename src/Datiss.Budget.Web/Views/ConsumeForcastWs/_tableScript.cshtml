@@ -1,0 +1,386 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+
+    function editRow(id) {
+
+        //$('th,tr td').css('background-color', 'rgb(255 255 255)');
+        //resetTableBackColor("my-table");
+
+        //do reset all row background
+
+        let row = $('#row_' + id);
+        //row.css('background-color', '#7598f3');
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_UserType_' + id).hide();
+        $('#divOutput_UsageLayerType_' + id).hide();
+        $('#divOutput_CountUser_' + id).hide();
+        $('#divOutput_UnitUser_' + id).hide();
+        $('#divOutput_ConsumeUser_' + id).hide();
+        $('#divOutput_AvgConsumeUser_' + id).hide();
+        $('#divOutput_ConsumeUserForcast_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_UserType_' + id).show();
+        $('#divInput_UsageLayerType_' + id).show();
+        $('#divInput_CountUser_' + id).show();
+        $('#divInput_UnitUser_' + id).show();
+        $('#divInput_ConsumeUser_' + id).show();
+        $('#divInput_AvgConsumeUser_' + id).show();
+        $('#divInput_ConsumeUserForcast_' + id).show();
+
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_UserType_' + id).hide();
+        $('#divInput_UsageLayerType_' + id).hide();
+        $('#divInput_CountUser_' + id).hide();
+        $('#divInput_UnitUser_' + id).hide();
+        $('#divInput_ConsumeUser_' + id).hide();
+        $('#divInput_AvgConsumeUser_' + id).hide();
+        $('#divInput_ConsumeUserForcast_' + id).hide();
+
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_UserType_' + id).show();
+        $('#divOutput_UsageLayerType_' + id).show();
+        $('#divOutput_CountUser_' + id).show();
+        $('#divOutput_UnitUser_' + id).show();
+        $('#divOutput_ConsumeUser_' + id).show();
+        $('#divOutput_AvgConsumeUser_' + id).show();
+        $('#divOutput_ConsumeUserForcast_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.userTypeId = $('#inputUserType_' + id).val();
+        model.usageLayerId = $('#inputUsageLayerType_' + id).val();
+        model.countUser = $('#inputCountUser_' + id).val();
+        model.unitUser = $('#inputUnitUser_' + id).val();
+        model.consumeUser = $('#inputConsumeUser_' + id).val();
+        model.avgConsumeUser = $('#inputAvgConsumeUser_' + id).val();
+        model.consumeUserForcast = $('#inputConsumeUserForcast_' + id).val();
+
+        
+        $.ajax({
+            url: '@Url.Action(ConsumeForcastWsController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanUserType_' + id).text(data.userTypeDisplay);
+                $('#spanUsageLayerType_' + id).text(data.usageLayerTypeDisplay);
+                $('#spanCountUser_' + id).text(data.countUser);
+                $('#spanUnitUser_' + id).text(data.unitUser);
+                $('#spanConsumeUser_' + id).text(data.consumeUser);
+                $('#spanAvgConsumeUser_' + id).text(data.avgConsumeUser);
+                $('#spanConsumeUserForcast_' + id).text(data.consumeUserForcast);
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+        console.log(e);
+
+
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.userTypeId = $(e).find('#inputUserType_').val();
+        model.usageLayerId = $(e).find('#inputUsageLayerType_').val();
+        model.countUser = $(e).find('#inputCountUser_').val();
+        model.unitUser = $(e).find('#inputUnitUser_').val();
+        model.consumeUser = $(e).find('#inputConsumeUser_').val();
+        model.avgConsumeUser = $(e).find('#inputAvgConsumeUser_').val();
+        model.consumeUserForcast = $(e).find('#inputConsumeUserForcast_').val();
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(ConsumeForcastWsController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //UserType
+                $(e).find('#divInput_UserType_').attr('id', 'divInput_UserType_' + data.id);
+                $(e).find('#hidUserTypeId_').attr('id', 'hidUserTypeId_' + data.id);
+                $(e).find('#inputUserType_').attr('id', 'inputUserType_' + data.id);
+                $(e).find('#divOutput_UserType_').attr('id', 'divOutput_UserType_' + data.id);
+                $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
+
+                $('#divInput_UserType_' + data.id).hide();
+                $('#spanUserType_' + data.id).text(data.userTypeDisplay);
+                $('#divOutput_UserType_' + data.id).show();
+
+
+                //UsageLayerType
+                $(e).find('#divInput_UsageLayerType_').attr('id', 'divInput_UsageLayerType_' + data.id);
+                $(e).find('#hidUsageLayerTypeId_').attr('id', 'hidUsageLayerTypeId_' + data.id);
+                $(e).find('#inputUsageLayerType_').attr('id', 'inputUsageLayerType_' + data.id);
+                $(e).find('#divOutput_UsageLayerType_').attr('id', 'divOutput_UsageLayerType_' + data.id);
+                $(e).find('#spanUsageLayerType_').attr('id', 'spanUsageLayerType_' + data.id);
+
+                $('#divInput_UsageLayerType_' + data.id).hide();
+                $('#spanUsageLayerType_' + data.id).text(data.usageLayerTypeDisplay);
+                $('#divOutput_UsageLayerType_' + data.id).show();
+
+                //CountUser
+                $(e).find('#divInput_CountUser_').attr('id', 'divInput_CountUser_' + data.id);
+                $(e).find('#inputCountUser_').attr('id', 'inputCountUser_' + data.id);
+                $(e).find('#divOutput_CountUser_').attr('id', 'divOutput_CountUser_' + data.id);
+                $(e).find('#spanCountUser_').attr('id', 'spanCountUser_' + data.id);
+
+                $('#divInput_CountUser_' + data.id).hide();
+                $('#spanCountUser_' + data.id).text(data.countUser);
+                $('#divOutput_CountUser_' + data.id).show();
+
+                //UnitUser
+                $(e).find('#divInput_UnitUser_').attr('id', 'divInput_UnitUser_' + data.id);
+                $(e).find('#inputUnitUser_').attr('id', 'inputUnitUser_' + data.id);
+                $(e).find('#divOutput_UnitUser_').attr('id', 'divOutput_UnitUser_' + data.id);
+                $(e).find('#spanUnitUser_').attr('id', 'spanUnitUser_' + data.id);
+
+                $('#divInput_UnitUser_' + data.id).hide();
+                $('#spanUnitUser_' + data.id).text(data.unitUser);
+                $('#divOutput_UnitUser_' + data.id).show();
+
+
+                //ConsumeUser
+                $(e).find('#divInput_ConsumeUser_').attr('id', 'divInput_ConsumeUser_' + data.id);
+                $(e).find('#inputConsumeUser_').attr('id', 'inputConsumeUser_' + data.id);
+                $(e).find('#divOutput_ConsumeUser_').attr('id', 'divOutput_ConsumeUser_' + data.id);
+                $(e).find('#spanConsumeUser_').attr('id', 'spanConsumeUser_' + data.id);
+
+                $('#divInput_ConsumeUser_' + data.id).hide();
+                $('#spanConsumeUser_' + data.id).text(data.consumeUser);
+                $('#divOutput_ConsumeUser_' + data.id).show();
+
+                //AvgConsumeUser
+                $(e).find('#divInput_AvgConsumeUser_').attr('id', 'divInput_AvgConsumeUser_' + data.id);
+                $(e).find('#inputAvgConsumeUser_').attr('id', 'inputAvgConsumeUser_' + data.id);
+                $(e).find('#divOutput_AvgConsumeUser_').attr('id', 'divOutput_AvgConsumeUser_' + data.id);
+                $(e).find('#spanAvgConsumeUser_').attr('id', 'spanAvgConsumeUser_' + data.id);
+
+                $('#divInput_AvgConsumeUser_' + data.id).hide();
+                $('#spanAvgConsumeUser_' + data.id).text(data.avgConsumeUser);
+                $('#divOutput_AvgConsumeUser_' + data.id).show();
+
+
+                //ConsumeUserForcast
+                $(e).find('#divInput_ConsumeUserForcast_').attr('id', 'divInput_ConsumeUserForcast_' + data.id);
+                $(e).find('#inputConsumeUserForcast_').attr('id', 'inputConsumeUserForcast_' + data.id);
+                $(e).find('#divOutput_ConsumeUserForcast_').attr('id', 'divOutput_ConsumeUserForcast_' + data.id);
+                $(e).find('#spanConsumeUserForcast_').attr('id', 'spanConsumeUserForcast_' + data.id);
+
+                $('#divInput_ConsumeUserForcast_' + data.id).hide();
+                $('#spanConsumeUserForcast_' + data.id).text(data.consumeUserForcast);
+                $('#divOutput_ConsumeUserForcast_' + data.id).show();
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        //do reset all row background
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+        
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.selectUserType:last').select2({
+            dir : 'rtl'
+        });
+
+        $('.select:last').select2({
+            dir: 'rtl'
+        });
+
+        let input = document.getElementById('inputAvgConsumeUser_');
+        let btnSave = document.getElementById('btnSaveCreate_');
+
+        console.log(input);
+        console.log(btnSave);
+
+        input.addEventListener('keyup', function (event) {
+            event.preventDefault();
+            if (event.keycode === 13) {
+                btnSave.click();
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        input.focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(ConsumeForcastWsController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    alert(data.message);
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                console.log(err);
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+
+
+        var rows = table.getElementsByTagName("tr");
+
+        for (i = 2; i < rows.length - 1; i++) {
+            console.log(i);
+            rows[i].style.backgroundColor = "#00000000"
+        }
+    }
+
+</script>
