@@ -42,6 +42,7 @@ namespace Datiss.Budget.Entities.Identity
         [StringLength(450)]
         public string PhotoFileName { get; set; }
 
+        //ignore
         public DateTime? BirthDate { get; set; }
 
         public DateTime? CreatedDateTime { get; set; }
@@ -50,6 +51,7 @@ namespace Datiss.Budget.Entities.Identity
 
         public bool IsEmailPublic { get; set; }
 
+        //ignore
         public string Location { set; get; }
 
         public bool IsActive { get; set; } = true;
