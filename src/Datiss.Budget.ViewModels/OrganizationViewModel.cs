@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -20,6 +21,14 @@ namespace Datiss.Budget.ViewModels
         public bool SewageStatus { get; set; }
 
         public IList<SelectListItem> ParentList { get; set; }
+        public void SetParentOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+             => ParentList = source.Select(x => new SelectListItem
+             {
+                 Text = x.Title,
+                 Value = x.Id.ToString()
+             }).ToList();
+        public IList<SelectListItem> OrganizationTypeSource => EnumSelectListProvider.GetOrganizationTypeItem(Type).ToList();
+
     }
 
     public class UpdateOrganizationViewModel : CreateOrganizationViewModel
@@ -39,6 +48,8 @@ namespace Datiss.Budget.ViewModels
 
         public OrganizationType Type { get; set; }
 
+        public string TypeDisplay => Type.ToDisplay();
+
         public bool SewageStatus { get; set; }
 
         public EntityStatus Status { get; set; }
@@ -48,7 +59,7 @@ namespace Datiss.Budget.ViewModels
 
     public class OrganizationFilterViewModel : FilterViewModel
     {
-        public int? ParentId { get; set; }
+        public int? OrganizationId { get; set; }
 
         public OrganizationType? Type { get; set; }
 
@@ -58,9 +69,9 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> ParentOrganozationSource { get; set; }
 
-        public IList<SelectListItem> OrganizationTypeSource { get; set; }
+        public IList<SelectListItem> OrganizationTypeSource => EnumSelectListProvider.GetOrganizationTypeItem(Type).ToList().AddEmptySelectListItem();
 
-        public IList<SelectListItem> OrganizationStatusSource { get; set; }
+        public IList<SelectListItem> OrganizationStatusSource => EnumSelectListProvider.GetEntityStatusItems(Status).ToList().AddEmptySelectListItem();
     }
 
     public class OrganizationIndexViewModel : PagedViewModel<OrganizationViewModel>
@@ -68,8 +79,17 @@ namespace Datiss.Budget.ViewModels
         public OrganizationIndexViewModel() {
             Filter = new OrganizationFilterViewModel();
         }
+        //public IList<SelectListItem> ParentOrganozationSource { get; set; }
+
 
         public OrganizationFilterViewModel Filter { get; set; }
+
+        //public void SetParentOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+        //    => ParentOrganozationSource = source.Select(x => new SelectListItem
+        //    {
+        //        Text = x.Title,
+        //        Value = x.Id.ToString()
+        //    }).ToList();
 
         public void SetParentOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectParentOrgId = null) {
             Filter.ParentOrganozationSource = source.Select(x => new SelectListItem {
@@ -79,21 +99,21 @@ namespace Datiss.Budget.ViewModels
             }).ToList().AddEmptySelectListItem();
         }
 
-        public void SetOrganizationTypeFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectOrgTypeId = null) {
-            Filter.OrganizationTypeSource = source.Select(x => new SelectListItem {
-                Selected = x.Id == selectOrgTypeId,
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
-        }
+        //public void SetOrganizationTypeFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectOrgTypeId = null) {
+        //    Filter.OrganizationTypeSource = source.Select(x => new SelectListItem {
+        //        Selected = x.Id == selectOrgTypeId,
+        //        Text = x.Title,
+        //        Value = x.Id.ToString()
+        //    }).ToList().AddEmptySelectListItem();
+        //}
 
-        public void SetOrganizationStatusFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectOrgStatusId = null) {
-            Filter.OrganizationStatusSource = source.Select(x => new SelectListItem {
-                Selected = x.Id == selectOrgStatusId,
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
-        }
+        //public void SetOrganizationStatusFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectOrgStatusId = null) {
+        //    Filter.OrganizationStatusSource = source.Select(x => new SelectListItem {
+        //        Selected = x.Id == selectOrgStatusId,
+        //        Text = x.Title,
+        //        Value = x.Id.ToString()
+        //    }).ToList().AddEmptySelectListItem();
+        //}
 
     }
 }

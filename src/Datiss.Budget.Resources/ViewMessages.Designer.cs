@@ -295,6 +295,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to سازمان مورد نظر دارای زیر مجموعه است . ابتدا آن ها را پاک کنید ..
+        /// </summary>
+        public static string OrganizationHasChild {
+            get {
+                return ResourceManager.GetString("OrganizationHasChild", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to خطای سیستمی. لطفاً با پشتیبانی تماس بگیرید..
         /// </summary>
         public static string SystemError {

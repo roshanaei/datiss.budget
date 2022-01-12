@@ -15,14 +15,15 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<ValidationResult> UpdateAsync(UpdateOrganizationDTO model);
 
-        Task<ValidationResult> SoftDeleteAsync(int id);
+        Task SoftDeleteAsync(int id);
 
         Task<IEnumerable<DropDownItem>> GetParentsAsync();
 
         Task<IEnumerable<Organization>> GetWithChildrenAsync(int? organizationId, bool input = false);
 
         Task<IEnumerable<DropDownItem>> GetDropDownDataAsync(bool input = false);
-        Task<IEnumerable<DropDownItem>> GetDropDownTypeOrgDataAsync(OrganizationType type,int? selectedId = null);
+
+        Task<IEnumerable<DropDownItem>> GetDropDownTypeOrgDataAsync(OrganizationType type);
 
         Task<bool> IsDescendentOfAsync(int parentId, int targetOrganizationId);
 
