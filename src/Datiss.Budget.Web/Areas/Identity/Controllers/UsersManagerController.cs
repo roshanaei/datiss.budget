@@ -1,5 +1,6 @@
 ﻿using Datiss.Budget.Common.IdentityToolkit;
 using Datiss.Budget.Entities.Identity;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Identity;
 using Datiss.Budget.ViewModels.Identity;
@@ -89,10 +90,15 @@ namespace Datiss.Budget.Areas.Identity.Controllers
         public async Task<IActionResult> ChangeUserStat(int userId, bool activate)
         {
             User thisUser = null;
+
+            EntityStatus status = activate 
+                ? EntityStatus.Enabled 
+                : EntityStatus.Disbaled;
+
             var result = await _userManager.UpdateUserAndSecurityStampAsync(
                 userId, user =>
                         {
-                            user.IsActive = activate;
+                            user.Status = status;
                             thisUser = user;
                         });
             if (!result.Succeeded)
