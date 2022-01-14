@@ -19,7 +19,7 @@ namespace Datiss.Budget.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class ServiceMessages {
@@ -93,6 +93,24 @@ namespace Datiss.Budget.Resources {
         public static string DuplicateNames {
             get {
                 return ResourceManager.GetString("DuplicateNames", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to کد ملی &apos;{0}&apos; قبلاً برای کاربر دیگری ثبت شده است.
+        /// </summary>
+        public static string Exist_NationalCode {
+            get {
+                return ResourceManager.GetString("Exist_NationalCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to نام کاربری &apos;{0}&apos; قبلاً ثبت شده است..
+        /// </summary>
+        public static string Exist_Username {
+            get {
+                return ResourceManager.GetString("Exist_Username", resourceCulture);
             }
         }
         
@@ -250,6 +268,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to فرمت کد ملی وارد شده اشتباه است..
+        /// </summary>
+        public static string Invalid_NationalCode {
+            get {
+                return ResourceManager.GetString("Invalid_NationalCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است.
         /// </summary>
         public static string Logic_BranchFeeAmount {
@@ -363,6 +390,42 @@ namespace Datiss.Budget.Resources {
         public static string RelationDataSoftDeleted {
             get {
                 return ResourceManager.GetString("RelationDataSoftDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to لطفاً نام کاربر را وراد نمایید..
+        /// </summary>
+        public static string Req_FirstName {
+            get {
+                return ResourceManager.GetString("Req_FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to لطفاً نام خانوادگی کاربر را وارد نمایید..
+        /// </summary>
+        public static string Req_LastName {
+            get {
+                return ResourceManager.GetString("Req_LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to لطفاً کد ملی کاربر را وارد نمایید.
+        /// </summary>
+        public static string Req_NationalCode {
+            get {
+                return ResourceManager.GetString("Req_NationalCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to نام کاربری را وارد نمایید..
+        /// </summary>
+        public static string Req_Username {
+            get {
+                return ResourceManager.GetString("Req_Username", resourceCulture);
             }
         }
         
