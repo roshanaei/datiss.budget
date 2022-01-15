@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="IncomeCurrentOperational_Cal1" xml:space="preserve">
+    <value>درآمد عملیاتی آب</value>
+  </data>
+  <data name="IncomeCurrentOperational_Cal2" xml:space="preserve">
+    <value>درآمد عملیاتی فاضلاب</value>
+  </data>
   <data name="IncomeForcastOthers_Cal1" xml:space="preserve">
     <value>تعداد کل </value>
   </data>

@@ -180,6 +180,9 @@
   <data name="ImportExcelWWsDiameterNotInExcel" xml:space="preserve">
     <value>قطر لوله های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
+  <data name="Logic_ActivityICOTypeOrganization" xml:space="preserve">
+    <value>اطلاعات کاربری {0} و درآمدعملیاتی {1} برای سازمان {2} قبلا ثبت شده است</value>
+  </data>
   <data name="Logic_BranchFeeAmount" xml:space="preserve">
     <value>اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است</value>
   </data>

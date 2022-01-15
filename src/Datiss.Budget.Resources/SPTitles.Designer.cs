@@ -61,6 +61,24 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to درآمد عملیاتی آب.
+        /// </summary>
+        public static string IncomeCurrentOperational_Cal1 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentOperational_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to درآمد عملیاتی فاضلاب.
+        /// </summary>
+        public static string IncomeCurrentOperational_Cal2 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentOperational_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to درآمد ماده 11 آب سالیانه.
         /// </summary>
         public static string IncomeForcast_Cal1 {

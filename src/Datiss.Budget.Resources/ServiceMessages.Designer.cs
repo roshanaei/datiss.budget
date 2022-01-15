@@ -250,6 +250,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} و درآمدعملیاتی {1} برای سازمان {2} قبلا ثبت شده است.
+        /// </summary>
+        public static string Logic_ActivityICOTypeOrganization {
+            get {
+                return ResourceManager.GetString("Logic_ActivityICOTypeOrganization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است.
         /// </summary>
         public static string Logic_BranchFeeAmount {
