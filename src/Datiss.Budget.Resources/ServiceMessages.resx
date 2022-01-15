@@ -171,6 +171,9 @@
   <data name="ImportExcelOrgNotInExcel" xml:space="preserve">
     <value>سازمان های ({0}) در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</value>
   </data>
+  <data name="ImportExcelPipeDiameterOrgNotInExcel" xml:space="preserve">
+    <value>قطر لوله های :&lt;br&gt;{0} برای سازمان "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
   <data name="ImportExcelSuccess" xml:space="preserve">
     <value>ورود اطلاعات با موفقیت انجام گردید.</value>
   </data>

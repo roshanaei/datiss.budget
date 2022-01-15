@@ -223,6 +223,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to قطر لوله های :&lt;br&gt;{0} برای سازمان &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelPipeDiameterOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelPipeDiameterOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ورود اطلاعات با موفقیت انجام گردید..
         /// </summary>
         public static string ImportExcelSuccess {

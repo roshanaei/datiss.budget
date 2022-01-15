@@ -407,15 +407,34 @@ namespace Datiss.Budget.Services
 
                 rowIndex++;
             }
+            //
+            var missingOrgs = new List<Organization>();
+            var existOrgs = new List<Organization>();
 
+            foreach (var item in descendents)
+            {
+                var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                if (!existInExcel)
+                    missingOrgs.Add(item);
+                else
+                    existOrgs.Add(item);
+            }
+            //
             //Start DWasteType
             var missingDWsType = new List<Constant>();
-            foreach (var item in dwastetypes)
+            string orgTitle = "";
+            foreach (var org in existOrgs)
             {
-                var existDWTypeInExcel = records.Any(_ => _.DWasteTypeId == item.Id);
-                if (!existDWTypeInExcel)
-                    missingDWsType.Add(item);
-
+                foreach (var item in dwastetypes)
+                {
+                    var existDWTypeInExcel = records.Any(_ => _.DWasteTypeId == item.Id &&
+                                                              _.OrganizationId==org.Id);
+                    if (!existDWTypeInExcel)
+                    {
+                        missingDWsType.Add(item);
+                        orgTitle = org.Title;
+                    }
+                }
             }
             if (missingDWsType.Any())
             {
@@ -425,7 +444,7 @@ namespace Datiss.Budget.Services
                     dWasteTypeNames += "- [" + item.Title + "]<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelWWsDiameterNotInExcel, dWasteTypeNames));
+                    string.Format(ServiceMessages.ImportExcelPipeDiameterOrgNotInExcel, dWasteTypeNames , orgTitle));
             }
             //end
 
@@ -433,15 +452,6 @@ namespace Datiss.Budget.Services
 
             if (!continueIfAnyOrgMissing)
             {
-                var missingOrgs = new List<Organization>();
-
-                foreach (var item in descendents)
-                {
-                    var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
-                    if (!existInExcel)
-                        missingOrgs.Add(item);
-                }
-
                 if (missingOrgs.Any())
                 {
                     string orgNames = "";
