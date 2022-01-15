@@ -97,6 +97,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to کلمه عبور مطابق با الگوی تعریف شده نیست..
+        /// </summary>
+        public static string Err_Password_Format {
+            get {
+                return ResourceManager.GetString("Err_Password_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to کد ملی &apos;{0}&apos; قبلاً برای کاربر دیگری ثبت شده است.
         /// </summary>
         public static string Exist_NationalCode {

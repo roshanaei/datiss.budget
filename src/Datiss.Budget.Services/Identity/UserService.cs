@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Datiss.Budget.Security;
-using Datiss.Budget.Common.GuardToolkit;
-using Datiss.Budget.Common.IdentityToolkit;
-using Datiss.Budget.Entities.Identity;
-using Datiss.Budget.Services.Contracts;
-using Datiss.Budget.Services.Contracts.Identity;
-using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Security;
 using Datiss.Budget.Services.Models;
-using Datiss.Budget.Services.Infrastructure;
+using Datiss.Budget.Entities.Identity;
+using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Common.Exceptions;
+using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Services.Infrastructure;
+using Datiss.Budget.Services.Contracts.Identity;
 using DNTPersianUtils.Core;
 using Datiss.Budget.Resources;
 using Mapster;
 
 namespace Datiss.Budget.Services.Identity
 {
+
     public class UserService : IUserService
     {
 
@@ -42,7 +41,7 @@ namespace Datiss.Budget.Services.Identity
             _dbSet = _uow.Set<User>();
         }
 
-        private IQueryable<User> Querty()
+        private IQueryable<User> Query()
             => _dbSet.Where(_ => _.Status != EntityStatus.Deleted).AsNoTracking();
 
         private IQueryable<User> QueryActiveUsers()
@@ -81,10 +80,68 @@ namespace Datiss.Budget.Services.Identity
 
             var result = await _userManager.CreateAsync(user, model.Password);
             if(!result.Succeeded) {
-                
+                throw new CreateUserException(result.Errors);
             }
+
+            var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
+            if (!passwordResult.Succeeded) {
+                return ValidationResult<UserResultDto>.Failed(
+                    user.Adapt<UserResultDto>(),
+                    ValidationMode.Update,
+                    ServiceMessages.Err_Password_Format);
+            }
+
+            return ValidationResult<UserResultDto>
+                    .Success(user.Adapt<UserResultDto>());
         }
 
+        public async Task<ValidationResult<UserResultDto>> UpdateAsync(UpdateUserDto model) {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var validation = await validateUpdateAsync(model);
+            if (validation.NotValid)
+                return ValidationResult<UserResultDto>
+                    .Failed(ValidationMode.Update, validation.Message);
+
+            var existingUser = await _dbSet.FirstOrDefaultAsync(_ => _.UserName.ToUpper() == model.Username.ToUpper()
+                                                                        && _.Id != model.Id);
+            if(existingUser != null) {
+                return ValidationResult<UserResultDto>.Failed(
+                    existingUser.Adapt<UserResultDto>(),
+                    ValidationMode.Update,
+                    string.Format(ServiceMessages.Exist_Username, model.Username));
+            }
+
+            var user = await _dbSet.FindAsync(model.Id);
+            user.CheckReferenceIsNull(nameof(user));
+            user.FirstName = model.FirstName.ApplyCorrectYeKe().Trim();
+            user.LastName = model.LastName.ApplyCorrectYeKe().Trim();
+            user.Email = model.Email.Trim();
+            user.NationalCode = model.NationalCode;
+            user.PhoneNumber = model.PhoneNumber;
+            user.PositionId = model.PositionId;
+            user.Status = model.Status;
+            user.UserName = model.Username;
+            user.OrganizationId = model.OrganizationId;
+
+            var result = await _userManager.UpdateAsync(user);
+            if(!result.Succeeded) {
+                throw new UpdateUserException(result.Errors);
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.Password)) {
+                var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
+                if(!passwordResult.Succeeded) {
+                    return ValidationResult<UserResultDto>.Failed(
+                        user.Adapt<UserResultDto>(),
+                        ValidationMode.Update,
+                        ServiceMessages.Err_Password_Format);
+                }
+            }
+
+            return ValidationResult<UserResultDto>
+                    .Success(user.Adapt<UserResultDto>());
+        }
 
         public async Task<bool> HasAccessToOrganizationAsync(int organizationId) {
             if(_userContext.OrganizationId == null 
@@ -96,7 +153,6 @@ namespace Datiss.Budget.Services.Identity
                 organizationId
             );
         }
-
 
         #region private methods
         
@@ -119,19 +175,24 @@ namespace Datiss.Budget.Services.Identity
                 throw new RequiredFieldException(nameof(nationalCode));
         }
 
-        private async Task validateNationalCodeAsync(string nationalCode, bool checkForDuplicate = false) {
+        private async Task validateNationalCodeAsync(string nationalCode, int? userId = null) {
             if (string.IsNullOrWhiteSpace(nationalCode))
                 throw new RequiredFieldException(nameof(nationalCode));
 
             if (!nationalCode.IsValidIranianNationalCode())
                 throw new InvalidNationalCodeException(nationalCode);
 
-            if(checkForDuplicate) {
-                //Check if the user with the given NationalCode already existed in DB.
-                var user = await _dbSet.FirstOrDefaultAsync(_ => _.NationalCode == nationalCode);
-                if (user != null)
+            //Check if the user with the given NationalCode already existed in DB.
+            if (userId.HasValue) {
+                var existingUser = await _dbSet.FirstOrDefaultAsync(_ => _.NationalCode == nationalCode 
+                                                                            && _.Id != userId.Value);
+                if (existingUser != null)
                     throw new UserNationalCodeAlreadyExistException(nationalCode);
             }
+            
+            var user = await _dbSet.FirstOrDefaultAsync(_ => _.NationalCode == nationalCode);
+            if (user != null)
+                throw new UserNationalCodeAlreadyExistException(nationalCode);
         }
 
         private async Task<ValidationResult> validateCreateAsync(CreateUserDto model) {
@@ -141,6 +202,8 @@ namespace Datiss.Budget.Services.Identity
                 validateRequiredFields(model.Username, model.FirstName, model.LastName, model.NationalCode);
             }
             catch(RequiredFieldException ex) {
+                if (ex.FieldName == "userName")
+                    ValidationResult.Failed(ServiceMessages.Req_Username);
                 if (ex.FieldName == "firstName")
                     ValidationResult.Failed(ServiceMessages.Req_FirstName);
                 if (ex.FieldName == "lastName")
@@ -150,12 +213,45 @@ namespace Datiss.Budget.Services.Identity
             }
             
             try {
-                await validateNationalCodeAsync(model.NationalCode, checkForDuplicate: true);
+                await validateNationalCodeAsync(model.NationalCode);
             }
             catch(InvalidNationalCodeException ex) {
                 ValidationResult.Failed(ServiceMessages.Invalid_NationalCode);
             }
             catch(UserNationalCodeAlreadyExistException) {
+                ValidationResult.Failed(string.Format(
+                    ServiceMessages.Exist_NationalCode, model.NationalCode)
+                );
+            }
+
+            return ValidationResult.Success();
+        }
+
+
+        private async Task<ValidationResult> validateUpdateAsync(UpdateUserDto model) {
+            model.CheckArgumentIsNull(nameof(model));
+
+            try {
+                validateRequiredFields(model.Username, model.FirstName, model.LastName, model.NationalCode);
+            }
+            catch (RequiredFieldException ex) {
+                if (ex.FieldName == "userName")
+                    ValidationResult.Failed(ServiceMessages.Req_Username);
+                if (ex.FieldName == "firstName")
+                    ValidationResult.Failed(ServiceMessages.Req_FirstName);
+                if (ex.FieldName == "lastName")
+                    ValidationResult.Failed(ServiceMessages.Req_LastName);
+                if (ex.FieldName == "nationalCode")
+                    ValidationResult.Failed(ServiceMessages.Req_NationalCode);
+            }
+
+            try {
+                await validateNationalCodeAsync(model.NationalCode, userId : model.Id);
+            }
+            catch (InvalidNationalCodeException ex) {
+                ValidationResult.Failed(ServiceMessages.Invalid_NationalCode);
+            }
+            catch (UserNationalCodeAlreadyExistException) {
                 ValidationResult.Failed(string.Format(
                     ServiceMessages.Exist_NationalCode, model.NationalCode)
                 );

@@ -129,6 +129,9 @@
   <data name="DuplicateNames" xml:space="preserve">
     <value>عنوان ({0}) تکراری است.</value>
   </data>
+  <data name="Err_Password_Format" xml:space="preserve">
+    <value>کلمه عبور مطابق با الگوی تعریف شده نیست.</value>
+  </data>
   <data name="Exist_NationalCode" xml:space="preserve">
     <value>کد ملی '{0}' قبلاً برای کاربر دیگری ثبت شده است</value>
   </data>
