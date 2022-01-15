@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Common;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.Entities.Identity;
@@ -26,16 +27,19 @@ namespace Datiss.Budget.Services.Identity
         private readonly IUnitOfWork _uow;
         private DbSet<User> _dbSet;
         private readonly IUserContext _userContext;
+        private readonly IDateService _dateService;
         private readonly IOrganizationService _organizationService;
         private readonly IApplicationUserManager _userManager;
 
         public UserService(
             IUnitOfWork uow, 
             IUserContext userContext,
+            IDateService dateService,
             IOrganizationService organizationService,
             IApplicationUserManager userManager) {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
+            _dateService = dateService ?? throw new ArgumentNullException(nameof(DateService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             _dbSet = _uow.Set<User>();
@@ -48,18 +52,18 @@ namespace Datiss.Budget.Services.Identity
             => _dbSet.Where(_ => _.Status != EntityStatus.Enabled).AsNoTracking();
 
 
-        public async Task<ValidationResult<UserResultDto>> CreateAsync(CreateUserDto model) {
+        public async Task<ValidationResult<UserResultDTO>> CreateAsync(CreateUserDTO model) {
             model.CheckArgumentIsNull(nameof(model));
 
             var validation = await validateCreateAsync(model);
             if (validation.NotValid)
-                return ValidationResult<UserResultDto>
+                return ValidationResult<UserResultDTO>
                     .Failed(ValidationMode.Create, validation.Message);
 
             var existingUser = await _userManager.FindByNameAsync(model.Username);
             if(existingUser != null) {
-                return ValidationResult<UserResultDto>.Failed(
-                    existingUser.Adapt<UserResultDto>(),
+                return ValidationResult<UserResultDTO>.Failed(
+                    existingUser.Adapt<UserResultDTO>(),
                     ValidationMode.Create,
                     string.Format(ServiceMessages.Exist_Username, model.Username));
             }
@@ -75,7 +79,8 @@ namespace Datiss.Budget.Services.Identity
                 Status = EntityStatus.Enabled,
                 TwoFactorEnabled = false,
                 UserName = model.Username.ApplyCorrectYeKe().Trim(),
-                OrganizationId = model.OrganizationId
+                OrganizationId = model.OrganizationId,
+                CreatedDateTime = _dateService.Now
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -85,29 +90,29 @@ namespace Datiss.Budget.Services.Identity
 
             var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
             if (!passwordResult.Succeeded) {
-                return ValidationResult<UserResultDto>.Failed(
-                    user.Adapt<UserResultDto>(),
+                return ValidationResult<UserResultDTO>.Failed(
+                    user.Adapt<UserResultDTO>(),
                     ValidationMode.Update,
                     ServiceMessages.Err_Password_Format);
             }
 
-            return ValidationResult<UserResultDto>
-                    .Success(user.Adapt<UserResultDto>());
+            return ValidationResult<UserResultDTO>
+                    .Success(user.Adapt<UserResultDTO>());
         }
 
-        public async Task<ValidationResult<UserResultDto>> UpdateAsync(UpdateUserDto model) {
+        public async Task<ValidationResult<UserResultDTO>> UpdateAsync(UpdateUserDTO model) {
             model.CheckArgumentIsNull(nameof(model));
 
             var validation = await validateUpdateAsync(model);
             if (validation.NotValid)
-                return ValidationResult<UserResultDto>
+                return ValidationResult<UserResultDTO>
                     .Failed(ValidationMode.Update, validation.Message);
 
             var existingUser = await _dbSet.FirstOrDefaultAsync(_ => _.UserName.ToUpper() == model.Username.ToUpper()
                                                                         && _.Id != model.Id);
             if(existingUser != null) {
-                return ValidationResult<UserResultDto>.Failed(
-                    existingUser.Adapt<UserResultDto>(),
+                return ValidationResult<UserResultDTO>.Failed(
+                    existingUser.Adapt<UserResultDTO>(),
                     ValidationMode.Update,
                     string.Format(ServiceMessages.Exist_Username, model.Username));
             }
@@ -132,16 +137,19 @@ namespace Datiss.Budget.Services.Identity
             if (!string.IsNullOrWhiteSpace(model.Password)) {
                 var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
                 if(!passwordResult.Succeeded) {
-                    return ValidationResult<UserResultDto>.Failed(
-                        user.Adapt<UserResultDto>(),
+                    return ValidationResult<UserResultDTO>.Failed(
+                        user.Adapt<UserResultDTO>(),
                         ValidationMode.Update,
                         ServiceMessages.Err_Password_Format);
                 }
             }
 
-            return ValidationResult<UserResultDto>
-                    .Success(user.Adapt<UserResultDto>());
+            return ValidationResult<UserResultDTO>
+                    .Success(user.Adapt<UserResultDTO>());
         }
+
+
+
 
         public async Task<bool> HasAccessToOrganizationAsync(int organizationId) {
             if(_userContext.OrganizationId == null 
@@ -195,7 +203,7 @@ namespace Datiss.Budget.Services.Identity
                 throw new UserNationalCodeAlreadyExistException(nationalCode);
         }
 
-        private async Task<ValidationResult> validateCreateAsync(CreateUserDto model) {
+        private async Task<ValidationResult> validateCreateAsync(CreateUserDTO model) {
             model.CheckArgumentIsNull(nameof(model));
 
             try {
@@ -228,7 +236,7 @@ namespace Datiss.Budget.Services.Identity
         }
 
 
-        private async Task<ValidationResult> validateUpdateAsync(UpdateUserDto model) {
+        private async Task<ValidationResult> validateUpdateAsync(UpdateUserDTO model) {
             model.CheckArgumentIsNull(nameof(model));
 
             try {

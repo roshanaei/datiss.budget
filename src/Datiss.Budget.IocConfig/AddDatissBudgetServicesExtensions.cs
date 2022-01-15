@@ -1,4 +1,5 @@
-﻿using Datiss.Budget.Services;
+﻿using Datiss.Budget.Common;
+using Datiss.Budget.Services;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Excel;
@@ -17,6 +18,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IExcelService, ExcelService>();
             
             services.AddScoped<IUserContext, UserContext>();
+            services.AddScoped<IDateService, DateService>();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IConstantService, ConstantService>();
@@ -37,7 +39,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IPerformanceEvaluationService, PerformanceEvaluationService>();
             services.AddScoped<IReportEngine, ReportEngine>();
-
 
             return services;
         }

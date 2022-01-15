@@ -1,14 +1,10 @@
-﻿using Datiss.Budget.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Services.Models
 {
 
-    public class UserResultDto
+    public class UserResultDTO
     {
         public int Id { get; set; }
         public string Username { get; set; }
@@ -26,7 +22,17 @@ namespace Datiss.Budget.Services.Models
         public EntityStatus Status { get; set; }
     }
 
-    public class CreateUserDto
+    public class UserFilterDTO : FilterInputDTO
+    {
+        public string Username { get; set; }
+        public string NationalCode { get; set; }
+        public string DisplayName { get; set; }
+        public string PhoneNumber { get; set; }
+        public int? OrganizationId { get; set; }
+        public EntityStatus? Status { get; set; }
+    }
+
+    public class CreateUserDTO
     {
         public string Username { get; set; }
         public string FirstName { get; set; }
@@ -39,9 +45,11 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
     }
 
-    public class UpdateUserDto : CreateUserDto
+    public class UpdateUserDTO : CreateUserDTO
     {
         public int Id { get; set; }
         public EntityStatus Status { get; set; }
     }
+
+
 }

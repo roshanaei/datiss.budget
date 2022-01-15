@@ -11,10 +11,10 @@ namespace Datiss.Budget.Services.Contracts.Identity
     public interface IUserService
     {
 
-        Task<ValidationResult<UserResultDto>> CreateAsync(CreateUserDto model);
+        Task<ValidationResult<UserResultDTO>> CreateAsync(CreateUserDTO model);
 
 
-        Task<ValidationResult<UserResultDto>> UpdateAsync(UpdateUserDto model);
+        Task<ValidationResult<UserResultDTO>> UpdateAsync(UpdateUserDTO model);
         
 
         Task<bool> HasAccessToOrganizationAsync(int organizationId);
