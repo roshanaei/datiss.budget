@@ -7,6 +7,7 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Identity;
 using Datiss.Budget.Reports;
 using Datiss.Budget.Reports.Contracts;
+using Datiss.Budget.Services.Infrastructure;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -19,6 +20,8 @@ namespace Microsoft.Extensions.DependencyInjection
             
             services.AddScoped<IUserContext, UserContext>();
             services.AddScoped<IDateService, DateService>();
+
+            MapperConfig.Config();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IConstantService, ConstantService>();

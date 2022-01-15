@@ -186,8 +186,8 @@ namespace Datiss.Budget.Services.Identity
                 .Take(filter.PageSize);
 
             result.Items = await query
-                .Select(_ => _.Adapt<UserResultDTO>())
                 .OrderByDescending(_ => _.Id)
+                .Select(_ => _.Adapt<UserResultDTO>())
                 .ToListAsync();
 
             return await Task.FromResult(result);

@@ -121,6 +121,11 @@ namespace Datiss.Budget.ViewModels.Identity
 
     public class UpdateUserViewModel : CreateUserViewModel
     {
+
+        public UpdateUserViewModel(
+            IEnumerable<DropDownItemViewModel> positions,
+            IEnumerable<DropDownItemViewModel> organizations) : base(positions, organizations) { }
+
         public int Id { get; set; }
     }
 

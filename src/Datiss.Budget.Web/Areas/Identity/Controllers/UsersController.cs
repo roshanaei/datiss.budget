@@ -12,9 +12,7 @@ using Datiss.Budget.Services.Identity;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.ViewModels.Identity;
 using Datiss.Budget.Common.GuardToolkit;
-using Datiss.Budget.Common.IdentityToolkit;
 using Datiss.Budget.Services.Contracts.Identity;
-using DNTCommon.Web.Core;
 using Mapster;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Common.Exceptions;
@@ -114,7 +112,7 @@ namespace Datiss.Budget.Web.Areas.Identity.Controllers
             catch(CreateUserException) {
                 return Json(new {
                     hasError = true,
-                    message = "خطایی در ایجاد کاربرد وجود دارد!"
+                    message = "خطایی در ایجاد کاربر وجود دارد!"
                 });
             }
             catch(Exception ex) {
