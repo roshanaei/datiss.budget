@@ -430,19 +430,55 @@
             $('#ExcellModal').modal('show');
         }
 
+        $(window).keydown(function (event) {
+            if (event.altKey && event.keyCode == 78) {
+                addNewRow();
+            }
+        });
 
         $(document).on('click', '#btnCreate', function () {
             addNewRow();
         });
 
-        $(document).on('click', '.edit-row', function () {
+    $(document).on('click', '.edit-row', function () {
+        
             resetDataColumns()
             let id = $(this).data('id');
-            let input = document.getElementById('inputAvgConsumeUser_' + id);
+
+            let input1 = document.getElementById('inputCountUser_' + id);
+            let input2 = document.getElementById('inputUnitUser_' + id);
+            let input3 = document.getElementById('inputConsumeUser_' + id);
+            let input4 = document.getElementById('inputAvgConsumeUser_' + id);
+            let input5 = document.getElementById('inputConsumeUserForcast_' + id);
+
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
-            input.addEventListener("keyup", function (event) {
+
+            input1.addEventListener("keyup", function (event) {
                 event.preventDefault();
-                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input2.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input3.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input4.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input5.addEventListener("keyup", function (event) {
+                event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
                 }

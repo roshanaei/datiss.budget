@@ -203,11 +203,21 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var userTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
+            var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToList();
+            var userTypeKeys = "";
+            foreach (var key in userTypeData)
+            {
+                userTypeKeys += $"'{key.ConstantKey}',";
+            }
+            ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
 
-            var usageLayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            //var usageLayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
+            //    .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                 .Adapt<List<DropDownItemViewModel>>();
@@ -218,7 +228,7 @@ namespace Datiss.Budget.Web.Controllers
             model.SetFinanceYearFilterSource(yearSource);
             model.SetOrganizationFilterSource(orgSource);
             model.SetUserTypeSource(userTypeSource);
-            model.SetUsageLayerSource(usageLayerSource);
+            //model.SetUsageLayerSource(usageLayerSource);
 
             return View(model);
         }

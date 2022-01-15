@@ -22,6 +22,7 @@ using Datiss.Budget.Security;
 using Microsoft.Data.SqlClient;
 using Datiss.Budget.Extensions;
 using Datiss.Budget.Common;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Services
 {
@@ -81,23 +82,35 @@ namespace Datiss.Budget.Services
                 AvgConsumeUser = model.AvgConsumeUser
             };
 
-            if(await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId,model.UsageLayerId))
+            model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
+            model.UsageLayerTitle = (await _constSet.FindAsync(model.UsageLayerId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
+            try
             {
-                await _dbSet.AddAsync(entity);
-                await _uow.SaveChangesAsync();
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.UsageLayerId))
+                {
+                    await _dbSet.AddAsync(entity);
+                    await _uow.SaveChangesAsync();
 
-                var result = entity.Adapt<ConsumeForcastDTO>();
-                result.UsageLayerTitle = (await _constSet.FindAsync(model.UsageLayerId)).Title;
-                result.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
-                result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
-                result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-                result.CountUser = entity.CountUser;
-                result.UnitUser = entity.UnitUser;
-                result.ConsumeUser = model.ConsumeUser;
-                result.AvgConsumeUser = model.AvgConsumeUser;
+                    var result = entity.Adapt<ConsumeForcastDTO>();
+                    result.UsageLayerTitle = model.UsageLayerTitle;
+                    result.UserTypeTitle = model.UserTypeTitle;
+                    result.OrganizationDisplay = organizationDisplay;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.CountUser = entity.CountUser;
+                    result.UnitUser = entity.UnitUser;
+                    result.ConsumeUser = model.ConsumeUser;
+                    result.AvgConsumeUser = model.AvgConsumeUser;
 
-                return ValidationResult<ConsumeForcastDTO>.Success(result);
+                    return ValidationResult<ConsumeForcastDTO>.Success(result);
+                }
             }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<ConsumeForcastDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
 
             return ValidationResult<ConsumeForcastDTO>.Failed(
                 string.Format(ServiceMessages.Logic_ConsumeForcast,
@@ -110,39 +123,49 @@ namespace Datiss.Budget.Services
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            if(await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.UsageLayerId,model.Id))
+            model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
+            model.UsageLayerTitle = (await _constSet.FindAsync(model.UsageLayerId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+            try
             {
-                var entity = await _dbSet.FindAsync(model.Id);
-                entity.YearId = model.YearId;
-                entity.OrganizationId = model.OrganizationId;
-                entity.UserTypeId = model.UserTypeId;
-                entity.UsageLayerId = model.UsageLayerId;
-                entity.UnitUser = model.UnitUser;
-                entity.CountUser = model.CountUser;
-                entity.ConsumeUser = model.ConsumeUser;
-                entity.AvgConsumeUser = model.AvgConsumeUser;
-                entity.ConsumeUserForcast = model.ConsumeUserForcast;
-
-                await _uow.SaveChangesAsync();
-
-                var result = new ConsumeForcastDTO
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.UsageLayerId, model.Id))
                 {
-                    YearId = model.YearId,
-                    OrganizationId = model.OrganizationId,
-                    UserTypeId = model.UserTypeId,
-                    UsageLayerId = model.UsageLayerId,
-                    CountUser = model.CountUser,
-                    UnitUser = model.UnitUser,
-                    ConsumeUser = model.ConsumeUser,
-                    AvgConsumeUser = model.AvgConsumeUser,
-                    ConsumeUserForcast = model.ConsumeUserForcast,
-                    Year = (await _yearSet.FindAsync(model.YearId)).Year,
-                    OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
-                    UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title,
-                    UsageLayerTitle = (await _constSet.FindAsync(model.UsageLayerId)).Title
-                };
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.YearId = model.YearId;
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.UserTypeId = model.UserTypeId;
+                    entity.UsageLayerId = model.UsageLayerId;
+                    entity.UnitUser = model.UnitUser;
+                    entity.CountUser = model.CountUser;
+                    entity.ConsumeUser = model.ConsumeUser;
+                    entity.AvgConsumeUser = model.AvgConsumeUser;
+                    entity.ConsumeUserForcast = model.ConsumeUserForcast;
 
-                return ValidationResult<ConsumeForcastDTO>.Success(result);
+                    await _uow.SaveChangesAsync();
+
+                    var result = new ConsumeForcastDTO
+                    {
+                        YearId = model.YearId,
+                        OrganizationId = model.OrganizationId,
+                        UserTypeId = model.UserTypeId,
+                        UsageLayerId = model.UsageLayerId,
+                        CountUser = model.CountUser,
+                        UnitUser = model.UnitUser,
+                        ConsumeUser = model.ConsumeUser,
+                        AvgConsumeUser = model.AvgConsumeUser,
+                        ConsumeUserForcast = model.ConsumeUserForcast,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year,
+                        OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
+                        UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title,
+                        UsageLayerTitle = (await _constSet.FindAsync(model.UsageLayerId)).Title
+                    };
+
+                    return ValidationResult<ConsumeForcastDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<ConsumeForcastDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
             return ValidationResult<ConsumeForcastDTO>.Failed(
@@ -684,7 +707,14 @@ namespace Datiss.Budget.Services
              int organizationId,
              int userTypeId,
              int usageLayerId,
-             int? id = null) {
+             int? id = null) 
+        {
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
             var result = id == null
                    ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                    x.OrganizationId == organizationId &&

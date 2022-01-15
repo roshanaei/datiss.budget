@@ -136,6 +136,8 @@ namespace Datiss.Budget.ViewModels
         {
             get
             {
+                if (UserTypeSource == null || !UserTypeSource.Any())
+                    return string.Empty;
                 string result = "";
                 foreach(var item in UserTypeSource)
                 {
