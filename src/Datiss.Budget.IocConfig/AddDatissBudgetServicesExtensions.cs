@@ -28,6 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IWasteSalesSplitService, WasteSalesSplitService>();
             services.AddScoped<IBranchFeeAmountService, BranchFeeAmountService>();
             services.AddScoped<IConsumeForcastService, ConsumeForcastService>();
+            services.AddScoped<IConsumeForcastWsService, ConsumeForcastWsService>();
             services.AddScoped<IIncomeForcastService, IncomeForcastService>();
             services.AddScoped<IIncomeForcastWsService, IncomeForcastWsService>();
             services.AddScoped<INHCoService, NHCoService>();

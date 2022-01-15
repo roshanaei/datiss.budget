@@ -1,6 +1,6 @@
 ﻿namespace Datiss.Budget.Services.Models
 {
-    public class CreateConsumeForcastDTO
+    public class CreateConsumeForcastWsDTO
     {
         public int YearId { get; set; }
 
@@ -23,14 +23,14 @@
         public decimal AvgConsumeUser { get; set; }
     }
 
-    public class UpdateConsumeForcastDTO : CreateConsumeForcastDTO
+    public class UpdateConsumeForcastWsDTO : CreateConsumeForcastWsDTO
     {
         public int Id { get; set; }
-        public decimal ConsumeUserForcast { get; set; }
 
+        public decimal ConsumeUserForcast { get; set; }
     }
 
-    public class ConsumeForcastDTO
+    public class ConsumeForcastWsDTO
     {
         public int Id { get; set; }
 

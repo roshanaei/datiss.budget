@@ -189,6 +189,9 @@
   <data name="Logic_ConsumeForcast" xml:space="preserve">
     <value>اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است</value>
   </data>
+  <data name="Logic_ConsumeForcastWs" xml:space="preserve">
+    <value>اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است</value>
+  </data>
   <data name="Logic_DWasteType" xml:space="preserve">
     <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
   </data>

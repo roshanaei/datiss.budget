@@ -7,7 +7,7 @@ using Ganss.Excel;
 
 namespace Datiss.Budget.Services.Excel
 {
-    public class ConsumeForcastImportModel
+    public class ConsumeForcastWsImportModel
     {
         [Column(0, MappingDirections.Both, Letter = "A")]
         public string OrganizationDisplay { get; set; }
