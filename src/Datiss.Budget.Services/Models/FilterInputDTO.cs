@@ -24,7 +24,7 @@ namespace Datiss.Budget.Services.Models
 
     public class OrganizationFilterDTO : FilterInputDTO
     {
-        public int? ParentId { get; set; }
+        public int? OrganizationId { get; set; }
         public OrganizationType? Type { get; set; }
         public bool? SewageStatus { get; set; }
         public EntityStatus? Status { get; set; }

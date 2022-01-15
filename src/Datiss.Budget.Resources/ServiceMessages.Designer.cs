@@ -322,6 +322,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to سازمان &quot;{0}&quot; قبلا ثبت شده است ..
+        /// </summary>
+        public static string Logic_Organization {
+            get {
+                return ResourceManager.GetString("Logic_Organization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
         /// </summary>
         public static string Logic_UserType {

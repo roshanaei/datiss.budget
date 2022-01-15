@@ -20,14 +20,23 @@ using Datiss.Budget.Common.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Datiss.Budget.Common.GuardToolkit;
 using Mapster;
+using Datiss.Budget.Enum;
+using Datiss.Budget.Resources;
 
 namespace Datiss.Budget.Web.Controllers
 {
 
     [Authorize(Policy = ConstantPolicies.DynamicPermission)]
-    [Route("[controller]/[action]")]
+    [Route("[controller]")]
     public class OrganizationController : Controller
     {
+        public const string Name = "Organization";
+        public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Index = nameof(Index);
+        public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Delete = nameof(Delete);
+
+        private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
         private readonly IWebHostEnvironment _env;
         private readonly ISecurityTrimmingService _securityTrimmingService;
@@ -46,64 +55,157 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("{page?}")]
         public  async Task<IActionResult> Index(int page = 1)
         {
-            var filterInput = new OrganizationFilterDTO {
-                OrderBy = "DisplayOrder",
-                PageNumber = page,
-                PageSize = 10
-            };
+            var filter = new OrganizationFilterDTO();
 
-            var result = await _organizationService.GetListAsync(filterInput);
+            var orgSource = (await _organizationService.GetDropDownTypeOrgDataAsync(OrganizationType.County))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var myfilter = TempData.Get<OrganizationFilterViewModel>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<OrganizationFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
+
+            var result = await _organizationService.GetListAsync(filter);
             var model = new OrganizationIndexViewModel();
-            model.SetParentOrganizationFilterSource(
-                (await _organizationService.GetDropDownDataAsync())
-                .Adapt<IEnumerable<DropDownItemViewModel>>()
-            );
+            model = result.Adapt<OrganizationIndexViewModel>();
+
+            model.SetParentOrganizationFilterSource(orgSource,filter.OrganizationId);
+
 
             return View(model);
         }
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index (OrganizationIndexViewModel viewModel,int page = 1)
+        public async Task<IActionResult> Index (OrganizationIndexViewModel model,int page = 1)
         {
-            if(Request.Form["btnFilter"].Count() > 0)
-            {
-                var filterInput = viewModel.Filter.Adapt<OrganizationFilterDTO>();
-                filterInput.PageNumber = page;
-                var result = await _organizationService.GetListAsync(filterInput);
-                var model = result.Adapt<OrganizationIndexViewModel>();
-                model.SetParentOrganizationFilterSource(
-                    (await _organizationService.GetDropDownDataAsync())
-                    .Adapt<IEnumerable<DropDownItemViewModel>>()
-                );
+            model.Filter.PageNumber = 1;
+            var filter = model.Filter.Adapt<OrganizationFilterDTO>();
 
-                return View(model);
-            }
+            TempData.Put(_indexFilterKey, filter);
 
-            if (Request.Form["btnCreate"].Count() > 0)
-            {
-                //int parentId = int.Parse(Request.Form["Filter.ParentId"].ToString());
+            var result = await _organizationService.GetListAsync(filter);
+            model = result.Adapt<OrganizationIndexViewModel>();
+            model.Filter = filter.Adapt<OrganizationFilterViewModel>();
 
-                return RedirectToAction("Create", new { });
-            }
-            return RedirectToAction("Index");
-        }
+            var orgSource = (await _organizationService.GetDropDownTypeOrgDataAsync(OrganizationType.County))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-        [HttpGet]
-        public async Task<IActionResult> New()
-        {
-            var parentList = await _organizationService.GetParentsAsync();
-            var model = new CreateOrganizationViewModel
-            {
-                ParentList = parentList.Select(x => new SelectListItem
-                {
-                    Value = x.Id.ToString(),
-                    Text = x.Title
-                }).ToList()
-            };
-
+            model.SetParentOrganizationFilterSource(orgSource, filter.OrganizationId);
             return View(model);
         }
 
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Create()
+        {
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var model = new CreateOrganizationViewModel();
+
+            model.SetParentOrganizationSource(orgSource);
+
+            return PartialView("_createModal", model);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create(CreateOrganizationViewModel model)
+        {
+            var data = model.Adapt<CreateOrganizationDTO>();
+
+            var result = await _organizationService.CreateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            var entity = await _organizationService.GetByIdAsync(id);
+
+            if (entity == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var model = new UpdateOrganizationViewModel
+            {
+                Type = entity.Type,
+                DisplayOrder = entity.DisplayOrder,
+                ParentId = entity.ParentId,
+                Title = entity.Title,
+                SewageStatus = entity.SewageStatus,
+                Enabled = entity.Status == EntityStatus.Enabled ? true : false
+            };
+
+            model.SetParentOrganizationSource(orgSource);
+
+
+            return PartialView("_editModal", model);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Edit(UpdateOrganizationViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+
+            var data = model.Adapt<UpdateOrganizationDTO>();
+            var result = await _organizationService.UpdateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(result);
+        }
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+
+            try
+            {
+                await _organizationService.SoftDeleteAsync(id);
+
+                return Json(new
+                {
+                    hasError = false,
+                    message = ViewMessages.FinanceYearSuccessSoftDelete
+                });
+            }
+            catch(OrganizationHasChildException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.OrganizationHasChild
+                });
+            }
+            catch (Exception)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.SystemError
+                });
+            }
+        }
     }
 }
