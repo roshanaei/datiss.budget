@@ -16,6 +16,9 @@ using Datiss.Budget.Common.IdentityToolkit;
 using Datiss.Budget.Services.Contracts.Identity;
 using DNTCommon.Web.Core;
 using Mapster;
+using Datiss.Budget.Resources;
+using Datiss.Budget.Common.Exceptions;
+using Datiss.Budget.Services.Infrastructure;
 
 namespace Datiss.Budget.Web.Areas.Identity.Controllers
 {
@@ -57,14 +60,8 @@ namespace Datiss.Budget.Web.Areas.Identity.Controllers
 
             var result = await _userService.GetListAsync(filter);
             var model = result.Adapt<UsersIndexViewModel>();
-
-            var positionSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__Position))
-                .Adapt<List<DropDownItemViewModel>>();
-            model.SetPositionFilterSource(positionSource, filter.PositionId);
-
-            var orgSource = (await _organizationService.GetDropDownDataAsync())
-                .Adapt<List<DropDownItemViewModel>>();
-            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+            model.SetPositionFilterSource(await getPostionDropDownAsync(), filter.PositionId);
+            model.SetOrganizationFilterSource(await getOrganizationDropDownAsync(), filter.OrganizationId);
 
             return View(model);
         }
@@ -91,6 +88,65 @@ namespace Datiss.Budget.Web.Areas.Identity.Controllers
             return View(viewModel);
         }
 
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Create() {
+            var model = new CreateUserViewModel(
+                positions: await getPostionDropDownAsync(),
+                organizations: await getOrganizationDropDownAsync()
+            );
 
+            return PartialView("_Create", model);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create(CreateUserViewModel model) {
+            model.CheckArgumentIsNull(nameof(model));
+
+            if(!ModelState.IsValid) {
+                model.AddError(ViewMessages.ModelState);
+                return PartialView("_Create");
+            }
+
+            ValidationResult<UserResultDTO> result = null;
+            try {
+                result = await _userService.CreateAsync(model.Adapt<CreateUserDTO>());
+            }
+            catch(CreateUserException) {
+                return Json(new {
+                    hasError = true,
+                    message = "خطایی در ایجاد کاربرد وجود دارد!"
+                });
+            }
+            catch(Exception ex) {
+                return Json(new {
+                    hasError = true,
+                    message = ViewMessages.SystemError
+                });
+            }
+
+            if(result.NotValid) {
+                return Json(new {
+                    hasError = true,
+                    message = result.Message
+                });
+            }
+
+            return Json(new {
+                data = result.Result,
+                success = true
+            });
+        }
+
+        #region helper methods
+
+        private async Task<IEnumerable<DropDownItemViewModel>> getPostionDropDownAsync()
+            => (await _constantService.GetByConstantKeyAsync(ConstantKeys.__Position))
+                    .Adapt<List<DropDownItemViewModel>>();
+
+        private async Task<IEnumerable<DropDownItemViewModel>> getOrganizationDropDownAsync()
+            => (await _organizationService.GetDropDownDataAsync())
+                    .Adapt<List<DropDownItemViewModel>>();
+
+        #endregion
     }
 }

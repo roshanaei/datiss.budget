@@ -63,6 +63,14 @@ namespace Datiss.Budget.ViewModels.Identity
 
     public class CreateUserViewModel : BaseViewModel
     {
+
+        public CreateUserViewModel(
+            IEnumerable<DropDownItemViewModel> positions, 
+            IEnumerable<DropDownItemViewModel> organizations) {
+            SetPositionSource(positions);
+            SetOrganizationSource(organizations);
+        }
+
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [MaxLength(256, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
         public string Username { get; set; }
