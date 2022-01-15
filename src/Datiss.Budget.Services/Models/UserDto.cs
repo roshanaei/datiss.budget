@@ -14,11 +14,13 @@ namespace Datiss.Budget.Services.Models
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
         public int? PositionId { get; set; }
+        public string PositionTitle { get; set; }
         public DateTime? CreatedDateTime { get; set; }
         public DateTime? LastVisitDateTime { get; set; }
         public bool IsEmailPublic { get; set; }
         public string NationalCode { get; set; }
         public int? OrganizationId { get; set; }
+        public string OrganizationTitle { get; set; }
         public EntityStatus Status { get; set; }
     }
 
