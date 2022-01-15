@@ -7,7 +7,7 @@ namespace Datiss.Budget.Services.Models
     public class UserResultDTO
     {
         public int Id { get; set; }
-        public string Username { get; set; }
+        public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -26,7 +26,7 @@ namespace Datiss.Budget.Services.Models
 
     public class UserFilterDTO : FilterInputDTO
     {
-        public string Username { get; set; }
+        public string UserName { get; set; }
         public string NationalCode { get; set; }
         public string DisplayName { get; set; }
         public string PhoneNumber { get; set; }
@@ -37,7 +37,7 @@ namespace Datiss.Budget.Services.Models
 
     public class CreateUserDTO
     {
-        public string Username { get; set; }
+        public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }

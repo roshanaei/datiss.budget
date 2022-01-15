@@ -1,5 +1,4 @@
-﻿@using Datiss.Budget.Web.Areas.Identity.Controllers
-@model UsersIndexViewModel
+﻿@model UsersIndexViewModel
 @{
     ViewData["Title"] = "مدیریت کاربران سیستم";
 }
@@ -42,6 +41,14 @@
                                                 asp-items="Model.Filter.PositionSource"
                                                 class="form-control d-inline-block width-300"
                                                 id="positionId">
+                                        </select>
+                                    </label>
+                                    <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
+                                        وضعیت:
+                                        <select asp-for="Filter.Status"
+                                                asp-items="Model.Filter.StatusSource"
+                                                class="form-control d-inline-block width-300"
+                                                id="statusId">
                                         </select>
                                     </label>
                                     <input asp-for="Filter.OrderBy" type="hidden" />
@@ -107,7 +114,7 @@
                                                                name="col-1"
                                                                id="col-1" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-1"><span>سال</span></label>
+                                                               for="col-1"><span>نام کاربری</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -118,7 +125,7 @@
                                                                name="col-2"
                                                                id="col-2" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-2"><span>سازمان</span></label>
+                                                               for="col-2"><span>نام</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -129,7 +136,7 @@
                                                                name="col-3"
                                                                id="col-3" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-3"><span>قطر انشعاب</span></label>
+                                                               for="col-3"><span>نام خانوادگی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -140,7 +147,29 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>تعرفه نصب انشعاب</span></label>
+                                                               for="col-4"><span>کد ملی</span></label>
+                                                    </div>
+                                                </div>
+                                                 <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-5"
+                                                               id="col-5" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-5"><span>سازمان</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-6"
+                                                               id="col-6" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-6"><span>شماره تماس</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -184,4 +213,83 @@
     <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
 }
 
+@section footSection {
+    <script type="text/javascript">
+        let allColumns = '1,2,3,4,5,6';
+        let columnIndices = allColumns.split(',');
+        console.log(columnIndices);
+        let showingColmuns = "1,2,3,4,5,6";
+    </script>
 
+    @if(Model.Filter.Columns.IsNotNullOrEmpty()) {
+        <script type="text/javascript">
+            showingColmuns = '@Model.Filter.Columns' ;
+        </script>
+    }
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //fill input hidden with initial columns showing
+            document.getElementById("hidColumns").value = showingColmuns;
+
+            //setDataColumns();
+
+            $('#organizationId').select2({
+                dir: 'rtl'
+            });
+
+            $('#positionId').select2({
+                dir: 'rtl'
+            });
+
+            $(".dropdown-menu").click(function (e) {
+                e.stopPropagation();
+            });
+
+            $("#columnSelector input:checkbox:checked").change(function () {
+                let index = parseInt($(this)[0].id.split('-')[1]);
+                console.log(`showing or hiding col : ${index}`);
+                let checked = $(this)[0].checked;
+                if (checked) {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                    showingColmuns = showingColmuns + `${index},`
+                    document.getElementById("hidColumns").value = showingColmuns ;
+                } else {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+                    showingColmuns = showingColmuns.replace(`${index},`, '');
+                    document.getElementById("hidColumns").value = showingColmuns;
+                }
+            });
+
+        });
+
+
+        function setDataColumns() {
+            let columnsToShow = document.getElementById("hidColumns").value.split(',');
+            console.log('ColumnsToShow ');
+            console.log(columnsToShow);
+            let checkBoxes = $("#columnSelector input:checkbox");
+            for(let i = 0; i < columnIndices.length; i++) {
+                let index = parseInt(columnIndices[i]);
+                let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
+                console.log(`Column : ${index} show = ${showColumn}`);
+                checkBoxes[i].checked = showColumn;
+                if(showColumn)
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                else
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+            }
+        }
+
+        function resetDataColumns() {
+            $('th,tr td').show();
+            let inputs = $("#columnSelector input:checkbox");
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].checked = true
+            }
+        }
+
+    </script>
+
+
+}

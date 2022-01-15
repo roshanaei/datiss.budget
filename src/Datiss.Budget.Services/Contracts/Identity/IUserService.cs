@@ -11,6 +11,8 @@ namespace Datiss.Budget.Services.Contracts.Identity
     public interface IUserService
     {
 
+        Task<UserResultDTO> GetByIdAsync(int id);
+
         Task<ValidationResult<UserResultDTO>> CreateAsync(CreateUserDTO model);
 
         Task<ValidationResult<UserResultDTO>> UpdateAsync(UpdateUserDTO model);

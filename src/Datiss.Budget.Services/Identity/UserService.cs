@@ -52,6 +52,13 @@ namespace Datiss.Budget.Services.Identity
             => _dbSet.Where(_ => _.Status != EntityStatus.Enabled).AsNoTracking();
 
 
+        public async Task<UserResultDTO> GetByIdAsync(int id) {
+            var user = await _dbSet.FindAsync(id);
+            user.CheckReferenceIsNull(nameof(user));
+
+            return await Task.FromResult(user.Adapt<UserResultDTO>());
+        }
+
         public async Task<ValidationResult<UserResultDTO>> CreateAsync(CreateUserDTO model) {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -59,7 +66,7 @@ namespace Datiss.Budget.Services.Identity
             model.NationalCode = model.NationalCode?.ToEnglishNumbers();
             model.FirstName = model.FirstName?.ApplyCorrectYeKe().Trim();
             model.LastName = model.LastName?.ApplyCorrectYeKe().Trim();
-            model.Username = model.Username?.ApplyCorrectYeKe().Trim();
+            model.UserName = model.UserName?.ApplyCorrectYeKe().Trim();
             model.Email = model.Email?.Trim();
             model.PhoneNumber = model.PhoneNumber?.ToEnglishNumbers();
 
@@ -69,12 +76,12 @@ namespace Datiss.Budget.Services.Identity
                 return ValidationResult<UserResultDTO>
                     .Failed(ValidationMode.Create, validation.Message);
 
-            var existingUser = await _userManager.FindByNameAsync(model.Username);
+            var existingUser = await _userManager.FindByNameAsync(model.UserName);
             if(existingUser != null) {
                 return ValidationResult<UserResultDTO>.Failed(
                     existingUser.Adapt<UserResultDTO>(),
                     ValidationMode.Create,
-                    string.Format(ServiceMessages.Exist_Username, model.Username));
+                    string.Format(ServiceMessages.Exist_Username, model.UserName));
             }
 
             //Create
@@ -88,7 +95,7 @@ namespace Datiss.Budget.Services.Identity
                 PositionId = model.PositionId,
                 Status = EntityStatus.Enabled,
                 TwoFactorEnabled = false,
-                UserName = model.Username,
+                UserName = model.UserName,
                 OrganizationId = model.OrganizationId,
                 CreatedDateTime = _dateService.Now
             };
@@ -117,7 +124,7 @@ namespace Datiss.Budget.Services.Identity
             model.NationalCode = model.NationalCode?.ToEnglishNumbers();
             model.FirstName = model.FirstName?.ApplyCorrectYeKe().Trim();
             model.LastName = model.LastName?.ApplyCorrectYeKe().Trim();
-            model.Username = model.Username?.ApplyCorrectYeKe().Trim();
+            model.UserName = model.UserName?.ApplyCorrectYeKe().Trim();
             model.Email = model.Email?.Trim();
             model.PhoneNumber = model.PhoneNumber?.ToEnglishNumbers();
 
@@ -127,13 +134,13 @@ namespace Datiss.Budget.Services.Identity
                 return ValidationResult<UserResultDTO>
                     .Failed(ValidationMode.Update, validation.Message);
 
-            var existingUser = await _dbSet.FirstOrDefaultAsync(_ => _.UserName.ToUpper() == model.Username.ToUpper()
+            var existingUser = await _dbSet.FirstOrDefaultAsync(_ => _.UserName.ToUpper() == model.UserName.ToUpper()
                                                                         && _.Id != model.Id);
             if(existingUser != null) {
                 return ValidationResult<UserResultDTO>.Failed(
                     existingUser.Adapt<UserResultDTO>(),
                     ValidationMode.Update,
-                    string.Format(ServiceMessages.Exist_Username, model.Username));
+                    string.Format(ServiceMessages.Exist_Username, model.UserName));
             }
 
             //Update entity
@@ -146,7 +153,7 @@ namespace Datiss.Budget.Services.Identity
             user.PhoneNumber = model.PhoneNumber;
             user.PositionId = model.PositionId;
             user.Status = model.Status;
-            user.UserName = model.Username;
+            user.UserName = model.UserName;
             user.OrganizationId = model.OrganizationId;
 
             var result = await _userManager.UpdateAsync(user);
@@ -249,7 +256,7 @@ namespace Datiss.Budget.Services.Identity
             model.CheckArgumentIsNull(nameof(model));
 
             try {
-                validateRequiredFields(model.Username, model.FirstName, model.LastName, model.NationalCode);
+                validateRequiredFields(model.UserName, model.FirstName, model.LastName, model.NationalCode);
             }
             catch(RequiredFieldException ex) {
                 if (ex.FieldName == "userName")
@@ -282,7 +289,7 @@ namespace Datiss.Budget.Services.Identity
             model.CheckArgumentIsNull(nameof(model));
 
             try {
-                validateRequiredFields(model.Username, model.FirstName, model.LastName, model.NationalCode);
+                validateRequiredFields(model.UserName, model.FirstName, model.LastName, model.NationalCode);
             }
             catch (RequiredFieldException ex) {
                 if (ex.FieldName == "userName")
@@ -313,9 +320,9 @@ namespace Datiss.Budget.Services.Identity
         private async Task<IQueryable<User>> setFilterAsync(IQueryable<User> query, UserFilterDTO filter) {
             filter.CheckArgumentIsNull(nameof(filter));
 
-            if(filter.Username.IsNotNullOrEmpty()) {
-                filter.Username = filter.Username.ToUpper();
-                query = query.Where(_ => _.UserName.ToUpper().Contains(filter.Username));
+            if(filter.UserName.IsNotNullOrEmpty()) {
+                filter.UserName = filter.UserName.ToUpper();
+                query = query.Where(_ => _.UserName.ToUpper().Contains(filter.UserName));
             }
             
             if(filter.DisplayName.IsNotNullOrEmpty()) {

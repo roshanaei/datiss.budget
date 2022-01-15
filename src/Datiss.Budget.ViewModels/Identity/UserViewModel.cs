@@ -7,6 +7,7 @@ using Datiss.Budget.Enum;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Extensions;
 using DNTPersianUtils.Core;
+using Datiss.Budget.ViewModels;
 
 namespace Datiss.Budget.ViewModels.Identity
 {
@@ -41,7 +42,7 @@ namespace Datiss.Budget.ViewModels.Identity
     public class UserViewModel
     {
         public int Id { get; set; }
-        public string Username { get; set; }
+        public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -73,7 +74,7 @@ namespace Datiss.Budget.ViewModels.Identity
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [MaxLength(256, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [MaxLength(450, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
@@ -131,7 +132,7 @@ namespace Datiss.Budget.ViewModels.Identity
 
     public class UserFilterViewModel : FilterViewModel
     {
-        public string Username { get; set; }
+        public string UserName { get; set; }
         public string NationalCode { get; set; }
         public string DisplayName { get; set; }
         public string PhoneNumber { get; set; }
@@ -140,10 +141,13 @@ namespace Datiss.Budget.ViewModels.Identity
         public EntityStatus? Status { get; set; }
 
         public IEnumerable<SelectListItem> StatusSource
-            => EnumSelectListProvider.GetEntityStatusItems(Status);
+            => EnumSelectListProvider.GetEntityStatusItems(Status)
+                .ToList()
+                .AddEmptySelectListItem();
 
         public IEnumerable<SelectListItem> OrganizationSource { get; set; }
 
         public IEnumerable<SelectListItem> PositionSource { get; set; }
+
     }
 }

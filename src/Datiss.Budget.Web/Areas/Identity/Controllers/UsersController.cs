@@ -66,24 +66,23 @@ namespace Datiss.Budget.Web.Areas.Identity.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(UserFilterViewModel model, int page = 1) {
+        public async Task<IActionResult> Index(UsersIndexViewModel model, int page = 1) {
             model.CheckArgumentIsNull(nameof(model));
-            var filter = model.Adapt<UserFilterDTO>();
+            var filter = model.Filter.Adapt<UserFilterDTO>();
             TempData.Put(_indexFilterKey, filter);
 
             var result = await _userService.GetListAsync(filter);
-            var viewModel = result.Adapt<UsersIndexViewModel>();
-            viewModel.Filter = model;
-
+            model = result.Adapt<UsersIndexViewModel>();
+            
             var positionSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__Position))
                 .Adapt<List<DropDownItemViewModel>>();
-            viewModel.SetPositionFilterSource(positionSource, filter.PositionId);
+            model.SetPositionFilterSource(positionSource, filter.PositionId);
 
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<List<DropDownItemViewModel>>();
-            viewModel.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
 
-            return View(viewModel);
+            return View(model);
         }
 
         [HttpGet("[action]")]
@@ -132,6 +131,52 @@ namespace Datiss.Budget.Web.Areas.Identity.Controllers
             return Json(new {
                 data = result.Result,
                 success = true
+            });
+        }
+
+        [HttpGet("edit/{id}")]
+        public async Task<IActionResult> Edit(int id) {
+            try {
+                var user = await _userService.GetByIdAsync(id);
+                var model = user.Adapt<UpdateUserViewModel>();
+
+                return PartialView("_Edit", model);
+            }
+            catch(NullReferenceException) {
+                return Json(new {
+                    hasError = true,
+                    message = "کاربر مورد نظر یافت نشد."
+                });
+            }
+        }
+
+        [HttpPost("edit/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, UpdateUserViewModel model) {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var data = model.Adapt<UpdateUserDTO>();
+            ValidationResult<UserResultDTO> result = null;
+            try {
+                result = await _userService.UpdateAsync(data);
+                if(result.NotValid) {
+                    return Json(new {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
+
+            }
+            catch(Exception ex) {
+                return Json(new {
+                    hasError = true,
+                    message = "کاربر مورد نظر یافت نشد."
+                });
+            }
+
+            return Json(new {
+                success = true,
+                data = result.Adapt<UserViewModel>()
             });
         }
 
