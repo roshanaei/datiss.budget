@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Resources;
 using Datiss.Budget.Extensions;
 using DNTPersianUtils.Core;
 
@@ -61,12 +63,57 @@ namespace Datiss.Budget.ViewModels.Identity
 
     public class CreateUserViewModel : BaseViewModel
     {
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(256, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string Username { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(450, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(450, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string LastName { get; set; }
+
+        [MaxLength(256, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(30, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string Password { get; set; }
+
+        [MaxLength(30, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string PhoneNumber { get; set; }
+
+        public int? PositionId { get; set; }
+        public IEnumerable<SelectListItem> PositionSource { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(10, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string NationalCode { get; set; }
+
+        public int? OrganizationId { get; set; }
+        public IEnumerable<SelectListItem> OrganizationSource { get; set; }
+
+        public void SetPositionSource(IEnumerable<DropDownItemViewModel> source)
+            => source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
 
     }
 
-    public class UpdateUserViewModel
+    public class UpdateUserViewModel : CreateUserViewModel
     {
-
+        public int Id { get; set; }
     }
 
     public class UserFilterViewModel : FilterViewModel
