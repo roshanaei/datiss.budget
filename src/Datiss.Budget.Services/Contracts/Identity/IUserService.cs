@@ -13,9 +13,9 @@ namespace Datiss.Budget.Services.Contracts.Identity
 
         Task<ValidationResult<UserResultDTO>> CreateAsync(CreateUserDTO model);
 
-
         Task<ValidationResult<UserResultDTO>> UpdateAsync(UpdateUserDTO model);
-        
+
+        Task<PagedResult<UserResultDTO>> GetListAsync(UserFilterDTO filter);
 
         Task<bool> HasAccessToOrganizationAsync(int organizationId);
     }

@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Datiss.Budget.Enum;
 using Datiss.Budget.Common;
 using Datiss.Budget.Security;
+using Datiss.Budget.Resources;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.Entities.Identity;
 using Datiss.Budget.DataLayer.Context;
@@ -15,7 +15,7 @@ using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts.Identity;
 using DNTPersianUtils.Core;
-using Datiss.Budget.Resources;
+using LinqKit;
 using Mapster;
 
 namespace Datiss.Budget.Services.Identity
@@ -55,6 +55,15 @@ namespace Datiss.Budget.Services.Identity
         public async Task<ValidationResult<UserResultDTO>> CreateAsync(CreateUserDTO model) {
             model.CheckArgumentIsNull(nameof(model));
 
+            //First normalize model data
+            model.NationalCode = model.NationalCode?.ToEnglishNumbers();
+            model.FirstName = model.FirstName?.ApplyCorrectYeKe().Trim();
+            model.LastName = model.LastName?.ApplyCorrectYeKe().Trim();
+            model.Username = model.Username?.ApplyCorrectYeKe().Trim();
+            model.Email = model.Email?.Trim();
+            model.PhoneNumber = model.PhoneNumber?.ToEnglishNumbers();
+
+            //Validate
             var validation = await validateCreateAsync(model);
             if (validation.NotValid)
                 return ValidationResult<UserResultDTO>
@@ -68,17 +77,18 @@ namespace Datiss.Budget.Services.Identity
                     string.Format(ServiceMessages.Exist_Username, model.Username));
             }
 
+            //Create
             var user = new User
             {
-                FirstName = model.FirstName.ApplyCorrectYeKe().Trim(),
-                LastName = model.LastName.ApplyCorrectYeKe().Trim(),
-                Email = model.Email.Trim(),
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
                 NationalCode = model.NationalCode,
                 PhoneNumber = model.PhoneNumber,
                 PositionId = model.PositionId,
                 Status = EntityStatus.Enabled,
                 TwoFactorEnabled = false,
-                UserName = model.Username.ApplyCorrectYeKe().Trim(),
+                UserName = model.Username,
                 OrganizationId = model.OrganizationId,
                 CreatedDateTime = _dateService.Now
             };
@@ -103,6 +113,15 @@ namespace Datiss.Budget.Services.Identity
         public async Task<ValidationResult<UserResultDTO>> UpdateAsync(UpdateUserDTO model) {
             model.CheckArgumentIsNull(nameof(model));
 
+            //First normalize model data
+            model.NationalCode = model.NationalCode?.ToEnglishNumbers();
+            model.FirstName = model.FirstName?.ApplyCorrectYeKe().Trim();
+            model.LastName = model.LastName?.ApplyCorrectYeKe().Trim();
+            model.Username = model.Username?.ApplyCorrectYeKe().Trim();
+            model.Email = model.Email?.Trim();
+            model.PhoneNumber = model.PhoneNumber?.ToEnglishNumbers();
+
+            //Validate model's data
             var validation = await validateUpdateAsync(model);
             if (validation.NotValid)
                 return ValidationResult<UserResultDTO>
@@ -117,6 +136,7 @@ namespace Datiss.Budget.Services.Identity
                     string.Format(ServiceMessages.Exist_Username, model.Username));
             }
 
+            //Update entity
             var user = await _dbSet.FindAsync(model.Id);
             user.CheckReferenceIsNull(nameof(user));
             user.FirstName = model.FirstName.ApplyCorrectYeKe().Trim();
@@ -148,8 +168,30 @@ namespace Datiss.Budget.Services.Identity
                     .Success(user.Adapt<UserResultDTO>());
         }
 
+        public async Task<PagedResult<UserResultDTO>> GetListAsync(UserFilterDTO filter) {
+            filter.CheckArgumentIsNull(nameof(filter));
 
+            var result = new PagedResult<UserResultDTO>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
 
+            var query = await setFilterAsync(_dbSet.AsNoTracking(), filter);
+
+            result.TotalCount = await query.CountAsync();
+
+            query = query
+                .Skip(filter.StartIndex)
+                .Take(filter.PageSize);
+
+            result.Items = await query
+                .Select(_ => _.Adapt<UserResultDTO>())
+                .OrderByDescending(_ => _.Id)
+                .ToListAsync();
+
+            return await Task.FromResult(result);
+        }
 
         public async Task<bool> HasAccessToOrganizationAsync(int organizationId) {
             if(_userContext.OrganizationId == null 
@@ -266,6 +308,49 @@ namespace Datiss.Budget.Services.Identity
             }
 
             return ValidationResult.Success();
+        }
+
+        private async Task<IQueryable<User>> setFilterAsync(IQueryable<User> query, UserFilterDTO filter) {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            if(filter.Username.IsNotNullOrEmpty()) {
+                filter.Username = filter.Username.ToUpper();
+                query = query.Where(_ => _.UserName.ToUpper().Contains(filter.Username));
+            }
+            
+            if(filter.DisplayName.IsNotNullOrEmpty()) {
+                filter.DisplayName = filter.DisplayName.ApplyCorrectYeKe().ToUpper();
+                query = query.Where(_ => _.FirstName.ToUpper().Contains(filter.DisplayName) ||
+                                            _.LastName.ToUpper().Contains(filter.DisplayName));
+            }
+
+            if(filter.NationalCode.IsNotNullOrEmpty()) {
+                filter.NationalCode = filter.NationalCode.ToEnglishNumbers();
+                query = query.Where(_ => _.NationalCode.Contains(filter.NationalCode));
+            }
+
+            if(filter.PhoneNumber.IsNotNullOrEmpty()) {
+                filter.PhoneNumber = filter.PhoneNumber.ToEnglishNumbers().Trim();
+                query = query.Where(_ => _.PhoneNumber.Contains(filter.PhoneNumber));
+            }
+
+            if(filter.OrganizationId.HasValue) {
+                var predicate = PredicateBuilder.New<User>();
+
+                var organizations = await _organizationService
+                    .GetWithChildrenAsync(filter.OrganizationId.Value);
+
+                foreach (var org in organizations)
+                    predicate.Or(_ => _.OrganizationId == org.Id);
+
+                query = query.Where(predicate);
+            }
+
+            if(filter.Status.HasValue) {
+                query = query.Where(_ => _.Status == filter.Status.Value);
+            }
+
+            return query;
         }
 
         #endregion
