@@ -31,10 +31,12 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 7).Value = "متوسط ظرفیت قراردادی";
             sheet.Cell(1, 8).Value = "میانگین مصرف"; 
             sheet.Cell(1, 9).Value = "پیش بینی ظرفیت قراردادی";
-            for (int i = 0; i < items.Count(); i++)
+
+            var totalCount = items.Count();
+            int row = 2;
+            for (int i = 0; i < totalCount; i++)
             {
                 var item = items.ElementAt(i);
-                var row = i + 2;
                 sheet.Cell(row, 1).Value = item.Year.ToString();
                 sheet.Cell(row, 2).Value = item.OrganizationDisplay;
                 sheet.Cell(row, 3).Value = item.UserTypeTitle;
@@ -49,7 +51,13 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 8).DataType = XLDataType.Number;
                 sheet.Cell(row, 9).Value = item.ConsumeUserForcast;
                 sheet.Cell(row, 9).DataType = XLDataType.Number;
+                row++;
             }
+
+            var range = sheet.Range(1, 1, row - 1, 9);
+            var table = range.CreateTable($"{_sheetName}_Table");
+            table.Theme = XLTableTheme.TableStyleMedium16;
+            sheet.Columns().AdjustToContents();
 
             return workbook;
         }

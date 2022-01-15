@@ -148,8 +148,8 @@ namespace Datiss.Budget.Web.Controllers
             }
             ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
 
-            var usageLayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            //var usageLayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
+            //    .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                 .Adapt<List<DropDownItemViewModel>>();
@@ -173,7 +173,7 @@ namespace Datiss.Budget.Web.Controllers
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetUserTypeSource(userTypeSource);
-            model.SetUsageLayerSource(usageLayerSource);
+            //model.SetUsageLayerSource(usageLayerSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
@@ -432,6 +432,7 @@ namespace Datiss.Budget.Web.Controllers
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
             var userTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
+
             var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType);
             var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
 

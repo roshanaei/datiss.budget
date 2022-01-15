@@ -394,6 +394,7 @@
         if (key != 'UserType.House') {
             key = 'UsageLayer';
         }
+
         $.ajax({
                 url: '@Url.Action("GetUsageLayerAsync")',
                 type: 'POST',
@@ -403,11 +404,10 @@
                 }
         }).done(function (data) {
             console.log(data);
-            alert('wait');
-            var options = $('#inputUsageLayerType_');
+            var options = $('.selectUsageLayerType');
             options.empty();
             $.each(data,
-                function(i, item) {
+                function (i, item) {
                     options.append($('<option />')
                         .val(item.value)
                         .text(item.title));
