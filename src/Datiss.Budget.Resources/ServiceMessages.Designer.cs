@@ -313,6 +313,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است.
+        /// </summary>
+        public static string Logic_ConsumeForcastWs {
+            get {
+                return ResourceManager.GetString("Logic_ConsumeForcastWs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
         /// </summary>
         public static string Logic_DWasteType {
@@ -345,6 +354,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_NHCo {
             get {
                 return ResourceManager.GetString("Logic_NHCo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سازمان &quot;{0}&quot; قبلا ثبت شده است ..
+        /// </summary>
+        public static string Logic_Organization {
+            get {
+                return ResourceManager.GetString("Logic_Organization", resourceCulture);
             }
         }
         
