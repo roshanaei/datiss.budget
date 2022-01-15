@@ -61,6 +61,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to توزیع مصرف.
+        /// </summary>
+        public static string ConsumeForcastWs_Cal1 {
+            get {
+                return ResourceManager.GetString("ConsumeForcastWs_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to درآمد ماده 11 آب سالیانه.
         /// </summary>
         public static string IncomeForcast_Cal1 {

@@ -9,9 +9,10 @@ using System.Globalization;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class CreateConsumeForcastViewModel : BaseViewModel
+    public class CreateConsumeForcastWsViewModel : BaseViewModel
     {
         public int YearId { get; set; }
+
         public string YearDisplay { get; set; }
 
         public int OrganizationId { get; set; }
@@ -22,19 +23,24 @@ namespace Datiss.Budget.ViewModels
 
         public int UsageLayerId { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public decimal CountUser { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public decimal UnitUser { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public decimal ConsumeUser { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public decimal AvgConsumeUser { get; set; }
 
         public IEnumerable<SelectListItem> UserTypeSource { get; set; }
 
         public string UserTypeTitle
         {
-            get {
+            get
+            {
                 if (UserTypeSource == null || !UserTypeSource.Any())
                     return string.Empty;
 
@@ -50,20 +56,19 @@ namespace Datiss.Budget.ViewModels
             {
                 if (UsageLayerSource == null || !UsageLayerSource.Any())
                     return string.Empty;
-
                 return UsageLayerSource.FirstOrDefault(x => x.Value.ToString() == UsageLayerId.ToString()).Text;
             }
         }
     }
 
-    public class UpdateConsumeForcastViewModel : CreateConsumeForcastViewModel
+    public class UpdateConsumeForcastWsViewModel : CreateConsumeForcastWsViewModel
     {
         public int Id { get; set; }
 
         public decimal ConsumeUserForcast { get; set; }
     }
 
-    public class ConsumeForcastViewModel
+    public class ConsumeForcastWsViewModel
     {
         public int Id { get; set; }
 
@@ -83,28 +88,28 @@ namespace Datiss.Budget.ViewModels
 
         public string UsageLayerTitle { get; set; }
 
-        public decimal CountUser { get; set; }
 
+        public decimal CountUser { get; set; }
         public string CountUserDisplay => CountUser.ToString("N2");
 
+        
         public decimal UnitUser { get; set; }
-
         public string UnitUserDisplay => UnitUser.ToString("N2");
 
-        public decimal ConsumeUser { get; set; }
 
+        public decimal ConsumeUser { get; set; }
         public string ConsumeUserDisplay => ConsumeUser.ToString("N2");
 
-        public decimal AvgConsumeUser { get; set; }
 
+        public decimal AvgConsumeUser { get; set; }
         public string AvgConsumeUserDisplay => AvgConsumeUser.ToString("N2");
 
-        public decimal ConsumeUserForcast { get; set; }
 
+        public decimal ConsumeUserForcast { get; set; }
         public string ConsumeUserForcastDisplay => ConsumeUserForcast.ToString("N2");
     }
 
-    public class ConsumeForcastFilterViewModel : FilterViewModel
+    public class ConsumeForcastWsFilterViewModel :FilterViewModel
     {
         public int? YearId { get; set; }
 
@@ -115,14 +120,14 @@ namespace Datiss.Budget.ViewModels
         public IList<SelectListItem> OrganizationSource { get; set; }
     }
 
-    public class ConsumeForcastIndexViewModel : PagedViewModel<ConsumeForcastViewModel>
+    public class ConsumeForcastWsIndexViewModel : PagedViewModel<ConsumeForcastWsViewModel>
     {
-        public ConsumeForcastIndexViewModel()
+        public ConsumeForcastWsIndexViewModel()
         {
-            Filter = new ConsumeForcastFilterViewModel();
+            Filter = new ConsumeForcastWsFilterViewModel();
         }
 
-        public ConsumeForcastFilterViewModel Filter { get; set; }
+        public ConsumeForcastWsFilterViewModel Filter { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
 
@@ -144,39 +149,39 @@ namespace Datiss.Budget.ViewModels
             }).ToList();
 
         public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
-               => OrganizationSource = source.Select(x => new SelectListItem
-               {
-                   Text = x.Title,
-                   Value = x.Id.ToString()
-               }).ToList();
+            => OrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
 
         public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
-                => InputOrganizationSource = source.Select(x => new SelectListItem
-                {
-                    Text = x.Title,
-                    Value = x.Id.ToString()
-                }).ToList();
+            => InputOrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
 
         public void SetUserTypeSource(IEnumerable<DropDownItemViewModel> source)
-            => UserTypeSource = source.Select(x => new SelectListItem {
-                   Text = x.Title,
-                   Value = x.Id.ToString()
-               }).ToList();
+            => UserTypeSource = source.Select(x => new SelectListItem { 
+                Text = x.Title,
+                Value = x.Id.ToString()
+                }).ToList();
 
         public void SetUsageLayerSource(IEnumerable<DropDownItemViewModel> source)
-             => UsageLayerSource = source.Select(x => new SelectListItem
-             {
-                 Text = x.Title,
-                 Value = x.Id.ToString()
-             }).ToList();
+            => UsageLayerSource= source.Select(x => new SelectListItem
+               {
+                    Text= x.Title,
+                    Value = x.Id.ToString()
+               }).ToList();
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
-                => Filter.YearSource = source.Select(x => new SelectListItem
-                {
-                    Selected = x.Id == selectedYearId,
-                    Text = x.Title,
-                    Value = x.Id.ToString()
-                }).ToList();
+            => Filter.YearSource = source.Select(x => new SelectListItem
+            {
+                Selected = x.Id == selectedYearId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
 
         public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
             => Filter.OrganizationSource = source.Select(x => new SelectListItem
@@ -187,7 +192,4 @@ namespace Datiss.Budget.ViewModels
             }).ToList();
     }
 
-
 }
-
-
