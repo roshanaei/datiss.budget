@@ -36,8 +36,8 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
-        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
+        public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
@@ -135,8 +135,18 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<List<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(x => x.Id);
 
-            var userTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
+            var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToList();
+            var userTypeKeys = "";
+            foreach(var key in userTypeData)
+            {
+                userTypeKeys += $"'{key.ConstantKey}',";
+            }
+            ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
 
             var usageLayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
@@ -361,19 +371,6 @@ namespace Datiss.Budget.Web.Controllers
             return PartialView("_calculationModal", output);
         }
 
-
-        [HttpGet("[action]")]
-        public async Task<IActionResult> DownloadExcelTemplate()
-        {
-            var filePath = $"{_env.WebRootPath}\\Excel\\ConsumeForcastImport.xlsx";
-
-            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return File(
-                stream,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "ConsumeForcast.xlsx");
-        }
-
         [HttpGet("[action]")]
         public async Task<IActionResult> Copy()
         {
@@ -429,6 +426,63 @@ namespace Datiss.Budget.Web.Controllers
             return Json(model);
         }
 
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var userTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
+            var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType);
+            var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
+
+            var items = new List<ConsumeForcastDTO>();
+
+            foreach (var org in organizations)
+            {
+                foreach (var usert in userTypes)
+                {
+                    if(usert.ConstantKey==ConstantKeys.__House)
+                    {
+                        foreach(var usage in houseUsageLayer)
+                        {
+                            items.Add(new ConsumeForcastDTO
+                            {
+                                UserTypeTitle = usert.Title,
+                                UserTypeId = usert.Id,
+                                UsageLayerTitle = usage.Title,
+                                UsageLayerId = usage.Id,
+                                OrganizationId = org.Id,
+                                OrganizationDisplay = org.Title,
+                                Year = year.Year,
+                                YearId = year.Id
+                            });
+                        }
+                    }
+                    else
+                    {
+                        foreach (var usage in nhouseUsagelayer)
+                        {
+                            items.Add(new ConsumeForcastDTO
+                            {
+                                UserTypeTitle = usert.Title,
+                                UserTypeId = usert.Id,
+                                UsageLayerTitle = usage.Title,
+                                UsageLayerId = usage.Id,
+                                OrganizationId = org.Id,
+                                OrganizationDisplay = org.Title,
+                                Year = year.Year,
+                                YearId = year.Id
+                            });
+                        }
+                    }
+
+                }
+            }
+
+            using var workbook = items.GetImportTemplate(year.Year);
+            return workbook.Deliver("ConsumeForcast-Import-Template.xlsx");
+        }
+
         [HttpGet("[action]/{orgid}/{yearid}")]
         public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
@@ -440,6 +494,15 @@ namespace Datiss.Budget.Web.Controllers
             using var workbook = result.ExportExcel();
             return workbook.Deliver("ConsumeForcast.xlsx");
 
+        }
+
+        [HttpPost, Route("GetUsageLayerAsync")]
+        public async Task<JsonResult> GetUsageLayerAsync(string key)
+        {
+            var result = await _constantService
+                .GetByKeyAsync(key,ConstantKeys.__UsageLayerType);
+
+            return new JsonResult(result);
         }
 
     }

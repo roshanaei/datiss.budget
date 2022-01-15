@@ -97,7 +97,7 @@
         model.avgConsumeUser = $('#inputAvgConsumeUser_' + id).val();
         model.consumeUserForcast = $('#inputConsumeUserForcast_' + id).val();
 
-        
+
         $.ajax({
             url: '@Url.Action(ConsumeForcastController.ACTION_Edit)',
             type: 'POST',
@@ -312,7 +312,7 @@
             .attr('id', 'newRow')
             .css('background-color', 'rgb(230 247 228)')
             .show();
-        
+
         $('.selectOrganization:last').select2({
             dir: 'rtl'
         });
@@ -382,5 +382,40 @@
             rows[i].style.backgroundColor = "#00000000"
         }
     }
+
+    $(document).ready(function () {
+        $("#inputUserType_").change();
+    });
+
+    function RelatedDropDown(e, event) {
+
+        let id = event.target.value;
+        let key = userType_source[id];
+        if (key != 'UserType.House') {
+            key = 'UsageLayer';
+        }
+        $.ajax({
+                url: '@Url.Action("GetUsageLayerAsync")',
+                type: 'POST',
+                dataType: 'json',
+            data: {
+                'key': key
+                }
+        }).done(function (data) {
+            console.log(data);
+            alert('wait');
+            var options = $('#inputUsageLayerType_');
+            options.empty();
+            $.each(data,
+                function(i, item) {
+                    options.append($('<option />')
+                        .val(item.value)
+                        .text(item.title));
+                });
+        }).fail(function (error) {
+            alert(error);
+        });
+    }
+
 
 </script>

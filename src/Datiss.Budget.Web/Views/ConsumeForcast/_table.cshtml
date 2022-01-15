@@ -49,7 +49,7 @@
                 <td>
                     <div id="divInput_UserType_">
                         <input id="hidUserTypeId_" type="hidden" />
-                        <select class="form-control selectUserType" id="inputUserType_" asp-items="Model.UserTypeSource">
+                        <select class="form-control selectUserType" id="inputUserType_" asp-items="Model.UserTypeSource" onchange="RelatedDropDown(this,event)">
                         </select>
                     </div>
                     <div id="divOutput_UserType_" style="display: none">

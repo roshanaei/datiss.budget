@@ -33,5 +33,6 @@ namespace Datiss.Budget.Services.Contracts
         Task<IEnumerable<ConsumeForcastDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
         Task<Stream> ExportExcelAsync(ConsumeForcastFilterDTO filter);
+
     }
 }

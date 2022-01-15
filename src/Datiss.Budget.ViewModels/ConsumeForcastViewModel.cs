@@ -132,6 +132,19 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> UserTypeSource { get; set; }
 
+        public string UserTypeSourceIdArray
+        {
+            get
+            {
+                string result = "";
+                foreach(var item in UserTypeSource)
+                {
+                    result += $"{item.Value},";
+                }
+                return result.TrimEnd(',');
+            }
+        }
+
         public IList<SelectListItem> UsageLayerSource { get; set; }
 
         public IFormFile ExcelFile { get; set; }
