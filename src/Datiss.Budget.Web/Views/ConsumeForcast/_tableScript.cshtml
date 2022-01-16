@@ -5,7 +5,6 @@
     function editRow(id) {
 
         let usertypeid = $('#hidUserTypeId_' + id).val();
-        alert(usertypeid);
         FillDropDoen(usertypeid);
 
         let selectval = $('#hidUsageLayerTypeId_' + id).val();
@@ -13,10 +12,7 @@
 
         resetTableBackColor("my-table");
 
-        //do reset all row background
-
         let row = $('#row_' + id);
-        //row.css('background-color', '#7598f3');
 
         //Hide output elements
         $('#divOutput_Year_' + id).hide();
@@ -382,6 +378,7 @@
     }
 
     function FillDropDoen(id) {
+
         let key = userType_source[id];
         if (key != 'UserType.House') {
             key = 'UsageLayer';

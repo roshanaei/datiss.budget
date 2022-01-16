@@ -259,7 +259,7 @@ namespace Datiss.Budget.Web.Controllers
                     });
                 }
             }
-            catch (ImportExcelFileFormatInvalidException ex)
+            catch (ImportExcelFileFormatInvalidException)
             {
                 showMessage(CssClassNames.Error,
                     ViewMessages.ImportExcelFileFormatInvalid);
@@ -269,7 +269,7 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.ImportExcelFileFormatInvalid
                 });
             }
-            catch (ImportExcelFileSizeInvalidException ex)
+            catch (ImportExcelFileSizeInvalidException)
             {
                 showMessage(CssClassNames.Error,
                     ViewMessages.ImportExcelFileSizeInvalid);
@@ -322,7 +322,7 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.NullRef
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json(new
                 {
@@ -440,7 +440,7 @@ namespace Datiss.Budget.Web.Controllers
             {
                 model.AddError(ViewMessages.CopyDestYearHasData);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 model.AddError(ViewMessages.SystemError);
             }

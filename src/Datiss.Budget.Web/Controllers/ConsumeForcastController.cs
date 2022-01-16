@@ -2,6 +2,7 @@
 using Datiss.Budget.Common;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Reports.Excel;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Services.Contracts;
@@ -389,12 +390,17 @@ namespace Datiss.Budget.Web.Controllers
             var model = new CopyViewModel();
 
             model.SetOrganizationSource(
-                (await _organizationService.GetDropDownDataAsync())
+              (await _organizationService.GetDropDownDataAsync())
+                  .Adapt<IEnumerable<DropDownItemViewModel>>()
+          );
+
+            model.SetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Disbaled))
                     .Adapt<IEnumerable<DropDownItemViewModel>>()
             );
 
-            model.SetYearSource(
-                (await _financeYearService.GetDropDownDataAsync())
+            model.SetTargetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Enabled))
                     .Adapt<IEnumerable<DropDownItemViewModel>>()
             );
 

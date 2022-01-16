@@ -102,7 +102,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<WasteInstallFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_WWsDiameter,
+                string.Format(ServiceMessages.Logic_DiameterPipeOrgDuplicate,
                 model.DWasteTypeTitle , organizationDisplay)
                 );
         }
@@ -145,7 +145,7 @@ namespace Datiss.Budget.Services
                 return ValidationResult<WasteInstallFeeDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
             return ValidationResult<WasteInstallFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_WWsDiameter,
+                string.Format(ServiceMessages.Logic_DiameterPipeOrgDuplicate,
                 model.DWasteTypeTitle , organizationDisplay)
                 );
         }
@@ -395,7 +395,7 @@ namespace Datiss.Budget.Services
                 if (!await dwastetypes.AnyAsync(x => x.Id == rec.DWasteTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelWWsDiameterNotInExcel, rowIndex + 1, rec.DWasteTypeId)
+                        string.Format(ServiceMessages.ImportExcelDiameterPipeNotInExcel, rowIndex + 1, rec.DWasteTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -444,7 +444,7 @@ namespace Datiss.Budget.Services
                     dWasteTypeNames += "- [" + item.Title + "]<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelPipeDiameterOrgNotInExcel, dWasteTypeNames , orgTitle));
+                    string.Format(ServiceMessages.ImportExcelDiameterPipeOrgNotInExcel, dWasteTypeNames , orgTitle));
             }
             //end
 

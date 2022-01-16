@@ -103,7 +103,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<WaterInstallFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_WWsDiameter,
+                string.Format(ServiceMessages.Logic_DiameterPipeOrgDuplicate,
                 model.DWaterTypeTitle, organizationDisplay)
                 );
 
@@ -149,7 +149,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<WaterInstallFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_WWsDiameter,
+                string.Format(ServiceMessages.Logic_DiameterPipeOrgDuplicate,
                 model.DWaterTypeTitle, organizationDisplay)
                 );
         }
@@ -348,7 +348,7 @@ namespace Datiss.Budget.Services
                 if (!await dwatertypes.AnyAsync(x => x.Id == rec.DWaterTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidWaterDiameter, rowIndex + 1, rec.DWaterTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidDiameterPipe, rowIndex + 1, rec.DWaterTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -378,7 +378,7 @@ namespace Datiss.Budget.Services
                     dWaterTypeNames += "- [" + item.Title + "]<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelWWsDiameterNotInExcel, dWaterTypeNames));
+                    string.Format(ServiceMessages.ImportExcelDiameterPipeNotInExcel, dWaterTypeNames));
             }
             //end
 

@@ -72,7 +72,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult.Failed(
-                string.Format(ServiceMessages.Logic_Organization , model.Title)
+                string.Format(ServiceMessages.Logic_OrganizationDuplicate, model.Title)
                 );
 
         }
@@ -97,7 +97,7 @@ namespace Datiss.Budget.Services
                 return ValidationResult.Success();
             }
             return ValidationResult.Failed(
-                string.Format(ServiceMessages.Logic_Organization, model.Title)
+                string.Format(ServiceMessages.Logic_OrganizationDuplicate, model.Title)
                 );
         }
 

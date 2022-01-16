@@ -113,7 +113,7 @@ namespace Datiss.Budget.Services
 
 
             return ValidationResult<ConsumeForcastDTO>.Failed(
-                string.Format(ServiceMessages.Logic_ConsumeForcast,
+                string.Format(ServiceMessages.Logic_UserTypeUsageLayerDuplicate,
                                                 model.UserTypeTitle,
                                                 model.UsageLayerTitle)
                 );
@@ -169,7 +169,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<ConsumeForcastDTO>.Failed(
-                string.Format(ServiceMessages.Logic_ConsumeForcast,
+                string.Format(ServiceMessages.Logic_UserTypeUsageLayerDuplicate,
                                     model.UserTypeTitle,
                                     model.UsageLayerTitle)
                 );
@@ -379,7 +379,13 @@ namespace Datiss.Budget.Services
                 if (!await usertypes.AnyAsync(x => x.Id == rec.UserTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 2, rec.UserTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.UserTypeId)
+                        );
+                }
+                if (!await usagelayers.AnyAsync(x => x.Id == rec.UsageLayerId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayer, rowIndex + 2, rec.UsageLayerId)
                         );
                 }
 
@@ -388,14 +394,14 @@ namespace Datiss.Budget.Services
                 if (userType.ConstantKey == ConstantKeys.__House && !houseUsageLayer.Any(x => x.Id == rec.UsageLayerId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerType, rowIndex + 2, rec.UsageLayerId)
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerUserType, rowIndex + 2, rec.UsageLayerId , userType.Title)
                         );
                 }
 
                 if (userType.ConstantKey != ConstantKeys.__House && !noneHouseUsageLayer.Any(x => x.Id == rec.UsageLayerId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerType, rowIndex + 2, rec.UsageLayerId)
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerUserType, rowIndex + 2, rec.UsageLayerId , userType.Title)
                         );
                 }
 
@@ -493,7 +499,7 @@ namespace Datiss.Budget.Services
                     uTypeNames += "- [" + item.Title + "]<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelPipeDiameterOrgNotInExcel, uTypeNames, orgTitle));
+                    string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, uTypeNames, orgTitle));
             }
 
             if (missingHUsageLayerType.Any())
