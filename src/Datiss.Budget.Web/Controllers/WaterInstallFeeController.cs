@@ -81,7 +81,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWaterInstallFeeViewModel model) 
         {
-            if (!ModelState.IsValid)
+            if (model.WInstallFee<0)
             {
                 model.AddError(ViewMessages.InvalidData);
                 return Json(model);
@@ -171,8 +171,8 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(WaterInstallFeeIndexViewModel model, int page = 1) {
-            model.Filter.PageNumber = 1;
+        public async Task<IActionResult> Index(WaterInstallFeeIndexViewModel model) {
+
             var filter = model.Filter.Adapt<WaterInstallFeeFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
@@ -244,7 +244,7 @@ namespace Datiss.Budget.Web.Controllers
                     });
                 }
             }
-            catch (ImportExcelFileFormatInvalidException ex) {
+            catch (ImportExcelFileFormatInvalidException) {
                 showMessage(CssClassNames.Error,
                     ViewMessages.ImportExcelFileFormatInvalid);
                 return Json(new {
@@ -252,7 +252,7 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.ImportExcelFileFormatInvalid
                 });
             }
-            catch (ImportExcelFileSizeInvalidException ex) {
+            catch (ImportExcelFileSizeInvalidException) {
                 showMessage(CssClassNames.Error,
                     ViewMessages.ImportExcelFileSizeInvalid);
                 return Json(new {
@@ -298,7 +298,7 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.NullRef
                 });
             }
-            catch(Exception ex) {
+            catch(Exception) {
                 return Json(new {
                     hasError = true,
                     message = ViewMessages.DeleteRelatedData
@@ -414,7 +414,7 @@ namespace Datiss.Budget.Web.Controllers
             catch (CopyDestYearHasDataException) {
                 model.AddError(ViewMessages.CopyDestYearHasData);
             }
-            catch(Exception ex) {
+            catch(Exception) {
                 model.AddError(ViewMessages.SystemError);
             }
             

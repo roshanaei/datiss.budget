@@ -370,7 +370,8 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
-            var dwastetypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__WasteDiameter);
+            var dwastetypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                   x.Parent.ConstantKey == ConstantKeys.__WasteDiameter);
 
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull($"Year not found with id: {yearId}");
@@ -415,7 +416,10 @@ namespace Datiss.Budget.Services
             {
                 var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
                 if (!existInExcel)
-                    missingOrgs.Add(item);
+                {
+                    if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                        missingOrgs.Add(item);
+                }
                 else
                     existOrgs.Add(item);
             }
@@ -562,6 +566,8 @@ namespace Datiss.Budget.Services
                     return query.Include(x => x.Organization)
                                 .Include(x => x.DWasteType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.Organization.Type)
+                                .ThenBy(x => x.Organization.ParentId)
                                 .ThenBy(x => x.DWasteType.DisplayOrder);
             }
         }
@@ -572,7 +578,8 @@ namespace Datiss.Budget.Services
         {
 
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId)
+                .Where(_ => _.Status != EntityStatus.Deleted &&
+                            _.ParentId == parentOrganizationId)
                 .ToListAsync();
 
             var result = new List<WasteInstallFee>();
@@ -614,7 +621,8 @@ namespace Datiss.Budget.Services
             int yearId)
         {
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId)
+                .Where(_ => _.Status != EntityStatus.Deleted &&
+                            _.ParentId == parentOrganizationId)
                 .ToListAsync();
             var result = new List<WasteInstallFee>();
             foreach (var org in children)
