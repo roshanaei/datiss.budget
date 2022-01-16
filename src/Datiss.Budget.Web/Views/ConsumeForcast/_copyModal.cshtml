@@ -36,7 +36,7 @@
                                             class="form-control form-control-sm d-inline-block">
                                     </select>
                                     <script>
-                                        $('#SourceOrgId').select2( {
+                                        $('#SourceOrgId').select2({
                                             dir: 'rtl'
                                         });
                                     </script>
@@ -54,7 +54,7 @@
                                 <label class="my-font rowAC">
                                     <span style="margin-left:5px">سال:</span>
                                     <select asp-for="TargetYearId"
-                                            asp-items="Model.YearSource"
+                                            asp-items="Model.TargetYearSource"
                                             style="flex:1"
                                             class="form-control form-control-sm d-inline-block width-100">
                                     </select>
@@ -63,7 +63,7 @@
                         </div>
                         <div style="flex:1.5" />
                     </div>
-                   
+
 
                 </div>
                 <div class="modal-footer">
@@ -71,7 +71,7 @@
                     <button id="btnDoCopy" type="button" class="btn btn-warning bg-light-warning mr-1 my-font">ثبت</button>
                 </div>
             </form>
-            
+
         </div>
     </div>
 </div>

@@ -107,7 +107,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<IncomeForcastOtherDTO>.Failed(
-                string.Format(ServiceMessages.Logic_UserType,
+                string.Format(ServiceMessages.Logic_TitleDuplicate,
                 model.OIFTypeTitle)
                 );
 
@@ -153,7 +153,7 @@ namespace Datiss.Budget.Services
                 return ValidationResult<IncomeForcastOtherDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
             return ValidationResult<IncomeForcastOtherDTO>.Failed(
-                string.Format(ServiceMessages.Logic_UserType,
+                string.Format(ServiceMessages.Logic_TitleDuplicate,
                 model.OIFTypeTitle)
                 );
         }
@@ -374,7 +374,7 @@ namespace Datiss.Budget.Services
                 if (!await oiftypes.AnyAsync(x => x.Id == rec.OIFTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 1, rec.OIFTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex + 1, rec.OIFTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -404,7 +404,7 @@ namespace Datiss.Budget.Services
                     oIFTypeNames += "- " + item.Title + "<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelDWTypeNotInExcel, oIFTypeNames));
+                    string.Format(ServiceMessages.ImportExcelTitleNotInExcel, oIFTypeNames));
             }
             //end
 

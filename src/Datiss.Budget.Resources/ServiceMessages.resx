@@ -144,26 +144,35 @@
   <data name="ImportExcelAccessError" xml:space="preserve">
     <value>دسترسی شما برای وارد کردن اطلاعات سازمان وجود ندارد. [سطر {0} فایل اکسل]</value>
   </data>
-  <data name="ImportExcelDWTypeNotInExcel" xml:space="preserve">
-    <value>کاربری های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
+  <data name="ImportExcelDiameterPipeNotInExcel" xml:space="preserve">
+    <value>قطر لوله های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
-  <data name="ImportExcelInvalidDWaterType" xml:space="preserve">
-    <value>در سطر {0} فایل اکسل، کد کاربری "{1}" معتبر نیست .</value>
+  <data name="ImportExcelDiameterPipeOrgNotInExcel" xml:space="preserve">
+    <value>قطر لوله های :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="ImportExcelInvalidDiameterPipe" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد قطر لوله "{1}" معتبر نیست .</value>
   </data>
   <data name="ImportExcelInvalidFinanceYear" xml:space="preserve">
     <value>در سطر {0} فایل اکسل، کد سال "{1}" معتبر نیست .</value>
   </data>
-  <data name="ImportExcelInvalidUsageLayerType" xml:space="preserve">
-    <value>در سطر {0} فایل اکسل، کد طبقه مصرف "{1}" معتبر نیست .</value>
+  <data name="ImportExcelInvalidTitle" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد "{1}" معتبر نیست .</value>
   </data>
-  <data name="ImportExcelInvalidWaterDiameter" xml:space="preserve">
-    <value>در سطر {0} فایل اکسل، کد قطر لوله "{1}" معتبر نیست .</value>
+  <data name="ImportExcelInvalidUsageLayer" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد طبقه مصرف"{1}" معتبر نیست .</value>
+  </data>
+  <data name="ImportExcelInvalidUsageLayerUserType" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد طبقه مصرف "{1}" برای کاربری "{2}" معتبر نیست .</value>
+  </data>
+  <data name="ImportExcelInvalidUserType" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد کاربری "{1}" معتبر نیست .</value>
   </data>
   <data name="ImportExcelLogicError" xml:space="preserve">
     <value>داده سطر {0} در اکسل مشکل دارد. لطفاً ورودی ها را بررسی نمایید.</value>
   </data>
   <data name="ImportExcelNotAllowedOrg" xml:space="preserve">
-    <value>شما مجاز به ورود اطلاعات برای سازمان " {0} " نیستید.[سطر {1} فایل اکسل]</value>
+    <value>شما مجاز به ورود اطلاعات برای " {0} " نیستید.[سطر {1} فایل اکسل]</value>
   </data>
   <data name="ImportExcelNotExistOrg" xml:space="preserve">
     <value>در سطر {0} فایل اکسل، کد سازمان "{1}" معتبر نیست .</value>
@@ -174,53 +183,47 @@
   <data name="ImportExcelSuccess" xml:space="preserve">
     <value>ورود اطلاعات با موفقیت انجام گردید.</value>
   </data>
-  <data name="ImportExcelTypeWPDiameterNotInExcel" xml:space="preserve">
+  <data name="ImportExcelTitleNotInExcel" xml:space="preserve">
+    <value>عنوان های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="ImportExcelUsageLayerUserTypeOrgNotInExcel" xml:space="preserve">
+    <value>در فایل اکسل شما اطلاعات طبقه مصرف :&lt;br&gt;{0} برای کاربری "{1}" ، "{2}" وجود ندارد.</value>
+  </data>
+  <data name="ImportExcelUserTypeNotInExcel" xml:space="preserve">
+    <value>کاربری های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="ImportExcelUserTypeOrgNotInExcel" xml:space="preserve">
+    <value>کاربری های :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="ImportExcelUserType_DiameterPipeNotInExcel" xml:space="preserve">
     <value>کاربری های :&lt;br&gt;{0}قطرلوله های :&lt;br&gt;{1} در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
-  <data name="ImportExcelWWsDiameterNotInExcel" xml:space="preserve">
-    <value>قطر لوله های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
+  <data name="Logic_ActivityDuplicate" xml:space="preserve">
+    <value>اطلاعات برای فعالیت {0} قبلا ثبت شده است.</value>
   </data>
-  <data name="Logic_BranchFeeAmount" xml:space="preserve">
-    <value>اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است</value>
-  </data>
-  <data name="Logic_BranchingRateIncrease" xml:space="preserve">
-    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
-  </data>
-  <data name="Logic_ConsumeForcast" xml:space="preserve">
-    <value>اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است</value>
-  </data>
-  <data name="Logic_ConsumeForcastWs" xml:space="preserve">
-    <value>اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است</value>
-  </data>
-  <data name="Logic_DWasteType" xml:space="preserve">
-    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
-  </data>
-  <data name="Logic_IncomeForcast" xml:space="preserve">
-    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
+  <data name="Logic_DiameterPipeOrgDuplicate" xml:space="preserve">
+    <value>اطلاعات قطر لوله {0} برای سازمان {1} قبلا ثبت شده است.</value>
   </data>
   <data name="Logic_InputDisableYearData" xml:space="preserve">
     <value> این عملیات را برای سال غیر فعال نمی توانید انجام دهید.</value>
   </data>
-  <data name="Logic_NHCo" xml:space="preserve">
-    <value>اطلاعات برای فعالیت {0} قبلا ثبت شده است.</value>
-  </data>
-  <data name="Logic_Organization" xml:space="preserve">
+  <data name="Logic_OrganizationDuplicate" xml:space="preserve">
     <value>سازمان "{0}" قبلا ثبت شده است .</value>
   </data>
-  <data name="Logic_UserType" xml:space="preserve">
-    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
+  <data name="Logic_TitleDuplicate" xml:space="preserve">
+    <value>اطلاعات {0} قبلا ثبت شده است.</value>
   </data>
-  <data name="Logic_UserTypeAverageCapacity" xml:space="preserve">
-    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
-  </data>
-  <data name="Logic_WasteSalesSplit" xml:space="preserve">
+  <data name="Logic_UserTypeDiameterPipeDuplicate" xml:space="preserve">
     <value>اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است</value>
   </data>
-  <data name="Logic_WaterSalesSplit" xml:space="preserve">
-    <value>اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است</value>
+  <data name="Logic_UserTypeDuplicate" xml:space="preserve">
+    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
   </data>
-  <data name="Logic_WWsDiameter" xml:space="preserve">
-    <value>اطلاعات قطر لوله "{0}" برای سازمان "{1}" قبلا ثبت شده است.</value>
+  <data name="Logic_UserTypeUsageLayerDuplicate" xml:space="preserve">
+    <value>اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است</value>
+  </data>
+  <data name="Logic_YearOrgDuplicate" xml:space="preserve">
+    <value>اطلاعات سال {0} برای "{1}" قبلا ثبت شده است.</value>
   </data>
   <data name="RelationDataSoftDeleted" xml:space="preserve">
     <value>به دلیل وجود داده وابسته امکان حذف نمی باشد.</value>

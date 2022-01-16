@@ -102,7 +102,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<WasteInstallFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_WWsDiameter,
+                string.Format(ServiceMessages.Logic_DiameterPipeOrgDuplicate,
                 model.DWasteTypeTitle , organizationDisplay)
                 );
         }
@@ -145,7 +145,7 @@ namespace Datiss.Budget.Services
                 return ValidationResult<WasteInstallFeeDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
             return ValidationResult<WasteInstallFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_WWsDiameter,
+                string.Format(ServiceMessages.Logic_DiameterPipeOrgDuplicate,
                 model.DWasteTypeTitle , organizationDisplay)
                 );
         }
@@ -395,7 +395,7 @@ namespace Datiss.Budget.Services
                 if (!await dwastetypes.AnyAsync(x => x.Id == rec.DWasteTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelWWsDiameterNotInExcel, rowIndex + 1, rec.DWasteTypeId)
+                        string.Format(ServiceMessages.ImportExcelDiameterPipeNotInExcel, rowIndex + 1, rec.DWasteTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -407,15 +407,34 @@ namespace Datiss.Budget.Services
 
                 rowIndex++;
             }
+            //
+            var missingOrgs = new List<Organization>();
+            var existOrgs = new List<Organization>();
 
+            foreach (var item in descendents)
+            {
+                var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                if (!existInExcel)
+                    missingOrgs.Add(item);
+                else
+                    existOrgs.Add(item);
+            }
+            //
             //Start DWasteType
             var missingDWsType = new List<Constant>();
-            foreach (var item in dwastetypes)
+            string orgTitle = "";
+            foreach (var org in existOrgs)
             {
-                var existDWTypeInExcel = records.Any(_ => _.DWasteTypeId == item.Id);
-                if (!existDWTypeInExcel)
-                    missingDWsType.Add(item);
-
+                foreach (var item in dwastetypes)
+                {
+                    var existDWTypeInExcel = records.Any(_ => _.DWasteTypeId == item.Id &&
+                                                              _.OrganizationId==org.Id);
+                    if (!existDWTypeInExcel)
+                    {
+                        missingDWsType.Add(item);
+                        orgTitle = org.Title;
+                    }
+                }
             }
             if (missingDWsType.Any())
             {
@@ -425,7 +444,7 @@ namespace Datiss.Budget.Services
                     dWasteTypeNames += "- [" + item.Title + "]<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelWWsDiameterNotInExcel, dWasteTypeNames));
+                    string.Format(ServiceMessages.ImportExcelDiameterPipeOrgNotInExcel, dWasteTypeNames , orgTitle));
             }
             //end
 
@@ -433,15 +452,6 @@ namespace Datiss.Budget.Services
 
             if (!continueIfAnyOrgMissing)
             {
-                var missingOrgs = new List<Organization>();
-
-                foreach (var item in descendents)
-                {
-                    var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
-                    if (!existInExcel)
-                        missingOrgs.Add(item);
-                }
-
                 if (missingOrgs.Any())
                 {
                     string orgNames = "";
