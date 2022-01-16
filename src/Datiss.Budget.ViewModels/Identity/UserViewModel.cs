@@ -105,14 +105,14 @@ namespace Datiss.Budget.ViewModels.Identity
         public IEnumerable<SelectListItem> OrganizationSource { get; set; }
 
         public void SetPositionSource(IEnumerable<DropDownItemViewModel> source)
-            => source.Select(x => new SelectListItem
+            => PositionSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
 
         public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
-            => source.Select(x => new SelectListItem
+            => OrganizationSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()

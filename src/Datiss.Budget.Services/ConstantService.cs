@@ -14,6 +14,7 @@ using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
 using DNTPersianUtils.Core;
+using Mapster;
 
 namespace Datiss.Budget.Services
 {
@@ -116,7 +117,26 @@ namespace Datiss.Budget.Services
                             Id = x.Id,
                             Title = x.Title
                         }).ToListAsync();
+        public async Task<IEnumerable<DropDownItem>> GetByKeyAsync(string key,string parentkey)
+            => await _dbSet
+                        .Include(x=>x.Parent)
+                        .Where(x => x.ConstantKey.ToUpper() == key.ToUpper() &&
+                                    x.Parent.ConstantKey.ToUpper() == parentkey.ToUpper())
+                        .OrderBy(x => x.DisplayOrder)
+                        .Select(x => new DropDownItem
+                        {
+                            Id = x.Id,
+                            Title = x.Title
+                        }).ToListAsync();
 
+        public async Task<IEnumerable<ConstantDTO>> GetDataByKeyAsync(string key)
+            => await _dbSet
+                        .Include(x => x.Parent)
+                        .Where(x => x.Parent.ConstantKey.ToUpper() == key.ToUpper())
+                        .OrderBy(x => x.DisplayOrder)
+                        .Select(x => x.Adapt<ConstantDTO>())
+                        .ToListAsync();
+        
         public async Task<PagedResult<ConstantDTO>> GetListAsync(ConstantFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));

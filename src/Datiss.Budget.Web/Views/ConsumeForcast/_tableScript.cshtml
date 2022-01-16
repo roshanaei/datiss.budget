@@ -4,13 +4,15 @@
 
     function editRow(id) {
 
-        //$('th,tr td').css('background-color', 'rgb(255 255 255)');
-        //resetTableBackColor("my-table");
+        let usertypeid = $('#hidUserTypeId_' + id).val();
+        FillDropDoen(usertypeid);
 
-        //do reset all row background
+        let selectval = $('#hidUsageLayerTypeId_' + id).val();
+        $('#inputUsageLayerType_' + id).val(selectval).attr("selected", "selected");
+
+        resetTableBackColor("my-table");
 
         let row = $('#row_' + id);
-        //row.css('background-color', '#7598f3');
 
         //Hide output elements
         $('#divOutput_Year_' + id).hide();
@@ -97,7 +99,7 @@
         model.avgConsumeUser = $('#inputAvgConsumeUser_' + id).val();
         model.consumeUserForcast = $('#inputConsumeUserForcast_' + id).val();
 
-        
+
         $.ajax({
             url: '@Url.Action(ConsumeForcastController.ACTION_Edit)',
             type: 'POST',
@@ -116,13 +118,14 @@
                         });
                         return;
                 }
+                console.log(data);
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
-                $('#spanUserType_' + id).text(data.userTypeDisplay);
-                $('#spanUsageLayerType_' + id).text(data.usageLayerTypeDisplay);
+                $('#spanUserType_' + id).text(data.userTypeTitle);
+                $('#spanUsageLayerType_' + id).text(data.usageLayerTitle);
                 $('#spanCountUser_' + id).text(data.countUser);
                 $('#spanUnitUser_' + id).text(data.unitUser);
                 $('#spanConsumeUser_' + id).text(data.consumeUser);
@@ -139,9 +142,6 @@
     }
 
     function saveNewRow(e) {
-        console.log(e);
-
-
 
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
@@ -175,6 +175,8 @@
                     return;
                 }
 
+                console.log(data);
+
                 //Year
                 $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
                 $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
@@ -205,7 +207,7 @@
                 $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
 
                 $('#divInput_UserType_' + data.id).hide();
-                $('#spanUserType_' + data.id).text(data.userTypeDisplay);
+                $('#spanUserType_' + data.id).text(data.userTypeTitle);
                 $('#divOutput_UserType_' + data.id).show();
 
 
@@ -217,7 +219,7 @@
                 $(e).find('#spanUsageLayerType_').attr('id', 'spanUsageLayerType_' + data.id);
 
                 $('#divInput_UsageLayerType_' + data.id).hide();
-                $('#spanUsageLayerType_' + data.id).text(data.usageLayerTypeDisplay);
+                $('#spanUsageLayerType_' + data.id).text(data.usageLayerTitle);
                 $('#divOutput_UsageLayerType_' + data.id).show();
 
                 //CountUser
@@ -305,42 +307,33 @@
     function addNewRow() {
         if (isNewRow) return;
 
-        //do reset all row background
+        resetTableBackColor("my-table");
+
+        let usertypeid = $('#inputUserType_').val();
+        FillDropDoen(usertypeid);
+        
 
         var template = $('#rowTemplate').clone()
             .appendTo($('#my-table tbody'))
             .attr('id', 'newRow')
             .css('background-color', 'rgb(230 247 228)')
             .show();
-        
+
         $('.selectOrganization:last').select2({
             dir: 'rtl'
         });
 
-        $('.selectUserType:last').select2({
-            dir : 'rtl'
-        });
-
-        $('.select:last').select2({
-            dir: 'rtl'
-        });
-
-        let input = document.getElementById('inputAvgConsumeUser_');
-        let btnSave = document.getElementById('btnSaveCreate_');
-
-        console.log(input);
-        console.log(btnSave);
-
-        input.addEventListener('keyup', function (event) {
+        $('.input-keyup').keyup(function (event) {
             event.preventDefault();
-            if (event.keycode === 13) {
-                btnSave.click();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
             }
         });
 
         let newRowElement = document.getElementById('newRow');
         newRowElement.scrollIntoView();
-        input.focus();
+        $('.default-input:last').focus();
 
         isNewRow = true;
     }
@@ -373,14 +366,45 @@
 
     function resetTableBackColor(id) {
         var table = document.getElementById(id);
-
-
         var rows = table.getElementsByTagName("tr");
-
         for (i = 2; i < rows.length - 1; i++) {
-            console.log(i);
-            rows[i].style.backgroundColor = "#00000000"
+            rows[i].style = "";
         }
     }
+
+    function RelatedDropDown(e, event) {
+        let usertypeid = event.target.value;
+        FillDropDoen(usertypeid);
+    }
+
+    function FillDropDoen(id) {
+
+        let key = userType_source[id];
+        if (key != 'UserType.House') {
+            key = 'UsageLayer';
+        }
+
+        $.ajax({
+            url: '@Url.Action("GetUsageLayerAsync")',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'key': key
+                }
+        }).done(function (data) {
+            console.log(data);
+            var options = $('.selectUsageLayerType');
+            options.empty();
+            $.each(data,
+                function (i, item) {
+                    options.append($('<option />')
+                        .val(item.id)
+                        .text(item.title));
+                });
+        }).fail(function (error) {
+            alert(error);
+        });
+    }
+
 
 </script>

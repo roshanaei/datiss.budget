@@ -118,7 +118,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<BranchingRateIncreaseDTO>.Failed(
-                string.Format(ServiceMessages.Logic_BranchingRateIncrease,
+                string.Format(ServiceMessages.Logic_UserTypeDuplicate,
                 model.UserTypeTitle)
                 );
 
@@ -176,7 +176,7 @@ namespace Datiss.Budget.Services
                 return ValidationResult<BranchingRateIncreaseDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
             return ValidationResult<BranchingRateIncreaseDTO>.Failed(
-                string.Format(ServiceMessages.Logic_BranchingRateIncrease,
+                string.Format(ServiceMessages.Logic_UserTypeDuplicate,
                 model.UserTypeTitle)
                 );
         }
@@ -370,7 +370,7 @@ namespace Datiss.Budget.Services
                 if (!await usertypes.AnyAsync(x => x.Id == rec.UserTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 1, rec.UserTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 1, rec.UserTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -401,7 +401,7 @@ namespace Datiss.Budget.Services
                     userTypeNames += "- " + item.Title + "<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelDWTypeNotInExcel, userTypeNames));
+                    string.Format(ServiceMessages.ImportExcelUserTypeNotInExcel, userTypeNames));
             }
             //end
 

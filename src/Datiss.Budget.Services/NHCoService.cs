@@ -106,7 +106,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<NHCoDTO>.Failed(
-                string.Format(ServiceMessages.Logic_NHCo,
+                string.Format(ServiceMessages.Logic_ActivityDuplicate,
                 model.ActivityType.ToDisplay())
                 );
 
@@ -152,7 +152,7 @@ namespace Datiss.Budget.Services
                 return ValidationResult<NHCoDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
             return ValidationResult<NHCoDTO>.Failed(
-                string.Format(ServiceMessages.Logic_NHCo,
+                string.Format(ServiceMessages.Logic_ActivityDuplicate,
                 model.ActivityType.ToDisplay())
                 );
         }
