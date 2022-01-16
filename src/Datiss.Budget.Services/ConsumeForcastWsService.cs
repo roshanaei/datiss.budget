@@ -112,7 +112,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<ConsumeForcastWsDTO>.Failed(
-                string.Format(ServiceMessages.Logic_ConsumeForcastWs,
+                string.Format(ServiceMessages.Logic_UserTypeUsageLayerDuplicate,
                 model.UserTypeTitle,
                 model.UserTypeTitle)
                 );
@@ -162,10 +162,10 @@ namespace Datiss.Budget.Services
             }
             catch(DisbaledYearDataInputException)
             {
-                return ValidationResult<ConsumeForcastWsDTO>.Failed(ServiceMessages.Logic_ConsumeForcastWs);
+                return ValidationResult<ConsumeForcastWsDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
             return ValidationResult<ConsumeForcastWsDTO>.Failed(
-                string.Format(ServiceMessages.Logic_ConsumeForcastWs,
+                string.Format(ServiceMessages.Logic_UserTypeUsageLayerDuplicate,
                 model.UserTypeTitle,
                 model.UsageLayerTitle)
                 );
@@ -389,14 +389,14 @@ namespace Datiss.Budget.Services
                 if (!await usertypes.AnyAsync(x => x.Id == rec.UserTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 1, rec.UserTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 1, rec.UserTypeId)
                         );
                 }
 
                 if (!await usagetypes.AnyAsync(x => x.Id == rec.UsageLayerId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerType, rowIndex + 1, rec.UsageLayerId)
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayer, rowIndex + 1, rec.UsageLayerId)
                         );
                 }
 
@@ -427,7 +427,7 @@ namespace Datiss.Budget.Services
                     userTypeNames += "- " + item.Title + "<br>";
                 }
                 return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelDWTypeNotInExcel, userTypeNames));
+                        string.Format(ServiceMessages.ImportExcelUserTypeNotInExcel, userTypeNames));
 
             }
             //End UserType

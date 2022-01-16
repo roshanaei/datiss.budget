@@ -107,7 +107,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<WasteSalesSplitDTO>.Failed(
-                string.Format(ServiceMessages.Logic_WasteSalesSplit,
+                string.Format(ServiceMessages.Logic_UserTypeDiameterPipeDuplicate,
                                 model.UserTypeTitle, model.WsPipeDiameterTitle)
                 );
         }
@@ -158,7 +158,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<WasteSalesSplitDTO>.Failed(
-               string.Format(ServiceMessages.Logic_WasteSalesSplit,
+               string.Format(ServiceMessages.Logic_UserTypeDiameterPipeDuplicate,
                                 model.UserTypeTitle, model.WsPipeDiameterTitle)
                );
         }
@@ -406,13 +406,13 @@ namespace Datiss.Budget.Services
                 if (!await usertypes.AnyAsync(x => x.Id == rec.UserTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 1, rec.UserTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 1, rec.UserTypeId)
                         );
                 }
                 if (!await wastediameters.AnyAsync(x => x.Id == rec.WsPipeDiameterId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidWaterDiameter, rowIndex + 1, rec.UserTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidDiameterPipe, rowIndex + 1, rec.UserTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -456,7 +456,7 @@ namespace Datiss.Budget.Services
                     wsPDiametersNames += "- " + item.Title + "<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelTypeWPDiameterNotInExcel, userTypeNames, wsPDiametersNames));
+                    string.Format(ServiceMessages.ImportExcelUserType_DiameterPipeNotInExcel, userTypeNames, wsPDiametersNames));
             }
             //end
 

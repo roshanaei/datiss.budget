@@ -142,20 +142,29 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to کاربری های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
+        ///   Looks up a localized string similar to قطر لوله های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
-        public static string ImportExcelDWTypeNotInExcel {
+        public static string ImportExcelDiameterPipeNotInExcel {
             get {
-                return ResourceManager.GetString("ImportExcelDWTypeNotInExcel", resourceCulture);
+                return ResourceManager.GetString("ImportExcelDiameterPipeNotInExcel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد کاربری &quot;{1}&quot; معتبر نیست ..
+        ///   Looks up a localized string similar to قطر لوله های :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
-        public static string ImportExcelInvalidDWaterType {
+        public static string ImportExcelDiameterPipeOrgNotInExcel {
             get {
-                return ResourceManager.GetString("ImportExcelInvalidDWaterType", resourceCulture);
+                return ResourceManager.GetString("ImportExcelDiameterPipeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد قطر لوله &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidDiameterPipe {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidDiameterPipe", resourceCulture);
             }
         }
         
@@ -169,20 +178,38 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد طبقه مصرف &quot;{1}&quot; معتبر نیست ..
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد &quot;{1}&quot; معتبر نیست ..
         /// </summary>
-        public static string ImportExcelInvalidUsageLayerType {
+        public static string ImportExcelInvalidTitle {
             get {
-                return ResourceManager.GetString("ImportExcelInvalidUsageLayerType", resourceCulture);
+                return ResourceManager.GetString("ImportExcelInvalidTitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد قطر لوله &quot;{1}&quot; معتبر نیست ..
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد طبقه مصرف&quot;{1}&quot; معتبر نیست ..
         /// </summary>
-        public static string ImportExcelInvalidWaterDiameter {
+        public static string ImportExcelInvalidUsageLayer {
             get {
-                return ResourceManager.GetString("ImportExcelInvalidWaterDiameter", resourceCulture);
+                return ResourceManager.GetString("ImportExcelInvalidUsageLayer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد طبقه مصرف &quot;{1}&quot; برای کاربری &quot;{2}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidUsageLayerUserType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidUsageLayerUserType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد کاربری &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidUserType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidUserType", resourceCulture);
             }
         }
         
@@ -196,7 +223,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to شما مجاز به ورود اطلاعات برای سازمان &quot; {0} &quot; نیستید.[سطر {1} فایل اکسل].
+        ///   Looks up a localized string similar to شما مجاز به ورود اطلاعات برای &quot; {0} &quot; نیستید.[سطر {1} فایل اکسل].
         /// </summary>
         public static string ImportExcelNotAllowedOrg {
             get {
@@ -232,74 +259,65 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelTitleNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelTitleNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در فایل اکسل شما اطلاعات طبقه مصرف :&lt;br&gt;{0} برای کاربری &quot;{1}&quot; ، &quot;{2}&quot; وجود ندارد..
+        /// </summary>
+        public static string ImportExcelUsageLayerUserTypeOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelUsageLayerUserTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to کاربری های :&lt;br&gt;{0}قطرلوله های :&lt;br&gt;{1} در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
-        public static string ImportExcelTypeWPDiameterNotInExcel {
+        public static string ImportExcelUserType_DiameterPipeNotInExcel {
             get {
-                return ResourceManager.GetString("ImportExcelTypeWPDiameterNotInExcel", resourceCulture);
+                return ResourceManager.GetString("ImportExcelUserType_DiameterPipeNotInExcel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to قطر لوله های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
+        ///   Looks up a localized string similar to کاربری های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
-        public static string ImportExcelWWsDiameterNotInExcel {
+        public static string ImportExcelUserTypeNotInExcel {
             get {
-                return ResourceManager.GetString("ImportExcelWWsDiameterNotInExcel", resourceCulture);
+                return ResourceManager.GetString("ImportExcelUserTypeNotInExcel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است.
+        ///   Looks up a localized string similar to کاربری های :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
-        public static string Logic_BranchFeeAmount {
+        public static string ImportExcelUserTypeOrgNotInExcel {
             get {
-                return ResourceManager.GetString("Logic_BranchFeeAmount", resourceCulture);
+                return ResourceManager.GetString("ImportExcelUserTypeOrgNotInExcel", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
+        ///   Looks up a localized string similar to اطلاعات برای فعالیت {0} قبلا ثبت شده است..
         /// </summary>
-        public static string Logic_BranchingRateIncrease {
+        public static string Logic_ActivityDuplicate {
             get {
-                return ResourceManager.GetString("Logic_BranchingRateIncrease", resourceCulture);
+                return ResourceManager.GetString("Logic_ActivityDuplicate", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است.
+        ///   Looks up a localized string similar to اطلاعات قطر لوله {0} برای سازمان {1} قبلا ثبت شده است..
         /// </summary>
-        public static string Logic_ConsumeForcast {
+        public static string Logic_DiameterPipeOrgDuplicate {
             get {
-                return ResourceManager.GetString("Logic_ConsumeForcast", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است.
-        /// </summary>
-        public static string Logic_ConsumeForcastWs {
-            get {
-                return ResourceManager.GetString("Logic_ConsumeForcastWs", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
-        /// </summary>
-        public static string Logic_DWasteType {
-            get {
-                return ResourceManager.GetString("Logic_DWasteType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
-        /// </summary>
-        public static string Logic_IncomeForcast {
-            get {
-                return ResourceManager.GetString("Logic_IncomeForcast", resourceCulture);
+                return ResourceManager.GetString("Logic_DiameterPipeOrgDuplicate", resourceCulture);
             }
         }
         
@@ -313,65 +331,56 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات برای فعالیت {0} قبلا ثبت شده است..
-        /// </summary>
-        public static string Logic_NHCo {
-            get {
-                return ResourceManager.GetString("Logic_NHCo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to سازمان &quot;{0}&quot; قبلا ثبت شده است ..
         /// </summary>
-        public static string Logic_Organization {
+        public static string Logic_OrganizationDuplicate {
             get {
-                return ResourceManager.GetString("Logic_Organization", resourceCulture);
+                return ResourceManager.GetString("Logic_OrganizationDuplicate", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
+        ///   Looks up a localized string similar to اطلاعات {0} قبلا ثبت شده است..
         /// </summary>
-        public static string Logic_UserType {
+        public static string Logic_TitleDuplicate {
             get {
-                return ResourceManager.GetString("Logic_UserType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
-        /// </summary>
-        public static string Logic_UserTypeAverageCapacity {
-            get {
-                return ResourceManager.GetString("Logic_UserTypeAverageCapacity", resourceCulture);
+                return ResourceManager.GetString("Logic_TitleDuplicate", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است.
         /// </summary>
-        public static string Logic_WasteSalesSplit {
+        public static string Logic_UserTypeDiameterPipeDuplicate {
             get {
-                return ResourceManager.GetString("Logic_WasteSalesSplit", resourceCulture);
+                return ResourceManager.GetString("Logic_UserTypeDiameterPipeDuplicate", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است.
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} قبلا ثبت شده است..
         /// </summary>
-        public static string Logic_WaterSalesSplit {
+        public static string Logic_UserTypeDuplicate {
             get {
-                return ResourceManager.GetString("Logic_WaterSalesSplit", resourceCulture);
+                return ResourceManager.GetString("Logic_UserTypeDuplicate", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات قطر لوله &quot;{0}&quot; برای سازمان &quot;{1}&quot; قبلا ثبت شده است..
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است.
         /// </summary>
-        public static string Logic_WWsDiameter {
+        public static string Logic_UserTypeUsageLayerDuplicate {
             get {
-                return ResourceManager.GetString("Logic_WWsDiameter", resourceCulture);
+                return ResourceManager.GetString("Logic_UserTypeUsageLayerDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات سال {0} برای &quot;{1}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_YearOrgDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_YearOrgDuplicate", resourceCulture);
             }
         }
         

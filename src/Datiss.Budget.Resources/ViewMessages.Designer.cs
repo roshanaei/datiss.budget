@@ -142,7 +142,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to سال مالی داده وابسته دارد . ابتدا آن ها را پاک کنید !.
+        ///   Looks up a localized string similar to سال مالی داده وابسته دارد . ابتدا آن ها را حذف کنید !.
         /// </summary>
         public static string FinanceYearErrorHardDelete {
             get {
@@ -160,7 +160,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to سال مالی با موفقیت از روی سیستم پاک شد..
+        ///   Looks up a localized string similar to سال مالی با موفقیت حذف شد..
         /// </summary>
         public static string FinanceYearSuccessHardDelete {
             get {
@@ -169,7 +169,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to سال مالی از لیست حذف شده ها پاک شد ..
+        ///   Looks up a localized string similar to سال مالی از لیست حذف شده ها حذف شد ..
         /// </summary>
         public static string FinanceYearSuccessReturnYear {
             get {
@@ -295,7 +295,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to سازمان مورد نظر دارای زیر مجموعه است . ابتدا آن ها را پاک کنید ..
+        ///   Looks up a localized string similar to سازمان مورد نظر دارای زیر مجموعه است . ابتدا آن ها را حذف کنید ..
         /// </summary>
         public static string OrganizationHasChild {
             get {

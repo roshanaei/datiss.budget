@@ -120,7 +120,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<BranchFeeAmountDTO>.Failed(
-                  string.Format(ServiceMessages.Logic_BranchFeeAmount,
+                  string.Format(ServiceMessages.Logic_UserTypeDuplicate,
                   model.YearId, model.OrganizationId)
                   );
             }
@@ -180,7 +180,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<BranchFeeAmountDTO>.Failed(
-                string.Format(ServiceMessages.Logic_BranchFeeAmount,
+                string.Format(ServiceMessages.Logic_UserTypeDuplicate,
                 model.YearId, 
                 model.OrganizationId)
                 );
