@@ -30,6 +30,7 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 1).Value = item.Year.ToString();
                 sheet.Cell(row, 2).Value = item.OrganizationDisplay;
                 sheet.Cell(row, 3).Value = item.DWaterTypeDisplay;
+                sheet.Cell(row, 3).DataType = XLDataType.Text;
                 sheet.Cell(row, 4).Value = item.WInstallFee;
                 sheet.Cell(row, 4).DataType = XLDataType.Number;
                 row++;
@@ -71,8 +72,8 @@ namespace Datiss.Budget.Reports.Excel
             }
 
             var range = sheet.Range(2, 1, row - 1, 5);
-            range.Column(5).Style.NumberFormat.Format = "#,##0";
-            range.Column(6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(4).Style.NumberFormat.Format = "#,##0";
+            range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();

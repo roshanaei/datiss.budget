@@ -395,7 +395,7 @@ namespace Datiss.Budget.Services
                 if (!await dwastetypes.AnyAsync(x => x.Id == rec.DWasteTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelDiameterPipeNotInExcel, rowIndex + 1, rec.DWasteTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidDiameterPipe, rowIndex + 1, rec.DWasteTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)

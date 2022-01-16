@@ -80,7 +80,7 @@ namespace Datiss.Budget.Services
             {
                 return ValidationResult.Failed(ServiceMessages.FinanceYearDuplicateYear);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return ValidationResult.Failed(ServiceMessages.SystemError);
             }
@@ -121,7 +121,7 @@ namespace Datiss.Budget.Services
             {
                 return ValidationResult.Failed(ServiceMessages.FinanceYearDuplicateYear);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return ValidationResult.Failed(ServiceMessages.SystemError);
             }
