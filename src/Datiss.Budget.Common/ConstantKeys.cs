@@ -8,5 +8,7 @@
         public const string __WasteDiameter = "WasteDiameter";
         public const string __OIFType = "OIF";
         public const string __House = "UserType.House";
+        public const string __CIOWType = "CIOWType";
+        public const string __CIOWsType = "CIOWsType";
     }
 }

@@ -313,6 +313,24 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات برای فعالیت {0}، {1} قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_ActivityOrgDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_ActivityOrgDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات {0}، {1} برای {2} قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_ActivityTitleOrgDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_ActivityTitleOrgDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات قطر لوله {0} برای سازمان {1} قبلا ثبت شده است..
         /// </summary>
         public static string Logic_DiameterPipeOrgDuplicate {

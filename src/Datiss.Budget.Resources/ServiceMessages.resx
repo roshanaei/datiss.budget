@@ -201,6 +201,12 @@
   <data name="Logic_ActivityDuplicate" xml:space="preserve">
     <value>اطلاعات برای فعالیت {0} قبلا ثبت شده است.</value>
   </data>
+  <data name="Logic_ActivityOrgDuplicate" xml:space="preserve">
+    <value>اطلاعات برای فعالیت {0}، {1} قبلا ثبت شده است.</value>
+  </data>
+  <data name="Logic_ActivityTitleOrgDuplicate" xml:space="preserve">
+    <value>اطلاعات {0}، {1} برای {2} قبلا ثبت شده است.</value>
+  </data>
   <data name="Logic_DiameterPipeOrgDuplicate" xml:space="preserve">
     <value>اطلاعات قطر لوله {0} برای سازمان {1} قبلا ثبت شده است.</value>
   </data>
