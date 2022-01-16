@@ -250,6 +250,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to طبقه های مصرف :&lt;br&gt;{0} برای کاربری &quot;{1}&quot; و سازمان &quot;{2}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelUsageLayerUserTypeOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelUsageLayerUserTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to قطر لوله های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelWWsDiameterNotInExcel {

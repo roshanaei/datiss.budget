@@ -275,14 +275,14 @@
         </script>
     }
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
     var userType_Ids = [
         @Html.Raw(Model.UserTypeSourceIdArray)
     ];
 
     var userType_keys = [
-        @Html.Raw(ViewData["userTypeKeys"].ToString()) 
+        @Html.Raw(ViewData["userTypeKeys"].ToString())
     ];
 
     var userType_source = {};
@@ -441,7 +441,7 @@
         });
 
     $(document).on('click', '.edit-row', function () {
-        
+
             resetDataColumns()
             let id = $(this).data('id');
 
@@ -598,7 +598,9 @@
             var fdata = new FormData();
             var fileInput = $('#ExcelFile')[0];
             var file = fileInput.files[0];
+            var yearId = $('#yearId').val();
             fdata.append('ExcelFile', file);
+            fdata.append('yearId', yearId);
 
             $.ajax({
                 url: '@Url.Action(ConsumeForcastController.ACTION_ImportExcel)',
@@ -780,6 +782,6 @@
             $('#filterForm').submit();
         };
 
-</script>
+    </script>
 
 }

@@ -238,17 +238,19 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            if (model.ExcelFile == null ||
-                model.ExcelFile.Length == 0)
+            if (model.ExcelFile == null || model.ExcelFile.Length == 0)
                 return Json(new
                 {
                     hasError = true,
-                    message = "فایل انتخاب شده معتبر نیست."
+                    message = ViewMessages.ImportExcelInvalidFile
                 });
 
             try
             {
-                var result = await _consumeForcastService.ImportExcelAsync(model.ExcelFile, model.ContinueIfAnyOrgMissing);
+                var result = await _consumeForcastService.ImportExcelAsync(
+                                                                    model.ExcelFile,
+                                                                    model.YearId,
+                                                                    model.ContinueIfAnyOrgMissing);
                 if (result.AskToImport)
                 {
                     return Json(new
@@ -450,44 +452,36 @@ namespace Datiss.Budget.Web.Controllers
 
             foreach (var org in organizations)
             {
-                foreach (var usert in userTypes)
-                {
-                    if(usert.ConstantKey==ConstantKeys.__House)
-                    {
-                        foreach(var usage in houseUsageLayer)
-                        {
-                            items.Add(new ConsumeForcastDTO
-                            {
-                                UserTypeTitle = usert.Title,
-                                UserTypeId = usert.Id,
-                                UsageLayerTitle = usage.Title,
-                                UsageLayerId = usage.Id,
-                                OrganizationId = org.Id,
-                                OrganizationDisplay = org.Title,
-                                Year = year.Year,
-                                YearId = year.Id
-                            });
-                        }
-                    }
-                    else
-                    {
-                        foreach (var usage in nhouseUsagelayer)
-                        {
-                            items.Add(new ConsumeForcastDTO
-                            {
-                                UserTypeTitle = usert.Title,
-                                UserTypeId = usert.Id,
-                                UsageLayerTitle = usage.Title,
-                                UsageLayerId = usage.Id,
-                                OrganizationId = org.Id,
-                                OrganizationDisplay = org.Title,
-                                Year = year.Year,
-                                YearId = year.Id
-                            });
-                        }
-                    }
-
-                }
+                userTypes.Where(ut => ut.ConstantKey == ConstantKeys.__House)
+                    .ToList()
+                    .ForEach(ut => items.AddRange(houseUsageLayer
+                                        .Select(hul => new ConsumeForcastDTO
+                                        {
+                                            UserTypeTitle = ut.Title,
+                                            UserTypeId = ut.Id,
+                                            UsageLayerTitle = hul.Title,
+                                            UsageLayerId = hul.Id,
+                                            OrganizationId = org.Id,
+                                            OrganizationDisplay = org.Title,
+                                            Year = year.Year,
+                                            YearId = year.Id
+                                        }).ToList())
+                    );
+                userTypes.Where(ut => ut.ConstantKey != ConstantKeys.__House)
+                    .ToList()
+                    .ForEach(ut => items.AddRange(nhouseUsagelayer
+                                        .Select(hul => new ConsumeForcastDTO
+                                        {
+                                            UserTypeTitle = ut.Title,
+                                            UserTypeId = ut.Id,
+                                            UsageLayerTitle = hul.Title,
+                                            UsageLayerId = hul.Id,
+                                            OrganizationId = org.Id,
+                                            OrganizationDisplay = org.Title,
+                                            Year = year.Year,
+                                            YearId = year.Id
+                                        }).ToList())
+                    );
             }
 
             using var workbook = items.GetImportTemplate(year.Year);

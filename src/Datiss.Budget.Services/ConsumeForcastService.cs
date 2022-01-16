@@ -186,7 +186,7 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId,int organizationId)
+        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId)
         {
             var organization = await _orgDbSet.FindAsync(organizationId);
             organization.CheckReferenceIsNull(nameof(organization));
@@ -218,7 +218,7 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task<int> CalculationAsync(int yearId,int organizationId)
+        public async Task<int> CalculationAsync(int yearId, int organizationId)
         {
             List<SqlParameter> sqlParams = new List<SqlParameter>
             {
@@ -280,7 +280,7 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task CopyAsync( int sourceYearId, int sourceOrgId,int destYearId)
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
         {
             if (sourceYearId == destYearId)
                 throw new CopySameYearException();
@@ -304,7 +304,7 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.UserTypeId,item.UsageLayerId))
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.UserTypeId, item.UsageLayerId))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new ConsumeForcast
@@ -334,70 +334,196 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, bool continueIfAnyOrgMissing = false)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<ConsumeForcastImportModel>(fileInfo);
+            var data = await _excelService.ImportAsync<ConsumeForcastImportModel>
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
 
             var records = data.Adapt<List<ConsumeForcast>>();
 
             int rowIndex = 1;
+            //Organization
+            var descendents = await _organizationService
+                .GetAllDescendentsAsync(_userContext.OrganizationId);
+            //Constant
+            var usertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                 x.Parent.ConstantKey == ConstantKeys.__UserType);
 
-            var usertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
+            var usagelayers = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                   x.Parent.ConstantKey == ConstantKeys.__UsageLayerType);
 
-            var usagelayers = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UsageLayerType);
+            var houseUsageLayer = await usagelayers.Where(x => x.ConstantKey == ConstantKeys.__House).ToListAsync();
+            var noneHouseUsageLayer = await usagelayers.Where(x => x.ConstantKey == ConstantKeys.__UsageLayerType).ToListAsync();
+
+            //Year
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
 
             foreach (var rec in records)
             {
+                rec.YearId = yearId;
+
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
-                var year = await _yearSet.FindAsync(rec.YearId);
                 if (year == null || year.Status == Enum.EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 1, rec.YearId)
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
                         );
                 }
                 if (org == null)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotExistOrg,rowIndex + 1, rec.OrganizationId)
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
-                if ( !await usertypes.AnyAsync(x => x.Id == rec.UserTypeId))
+                if (!await usertypes.AnyAsync(x => x.Id == rec.UserTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidDWaterType , rowIndex + 1 ,rec.UserTypeId )
+                        string.Format(ServiceMessages.ImportExcelInvalidDWaterType, rowIndex + 2, rec.UserTypeId)
                         );
                 }
-                if (!await usagelayers.AnyAsync( x=> x.Id == rec.UsageLayerId))
+
+                var userType =await _constSet.FindAsync(rec.UserTypeId);
+
+                if (userType.ConstantKey == ConstantKeys.__House && !houseUsageLayer.Any(x => x.Id == rec.UsageLayerId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerType,rowIndex + 1,rec.UsageLayerId)
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerType, rowIndex + 2, rec.UsageLayerId)
                         );
                 }
+
+                if (userType.ConstantKey != ConstantKeys.__House && !noneHouseUsageLayer.Any(x => x.Id == rec.UsageLayerId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerType, rowIndex + 2, rec.UsageLayerId)
+                        );
+                }
+
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg,org.Title, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
                         );
                 }
 
                 rowIndex++;
             }
+
+            //
+            var missingOrgs = new List<Organization>();
+            var existOrgs = new List<Organization>();
+
+            foreach (var item in descendents)
+            {
+                var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                if (!existInExcel)
+                {
+                    if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                        missingOrgs.Add(item);
+                }
+                else
+                    existOrgs.Add(item);
+            }
+            //
+
+            //Start Check Type
+            var missingUType = new List<Constant>();
+            var missingHUsageLayerType = new List<Constant>();
+            var missingNHUsageLayerType = new List<Constant>();
+
+            string orgTitle = "";
+            string orgTitleHouse = "";
+            string orgTitleNHouse = "";
+
+            string hUsageLayerTitle = "";
+            string nHUsageLayerTitle = "";
+
+            foreach (var org in existOrgs)
+            {
+                foreach (var usert in usertypes)
+                {
+                    var existUTypeInExcel = records.Any(_ => _.UserTypeId == usert.Id &&
+                                                              _.OrganizationId == org.Id);
+                    if (!existUTypeInExcel)
+                    {
+                        missingUType.Add(usert);
+                        orgTitle = org.Title;
+                    }
+                    else
+                    {
+                        if (usert.ConstantKey == ConstantKeys.__House)
+                        {
+                            foreach (var usage in houseUsageLayer)
+                            {
+                                var exist = records.Any(_ => _.UserTypeId == usert.Id &&
+                                                             _.OrganizationId == org.Id &&
+                                                             _.UsageLayerId == usage.Id);
+                                if (!exist)
+                                {
+                                    missingHUsageLayerType.Add(usage);
+                                    hUsageLayerTitle = usert.Title;
+                                    orgTitleHouse = org.Title;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (var nhusage in noneHouseUsageLayer)
+                            {
+                                var exist = records.Any(_ => _.UserTypeId == usert.Id &&
+                                                             _.OrganizationId == org.Id &&
+                                                             _.UsageLayerId == nhusage.Id);
+                                if (!exist)
+                                {
+                                    missingNHUsageLayerType.Add(nhusage);
+                                    nHUsageLayerTitle = usert.Title;
+                                    orgTitleNHouse = org.Title;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (missingUType.Any())
+            {
+                string uTypeNames = "";
+                foreach (var item in missingUType)
+                {
+                    uTypeNames += "- [" + item.Title + "]<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelPipeDiameterOrgNotInExcel, uTypeNames, orgTitle));
+            }
+
+            if (missingHUsageLayerType.Any())
+            {
+                string usageTypeNames = "";
+                foreach (var item in missingHUsageLayerType)
+                {
+                    usageTypeNames += "- " + item.Title + "<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelUsageLayerUserTypeOrgNotInExcel, usageTypeNames, hUsageLayerTitle, orgTitleHouse));
+            }
+
+            if (missingNHUsageLayerType.Any())
+            {
+                string usageTypeNames = "";
+                foreach (var item in missingNHUsageLayerType)
+                {
+                    usageTypeNames += "- " + item.Title + "<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelUsageLayerUserTypeOrgNotInExcel, usageTypeNames, nHUsageLayerTitle, orgTitleNHouse));
+            }
+
+            //End Check Type
+
             rowIndex = 1;
-            var descendents = await _organizationService
-                                    .GetAllDescendentsAsync(_userContext.OrganizationId);
+
             if (!continueIfAnyOrgMissing)
             {
-                var missingOrgs = new List<Organization>();
-
-                foreach (var item in descendents)
-                {
-                    var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
-                    if (!existInExcel)
-                        if(item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
-                            missingOrgs.Add(item);
-                }
-
                 if (missingOrgs.Any())
                 {
                     string orgNames = "";
@@ -408,7 +534,7 @@ namespace Datiss.Budget.Services
 
                     return new ImportResult
                     {
-                        Message = orgNames ,
+                        Message = orgNames,
                         AskToImport = true
                     };
                 }
@@ -419,7 +545,7 @@ namespace Datiss.Budget.Services
                 //if organization type is not city or village then pass
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelAccessError,rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
                         );
 
                 if (!await checkLogicAsync(
@@ -429,7 +555,7 @@ namespace Datiss.Budget.Services
                     record.UsageLayerId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
                         );
                 }
 
@@ -542,7 +668,7 @@ namespace Datiss.Budget.Services
                 var organizations = await _organizationService
                     .GetWithChildrenAsync(filter.OrganizationId.Value);
 
-                foreach(var org in organizations)
+                foreach (var org in organizations)
                 {
                     predicate.Or(x => x.OrganizationId == org.Id);
                 }
@@ -553,11 +679,11 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(x => x.Organization.Title.ToUpper().Contains(filter.Search) || 
+                query = query.Where(x => x.Organization.Title.ToUpper().Contains(filter.Search) ||
                                          x.UserType.Title.ToUpper().Contains(filter.Search) ||
                                          x.UsageLayer.Title.ToUpper().Contains(filter.Search) ||
                                          x.UnitUser.ToString().ToUpper().Contains(filter.Search)
-                                         );   
+                                         );
             }
 
             return query;
@@ -566,7 +692,8 @@ namespace Datiss.Budget.Services
         private IQueryable<ConsumeForcast> setOrder(
             IQueryable<ConsumeForcast> query,
             string orderBy = "id",
-            bool desc = false){
+            bool desc = false)
+        {
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "id";
 
@@ -606,7 +733,8 @@ namespace Datiss.Budget.Services
         private async Task<IEnumerable<ConsumeForcast>> getChildrenData(
             int parentOrganizationId,
             int yearId,
-            int targetYearId){
+            int targetYearId)
+        {
 
             var children = await _orgDbSet
                 .Where(x => x.ParentId == parentOrganizationId)
@@ -614,7 +742,8 @@ namespace Datiss.Budget.Services
 
             var result = new List<ConsumeForcast>();
 
-            foreach(var org in children){
+            foreach (var org in children)
+            {
                 if (await Query()
                             .Where(x => x.OrganizationId == org.Id)
                             .Where(x => x.YearId == targetYearId).AnyAsync())
@@ -627,7 +756,8 @@ namespace Datiss.Budget.Services
                                 .Where(x => x.OrganizationId == org.Id)
                                 .ToListAsync();
 
-                foreach(var item in data){
+                foreach (var item in data)
+                {
                     if (!await checkLogicAsync(targetYearId, org.Id, item.UserTypeId, item.UsageLayerId))
                         throw new CopyDestYearHasDataException();
 
@@ -651,7 +781,7 @@ namespace Datiss.Budget.Services
             return result;
         }
 
-        private async Task<IEnumerable<ConsumeForcast>> getChildren( 
+        private async Task<IEnumerable<ConsumeForcast>> getChildren(
             int parentOrganizationId,
             int yearId)
         {
@@ -659,14 +789,14 @@ namespace Datiss.Budget.Services
                 .Where(x => x.ParentId == parentOrganizationId)
                 .ToListAsync();
             var result = new List<ConsumeForcast>();
-            foreach(var org in children)
+            foreach (var org in children)
             {
                 var data = await Query()
                                 .Where(x => x.YearId == yearId)
                                 .Where(x => x.OrganizationId == org.Id)
                                 .ToListAsync();
 
-                foreach(var item in data)
+                foreach (var item in data)
                 {
                     result.Add(item);
                 }
@@ -675,18 +805,18 @@ namespace Datiss.Budget.Services
             return result;
         }
 
-        private async Task<bool> hasAnyDataAsync(int orgid,int yearid)
+        private async Task<bool> hasAnyDataAsync(int orgid, int yearid)
         {
             bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
                                                    x.YearId == yearid);
 
-            if(any)
+            if (any)
             {
                 return true;
             }
             else
             {
-                if(await Query().Include(x => x.Organization)
+                if (await Query().Include(x => x.Organization)
                                 .AnyAsync(x => x.Organization.ParentId == orgid &&
                                                 x.YearId == yearid))
                 {
@@ -707,7 +837,7 @@ namespace Datiss.Budget.Services
              int organizationId,
              int userTypeId,
              int usageLayerId,
-             int? id = null) 
+             int? id = null)
         {
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull(nameof(year));
@@ -729,7 +859,7 @@ namespace Datiss.Budget.Services
 
             return !result;
         }
-        
+
         #endregion
     }
 }
