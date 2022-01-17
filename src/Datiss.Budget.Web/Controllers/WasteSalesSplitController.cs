@@ -9,10 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Datiss.Budget.Services.Identity;
 using Datiss.Budget.Services.Contracts.Identity;
-using Microsoft.AspNetCore.Http;
 using Datiss.Budget.Common.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Datiss.Budget.Common.GuardToolkit;
@@ -70,20 +68,11 @@ namespace Datiss.Budget.Web.Controllers
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
-        private void showMessage(string type, string message)
-        {
-            ViewData["type"] = type;
-            ViewData["message"] = message;
-        }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWasteSalesSplitViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                model.AddError(ViewMessages.InvalidData);
-                return Json(model);
-            }
+
             var data = model.Adapt<CreateWasteSalesSplitDTO>();
 
             var result = await _wasteSalesSplitService.CreateAsync(data);
@@ -177,9 +166,8 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(WasteSalesSplitIndexViewModel model, int page = 1)
+        public async Task<IActionResult> Index(WasteSalesSplitIndexViewModel model)
         {
-            model.Filter.PageNumber = 1;
             var filter = model.Filter.Adapt<WasteSalesSplitFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
@@ -224,7 +212,7 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(new
                 {
                     hasError = true,
-                    message = "فایل انتخاب شده معتبر نیست."
+                    message = ViewMessages.ImportExcelInvalidFile
                 });
 
             try
@@ -260,20 +248,16 @@ namespace Datiss.Budget.Web.Controllers
                     });
                 }
             }
-            catch (ImportExcelFileFormatInvalidException ex)
+            catch (ImportExcelFileFormatInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileFormatInvalid);
                 return Json(new
                 {
                     hasError = true,
                     message = ViewMessages.ImportExcelFileFormatInvalid
                 });
             }
-            catch (ImportExcelFileSizeInvalidException ex)
+            catch (ImportExcelFileSizeInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileSizeInvalid);
                 return Json(new
                 {
                     hasError = true,
@@ -322,7 +306,7 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.NullRef
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json(new
                 {
@@ -440,7 +424,7 @@ namespace Datiss.Budget.Web.Controllers
             {
                 model.AddError(ViewMessages.CopyDestYearHasData);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 model.AddError(ViewMessages.SystemError);
             }
@@ -492,6 +476,7 @@ namespace Datiss.Budget.Web.Controllers
             using var workbook = result.ExportExcel();
             return workbook.Deliver("WasteSalesSplit.xlsx");
         }
+
         #region Private Helper Methods
         private string getCalcTitle(string key)
             => key switch

@@ -151,6 +151,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در فایل اکسل شما اطلاعات قطر لوله :&lt;br&gt;{0} برای کاربری &quot;{1}&quot; ، &quot;{2}&quot; وجود ندارد..
+        /// </summary>
+        public static string ImportExcelDiameterPipeUserTypeOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelDiameterPipeUserTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد قطر لوله &quot;{1}&quot; معتبر نیست ..
         /// </summary>
         public static string ImportExcelInvalidDiameterPipe {
@@ -268,15 +277,6 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to کاربری های :&lt;br&gt;{0}قطرلوله های :&lt;br&gt;{1} در فایل اکسل شما اطلاعاتی ندارند..
-        /// </summary>
-        public static string ImportExcelUserType_DiameterPipeNotInExcel {
-            get {
-                return ResourceManager.GetString("ImportExcelUserType_DiameterPipeNotInExcel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to کاربری های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelUserTypeNotInExcel {
@@ -295,6 +295,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to خطاهای داده ای را بررسی کنید..
+        /// </summary>
+        public static string InvalidData {
+            get {
+                return ResourceManager.GetString("InvalidData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات برای فعالیت {0} قبلا ثبت شده است..
         /// </summary>
         public static string Logic_ActivityDuplicate {
@@ -304,7 +313,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات قطر لوله {0} برای سازمان {1} قبلا ثبت شده است..
+        ///   Looks up a localized string similar to اطلاعات قطر لوله {0} برای &quot;{1}&quot; قبلا ثبت شده است..
         /// </summary>
         public static string Logic_DiameterPipeOrgDuplicate {
             get {
@@ -340,7 +349,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات کاربری {0} و قطر لوله {1} قبلا ثبت شده است.
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} و قطر لوله {1} برای &quot;{2}&quot; قبلا ثبت شده است..
         /// </summary>
         public static string Logic_UserTypeDiameterPipeDuplicate {
             get {
@@ -358,7 +367,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است.
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است..
         /// </summary>
         public static string Logic_UserTypeUsageLayerDuplicate {
             get {

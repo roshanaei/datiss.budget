@@ -68,6 +68,10 @@ namespace Datiss.Budget.Services
         public async Task<ValidationResult<WaterSalesSplitDTO>> CreateAsync(CreateWaterSalesSplitDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
+            if (model.NumberSales < 0 || model.UnitSales < 0 || model.AverageCapacity < 0)
+            {
+                return ValidationResult<WaterSalesSplitDTO>.Failed(ServiceMessages.InvalidData);
+            }
             var entity = new WaterSalesSplit
             {
                 YearId = model.YearId,
@@ -80,7 +84,8 @@ namespace Datiss.Budget.Services
             };
 
             model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
-            
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
             try
             {
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.WPipeDiameterId))
@@ -91,7 +96,7 @@ namespace Datiss.Budget.Services
                     var result = entity.Adapt<WaterSalesSplitDTO>();
                     result.UserTypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title;
                     result.WPipeDiameterDisplay = (await _constSet.FindAsync(model.WPipeDiameterId)).Title;
-                    result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+                    result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.NumberSales = entity.NumberSales;
                     result.UnitSales = model.UnitSales;
@@ -108,7 +113,7 @@ namespace Datiss.Budget.Services
 
             return ValidationResult<WaterSalesSplitDTO>.Failed(
                 string.Format(ServiceMessages.Logic_UserTypeDiameterPipeDuplicate,
-                                model.UserTypeTitle, model.WPipeDiameterTitle)
+                                model.UserTypeTitle, model.WPipeDiameterTitle, organizationDisplay)
                 );
         }
 
@@ -117,6 +122,7 @@ namespace Datiss.Budget.Services
             model.CheckArgumentIsNull(nameof(model));
 
             model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
             {
@@ -140,7 +146,7 @@ namespace Datiss.Budget.Services
                         YearId = model.YearId,
                         UserTypeId = model.UserTypeId,
                         WPipeDiameterId = model.WPipeDiameterId,
-                        OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
+                        OrganizationDisplay = organizationDisplay,
                         UserTypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title,
                         WPipeDiameterDisplay = (await _constSet.FindAsync(model.WPipeDiameterId)).Title,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year,
@@ -160,7 +166,7 @@ namespace Datiss.Budget.Services
 
             return ValidationResult<WaterSalesSplitDTO>.Failed(
                string.Format(ServiceMessages.Logic_UserTypeDiameterPipeDuplicate,
-                                model.UserTypeTitle, model.WPipeDiameterTitle)
+                                model.UserTypeTitle, model.WPipeDiameterTitle, organizationDisplay)
                );
         }
         public async Task HardDeleteAsync(int Id)
@@ -223,7 +229,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "WaterSalesSplit_Cal1",
-                Value =await  _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<int>(
                                     "[dbo].[WaterSalesSplit_Cal1] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
@@ -274,6 +280,7 @@ namespace Datiss.Budget.Services
         public async Task<PagedResult<WaterSalesSplitDTO>> GetListAsync(WaterSalesSplitFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
+
             var result = new PagedResult<WaterSalesSplitDTO>
             {
                 PageSize = filter.PageSize,
@@ -456,9 +463,11 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
-            var usertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
+            var usertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType &&
+                                                 x.Status != EntityStatus.Deleted);
 
-            var waterdiameters = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__WaterDiameter);
+            var waterdiameters = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__WaterDiameter &&
+                                                      x.Status != EntityStatus.Deleted);
 
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull($"Year not found with id: {yearId}");
@@ -471,86 +480,120 @@ namespace Datiss.Budget.Services
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 1, rec.YearId)
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
                         );
                 }
                 if (org == null)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId)
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
                 if (!await usertypes.AnyAsync(x => x.Id == rec.UserTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 1, rec.UserTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.UserTypeId)
                         );
                 }
                 if (!await waterdiameters.AnyAsync(x => x.Id == rec.WPipeDiameterId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidDiameterPipe, rowIndex + 1, rec.UserTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidDiameterPipe, rowIndex + 2, rec.UserTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
                         );
                 }
 
                 rowIndex++;
             }
 
-            //Start
+            //
+            var missingOrgs = new List<Organization>();
+            var existOrgs = new List<Organization>();
+
+            foreach (var item in descendents)
+            {
+                var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                if (!existInExcel)
+                {
+                    if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                        missingOrgs.Add(item);
+                }
+                else
+                    existOrgs.Add(item);
+            }
+            //
+
+            //Start Missing Type
             var missingUserType = new List<Constant>();
-            foreach (var item in usertypes)
-            {
-                var existUserTypeInExcel = records.Any(_ => _.UserTypeId == item.Id);
-                if (!existUserTypeInExcel)
-                    missingUserType.Add(item);
-
-            }
-
             var missingWPDiameters = new List<Constant>();
-            foreach (var item in waterdiameters)
+
+            string orgTitle = "";
+            string userTypeTitle = "";
+
+            foreach (var org in existOrgs)
             {
-                var existWPDiametersInExcel = records.Any(_ => _.WPipeDiameterId == item.Id);
-                if (!existWPDiametersInExcel)
-                    missingWPDiameters.Add(item);
+                if (orgTitle != "")
+                    break;
+                foreach (var usert in usertypes)
+                {
+                    var existUserTypeInExcel = records.Any(_ => _.UserTypeId == usert.Id &&
+                                                                _.OrganizationId == org.Id);
+                    if (!existUserTypeInExcel)
+                    {
+                        missingUserType.Add(usert);
+                        orgTitle = org.Title;
+                    }
+                    else if (!missingUserType.Any())
+                    {
+                        foreach (var waterd in waterdiameters)
+                        {
+                            var existWPDiametersInExcel = records.Any(_ => _.UserTypeId == usert.Id &&
+                                                                           _.WPipeDiameterId == waterd.Id &&
+                                                                           _.OrganizationId == org.Id);
+
+                            if (!existWPDiametersInExcel)
+                            {
+                                missingWPDiameters.Add(waterd);
+                                orgTitle = org.Title;
+                                userTypeTitle = usert.Title;
+                            }
+                        }
+                    }
+                }
             }
 
-            if (missingWPDiameters.Any() || missingUserType.Any())
+            if (missingUserType.Any())
             {
                 string userTypeNames = "";
-                string wPDiametersNames = "";
                 foreach (var item in missingUserType)
                 {
                     userTypeNames += "- " + item.Title + "<br>";
                 }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, userTypeNames, orgTitle));
+            }
+
+            if (missingWPDiameters.Any())
+            {
+                string wPDiametersNames = "";
                 foreach (var item in missingWPDiameters)
                 {
-                    wPDiametersNames += "- " + item.Title + "<br>";
+                    wPDiametersNames += "- [" + item.Title + "]<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelUserType_DiameterPipeNotInExcel, userTypeNames , wPDiametersNames));
+                    string.Format(ServiceMessages.ImportExcelDiameterPipeUserTypeOrgNotInExcel, wPDiametersNames, userTypeTitle, orgTitle));
             }
-            //end
+            //End
 
             rowIndex = 1;
 
             if (!continueIfAnyOrgMissing)
             {
-                var missingOrgs = new List<Organization>();
-
-                foreach (var item in descendents)
-                {
-                    var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
-                    if (!existInExcel)
-                        if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
-                            missingOrgs.Add(item);
-                }
-
                 if (missingOrgs.Any())
                 {
                     string orgNames = "";
@@ -572,7 +615,7 @@ namespace Datiss.Budget.Services
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
                         );
 
                 if (!await checkLogicAsync(
@@ -583,7 +626,7 @@ namespace Datiss.Budget.Services
                 {
 
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
                         );
                 }
 
@@ -631,6 +674,8 @@ namespace Datiss.Budget.Services
                                 .Include(x => x.UserType)
                                 .Include(x => x.WPipeDiameter)
                                 .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.Organization.Type)
+                                .ThenBy(x => x.Organization.ParentId)
                                 .ThenBy(x => x.UserType.DisplayOrder)
                                 .ThenBy(x => x.WPipeDiameter.DisplayOrder);
             }
@@ -680,7 +725,8 @@ namespace Datiss.Budget.Services
             int targetYearId)
         {
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId)
+                .Where(_ => _.ParentId == parentOrganizationId &&
+                            _.Status != EntityStatus.Deleted)
                 .ToListAsync();
             var result = new List<WaterSalesSplit>();
             foreach (var org in children)
@@ -723,7 +769,8 @@ namespace Datiss.Budget.Services
             int yearId)
         {
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId)
+                .Where(_ => _.ParentId == parentOrganizationId &&
+                            _.Status != EntityStatus.Deleted)
                 .ToListAsync();
             var result = new List<WaterSalesSplit>();
             foreach (var org in children)

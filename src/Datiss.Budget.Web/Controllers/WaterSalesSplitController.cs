@@ -70,20 +70,11 @@ namespace Datiss.Budget.Web.Controllers
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
         }
-        private void showMessage(string type, string message)
-        {
-            ViewData["type"] = type;
-            ViewData["message"] = message;
-        }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWaterSalesSplitViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                model.AddError(ViewMessages.InvalidData);
-                return Json(model);
-            }
+
             var data = model.Adapt<CreateWaterSalesSplitDTO>();
 
             var result = await _waterSalesSplitService.CreateAsync(data);
@@ -175,9 +166,8 @@ namespace Datiss.Budget.Web.Controllers
         }
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(WaterSalesSplitIndexViewModel model, int page = 1)
+        public async Task<IActionResult> Index(WaterSalesSplitIndexViewModel model)
         {
-            model.Filter.PageNumber = 1;
             var filter = model.Filter.Adapt<WaterSalesSplitFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
@@ -223,7 +213,7 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(new
                 {
                     hasError = true,
-                    message = "فایل انتخاب شده معتبر نیست."
+                    message = ViewMessages.ImportExcelInvalidFile
                 });
 
             try
@@ -261,8 +251,6 @@ namespace Datiss.Budget.Web.Controllers
             }
             catch (ImportExcelFileFormatInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileFormatInvalid);
                 return Json(new
                 {
                     hasError = true,
@@ -271,8 +259,6 @@ namespace Datiss.Budget.Web.Controllers
             }
             catch (ImportExcelFileSizeInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileSizeInvalid);
                 return Json(new
                 {
                     hasError = true,
@@ -492,6 +478,7 @@ namespace Datiss.Budget.Web.Controllers
             using var workbook = result.ExportExcel();
             return workbook.Deliver("WaterSalesSplit.xlsx");
         }
+
         #region Private Helper Methods
         private string getCalcTitle(string key)
             => key switch
