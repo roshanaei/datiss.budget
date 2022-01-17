@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Datiss.Budget.Services.Infrastructure;
+﻿using System.Threading.Tasks;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.Services.Infrastructure;
 
 namespace Datiss.Budget.Services.Contracts.Identity
 {
@@ -20,5 +17,7 @@ namespace Datiss.Budget.Services.Contracts.Identity
         Task<PagedResult<UserResultDTO>> GetListAsync(UserFilterDTO filter);
 
         Task<bool> HasAccessToOrganizationAsync(int organizationId);
+
+        Task SetUserStatusAsync(int id, EntityStatus status);
     }
 }

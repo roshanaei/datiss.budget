@@ -1,4 +1,13 @@
 ﻿
+function numberOnly(id) {
+    var element = document.getElementById(id);
+    element.value = element.value.replace(/[^0-9]/gi, "");
+}
+
+function numberOnly(element) {
+    element.value = element.value.replace(/[^0-9]/gi, "");
+}
+
 function successMsg(message) {
     Swal.fire({
         title: 'عملیات موفق',

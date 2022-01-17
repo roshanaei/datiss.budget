@@ -93,40 +93,40 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 organizations: await getOrganizationDropDownAsync()
             );
 
-            //return PartialView("_Create", model);
             return View(model);
         }
+
+        //[HttpGet("[action]")]
+        //public async Task<IActionResult> Create() {
+        //    var model = new CreateUserViewModel(
+        //        positions: await getPostionDropDownAsync(),
+        //        organizations: await getOrganizationDropDownAsync()
+        //    );
+
+        //    return PartialView("_Create", model);
+        //}
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateUserViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
-            
-            if(!ModelState.IsValid) {
+
+            if (!ModelState.IsValid) {
                 model.AddError(ViewMessages.ModelState);
-                //return PartialView("_Create", model);
                 return View(model);
             }
 
             ValidationResult<UserResultDTO> result = null;
             try {
                 result = await _userService.CreateAsync(model.Adapt<CreateUserDTO>());
-                if(result.NotValid) {
+                if (result.NotValid) {
                     model.AddError(result.Message);
                     return View(model);
                 }
             }
-            catch(CreateUserException) {
-                //return Json(new {
-                //    hasError = true,
-                //    message = "خطایی در ایجاد کاربر وجود دارد!"
-                //});
+            catch (CreateUserException) {
                 model.AddError("خطایی در ایجاد کاربر جدید وجود دارد.");
             }
-            catch(Exception ex) {
-                //return Json(new {
-                //    hasError = true,
-                //    message = ViewMessages.SystemError
-                //});
+            catch (Exception ex) {
                 model.AddError(ViewMessages.SystemError);
             }
 
@@ -134,19 +134,51 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 return View(model);
 
             return RedirectToAction(ACTION_Index);
-
-            //if(result.NotValid) {
-            //    return Json(new {
-            //        hasError = true,
-            //        message = result.Message
-            //    });
-            //}
-
-            //return Json(new {
-            //    data = result.Result,
-            //    success = true
-            //});
         }
+
+        //[HttpPost("[action]")]
+        //public async Task<IActionResult> Create(CreateUserViewModel model) {
+        //    model.CheckArgumentIsNull(nameof(model));
+
+        //    if (!ModelState.IsValid) {
+        //        model.AddError(ViewMessages.ModelState);
+        //        return PartialView("_Create", model);
+        //        //return View(model);
+        //    }
+
+        //    ValidationResult<UserResultDTO> result = null;
+        //    try {
+        //        result = await _userService.CreateAsync(model.Adapt<CreateUserDTO>());
+        //        if (result.NotValid) {
+        //            model.AddError(result.Message);
+        //            return View(model);
+        //        }
+        //    }
+        //    catch (CreateUserException) {
+        //        return Json(new {
+        //            hasError = true,
+        //            message = "خطایی در ایجاد کاربر وجود دارد!"
+        //        });
+        //    }
+        //    catch (Exception ex) {
+        //        return Json(new {
+        //            hasError = true,
+        //            message = ViewMessages.SystemError
+        //        });
+        //    }
+
+        //    if (result.NotValid) {
+        //        return Json(new {
+        //            hasError = true,
+        //            message = result.Message
+        //        });
+        //    }
+
+        //    return Json(new {
+        //        data = result.Result,
+        //        success = true
+        //    });
+        //}
 
         [HttpGet("edit/{id}")]
         public async Task<IActionResult> Edit(int id) {

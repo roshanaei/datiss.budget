@@ -169,3 +169,7 @@ th:last-child, td:last-child {
     max-height: 35vh;
     overflow-y: auto;
 }
+
+.dashboardcode-bsmultiselect {
+    font-family: 'Vazir';
+}

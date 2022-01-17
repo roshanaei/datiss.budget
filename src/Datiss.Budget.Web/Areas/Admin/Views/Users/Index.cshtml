@@ -62,7 +62,7 @@
                                         <a asp-action="@UsersController.ACTION_Create" data-toggle="tooltip" data-placement="top" title="رکورد جدید" class="btn btn-success bg-light-success my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
                                         </a>
-                                       @* <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                                        @*<button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
                                         </button>*@
                                     </div>
@@ -378,11 +378,6 @@
             }).fail(function(request, options, err) {
                 console.log(err);
             });
-        }
-
-        function numberOnly(id) {
-            var element = document.getElementById(id);
-            element.value = element.value.replace(/[^0-9]/gi, "");
         }
 
     </script>

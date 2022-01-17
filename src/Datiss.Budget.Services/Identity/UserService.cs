@@ -211,6 +211,15 @@ namespace Datiss.Budget.Services.Identity
             );
         }
 
+        public async Task SetUserStatusAsync(int id, EntityStatus status) {
+            var user = await _dbSet.FindAsync(id);
+            user.CheckReferenceIsNull(nameof(user));
+
+            user.Status = status;
+            _dbSet.Update(user);
+            await _uow.SaveChangesAsync();
+        }
+
         #region private methods
         
         private void validateRequiredFields(

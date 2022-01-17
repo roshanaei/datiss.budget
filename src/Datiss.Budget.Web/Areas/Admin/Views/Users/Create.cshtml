@@ -11,7 +11,7 @@
     </div>
 </div>
 
-<div class="card-body">
+<div class="card-body" dir="rtl">
     @if (Model._HasError) {
         <div class="alert alert-warning" role="alert">
             <a href="#" class="close" data-dismiss="alert">×</a>
@@ -90,11 +90,35 @@
             </div>
         </div>
     </div>
-    <div class="">
-
+    <div class="form-group row">
+        <div class="col-md-6">
+            <label asp-for="Password" class="col-md-4 col-form-label text-md-left my-font">کلمه عبور</label>
+            <div class="col-md-10">
+                <input dir="ltr" type="password" asp-for="Password" class="form-control my-font" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="RetypePassword" class="col-md-4 col-form-label text-md-left my-font">تایید کلمه عبور</label>
+            <div class="col-md-10">
+                <input dir="ltr" type="password" asp-for="RetypePassword" class="form-control my-font" />
+                <span asp-validation-for="RetypePassword" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-6">
+            <select id="selectRoles" class="form-control my-font">
+                <option value="1">سلام</option>
+                <option value="2">مدیر سیستم</option>
+                <option value="3">کاربر ورود اطلاعات</option>
+                <option value="4">نقش فلان</option>
+                <option value="5">نقش بیسار</option>
+            </select>
+        </div>
     </div>
 
-    <div class="form-group row">
+    <div class="form-group row form-actions">
         <div class="offset-md-2 col-md-10">
             
             <button type="submit" class="btn btn-info col-md-2 my-font">
@@ -114,13 +138,19 @@
 
 @section headSection {
     <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
-    <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
+    <link href="~/assets/vendors/BsMultiSelect/css/BsMultiSelect.min.css" rel="stylesheet" />
+    
+
 }
 
 @section footSection {
+    <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="~/assets/vendors/BsMultiSelect/js/BsMultiSelect.min.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
+            $('#selectRoles').bsMultiSelect();
+
             $('#OrganizationId').select2({
                 dir: 'rtl'
             });
@@ -129,6 +159,13 @@
                 dir: 'rtl'
             });
         });
+
+        
+        function numberOnly(id) {
+            var element = document.getElementById(id);
+            element.value = element.value.replace(/[^0-9]/gi, "");
+        }
+
     </script>
 
 }
