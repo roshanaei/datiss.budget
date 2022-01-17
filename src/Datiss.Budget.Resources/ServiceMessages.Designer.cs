@@ -295,20 +295,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-<<<<<<< HEAD
-        ///   Looks up a localized string similar to فرمت کد ملی وارد شده اشتباه است..
-        /// </summary>
-        public static string Invalid_NationalCode {
-            get {
-                return ResourceManager.GetString("Invalid_NationalCode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است.
-=======
         ///   Looks up a localized string similar to در فایل اکسل شما اطلاعات طبقه مصرف :&lt;br&gt;{0} برای کاربری &quot;{1}&quot; ، &quot;{2}&quot; وجود ندارد..
->>>>>>> 06336d3c5344197ff3d08d4cef4e60bfea9f36c0
         /// </summary>
         public static string ImportExcelUsageLayerUserTypeOrgNotInExcel {
             get {
@@ -340,6 +327,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelUserTypeOrgNotInExcel {
             get {
                 return ResourceManager.GetString("ImportExcelUserTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to فرمت کد ملی وارد شده اشتباه است..
+        /// </summary>
+        public static string Invalid_NationalCode {
+            get {
+                return ResourceManager.GetString("Invalid_NationalCode", resourceCulture);
             }
         }
         

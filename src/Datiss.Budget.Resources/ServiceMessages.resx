@@ -195,16 +195,11 @@
   <data name="ImportExcelTitleNotInExcel" xml:space="preserve">
     <value>عنوان های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
-<<<<<<< HEAD
   <data name="Invalid_NationalCode" xml:space="preserve">
     <value>فرمت کد ملی وارد شده اشتباه است.</value>
   </data>
-  <data name="Logic_BranchFeeAmount" xml:space="preserve">
-    <value>اطلاعات سال{0} برای شهر{1} قبلا ثبت شده است</value>
-=======
   <data name="ImportExcelUsageLayerUserTypeOrgNotInExcel" xml:space="preserve">
     <value>در فایل اکسل شما اطلاعات طبقه مصرف :&lt;br&gt;{0} برای کاربری "{1}" ، "{2}" وجود ندارد.</value>
->>>>>>> 06336d3c5344197ff3d08d4cef4e60bfea9f36c0
   </data>
   <data name="ImportExcelUserTypeNotInExcel" xml:space="preserve">
     <value>کاربری های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>

@@ -1,0 +1,134 @@
+﻿@model CreateUserViewModel
+@{
+    ViewData["Title"] = "ایجاد کاربر جدید";
+}
+
+<div class="card mt-5">
+    <div class="card-header">
+        <h5 class="card-title my-font">
+            <i class="fa fa-plus"></i> @ViewData["Title"]
+        </h5>
+    </div>
+</div>
+
+<div class="card-body">
+    @if (Model._HasError) {
+        <div class="alert alert-warning" role="alert">
+            <a href="#" class="close" data-dismiss="alert">×</a>
+            @Html.Raw(Model._ErrorMessage)
+        </div>
+    }
+
+    <form id="create-user-form"
+          asp-controller="@UsersController.Name"
+          asp-action="@UsersController.ACTION_Create"
+          method="POST">
+
+    <div class="form-group row">
+        <div class="col-md-6">
+            <label asp-for="FirstName" class="col-md-4 col-form-label text-md-left my-font">نام</label>
+            <div class="col-md-10">
+                <input dir="rtl" asp-for="FirstName" class="form-control my-font" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="LastName" class="col-md-4 col-form-label text-md-left my-font">نام خانوادگی</label>
+            <div class="col-md-10">
+                <input dir="rtl" asp-for="LastName" class="form-control my-font" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-6">
+            <label asp-for="UserName" class="col-md-4 col-form-label text-md-left my-font">نام کاربری</label>
+            <div class="col-md-10">
+                <input dir="ltr" asp-for="UserName" class="form-control my-font" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="NationalCode" class="col-md-4 col-form-label text-md-left my-font">کد ملی</label>
+            <div class="col-md-10">
+                <input dir="ltr" type="text" oninput="numberOnly(this.id);" asp-for="NationalCode" inputmode="numeric" maxlength="10" pattern="[0-9]*" class="form-control my-font" />
+                <span asp-validation-for="NationalCode" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-6">
+            <label asp-for="OrganizationId" class="col-md-4 col-form-label text-md-left my-font">سازمان</label>
+            <div class="col-md-10">
+                <select asp-for="OrganizationId" asp-items="Model.OrganizationSource" class="form-control my-font">
+                </select>
+                <span asp-validation-for="OrganizationId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="PositionId" class="col-md-4 col-form-label text-md-left my-font">سمت</label>
+            <div class="col-md-10">
+                <select asp-for="PositionId" asp-items="Model.PositionSource" class="form-control my-font">
+                </select>
+                <span asp-validation-for="PositionId" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-6">
+            <label asp-for="PhoneNumber" class="col-md-4 col-form-label text-md-left my-font">شماره تماس</label>
+            <div class="col-md-10">
+                <input dir="ltr" type="text" oninput="numberOnly(this.id);" asp-for="PhoneNumber" inputmode="numeric" maxlength="13" pattern="[0-9]*" class="form-control my-font" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="Email" class="col-md-4 col-form-label text-md-left my-font">آدرس ایمیل</label>
+            <div class="col-md-10">
+                <input dir="ltr" type="text" asp-for="Email" class="form-control my-font" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="">
+
+    </div>
+
+    <div class="form-group row">
+        <div class="offset-md-2 col-md-10">
+            
+            <button type="submit" class="btn btn-info col-md-2 my-font">
+                <i class="fa fa-check"></i> ارسال
+            </button>
+            <a asp-controller="@UsersController.Name" asp-action="@UsersController.ACTION_Index"
+                    class="btn btn-secondary bg-light-secondary mr-1 my-font"
+                    data-dismiss="modal">
+                <i class="fa fa-times"></i> انصراف
+            </a>
+        </div>
+    </div>
+
+    </form>
+</div>
+
+
+@section headSection {
+    <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
+}
+
+@section footSection {
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#OrganizationId').select2({
+                dir: 'rtl'
+            });
+
+            $('#PositionId').select2({
+                dir: 'rtl'
+            });
+        });
+    </script>
+
+}

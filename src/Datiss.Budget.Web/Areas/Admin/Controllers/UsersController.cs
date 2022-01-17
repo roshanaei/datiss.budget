@@ -18,16 +18,17 @@ using Datiss.Budget.Resources;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Services.Infrastructure;
 
-namespace Datiss.Budget.Web.Areas.Identity.Controllers
+namespace Datiss.Budget.Web.Admin.Controllers
 {
 
     [Authorize(Roles = ConstantRoles.Admin)]
-    [Area(AreaConstants.IdentityArea)]
+    [Area(AreaConstants.AdminArea)]
     [Route("[area]/[controller]")]
     public class UsersController : Controller
     {
         public const string Name = "Users";
         public const string ACTION_Index = nameof(Index);
+        public const string ACTION_Create = nameof(Create);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}";
 
@@ -92,46 +93,59 @@ namespace Datiss.Budget.Web.Areas.Identity.Controllers
                 organizations: await getOrganizationDropDownAsync()
             );
 
-            return PartialView("_Create", model);
+            //return PartialView("_Create", model);
+            return View(model);
         }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateUserViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
-
+            
             if(!ModelState.IsValid) {
                 model.AddError(ViewMessages.ModelState);
-                return PartialView("_Create");
+                //return PartialView("_Create", model);
+                return View(model);
             }
 
             ValidationResult<UserResultDTO> result = null;
             try {
                 result = await _userService.CreateAsync(model.Adapt<CreateUserDTO>());
+                if(result.NotValid) {
+                    model.AddError(result.Message);
+                    return View(model);
+                }
             }
             catch(CreateUserException) {
-                return Json(new {
-                    hasError = true,
-                    message = "خطایی در ایجاد کاربر وجود دارد!"
-                });
+                //return Json(new {
+                //    hasError = true,
+                //    message = "خطایی در ایجاد کاربر وجود دارد!"
+                //});
+                model.AddError("خطایی در ایجاد کاربر جدید وجود دارد.");
             }
             catch(Exception ex) {
-                return Json(new {
-                    hasError = true,
-                    message = ViewMessages.SystemError
-                });
+                //return Json(new {
+                //    hasError = true,
+                //    message = ViewMessages.SystemError
+                //});
+                model.AddError(ViewMessages.SystemError);
             }
 
-            if(result.NotValid) {
-                return Json(new {
-                    hasError = true,
-                    message = result.Message
-                });
-            }
+            if (model._HasError)
+                return View(model);
 
-            return Json(new {
-                data = result.Result,
-                success = true
-            });
+            return RedirectToAction(ACTION_Index);
+
+            //if(result.NotValid) {
+            //    return Json(new {
+            //        hasError = true,
+            //        message = result.Message
+            //    });
+            //}
+
+            //return Json(new {
+            //    data = result.Result,
+            //    success = true
+            //});
         }
 
         [HttpGet("edit/{id}")]
@@ -140,13 +154,15 @@ namespace Datiss.Budget.Web.Areas.Identity.Controllers
                 var user = await _userService.GetByIdAsync(id);
                 var model = user.Adapt<UpdateUserViewModel>();
 
-                return PartialView("_Edit", model);
+                //return PartialView("_Edit", model);
+                return View(model);
             }
             catch(NullReferenceException) {
-                return Json(new {
-                    hasError = true,
-                    message = "کاربر مورد نظر یافت نشد."
-                });
+                //return Json(new {
+                //    hasError = true,
+                //    message = "کاربر مورد نظر یافت نشد."
+                //});
+                return NotFound();
             }
         }
 
@@ -160,27 +176,39 @@ namespace Datiss.Budget.Web.Areas.Identity.Controllers
             try {
                 result = await _userService.UpdateAsync(data);
                 if(result.NotValid) {
-                    return Json(new {
-                        hasError = true,
-                        message = result.Message
-                    });
+                    //return Json(new {
+                    //    hasError = true,
+                    //    message = result.Message
+                    //});
+                    model.AddError(result.Message);
+                    return View(model);
                 }
 
             }
+            catch(UpdateUserException ex) 
+            {
+                model.AddError("خطا در بروزرسانی اطلاعات");
+            }
             catch(Exception ex) {
-                return Json(new {
-                    hasError = true,
-                    message = "کاربر مورد نظر یافت نشد."
-                });
+                //return Json(new {
+                //    hasError = true,
+                //    message = "کاربر مورد نظر یافت نشد."
+                //});
+                model.AddError(ViewMessages.SystemError);
             }
 
-            return Json(new {
-                success = true,
-                data = result.Adapt<UserViewModel>()
-            });
+            if (model._HasError)
+                return View(model);
+
+            //return Json(new {
+            //    success = true,
+            //    data = result.Adapt<UserViewModel>()
+            //});
+
+            return RedirectToAction(ACTION_Index);
         }
 
-        #region helper methods
+        #region private helper methods
 
         private async Task<IEnumerable<DropDownItemViewModel>> getPostionDropDownAsync()
             => (await _constantService.GetByConstantKeyAsync(ConstantKeys.__Position))

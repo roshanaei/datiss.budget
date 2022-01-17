@@ -65,6 +65,11 @@ namespace Datiss.Budget.ViewModels.Identity
     public class CreateUserViewModel : BaseViewModel
     {
 
+        public CreateUserViewModel() {
+            PositionSource = new List<SelectListItem>();
+            OrganizationSource = new List<SelectListItem>();
+        }
+
         public CreateUserViewModel(
             IEnumerable<DropDownItemViewModel> positions, 
             IEnumerable<DropDownItemViewModel> organizations) {
@@ -91,6 +96,11 @@ namespace Datiss.Budget.ViewModels.Identity
         [MaxLength(30, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
         public string Password { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(30, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        [Compare(nameof(Password), ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "PasswordDoesNotMatch")]
+        public string RetypePassword { get; set; }
+
         [MaxLength(30, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
         public string PhoneNumber { get; set; }
 
@@ -109,19 +119,24 @@ namespace Datiss.Budget.ViewModels.Identity
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList();
+            }).ToList().AddEmptySelectListItem();
 
         public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
             => OrganizationSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList();
+            }).ToList().AddEmptySelectListItem();
 
     }
 
     public class UpdateUserViewModel : CreateUserViewModel
     {
+
+        public UpdateUserViewModel() {
+            PositionSource = new List<SelectListItem>();
+            OrganizationSource = new List<SelectListItem>();
+        }
 
         public UpdateUserViewModel(
             IEnumerable<DropDownItemViewModel> positions,

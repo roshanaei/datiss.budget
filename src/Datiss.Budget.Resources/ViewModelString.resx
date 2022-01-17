@@ -120,6 +120,9 @@
   <data name="MaxLen" xml:space="preserve">
     <value>تعداد کاراکترهای وارد شده بیش از حد مجاز است.</value>
   </data>
+  <data name="PasswordDoesNotMatch" xml:space="preserve">
+    <value>کلمه عبورها مطابقت ندارند.</value>
+  </data>
   <data name="Required" xml:space="preserve">
     <value>لطفاً مقدار این فیلد را وارد نمایید.</value>
   </data>

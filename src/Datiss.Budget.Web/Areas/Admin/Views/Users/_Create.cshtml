@@ -1,0 +1,112 @@
+﻿@model CreateUserViewModel
+
+<div id="modalCreateUser" class="modal fade text-left" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title my-font" id="modalTitle">
+                    <i class="fa fa-plus"></i> ایجاد کاربر جدید
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                </button>
+            </div>
+            <form asp-controller="@UsersController.Name"
+                  asp-action="@UsersController.ACTION_Create"
+                  data-ajax="true"
+                  data-ajax-method="POST"
+                  data-ajax-success="createUserSuccess"
+                  data-ajax-failure="createUserFailure"
+                  data-ajax-complete="createUserComplete"
+                  id="create-form"
+                  class="form-horizontal">
+                <div class="modal-content">
+                    <div class="modal-body">
+
+                        <partial name="_CustomValidationSummary" />
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label asp-for="FirstName" class="col-md-4 col-form-label text-md-left my-font">نام</label>
+                                <div class="col-md-10">
+                                    <input dir="rtl" asp-for="FirstName" class="form-control my-font" />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="LastName" class="col-md-4 col-form-label text-md-left my-font">نام خانوادگی</label>
+                                <div class="col-md-10">
+                                    <input dir="rtl" asp-for="LastName" class="form-control my-font" />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label asp-for="UserName" class="col-md-4 col-form-label text-md-left my-font">نام کاربری</label>
+                                <div class="col-md-10">
+                                    <input dir="ltr" asp-for="UserName" class="form-control my-font" />
+                                    <span asp-validation-for="UserName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="NationalCode" class="col-md-4 col-form-label text-md-left my-font">کد ملی</label>
+                                <div class="col-md-10">
+                                    <input dir="ltr" type="text" oninput="numberOnly(this.id);" asp-for="NationalCode" inputmode="numeric" maxlength="10" pattern="[0-9]*" class="form-control my-font" />
+                                    <span asp-validation-for="NationalCode" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label asp-for="OrganizationId" class="col-md-4 col-form-label text-md-left my-font">سازمان</label>
+                                <div class="col-md-10">
+                                    <select asp-for="OrganizationId" asp-items="Model.OrganizationSource" class="form-control my-font">
+                                    </select>
+                                    <span asp-validation-for="OrganizationId" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="PositionId" class="col-md-4 col-form-label text-md-left my-font">سمت</label>
+                                <div class="col-md-10">
+                                    <select asp-for="PositionId" asp-items="Model.PositionSource" class="form-control my-font">
+                                    </select>
+                                    <span asp-validation-for="PositionId" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label asp-for="PhoneNumber" class="col-md-4 col-form-label text-md-left my-font">شماره تماس</label>
+                                <div class="col-md-10">
+                                    <input dir="ltr" type="text" oninput="numberOnly(this.id);" asp-for="PhoneNumber" inputmode="numeric" maxlength="13" pattern="[0-9]*" class="form-control my-font" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="col-md-4 col-form-label text-md-left my-font">آدرس ایمیل</label>
+                                <div class="col-md-10">
+                                    <input dir="ltr" type="text" asp-for="Email" class="form-control my-font" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="btnSaveCreateUser" class="btn btn-success mr-1 my-font">
+                            <i class="fa fa-check"></i> ذخیره
+                        </button>
+                        <button type="button"
+                                class="btn btn-secondary bg-light-secondary mr-1 my-font"
+                                data-dismiss="modal">
+                            <i class="fa fa-times"></i> بستن
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>

@@ -16,7 +16,6 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-
                 <div class="card-content">
                     <div class="card-body">
                         <form id="filterForm"
@@ -60,9 +59,12 @@
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
-                                        <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                                        <a asp-action="@UsersController.ACTION_Create" data-toggle="tooltip" data-placement="top" title="رکورد جدید" class="btn btn-success bg-light-success my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
-                                        </button>
+                                        </a>
+                                       @* <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                        </button>*@
                                     </div>
                                 </fieldset>
                             </div>
@@ -266,9 +268,9 @@
                 }
             });
 
-            $('#btnCreate').on('click', function() {
-                openCreate();
-            });
+            //$('#btnCreate').on('click', function() {
+            //    openCreate();
+            //});
 
         });
 
@@ -303,7 +305,7 @@
             console.log(div);
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action("Create")',
+                url: '@Url.Action(UsersController.ACTION_Create)',
                 success: function(data, status, settings) {
                     $(div).html('');
                     $(div).html(data);
@@ -311,6 +313,15 @@
                         dir: 'rtl'
                     });
                     let mymodal = document.getElementById('modalCreateUser');
+                    let btnSave = document.getElementById('btnSaveCreateUser');
+                    //btnSave.addEventListener('click', function(event) {
+                    //    event.preventDefault();
+                    //    var $form = $('#create-form'); 
+                    //    $.validator.unobtrusive.parse($form);
+                    //    if($form.valid()) {
+                    //        createUser();
+                    //    }
+                    //});
                     $(mymodal).modal('show');
                     $(mymodal).on('hidden.bs.modal', function() {
                         $(div).html('');
@@ -323,6 +334,18 @@
             })
         }
 
+        var createUserSuccess = function(context) {
+            console.log(context);
+            console.log(context.data);
+        };
+
+        var createUserComplete = function(context) {
+            console.log(context);
+        };
+
+        var createUserFailure = function(context) {
+            console.log(context);
+        };
 
         function createUser() {
             var model = {};
@@ -337,6 +360,24 @@
 
             console.log(model);
 
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(UsersController.ACTION_Create)',
+                data: model
+            }).done(function(data, status, setting) {
+                var $form = $('#create-form'); 
+                $form.removeData('validator');
+                $form.removeData('unobtrusiveValidation');
+                if(data.hasError) {
+                    alert(data.message);
+                }
+
+                if(data.success) {
+                    alert('success');
+                }
+            }).fail(function(request, options, err) {
+                console.log(err);
+            });
         }
 
         function numberOnly(id) {

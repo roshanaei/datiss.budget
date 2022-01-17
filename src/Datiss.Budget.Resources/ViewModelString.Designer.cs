@@ -70,6 +70,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to کلمه عبورها مطابقت ندارند..
+        /// </summary>
+        public static string PasswordDoesNotMatch {
+            get {
+                return ResourceManager.GetString("PasswordDoesNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to لطفاً مقدار این فیلد را وارد نمایید..
         /// </summary>
         public static string Required {
