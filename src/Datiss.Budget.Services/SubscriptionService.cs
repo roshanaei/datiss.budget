@@ -16,30 +16,47 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Mapster;
 using LinqKit;
 using Datiss.Budget.Services.Excel.Models;
+using Datiss.Budget.Security;
+using Datiss.Budget.Entities;
 
 namespace Datiss.Budget.Services
 {
     public class SubscriptionService : ISubscriptionService
     {
+        private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
         private readonly IExcelService _excelService;
         private readonly IUserService _userService;
+        private readonly IOrganizationService _organizationService;
 
         private readonly DbSet<Subscription> _dbSet;
+        private readonly DbSet<Organization> _orgDbSet;
+        private readonly DbSet<FinanceYear> _yearSet;
+        private readonly DbSet<Constant> _constSet;
+
 
         public SubscriptionService(
+            IUserContext userContext,
             IUnitOfWork uow,
             IExcelService excelService,
-            IUserService userService)
+            IUserService userService,
+            IOrganizationService organizationService)
         {
+            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<Subscription>();
             _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
+            _orgDbSet = _uow.Set<Organization>();
+            _yearSet = _uow.Set<FinanceYear>();
+            _constSet = _uow.Set<Constant>();
+            _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+            _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
         private IQueryable<Subscription> Query()
             => _dbSet.AsNoTracking();
+
         public async Task<Subscription> GetByIdAsync(int id)
         {
             var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
