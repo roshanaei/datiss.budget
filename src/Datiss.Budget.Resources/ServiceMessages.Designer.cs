@@ -142,6 +142,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to امکان انجام این عملیات به دلیل نبود رکورد در جدول وابسته، وجود ندارد..
+        /// </summary>
+        public static string ImportExcelCalculationField {
+            get {
+                return ResourceManager.GetString("ImportExcelCalculationField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to قطر لوله های :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelDiameterPipeOrgNotInExcel {

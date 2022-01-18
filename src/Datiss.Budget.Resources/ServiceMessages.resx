@@ -144,6 +144,9 @@
   <data name="ImportExcelAccessError" xml:space="preserve">
     <value>دسترسی شما برای وارد کردن اطلاعات سازمان وجود ندارد. [سطر {0} فایل اکسل]</value>
   </data>
+  <data name="ImportExcelCalculationField" xml:space="preserve">
+    <value>امکان انجام این عملیات به دلیل نبود رکورد در جدول وابسته، وجود ندارد.</value>
+  </data>
   <data name="ImportExcelDiameterPipeOrgNotInExcel" xml:space="preserve">
     <value>قطر لوله های :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
