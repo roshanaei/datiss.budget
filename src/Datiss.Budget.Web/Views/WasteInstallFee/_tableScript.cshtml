@@ -101,6 +101,8 @@
         model.organizationId = $(e).find('#inputOrg_').val();
         model.dWasteTypeId = $(e).find('#inputDWasteType_').val();
         model.wsInstallFee = $(e).find('#inputWsInstallFee_').val();
+        if (model.wsInstallFee == "")
+            model.wsInstallFee = 0;
 
         $.ajax({
             url: '@Url.Action(WasteInstallFeeController.ACTION_Create)',
