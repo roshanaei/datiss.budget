@@ -165,14 +165,31 @@ namespace Datiss.Budget.Services
 
             await _uow.SaveChangesAsync();
         }
-        public async Task HardDeleteAsync(int yearId, int organizationId)
+
+        public async Task<SubscriptionDeleteDataResult> HardDeleteAllAsync(int yearId)
         {
-            var items = await _dbSet.Where(_ => _.YearId == yearId)
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
+            var self = await _dbSet.Where(_ => _.YearId == yearId)
                                     .ToListAsync();
 
-            _dbSet.RemoveRange(items);
+            if (self.Count() == 0)
+                throw new DeleteNullRecordException();
+            _dbSet.RemoveRange(self);
+
+            var result = new SubscriptionDeleteDataResult
+            {
+                Year = year.Year,
+                YearTitle = year.Title
+            };
 
             await _uow.SaveChangesAsync();
+
+            return await Task.FromResult(result);
         }
         public async Task<PagedResult<SubscriptionDTO>> GetListAsync(SubscriptionFilterDTO filter)
         {
