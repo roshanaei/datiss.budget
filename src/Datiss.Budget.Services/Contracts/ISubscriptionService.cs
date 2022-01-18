@@ -15,7 +15,7 @@ namespace Datiss.Budget.Services.Contracts
     {
         Task<Subscription> GetByIdAsync(int id);
 
-        //Task<ValidationResult> AddAsync(CreateSubscriptionDTO model);
+        Task<ValidationResult<SubscriptionDTO>> CreateAsync(CreateSubscriptionDTO model);
 
         //Task<ValidationResult> UpdateAsync(UpdateSubscriptionDTO model);
 

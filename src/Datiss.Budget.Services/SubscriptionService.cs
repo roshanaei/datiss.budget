@@ -18,6 +18,8 @@ using LinqKit;
 using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Security;
 using Datiss.Budget.Entities;
+using Datiss.Budget.Services.Infrastructure;
+using Datiss.Budget.Resources;
 
 namespace Datiss.Budget.Services
 {
@@ -62,6 +64,47 @@ namespace Datiss.Budget.Services
             var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
+
+        public async Task<ValidationResult<SubscriptionDTO>> CreateAsync(CreateSubscriptionDTO model) 
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var entity = new Subscription
+            {
+                YearId = model.YearId,
+                UserTypeId  =model.UserTypeId,
+                SubW = model.SubW,
+                SubWs = model.SubWs
+            };
+            model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
+
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.UserTypeId))
+                {
+                    await _dbSet.AddAsync(entity);
+                    await _uow.SaveChangesAsync();
+
+                    var result = entity.Adapt<SubscriptionDTO>();
+                    result.UserTypeDisplay = model.UserTypeTitle;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.SubW = entity.SubW;
+                    result.SubWs = entity.SubWs;
+
+                    return ValidationResult<SubscriptionDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<SubscriptionDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+            return ValidationResult<SubscriptionDTO>.Failed(
+                string.Format(ServiceMessages.Logic_UserTypeDuplicate,
+                model.UserTypeTitle)
+                );
+        }
+
         public async Task HardDeleteAsync(int Id)
         {
             var entity = await _dbSet.FindAsync(Id);
