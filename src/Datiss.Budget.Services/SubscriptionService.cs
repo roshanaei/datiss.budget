@@ -22,6 +22,7 @@ using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Enum;
 using System.Data.SqlClient;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services
 {
@@ -346,11 +347,32 @@ namespace Datiss.Budget.Services
             IQueryable<Subscription> query,
             SubscriptionFilterDTO filter)
         {
+            query.CheckArgumentIsNull(nameof(query));
+            filter.CheckArgumentIsNull(nameof(filter));
+
             var predicate = PredicateBuilder.New<Subscription>();
+
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
+            
             if (filter.UserTypeId.HasValue)
                 query = query.Where(x => x.UserTypeId == filter.UserTypeId.Value);
+
+            if (filter.Search.IsNotNullOrEmpty())
+            {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                bool isNum = int.TryParse(filter.Search, out int res);
+                if (isNum)
+                {
+                    query = query.Where(_ => _.SubW.ToString().Contains(filter.Search) ||
+                                        _.SubWs.ToString().Contains(filter.Search));
+                }
+                else
+                {
+                    query = query.Where(_ => _.UserType.Title.ToUpper().Contains(filter.Search));
+                }
+            }
+
             return query;
         }
 
@@ -365,19 +387,14 @@ namespace Datiss.Budget.Services
             orderBy = orderBy.ToLower();
             switch (orderBy)
             {
-                case "year":
-                    return desc
-                        ? query.OrderByDescending(x => x.FinanceYear.Year)
-                        : query.OrderBy(x => x.FinanceYear.Year);
                 case "usertype":
                     return desc
                         ? query.OrderByDescending(x => x.UserType.DisplayOrder)
                         : query.OrderBy(x => x.UserType.DisplayOrder);
 
                 default:
-                    return desc
-                        ? query.OrderByDescending(x => x.Id)
-                        : query.OrderBy(x => x.Id);
+                    return query.Include(x => x.UserType)
+                                .OrderBy(x => x.UserType.DisplayOrder);
             }
         }
         #endregion
