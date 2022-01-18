@@ -111,6 +111,9 @@
         model.organizationId = $(e).find('#inputOrg_').val();
         model.dWaterTypeId = $(e).find('#inputDWaterType_').val();
         model.wInstallFee = $(e).find('#inputWInstallFee_').val();
+        if (model.wInstallFee == "") {
+            model.wInstallFee = 0;
+        }
 
         console.log(model);
 

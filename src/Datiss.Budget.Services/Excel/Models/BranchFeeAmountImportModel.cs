@@ -15,10 +15,10 @@ namespace Datiss.Budget.Services.Excel
         public int OrganizationId { get; set; }
 
         [Column(2, MappingDirections.Both, Letter = "C")]
-        public int UrbanAdjustmentFactor { get; set; }
+        public decimal UrbanAdjustmentFactor { get; set; }
 
         [Column(3, MappingDirections.Both, Letter = "D")]
-        public int WasteRateInWater { get; set; }
+        public decimal WasteRateInWater { get; set; }
 
         [Column(4, MappingDirections.Both, Letter = "E")]
         public int WaterBranchingPerHousing { get; set; }

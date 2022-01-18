@@ -323,7 +323,10 @@ namespace Datiss.Budget.Services
 
             int rowIndex = 1;
 
-            var dwatertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__WaterDiameter);
+            var dwatertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                   x.Parent.ConstantKey == ConstantKeys.__WaterDiameter);
+            var descendents = await _organizationService
+                             .GetAllDescendentsAsync(_userContext.OrganizationId);
 
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull($"Year not found with id: {yearId}");
@@ -332,43 +335,66 @@ namespace Datiss.Budget.Services
             {
                 rec.YearId = yearId;
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
-                
+
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 1, rec.YearId)
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
                         );
                 }
                 if (org == null)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId)
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
                 if (!await dwatertypes.AnyAsync(x => x.Id == rec.DWaterTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidDiameterPipe, rowIndex + 1, rec.DWaterTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidDiameterPipe, rowIndex + 2, rec.DWaterTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
                         );
                 }
 
                 rowIndex++;
             }
+            //
+            var missingOrgs = new List<Organization>();
+            var existOrgs = new List<Organization>();
 
+            foreach (var item in descendents)
+            {
+                var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                if (!existInExcel)
+                {
+                    if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                        missingOrgs.Add(item);
+                }
+                else
+                    existOrgs.Add(item);
+            }
+            //
             //Start DWaterType
             var missingDWType = new List<Constant>();
-            foreach (var item in dwatertypes)
+            string orgTitle = "";
+            foreach (var org in existOrgs)
             {
-                var existDWTypeInExcel = records.Any(_ => _.DWaterTypeId == item.Id);
-                if (!existDWTypeInExcel)
-                    missingDWType.Add(item);
+                foreach (var item in dwatertypes)
+                {
+                    var existDWTypeInExcel = records.Any(_ => _.DWaterTypeId == item.Id &&
+                                              _.OrganizationId == org.Id);
+                    if (!existDWTypeInExcel)
+                    {
+                        missingDWType.Add(item);
+                        orgTitle = org.Title;
+                    }
 
+                }
             }
             if (missingDWType.Any())
             {
@@ -378,27 +404,14 @@ namespace Datiss.Budget.Services
                     dWaterTypeNames += "- [" + item.Title + "]<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelDiameterPipeNotInExcel, dWaterTypeNames));
+                    string.Format(ServiceMessages.ImportExcelDiameterPipeOrgNotInExcel, dWaterTypeNames, orgTitle));
             }
             //end
 
             rowIndex = 1;
 
-            var descendents = await _organizationService
-                .GetAllDescendentsAsync(_userContext.OrganizationId);
-
             if (!continueIfAnyOrgMissing)
             {
-                var missingOrgs = new List<Organization>();
-
-                foreach (var item in descendents)
-                {
-                    var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
-                    if (!existInExcel)
-                        if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
-                            missingOrgs.Add(item);
-                }
-
                 if (missingOrgs.Any())
                 {
                     string orgNames = "";
@@ -420,7 +433,7 @@ namespace Datiss.Budget.Services
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
                         );
 
                 if (!await checkLogicAsync(
@@ -430,7 +443,7 @@ namespace Datiss.Budget.Services
                 {
 
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
                         );
                 }
 
@@ -597,6 +610,8 @@ namespace Datiss.Budget.Services
                     return query.Include(x => x.Organization)
                                 .Include(x => x.DWaterType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.Organization.Type)
+                                .ThenBy(x => x.Organization.ParentId)
                                 .ThenBy(x => x.DWaterType.DisplayOrder);
             }
         }
@@ -608,7 +623,8 @@ namespace Datiss.Budget.Services
         {
 
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId)
+                .Where(_ => _.Status != EntityStatus.Deleted &&
+                            _.ParentId == parentOrganizationId)
                 .ToListAsync();
 
             var result = new List<WaterInstallFee>();
@@ -653,7 +669,8 @@ namespace Datiss.Budget.Services
             int yearId)
         {
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId)
+                .Where(_ => _.Status != EntityStatus.Deleted &&
+                            _.ParentId == parentOrganizationId)
                 .ToListAsync();
             var result = new List<WaterInstallFee>();
             foreach (var org in children)
@@ -683,7 +700,7 @@ namespace Datiss.Budget.Services
             {
                 var childs = await _organizationService.GetWithChildrenAsync(orgid);
                 foreach (var child in childs)
-                    if (await Query().AnyAsync(x =>x.YearId==yearid && x.OrganizationId == child.Id))
+                    if (await Query().AnyAsync(x => x.YearId == yearid && x.OrganizationId == child.Id))
                         return true;
             }
 

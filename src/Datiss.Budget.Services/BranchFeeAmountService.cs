@@ -87,6 +87,8 @@ namespace Datiss.Budget.Services
                 WsTubingCost = model.WsTubingCost
             };
 
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
             try
             {
                 if (await checkLogicAsync(model.YearId, model.OrganizationId))
@@ -95,7 +97,7 @@ namespace Datiss.Budget.Services
                     await _uow.SaveChangesAsync();
 
                     var result = entity.Adapt<BranchFeeAmountDTO>();
-                    result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+                    result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.UrbanAdjustmentFactor = entity.UrbanAdjustmentFactor;
                     result.WasteRateInWater = entity.WasteRateInWater;
@@ -120,14 +122,16 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<BranchFeeAmountDTO>.Failed(
-                  string.Format(ServiceMessages.Logic_UserTypeDuplicate,
-                  model.YearId, model.OrganizationId)
+                  string.Format(ServiceMessages.Logic_OrganizationDuplicate,
+                  organizationDisplay)
                   );
             }
 
         public async Task<ValidationResult<BranchFeeAmountDTO>> UpdateAsync(UpdateBranchFeeAmountDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
+
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
             {
@@ -180,9 +184,8 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<BranchFeeAmountDTO>.Failed(
-                string.Format(ServiceMessages.Logic_UserTypeDuplicate,
-                model.YearId, 
-                model.OrganizationId)
+                string.Format(ServiceMessages.Logic_OrganizationDuplicate,
+                organizationDisplay)
                 );
         }
 
@@ -569,7 +572,9 @@ namespace Datiss.Budget.Services
 
                 default:
                     return query.Include(x => x.Organization)
-                        .OrderBy(x => x.Organization.DisplayOrder);
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.Organization.Type)
+                                .ThenBy(x => x.Organization.ParentId);
             }
         }
 
@@ -628,7 +633,8 @@ namespace Datiss.Budget.Services
             int targetYearId)
         {
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId)
+                .Where(_ => _.ParentId == parentOrganizationId &&
+                            _.Status != EntityStatus.Deleted)
                 .ToListAsync();
 
             var result = new List<BranchFeeAmount>();
@@ -681,7 +687,8 @@ namespace Datiss.Budget.Services
             int yearId)
         {
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId)
+                .Where(_ => _.ParentId == parentOrganizationId &&
+                            _.Status != EntityStatus.Deleted)
                 .ToListAsync();
             var result = new List<BranchFeeAmount>();
             foreach (var org in children)
@@ -710,19 +717,13 @@ namespace Datiss.Budget.Services
             }
             else
             {
-                if (await Query().Include(x => x.Organization)
-                                 .AnyAsync(x => x.Organization.ParentId == orgid &&
-                                                x.YearId == yearid))
-                {
-                    return true;
-                }
-                var childs = await _orgDbSet.Where(x => x.ParentId == orgid).ToListAsync();
+                var childs = await _organizationService.GetWithChildrenAsync(orgid);
                 foreach (var child in childs)
-                    return await hasAnyDataAsync(child.Id, yearid);
+                    if (await Query().AnyAsync(x => x.YearId == yearid && x.OrganizationId == child.Id))
+                        return true;
             }
 
             return false;
-
         }
         #endregion
 
