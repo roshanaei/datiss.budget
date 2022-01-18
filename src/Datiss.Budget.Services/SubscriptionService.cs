@@ -20,6 +20,7 @@ using Datiss.Budget.Security;
 using Datiss.Budget.Entities;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Resources;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Services
 {
@@ -150,6 +151,13 @@ namespace Datiss.Budget.Services
         public async Task HardDeleteAsync(int Id)
         {
             var entity = await _dbSet.FindAsync(Id);
+            entity.CheckArgumentIsNull(nameof(entity));
+
+            var year = await _yearSet.FindAsync(entity.YearId);
+            year.CheckArgumentIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
 
             entity.CheckArgumentIsNull(nameof(entity));
 
