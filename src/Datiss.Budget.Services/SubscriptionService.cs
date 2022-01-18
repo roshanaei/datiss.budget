@@ -105,6 +105,48 @@ namespace Datiss.Budget.Services
                 );
         }
 
+        public async Task<ValidationResult<SubscriptionDTO>> UpdateAsync(UpdateSubscriptionDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
+
+            try 
+            {
+                if (await checkLogicAsync(model.YearId, model.UserTypeId))
+                {
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.YearId = model.YearId;
+                    entity.UserTypeId = model.UserTypeId;
+                    entity.SubW = model.SubW;
+                    entity.SubWs = model.SubWs;
+
+                    await _uow.SaveChangesAsync();
+
+                    var result = new SubscriptionDTO
+                    {
+                        YearId = model.YearId,
+                        UserTypeId = model.UserTypeId,
+                        SubW = model.SubW,
+                        SubWs = model.SubWs,
+                        UserTypeDisplay = model.UserTypeTitle,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
+
+                    return ValidationResult<SubscriptionDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<SubscriptionDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+            return ValidationResult<SubscriptionDTO>.Failed(
+                string.Format(ServiceMessages.Logic_UserTypeDuplicate,
+                model.UserTypeTitle)
+                );
+        }
+
         public async Task HardDeleteAsync(int Id)
         {
             var entity = await _dbSet.FindAsync(Id);
