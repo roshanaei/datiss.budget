@@ -71,7 +71,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
             model.CheckArgumentIsNull(nameof(model));
             var filter = model.Filter.Adapt<UserFilterDTO>();
             TempData.Put(_indexFilterKey, filter);
-
+            
             var result = await _userService.GetListAsync(filter);
             model = result.Adapt<UsersIndexViewModel>();
             
@@ -86,16 +86,6 @@ namespace Datiss.Budget.Web.Admin.Controllers
             return View(model);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IActionResult> Create() {
-            var model = new CreateUserViewModel(
-                positions: await getPostionDropDownAsync(),
-                organizations: await getOrganizationDropDownAsync()
-            );
-
-            return View(model);
-        }
-
         //[HttpGet("[action]")]
         //public async Task<IActionResult> Create() {
         //    var model = new CreateUserViewModel(
@@ -103,8 +93,18 @@ namespace Datiss.Budget.Web.Admin.Controllers
         //        organizations: await getOrganizationDropDownAsync()
         //    );
 
-        //    return PartialView("_Create", model);
+        //    return View(model);
         //}
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Create() {
+            var model = new CreateUserViewModel(
+                positions: await getPostionDropDownAsync(),
+                organizations: await getOrganizationDropDownAsync()
+            );
+
+            return PartialView("_Create", model);
+        }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateUserViewModel model) {

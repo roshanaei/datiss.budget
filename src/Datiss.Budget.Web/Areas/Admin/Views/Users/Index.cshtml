@@ -59,12 +59,12 @@
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
-                                        <a asp-action="@UsersController.ACTION_Create" data-toggle="tooltip" data-placement="top" title="رکورد جدید" class="btn btn-success bg-light-success my-font">
+                                       @* <a asp-action="@UsersController.ACTION_Create" data-toggle="tooltip" data-placement="top" title="رکورد جدید" class="btn btn-success bg-light-success my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
-                                        </a>
-                                        @*<button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                                        </a>*@
+                                        <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
-                                        </button>*@
+                                        </button>
                                     </div>
                                 </fieldset>
                             </div>
@@ -268,9 +268,9 @@
                 }
             });
 
-            //$('#btnCreate').on('click', function() {
-            //    openCreate();
-            //});
+            $('#btnCreate').on('click', function() {
+                openCreate();
+            });
 
         });
 
@@ -314,14 +314,18 @@
                     });
                     let mymodal = document.getElementById('modalCreateUser');
                     let btnSave = document.getElementById('btnSaveCreateUser');
-                    //btnSave.addEventListener('click', function(event) {
-                    //    event.preventDefault();
-                    //    var $form = $('#create-form'); 
-                    //    $.validator.unobtrusive.parse($form);
-                    //    if($form.valid()) {
-                    //        createUser();
-                    //    }
-                    //});
+                    btnSave.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        //if($form.valid()) {
+                        //    createUser();
+                        //}
+                    });
+                    var form = $('#create-form');
+                    form.unbind();
+                    form.removeData('validator');
+                    form.removeData('unobtrusiveValidation');
+                    $.validator.unobtrusive.parse(form);
+                    form.validate(form.data("unobtrusiveValidation").options);
                     $(mymodal).modal('show');
                     $(mymodal).on('hidden.bs.modal', function() {
                         $(div).html('');
