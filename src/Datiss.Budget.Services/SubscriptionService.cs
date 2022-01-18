@@ -21,6 +21,7 @@ using Datiss.Budget.Entities;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Enum;
+using System.Data.SqlClient;
 
 namespace Datiss.Budget.Services
 {
@@ -191,6 +192,25 @@ namespace Datiss.Budget.Services
 
             return await Task.FromResult(result);
         }
+
+        public async Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId)
+        {
+            List<SqlParameter> sqlParams = new List<SqlParameter>
+            {
+                new SqlParameter("YearId", yearId),
+            };
+            var result = new List<CalculationItemData>();
+            result.Add(new CalculationItemData
+            {
+                Key = "",
+                Value = await _uow.ExecuteScalar<int>(
+                        "",
+                        parameters: sqlParams.ToArray())
+            });
+
+            return await Task.FromResult(result);
+        }
+
         public async Task<PagedResult<SubscriptionDTO>> GetListAsync(SubscriptionFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));

@@ -23,7 +23,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<SubscriptionDeleteDataResult> HardDeleteAllAsync(int yearId);
 
-        //Task<int> CalculationAsync(int yearId, int organizationId);
+        Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId);
 
         Task<PagedResult<SubscriptionDTO>> GetListAsync(SubscriptionFilterDTO filter);
 
