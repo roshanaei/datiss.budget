@@ -8,4 +8,10 @@
         public string YearTitle { get; set; }
     }
 
+    public class SubscriptionDeleteDataResult
+    {
+        public int Year { get; set; }
+
+        public string YearTitle { get; set; }
+    }
 }
