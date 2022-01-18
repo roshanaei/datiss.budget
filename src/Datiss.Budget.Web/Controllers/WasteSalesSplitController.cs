@@ -72,6 +72,11 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWasteSalesSplitViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
 
             var data = model.Adapt<CreateWasteSalesSplitDTO>();
 

@@ -79,7 +79,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWasteInstallFeeViewModel model)
         {
-            if (model.WsInstallFee < 0)
+            if (!ModelState.IsValid)
             {
                 model.AddError(ViewMessages.InvalidData);
                 return Json(model);

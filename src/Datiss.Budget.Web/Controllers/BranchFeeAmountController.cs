@@ -38,7 +38,6 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
-        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
@@ -67,12 +66,6 @@ namespace Datiss.Budget.Web.Controllers
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
-        }
-
-        private void showMessage(string type, string message)
-        {
-            ViewData["type"] = type;
-            ViewData["message"] = message;
         }
 
         [HttpPost("[action]")]
@@ -107,7 +100,7 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            var data = ModelState.Adapt<UpdateBranchFeeAmountDTO>();
+            var data = model.Adapt<UpdateBranchFeeAmountDTO>();
             var result = await _branchFeeAmountService.UpdateAsync(data);
 
             if (!result.IsValid) {
@@ -169,9 +162,8 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(BranchFeeAmountIndexViewModel model, int page = 1)
+        public async Task<IActionResult> Index(BranchFeeAmountIndexViewModel model)
         {
-            model.Filter.PageNumber = 1;
             var filter = model.Filter.Adapt<BranchFeeAmountFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
@@ -244,20 +236,16 @@ namespace Datiss.Budget.Web.Controllers
                     });
                 }
             }
-            catch (ImportExcelFileFormatInvalidException ex)
+            catch (ImportExcelFileFormatInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileFormatInvalid);
                 return Json(new
                 {
                     hasError = true,
                     message = ViewMessages.ImportExcelFileFormatInvalid
                 });
             }
-            catch (ImportExcelFileSizeInvalidException ex)
+            catch (ImportExcelFileSizeInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileSizeInvalid);
                 return Json(new
                 {
                     hasError = true,
@@ -306,7 +294,7 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.NullRef
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json(new
                 {
@@ -346,18 +334,6 @@ namespace Datiss.Budget.Web.Controllers
                 hasError = false,
                 message = ViewMessages.DeleteRowSuccess
             });
-        }
-
-        [HttpGet("[action]")]
-        public async Task<IActionResult> DownloadExcelTemplate()
-        {
-            var filePath = $"{_env.WebRootPath}\\Excel\\BranchFeeAmountImport.xlsx";
-
-            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return File(
-                stream,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "WaterInstallFee.xlsx");
         }
 
         [HttpGet("[action]")]
@@ -412,7 +388,7 @@ namespace Datiss.Budget.Web.Controllers
             {
                 model.AddError(ViewMessages.CopyDestYearHasData);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 model.AddError(ViewMessages.SystemError);
             }
@@ -452,9 +428,5 @@ namespace Datiss.Budget.Web.Controllers
             using var workbook = result.ExportExcel();
             return workbook.Deliver("BranchFeeAmount.xlsx");
         }
-
-        #region Private Helper Methods
-        
-        #endregion
     }
 }

@@ -74,6 +74,11 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateWaterSalesSplitViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
 
             var data = model.Adapt<CreateWaterSalesSplitDTO>();
 

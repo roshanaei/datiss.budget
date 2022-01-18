@@ -179,24 +179,65 @@
     }
 
     function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
         console.log(e);
 
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
         model.urbanAdjustmentFactor = $(e).find('#inputUrbanAdjustmentFactor_').val();
+        if (model.urbanAdjustmentFactor=="") {
+            model.urbanAdjustmentFactor = 0;
+        }
         model.wasteRateInWater = $(e).find('#inputWasteRateInWater_').val();
+        if (model.wasteRateInWater == "") {
+            model.wasteRateInWater = 0;
+        }
         model.waterBranchingPerHousing = $(e).find('#inputWaterBranchingPerHousing_').val();
+        if (model.waterBranchingPerHousing == "") {
+            model.waterBranchingPerHousing = 0;
+        }
         model.tubingCost = $(e).find('#inputTubingCost_').val();
+        if (model.tubingCost == "") {
+            model.tubingCost = 0;
+        }
         model.waterPartnershipAmountDomestic = $(e).find('#inputWaterPartnershipAmountDomestic_').val();
+        if (model.waterPartnershipAmountDomestic == "") {
+            model.waterPartnershipAmountDomestic = 0;
+        }
         model.waterPartnershipAmountNDomestic = $(e).find('#inputWaterPartnershipAmountNDomestic_').val();
+        if (model.waterPartnershipAmountNDomestic == "") {
+            model.waterPartnershipAmountNDomestic = 0;
+        }
         model.wastePartnershipAmountDomestic = $(e).find('#inputWastePartnershipAmountDomestic_').val();
+        if (model.wastePartnershipAmountDomestic == "") {
+            model.wastePartnershipAmountDomestic = 0;
+        }
         model.wastePartnershipAmountNDomestic = $(e).find('#inputWastePartnershipAmountNDomestic_').val();
+        if (model.wastePartnershipAmountNDomestic == "") {
+            model.wastePartnershipAmountNDomestic = 0;
+        }
         model.fixCostNote11H = $(e).find('#inputFixCostNote11H_').val();
+        if (model.fixCostNote11H == "") {
+            model.fixCostNote11H = 0;
+        }
         model.fixCostNote11NH = $(e).find('#inputFixCostNote11NH_').val();
+        if (model.fixCostNote11NH == "") {
+            model.fixCostNote11NH = 0;
+        }
         model.fixCostNote11HWs = $(e).find('#inputFixCostNote11HWs_').val();
+        if (model.fixCostNote11HWs == "") {
+            model.fixCostNote11HWs = 0;
+        }
         model.fixCostNote11NHWs = $(e).find('#inputFixCostNote11NHWs_').val();
+        if (model.fixCostNote11NHWs == "") {
+            model.fixCostNote11NHWs = 0;
+        }
         model.wsTubingCost = $(e).find('#inputWsTubingCost_').val();
+        if (model.wsTubingCost == "") {
+            model.wsTubingCost = 0;
+        }
 
         console.log(model);
 
@@ -431,103 +472,7 @@
         });
 
 
-        $('.input1:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-
-        $('.input2:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-
-        $('.input3:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-
-        $('.input4:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-
-        $('.input5:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-
-        $('.input6:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-
-        $('.input7:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-
-        $('.input8:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-
-        $('.input9:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-
-        $('.input10:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-
-        $('.input11:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-
-        $('.input12:last').keyup(function (event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                let row = $(this).closest('tr');
-                saveNewRow(row);
-            }
-        });
-
-        $('.input13:last').keyup(function (event) {
+        $('.input-keyup').keyup(function (event) {
             event.preventDefault();
             if (event.keyCode === 13) {
                 let row = $(this).closest('tr');
@@ -537,7 +482,7 @@
 
         let newRowElement = document.getElementById('newRow');
         newRowElement.scrollIntoView();
-        $('.input2:last').focus();
+        $('.default-input:last').focus();
 
         isNewRow = true;
     }

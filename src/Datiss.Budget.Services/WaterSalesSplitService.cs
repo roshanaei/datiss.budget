@@ -68,10 +68,7 @@ namespace Datiss.Budget.Services
         public async Task<ValidationResult<WaterSalesSplitDTO>> CreateAsync(CreateWaterSalesSplitDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
-            if (model.NumberSales < 0 || model.UnitSales < 0 || model.AverageCapacity < 0)
-            {
-                return ValidationResult<WaterSalesSplitDTO>.Failed(ServiceMessages.InvalidData);
-            }
+
             var entity = new WaterSalesSplit
             {
                 YearId = model.YearId,

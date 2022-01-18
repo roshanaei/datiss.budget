@@ -135,9 +135,17 @@
         model.userTypeId = $(e).find('#inputUserType_').val();
         model.wsPipeDiameterId = $(e).find('#inputWsPipeDiameter_').val();
         model.numberSales = $(e).find('#inputNumberSales_').val();
+        if(model.numberSales == "")
+            model.numberSales = 0;
         model.unitSales = $(e).find('#inputUnitSales_').val();
+        if (model.unitSales == "")
+            model.unitSales = 0;
         model.averageCapacity = $(e).find('#inputAverageCapacity_').val();
+        if (model.averageCapacity == "")
+            model.averageCapacity = 0;
         model.wsInstallationCosts = $(e).find('#inputWsInstallationCosts_').val();
+        if (model.wsInstallationCosts == "")
+            model.wsInstallationCosts = 0;
 
         $.ajax({
             url: '@Url.Action(WasteSalesSplitController.ACTION_Create)',
