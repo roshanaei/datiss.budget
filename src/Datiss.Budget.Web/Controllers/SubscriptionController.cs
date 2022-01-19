@@ -47,7 +47,6 @@ namespace Datiss.Budget.Web.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly ISubscriptionService _subscriptionService;
         private readonly IConstantService _constantService;
-        private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
         private readonly ISecurityTrimmingService _securityTrimmingService;
 
@@ -55,7 +54,6 @@ namespace Datiss.Budget.Web.Controllers
             ILogger<SubscriptionController> logger,
             IWebHostEnvironment environment,
             ISubscriptionService subscriptionService,
-            IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             IConstantService constantService,
             ISecurityTrimmingService securityTrimmingService)
@@ -63,7 +61,6 @@ namespace Datiss.Budget.Web.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
             _subscriptionService = subscriptionService ?? throw new ArgumentNullException(nameof(subscriptionService));
-            _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
@@ -370,6 +367,43 @@ namespace Datiss.Budget.Web.Controllers
             );
 
             return PartialView("_copyModal", model);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Copy(CopyViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            try
+            {
+                await _subscriptionService.CopyAsync(
+                                                    model.SourceYearId,
+                                                    model.TargetYearId);
+
+                model.Succeed(ViewMessages.CopySuccess);
+            }
+            catch (CopySameYearException)
+            {
+                model.AddError(ViewMessages.CopySameYear);
+            }
+            catch (CopyDestYearExxeption)
+            {
+                model.AddError(ViewMessages.CopyErrorDestYear);
+            }
+            catch (CopyOrgNullDataException)
+            {
+                model.AddError(ViewMessages.CopySourceOrgNullData);
+            }
+            catch (CopyDestYearHasDataException)
+            {
+                model.AddError(ViewMessages.CopyDestYearHasData);
+            }
+            catch (Exception)
+            {
+                model.AddError(ViewMessages.SystemError);
+            }
+
+            return Json(model);
         }
 
 
