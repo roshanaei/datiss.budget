@@ -36,6 +36,11 @@ namespace Datiss.Budget.ViewModels
         }
     }
 
+    public class UpdateSubscriptionViewModel : CreateSubscriptionViewModel
+    {
+        public int Id { get; set; }
+    }
+
     public class SubscriptionViewModel
     {
         public int Id { get; set; }
