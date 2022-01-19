@@ -17,7 +17,7 @@ namespace Datiss.Budget.ViewModels
     public  class CalculationResultViewModel
     {
         public string Title { get; set; }
-
         public int Result { get; set; }
+        public string ResultDisplay => Result.ToString("N0");
     }
 }

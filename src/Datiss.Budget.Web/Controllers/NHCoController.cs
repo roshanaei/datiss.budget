@@ -64,12 +64,6 @@ namespace Datiss.Budget.Web.Controllers
         }
 
 
-        private void showMessage(string type, string message)
-        {
-            ViewData["type"] = type;
-            ViewData["message"] = message;
-        }
-
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateNHCoViewModel model)
         {
@@ -242,8 +236,6 @@ namespace Datiss.Budget.Web.Controllers
             }
             catch (ImportExcelFileFormatInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileFormatInvalid);
                 return Json(new
                 {
                     hasError = true,
@@ -252,8 +244,6 @@ namespace Datiss.Budget.Web.Controllers
             }
             catch (ImportExcelFileSizeInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileSizeInvalid);
                 return Json(new
                 {
                     hasError = true,

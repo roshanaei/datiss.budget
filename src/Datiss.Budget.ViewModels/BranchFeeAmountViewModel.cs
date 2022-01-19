@@ -9,11 +9,7 @@ namespace Datiss.Budget.ViewModels
     {
         public int YearId { get; set; }
 
-        public string YearDisplay { get; set; }
-
         public int OrganizationId { get; set; }
-
-        public string OrganizationDisplay { get; set; }
 
         public decimal UrbanAdjustmentFactor { get; set; }
 
@@ -59,11 +55,11 @@ namespace Datiss.Budget.ViewModels
 
 
         public decimal UrbanAdjustmentFactor { get; set; }
-        public string UrbanAdjustmentFactorDisplay => UrbanAdjustmentFactor.ToString("N0");
+        public string UrbanAdjustmentFactorDisplay => UrbanAdjustmentFactor.ToString("N2");
 
 
         public decimal WasteRateInWater { get; set; }
-        public string WasteRateInWaterDisplay => WasteRateInWater.ToString("N0");
+        public string WasteRateInWaterDisplay => WasteRateInWater.ToString("N2");
 
 
         public int WaterBranchingPerHousing { get; set; }

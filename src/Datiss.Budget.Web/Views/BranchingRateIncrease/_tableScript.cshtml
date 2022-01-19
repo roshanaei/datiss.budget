@@ -163,14 +163,41 @@
         model.organizationId = $(e).find('#inputOrg_').val();
         model.userTypeId = $(e).find('#inputUserType_').val();
         model.waterRateIncrease = $(e).find('#inputWaterRateIncrease_').val();
+        if (model.waterRateIncrease == "") {
+            model.waterRateIncrease = 0;
+        }
         model.wasteRateIncrease = $(e).find('#inputWasteRateIncrease_').val();
+        if (model.wasteRateIncrease == "") {
+            model.wasteRateIncrease = 0;
+        }
         model.wastePersentIncrease = $(e).find('#inputWastePersentIncrease_').val();
+        if (model.wastePersentIncrease == "") {
+            model.wastePersentIncrease = 0;
+        }
         model.fixAmountBusiness = $(e).find('#inputFixAmountBusiness_').val();
+        if (model.fixAmountBusiness == "") {
+            model.fixAmountBusiness = 0;
+        }
         model.capacityFixAmount = $(e).find('#inputCapacityFixAmount_').val();
+        if (model.capacityFixAmount == "") {
+            model.capacityFixAmount = 0;
+        }
         model.waterInstallRateIncrease = $(e).find('#inputWaterInstallRateIncrease_').val();
+        if (model.waterInstallRateIncrease == "") {
+            model.waterInstallRateIncrease = 0;
+        }
         model.wsInstalIncrease = $(e).find('#inputWsInstalIncrease_').val();
+        if (model.wsInstalIncrease == "") {
+            model.wsInstalIncrease = 0;
+        }
         model.waterFixNote2 = $(e).find('#inputWaterFixNote2_').val();
+        if (model.waterFixNote2 == "") {
+            model.waterFixNote2 = 0;
+        }
         model.wasteFixNote2 = $(e).find('#inputWasteFixNote2_').val();
+        if (model.wasteFixNote2 == "") {
+            model.wasteFixNote2 = 0;
+        }
 
         console.log(model);
 
