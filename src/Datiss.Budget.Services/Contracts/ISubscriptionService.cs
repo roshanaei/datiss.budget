@@ -27,7 +27,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<PagedResult<SubscriptionDTO>> GetListAsync(SubscriptionFilterDTO filter);
 
-        Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
+        Task CopyAsync(int sourceYearId, int destYearId);
 
         Task<Stream> ExportExcelAsync(SubscriptionFilterDTO filter);
 

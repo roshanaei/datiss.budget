@@ -68,14 +68,14 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult<SubscriptionDTO>> CreateAsync(CreateSubscriptionDTO model) 
+        public async Task<ValidationResult<SubscriptionDTO>> CreateAsync(CreateSubscriptionDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
             var entity = new Subscription
             {
                 YearId = model.YearId,
-                UserTypeId  =model.UserTypeId,
+                UserTypeId = model.UserTypeId,
                 SubW = model.SubW,
                 SubWs = model.SubWs
             };
@@ -114,7 +114,7 @@ namespace Datiss.Budget.Services
 
             model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
 
-            try 
+            try
             {
                 if (await checkLogicAsync(model.YearId, model.UserTypeId))
                 {
@@ -249,10 +249,16 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
+        public async Task CopyAsync(int sourceYearId, int destYearId)
         {
             if (sourceYearId == destYearId)
                 throw new CopySameYearException();
+
+            if (destYearId < sourceYearId)
+                throw new CopyDestYearExxeption();
+
+            if (!await hasAnyDataAsync(sourceYearId))
+                throw new CopyOrgNullDataException();
 
             var result = new List<Subscription>();
 
@@ -263,6 +269,9 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
+                    if (!await checkLogicAsync(destYearId, item.UserTypeId))
+                        throw new CopyDestYearHasDataException();
+
                     var entity = new Subscription
                     {
                         UserTypeId = item.UserTypeId,
@@ -273,7 +282,9 @@ namespace Datiss.Budget.Services
                     result.Add(entity);
                 }
             }
+
             _dbSet.AddRange(result);
+
             await _uow.SaveChangesAsync();
         }
         public async Task ImportExcelAsync(IFormFile fileInfo)
@@ -354,7 +365,7 @@ namespace Datiss.Budget.Services
 
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
-            
+
             if (filter.UserTypeId.HasValue)
                 query = query.Where(x => x.UserTypeId == filter.UserTypeId.Value);
 
@@ -414,6 +425,22 @@ namespace Datiss.Budget.Services
                                             x.UserTypeId == userTypeId &&
                                             x.Id != id);
             return !result;
+        }
+
+        private async Task<bool> hasAnyDataAsync(int yearid)
+        {
+            bool any = await Query().AnyAsync(x => x.YearId == yearid);
+            if (any)
+            {
+                return true;
+            }
+            else
+            {
+                if (await Query().AnyAsync(x => x.YearId == yearid))
+                    return true;
+            }
+
+            return false;
         }
 
         #endregion
