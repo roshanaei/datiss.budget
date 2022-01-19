@@ -56,5 +56,46 @@ namespace Datiss.Budget.Reports.Excel
             return workbook;
         }
 
+        public static XLWorkbook GetImportTemplate(this IEnumerable<SubscriptionDTO> items, int year)
+        {
+            if (items == null || !items.Any())
+                return null;
+
+            var workbook = new XLWorkbook();
+            var sheet = workbook.Worksheets.Add(_sheetName);
+
+            sheet.RightToLeft = true;
+            sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
+            sheet.Range(1, 1, 1, 5).Merge();
+
+            sheet.Cell(2, 1).Value = "عنوان کاربری";
+            sheet.Cell(2, 2).Value = "کد کاربری";
+            sheet.Cell(2, 3).Value = "آبونمان آب";
+            sheet.Cell(2, 4).Value = "آبونمان فاضلاب";
+
+            var totalCount = items.Count();
+            int row = 3;
+            for (int i = 0; i < totalCount; i++)
+            {
+                var item = items.ElementAt(i);
+                sheet.Cell(row, 1).Value = item.UserTypeDisplay;
+                sheet.Cell(row, 2).Value = item.UserTypeId;
+                row++; //for keeping index in table records
+            }
+
+            var range = sheet.Range(2, 1, row - 1, 4);
+            range.Column(3).Style.NumberFormat.Format = "#,##0";
+            range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            //Other
+            range.Column(4).Style.NumberFormat.Format = "#,##0";
+            range.Column(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            //
+            var table = range.CreateTable($"{_sheetName}_Table");
+            table.Theme = XLTableTheme.TableStyleMedium16;
+            sheet.Columns().AdjustToContents();
+
+            return workbook;
+        }
+
     }
 }
