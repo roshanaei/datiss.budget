@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Contracts
 {
-    public interface ISalesSplitTotal
+    public interface ISalesSplitTotalService
     {
         Task<SalesSplitTotal> GetByIdAsync(int id);
 
