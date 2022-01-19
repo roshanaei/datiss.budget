@@ -80,6 +80,31 @@ namespace Datiss.Budget.Web.Controllers
             return Json(result.Result.Adapt<SubscriptionViewModel>());
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Edit(UpdateWaterInstallFeeViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+
+            var data = model.Adapt<UpdateWaterInstallFeeDTO>();
+            var result = await _waterInstallFeeService.UpdateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(
+                result.Result.Adapt<WaterInstallFeeViewModel>()
+            );
+        }
+
+
         public IActionResult Index()
         {
             return View();
