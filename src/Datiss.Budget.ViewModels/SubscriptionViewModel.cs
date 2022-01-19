@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,13 +27,15 @@ namespace Datiss.Budget.ViewModels
 
         public IEnumerable<SelectListItem> UserTypeSource { get; set; }
 
-        public string UserTypeTitle { 
-            get {
+        public string UserTypeTitle
+        {
+            get
+            {
                 if (UserTypeSource == null || !UserTypeSource.Any())
                     return string.Empty;
 
                 return UserTypeSource.FirstOrDefault(x => x.Value.ToString() == UserTypeId.ToString()).Text;
-            } 
+            }
         }
     }
 
@@ -73,5 +76,43 @@ namespace Datiss.Budget.ViewModels
         public int? SubWs { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
+    }
+
+    public class SubscriptionIndexViewModel : PagedViewModel<SubscriptionViewModel>
+    {
+        public SubscriptionIndexViewModel()
+        {
+            Filter = new SubscriptionFilterViewModel();
+        }
+
+        public SubscriptionFilterViewModel Filter { get; set; }
+
+        public IList<SelectListItem> YearSource { get; set; }
+
+        public IList<SelectListItem> UserTypeSource { get; set; }
+
+        public IFormFile ExcelFile { get; set; }
+
+        public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
+            => YearSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetUserTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => UserTypeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
+            => Filter.YearSource = source.Select(x => new SelectListItem
+            {
+                Selected = x.Id == selectedYearId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
     }
 }
