@@ -31,6 +31,7 @@ namespace Datiss.Budget.Web.Controllers
     public class SubscriptionController : Controller
     {
         public const string Name = "Subscription";
+        public const string ACTION_Create = nameof(Create);
 
         private readonly ILogger<SubscriptionController> _logger;
         private readonly IWebHostEnvironment _env;
@@ -57,6 +58,28 @@ namespace Datiss.Budget.Web.Controllers
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create(CreateSubscriptionViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+            var data = model.Adapt<CreateSubscriptionDTO>();
+
+            var result = await _subscriptionService.CreateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(result.Result.Adapt<SubscriptionViewModel>());
+        }
+
         public IActionResult Index()
         {
             return View();
