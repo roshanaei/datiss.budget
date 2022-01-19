@@ -40,6 +40,8 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
+        public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
+
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
@@ -404,6 +406,29 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(model);
+        }
+
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var userTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
+
+            var items = new List<SubscriptionDTO>();
+
+            foreach (var ut in userTypes)
+            {
+                items.Add(new SubscriptionDTO
+                {
+                    UserTypeDisplay = ut.Title,
+                    UserTypeId = ut.Id,
+                    Year = year.Year,
+                    YearId = year.Id
+                });
+            }
+
+            using var workbook = items.GetImportTemplate(year.Year);
+            return workbook.Deliver("Subscription-Import-Template.xlsx");
         }
 
 
