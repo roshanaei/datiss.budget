@@ -48,11 +48,18 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
     }
 
-    public class UpdateUserDTO : CreateUserDTO
+    public class UpdateUserDTO
     {
         public int Id { get; set; }
         public EntityStatus Status { get; set; }
+        public string UserName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public int? PositionId { get; set; }
+        public string NationalCode { get; set; }
+        public int? OrganizationId { get; set; }
     }
-
 
 }

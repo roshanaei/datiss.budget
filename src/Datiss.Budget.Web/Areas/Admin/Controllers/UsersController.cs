@@ -29,6 +29,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public const string Name = "Users";
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Edit = nameof(Edit);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}";
 
@@ -86,16 +87,6 @@ namespace Datiss.Budget.Web.Admin.Controllers
             return View(model);
         }
 
-        //[HttpGet("[action]")]
-        //public async Task<IActionResult> Create() {
-        //    var model = new CreateUserViewModel(
-        //        positions: await getPostionDropDownAsync(),
-        //        organizations: await getOrganizationDropDownAsync()
-        //    );
-
-        //    return View(model);
-        //}
-
         [HttpGet("[action]")]
         public async Task<IActionResult> Create() {
             var model = new CreateUserViewModel(
@@ -103,8 +94,18 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 organizations: await getOrganizationDropDownAsync()
             );
 
-            return PartialView("_Create", model);
+            return View(model);
         }
+
+        //[HttpGet("[action]")]
+        //public async Task<IActionResult> Create() {
+        //    var model = new CreateUserViewModel(
+        //        positions: await getPostionDropDownAsync(),
+        //        organizations: await getOrganizationDropDownAsync()
+        //    );
+
+        //    return PartialView("_Create", model);
+        //}
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateUserViewModel model) {
@@ -123,8 +124,8 @@ namespace Datiss.Budget.Web.Admin.Controllers
                     return View(model);
                 }
             }
-            catch (CreateUserException) {
-                model.AddError("خطایی در ایجاد کاربر جدید وجود دارد.");
+            catch (CreateUserException err) {
+                model.AddError(err.MyErrors);
             }
             catch (Exception ex) {
                 model.AddError(ViewMessages.SystemError);
@@ -185,15 +186,12 @@ namespace Datiss.Budget.Web.Admin.Controllers
             try {
                 var user = await _userService.GetByIdAsync(id);
                 var model = user.Adapt<UpdateUserViewModel>();
-
-                //return PartialView("_Edit", model);
+                model.SetPositionSource((await getPostionDropDownAsync()), user.PositionId);
+                model.SetOrganizationSource((await getOrganizationDropDownAsync()), user.OrganizationId);
+                
                 return View(model);
             }
             catch(NullReferenceException) {
-                //return Json(new {
-                //    hasError = true,
-                //    message = "کاربر مورد نظر یافت نشد."
-                //});
                 return NotFound();
             }
         }
@@ -208,34 +206,20 @@ namespace Datiss.Budget.Web.Admin.Controllers
             try {
                 result = await _userService.UpdateAsync(data);
                 if(result.NotValid) {
-                    //return Json(new {
-                    //    hasError = true,
-                    //    message = result.Message
-                    //});
                     model.AddError(result.Message);
                     return View(model);
                 }
-
             }
-            catch(UpdateUserException ex) 
+            catch(UpdateUserException err) 
             {
-                model.AddError("خطا در بروزرسانی اطلاعات");
+                model.AddError(err.MyErrors);
             }
             catch(Exception ex) {
-                //return Json(new {
-                //    hasError = true,
-                //    message = "کاربر مورد نظر یافت نشد."
-                //});
                 model.AddError(ViewMessages.SystemError);
             }
 
             if (model._HasError)
                 return View(model);
-
-            //return Json(new {
-            //    success = true,
-            //    data = result.Adapt<UserViewModel>()
-            //});
 
             return RedirectToAction(ACTION_Index);
         }

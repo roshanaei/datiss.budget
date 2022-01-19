@@ -1,6 +1,6 @@
-﻿@model CreateUserViewModel
+﻿@model UpdateUserViewModel
 @{
-    ViewData["Title"] = "ایجاد کاربر جدید";
+    ViewData["Title"] = $"ویرایش کاربر '{Model.FullName}'";
 }
 
 <section>
@@ -23,10 +23,10 @@
                         <form id="create-user-form"
                                 novalidate
                                   asp-controller="@UsersController.Name"
-                                  asp-action="@UsersController.ACTION_Create"
+                                  asp-action="@UsersController.ACTION_Edit"
                                   method="POST">
                         <div class="row">
-                            
+                            <input type="hidden" asp-for="Id" />
                             <div class="col-md-6">
                                 <fieldset class="form-group">
                                     <label asp-for="FirstName" class="col-md-4 col-form-label text-md-left my-font">نام</label>
@@ -58,14 +58,6 @@
                                     <div class="col-md-10">
                                         <input dir="ltr" type="text" oninput="numberOnly(this.id);" asp-for="PhoneNumber" inputmode="numeric" maxlength="13" pattern="[0-9]*" class="form-control my-font" />
                                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                                    </div>
-                                </fieldset>
-
-                                <fieldset class="form-group">
-                                     <label asp-for="Password" class="col-md-4 col-form-label text-md-left my-font">کلمه عبور</label>
-                                    <div class="col-md-10">
-                                        <input dir="ltr" type="password" asp-for="Password" class="form-control my-font" />
-                                        <span asp-validation-for="Password" class="text-danger"></span>
                                     </div>
                                 </fieldset>
 
@@ -117,19 +109,7 @@
                                         <span asp-validation-for="Email" class="text-danger"></span>
                                     </div>
                                 </fieldset>
-
-                                <fieldset class="form-group">
-                                    <label asp-for="RetypePassword" class="col-md-4 col-form-label text-md-left my-font">تایید کلمه عبور</label>
-                                    <div class="col-md-10">
-                                        <input dir="ltr" type="password" asp-for="RetypePassword" class="form-control my-font" />
-                                        <span asp-validation-for="RetypePassword" class="text-danger"></span>
-                                    </div>
-                                </fieldset>
                             </div>
-
-                            
-                            
-                           
                         </div>
 
                         <div class="row" style="padding-top: 20px;">
@@ -142,7 +122,6 @@
                                             <i class="fa fa-check"></i> ارسال
                             </button>
                         </div>
-
                         
                          </form>
                     </div>

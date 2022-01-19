@@ -17,6 +17,16 @@ namespace Datiss.Budget.Common.Exceptions
 
         public IEnumerable<IdentityError> CreateErrors { get; set; }
 
+        public string MyErrors {
+            get {
+                string result = "";
+                foreach(var err in CreateErrors) {
+                    result += err.Description + " <br>";
+                }
+                return result;
+            }
+        }
+
         public bool UsernameAlreadyExist { get; set; }
 
         public bool PasswordHasError { get; set; }

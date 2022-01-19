@@ -130,7 +130,7 @@ namespace Datiss.Budget.ViewModels.Identity
 
     }
 
-    public class UpdateUserViewModel : CreateUserViewModel
+    public class UpdateUserViewModel : BaseViewModel
     {
 
         public UpdateUserViewModel() {
@@ -140,9 +140,58 @@ namespace Datiss.Budget.ViewModels.Identity
 
         public UpdateUserViewModel(
             IEnumerable<DropDownItemViewModel> positions,
-            IEnumerable<DropDownItemViewModel> organizations) : base(positions, organizations) { }
+            IEnumerable<DropDownItemViewModel> organizations){
+            SetOrganizationSource(organizations);
+            SetPositionSource(positions);
+        }
 
         public int Id { get; set; }
+        public string FullName => $"{FirstName} {LastName}";
+
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(256, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string UserName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(450, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string FirstName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(450, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string LastName { get; set; }
+
+        [MaxLength(256, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string Email { get; set; }
+
+        [MaxLength(30, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string PhoneNumber { get; set; }
+
+        public int? PositionId { get; set; }
+        public IEnumerable<SelectListItem> PositionSource { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(10, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string NationalCode { get; set; }
+
+        public int? OrganizationId { get; set; }
+        public IEnumerable<SelectListItem> OrganizationSource { get; set; }
+
+        public void SetPositionSource(IEnumerable<DropDownItemViewModel> source, int? selectedPositionId = null)
+            => PositionSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString(),
+                Selected = x.Id == selectedPositionId
+            }).ToList();
+
+        public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrganizationId = null)
+            => OrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString(),
+                Selected = x.Id == selectedOrganizationId
+            }).ToList();
+
     }
 
     public class UserFilterViewModel : FilterViewModel

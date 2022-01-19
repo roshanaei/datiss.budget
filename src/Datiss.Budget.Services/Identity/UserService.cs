@@ -105,13 +105,13 @@ namespace Datiss.Budget.Services.Identity
                 throw new CreateUserException(result.Errors);
             }
 
-            var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
-            if (!passwordResult.Succeeded) {
-                return ValidationResult<UserResultDTO>.Failed(
-                    user.Adapt<UserResultDTO>(),
-                    ValidationMode.Update,
-                    ServiceMessages.Err_Password_Format);
-            }
+            //var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
+            //if (!passwordResult.Succeeded) {
+            //    return ValidationResult<UserResultDTO>.Failed(
+            //        user.Adapt<UserResultDTO>(),
+            //        ValidationMode.Update,
+            //        ServiceMessages.Err_Password_Format);
+            //}
 
             return ValidationResult<UserResultDTO>
                     .Success(user.Adapt<UserResultDTO>());
@@ -161,15 +161,15 @@ namespace Datiss.Budget.Services.Identity
                 throw new UpdateUserException(result.Errors);
             }
 
-            if (!string.IsNullOrWhiteSpace(model.Password)) {
-                var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
-                if(!passwordResult.Succeeded) {
-                    return ValidationResult<UserResultDTO>.Failed(
-                        user.Adapt<UserResultDTO>(),
-                        ValidationMode.Update,
-                        ServiceMessages.Err_Password_Format);
-                }
-            }
+            //if (!string.IsNullOrWhiteSpace(model.Password)) {
+            //    var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
+            //    if(!passwordResult.Succeeded) {
+            //        return ValidationResult<UserResultDTO>.Failed(
+            //            user.Adapt<UserResultDTO>(),
+            //            ValidationMode.Update,
+            //            ServiceMessages.Err_Password_Format);
+            //    }
+            //}
 
             return ValidationResult<UserResultDTO>
                     .Success(user.Adapt<UserResultDTO>());
