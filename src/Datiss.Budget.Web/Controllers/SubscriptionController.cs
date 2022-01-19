@@ -340,6 +340,18 @@ namespace Datiss.Budget.Web.Controllers
             return PartialView("_calculationModal", viewModel);
         }
 
+        [HttpGet("[action]")]
+        public async Task<IActionResult> DownloadExcelTemplate()
+        {
+            var filePath = $"{_env.WebRootPath}\\Excel\\SubscriptionImport.xlsx";
+
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return File(
+                stream,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "Subscription.xlsx");
+        }
+
         #region Private Helper Methods
         private string getCalcTitle(string key)
             => key switch
