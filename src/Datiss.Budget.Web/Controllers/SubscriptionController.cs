@@ -40,6 +40,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
+        public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
 
@@ -429,6 +430,16 @@ namespace Datiss.Budget.Web.Controllers
 
             using var workbook = items.GetImportTemplate(year.Year);
             return workbook.Deliver("Subscription-Import-Template.xlsx");
+        }
+
+        [HttpGet("[action]/{orgid}/{yearid}")]
+        public async Task<IActionResult> ExportExcel(int yearid)
+        {
+            var result = await _subscriptionService.GetExportItemsAsync(yearid);
+            if (result.Count() == 0)
+                return RedirectToAction("Index");
+            using var workbook = result.ExportExcel();
+            return workbook.Deliver("Subscription.xlsx");
         }
 
 
