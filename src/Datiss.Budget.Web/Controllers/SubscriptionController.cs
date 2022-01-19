@@ -32,6 +32,8 @@ namespace Datiss.Budget.Web.Controllers
     {
         public const string Name = "Subscription";
         public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Index = nameof(Index);
+        public const string ACTION_Edit = nameof(Edit);
 
         private readonly ILogger<SubscriptionController> _logger;
         private readonly IWebHostEnvironment _env;
@@ -104,9 +106,17 @@ namespace Datiss.Budget.Web.Controllers
             );
         }
 
-
-        public IActionResult Index()
+        [HttpGet("{page?}")]
+        public async Task<IActionResult> Index(int page = 1)
         {
+            var filter = new SubscriptionFilterDTO();
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(_ => _.Id);
+
+            var userSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
             return View();
         }
     }
