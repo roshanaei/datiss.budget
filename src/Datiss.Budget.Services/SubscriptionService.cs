@@ -23,6 +23,7 @@ using Datiss.Budget.Resources;
 using Datiss.Budget.Enum;
 using System.Data.SqlClient;
 using Datiss.Budget.Extensions;
+using Datiss.Budget.Common;
 
 namespace Datiss.Budget.Services
 {
@@ -287,24 +288,89 @@ namespace Datiss.Budget.Services
 
             await _uow.SaveChangesAsync();
         }
-        public async Task ImportExcelAsync(IFormFile fileInfo)
+
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId)
         {
-            var data = await _excelService.ImportAsync<SubscriptionImportModel>(fileInfo);
+            var data = await _excelService.ImportAsync<SubscriptionImportModel>
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
 
             var records = data.Adapt<List<Subscription>>();
 
             int rowIndex = 1;
 
-            foreach (var record in records)
+            var usertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                   x.Parent.ConstantKey == ConstantKeys.__UserType);
+
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
+
+            foreach (var rec in records)
             {
-                if (!await checkLogicAsync(
+                rec.YearId = yearId;
+
+                if (year == null || year.Status == EntityStatus.Disbaled)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
+                        );
+                }
+
+                if (!await usertypes.AnyAsync(x => x.Id == rec.UserTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.UserTypeId)
+                        );
+                }
+
+                rowIndex++;
+            }
+
+            //Start UserType
+            var missingUserType = new List<Constant>();
+            foreach(var item in missingUserType)
+            {
+                var existUserTypeInExcel = records.Any(_ => _.UserTypeId == item.Id);
+
+                if (!existUserTypeInExcel)
+                {
+                    missingUserType.Add(item);
+                }
+            }
+            if (missingUserType.Any())
+            {
+                string userTypeNames = "";
+                foreach (var item in missingUserType)
+                {
+                    userTypeNames += "- [" + item.Title + "]<br>";
+                }
+
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelUserTypeNotInExcel, userTypeNames));
+            }
+            //end
+
+            rowIndex = 1;
+
+            foreach(var record in records)
+            {
+                if(!await checkLogicAsync(
                     record.YearId,
-                    record.UserTypeId))
-                    throw new ImportExcelFileException(rowIndex);
+                    record.UserTypeId)) 
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
+                        );
+                }
+
                 rowIndex++;
             }
             await _dbSet.AddRangeAsync(records);
+
             await _uow.SaveChangesAsync();
+
+            return ImportResult.Succeed(
+                string.Format(ServiceMessages.ImportExcelSuccess)
+                );
         }
 
         public async Task<IEnumerable<SubscriptionDTO>> GetExportItemsAsync(int yearId)
@@ -337,6 +403,7 @@ namespace Datiss.Budget.Services
 
             return items;
         }
+
         public async Task<Stream> ExportExcelAsync(SubscriptionFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));

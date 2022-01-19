@@ -33,6 +33,6 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<IEnumerable<SubscriptionDTO>> GetExportItemsAsync(int yearId);
 
-        Task ImportExcelAsync(IFormFile fileInfo);
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId);
     }
 }
