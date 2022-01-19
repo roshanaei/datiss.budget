@@ -34,6 +34,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
@@ -240,6 +241,39 @@ namespace Datiss.Budget.Web.Controllers
             }
 
         }
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _subscriptionService.HardDeleteAsync(id);
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.GetBaseException().Message);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.InvalidUpdateData
+                });
+            }
+
+            return Json(new
+            {
+                hasError = false,
+                message = ViewMessages.DeleteRowSuccess
+            });
+        }
+
 
     }
 }
