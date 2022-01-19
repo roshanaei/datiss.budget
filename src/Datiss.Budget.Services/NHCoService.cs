@@ -81,6 +81,8 @@ namespace Datiss.Budget.Services
                 P2CostCo = model.P2CostCo
             };
 
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
             try
             {
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ActivityType))
@@ -89,7 +91,7 @@ namespace Datiss.Budget.Services
                     await _uow.SaveChangesAsync();
 
                     var result = entity.Adapt<NHCoDTO>();
-                    result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+                    result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.ActivityType = entity.ActivityType;
                     result.P1Capacity = entity.P1Capacity;
@@ -107,7 +109,7 @@ namespace Datiss.Budget.Services
 
             return ValidationResult<NHCoDTO>.Failed(
                 string.Format(ServiceMessages.Logic_ActivityDuplicate,
-                model.ActivityType.ToDisplay())
+                model.ActivityType.ToDisplay() , organizationDisplay)
                 );
 
 
@@ -116,6 +118,9 @@ namespace Datiss.Budget.Services
         public async Task<ValidationResult<NHCoDTO>> UpdateAsync(UpdateNHCoDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
+
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
             try
             {
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ActivityType, model.Id))
@@ -140,7 +145,7 @@ namespace Datiss.Budget.Services
                         FixCostCo = model.FixCostCo,
                         P1CostCo = model.P1CostCo,
                         P2CostCo = model.P2CostCo,
-                        OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
+                        OrganizationDisplay = organizationDisplay,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
                     };
 
@@ -153,7 +158,7 @@ namespace Datiss.Budget.Services
             }
             return ValidationResult<NHCoDTO>.Failed(
                 string.Format(ServiceMessages.Logic_ActivityDuplicate,
-                model.ActivityType.ToDisplay())
+                model.ActivityType.ToDisplay(), organizationDisplay)
                 );
         }
 
@@ -334,6 +339,9 @@ namespace Datiss.Budget.Services
 
             int rowIndex = 1;
 
+            var descendents = await _organizationService
+                 .GetAllDescendentsAsync(_userContext.OrganizationId);
+
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull($"Year not found with id: {yearId}");
 
@@ -345,19 +353,19 @@ namespace Datiss.Budget.Services
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 1, rec.YearId)
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
                         );
                 }
                 if (org == null)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId)
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
                         );
                 }
 
@@ -365,9 +373,6 @@ namespace Datiss.Budget.Services
             }
 
             rowIndex = 1;
-
-            var descendents = await _organizationService
-                .GetAllDescendentsAsync(_userContext.OrganizationId);
 
             if (!continueIfAnyOrgMissing)
             {
@@ -402,7 +407,7 @@ namespace Datiss.Budget.Services
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
                         );
 
                 if (!await checkLogicAsync(
@@ -412,7 +417,7 @@ namespace Datiss.Budget.Services
                 {
 
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
                         );
                 }
 
@@ -529,7 +534,11 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search));
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
+                                         _.P1Capacity.ToString().Contains(filter.Search) ||
+                                         _.FixCostCo.ToString().Contains(filter.Search) ||
+                                         _.P1CostCo.ToString().Contains(filter.Search) ||
+                                         _.P2CostCo.ToString().Contains(filter.Search));
             }
 
             return query;
@@ -554,10 +563,14 @@ namespace Datiss.Budget.Services
                 case "getexport":
                     return query.Include(x => x.Organization)
                                 .OrderBy(x => x.ActivityType)
-                                .ThenBy(x => x.Organization.DisplayOrder);
+                                .ThenBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.Organization.Type)
+                                .ThenBy(x => x.Organization.ParentId);
                 default:
                     return query.Include(x => x.Organization)
-                                .OrderBy(x => x.Organization.DisplayOrder);
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.Organization.Type)
+                                .ThenBy(x => x.Organization.ParentId);
             }
         }
 
@@ -569,7 +582,8 @@ namespace Datiss.Budget.Services
         {
 
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId)
+                .Where(_ => _.Status != EntityStatus.Deleted && 
+                            _.ParentId == parentOrganizationId)
                 .ToListAsync();
 
             var result = new List<NHCo>();
@@ -620,7 +634,8 @@ namespace Datiss.Budget.Services
             ActivityType activityType)
         {
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId)
+                .Where(_ => _.Status != EntityStatus.Deleted && 
+                            _.ParentId == parentOrganizationId)
                 .ToListAsync();
             var result = new List<NHCo>();
             foreach (var org in children)
@@ -650,16 +665,12 @@ namespace Datiss.Budget.Services
             }
             else
             {
-                if (await Query().Include(x => x.Organization)
-                                 .AnyAsync(x => x.Organization.ParentId == orgid &&
-                                                x.YearId == yearid &&
-                                                x.ActivityType == activityType))
-                {
-                    return true;
-                }
-                var childs = await _orgDbSet.Where(x => x.ParentId == orgid).ToListAsync();
+                var childs = await _organizationService.GetWithChildrenAsync(orgid);
                 foreach (var child in childs)
-                    return await hasAnyDataAsync(child.Id, yearid, activityType);
+                    if (await Query().AnyAsync(x => x.YearId == yearid &&
+                                                    x.OrganizationId == child.Id &&
+                                                    x.ActivityType == activityType))
+                        return true;
             }
 
             return false;
