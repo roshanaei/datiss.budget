@@ -153,6 +153,30 @@
   <data name="IncomeForcast_Cal5" xml:space="preserve">
     <value>درآمد حق انشعاب آب سالیانه</value>
   </data>
+  <data name="SalesSplitTotal_Cal1" xml:space="preserve">
+    <value>تعداد انشعاب آب پایان شش ماهه اول سال ماقبل</value>
+  </data>
+  <data name="SalesSplitTotal_Cal2" xml:space="preserve">
+    <value>آحاد انشعاب آب پایان شش ماهه اول سال ماقبل</value>
+  </data>
+  <data name="SalesSplitTotal_Cal3" xml:space="preserve">
+    <value>تعداد انشعاب فاضلاب پایان شش ماهه اول سال ماقبل</value>
+  </data>
+  <data name="SalesSplitTotal_Cal4" xml:space="preserve">
+    <value>آحاد انشعاب فاضلاب پایان شش ماهه اول سال ماقبل</value>
+  </data>
+  <data name="SalesSplitTotal_Cal5" xml:space="preserve">
+    <value>تعداد انشعاب آب شش ماهه دوم سال ماقبل</value>
+  </data>
+  <data name="SalesSplitTotal_Cal6" xml:space="preserve">
+    <value>آحاد انشعاب آب شش ماهه دوم سال ماقبل</value>
+  </data>
+  <data name="SalesSplitTotal_Cal7" xml:space="preserve">
+    <value>تعداد انشعاب فاضلاب شش ماهه دوم سال ماقبل</value>
+  </data>
+  <data name="SalesSplitTotal_Cal8" xml:space="preserve">
+    <value>آحاد انشعاب فاضلاب شش ماهه دوم سال ماقبل</value>
+  </data>
   <data name="WasteInstallFees_Cal1" xml:space="preserve">
     <value>WasteInstallFees_Cal1</value>
   </data>
