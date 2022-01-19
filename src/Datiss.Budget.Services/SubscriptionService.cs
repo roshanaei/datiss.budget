@@ -331,9 +331,13 @@ namespace Datiss.Budget.Services
         public async Task<Stream> ExportExcelAsync(SubscriptionFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
+
             var query = Query();
+
             query = await setFilter(query, filter);
+
             query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
             var items = await query
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.UserType)
@@ -342,17 +346,20 @@ namespace Datiss.Budget.Services
                                         Id = x.Id,
                                         UserTypeDisplay = x.UserType.Title,
                                         UserTypeId = x.UserTypeId,
-                                        Year = x.FinanceYear.Year,
-                                        YearId = x.YearId,
                                         SubW = x.SubW,
-                                        SubWs = x.SubWs
+                                        SubWs = x.SubWs,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
                                     }).ToListAsync();
 
             var ms = new MemoryStream();
             var result = _excelService.Export(items, ms);
+
             var mem1 = new MemoryStream(ms.ToArray());
+
             return mem1;
         }
+
         #region Private Helper Methods
         private async Task<IQueryable<Subscription>> setFilter(
             IQueryable<Subscription> query,
@@ -408,6 +415,23 @@ namespace Datiss.Budget.Services
                                 .OrderBy(x => x.UserType.DisplayOrder);
             }
         }
+
+
+        private async Task<bool> hasAnyDataAsync(int yearid)
+        {
+            bool any = await Query().AnyAsync(x => x.YearId == yearid);
+            if (any)
+            {
+                return true;
+            }
+            else
+            {
+                if (await Query().AnyAsync(x => x.YearId == yearid))
+                    return true;
+            }
+
+            return false;
+        }
         #endregion
 
         #region Logics
@@ -426,23 +450,6 @@ namespace Datiss.Budget.Services
                                             x.Id != id);
             return !result;
         }
-
-        private async Task<bool> hasAnyDataAsync(int yearid)
-        {
-            bool any = await Query().AnyAsync(x => x.YearId == yearid);
-            if (any)
-            {
-                return true;
-            }
-            else
-            {
-                if (await Query().AnyAsync(x => x.YearId == yearid))
-                    return true;
-            }
-
-            return false;
-        }
-
         #endregion
     }
 }
