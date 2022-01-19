@@ -139,11 +139,29 @@
         model.organizationId = $(e).find('#inputOrg_').val();
         model.userTypeId = $(e).find('#inputUserType_').val();
         model.numberUser = $(e).find('#inputNumberUser_').val();
+        if (model.numberUser == "") {
+            model.numberUser = 0;
+        }
         model.unitUser = $(e).find('#inputUnitUser_').val();
+        if (model.unitUser == "") {
+            model.unitUser = 0;
+        }
         model.wasteInstallIncome = $(e).find('#inputWasteInstallIncome_').val();
+        if (model.wasteInstallIncome == "") {
+            model.wasteInstallIncome = 0;
+        }
         model.wasteBranchIncome = $(e).find('#inputWasteBranchIncome_').val();
+        if (model.wasteBranchIncome == "") {
+            model.wasteBranchIncome = 0;
+        }
         model.wasteNote3Income = $(e).find('#inputWasteNote3Income_').val();
+        if (model.wasteNote3Income == "") {
+            model.wasteNote3Income = 0;
+        }
         model.wsNote11Income = $(e).find('#inputWsNote11Income_').val();
+        if (model.wsNote11Income == "") {
+            model.wsNote11Income = 0;
+        }
 
         console.log(model);
 
@@ -307,9 +325,6 @@
             dir: 'rtl'
         });
 
-        $('.selectUserType:last').select2({
-            dir : 'rtl'
-        });
 
         $('.input-keyup').keyup(function (event) {
             event.preventDefault();
