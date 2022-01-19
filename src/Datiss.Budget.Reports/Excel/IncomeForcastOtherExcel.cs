@@ -40,8 +40,11 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 3).Value = item.OIFTypeDisplay;
                 sheet.Cell(row, 4).Value = item.ActivityDisplay;
                 sheet.Cell(row, 5).Value = item.OIFCount;
+                sheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0";
+                sheet.Cell(row, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 sheet.Cell(row, 6).Value = item.OIFPrice;
-                sheet.Cell(row, 6).DataType = XLDataType.Number;
+                sheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0";
+                sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 row++;
             }
             var range = sheet.Range(1, 1, row - 1, 6);
@@ -84,14 +87,17 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 4).Value = item.OIFTypeId;
                 sheet.Cell(row, 5).Value = item.ActivityDisplay;
                 sheet.Cell(row, 6).Value = item.ActivityId == ActivityType.Water ? 0: 1;
-                sheet.Cell(row, 7).Value = item.OIFCount;
-                sheet.Cell(row, 8).Value = item.OIFPrice;
                 row++; //for keeping index in table records
             }
 
             var range = sheet.Range(2, 1, row - 1, 8);
-            range.Column(6).Style.NumberFormat.Format = "#,##0";
+            range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            //Other
+            range.Column(7).Style.NumberFormat.Format = "#,##0";
             range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(8).Style.NumberFormat.Format = "#,##0";
+            range.Column(8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            //
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();

@@ -124,8 +124,13 @@
         model.oifTypeId = $(e).find('#inputOIFType_').val();
         model.activityId = $(e).find('#inputActivityId_').val();
         model.oifCount = $(e).find('#inputOIFCount_').val();
+        if (model.oifCount == "") {
+            model.oifCount = 0;
+        }
         model.oifPrice = $(e).find('#inputOIFPrice_').val();
-
+        if (model.oifPrice == "") {
+            model.oifPrice = 0;
+        }
         console.log(model);
 
         $.ajax({

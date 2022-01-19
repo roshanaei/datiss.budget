@@ -268,7 +268,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
+        ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelTitleNotInExcel {
             get {
@@ -340,7 +340,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات {0} قبلا ثبت شده است..
+        ///   Looks up a localized string similar to اطلاعات {0} برای &quot;{1}&quot; قبلا ثبت شده است..
         /// </summary>
         public static string Logic_TitleDuplicate {
             get {
