@@ -61,4 +61,17 @@ namespace Datiss.Budget.ViewModels
 
         public string SubWsDisplay => SubWs.ToString("N0");
     }
+
+    public class SubscriptionFilterViewModel : FilterViewModel
+    {
+        public int? YearId { get; set; }
+
+        public int? UserTypeId { get; set; }
+
+        public int? SubW { get; set; }
+
+        public int? SubWs { get; set; }
+
+        public IList<SelectListItem> YearSource { get; set; }
+    }
 }
