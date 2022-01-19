@@ -201,6 +201,7 @@ namespace Datiss.Budget.Services
             {
                 new SqlParameter("YearId", yearId),
             };
+
             var result = new List<CalculationItemData>();
             result.Add(new CalculationItemData
             {
@@ -216,6 +217,7 @@ namespace Datiss.Budget.Services
         public async Task<PagedResult<SubscriptionDTO>> GetListAsync(SubscriptionFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
+
             var result = new PagedResult<SubscriptionDTO>
             {
                 PageSize = filter.PageSize,
@@ -327,6 +329,7 @@ namespace Datiss.Budget.Services
 
             //Start UserType
             var missingUserType = new List<Constant>();
+
             foreach(var item in missingUserType)
             {
                 var existUserTypeInExcel = records.Any(_ => _.UserTypeId == item.Id);
@@ -336,9 +339,11 @@ namespace Datiss.Budget.Services
                     missingUserType.Add(item);
                 }
             }
+
             if (missingUserType.Any())
             {
                 string userTypeNames = "";
+
                 foreach (var item in missingUserType)
                 {
                     userTypeNames += "- [" + item.Title + "]<br>";
@@ -429,6 +434,7 @@ namespace Datiss.Budget.Services
                                     }).ToListAsync();
 
             var ms = new MemoryStream();
+
             var result = _excelService.Export(items, ms);
 
             var mem1 = new MemoryStream(ms.ToArray());
@@ -442,6 +448,7 @@ namespace Datiss.Budget.Services
             SubscriptionFilterDTO filter)
         {
             query.CheckArgumentIsNull(nameof(query));
+
             filter.CheckArgumentIsNull(nameof(filter));
 
             var predicate = PredicateBuilder.New<Subscription>();
@@ -455,7 +462,9 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
+
                 bool isNum = int.TryParse(filter.Search, out int res);
+
                 if (isNum)
                 {
                     query = query.Where(_ => _.SubW.ToString().Contains(filter.Search) ||
@@ -492,10 +501,10 @@ namespace Datiss.Budget.Services
             }
         }
 
-
         private async Task<bool> hasAnyDataAsync(int yearid)
         {
             bool any = await Query().AnyAsync(x => x.YearId == yearid);
+
             if (any)
             {
                 return true;
