@@ -427,7 +427,7 @@ namespace Datiss.Budget.Services
                     userTypeNames += "- " + item.Title + "<br>";
                 }
                 return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelUserTypeNotInExcel, userTypeNames));
+                        string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, userTypeNames , ""));
 
             }
             //End UserType

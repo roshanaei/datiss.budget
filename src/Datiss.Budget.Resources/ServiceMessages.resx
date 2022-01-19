@@ -187,13 +187,10 @@
     <value>ورود اطلاعات با موفقیت انجام گردید.</value>
   </data>
   <data name="ImportExcelTitleNotInExcel" xml:space="preserve">
-    <value>عنوان های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
+    <value>عنوان های :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
   <data name="ImportExcelUsageLayerUserTypeOrgNotInExcel" xml:space="preserve">
     <value>در فایل اکسل شما اطلاعات طبقه مصرف :&lt;br&gt;{0} برای کاربری "{1}" ، "{2}" وجود ندارد.</value>
-  </data>
-  <data name="ImportExcelUserTypeNotInExcel" xml:space="preserve">
-    <value>کاربری های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
   <data name="ImportExcelUserTypeOrgNotInExcel" xml:space="preserve">
     <value>کاربری های :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
@@ -202,7 +199,7 @@
     <value>خطاهای داده ای را بررسی کنید.</value>
   </data>
   <data name="Logic_ActivityDuplicate" xml:space="preserve">
-    <value>اطلاعات برای فعالیت {0} قبلا ثبت شده است.</value>
+    <value>اطلاعات "{1}" برای فعالیت {0} قبلا ثبت شده است.</value>
   </data>
   <data name="Logic_DiameterPipeOrgDuplicate" xml:space="preserve">
     <value>اطلاعات قطر لوله {0} برای "{1}" قبلا ثبت شده است.</value>
@@ -214,13 +211,13 @@
     <value>سازمان "{0}" قبلا ثبت شده است .</value>
   </data>
   <data name="Logic_TitleDuplicate" xml:space="preserve">
-    <value>اطلاعات {0} قبلا ثبت شده است.</value>
+    <value>اطلاعات {0} برای "{1}" قبلا ثبت شده است.</value>
   </data>
   <data name="Logic_UserTypeDiameterPipeDuplicate" xml:space="preserve">
     <value>اطلاعات کاربری {0} و قطر لوله {1} برای "{2}" قبلا ثبت شده است.</value>
   </data>
   <data name="Logic_UserTypeDuplicate" xml:space="preserve">
-    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
+    <value>اطلاعات کاربری {0} برای "{1}" قبلا ثبت شده است.</value>
   </data>
   <data name="Logic_UserTypeUsageLayerDuplicate" xml:space="preserve">
     <value>اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است.</value>

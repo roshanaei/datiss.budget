@@ -115,9 +115,21 @@
         model.activityType = $('#activityType option:selected').val();
         model.organizationId = $(e).find('#inputOrg_').val();
         model.p1Capacity = $(e).find('#inputP1Capacity_').val();
+        if (model.p1Capacity == "") {
+            model.p1Capacity = 0;
+        }
         model.fixCostCo = $(e).find('#inputFixCostCo_').val();
+        if (model.fixCostCo == "") {
+            model.fixCostCo = 0;
+        }
         model.p1CostCo = $(e).find('#inputP1CostCo_').val();
+        if (model.p1CostCo == "") {
+            model.p1CostCo = 0;
+        }
         model.p2CostCo = $(e).find('#inputP2CostCo_').val();
+        if (model.p2CostCo == "") {
+            model.p2CostCo = 0;
+        }
 
         resetTableBackColor("my-table");
 

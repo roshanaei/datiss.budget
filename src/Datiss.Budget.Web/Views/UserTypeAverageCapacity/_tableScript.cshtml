@@ -124,15 +124,26 @@
 
         resetTableBackColor("my-table");
 
-
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
         model.userTypeId = $(e).find('#inputUserType_').val();
         model.averageCapacityW = $(e).find('#inputAverageCapacityW_').val();
+        if (model.averageCapacityW == "") {
+            model.averageCapacityW = 0;
+        }
         model.averageCapacityWs = $(e).find('#inputAverageCapacityWs_').val();
+        if (model.averageCapacityWs == "") {
+            model.averageCapacityWs = 0;
+        }
         model.averageCapacityWIncome = $(e).find('#inputAverageCapacityWIncome_').val();
+        if (model.averageCapacityWIncome == "") {
+            model.averageCapacityWIncome = 0;
+        }
         model.averageCapacityWsIncome = $(e).find('#inputAverageCapacityWsIncome_').val();
+        if (model.averageCapacityWsIncome == "") {
+            model.averageCapacityWsIncome = 0;
+        }
 
         console.log(model);
 
