@@ -49,7 +49,7 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 sheet.Cell(row, 6).Value = item.WsNumber;
-                sheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0.00";
+                sheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 sheet.Cell(row, 7).Value = item.WsUnit;
                 sheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0";
@@ -61,7 +61,7 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 9).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 sheet.Cell(row, 10).Value = item.WsNumber_2;
-                sheet.Cell(row, 10).Style.NumberFormat.Format = "#,##0.00";
+                sheet.Cell(row, 10).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 sheet.Cell(row, 11).Value = item.WsUnit_2;
                 sheet.Cell(row, 11).Style.NumberFormat.Format = "#,##0";

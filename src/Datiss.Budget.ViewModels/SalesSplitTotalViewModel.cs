@@ -69,7 +69,7 @@ namespace Datiss.Budget.ViewModels
         public int UserTypeId { get; set; }
         public string UserTypeDisplay { get; set; }
         public int WNumber { get; set; }
-        public string NumberSalesDisplay => WNumber.ToString("N0");
+        public string WNumberDisplay => WNumber.ToString("N0");
         public int WUnit { get; set; }
         public string WUnitDisplay => WUnit.ToString("N0");
 
