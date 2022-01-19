@@ -81,7 +81,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Edit(UpdateWaterInstallFeeViewModel model)
+        public async Task<IActionResult> Edit(UpdateSubscriptionViewModel model)
         {
 
             if (!ModelState.IsValid)
@@ -90,8 +90,8 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            var data = model.Adapt<UpdateWaterInstallFeeDTO>();
-            var result = await _waterInstallFeeService.UpdateAsync(data);
+            var data = model.Adapt<UpdateSubscriptionDTO>();
+            var result = await _subscriptionService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
@@ -100,7 +100,7 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(
-                result.Result.Adapt<WaterInstallFeeViewModel>()
+                result.Result.Adapt<SubscriptionViewModel>()
             );
         }
 
