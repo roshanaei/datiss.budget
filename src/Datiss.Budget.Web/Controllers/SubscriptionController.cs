@@ -35,6 +35,8 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
 
+        private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
+
         private readonly ILogger<SubscriptionController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly ISubscriptionService _subscriptionService;
@@ -117,7 +119,59 @@ namespace Datiss.Budget.Web.Controllers
 
             var userSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
-            return View();
+
+            filter.YearId = maxYear;
+
+            var myfilter = TempData.Get<SubscriptionFilterViewModel>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<SubscriptionFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
+
+            var result = await _subscriptionService.GetListAsync(filter);
+            var model = result.Adapt<SubscriptionIndexViewModel>();
+
+            model.SetYearSource(yearSource);
+            model.SetUserTypeSource(userSource);
+
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+
+            model.Filter.YearId = filter.YearId;
+            model.PageNumber = filter.PageNumber;
+            model.PageSize = filter.PageSize;
+
+            return View(model);
+        }
+
+        [HttpPost("{page?}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(SubscriptionIndexViewModel model)
+        {
+
+            var filter = model.Filter.Adapt<SubscriptionFilterDTO>();
+
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _subscriptionService.GetListAsync(filter);
+            
+            model = result.Adapt<SubscriptionIndexViewModel>();
+            
+            model.Filter = filter.Adapt<SubscriptionFilterViewModel>();
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var userSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            model.SetYearSource(yearSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetUserTypeSource(userSource);
+
+            return View(model);
         }
     }
 }
