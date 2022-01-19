@@ -201,9 +201,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _subscriptionService.ImportExcelAsync(
-                                                                    model.ExcelFile,
-                                                                    model.YearId);
+                var result = await _subscriptionService.ImportExcelAsync(model.ExcelFile,model.YearId);
 
                 if (result.Success)
                 {
@@ -379,9 +377,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                await _subscriptionService.CopyAsync(
-                                                    model.SourceYearId,
-                                                    model.TargetYearId);
+                await _subscriptionService.CopyAsync(model.SourceYearId, model.TargetYearId);
 
                 model.Succeed(ViewMessages.CopySuccess);
             }
@@ -410,7 +406,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("import/template/{yearId}/{orgId?}")]
-        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        public async Task<IActionResult> GetExcelTemplate(int yearId)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var userTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
