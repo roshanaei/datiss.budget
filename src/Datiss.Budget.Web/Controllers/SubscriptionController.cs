@@ -1,0 +1,65 @@
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.IO;
+using Mapster;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Datiss.Budget.Services.Identity;
+using Datiss.Budget.Services.Contracts.Identity;
+using Microsoft.AspNetCore.Http;
+using Datiss.Budget.Common.Exceptions;
+using Microsoft.AspNetCore.Hosting;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Web.Helpers;
+using Datiss.Budget.Resources;
+using ClosedXML.Extensions;
+using Datiss.Budget.Reports.Excel;
+using Microsoft.Extensions.Logging;
+using Datiss.Budget.Common;
+using Datiss.Budget.Enum;
+
+namespace Datiss.Budget.Web.Controllers
+{
+    [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+    [Route("[controller]")]
+    public class SubscriptionController : Controller
+    {
+        public const string Name = "Subscription";
+
+        private readonly ILogger<SubscriptionController> _logger;
+        private readonly IWebHostEnvironment _env;
+        private readonly ISubscriptionService _subscriptionService;
+        private readonly IConstantService _constantService;
+        private readonly IOrganizationService _organizationService;
+        private readonly IFinanceYearService _financeYearService;
+        private readonly ISecurityTrimmingService _securityTrimmingService;
+
+        public SubscriptionController(
+            ILogger<SubscriptionController> logger,
+            IWebHostEnvironment environment,
+            ISubscriptionService subscriptionService,
+            IOrganizationService organizationService,
+            IFinanceYearService financeYearService,
+            IConstantService constantService,
+            ISecurityTrimmingService securityTrimmingService)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _env = environment ?? throw new ArgumentNullException(nameof(environment));
+            _subscriptionService = subscriptionService ?? throw new ArgumentNullException(nameof(subscriptionService));
+            _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
+            _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
+            _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
+            _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
+        }
+        public IActionResult Index()
+        {
+            return View();
+        }
+    }
+}
