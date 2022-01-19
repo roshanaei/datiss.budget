@@ -306,12 +306,21 @@ namespace Datiss.Budget.Services
             await _dbSet.AddRangeAsync(records);
             await _uow.SaveChangesAsync();
         }
-        public async Task<IEnumerable<SubscriptionDTO>> GetExportItemsAsync(SubscriptionFilterDTO filter)
+
+        public async Task<IEnumerable<SubscriptionDTO>> GetExportItemsAsync(int yearId)
         {
+            var filter = new SubscriptionFilterDTO
+            {
+                YearId = yearId
+            };
             filter.CheckArgumentIsNull(nameof(filter));
+
             var query = Query();
+
             query = await setFilter(query, filter);
+
             query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
             var items = await query
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.UserType)
@@ -320,10 +329,10 @@ namespace Datiss.Budget.Services
                                         Id = x.Id,
                                         UserTypeDisplay = x.UserType.Title,
                                         UserTypeId = x.UserTypeId,
-                                        Year = x.FinanceYear.Year,
-                                        YearId = x.YearId,
                                         SubW = x.SubW,
-                                        SubWs = x.SubWs
+                                        SubWs = x.SubWs,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
                                     }).ToListAsync();
 
             return items;
