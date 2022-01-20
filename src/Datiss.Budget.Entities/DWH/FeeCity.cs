@@ -5,7 +5,8 @@ namespace Datiss.Budget.Entities.DWH
     public class FeeCity : IAuditableEntity
     {
         public  FeeCity() { }
-    #region Properties
+
+        #region Properties
         public int Id { get; set; }
 
         public int YearId { get; set; }
@@ -16,7 +17,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public decimal NDomesticPrice { get; set; }
 
-    #endregion
+        #endregion
 
         #region Navigation
         public FinanceYear FinanceYear { get; set; }
