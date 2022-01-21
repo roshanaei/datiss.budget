@@ -8,9 +8,6 @@
         let selectval = $('#hidUsageLayerTypeId_' + id).val();
         alert(selectval);
         FillDropDoen(usertypeid, selectval);
-
-        //let selectval = $('#hidUsageLayerTypeId_' + id).val();
-        //$('#inputUsageLayerType_' + id).val(selectval).attr("selected", "selected");
         
         resetTableBackColor("my-table");
 
@@ -421,7 +418,6 @@
                 });
             if (selectval != null) {
                 options.val(selectval);
-                alert('in to if');
             }
         }).fail(function (error) {
             alert(error);

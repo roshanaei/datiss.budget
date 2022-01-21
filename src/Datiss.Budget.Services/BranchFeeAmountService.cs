@@ -125,7 +125,7 @@ namespace Datiss.Budget.Services
                   string.Format(ServiceMessages.Logic_OrganizationDuplicate,
                   organizationDisplay)
                   );
-            }
+        }
 
         public async Task<ValidationResult<BranchFeeAmountDTO>> UpdateAsync(UpdateBranchFeeAmountDTO model)
         {
@@ -135,7 +135,7 @@ namespace Datiss.Budget.Services
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId,model.Id))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.OrganizationId = model.OrganizationId;
@@ -158,8 +158,10 @@ namespace Datiss.Budget.Services
 
                     var result = new BranchFeeAmountDTO
                     {
-                        OrganizationId=model.OrganizationId,
-                        YearId=model.YearId,
+                        OrganizationId = model.OrganizationId,
+                        OrganizationDisplay = organizationDisplay,
+                        YearId = model.YearId,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year,
                         UrbanAdjustmentFactor = model.UrbanAdjustmentFactor,
                         WasteRateInWater = model.WasteRateInWater,
                         WaterBranchingPerHousing = model.WaterBranchingPerHousing,
@@ -281,12 +283,13 @@ namespace Datiss.Budget.Services
             query = query
                 .Skip(filter.StartIndex)
                 .Take(filter.PageSize);
-            
+
             result.Items = await query
                             .Include(x => x.FinanceYear)
                             .Include(x => x.Organization)
-                            .Select(x => new BranchFeeAmountDTO {
-                                Id=x.Id,
+                            .Select(x => new BranchFeeAmountDTO
+                            {
+                                Id = x.Id,
                                 Year = x.FinanceYear.Year,
                                 YearId = x.YearId,
                                 OrganizationId = x.OrganizationId,
@@ -371,7 +374,7 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo,int yearId,bool continueIfAnyOrgMissing = false)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<BranchFeeAmountImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
@@ -392,18 +395,18 @@ namespace Datiss.Budget.Services
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear,rowIndex + 1,rec.YearId)
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 1, rec.YearId)
                         );
                 }
                 if (org == null)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotExistOrg,rowIndex + 1,rec.OrganizationId)
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId)
                         );
                 }
-                if(org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
+                if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
-                    return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex +1 )
+                    return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 1)
                         );
                 }
 
@@ -417,11 +420,11 @@ namespace Datiss.Budget.Services
             {
                 var missingOrgs = new List<Organization>();
 
-                foreach( var item in descendents)
+                foreach (var item in descendents)
                 {
                     var existInExcel = records.Any(x => x.OrganizationId == item.Id);
                     if (!existInExcel)
-                       
+
                         if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
                             missingOrgs.Add(item);
                 }
@@ -429,7 +432,7 @@ namespace Datiss.Budget.Services
                 if (missingOrgs.Any())
                 {
                     string orgNames = "";
-                    foreach(var item in missingOrgs)
+                    foreach (var item in missingOrgs)
                     {
                         orgNames += "- " + item.Title + "<br>";
                     }
@@ -441,11 +444,11 @@ namespace Datiss.Budget.Services
                     };
                 }
             }
-            foreach(var record in records)
+            foreach (var record in records)
             {
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelAccessError,rowIndex +1)
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 1)
                         );
 
                 if (!await checkLogicAsync(
@@ -467,10 +470,10 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<IEnumerable<BranchFeeAmountDTO>> GetExportItemsAsync(int yearId,int organizationId)
+        public async Task<IEnumerable<BranchFeeAmountDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
             var filter = new BranchFeeAmountFilterDTO
-            { 
+            {
                 OrganizationId = organizationId,
                 YearId = yearId
             };
@@ -558,12 +561,12 @@ namespace Datiss.Budget.Services
         private IQueryable<BranchFeeAmount> setOrder(
             IQueryable<BranchFeeAmount> query,
             string orderBy = "id",
-            bool desc = false) 
+            bool desc = false)
         {
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "id";
             orderBy = orderBy.ToLower();
-            switch (orderBy) 
+            switch (orderBy)
             {
                 case "organization":
                     return desc
@@ -583,7 +586,7 @@ namespace Datiss.Budget.Services
             BranchFeeAmountFilterDTO filter)
         {
             query.CheckArgumentIsNull(nameof(query));
-            
+
             filter.CheckArgumentIsNull(nameof(filter));
 
             var predicate = PredicateBuilder.New<BranchFeeAmount>();
@@ -735,7 +738,7 @@ namespace Datiss.Budget.Services
             int? id = null)
         {
             var year = await _yearSet.FindAsync(yearId);
-            
+
             year.CheckReferenceIsNull(nameof(year));
 
             if (year.Status == EntityStatus.Disbaled)
