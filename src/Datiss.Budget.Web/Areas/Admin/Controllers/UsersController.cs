@@ -30,6 +30,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_SetUserPassword = nameof(SetUserPassword);
 
         private readonly string _indexFilterKey = $"{Name}_{ACTION_Index}";
 
@@ -232,6 +233,48 @@ namespace Datiss.Budget.Web.Admin.Controllers
             }
             
             return RedirectToAction(ACTION_Index);
+        }
+
+        [HttpGet("edit/password/{id}")]
+        public async Task<IActionResult> SetUserPassword(int id) 
+        {
+            try 
+            {
+                var user = await _userService.GetByIdAsync(id);
+                var model = new AdminChangeUserPasswordViewModel {
+                    UserId = user.Id
+                };
+
+                return PartialView("_setUserPassword", model);
+            }
+            catch(Exception ex) 
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost("edit/password")]
+        public async Task<IActionResult> SetUserPassword(AdminChangeUserPasswordViewModel model) 
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            try {
+                await _userService.SetUserPasswordAsync(model.UserId, model.NewPassword);
+
+                return Ok();
+            }
+            catch(UserChangePasswordException ex) {
+                return new JsonResult(new {
+                    hasError = true,
+                    message = ex.MyErrors
+                });
+            }
+            catch(Exception ex) {
+                return new JsonResult(new {
+                    hasError = true,
+                    message = ViewMessages.SystemError
+                });
+            }
         }
 
         #region private helper methods
