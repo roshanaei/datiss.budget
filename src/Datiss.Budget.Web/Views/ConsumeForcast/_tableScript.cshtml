@@ -5,11 +5,13 @@
     function editRow(id) {
 
         let usertypeid = $('#hidUserTypeId_' + id).val();
-        FillDropDoen(usertypeid);
-
         let selectval = $('#hidUsageLayerTypeId_' + id).val();
-        $('#inputUsageLayerType_' + id).val(selectval).attr("selected", "selected");
+        alert(selectval);
+        FillDropDoen(usertypeid, selectval);
 
+        //let selectval = $('#hidUsageLayerTypeId_' + id).val();
+        //$('#inputUsageLayerType_' + id).val(selectval).attr("selected", "selected");
+        
         resetTableBackColor("my-table");
 
         let row = $('#row_' + id);
@@ -143,16 +145,33 @@
 
     function saveNewRow(e) {
 
+        resetTableBackColor("my-table");
+
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
         model.userTypeId = $(e).find('#inputUserType_').val();
         model.usageLayerId = $(e).find('#inputUsageLayerType_').val();
         model.countUser = $(e).find('#inputCountUser_').val();
+        if (model.countUser == "") {
+            model.countUser = 0;
+        }
         model.unitUser = $(e).find('#inputUnitUser_').val();
+        if (model.unitUser == "") {
+            model.unitUser = 0;
+        }
         model.consumeUser = $(e).find('#inputConsumeUser_').val();
+        if (model.consumeUser == "") {
+            model.consumeUser = 0;
+        }
         model.avgConsumeUser = $(e).find('#inputAvgConsumeUser_').val();
+        if (model.avgConsumeUser == "") {
+            model.avgConsumeUser = 0;
+        }
         model.consumeUserForcast = $(e).find('#inputConsumeUserForcast_').val();
+        if (model.consumeUserForcast == "") {
+            model.consumeUserForcast = 0;
+        }
 
         console.log(model);
 
@@ -377,7 +396,7 @@
         FillDropDoen(usertypeid);
     }
 
-    function FillDropDoen(id) {
+    function FillDropDoen(id, selectval = null) {
 
         let key = userType_source[id];
         if (key != 'UserType.House') {
@@ -392,7 +411,6 @@
                 'key': key
                 }
         }).done(function (data) {
-            console.log(data);
             var options = $('.selectUsageLayerType');
             options.empty();
             $.each(data,
@@ -401,6 +419,10 @@
                         .val(item.id)
                         .text(item.title));
                 });
+            if (selectval != null) {
+                options.val(selectval);
+                alert('in to if');
+            }
         }).fail(function (error) {
             alert(error);
         });
