@@ -31,7 +31,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Edit = nameof(Edit);
 
-        private string _indexFilterKey = $"{Name}_{ACTION_Index}";
+        private readonly string _indexFilterKey = $"{Name}_{ACTION_Index}";
 
         private readonly IUserService _userService;
         private readonly IConstantService _constantService;
@@ -112,6 +112,8 @@ namespace Datiss.Budget.Web.Admin.Controllers
             model.CheckArgumentIsNull(nameof(model));
 
             if (!ModelState.IsValid) {
+                model.SetOrganizationSource(await getOrganizationDropDownAsync());
+                model.SetPositionSource(await getPostionDropDownAsync());
                 model.AddError(ViewMessages.ModelState);
                 return View(model);
             }
@@ -131,8 +133,11 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 model.AddError(ViewMessages.SystemError);
             }
 
-            if (model._HasError)
+            if (model._HasError) {
+                model.SetOrganizationSource(await getOrganizationDropDownAsync());
+                model.SetPositionSource(await getPostionDropDownAsync());
                 return View(model);
+            }
 
             return RedirectToAction(ACTION_Index);
         }
@@ -206,6 +211,8 @@ namespace Datiss.Budget.Web.Admin.Controllers
             try {
                 result = await _userService.UpdateAsync(data);
                 if(result.NotValid) {
+                    model.SetOrganizationSource(await getOrganizationDropDownAsync());
+                    model.SetPositionSource(await getPostionDropDownAsync());
                     model.AddError(result.Message);
                     return View(model);
                 }
@@ -218,9 +225,12 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 model.AddError(ViewMessages.SystemError);
             }
 
-            if (model._HasError)
+            if (model._HasError) {
+                model.SetOrganizationSource(await getOrganizationDropDownAsync());
+                model.SetPositionSource(await getPostionDropDownAsync());
                 return View(model);
-
+            }
+            
             return RedirectToAction(ACTION_Index);
         }
 
