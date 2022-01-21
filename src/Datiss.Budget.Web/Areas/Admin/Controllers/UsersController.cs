@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Datiss.Budget.Enum;
@@ -37,14 +38,18 @@ namespace Datiss.Budget.Web.Admin.Controllers
         private readonly IUserService _userService;
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
+        private readonly IApplicationRoleManager _roleManager;
 
         public UsersController(
             IUserService userService,
             IConstantService constantService,
-            IOrganizationService organizationService) {
+            IOrganizationService organizationService,
+            IApplicationRoleManager roleManager) 
+        {
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
+            _roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
         }
 
         [HttpGet("{page?}")]
@@ -92,7 +97,8 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public async Task<IActionResult> Create() {
             var model = new CreateUserViewModel(
                 positions: await getPostionDropDownAsync(),
-                organizations: await getOrganizationDropDownAsync()
+                organizations: await getOrganizationDropDownAsync(),
+                roles: await getRoleDropDownAsync()
             );
 
             return View(model);
@@ -115,6 +121,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
             if (!ModelState.IsValid) {
                 model.SetOrganizationSource(await getOrganizationDropDownAsync());
                 model.SetPositionSource(await getPostionDropDownAsync());
+                model.SetRoleSource(await getRoleDropDownAsync());
                 model.AddError(ViewMessages.ModelState);
                 return View(model);
             }
@@ -241,8 +248,10 @@ namespace Datiss.Budget.Web.Admin.Controllers
             try 
             {
                 var user = await _userService.GetByIdAsync(id);
-                var model = new AdminChangeUserPasswordViewModel {
-                    UserId = user.Id
+                var model = new AdminSetUserPasswordViewModel {
+                    UserId = user.Id,
+                    UserDisplayName = user.DisplayName,
+                    UserName = user.UserName
                 };
 
                 return PartialView("_setUserPassword", model);
@@ -254,7 +263,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
         }
 
         [HttpPost("edit/password")]
-        public async Task<IActionResult> SetUserPassword(AdminChangeUserPasswordViewModel model) 
+        public async Task<IActionResult> SetUserPassword(AdminSetUserPasswordViewModel model) 
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -286,6 +295,13 @@ namespace Datiss.Budget.Web.Admin.Controllers
         private async Task<IEnumerable<DropDownItemViewModel>> getOrganizationDropDownAsync()
             => (await _organizationService.GetDropDownDataAsync())
                     .Adapt<List<DropDownItemViewModel>>();
+
+        private async Task<IEnumerable<DropDownItemViewModel>> getRoleDropDownAsync()
+            => (await _roleManager.GetAllCustomRolesAsync())
+                .Select(x => new DropDownItemViewModel {
+                    Id = x.Id,
+                    Title = x.Name
+                }).ToList();
 
         #endregion
     }

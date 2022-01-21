@@ -49,7 +49,7 @@
                                     <div class="col-md-10">
                                         <select asp-for="OrganizationId" asp-items="Model.OrganizationSource" class="form-control my-font">
                                         </select>
-                                        <span asp-validation-for="OrganizationId" class="text-danger"></span>
+                                        @*<span asp-validation-for="OrganizationId" class="text-danger"></span>*@
                                     </div>
                                 </fieldset>
 
@@ -72,7 +72,7 @@
                                 <fieldset class="form-group">
                                     <label class="col-md-4 col-form-label text-md-left my-font">نقش های کاربری</label>
                                     <div class="col-md-10">
-                                        <select id="selectRoles" class="form-control my-font">
+                                        <select asp-for="SelectedRoles" id="selectRoles" class="form-control my-font">
                                             <option value="1">سلام</option>
                                             <option value="2">مدیر سیستم</option>
                                             <option value="3">کاربر ورود اطلاعات</option>
@@ -106,7 +106,7 @@
                                     <div class="col-md-10">
                                         <select asp-for="PositionId" asp-items="Model.PositionSource" class="form-control my-font">
                                         </select>
-                                        <span asp-validation-for="PositionId" class="text-danger"></span>
+                                        @*<span asp-validation-for="PositionId" class="text-danger"></span>*@
                                     </div>
                                 </fieldset>
 

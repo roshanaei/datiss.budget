@@ -221,6 +221,10 @@
 
     </div>
     
+    <div id="divSetUserPassword">
+
+    </div>
+    
     <script type="text/javascript">
         let allColumns = '1,2,3,4,5,6';
         let columnIndices = allColumns.split(',');
@@ -254,9 +258,9 @@
             });
 
             $("#columnSelector input:checkbox:checked").change(function () {
-                let index = parseInt($(this)[0].id.split('-')[1]);
+                const index = parseInt($(this)[0].id.split('-')[1]);
                 console.log(`showing or hiding col : ${index}`);
-                let checked = $(this)[0].checked;
+                const checked = $(this)[0].checked;
                 if (checked) {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
                     showingColmuns = showingColmuns + `${index},`
@@ -276,13 +280,13 @@
 
 
         function setDataColumns() {
-            let columnsToShow = document.getElementById("hidColumns").value.split(',');
+            const columnsToShow = document.getElementById("hidColumns").value.split(',');
             console.log('ColumnsToShow ');
             console.log(columnsToShow);
-            let checkBoxes = $("#columnSelector input:checkbox");
+            const checkBoxes = $("#columnSelector input:checkbox");
             for(let i = 0; i < columnIndices.length; i++) {
-                let index = parseInt(columnIndices[i]);
-                let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
+                const index = parseInt(columnIndices[i]);
+                const showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
                 console.log(`Column : ${index} show = ${showColumn}`);
                 checkBoxes[i].checked = showColumn;
                 if(showColumn)
@@ -294,14 +298,14 @@
 
         function resetDataColumns() {
             $('th,tr td').show();
-            let inputs = $("#columnSelector input:checkbox");
+            const inputs = $("#columnSelector input:checkbox");
             for (let i = 0; i < inputs.length; i++) {
                 inputs[i].checked = true
             }
         }
 
         function openCreate() {
-            let div = document.getElementById('divCreate');
+            const div = document.getElementById('divCreate');
             console.log(div);
             $.ajax({
                 type: 'GET',
@@ -312,30 +316,104 @@
                     $('#OrganizationId').select2({
                         dir: 'rtl'
                     });
-                    let mymodal = document.getElementById('modalCreateUser');
-                    let btnSave = document.getElementById('btnSaveCreateUser');
-                    btnSave.addEventListener('click', function(event) {
-                        event.preventDefault();
-                        //if($form.valid()) {
-                        //    createUser();
-                        //}
-                    });
-                    var form = $('#create-form');
+                    const mymodal = document.getElementById('modalCreateUser');
+                    const btnSave = document.getElementById('btnSaveCreateUser');
+                    btnSave.addEventListener('click',
+                        function(event) {
+                            event.preventDefault();
+                            //if($form.valid()) {
+                            //    createUser();
+                            //}
+                        });
+                    const form = $('#create-form');
                     form.unbind();
                     form.removeData('validator');
                     form.removeData('unobtrusiveValidation');
                     $.validator.unobtrusive.parse(form);
                     form.validate(form.data("unobtrusiveValidation").options);
                     $(mymodal).modal('show');
-                    $(mymodal).on('hidden.bs.modal', function() {
-                        $(div).html('');
-                        $('.modal-backdrop').remove();
-                    });
+                    $(mymodal).on('hidden.bs.modal',
+                        function() {
+                            $(div).html('');
+                            $('.modal-backdrop').remove();
+                        });
                 },
                 error: function(request, options, err) {
 
                 }
-            })
+            });
+        }
+
+
+        function openSetPassword(id) {
+            const div = document.getElementById('divSetUserPassword');
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action(UsersController.ACTION_SetUserPassword)' + '/' + id,
+                success: function(data, status, settings) {
+                    $(div).html('');
+                    $(div).html(data);
+                    const mymodal = document.getElementById('modalSetUserPassword');
+                    const btnSave = document.getElementById('btnSetUserPassword');
+                    btnSave.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        setUserPassword();
+                    });
+                    $(mymodal).modal('show');
+                    $(mymodal).on('hidden.bs.modal',
+                        function() {
+                            $(div).html('');
+                            $('.modal-backdrop').remove();
+                        }
+                    );
+                    $('#SetPassword_NewPassword').focus();
+                },
+                error: function(request, options, err) {
+                    console.log(err);
+                }
+            });
+        }
+        
+        function setUserPassword() {
+            const model = {};
+            model.userId = $('#SetPassword_UserId').val();
+            model.newPassword = $('#SetPassword_NewPassword').val();
+            model.verifyNewPassword = $('#SetPassword_VerifyNewPassword').val();
+            console.log(model);
+
+            if(model.newPassword === '') {
+                $('#validateNewPassword').html('لطفاً کلمه عبور را وارد نمایید.');
+                $('#validateNewPassword').focus();
+                return;
+            }
+
+            if(model.verifyNewPassword === '') {
+                $('#validateVerifyNewPassword').html('لطفاً کلمه عبور را دوباره وارد نمایید.');
+                $('#validateVerifyNewPassword').focus();
+                return;
+            }
+
+            if(model.newPassword != model.verifyNewPassword) {
+                alert('کلمات عبور با هم مطابقت ندارند. لطفاً برای تایید کلمه عبور وارد شده، آن را دوباره و به درستی وارد نمایید.');
+                $('validateVerifyNewPassword').focus();
+                return;
+            }
+
+            const mymodal = document.getElementById('modalSetUserPassword');
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(UsersController.ACTION_SetUserPassword)',
+                data: model,
+                success: function(data, status, settings) {
+                    if(data.hasError) {
+                        alert(data.message);
+                    }
+                    $(mymodal).modal('hide');
+                },
+                error: function(request, options, err) {
+                    console.log(err);
+                }
+            });
         }
 
         var createUserSuccess = function(context) {
@@ -352,7 +430,7 @@
         };
 
         function createUser() {
-            var model = {};
+            const model = {};
             model.firstName = $('#FirstName').val();
             model.lastName = $('#LastName').val();
             model.userName = $('#UserName').val();
@@ -369,7 +447,7 @@
                 url: '@Url.Action(UsersController.ACTION_Create)',
                 data: model
             }).done(function(data, status, setting) {
-                var $form = $('#create-form'); 
+                const $form = $('#create-form'); 
                 $form.removeData('validator');
                 $form.removeData('unobtrusiveValidation');
                 if(data.hasError) {

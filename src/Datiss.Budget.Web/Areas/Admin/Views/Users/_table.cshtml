@@ -44,6 +44,10 @@
                             asp-route-id="@item.Id">
                             <i class="fa ft-edit fa-1x"></i>
                         </a>
+                        
+                        <button id="btnSetUserPassword_@item.Id" onclick="openSetPassword(@item.Id);" type="button" data-id="@item.Id" class="set-password btn bg-glass-1 btn-primary mr-1 myfont">
+                            <i class="fa fa-lock"></i>
+                        </button>
 
                         <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
                             <i class="fa ft-trash-2"></i>
