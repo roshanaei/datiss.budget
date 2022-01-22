@@ -90,8 +90,8 @@
                 $('#hidUserTypeId_' + id).attr('value', model.userTypeId);
                 $('#spanYear_' + id).text(data.year);
                 $('#spanUserType_' + id).text(data.userTypeDisplay);
-                $('#spanSubW_' + id).text(data.SubW);
-                $('#spanSubWs_' + id).text(data.SubWs);
+                $('#spanSubW_' + id).text(data.subW);
+                $('#spanSubWs_' + id).text(data.subWs);
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
                 cancelEditRow(id);
@@ -159,7 +159,7 @@
 
                 $('#divInput_UserType_' + data.id).hide();
                 $('#spanUserType_' + data.id).text(data.userTypeDisplay);
-                $('#divOutput_userType_' + data.id).show();
+                $('#divOutput_UserType_' + data.id).show();
 
                 //SubW
                 $(e).find('#divInput_SubW_').attr('id', 'divInput_SubW_' + data.id);

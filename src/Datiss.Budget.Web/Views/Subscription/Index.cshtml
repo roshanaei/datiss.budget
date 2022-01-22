@@ -218,7 +218,7 @@
         </script>
     }
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
             console.log('ready');
@@ -371,25 +371,24 @@
             let input2 = document.getElementById('inputSubWs_' + id);
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
-            input1.addEventListener('keyup', function (event) {
+            input1.addEventListener("keyup", function (event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
                 }
             });
-            input2.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
+            input2.addEventListener("keyup", function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                btnSaveEdit.click();
+            }
             });
-
-            btnSaveEdit.addEventListener('click', function (event) {
-                event.preventDefault();
+    
+            btnSaveEdit.addEventListener('click', function (evenrt) {
                 $(btnSaveEdit).attr('disabled', true);
-                $(btnSaveEdit).unbind('keyup');
+                console.log('Update via Click');
             });
-
+    
             editRow(id);
         });
 
@@ -604,6 +603,6 @@
             $('#filterForm').submit();
         };
 
-</script>
+    </script>
 
 }

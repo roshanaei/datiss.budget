@@ -428,7 +428,7 @@ namespace Datiss.Budget.Web.Controllers
             return workbook.Deliver("Subscription-Import-Template.xlsx");
         }
 
-        [HttpGet("[action]/{orgid}/{yearid}")]
+        [HttpGet("[action]/{yearid}")]
         public async Task<IActionResult> ExportExcel(int yearid)
         {
             var result = await _subscriptionService.GetExportItemsAsync(yearid);

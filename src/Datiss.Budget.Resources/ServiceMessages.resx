@@ -225,6 +225,9 @@
   <data name="Logic_UserTypeUsageLayerDuplicate" xml:space="preserve">
     <value>اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است.</value>
   </data>
+  <data name="Logic_UserTypeYearDuplicate" xml:space="preserve">
+    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
+  </data>
   <data name="Logic_YearOrgDuplicate" xml:space="preserve">
     <value>اطلاعات سال {0} برای "{1}" قبلا ثبت شده است.</value>
   </data>

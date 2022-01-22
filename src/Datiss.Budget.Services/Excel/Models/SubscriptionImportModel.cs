@@ -10,7 +10,7 @@ namespace Datiss.Budget.Services.Excel.Models
     public class SubscriptionImportModel
     {
         [Column(0, MappingDirections.Both, Letter = "A")]
-        public int YearId { get; set; }
+        public string UserTypeDisplay { get; set; }
 
         [Column(1, MappingDirections.Both, Letter = "B")]
         public int UserTypeId { get; set; }

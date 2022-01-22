@@ -104,7 +104,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<SubscriptionDTO>.Failed(
-                string.Format(ServiceMessages.Logic_UserTypeDuplicate,
+                string.Format(ServiceMessages.Logic_UserTypeYearDuplicate,
                 model.UserTypeTitle)
                 );
         }
@@ -117,7 +117,7 @@ namespace Datiss.Budget.Services
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.UserTypeId))
+                if (await checkLogicAsync(model.YearId, model.UserTypeId, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.YearId = model.YearId;
@@ -146,7 +146,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<SubscriptionDTO>.Failed(
-                string.Format(ServiceMessages.Logic_UserTypeDuplicate,
+                string.Format(ServiceMessages.Logic_UserTypeYearDuplicate,
                 model.UserTypeTitle)
                 );
         }
@@ -293,6 +293,12 @@ namespace Datiss.Budget.Services
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId)
         {
+            var ext = Path.GetExtension(fileInfo.FileName);
+            if (ext != "xlsx")
+            {
+                var invaliddata = await _excelService.ImportAsync<SubscriptionImportModel>
+                    (fileInfo);
+            }
             var data = await _excelService.ImportAsync<SubscriptionImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
 
@@ -327,40 +333,37 @@ namespace Datiss.Budget.Services
                 rowIndex++;
             }
 
-            //Start UserType
+            //Start Missing Type
             var missingUserType = new List<Constant>();
 
-            foreach(var item in missingUserType)
+            foreach (var usert in usertypes)
             {
-                var existUserTypeInExcel = records.Any(_ => _.UserTypeId == item.Id);
-
+                var existUserTypeInExcel = records.Any(_ => _.UserTypeId == usert.Id);
                 if (!existUserTypeInExcel)
                 {
-                    missingUserType.Add(item);
+                    missingUserType.Add(usert);
                 }
             }
 
             if (missingUserType.Any())
             {
                 string userTypeNames = "";
-
                 foreach (var item in missingUserType)
                 {
-                    userTypeNames += "- [" + item.Title + "]<br>";
+                    userTypeNames += " - " + item.Title + "<br>";
                 }
-
                 return ImportResult.Failed(
                     string.Format(ServiceMessages.ImportExcelUserTypeNotInExcel, userTypeNames));
             }
-            //end
+            //End
 
             rowIndex = 1;
 
-            foreach(var record in records)
+            foreach (var record in records)
             {
-                if(!await checkLogicAsync(
+                if (!await checkLogicAsync(
                     record.YearId,
-                    record.UserTypeId)) 
+                    record.UserTypeId))
                 {
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
@@ -372,7 +375,6 @@ namespace Datiss.Budget.Services
             await _dbSet.AddRangeAsync(records);
 
             await _uow.SaveChangesAsync();
-
             return ImportResult.Succeed(
                 string.Format(ServiceMessages.ImportExcelSuccess)
                 );
@@ -526,6 +528,13 @@ namespace Datiss.Budget.Services
             int userTypeId,
             int? id = null)
         {
+
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
             var result = id == null
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.UserTypeId == userTypeId)
