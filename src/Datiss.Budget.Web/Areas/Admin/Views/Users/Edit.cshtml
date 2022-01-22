@@ -64,12 +64,7 @@
                                 <fieldset class="form-group">
                                     <label class="col-md-4 col-form-label text-md-left my-font">نقش های کاربری</label>
                                     <div class="col-md-10">
-                                        <select id="selectRoles" class="form-control my-font">
-                                            <option value="1">سلام</option>
-                                            <option value="2">مدیر سیستم</option>
-                                            <option value="3">کاربر ورود اطلاعات</option>
-                                            <option value="4">نقش فلان</option>
-                                            <option value="5">نقش بیسار</option>
+                                        <select asp-for="SelectedRoles" id="selectRoles" asp-items="@Model.RoleSource" class="form-control my-font">
                                         </select>
                                     </div>
                                 </fieldset>
