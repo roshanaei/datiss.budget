@@ -15,24 +15,24 @@ namespace Datiss.Budget.Services.Contracts
     {
         Task<IncomeCurrentWH> GetByIdAsync(int id);
 
-        //Task<ValidationResult> AddAsync(CreateIncomeCurrentWHDTO model);
+        Task<ValidationResult<IncomeCurrentWHDTO>> CreateAsync(CreateIncomeCurrentWHDTO model);
 
-        //Task<ValidationResult> UpdateAsync(UpdateIncomeCurrentWHDTO model);
+        Task<ValidationResult<IncomeCurrentWHDTO>> UpdateAsync(UpdateIncomeCurrentWHDTO model);
 
         Task HardDeleteAsync(int Id);
 
-        Task HardDeleteAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
-        //Task<int> CalculationAsync(int yearId, int organizationId);
+        Task<int> CalculationAsync(int yearId, int organizationId);
 
         Task<PagedResult<IncomeCurrentWHDTO>> GetListAsync(IncomeCurrentWHFilterDTO filter);
 
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
 
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
+
+        Task<IEnumerable<IncomeCurrentWHDTO>> GetExportItemsAsync(int yearId, int organizationId);
+
         Task<Stream> ExportExcelAsync(IncomeCurrentWHFilterDTO filter);
-
-        Task<IEnumerable<IncomeCurrentWHDTO>> GetExportItemsAsync(IncomeCurrentWHFilterDTO filter);
-
-        Task ImportExcelAsync(IFormFile fileInfo);
     }
 }
