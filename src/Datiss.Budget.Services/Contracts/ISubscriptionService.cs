@@ -15,22 +15,24 @@ namespace Datiss.Budget.Services.Contracts
     {
         Task<Subscription> GetByIdAsync(int id);
 
-        //Task<ValidationResult> AddAsync(CreateSubscriptionDTO model);
+        Task<ValidationResult<SubscriptionDTO>> CreateAsync(CreateSubscriptionDTO model);
 
-        //Task<ValidationResult> UpdateAsync(UpdateSubscriptionDTO model);
+        Task<ValidationResult<SubscriptionDTO>> UpdateAsync(UpdateSubscriptionDTO model);
 
         Task HardDeleteAsync(int yearId);
 
-        //Task<int> CalculationAsync(int yearId, int organizationId);
+        Task<SubscriptionDeleteDataResult> HardDeleteAllAsync(int yearId);
+
+        Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId);
 
         Task<PagedResult<SubscriptionDTO>> GetListAsync(SubscriptionFilterDTO filter);
 
-        Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
+        Task CopyAsync(int sourceYearId, int destYearId);
 
         Task<Stream> ExportExcelAsync(SubscriptionFilterDTO filter);
 
-        Task<IEnumerable<SubscriptionDTO>> GetExportItemsAsync(SubscriptionFilterDTO filter);
+        Task<IEnumerable<SubscriptionDTO>> GetExportItemsAsync(int yearId);
 
-        Task ImportExcelAsync(IFormFile fileInfo);
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId);
     }
 }

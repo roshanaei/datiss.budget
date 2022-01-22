@@ -68,13 +68,6 @@ namespace Datiss.Budget.Web.Controllers
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
 
-
-        private void showMessage(string type, string message)
-        {
-            ViewData["type"] = type;
-            ViewData["message"] = message;
-        }
-
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateUserTypeAverageCapacityViewModel model)
         {
@@ -172,9 +165,8 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(UserTypeAverageCapacityIndexViewModel model, int page = 1)
+        public async Task<IActionResult> Index(UserTypeAverageCapacityIndexViewModel model)
         {
-            model.Filter.PageNumber = 1;
             var filter = model.Filter.Adapt<UserTypeAverageCapacityFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
@@ -251,20 +243,16 @@ namespace Datiss.Budget.Web.Controllers
                     });
                 }
             }
-            catch (ImportExcelFileFormatInvalidException ex)
+            catch (ImportExcelFileFormatInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileFormatInvalid);
                 return Json(new
                 {
                     hasError = true,
                     message = ViewMessages.ImportExcelFileFormatInvalid
                 });
             }
-            catch (ImportExcelFileSizeInvalidException ex)
+            catch (ImportExcelFileSizeInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileSizeInvalid);
                 return Json(new
                 {
                     hasError = true,
@@ -314,7 +302,7 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.NullRef
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json(new
                 {
@@ -409,7 +397,7 @@ namespace Datiss.Budget.Web.Controllers
             {
                 model.AddError(ViewMessages.CopyDestYearHasData);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 model.AddError(ViewMessages.SystemError);
             }

@@ -28,10 +28,10 @@ namespace Datiss.Budget.Services.Excel.Models
         public int UnitUser { get; set; }
 
         [Column(MappingDirections.Both, Letter = "G")]
-        public int WasteBranchIncome { get; set; }
+        public int WasteInstallIncome { get; set; }
 
         [Column(MappingDirections.Both, Letter = "H")]
-        public int WasteInstallIncome { get; set; }
+        public int WasteBranchIncome { get; set; }
 
         [Column(MappingDirections.Both, Letter = "I")]
         public int WasteNote3Income { get; set; }

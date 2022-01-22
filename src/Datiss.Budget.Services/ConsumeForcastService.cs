@@ -115,7 +115,8 @@ namespace Datiss.Budget.Services
             return ValidationResult<ConsumeForcastDTO>.Failed(
                 string.Format(ServiceMessages.Logic_UserTypeUsageLayerDuplicate,
                                                 model.UserTypeTitle,
-                                                model.UsageLayerTitle)
+                                                model.UsageLayerTitle,
+                                                organizationDisplay)
                 );
         }
 
@@ -155,9 +156,9 @@ namespace Datiss.Budget.Services
                         AvgConsumeUser = model.AvgConsumeUser,
                         ConsumeUserForcast = model.ConsumeUserForcast,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year,
-                        OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
-                        UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title,
-                        UsageLayerTitle = (await _constSet.FindAsync(model.UsageLayerId)).Title
+                        OrganizationDisplay = organizationDisplay,
+                        UserTypeTitle = model.UserTypeTitle,
+                        UsageLayerTitle = model.UsageLayerTitle
                     };
 
                     return ValidationResult<ConsumeForcastDTO>.Success(result);
@@ -171,14 +172,21 @@ namespace Datiss.Budget.Services
             return ValidationResult<ConsumeForcastDTO>.Failed(
                 string.Format(ServiceMessages.Logic_UserTypeUsageLayerDuplicate,
                                     model.UserTypeTitle,
-                                    model.UsageLayerTitle)
+                                    model.UsageLayerTitle,
+                                    organizationDisplay)
                 );
         }
 
         public async Task HardDeleteAsync(int Id)
         {
             var entity = await _dbSet.FindAsync(Id);
+            entity.CheckReferenceIsNull(nameof(entity));
 
+            var year = await _yearSet.FindAsync(entity.YearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
             entity.CheckArgumentIsNull(nameof(entity));
 
             _dbSet.Remove(entity);
@@ -193,6 +201,9 @@ namespace Datiss.Budget.Services
 
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
 
             var self = await _dbSet.Where(x => x.YearId == yearId)
                                    .Where(x => x.OrganizationId == organizationId)
@@ -389,19 +400,19 @@ namespace Datiss.Budget.Services
                         );
                 }
 
-                var userType =await _constSet.FindAsync(rec.UserTypeId);
+                var userType = await _constSet.FindAsync(rec.UserTypeId);
 
                 if (userType.ConstantKey == ConstantKeys.__House && !houseUsageLayer.Any(x => x.Id == rec.UsageLayerId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerUserType, rowIndex + 2, rec.UsageLayerId , userType.Title)
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerUserType, rowIndex + 2, rec.UsageLayerId, userType.Title)
                         );
                 }
 
                 if (userType.ConstantKey != ConstantKeys.__House && !noneHouseUsageLayer.Any(x => x.Id == rec.UsageLayerId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerUserType, rowIndex + 2, rec.UsageLayerId , userType.Title)
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerUserType, rowIndex + 2, rec.UsageLayerId, userType.Title)
                         );
                 }
 
@@ -548,7 +559,6 @@ namespace Datiss.Budget.Services
 
             foreach (var record in records)
             {
-                //if organization type is not city or village then pass
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
@@ -688,8 +698,11 @@ namespace Datiss.Budget.Services
                 query = query.Where(x => x.Organization.Title.ToUpper().Contains(filter.Search) ||
                                          x.UserType.Title.ToUpper().Contains(filter.Search) ||
                                          x.UsageLayer.Title.ToUpper().Contains(filter.Search) ||
-                                         x.UnitUser.ToString().ToUpper().Contains(filter.Search)
-                                         );
+                                         x.UnitUser.ToString().ToUpper().Contains(filter.Search) ||
+                                         x.CountUser.ToString().ToUpper().Contains(filter.Search) ||
+                                         x.ConsumeUser.ToString().ToUpper().Contains(filter.Search) ||
+                                         x.AvgConsumeUser.ToString().ToUpper().Contains(filter.Search) ||
+                                         x.ConsumeUserForcast.ToString().ToUpper().Contains(filter.Search));
             }
 
             return query;
@@ -731,6 +744,8 @@ namespace Datiss.Budget.Services
                                 .Include(x => x.UserType)
                                 .Include(x => x.UsageLayer)
                                 .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.Organization.Type)
+                                .ThenBy(x => x.Organization.ParentId)
                                 .ThenBy(x => x.UserType.DisplayOrder)
                                 .ThenBy(x => x.UsageLayer.DisplayOrder);
             }
@@ -743,7 +758,8 @@ namespace Datiss.Budget.Services
         {
 
             var children = await _orgDbSet
-                .Where(x => x.ParentId == parentOrganizationId)
+                .Where(x => x.Status != EntityStatus.Deleted &&
+                            x.ParentId == parentOrganizationId)
                 .ToListAsync();
 
             var result = new List<ConsumeForcast>();
@@ -792,7 +808,8 @@ namespace Datiss.Budget.Services
             int yearId)
         {
             var children = await _orgDbSet
-                .Where(x => x.ParentId == parentOrganizationId)
+                .Where(x => x.Status != EntityStatus.Deleted && 
+                            x.ParentId == parentOrganizationId)
                 .ToListAsync();
             var result = new List<ConsumeForcast>();
             foreach (var org in children)
@@ -814,24 +831,19 @@ namespace Datiss.Budget.Services
         private async Task<bool> hasAnyDataAsync(int orgid, int yearid)
         {
             bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
-                                                   x.YearId == yearid);
-
+                                                x.YearId == yearid);
             if (any)
             {
                 return true;
             }
             else
             {
-                if (await Query().Include(x => x.Organization)
-                                .AnyAsync(x => x.Organization.ParentId == orgid &&
-                                                x.YearId == yearid))
-                {
-                    return true;
-                }
-                var childs = await _orgDbSet.Where(x => x.ParentId == orgid).ToListAsync();
+                var childs = await _organizationService.GetWithChildrenAsync(orgid);
                 foreach (var child in childs)
-                    return await hasAnyDataAsync(child.Id, yearid);
+                    if (await Query().AnyAsync(x => x.YearId == yearid && x.OrganizationId == child.Id))
+                        return true;
             }
+
             return false;
         }
 

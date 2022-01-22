@@ -1,0 +1,289 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    function editRow(id) {
+
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+        //row.css('background-color', '#7598f3');
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_UserType_' + id).hide();
+        $('#divOutput_SubW_' + id).hide();
+        $('#divOutput_SubWs_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_UserType_' + id).show();
+        $('#divInput_SubW_' + id).show();
+        $('#divInput_SubWs_' + id).show();
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_UserType_' + id).hide();
+        $('#divInput_SubW_' + id).hide();
+        $('#divInput_SubWs_' + id).hide();
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_UserType_' + id).show();
+        $('#divOutput_SubW_' + id).show();
+        $('#divOutput_SubWs_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.userTypeId = $('#inputUserType_' + id).val();
+        model.subW = $('#inputSubW_' + id).val();
+        model.subWs = $('#inputSubWs_' + id).val();
+
+        $.ajax({
+            url: '@Url.Action(SubscriptionController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidUserTypeId_' + id).attr('value', model.userTypeId);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanUserType_' + id).text(data.userTypeDisplay);
+                $('#spanSubW_' + id).text(data.subW);
+                $('#spanSubWs_' + id).text(data.subWs);
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.userTypeId = $(e).find('#inputUserType_').val();
+        model.subW = $(e).find('#inputSubW_').val();
+        model.subWs = $(e).find('#inputSubWs_').val();
+        if (model.subW == "") {
+            model.subW = 0;
+        }
+        if (model.subWs == "") {
+            model.subWs = 0;
+        }
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(SubscriptionController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //UserType
+                $(e).find('#divInput_UserType_').attr('id', 'divInput_UserType_' + data.id);
+                $(e).find('#hidUserTypeId_').attr('id', 'hidUserTypeId_' + data.id);
+                $(e).find('#inputUserType_').attr('id', 'inputUserType_' + data.id);
+                $(e).find('#divOutput_UserType_').attr('id', 'divOutput_UserType_' + data.id);
+                $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
+
+                $('#divInput_UserType_' + data.id).hide();
+                $('#spanUserType_' + data.id).text(data.userTypeDisplay);
+                $('#divOutput_UserType_' + data.id).show();
+
+                //SubW
+                $(e).find('#divInput_SubW_').attr('id', 'divInput_SubW_' + data.id);
+                $(e).find('#inputSubW_').attr('id', 'inputSubW_' + data.id);
+                $(e).find('#divOutput_SubW_').attr('id', 'divOutput_SubW_' + data.id);
+                $(e).find('#spanSubW_').attr('id', 'spanSubW_' + data.id);
+
+                $('#divInput_SubW_' + data.id).hide();
+                $('#spanSubW_' + data.id).text(data.subW);
+                $('#divOutput_SubW_' + data.id).show();
+
+                //SubWs
+                $(e).find('#divInput_SubWs_').attr('id', 'divInput_SubWs_' + data.id);
+                $(e).find('#inputSubWs_').attr('id', 'inputSubWs_' + data.id);
+                $(e).find('#divOutput_SubWs_').attr('id', 'divOutput_SubWs_' + data.id);
+                $(e).find('#spanSubWs_').attr('id', 'spanSubWs_' + data.id);
+
+                $('#divInput_SubWs_' + data.id).hide();
+                $('#spanSubWs_' + data.id).text(data.subW);
+                $('#divOutput_SubWs_' + data.id).show();
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        resetTableBackColor("my-table");
+
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectUserType:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(SubscriptionController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                console.log(err);
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+</script>

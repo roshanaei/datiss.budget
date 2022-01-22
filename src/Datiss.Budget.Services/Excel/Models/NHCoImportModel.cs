@@ -17,18 +17,15 @@ namespace Datiss.Budget.Services.Excel.Models
         public int OrganizationId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "C")]
-        public ActivityType ActivityType { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "D")]
         public int P1Capacity { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "E")]
+        [Column(MappingDirections.Both, Letter = "D")]
         public int FixCostCo { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "F")]
+        [Column(MappingDirections.Both, Letter = "E")]
         public int P1CostCo { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "G")]
+        [Column(MappingDirections.Both, Letter = "F")]
         public int P2CostCo { get; set; }
     }
 }

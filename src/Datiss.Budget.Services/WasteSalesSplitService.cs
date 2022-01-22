@@ -89,7 +89,17 @@ namespace Datiss.Budget.Services
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.WsPipeDiameterId))
                 {
                     await _dbSet.AddAsync(entity);
-                    await _uow.SaveChangesAsync();
+
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<WasteSalesSplitDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
 
                     var result = entity.Adapt<WasteSalesSplitDTO>();
                     result.UserTypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title;

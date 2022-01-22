@@ -81,7 +81,9 @@ namespace Datiss.Budget.Services
                 OIFCount = model.OIFCount,
                 OIFPrice = model.OIFPrice
             };
+
             model.OIFTypeTitle = (await _constSet.FindAsync(model.OIFTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
             {
@@ -92,7 +94,7 @@ namespace Datiss.Budget.Services
 
                     var result = entity.Adapt<IncomeForcastOtherDTO>();
                     result.OIFTypeDisplay = (await _constSet.FindAsync(model.OIFTypeId)).Title;
-                    result.OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+                    result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.ActivityId = model.ActivityId;
                     result.OIFCount = model.OIFCount;
@@ -108,7 +110,7 @@ namespace Datiss.Budget.Services
 
             return ValidationResult<IncomeForcastOtherDTO>.Failed(
                 string.Format(ServiceMessages.Logic_TitleDuplicate,
-                model.OIFTypeTitle)
+                model.OIFTypeTitle, organizationDisplay)
                 );
 
 
@@ -118,6 +120,8 @@ namespace Datiss.Budget.Services
         {
             model.CheckArgumentIsNull(nameof(model));
             model.OIFTypeTitle = (await _constSet.FindAsync(model.OIFTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
             try
             {
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.OIFTypeId, model.ActivityId, model.Id))
@@ -140,7 +144,7 @@ namespace Datiss.Budget.Services
                         ActivityId = model.ActivityId,
                         OIFCount = model.OIFCount,
                         OIFPrice = model.OIFPrice,
-                        OrganizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title,
+                        OrganizationDisplay = organizationDisplay,
                         OIFTypeDisplay = (await _constSet.FindAsync(model.OIFTypeId)).Title,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
                     };
@@ -154,7 +158,7 @@ namespace Datiss.Budget.Services
             }
             return ValidationResult<IncomeForcastOtherDTO>.Failed(
                 string.Format(ServiceMessages.Logic_TitleDuplicate,
-                model.OIFTypeTitle)
+                model.OIFTypeTitle, organizationDisplay)
                 );
         }
 
@@ -349,7 +353,11 @@ namespace Datiss.Budget.Services
 
             int rowIndex = 1;
 
-            var oiftypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__OIFType);
+            var oiftypes = _constSet.Where(x => x.Status != EntityStatus.Deleted && 
+                                                x.Parent.ConstantKey == ConstantKeys.__OIFType);
+
+            var descendents = await _organizationService
+                .GetAllDescendentsAsync(_userContext.OrganizationId);
 
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull($"Year not found with id: {yearId}");
@@ -362,69 +370,80 @@ namespace Datiss.Budget.Services
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 1, rec.YearId)
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
                         );
                 }
                 if (org == null)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId)
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
                 if (!await oiftypes.AnyAsync(x => x.Id == rec.OIFTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex + 1, rec.OIFTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex + 2, rec.OIFTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
                         );
                 }
 
                 rowIndex++;
             }
 
-            //Start OIFType
-            var missingDWType = new List<Constant>();
-            foreach (var item in oiftypes)
-            {
-                var existDWTypeInExcel = records.Any(_ => _.OIFTypeId == item.Id);
-                if (!existDWTypeInExcel)
-                    missingDWType.Add(item);
+            //
+            var missingOrgs = new List<Organization>();
+            var existOrgs = new List<Organization>();
 
+            foreach (var item in descendents)
+            {
+                var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                if (!existInExcel)
+                {
+                    if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                        missingOrgs.Add(item);
+                }
+                else
+                    existOrgs.Add(item);
             }
-            if (missingDWType.Any())
+            //
+
+            //Start OIFType
+            var missingType = new List<Constant>();
+            string orgTitle = "";
+            foreach (var org in existOrgs)
+            {
+                foreach (var usert in oiftypes)
+                {
+                    var existTypeInExcel = records.Any(_ => _.OIFTypeId == usert.Id &&
+                                              _.OrganizationId == org.Id);
+                    if (!existTypeInExcel)
+                    {
+                        missingType.Add(usert);
+                        orgTitle = org.Title;
+                    }
+                }
+            }
+            if (missingType.Any())
             {
                 string oIFTypeNames = "";
-                foreach (var item in missingDWType)
+                foreach (var item in missingType)
                 {
                     oIFTypeNames += "- " + item.Title + "<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelTitleNotInExcel, oIFTypeNames));
+                    string.Format(ServiceMessages.ImportExcelTitleNotInExcel, oIFTypeNames, orgTitle));
             }
             //end
 
             rowIndex = 1;
 
-            var descendents = await _organizationService
-                .GetAllDescendentsAsync(_userContext.OrganizationId);
-
             if (!continueIfAnyOrgMissing)
             {
-                var missingOrgs = new List<Organization>();
-
-                foreach (var item in descendents)
-                {
-                    var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
-                    if (!existInExcel)
-                        if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
-                            missingOrgs.Add(item);
-                }
-
                 if (missingOrgs.Any())
                 {
                     string orgNames = "";
@@ -446,7 +465,7 @@ namespace Datiss.Budget.Services
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
                         );
 
                 if (!await checkLogicAsync(
@@ -457,7 +476,7 @@ namespace Datiss.Budget.Services
                 {
 
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
                         );
                 }
 
@@ -616,7 +635,9 @@ namespace Datiss.Budget.Services
                     return query.Include(x => x.Organization)
                                 .Include(x => x.OIFType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
-                                .ThenBy(x=>x.ActivityId)
+                                .ThenBy(x => x.Organization.Type)
+                                .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.ActivityId)
                                 .ThenBy(x => x.OIFType.DisplayOrder);
             }
         }
@@ -628,7 +649,8 @@ namespace Datiss.Budget.Services
         {
 
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId)
+                .Where(_ => _.Status != EntityStatus.Deleted &&
+                            _.ParentId == parentOrganizationId)
                 .ToListAsync();
 
             var result = new List<IncomeForcastOther>();
@@ -675,7 +697,8 @@ namespace Datiss.Budget.Services
             int yearId)
         {
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId)
+                .Where(_ => _.Status != EntityStatus.Deleted && 
+                            _.ParentId == parentOrganizationId)
                 .ToListAsync();
             var result = new List<IncomeForcastOther>();
             foreach (var org in children)

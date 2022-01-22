@@ -169,6 +169,78 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to تعداد انشعاب آب پایان شش ماهه اول سال ماقبل.
+        /// </summary>
+        public static string SalesSplitTotal_Cal1 {
+            get {
+                return ResourceManager.GetString("SalesSplitTotal_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to آحاد انشعاب آب پایان شش ماهه اول سال ماقبل.
+        /// </summary>
+        public static string SalesSplitTotal_Cal2 {
+            get {
+                return ResourceManager.GetString("SalesSplitTotal_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to تعداد انشعاب فاضلاب پایان شش ماهه اول سال ماقبل.
+        /// </summary>
+        public static string SalesSplitTotal_Cal3 {
+            get {
+                return ResourceManager.GetString("SalesSplitTotal_Cal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to آحاد انشعاب فاضلاب پایان شش ماهه اول سال ماقبل.
+        /// </summary>
+        public static string SalesSplitTotal_Cal4 {
+            get {
+                return ResourceManager.GetString("SalesSplitTotal_Cal4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to تعداد انشعاب آب شش ماهه دوم سال ماقبل.
+        /// </summary>
+        public static string SalesSplitTotal_Cal5 {
+            get {
+                return ResourceManager.GetString("SalesSplitTotal_Cal5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to آحاد انشعاب آب شش ماهه دوم سال ماقبل.
+        /// </summary>
+        public static string SalesSplitTotal_Cal6 {
+            get {
+                return ResourceManager.GetString("SalesSplitTotal_Cal6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to تعداد انشعاب فاضلاب شش ماهه دوم سال ماقبل.
+        /// </summary>
+        public static string SalesSplitTotal_Cal7 {
+            get {
+                return ResourceManager.GetString("SalesSplitTotal_Cal7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to آحاد انشعاب فاضلاب شش ماهه دوم سال ماقبل.
+        /// </summary>
+        public static string SalesSplitTotal_Cal8 {
+            get {
+                return ResourceManager.GetString("SalesSplitTotal_Cal8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WasteInstallFees_Cal1.
         /// </summary>
         public static string WasteInstallFees_Cal1 {
