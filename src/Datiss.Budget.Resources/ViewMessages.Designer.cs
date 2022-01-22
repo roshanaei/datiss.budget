@@ -115,6 +115,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to حذف اطلاعات برای سال {0} با موفقیت انجام شد.
+        /// </summary>
+        public static string DeleteMultipleDataForYear {
+            get {
+                return ResourceManager.GetString("DeleteMultipleDataForYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to داده ای برای حذف وجود ندارد..
         /// </summary>
         public static string DeleteNullRecord {
