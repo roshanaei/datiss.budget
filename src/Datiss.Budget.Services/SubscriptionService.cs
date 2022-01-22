@@ -293,12 +293,6 @@ namespace Datiss.Budget.Services
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId)
         {
-            var ext = Path.GetExtension(fileInfo.FileName);
-            if (ext != "xlsx")
-            {
-                var invaliddata = await _excelService.ImportAsync<SubscriptionImportModel>
-                    (fileInfo);
-            }
             var data = await _excelService.ImportAsync<SubscriptionImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
 

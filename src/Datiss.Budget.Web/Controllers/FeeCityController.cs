@@ -1,16 +1,12 @@
-﻿using ClosedXML.Extensions;
-using Datiss.Budget.Common;
-using Datiss.Budget.Common.Exceptions;
+﻿using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Enum;
-using Datiss.Budget.Reports.Excel;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Identity;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
-using Datiss.Budget.Web.Helpers;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -21,14 +17,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Datiss.Budget.Reports.Excel;
+using ClosedXML.Extensions;
 
 namespace Datiss.Budget.Web.Controllers
 {
     [Authorize(Policy = ConstantPolicies.DynamicPermission)]
     [Route("[controller]")]
-    public class ConsumeForcastController : Controller
+    public class FeeCityController : Controller
     {
-        public const string Name = "ConsumeForcast";
+
+        public const string Name = "FeeCity";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
@@ -42,45 +41,40 @@ namespace Datiss.Budget.Web.Controllers
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
-        private readonly ILogger<ConsumeForcastController> _logger;
+        private readonly ILogger<FeeCityController> _logger;
         private readonly IWebHostEnvironment _env;
-        private readonly IConsumeForcastService _consumeForcastService;
-        private readonly IConstantService _constantService;
+        private readonly IFeeCityService _feeCityService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
         private readonly ISecurityTrimmingService _securityTrimmingService;
 
-
-        public ConsumeForcastController(
-            ILogger<ConsumeForcastController> logger,
+        public FeeCityController(
+            ILogger<FeeCityController> logger,
             IWebHostEnvironment environment,
-            IConsumeForcastService consumeForcastService,
+            IFeeCityService feeCityService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
-            IConstantService constantService,
             ISecurityTrimmingService securityTrimmingService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
-            _consumeForcastService = consumeForcastService ?? throw new ArgumentNullException(nameof(consumeForcastService));
+            _feeCityService = feeCityService ?? throw new ArgumentNullException(nameof(feeCityService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
-            _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(CreateConsumeForcastViewModel model)
+        public async Task<IActionResult> Create(CreateFeeCityViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 model.AddError(ViewMessages.InvalidData);
                 return Json(model);
             }
+            var data = model.Adapt<CreateFeeCityDTO>();
 
-            var data = model.Adapt<CreateConsumeForcastDTO>();
-
-            var result = await _consumeForcastService.CreateAsync(data);
+            var result = await _feeCityService.CreateAsync(data);
 
             if (!result.IsValid)
             {
@@ -88,12 +82,12 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            return Json(result.Result.Adapt<ConsumeForcastViewModel>());
+            return Json(result.Result.Adapt<FeeCityViewModel>());
         }
 
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Edit(UpdateConsumeForcastViewModel model)
+        public async Task<IActionResult> Edit(UpdateFeeCityViewModel model)
         {
 
             if (!ModelState.IsValid)
@@ -102,8 +96,8 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            var data = model.Adapt<UpdateConsumeForcastDTO>();
-            var result = await _consumeForcastService.UpdateAsync(data);
+            var data = model.Adapt<UpdateFeeCityDTO>();
+            var result = await _feeCityService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
@@ -112,59 +106,43 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(
-                result.Result.Adapt<ConsumeForcastViewModel>()
+                result.Result.Adapt<FeeCityViewModel>()
             );
         }
 
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var filter = new ConsumeForcastFilterDTO();
-
+            var filter = new FeeCityFilterDTO();
             var orgSource = (await _organizationService.GetDropDownDataAsync())
-                .Adapt<List<DropDownItemViewModel>>();
+              .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
 
-
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
-                .Adapt<List<DropDownItemViewModel>>();
-            int maxYear = yearSource.Max(x => x.Id);
-
-            var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
-            var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
-            {
-                Id = x.Id,
-                Title = x.Title
-            }).ToList();
-            var userTypeKeys = "";
-            foreach(var key in userTypeData)
-            {
-                userTypeKeys += $"'{key.ConstantKey}',";
-            }
-            ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(_ => _.Id);
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-                .Adapt<List<DropDownItemViewModel>>();
+               .Adapt<List<DropDownItemViewModel>>();
 
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
 
-            var myfilter = TempData.Get<ConsumeForcastFilterViewModel>(_indexFilterKey);
+            var myfilter = TempData.Get<FeeCityFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
             {
-                filter = myfilter.Adapt<ConsumeForcastFilterDTO>();
+                filter = myfilter.Adapt<FeeCityFilterDTO>();
                 TempData.Put(_indexFilterKey, myfilter);
             }
 
             filter.PageNumber = page;
 
-            var result = await _consumeForcastService.GetListAsync(filter);
-            var model = result.Adapt<ConsumeForcastIndexViewModel>();
+            var result = await _feeCityService.GetListAsync(filter);
+            var model = result.Adapt<FeeCityIndexViewModel>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetUserTypeSource(userTypeSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
@@ -179,15 +157,16 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(ConsumeForcastIndexViewModel model)
+        public async Task<IActionResult> Index(FeeCityIndexViewModel model)
         {
-            var filter = model.Filter.Adapt<ConsumeForcastFilterDTO>();
+
+            var filter = model.Filter.Adapt<FeeCityFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
 
-            var result = await _consumeForcastService.GetListAsync(filter);
-            model = result.Adapt<ConsumeForcastIndexViewModel>();
-            model.Filter = filter.Adapt<ConsumeForcastFilterViewModel>();
+            var result = await _feeCityService.GetListAsync(filter);
+            model = result.Adapt<FeeCityIndexViewModel>();
+            model.Filter = filter.Adapt<FeeCityFilterViewModel>();
 
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
@@ -195,29 +174,14 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
-            var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
-            {
-                Id = x.Id,
-                Title = x.Title
-            }).ToList();
-            var userTypeKeys = "";
-            foreach (var key in userTypeData)
-            {
-                userTypeKeys += $"'{key.ConstantKey}',";
-            }
-            ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
-
-
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-                .Adapt<List<DropDownItemViewModel>>();
+               .Adapt<List<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetFinanceYearFilterSource(yearSource);
-            model.SetOrganizationFilterSource(orgSource);
-            model.SetUserTypeSource(userTypeSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
 
             return View(model);
         }
@@ -236,10 +200,11 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _consumeForcastService.ImportExcelAsync(
+                var result = await _feeCityService.ImportExcelAsync(
                                                                     model.ExcelFile,
                                                                     model.YearId,
                                                                     model.ContinueIfAnyOrgMissing);
+
                 if (result.AskToImport)
                 {
                     return Json(new
@@ -256,6 +221,7 @@ namespace Datiss.Budget.Web.Controllers
                         hasError = false,
                         message = result.Message
                     });
+
                 }
                 else
                 {
@@ -266,7 +232,7 @@ namespace Datiss.Budget.Web.Controllers
                     });
                 }
             }
-            catch (ImportExcelFileFormatInvalidException ex)
+            catch (ImportExcelFileFormatInvalidException)
             {
                 return Json(new
                 {
@@ -274,7 +240,7 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.ImportExcelFileFormatInvalid
                 });
             }
-            catch (ImportExcelFileSizeInvalidException ex)
+            catch (ImportExcelFileSizeInvalidException)
             {
                 return Json(new
                 {
@@ -282,6 +248,7 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.ImportExcelFileSizeInvalid
                 });
             }
+
         }
 
         [HttpPost("records/delete")]
@@ -289,7 +256,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             try
             {
-                var result = await _consumeForcastService.HardDeleteAsync(yearId, orgId);
+                var result = await _feeCityService.HardDeleteAsync(yearId, orgId);
 
                 return Json(new
                 {
@@ -324,7 +291,7 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.NullRef
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json(new
                 {
@@ -339,7 +306,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             try
             {
-                await _consumeForcastService.HardDeleteAsync(id);
+                await _feeCityService.HardDeleteAsync(id);
             }
             catch (DisbaledYearDataInputException)
             {
@@ -371,17 +338,36 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var result = await _consumeForcastService.CalculationAsync(
+            var result = await _feeCityService.CalculationAsync(
                 model.YearId,
                 model.OrganizationId);
 
-            var output = new CalculationResultViewModel
+            List<CalculationResultViewModel> viewModel = new List<CalculationResultViewModel>();
+            foreach (var item in result)
             {
-                Result = result,
-                Title = "ConsumeForcast calc" //TODO : change it to proper title
-            };
+                viewModel.Add(
+                    new CalculationResultViewModel
+                    {
+                        Result = item.Value,
+                        Title = getCalcTitle(item.Key)
+                    }
+                );
+            }
 
-            return PartialView("_calculationModal", output);
+            return PartialView("_calculationModal", viewModel);
+        }
+
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> DownloadExcelTemplate()
+        {
+            var filePath = $"{_env.WebRootPath}\\Excel\\FeeCityImport.xlsx";
+
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return File(
+                stream,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "FeeCity.xlsx");
         }
 
         [HttpGet("[action]")]
@@ -390,9 +376,9 @@ namespace Datiss.Budget.Web.Controllers
             var model = new CopyViewModel();
 
             model.SetOrganizationSource(
-              (await _organizationService.GetDropDownDataAsync())
-                  .Adapt<IEnumerable<DropDownItemViewModel>>()
-          );
+                (await _organizationService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
 
             model.SetYearSource(
                 (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Disbaled))
@@ -414,7 +400,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                await _consumeForcastService.CopyAsync(
+                await _feeCityService.CopyAsync(
                                                     model.SourceYearId,
                                                     model.SourceOrgId,
                                                     model.TargetYearId);
@@ -436,7 +422,7 @@ namespace Datiss.Budget.Web.Controllers
             {
                 model.AddError(ViewMessages.CopyDestYearHasData);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 model.AddError(ViewMessages.SystemError);
             }
@@ -449,74 +435,41 @@ namespace Datiss.Budget.Web.Controllers
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var userTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
 
-            var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType);
-            var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
-
-            var items = new List<ConsumeForcastDTO>();
+            var items = new List<FeeCityDTO>();
 
             foreach (var org in organizations)
             {
-                userTypes.Where(ut => ut.ConstantKey == ConstantKeys.__House)
-                    .ToList()
-                    .ForEach(ut => items.AddRange(houseUsageLayer
-                                        .Select(hul => new ConsumeForcastDTO
-                                        {
-                                            UserTypeTitle = ut.Title,
-                                            UserTypeId = ut.Id,
-                                            UsageLayerTitle = hul.Title,
-                                            UsageLayerId = hul.Id,
-                                            OrganizationId = org.Id,
-                                            OrganizationDisplay = org.Title,
-                                            Year = year.Year,
-                                            YearId = year.Id
-                                        }).ToList())
-                    );
-                userTypes.Where(ut => ut.ConstantKey != ConstantKeys.__House)
-                    .ToList()
-                    .ForEach(ut => items.AddRange(nhouseUsagelayer
-                                        .Select(hul => new ConsumeForcastDTO
-                                        {
-                                            UserTypeTitle = ut.Title,
-                                            UserTypeId = ut.Id,
-                                            UsageLayerTitle = hul.Title,
-                                            UsageLayerId = hul.Id,
-                                            OrganizationId = org.Id,
-                                            OrganizationDisplay = org.Title,
-                                            Year = year.Year,
-                                            YearId = year.Id
-                                        }).ToList())
-                    );
+                items.Add(new FeeCityDTO
+                {
+                    OrganizationId = org.Id,
+                    OrganizationDisplay = org.Title,
+                    Year = year.Year,
+                    YearId = year.Id
+                });
             }
 
             using var workbook = items.GetImportTemplate(year.Year);
-            return workbook.Deliver("ConsumeForcast-Import-Template.xlsx");
+            return workbook.Deliver("FeeCity-Import-Template.xlsx");
         }
 
         [HttpGet("[action]/{orgid}/{yearid}")]
         public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
-            var result = await _consumeForcastService.GetExportItemsAsync(yearid, orgid);
-
+            var result = await _feeCityService.GetExportItemsAsync(yearid, orgid);
             if (result.Count() == 0)
                 return RedirectToAction("Index");
-
             using var workbook = result.ExportExcel();
-            return workbook.Deliver("ConsumeForcast.xlsx");
-
+            return workbook.Deliver("FeeCity.xlsx");
         }
 
-        [HttpPost, Route("GetUsageLayerAsync")]
-        public async Task<JsonResult> GetUsageLayerAsync(string key)
-        {
-            var result = await _constantService
-                .GetByKeyAsync(key,ConstantKeys.__UsageLayerType);
-
-            return new JsonResult(result);
-        }
+        #region Private Helper Methods
+        private string getCalcTitle(string key)
+            => key switch
+            {
+                _ => ""
+            };
+        #endregion
 
     }
-
 }
-
