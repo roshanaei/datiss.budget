@@ -9,16 +9,16 @@ namespace Datiss.Budget.Services.Excel.Models
 {
     public class FeeCityImportModel
     {
-        [Column(0, MappingDirections.Both, Letter = "A")]
-        public int YearId { get; set; }
+        [Column(MappingDirections.Both, Letter = "A")]
+        public string OrganizationDisplay { get; set; }
 
-        [Column(1, MappingDirections.Both, Letter = "B")]
+        [Column(MappingDirections.Both, Letter = "B")]
         public int OrganizationId { get; set; }
 
-        [Column(2, MappingDirections.Both, Letter = "C")]
+        [Column(MappingDirections.Both, Letter = "C")]
         public decimal DomesticPrice { get; set; }
 
-        [Column(3, MappingDirections.Both, Letter = "D")]
+        [Column(MappingDirections.Both, Letter = "D")]
         public decimal NDomesticPrice { get; set; }
     }
 }
