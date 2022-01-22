@@ -42,6 +42,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IIncomeForcastOtherService, IncomeForcastOtherService>();
             services.AddScoped<ISalesSplitTotalService, SalesSplitTotalService>();
             services.AddScoped<IFeeCityService, FeeCityService>();
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IPerformanceEvaluationService, PerformanceEvaluationService>();
             services.AddScoped<IReportEngine, ReportEngine>();

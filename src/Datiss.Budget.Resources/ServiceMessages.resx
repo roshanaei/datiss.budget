@@ -204,6 +204,9 @@
   <data name="ImportExcelUsageLayerUserTypeOrgNotInExcel" xml:space="preserve">
     <value>در فایل اکسل شما اطلاعات طبقه مصرف :&lt;br&gt;{0} برای کاربری "{1}" ، "{2}" وجود ندارد.</value>
   </data>
+  <data name="ImportExcelUserTypeNotInExcel" xml:space="preserve">
+    <value>کاربری های :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
   <data name="ImportExcelUserTypeOrgNotInExcel" xml:space="preserve">
     <value>کاربری های :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
@@ -233,6 +236,9 @@
   </data>
   <data name="Logic_UserTypeUsageLayerDuplicate" xml:space="preserve">
     <value>اطلاعات کاربری {0} و طبقه مصرف {1} برای "{2}" قبلا ثبت شده است.</value>
+  </data>
+  <data name="Logic_UserTypeYearDuplicate" xml:space="preserve">
+    <value>اطلاعات کاربری {0} قبلا ثبت شده است.</value>
   </data>
   <data name="Logic_YearOrgDuplicate" xml:space="preserve">
     <value>اطلاعات سال {0} برای "{1}" قبلا ثبت شده است.</value>
