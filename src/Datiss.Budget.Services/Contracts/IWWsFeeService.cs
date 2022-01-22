@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -14,7 +15,7 @@ namespace Datiss.Budget.Services.Contracts
     { 
         Task<WWsFee> GetByIdAsync(int id);
 
-        //Task<ValidationResult> AddAsync(CreateWWsFeeDTO model);
+        Task<ValidationResult<WWsFeeDTO>> CreateAsync(CreateWWsFeeDTO model);
 
         //Task<ValidationResult> UpdateAsync(UpdateWWsFeeDTO model);
 

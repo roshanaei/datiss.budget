@@ -3,6 +3,8 @@ using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Entities;
 using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Enum;
+using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
@@ -61,6 +63,62 @@ namespace Datiss.Budget.Services
         {
             var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
+        }
+
+        public async Task<ValidationResult<WWsFeeDTO>> CreateAsync(CreateWWsFeeDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var entity = new WWsFee
+            {
+                YearId = model.YearId,
+                OrganizationId = model.OrganizationId,
+                ActivityType = model.ActivityType,
+                UserTypeId = model.UserTypeId,
+                UsageLayerId = model.UsageLayerId,
+                P1Fee = model.P1Fee,
+                P2Fee = model.P2Fee,
+                P1Note3 = model.P1Note3,
+                P1Note7 = model.P1Note7,
+                P2Note3 = model.P2Note3,
+                P2Note7 = model.P2Note7                
+            };
+
+            model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+            var usageLayerDisplay = (await _constSet.FindAsync(model.UsageLayerId)).Title;
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId,model.ActivityType, model.UserTypeId, model.UsageLayerId))
+                {
+                    await _dbSet.AddAsync(entity);
+                    await _uow.SaveChangesAsync();
+
+                    var result = entity.Adapt<WWsFeeDTO>();
+                    result.UserTypeDisplay = model.UserTypeTitle;
+                    result.UsageLayerDisplay = usageLayerDisplay;
+                    result.ActivityType = model.ActivityType;
+                    result.OrganizationDisplay = organizationDisplay;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.P1Fee = entity.P1Fee;
+                    result.P2Fee = entity.P2Fee;
+                    result.P1Note3 = entity.P1Note3;
+                    result.P1Note7 = entity.P1Note7;
+                    result.P2Note3 = entity.P2Note3;
+                    result.P2Note7 = entity.P2Note7;
+
+                    return ValidationResult<WWsFeeDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<WWsFeeDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+            return ValidationResult<WWsFeeDTO>.Failed(
+                string.Format(ServiceMessages.Logic_UserTypeUsageLayerDuplicate,
+                model.UserTypeTitle, usageLayerDisplay, organizationDisplay)
+                );
         }
 
         public async Task HardDeleteAsync(int Id)
@@ -413,18 +471,29 @@ namespace Datiss.Budget.Services
         private async Task<bool> checkLogicAsync(
             int yearId,
             int organizationId,
-            int UserTypeId,
+            ActivityType activityType,
+            int userTypeId,
+            int UsageLayerId,
             int? id = null)
         {
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
             var result = id == null
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&
-                                                x.UserTypeId == UserTypeId)
+                                                x.ActivityType == activityType &&
+                                                x.UserTypeId == userTypeId &&
+                                                x.UsageLayerId == UsageLayerId)
 
                 : await Query().AnyAsync(x => x.YearId == yearId &&
-                                            x.OrganizationId == organizationId &&
-                                            x.UserTypeId == UserTypeId &&
-                                            x.Id != id);
+                                              x.OrganizationId == organizationId &&
+                                              x.ActivityType == activityType &&
+                                              x.UserTypeId == userTypeId &&
+                                              x.Id != id);
             return !result;
         }
 
