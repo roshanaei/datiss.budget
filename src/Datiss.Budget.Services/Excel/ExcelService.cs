@@ -65,6 +65,7 @@ namespace Datiss.Budget.Services.Excel
             IFormFile fileInfo, 
             int sheetIndex, 
             int minRowNum) where TResult : class {
+            validateExcelFile(fileInfo);
 
             using (var stream = new MemoryStream()) {
                 await fileInfo.CopyToAsync(stream);
