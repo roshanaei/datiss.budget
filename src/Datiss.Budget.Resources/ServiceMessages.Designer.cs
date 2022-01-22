@@ -403,7 +403,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to اطلاعات کاربری {0} و طبقه مصرف {1} قبلا ثبت شده است..
+        ///   Looks up a localized string similar to اطلاعات کاربری {0} و طبقه مصرف {1} برای &quot;{2}&quot; قبلا ثبت شده است..
         /// </summary>
         public static string Logic_UserTypeUsageLayerDuplicate {
             get {

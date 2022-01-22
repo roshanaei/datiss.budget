@@ -1,15 +1,13 @@
-﻿@model IncomeForcastOtherIndexViewModel
+﻿@model FeeCityIndexViewModel
 <div class="table-responsive">
     <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
         <thead class="thead-light">
             <tr>
-                <th style="min-width:135px">سال</th>
-                <th style="min-width:250px">سازمان</th>
-                <th style="min-width:205px">عنوان</th>
-                <th style="min-width:160px">فعالیت</th>
-                <th style="min-width:145px">تعداد</th>
-                <th style="min-width:145px">درآمد</th>
-                <th style="min-width:190px">مدیریت</th>
+                <th>سال</th>
+                <th>سازمان</th>
+                <th>ضریب قیمت خانگی</th>
+                <th>ضریب قیمت غیر خانگی</th>
+                <th>مدیریت</th>
             </tr>
         </thead>
         <tbody>
@@ -42,39 +40,19 @@
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_OIFType_">
-                        <input id="hidOIFTypeId_" type="hidden" />
-                        <select class="form-control" id="inputOIFType_" asp-items="Model.OIFTypeSource">
-                        </select>
+                    <div id="divInput_DomesticPrice_">
+                        <input class="form-control  input-keyup default-input" id="inputDomesticPrice_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_OIFType_" style="display: none">
-                        <span id="spanOIFType_"> </span>
+                    <div id="divOutput_DomesticPrice_" style="display: none">
+                        <span id="spanDomesticPrice_"> </span>
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_ActivityId_">
-                        <input id="hidActivityIdId_" type="hidden" />
-                        <select class="form-control selectActivityId" id="inputActivityId_" asp-items="Model.ActivitySource">
-                        </select>
+                    <div id="divInput_NDomesticPrice_">
+                        <input class="form-control input-keyup" id="inputNDomesticPrice_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_ActivityId_" style="display: none">
-                        <span id="spanActivityId_"> </span>
-                    </div>
-                </td>
-                <td>
-                    <div id="divInput_OIFCount_">
-                        <input class="form-control input-keyup default-input" id="inputOIFCount_" type="number" min="0" />
-                    </div>
-                    <div id="divOutput_OIFCount_" style="display: none">
-                        <span id="spanOIFCount_"> </span>
-                    </div>
-                </td>
-                <td>
-                    <div id="divInput_OIFPrice_">
-                        <input class="form-control input-keyup" id="inputOIFPrice_" type="number" min="0" />
-                    </div>
-                    <div id="divOutput_OIFPrice_" style="display: none">
-                        <span id="spanOIFPrice_"> </span>
+                    <div id="divOutput_NDomesticPrice_" style="display: none">
+                        <span id="spanNDomesticPrice_"> </span>
                     </div>
                 </td>
                 <td>
@@ -135,45 +113,19 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_OIFType_@item.Id" style="display: none">
-                            <input id="hidOIFTypeId_@item.Id" type="hidden" value="@item.OIFTypeId" />
-                            <select class="form-control selectOIFType" id="inputOIFType_@item.Id" asp-items="Model.OIFTypeSource">
-                            </select>
-                            <script>
-                                $('select#inputOIFType_' + @item.Id + ' option[value=' + @item.OIFTypeId + ']').attr('selected', true);
-                            </script>
+                        <div id="divInput_DomesticPrice_@item.Id" style="display: none">
+                            <input class="form-control" id="inputDomesticPrice_@item.Id" value="@item.DomesticPrice" type="number" />
                         </div>
-                        <div id="divOutput_OIFType_@item.Id">
-                            <span id="spanOIFType_@item.Id">@item.OIFTypeDisplay </span>
+                        <div id="divOutput_DomesticPrice_@item.Id">
+                            <span id="spanDomesticPrice_@item.Id">@item.DomesticPriceDisplay </span>
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_ActivityId_@item.Id" style="display: none">
-                            <input id="hidActivityIdId_@item.Id" type="hidden" value="@item.ActivityId" />
-                            <select class="form-control selectActivityId" id="inputActivityId_@item.Id" asp-items="item.ActivitySource">
-                            </select>
-                            <script>
-                                $('select#inputActivityId_' + @item.Id + ' option[value=' + @item.ActivityId + ']').attr('selected', true);
-                            </script>
+                        <div id="divInput_NDomesticPrice_@item.Id" style="display: none">
+                            <input class="form-control" id="inputNDomesticPrice_@item.Id" value="@item.NDomesticPrice" type="number" />
                         </div>
-                        <div id="divOutput_ActivityId_@item.Id">
-                            <span id="spanActivityId_@item.Id">@item.ActivityDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_OIFCount_@item.Id" style="display: none">
-                            <input class="form-control" id="inputOIFCount_@item.Id" value="@item.OIFCount" type="number" />
-                        </div>
-                        <div id="divOutput_OIFCount_@item.Id">
-                            <span id="spanOIFCount_@item.Id">@item.OIFCountDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_OIFPrice_@item.Id" style="display: none">
-                            <input class="form-control" id="inputOIFPrice_@item.Id" value="@item.OIFPrice" type="number" />
-                        </div>
-                        <div id="divOutput_OIFPrice_@item.Id">
-                            <span id="spanOIFPrice_@item.Id">@item.OIFPriceDisplay </span>
+                        <div id="divOutput_NDomesticPrice_@item.Id">
+                            <span id="spanNDomesticPrice_@item.Id">@item.NDomesticPriceDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -220,11 +172,6 @@
                 <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
                     <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
                 </button>
-                <span data-toggle="modal" data-target="#CalculationModal">
-                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
-                        <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                    </button>
-                </span>
                 <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
                     <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
                 </button>
@@ -252,8 +199,8 @@
                     {
                         <li class="page-item">
                             <a class="page-link"
-                               asp-controller="@IncomeForcastOtherController.Name"
-                               asp-action="@IncomeForcastOtherController.ACTION_Index"
+                               asp-controller="@FeeCityController.Name"
+                               asp-action="@FeeCityController.ACTION_Index"
                                asp-route-page="@Model.PreviousPage"
                                aria-label="Previous">«</a>
                         </li>
@@ -269,8 +216,8 @@
                         {
                             <li class="page-item">
                                 <a class="page-link"
-                                   asp-controller="@IncomeForcastOtherController.Name"
-                                   asp-action="@IncomeForcastOtherController.ACTION_Index"
+                                   asp-controller="@FeeCityController.Name"
+                                   asp-action="@FeeCityController.ACTION_Index"
                                    asp-route-page="@i">@i.ToString() </a>
                             </li>
                         }
@@ -280,8 +227,8 @@
                     {
                         <li class="page-item">
                             <a class="page-link"
-                               asp-controller="@IncomeForcastOtherController.Name"
-                               asp-action="@IncomeForcastOtherController.ACTION_Index"
+                               asp-controller="@FeeCityController.Name"
+                               asp-action="@FeeCityController.ACTION_Index"
                                asp-route-page="@Model.NextPage"
                                aria-label="Next">»</a>
                         </li>

@@ -1,5 +1,5 @@
-﻿@model SalesSplitTotalIndexViewModel
-@{ ViewData["Title"] = "گزارش عملکرد تعداد و آحاد فروش انشعابات آب و فاضلاب"; }
+﻿@model FeeCityIndexViewModel
+@{ ViewData["Title"] = "ضریب قیمت شهری"; }
 
 <!--Title-->
 <div class="row">
@@ -19,8 +19,8 @@
                         <!--Filters-->
                         <form method="post"
                               id="filterForm"
-                              asp-controller="@SalesSplitTotalController.Name"
-                              asp-action="@SalesSplitTotalController.ACTION_Index"
+                              asp-controller="@FeeCityController.Name"
+                              asp-action="@FeeCityController.ACTION_Index"
                               asp-antiforgery="true">
                             <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
                             <div class="rowACJSB">
@@ -95,7 +95,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu" style="width:270%">
+                                        <div class="dropdown-menu" style="width:170%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -127,7 +127,7 @@
                                                                name="col-3"
                                                                id="col-3" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-3"><span>کاربری</span></label>
+                                                               for="col-3"><span>ضریب قیمت خانگی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -138,84 +138,7 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>تعداد انشعاب آب پایان شش ماهه اول</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-5"
-                                                               id="col-5" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-5"><span>آحاد انشعاب آب پایان شش ماهه اول</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-6"
-                                                               id="col-6" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-6"><span>تعداد انشعاب فاضلاب پایان شش ماهه اول</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-7"
-                                                               id="col-7" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-7"><span>آحاد انشعاب فاضلاب پایان شش ماهه اول</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-8"
-                                                               id="col-8" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-8"><span>تعداد انشعاب آب شش ماهه دوم</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-9"
-                                                               id="col-9" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-9"><span>آحاد انشعاب آب شش ماهه دوم</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-10"
-                                                               id="col-10" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-10"><span>تعداد انشعاب فاضلاب شش ماهه دوم</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-11"
-                                                               id="col-11" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-11"><span>آحاد انشعاب فاضلاب شش ماهه دوم</span></label>
+                                                               for="col-4"><span>ضریب قیمت غیر خانگی</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -228,12 +151,12 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@SalesSplitTotalController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@FeeCityController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
-                                           asp-asp-controller="@SalesSplitTotalController.Name"
-                                           asp-action="@SalesSplitTotalController.ACTION_GetExcelTemplate"
+                                           asp-asp-controller="@FeeCityController.Name"
+                                           asp-action="@FeeCityController.ACTION_GetExcelTemplate"
                                            asp-route-yearId="@Model.Filter.YearId"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
@@ -277,10 +200,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8,9,10,11';
+        let allColumns = '1,2,3,4';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,,7,8,9,10,11,";
+        let showingColmuns = "1,2,3,4,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -370,7 +293,7 @@
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
                     console.log(params);
-                    let deleteUrl = '@Url.Action(SalesSplitTotalController.ACTION_DeleteRecords)';
+                    let deleteUrl = '@Url.Action(FeeCityController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
 
                     $.ajax({
@@ -405,7 +328,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(SalesSplitTotalController.ACTION_Index, new {  page = 1})';
+                                document.location.href = '@Url.Action(FeeCityController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
@@ -440,14 +363,9 @@
         $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
-            let input1 = document.getElementById('inputWNumber_' + id);
-            let input2 = document.getElementById('inputWUnit_' + id);
-            let input3 = document.getElementById('inputWsNumber_' + id);
-            let input4 = document.getElementById('inputWsUnit_' + id);
-            let input5 = document.getElementById('inputWNumber_2_' + id);
-            let input6 = document.getElementById('inputWUnit_2_' + id);
-            let input7 = document.getElementById('inputWsNumber_2_' + id);
-            let input8 = document.getElementById('inputWsUnit_2_' + id);
+
+            let input1 = document.getElementById('inputDomesticPrice_' + id);
+            let input2 = document.getElementById('inputNDomesticPrice_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -464,42 +382,6 @@
                 }
             });
             input2.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input3.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input4.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input5.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input6.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input7.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input8.addEventListener('keyup', function (event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
@@ -561,7 +443,7 @@
         $(document).on('click', '.openCopy', function() {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action(SalesSplitTotalController.ACTION_Copy)',
+                url: '@Url.Action(FeeCityController.ACTION_Copy)',
                 success: function (data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
@@ -593,13 +475,13 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(SalesSplitTotalController.ACTION_Calculation)',
+                url: '@Url.Action(FeeCityController.ACTION_Calculation)',
                 data: model,
                 success: function (data, status, settings) {
                     $('#divCalc').html('');
                     $('#divCalc').html(data);
                     $('#CalculationModal').modal('show');
-                    $('#CalculationModal').on('hidden.bs.modal', function () {
+                    $('#CalculationModal').on('hidden.bs.modal', function() {
                         $('#divCalc').html('');
                         $('.modal-backdrop').remove();
                     });
@@ -620,7 +502,7 @@
             fdata.append('yearId', yearId);
 
             $.ajax({
-                url: '@Url.Action(SalesSplitTotalController.ACTION_ImportExcel)',
+                url: '@Url.Action(FeeCityController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
@@ -664,7 +546,7 @@
                                 console.log(fdata);
 
                                 $.ajax({
-                                    url: '@Url.Action(SalesSplitTotalController.ACTION_ImportExcel)',
+                                    url: '@Url.Action(FeeCityController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
@@ -697,7 +579,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                document.location.href = '@Url.Action(SalesSplitTotalController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(FeeCityController.ACTION_Index)';
                                             });
                                         }
 
@@ -730,7 +612,7 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(SalesSplitTotalController.ACTION_Index)';
+                            document.location.href = '@Url.Action(FeeCityController.ACTION_Index)';
                         });
                     }
 
@@ -753,7 +635,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(SalesSplitTotalController.ACTION_Copy)',
+                url: '@Url.Action(FeeCityController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
                 success: function (data, status, settings) {
