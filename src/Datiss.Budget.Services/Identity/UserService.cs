@@ -25,7 +25,7 @@ namespace Datiss.Budget.Services.Identity
     {
 
         private readonly IUnitOfWork _uow;
-        private DbSet<User> _dbSet;
+        private readonly DbSet<User> _dbSet;
         private readonly IUserContext _userContext;
         private readonly IDateService _dateService;
         private readonly IOrganizationService _organizationService;
@@ -218,6 +218,19 @@ namespace Datiss.Budget.Services.Identity
             user.Status = status;
             _dbSet.Update(user);
             await _uow.SaveChangesAsync();
+        }
+
+        public async Task SetUserPasswordAsync(int userId, string newPassword) {
+            var user = await _dbSet.FindAsync(userId);
+            user.CheckReferenceIsNull(nameof(user));
+
+            var result = await _userManager.UpdatePasswordHash(
+                user, 
+                newPassword, 
+                validatePassword: true);
+            
+            if (!result.Succeeded)
+                throw new UserChangePasswordException(result.Errors);
         }
 
         #region private methods

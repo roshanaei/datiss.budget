@@ -19,5 +19,7 @@ namespace Datiss.Budget.Services.Contracts.Identity
         Task<bool> HasAccessToOrganizationAsync(int organizationId);
 
         Task SetUserStatusAsync(int id, EntityStatus status);
+
+        Task SetUserPasswordAsync(int userId, string newPassword);
     }
 }

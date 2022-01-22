@@ -65,16 +65,23 @@ namespace Datiss.Budget.ViewModels.Identity
     public class CreateUserViewModel : BaseViewModel
     {
 
-        public CreateUserViewModel() {
+        public CreateUserViewModel() 
+        {
             PositionSource = new List<SelectListItem>();
             OrganizationSource = new List<SelectListItem>();
+            RoleSource = new List<SelectListItem>();
+            SelectedRoles = new List<int>();
         }
 
         public CreateUserViewModel(
             IEnumerable<DropDownItemViewModel> positions, 
-            IEnumerable<DropDownItemViewModel> organizations) {
+            IEnumerable<DropDownItemViewModel> organizations,
+            IEnumerable<DropDownItemViewModel> roles)
+        {
             SetPositionSource(positions);
             SetOrganizationSource(organizations);
+            SetRoleSource(roles);
+            SelectedRoles = new List<int>();
         }
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
@@ -94,6 +101,7 @@ namespace Datiss.Budget.ViewModels.Identity
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [MaxLength(30, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        [MinLength(6, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "PassMinLen")]
         public string Password { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
@@ -114,6 +122,9 @@ namespace Datiss.Budget.ViewModels.Identity
         public int? OrganizationId { get; set; }
         public IEnumerable<SelectListItem> OrganizationSource { get; set; }
 
+        public IEnumerable<int> SelectedRoles { get; set; }
+        public IEnumerable<SelectListItem> RoleSource { get; set; }
+
         public void SetPositionSource(IEnumerable<DropDownItemViewModel> source)
             => PositionSource = source.Select(x => new SelectListItem
             {
@@ -128,6 +139,11 @@ namespace Datiss.Budget.ViewModels.Identity
                 Value = x.Id.ToString()
             }).ToList().AddEmptySelectListItem();
 
+        public void SetRoleSource(IEnumerable<DropDownItemViewModel> source)
+            => RoleSource = source.Select(x => new SelectListItem {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
     }
 
     public class UpdateUserViewModel : BaseViewModel
@@ -136,13 +152,18 @@ namespace Datiss.Budget.ViewModels.Identity
         public UpdateUserViewModel() {
             PositionSource = new List<SelectListItem>();
             OrganizationSource = new List<SelectListItem>();
+            RoleSource = new List<SelectListItem>();
+            SelectedRoles = new List<int>();
         }
 
         public UpdateUserViewModel(
             IEnumerable<DropDownItemViewModel> positions,
-            IEnumerable<DropDownItemViewModel> organizations){
+            IEnumerable<DropDownItemViewModel> organizations,
+            IEnumerable<DropDownItemViewModel> roles){
             SetOrganizationSource(organizations);
             SetPositionSource(positions);
+            SetRoleSource(roles);
+            SelectedRoles = new List<int>();
         }
 
         public int Id { get; set; }
@@ -176,6 +197,9 @@ namespace Datiss.Budget.ViewModels.Identity
         public int? OrganizationId { get; set; }
         public IEnumerable<SelectListItem> OrganizationSource { get; set; }
 
+        public IEnumerable<int> SelectedRoles { get; set; }
+        public IEnumerable<SelectListItem> RoleSource { get; set; }
+
         public void SetPositionSource(IEnumerable<DropDownItemViewModel> source, int? selectedPositionId = null)
             => PositionSource = source.Select(x => new SelectListItem
             {
@@ -192,6 +216,12 @@ namespace Datiss.Budget.ViewModels.Identity
                 Selected = x.Id == selectedOrganizationId
             }).ToList();
 
+        public void SetRoleSource(IEnumerable<DropDownItemViewModel> source)
+            => RoleSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            });
     }
 
     public class UserFilterViewModel : FilterViewModel
@@ -214,4 +244,25 @@ namespace Datiss.Budget.ViewModels.Identity
         public IEnumerable<SelectListItem> PositionSource { get; set; }
 
     }
+
+
+    public class AdminSetUserPasswordViewModel : BaseViewModel 
+    {
+        public int UserId { get; set; }
+
+        public string UserName { get; set; }
+
+        public string UserDisplayName { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(30, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        [Compare(nameof(VerifyNewPassword), ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "PasswordDoesNotMatch")]
+        public string NewPassword { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(30, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        [Compare(nameof(NewPassword), ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "PasswordDoesNotMatch")]
+        public string VerifyNewPassword { get; set; }
+    }
+
 }

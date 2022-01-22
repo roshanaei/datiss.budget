@@ -120,6 +120,9 @@
   <data name="MaxLen" xml:space="preserve">
     <value>تعداد کاراکترهای وارد شده بیش از حد مجاز است.</value>
   </data>
+  <data name="PassMinLen" xml:space="preserve">
+    <value>کلمه عبور باید 6 کاراکتر یا بیشتر باشد.</value>
+  </data>
   <data name="PasswordDoesNotMatch" xml:space="preserve">
     <value>کلمه عبورها مطابقت ندارند.</value>
   </data>

@@ -70,6 +70,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to کلمه عبور باید 6 کاراکتر یا بیشتر باشد..
+        /// </summary>
+        public static string PassMinLen {
+            get {
+                return ResourceManager.GetString("PassMinLen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to کلمه عبورها مطابقت ندارند..
         /// </summary>
         public static string PasswordDoesNotMatch {
