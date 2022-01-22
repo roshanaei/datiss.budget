@@ -7,7 +7,7 @@
         let usertypeid = $('#hidUserTypeId_' + id).val();
         let selectval = $('#hidUsageLayerTypeId_' + id).val();
         alert(selectval);
-        FillDropDoen(usertypeid, selectval);
+        FillDropDown(usertypeid, selectval);
         
         resetTableBackColor("my-table");
 
@@ -326,7 +326,7 @@
         resetTableBackColor("my-table");
 
         let usertypeid = $('#inputUserType_').val();
-        FillDropDoen(usertypeid);
+        FillDropDown(usertypeid);
         
 
         var template = $('#rowTemplate').clone()
@@ -390,10 +390,10 @@
 
     function RelatedDropDown(e, event) {
         let usertypeid = event.target.value;
-        FillDropDoen(usertypeid);
+        FillDropDown(usertypeid);
     }
 
-    function FillDropDoen(id, selectval = null) {
+    function FillDropDown(id, selectval = null) {
 
         let key = userType_source[id];
         if (key != 'UserType.House') {
