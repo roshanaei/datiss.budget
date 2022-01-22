@@ -69,12 +69,6 @@ namespace Datiss.Budget.Web.Controllers
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
 
-        private void showMessage(string type, string message)
-        {
-            ViewData["type"] = type;
-            ViewData["message"] = message;
-        }
-
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateConsumeForcastViewModel model)
         {
@@ -149,9 +143,6 @@ namespace Datiss.Budget.Web.Controllers
             }
             ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
 
-            //var usageLayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
-            //    .Adapt<IEnumerable<DropDownItemViewModel>>();
-
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                 .Adapt<List<DropDownItemViewModel>>();
 
@@ -174,22 +165,22 @@ namespace Datiss.Budget.Web.Controllers
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetUserTypeSource(userTypeSource);
-            //model.SetUsageLayerSource(usageLayerSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
 
             model.Filter.YearId = filter.YearId;
             model.Filter.OrganizationId = filter.OrganizationId;
+            model.PageNumber = filter.PageNumber;
+            model.PageSize = filter.PageSize;
 
             return View(model);
         }
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(ConsumeForcastIndexViewModel model, int page = 1)
+        public async Task<IActionResult> Index(ConsumeForcastIndexViewModel model)
         {
-            model.Filter.PageNumber = 1;
             var filter = model.Filter.Adapt<ConsumeForcastFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
@@ -217,8 +208,6 @@ namespace Datiss.Budget.Web.Controllers
             }
             ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
 
-            //var usageLayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
-            //    .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                 .Adapt<List<DropDownItemViewModel>>();
@@ -229,7 +218,6 @@ namespace Datiss.Budget.Web.Controllers
             model.SetFinanceYearFilterSource(yearSource);
             model.SetOrganizationFilterSource(orgSource);
             model.SetUserTypeSource(userTypeSource);
-            //model.SetUsageLayerSource(usageLayerSource);
 
             return View(model);
         }
@@ -280,8 +268,6 @@ namespace Datiss.Budget.Web.Controllers
             }
             catch (ImportExcelFileFormatInvalidException ex)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileFormatInvalid);
                 return Json(new
                 {
                     hasError = true,
@@ -290,8 +276,6 @@ namespace Datiss.Budget.Web.Controllers
             }
             catch (ImportExcelFileSizeInvalidException ex)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileSizeInvalid);
                 return Json(new
                 {
                     hasError = true,
@@ -314,6 +298,14 @@ namespace Datiss.Budget.Web.Controllers
                         ViewMessages.DeleteMultipleDataForOrg,
                         result.OrganizationTitle,
                         result.Year)
+                });
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
                 });
             }
             catch (DeleteNullRecordException)
@@ -348,6 +340,14 @@ namespace Datiss.Budget.Web.Controllers
             try
             {
                 await _consumeForcastService.HardDeleteAsync(id);
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
             }
             catch (Exception ex)
             {
