@@ -10,6 +10,7 @@ namespace Datiss.Budget.ViewModels
     public class CreateIncomeCurrentWHViewModel : BaseViewModel
     {
         public int YearId { get; set; }
+
         public string YearDisplay { get; set; }
 
         public int OrganizationId { get; set; }
@@ -48,31 +49,6 @@ namespace Datiss.Budget.ViewModels
 
         public int WasteVolume { get; set; }
 
-        public IEnumerable<SelectListItem> UserTypeSource { get; set; }
-
-        public string UserTypeDisplay
-        {
-            get
-            {
-                if (UserTypeSource == null || !UserTypeSource.Any())
-                    return string.Empty;
-
-                return UserTypeSource.FirstOrDefault(x => x.Value.ToString() == UserTypeId.ToString()).Text;
-            }
-        }
-
-        public IEnumerable<SelectListItem> UsageLayerSource { get; set; }
-
-        public string UsageLayerDisplay
-        {
-            get
-            {
-                if (UsageLayerSource == null || !UsageLayerSource.Any())
-                    return string.Empty;
-
-                return UsageLayerSource.FirstOrDefault(x => x.Value.ToString() == UsageLayerId.ToString()).Text;
-            }
-        }
     }
 
     public class UpdateIncomeCurrentWHViewModel : CreateIncomeCurrentWHViewModel
@@ -184,20 +160,7 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> UserTypeSource { get; set; }
 
-        public string UserTypeSourceIdArray
-        {
-            get
-            {
-                if (UserTypeSource == null || !UserTypeSource.Any())
-                    return string.Empty;
-                string result = "";
-                foreach (var item in UserTypeSource)
-                {
-                    result += $"{item.Value},";
-                }
-                return result.TrimEnd(',');
-            }
-        }
+        public IList<SelectListItem> UsageLayerTypeSource { get; set; }
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
             => YearSource = source.Select(x => new SelectListItem
@@ -222,6 +185,13 @@ namespace Datiss.Budget.ViewModels
 
         public void SetUserTypeSource(IEnumerable<DropDownItemViewModel> source)
             => UserTypeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetUsageLayerTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => UsageLayerTypeSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()

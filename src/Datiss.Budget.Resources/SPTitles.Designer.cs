@@ -70,6 +70,87 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد آب بها مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWH_Cal1 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWH_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد آبونمان مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWH_Cal2 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWH_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد فصلی مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWH_Cal3 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWH_Cal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد تبصره 2 مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWH_Cal4 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWH_Cal4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد تبصره 3 مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWH_Cal5 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWH_Cal5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد کل مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWH_Cal6 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWH_Cal6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع آحاد مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWH_Cal7 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWH_Cal7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع تعداد مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWH_Cal8 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWH_Cal8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع مصرف مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWH_Cal9 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWH_Cal9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to درآمد ماده 11 آب سالیانه.
         /// </summary>
         public static string IncomeForcast_Cal1 {

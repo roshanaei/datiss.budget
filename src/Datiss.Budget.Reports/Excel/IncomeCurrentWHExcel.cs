@@ -49,6 +49,7 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 2).Value = item.OrganizationDisplay;
                 sheet.Cell(row, 3).Value = item.UserTypeDisplay;
                 sheet.Cell(row, 4).Value = item.UsageLayerDisplay;
+                sheet.Cell(row, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
                 sheet.Cell(row, 5).Value = item.NumberUser;
                 sheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -158,7 +159,7 @@ namespace Datiss.Budget.Reports.Excel
             range.Column(8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(9).Style.NumberFormat.Format = "#,##0";
             range.Column(9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(10).Style.NumberFormat.Format = "#,##0";
+            range.Column(10).Style.NumberFormat.Format = "#,##0.00";
             range.Column(10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(11).Style.NumberFormat.Format = "#,##0";
             range.Column(11).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;

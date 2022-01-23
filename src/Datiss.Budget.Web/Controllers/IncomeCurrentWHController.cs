@@ -128,21 +128,14 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<List<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(x => x.Id);
 
-            var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
-            var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
-            {
-                Id = x.Id,
-                Title = x.Title
-            }).ToList();
-            var userTypeKeys = "";
-            foreach (var key in userTypeData)
-            {
-                userTypeKeys += $"'{key.ConstantKey}',";
-            }
-            ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
-
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                 .Adapt<List<DropDownItemViewModel>>();
+
+            var userTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var usageLayerTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
@@ -163,6 +156,7 @@ namespace Datiss.Budget.Web.Controllers
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetUserTypeSource(userTypeSource);
+            model.SetUsageLayerTypeSource(usageLayerTypeSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
@@ -175,9 +169,8 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(IncomeCurrentWHIndexViewModel model, int page = 1)
+        public async Task<IActionResult> Index(IncomeCurrentWHIndexViewModel model)
         {
-            model.Filter.PageNumber = 1;
             var filter = model.Filter.Adapt<IncomeCurrentWHFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
@@ -192,18 +185,12 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
-            var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
-            {
-                Id = x.Id,
-                Title = x.Title
-            }).ToList();
-            var userTypeKeys = "";
-            foreach (var key in userTypeData)
-            {
-                userTypeKeys += $"'{key.ConstantKey}',";
-            }
-            ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
+            var userTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var usageLayerTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                 .Adapt<List<DropDownItemViewModel>>();
@@ -214,6 +201,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetFinanceYearFilterSource(yearSource);
             model.SetOrganizationFilterSource(orgSource);
             model.SetUserTypeSource(userTypeSource);
+            model.SetUsageLayerTypeSource(usageLayerTypeSource);
+
 
             return View(model);
         }
@@ -296,6 +285,14 @@ namespace Datiss.Budget.Web.Controllers
                         result.Year)
                 });
             }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
             catch (DeleteNullRecordException)
             {
                 return Json(new
@@ -329,6 +326,14 @@ namespace Datiss.Budget.Web.Controllers
             {
                 await _incomeCurrentWHService.HardDeleteAsync(id);
             }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex.GetBaseException().Message);
@@ -355,13 +360,19 @@ namespace Datiss.Budget.Web.Controllers
                 model.YearId,
                 model.OrganizationId);
 
-            var output = new CalculationResultViewModel
+            List<CalculationResultViewModel> viewModel = new List<CalculationResultViewModel>();
+            foreach (var item in result)
             {
-                Result = result,
-                Title = "IncomeCurrentWH calc" //TODO : change it to proper title
-            };
+                viewModel.Add(
+                    new CalculationResultViewModel
+                    {
+                        Result = item.Value,
+                        Title = getCalcTitle(item.Key)
+                    }
+                );
+            }
 
-            return PartialView("_calculationModal", output);
+            return PartialView("_calculationModal", viewModel);
         }
 
         [HttpGet("[action]")]
@@ -429,45 +440,31 @@ namespace Datiss.Budget.Web.Controllers
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var userTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
 
-            var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType);
-            var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
+            var userTypes = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType);
+            var houseUsageLayerTypes = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType);
 
             var items = new List<IncomeCurrentWHDTO>();
 
             foreach (var org in organizations)
             {
-                userTypes.Where(ut => ut.ConstantKey == ConstantKeys.__House)
-                    .ToList()
-                    .ForEach(ut => items.AddRange(houseUsageLayer
-                                        .Select(hul => new IncomeCurrentWHDTO
-                                        {
-                                            UserTypeDisplay = ut.Title,
-                                            UserTypeId = ut.Id,
-                                            UsageLayerDisplay = hul.Title,
-                                            UsageLayerId = hul.Id,
-                                            OrganizationId = org.Id,
-                                            OrganizationDisplay = org.Title,
-                                            Year = year.Year,
-                                            YearId = year.Id
-                                        }).ToList())
-                    );
-                userTypes.Where(ut => ut.ConstantKey != ConstantKeys.__House)
-                    .ToList()
-                    .ForEach(ut => items.AddRange(nhouseUsagelayer
-                                        .Select(hul => new IncomeCurrentWHDTO
-                                        {
-                                            UserTypeDisplay = ut.Title,
-                                            UserTypeId = ut.Id,
-                                            UsageLayerDisplay = hul.Title,
-                                            UsageLayerId = hul.Id,
-                                            OrganizationId = org.Id,
-                                            OrganizationDisplay = org.Title,
-                                            Year = year.Year,
-                                            YearId = year.Id
-                                        }).ToList())
-                    );
+                foreach (var usert in userTypes)
+                {
+                    foreach (var hult in houseUsageLayerTypes)
+                    {
+                        items.Add(new IncomeCurrentWHDTO
+                        {
+                            UserTypeDisplay = usert.Title,
+                            UserTypeId = usert.Id,
+                            OrganizationId = org.Id,
+                            OrganizationDisplay = org.Title,
+                            UsageLayerId = hult.Id,
+                            UsageLayerDisplay = hult.Title,
+                            Year = year.Year,
+                            YearId = year.Id
+                        });
+                    }
+                }
             }
 
             using var workbook = items.GetImportTemplate(year.Year);
@@ -495,6 +492,21 @@ namespace Datiss.Budget.Web.Controllers
 
             return new JsonResult(result);
         }
-
+        #region Private Helper Methods
+        private string getCalcTitle(string key)
+            => key switch
+            {
+                "IncomeCurrentWH_Cal1" => SPTitles.IncomeCurrentWH_Cal1,
+                "IncomeCurrentWH_Cal2" => SPTitles.IncomeCurrentWH_Cal2,
+                "IncomeCurrentWH_Cal3" => SPTitles.IncomeCurrentWH_Cal3,
+                "IncomeCurrentWH_Cal4" => SPTitles.IncomeCurrentWH_Cal4,
+                "IncomeCurrentWH_Cal5" => SPTitles.IncomeCurrentWH_Cal5,
+                "IncomeCurrentWH_Cal6" => SPTitles.IncomeCurrentWH_Cal6,
+                "IncomeCurrentWH_Cal7" => SPTitles.IncomeCurrentWH_Cal7,
+                "IncomeCurrentWH_Cal8" => SPTitles.IncomeCurrentWH_Cal8,
+                "IncomeCurrentWH_Cal9" => SPTitles.IncomeCurrentWH_Cal9,
+                _ => ""
+            };
+        #endregion
     }
 }
