@@ -115,4 +115,24 @@ namespace Datiss.Budget.ViewModels
 
         public string P2Note7Display => P2Note7.ToString("N0");
     }
+
+    public class WWsFeeFilterViewModel : FilterViewModel
+    {
+        public int? YearId { get; set; }
+
+        public int? OrganizationId { get; set; }
+
+        public int? UserTypeId { get; set; }
+
+        public int? UsageLayerId { get; set; }
+
+        public ActivityType? ActivityType { get; set; }
+
+        public IList<SelectListItem> YearSource { get; set; }
+
+        public IList<SelectListItem> OrganizationSource { get; set; }
+
+        public IList<SelectListItem> ActivityTypeSource => EnumSelectListProvider.GetActivityTypeItems(ActivityType).ToList();
+
+    }
 }
