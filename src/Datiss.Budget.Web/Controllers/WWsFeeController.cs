@@ -7,6 +7,11 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Datiss.Budget.Entities.DWH;
+using System.Threading.Tasks;
+using Datiss.Budget.Resources;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
+using Mapster;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -16,6 +21,7 @@ namespace Datiss.Budget.Web.Controllers
     public class WWsFeeController : Controller
     {
         public const string Name = "WWsFee";
+        public const string ACTION_Create = nameof(Create);
 
 
         private readonly ILogger<WWsFee> _logger;
@@ -50,6 +56,27 @@ namespace Datiss.Budget.Web.Controllers
         {
             ViewData["type"] = type;
             ViewData["message"] = message;
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create(CreateWWsFeeViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+            var data = model.Adapt<CreateWWsFeeDTO>();
+
+            var result = await _wWsFeeService.CreateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(result.Result.Adapt<WWsFeeViewModel>());
         }
 
 
