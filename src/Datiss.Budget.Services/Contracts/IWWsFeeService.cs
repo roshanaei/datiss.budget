@@ -17,7 +17,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<ValidationResult<WWsFeeDTO>> CreateAsync(CreateWWsFeeDTO model);
 
-        //Task<ValidationResult> UpdateAsync(UpdateWWsFeeDTO model);
+        Task<ValidationResult<WWsFeeDTO>> UpdateAsync(UpdateWWsFeeDTO model);
 
         Task HardDeleteAsync(int Id);
 

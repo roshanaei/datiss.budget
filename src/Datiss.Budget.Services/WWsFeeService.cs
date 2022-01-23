@@ -121,6 +121,58 @@ namespace Datiss.Budget.Services
                 );
         }
 
+        public async Task<ValidationResult<WWsFeeDTO>> UpdateAsync(UpdateWWsFeeDTO model)
+        {
+            model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+            var usageLayerDisplay = (await _orgDbSet.FindAsync(model.UsageLayerId)).Title;
+
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ActivityType, model.UserTypeId, model.UsageLayerId, model.Id))
+                {
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.YearId = model.YearId;
+                    entity.ActivityType = model.ActivityType;
+                    entity.UserTypeId = model.UserTypeId;
+                    entity.UsageLayerId = model.UsageLayerId;
+                    entity.P1Fee = model.P1Fee;
+                    entity.P2Fee = model.P2Fee;
+                    entity.P1Note3 = model.P1Note3;
+                    entity.P1Note7 = model.P1Note7;
+                    entity.P2Note3 = model.P2Note3;
+                    entity.P2Note7 = model.P1Note7;
+
+                    await _uow.SaveChangesAsync();
+
+                    var result = new WWsFeeDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        UserTypeId = model.UserTypeId,
+                        ActivityType = model.ActivityType,
+                        UsageLayerId = model.UsageLayerId,
+                        OrganizationDisplay = organizationDisplay,
+                        UserTypeDisplay = model.UserTypeTitle,
+                        UsageLayerDisplay = usageLayerDisplay,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
+
+                    return ValidationResult<WWsFeeDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<WWsFeeDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+            return ValidationResult<WWsFeeDTO>.Failed(
+                string.Format(ServiceMessages.Logic_UserTypeUsageLayerDuplicate,
+                model.UserTypeTitle, usageLayerDisplay, organizationDisplay)
+                );
+        }
+
         public async Task HardDeleteAsync(int Id)
         {
             var entity = await _dbSet.FindAsync(Id);
