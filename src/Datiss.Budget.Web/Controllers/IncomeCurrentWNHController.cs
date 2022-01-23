@@ -125,7 +125,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var userSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House,ConstantKeys.__WaterDiameter,true))
+            var userSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House,ConstantKeys.__UserType,true))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -181,7 +181,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var userSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__WaterDiameter, true))
+            var userSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType, true))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -433,18 +433,18 @@ namespace Datiss.Budget.Web.Controllers
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var userTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter);
+            var userTypes = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType, true);
 
             var items = new List<IncomeCurrentWNHDTO>();
 
             foreach (var org in organizations)
             {
-                foreach (var dwt in userTypes)
+                foreach (var type in userTypes)
                 {
                     items.Add(new IncomeCurrentWNHDTO
                     {
-                        UserTypeDisplay = dwt.Title,
-                        UserTypeId = dwt.Id,
+                        UserTypeDisplay = type.Title,
+                        UserTypeId = type.Id,
                         OrganizationId = org.Id,
                         OrganizationDisplay = org.Title,
                         Year = year.Year,

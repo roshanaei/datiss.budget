@@ -488,7 +488,7 @@ namespace Datiss.Budget.Services
             int rowIndex = 1;
 
             var usertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                                 x.Parent.ConstantKey == ConstantKeys.__WaterDiameter &&
+                                                 x.Parent.ConstantKey == ConstantKeys.__UserType &&
                                                  x.ConstantKey != ConstantKeys.__House);
             var descendents = await _organizationService
                              .GetAllDescendentsAsync(_userContext.OrganizationId);
