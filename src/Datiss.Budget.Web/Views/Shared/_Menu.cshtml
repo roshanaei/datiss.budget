@@ -168,7 +168,7 @@
                             </li>
                         </ul>
                         <!--درآمد سرمایه ای-->
-                        <!--هزینه سرمایه ای-->
+                        <!--درآمد جاری-->
                         <ul class="has-sub" id="CapitalCost" parent="CollapseForcastManagment">
                             <li class="has-sub">
                                 <a href="#">
@@ -176,6 +176,11 @@
                                     <span data-i18n="درآمد جاری" class="menu-title my-font">درآمد جاری</span>
                                 </a>
                                 <ul class="menu-content" id="CapitalCost" parent="CollapseForcastManagment">
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="@SubscriptionController.Name" asp-action="index">
+                                            <span data-i18n="حجم مصرف آب" class="menu-item my-font-light">آبونمان</span>
+                                        </a>
+                                    </li>
                                     <li class="nav-item">
                                         <a asp-area="" asp-controller="@ConsumeForcastController.Name" asp-action="index">
                                             <span data-i18n="حجم مصرف آب" class="menu-item my-font-light">حجم مصرف آب</span>
@@ -187,13 +192,23 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a asp-area="" asp-controller="" asp-action="Index">
-                                            <span data-i18n="درآمد آب بها" class="menu-item my-font-light">درآمد آب بها</span>
+                                        <a asp-area="" asp-controller="IncomeCurrentWH" asp-action="Index">
+                                            <span data-i18n="درآمد آب بهای مسکونی" class="menu-item my-font-light">درآمد آب بهای مسکونی</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="IncomeCurrentWNH" asp-action="Index">
+                                            <span data-i18n="درآمد آب بهای غیر مسکونی" class="menu-item my-font-light">درآمد آب بهای غیر مسکونی</span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a asp-area="" asp-controller="" asp-action="Index">
-                                            <span data-i18n="درآمد فاضلاب بها" class="menu-item my-font-light">درآمد فاضلاب بها</span>
+                                            <span data-i18n="درآمد فاضلاب بها مسکونی" class="menu-item my-font-light">درآمد فاضلاب بها مسکونی</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                            <span data-i18n="درآمد فاضلاب بها غیر مسکونی" class="menu-item my-font-light">درآمد فاضلاب بها غیر مسکونی</span>
                                         </a>
                                     </li>
                                     <li class="nav-item">

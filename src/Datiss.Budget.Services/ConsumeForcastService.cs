@@ -62,7 +62,7 @@ namespace Datiss.Budget.Services
 
         public async Task<ConsumeForcast> GetByIdAsync(int id)
         {
-            var entity = await Query().SingleOrDefaultAsync(x => x.Id == id);
+            var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 
@@ -238,7 +238,7 @@ namespace Datiss.Budget.Services
             };
 
             var result = await _uow.ExecuteScalarAsync<int>(
-                "[dbo].[WaterInstallFees_Cal1] @YearId, @OrganizationId",
+                "[dbo].[ConsumeForcast_Cal1] @YearId, @OrganizationId",
                 parameters: sqlParams.ToArray());
 
             return await Task.FromResult(result);
@@ -695,14 +695,8 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(x => x.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                         x.UserType.Title.ToUpper().Contains(filter.Search) ||
-                                         x.UsageLayer.Title.ToUpper().Contains(filter.Search) ||
-                                         x.UnitUser.ToString().ToUpper().Contains(filter.Search) ||
-                                         x.CountUser.ToString().ToUpper().Contains(filter.Search) ||
-                                         x.ConsumeUser.ToString().ToUpper().Contains(filter.Search) ||
-                                         x.AvgConsumeUser.ToString().ToUpper().Contains(filter.Search) ||
-                                         x.ConsumeUserForcast.ToString().ToUpper().Contains(filter.Search));
+                query = query.Where(x => x.UserType.Title.ToUpper().Contains(filter.Search) ||
+                                         x.UsageLayer.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;

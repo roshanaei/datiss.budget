@@ -1,0 +1,568 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+
+    function editRow(id) {
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_UserType_' + id).hide();
+        $('#divOutput_UsageLayerType_' + id).hide();
+        $('#divOutput_NumberUser_' + id).hide();
+        $('#divOutput_UnitUser_' + id).hide();
+        $('#divOutput_Cost_' + id).hide();
+        $('#divOutput_AvgConsumeUser_' + id).hide();
+        $('#divOutput_ConsumptionUser_' + id).hide();
+        $('#divOutput_Income_' + id).hide();
+        $('#divOutput_SubscriptionIncome_' + id).hide();
+        $('#divOutput_SeasonalIncome_' + id).hide();
+        $('#divOutput_TIncome_' + id).hide();
+        $('#divOutput_Note3Price_' + id).hide();
+        $('#divOutput_Note3Income_' + id).hide();
+        $('#divOutput_Diff_ConsWsVolume_' + id).hide();
+        $('#divOutput_Note2Income_' + id).hide();
+        $('#divOutput_WasteVolume_' + id).hide();
+
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_UserType_' + id).show();
+        $('#divInput_UsageLayerType_' + id).show();
+        $('#divInput_NumberUser_' + id).show();
+        $('#divInput_UnitUser_' + id).show();
+        $('#divInput_Cost_' + id).show();
+        $('#divInput_AvgConsumeUser_' + id).show();
+        $('#divInput_ConsumptionUser_' + id).show();
+        $('#divInput_Income_' + id).show();
+        $('#divInput_SubscriptionIncome_' + id).show();
+        $('#divInput_SeasonalIncome_' + id).show();
+        $('#divInput_TIncome_' + id).show();
+        $('#divInput_Note3Price_' + id).show();
+        $('#divInput_Note3Income_' + id).show();
+        $('#divInput_Diff_ConsWsVolume_' + id).show();
+        $('#divInput_Note2Income_' + id).show();
+        $('#divInput_WasteVolume_' + id).show();
+
+
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_UserType_' + id).hide();
+        $('#divInput_UsageLayerType_' + id).hide();
+        $('#divInput_NumberUser_' + id).hide();
+        $('#divInput_UnitUser_' + id).hide();
+        $('#divInput_Cost_' + id).hide();
+        $('#divInput_AvgConsumeUser_' + id).hide();
+        $('#divInput_ConsumptionUser_' + id).hide();
+        $('#divInput_Income_' + id).hide();
+        $('#divInput_SubscriptionIncome_' + id).hide();
+        $('#divInput_SeasonalIncome_' + id).hide();
+        $('#divInput_TIncome_' + id).hide();
+        $('#divInput_Note3Price_' + id).hide();
+        $('#divInput_Note3Income_' + id).hide();
+        $('#divInput_Diff_ConsWsVolume_' + id).hide();
+        $('#divInput_Note2Income_' + id).hide();
+        $('#divInput_WasteVolume_' + id).hide();
+
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_UserType_' + id).show();
+        $('#divOutput_UsageLayerType_' + id).show();
+        $('#divOutput_NumberUser_' + id).show();
+        $('#divOutput_UnitUser_' + id).show();
+        $('#divOutput_Cost_' + id).show();
+        $('#divOutput_AvgConsumeUser_' + id).show();
+        $('#divOutput_ConsumptionUser_' + id).show();
+        $('#divOutput_Income_' + id).show();
+        $('#divOutput_SubscriptionIncome_' + id).show();
+        $('#divOutput_SeasonalIncome_' + id).show();
+        $('#divOutput_TIncome_' + id).show();
+        $('#divOutput_Note3Price_' + id).show();
+        $('#divOutput_Note3Income_' + id).show();
+        $('#divOutput_Diff_ConsWsVolume_' + id).show();
+        $('#divOutput_Note2Income_' + id).show();
+        $('#divOutput_WasteVolume_' + id).show();
+
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.userTypeId = $('#inputUserType_' + id).val();
+        model.usageLayerId = $('#inputUsageLayerType_' + id).val();
+        model.numberUser = $('#inputNumberUser_' + id).val();
+        model.unitUser = $('#inputUnitUser_' + id).val();
+        model.cost = $('#inputCost_' + id).val();
+        model.avgConsumeUser = $('#inputAvgConsumeUser_' + id).val();
+        model.consumptionUser = $('#inputConsumptionUser_' + id).val();
+        model.income = $('#inputIncome_' + id).val();
+        model.subscriptionIncome = $('#inputSubscriptionIncome_' + id).val();
+        model.seasonalIncome = $('#inputSeasonalIncome_' + id).val();
+        model.tIncome = $('#inputTIncome_' + id).val();
+        model.note3Price = $('#inputNote3Price_' + id).val();
+        model.note3Income = $('#inputNote3Income_' + id).val();
+        model.diff_ConsWsVolume = $('#inputDiff_ConsWsVolume_' + id).val();
+        model.note2Income = $('#inputNote2Income_' + id).val();
+        model.wasteVolume = $('#inputWasteVolume_' + id).val();
+
+
+
+        $.ajax({
+            url: '@Url.Action(IncomeCurrentWHController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+                console.log(data);
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanUserType_' + id).text(data.userTypeDisplay);
+                $('#spanUsageLayerType_' + id).text(data.usageLayerDisplay);
+                $('#spanNumberUser_' + id).text(data.numberUser);
+                $('#spanUnitUser_' + id).text(data.unitUser);
+                $('#spanCost_' + id).text(data.cost);
+                $('#spanAvgConsumeUser_' + id).text(data.avgConsumeUser);
+                $('#spanConsumptionUser_' + id).text(data.consumptionUser);
+                $('#spanIncome_' + id).text(data.income);
+                $('#spanSubscriptionIncome_' + id).text(data.subscriptionIncome);
+                $('#spanSeasonalIncome_' + id).text(data.seasonalIncome);
+                $('#spanTIncome_' + id).text(data.tIncome);
+                $('#spanNote3Price_' + id).text(data.note3Price);
+                $('#spanNote3Income_' + id).text(data.note3Income);
+                $('#spanDiff_ConsWsVolume_' + id).text(data.diff_ConsWsVolume);
+                $('#spanNote2Income_' + id).text(data.note2Income);
+                $('#spanWasteVolume_' + id).text(data.wasteVolume);
+
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.userTypeId = $(e).find('#inputUserType_').val();
+        model.usageLayerId = $(e).find('#inputUsageLayerType_').val();
+        model.numberUser = $(e).find('#inputNumberUser_').val();
+        if (model.numberUser == "") {
+            model.numberUser = 0;
+        }
+        model.unitUser = $(e).find('#inputUnitUser_').val();
+        if (model.unitUser == "") {
+            model.unitUser = 0;
+        }
+        model.cost = $(e).find('#inputCost_').val();
+        if (model.cost == "") {
+            model.cost = 0;
+        }
+        model.avgConsumeUser = $(e).find('#inputAvgConsumeUser_').val();
+        if (model.avgConsumeUser == "") {
+            model.avgConsumeUser = 0;
+        }
+        model.consumptionUser = $(e).find('#inputConsumptionUser_').val();
+        if (model.consumptionUser == "") {
+            model.consumptionUser = 0;
+        }
+        model.income = $(e).find('#inputIncome_').val();
+        if (model.income == "") {
+            model.income = 0;
+        }
+        model.subscriptionIncome = $(e).find('#inputSubscriptionIncome_').val();
+        if (model.subscriptionIncome == "") {
+            model.subscriptionIncome = 0;
+        }
+        model.seasonalIncome = $(e).find('#inputSeasonalIncome_').val();
+        if (model.seasonalIncome == "") {
+            model.seasonalIncome = 0;
+        }
+        model.tIncome = $(e).find('#inputTIncome_').val();
+        if (model.tIncome == "") {
+            model.tIncome = 0;
+        }
+        model.note3Price = $(e).find('#inputNote3Price_').val();
+        if (model.note3Price == "") {
+            model.note3Price = 0;
+        }
+        model.note3Income = $(e).find('#inputNote3Income_').val();
+        if (model.note3Income == "") {
+            model.note3Income = 0;
+        }
+        model.diff_ConsWsVolume = $(e).find('#inputDiff_ConsWsVolume_').val();
+        if (model.diff_ConsWsVolume == "") {
+            model.diff_ConsWsVolume = 0;
+        }
+        model.note2Income = $(e).find('#inputNote2Income_').val();
+        if (model.note2Income == "") {
+            model.note2Income = 0;
+        }
+        model.wasteVolume = $(e).find('#inputWasteVolume_').val();
+        if (model.wasteVolume == "") {
+            model.wasteVolume = 0;
+        }
+
+
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(IncomeCurrentWHController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                console.log(data);
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //UserType
+                $(e).find('#divInput_UserType_').attr('id', 'divInput_UserType_' + data.id);
+                $(e).find('#hidUserTypeId_').attr('id', 'hidUserTypeId_' + data.id);
+                $(e).find('#inputUserType_').attr('id', 'inputUserType_' + data.id);
+                $(e).find('#divOutput_UserType_').attr('id', 'divOutput_UserType_' + data.id);
+                $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
+
+                $('#divInput_UserType_' + data.id).hide();
+                $('#spanUserType_' + data.id).text(data.userTypeDisplay);
+                $('#divOutput_UserType_' + data.id).show();
+
+
+                //UsageLayerType
+                $(e).find('#divInput_UsageLayerType_').attr('id', 'divInput_UsageLayerType_' + data.id);
+                $(e).find('#hidUsageLayerTypeId_').attr('id', 'hidUsageLayerTypeId_' + data.id);
+                $(e).find('#inputUsageLayerType_').attr('id', 'inputUsageLayerType_' + data.id);
+                $(e).find('#divOutput_UsageLayerType_').attr('id', 'divOutput_UsageLayerType_' + data.id);
+                $(e).find('#spanUsageLayerType_').attr('id', 'spanUsageLayerType_' + data.id);
+
+                $('#divInput_UsageLayerType_' + data.id).hide();
+                $('#spanUsageLayerType_' + data.id).text(data.usageLayerDisplay);
+                $('#divOutput_UsageLayerType_' + data.id).show();
+
+                //NumberUser
+                $(e).find('#divInput_NumberUser_').attr('id', 'divInput_NumberUser_' + data.id);
+                $(e).find('#inputNumberUser_').attr('id', 'inputNumberUser_' + data.id);
+                $(e).find('#divOutput_NumberUser_').attr('id', 'divOutput_NumberUser_' + data.id);
+                $(e).find('#spanNumberUser_').attr('id', 'spanNumberUser_' + data.id);
+
+                $('#divInput_NumberUser_' + data.id).hide();
+                $('#spanNumberUser_' + data.id).text(data.numberUser);
+                $('#divOutput_NumberUser_' + data.id).show();
+
+                //UnitUser
+                $(e).find('#divInput_UnitUser_').attr('id', 'divInput_UnitUser_' + data.id);
+                $(e).find('#inputUnitUser_').attr('id', 'inputUnitUser_' + data.id);
+                $(e).find('#divOutput_UnitUser_').attr('id', 'divOutput_UnitUser_' + data.id);
+                $(e).find('#spanUnitUser_').attr('id', 'spanUnitUser_' + data.id);
+
+                $('#divInput_UnitUser_' + data.id).hide();
+                $('#spanUnitUser_' + data.id).text(data.unitUser);
+                $('#divOutput_UnitUser_' + data.id).show();
+
+                //Cost
+                $(e).find('#divInput_Cost_').attr('id', 'divInput_Cost_' + data.id);
+                $(e).find('#inputCost_').attr('id', 'inputCost_' + data.id);
+                $(e).find('#divOutput_Cost_').attr('id', 'divOutput_Cost_' + data.id);
+                $(e).find('#spanCost_').attr('id', 'spanCost_' + data.id);
+
+                $('#divInput_Cost_' + data.id).hide();
+                $('#spanCost_' + data.id).text(data.cost);
+                $('#divOutput_Cost_' + data.id).show();
+
+                //AvgConsumeUser
+                $(e).find('#divInput_AvgConsumeUser_').attr('id', 'divInput_AvgConsumeUser_' + data.id);
+                $(e).find('#inputAvgConsumeUser_').attr('id', 'inputAvgConsumeUser_' + data.id);
+                $(e).find('#divOutput_AvgConsumeUser_').attr('id', 'divOutput_AvgConsumeUser_' + data.id);
+                $(e).find('#spanAvgConsumeUser_').attr('id', 'spanAvgConsumeUser_' + data.id);
+
+                $('#divInput_AvgConsumeUser_' + data.id).hide();
+                $('#spanAvgConsumeUser_' + data.id).text(data.avgConsumeUser);
+                $('#divOutput_AvgConsumeUser_' + data.id).show();
+
+                //ConsumptionUser
+                $(e).find('#divInput_ConsumptionUser_').attr('id', 'divInput_ConsumptionUser_' + data.id);
+                $(e).find('#inputConsumptionUser_').attr('id', 'inputConsumptionUser_' + data.id);
+                $(e).find('#divOutput_ConsumptionUser_').attr('id', 'divOutput_ConsumptionUser_' + data.id);
+                $(e).find('#spanConsumptionUser_').attr('id', 'spanConsumptionUser_' + data.id);
+
+                $('#divInput_ConsumptionUser_' + data.id).hide();
+                $('#spanConsumptionUser_' + data.id).text(data.consumptionUser);
+                $('#divOutput_ConsumptionUser_' + data.id).show();
+
+                //Income
+                $(e).find('#divInput_Income_').attr('id', 'divInput_Income_' + data.id);
+                $(e).find('#inputIncome_').attr('id', 'inputIncome_' + data.id);
+                $(e).find('#divOutput_Income_').attr('id', 'divOutput_Income_' + data.id);
+                $(e).find('#spanIncome_').attr('id', 'spanIncome_' + data.id);
+
+                $('#divInput_Income_' + data.id).hide();
+                $('#spanIncome_' + data.id).text(data.income);
+                $('#divOutput_Income_' + data.id).show();
+
+                //SubscriptionIncome
+                $(e).find('#divInput_SubscriptionIncome_').attr('id', 'divInput_SubscriptionIncome_' + data.id);
+                $(e).find('#inputSubscriptionIncome_').attr('id', 'inputSubscriptionIncome_' + data.id);
+                $(e).find('#divOutput_SubscriptionIncome_').attr('id', 'divOutput_SubscriptionIncome_' + data.id);
+                $(e).find('#spanSubscriptionIncome_').attr('id', 'spanSubscriptionIncome_' + data.id);
+
+                $('#divInput_SubscriptionIncome_' + data.id).hide();
+                $('#spanSubscriptionIncome_' + data.id).text(data.subscriptionIncome);
+                $('#divOutput_SubscriptionIncome_' + data.id).show();
+
+                //SeasonalIncome
+                $(e).find('#divInput_SeasonalIncome_').attr('id', 'divInput_SeasonalIncome_' + data.id);
+                $(e).find('#inputSeasonalIncome_').attr('id', 'inputSeasonalIncome_' + data.id);
+                $(e).find('#divOutput_SeasonalIncome_').attr('id', 'divOutput_SeasonalIncome_' + data.id);
+                $(e).find('#spanSeasonalIncome_').attr('id', 'spanSeasonalIncome_' + data.id);
+
+                $('#divInput_SeasonalIncome_' + data.id).hide();
+                $('#spanSeasonalIncome_' + data.id).text(data.seasonalIncome);
+                $('#divOutput_SeasonalIncome_' + data.id).show();
+
+                //TIncome
+                $(e).find('#divInput_TIncome_').attr('id', 'divInput_TIncome_' + data.id);
+                $(e).find('#inputTIncome_').attr('id', 'inputTIncome_' + data.id);
+                $(e).find('#divOutput_TIncome_').attr('id', 'divOutput_TIncome_' + data.id);
+                $(e).find('#spanTIncome_').attr('id', 'spanTIncome_' + data.id);
+
+                $('#divInput_TIncome_' + data.id).hide();
+                $('#spanTIncome_' + data.id).text(data.tIncome);
+                $('#divOutput_TIncome_' + data.id).show();
+
+                //Note3Price
+                $(e).find('#divInput_Note3Price_').attr('id', 'divInput_Note3Price_' + data.id);
+                $(e).find('#inputNote3Price_').attr('id', 'inputNote3Price_' + data.id);
+                $(e).find('#divOutput_Note3Price_').attr('id', 'divOutput_Note3Price_' + data.id);
+                $(e).find('#spanNote3Price_').attr('id', 'spanNote3Price_' + data.id);
+
+                $('#divInput_Note3Price_' + data.id).hide();
+                $('#spanNote3Price_' + data.id).text(data.note3Price);
+                $('#divOutput_Note3Price_' + data.id).show();
+
+                //Note3Income
+                $(e).find('#divInput_Note3Income_').attr('id', 'divInput_Note3Income_' + data.id);
+                $(e).find('#inputNote3Income_').attr('id', 'inputNote3Income_' + data.id);
+                $(e).find('#divOutput_Note3Income_').attr('id', 'divOutput_Note3Income_' + data.id);
+                $(e).find('#spanNote3Income_').attr('id', 'spanNote3Income_' + data.id);
+
+                $('#divInput_Note3Income_' + data.id).hide();
+                $('#spanNote3Income_' + data.id).text(data.note3Income);
+                $('#divOutput_Note3Income_' + data.id).show();
+
+                //Diff_ConsWsVolume
+                $(e).find('#divInput_Diff_ConsWsVolume_').attr('id', 'divInput_Diff_ConsWsVolume_' + data.id);
+                $(e).find('#inputDiff_ConsWsVolume_').attr('id', 'inputDiff_ConsWsVolume_' + data.id);
+                $(e).find('#divOutput_Diff_ConsWsVolume_').attr('id', 'divOutput_Diff_ConsWsVolume_' + data.id);
+                $(e).find('#spanDiff_ConsWsVolume_').attr('id', 'spanDiff_ConsWsVolume_' + data.id);
+
+                $('#divInput_Diff_ConsWsVolume_' + data.id).hide();
+                $('#spanDiff_ConsWsVolume_' + data.id).text(data.diff_ConsWsVolume);
+                $('#divOutput_Diff_ConsWsVolume_' + data.id).show();
+
+                //Note2Income
+                $(e).find('#divInput_Note2Income_').attr('id', 'divInput_Note2Income_' + data.id);
+                $(e).find('#inputNote2Income_').attr('id', 'inputNote2Income_' + data.id);
+                $(e).find('#divOutput_Note2Income_').attr('id', 'divOutput_Note2Income_' + data.id);
+                $(e).find('#spanNote2Income_').attr('id', 'spanNote2Income_' + data.id);
+
+                $('#divInput_Note2Income_' + data.id).hide();
+                $('#spanNote2Income_' + data.id).text(data.note2Income);
+                $('#divOutput_Note2Income_' + data.id).show();
+
+                //WasteVolume
+                $(e).find('#divInput_WasteVolume_').attr('id', 'divInput_WasteVolume_' + data.id);
+                $(e).find('#inputWasteVolume_').attr('id', 'inputWasteVolume_' + data.id);
+                $(e).find('#divOutput_WasteVolume_').attr('id', 'divOutput_WasteVolume_' + data.id);
+                $(e).find('#spanWasteVolume_').attr('id', 'spanWasteVolume_' + data.id);
+
+                $('#divInput_WasteVolume_' + data.id).hide();
+                $('#spanWasteVolume_' + data.id).text(data.wasteVolume);
+                $('#divOutput_WasteVolume_' + data.id).show();
+
+                
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        resetTableBackColor("my-table");
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(IncomeCurrentWHController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    alert(data.message);
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                console.log(err);
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+</script>
