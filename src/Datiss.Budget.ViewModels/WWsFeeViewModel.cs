@@ -1,5 +1,6 @@
 ﻿using Datiss.Budget.Enum;
 using Datiss.Budget.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -133,6 +134,92 @@ namespace Datiss.Budget.ViewModels
         public IList<SelectListItem> OrganizationSource { get; set; }
 
         public IList<SelectListItem> ActivityTypeSource => EnumSelectListProvider.GetActivityTypeItems(ActivityType).ToList();
+
+    }
+
+    public class WWsFeeIndexViewModel : PagedViewModel<WWsFeeViewModel>
+    {
+        public WWsFeeIndexViewModel()
+        {
+            Filter = new WWsFeeFilterViewModel();
+        }
+
+        public WWsFeeFilterViewModel Filter { get; set; }
+
+        public ActivityType activityType { get; set; }
+
+        public IList<SelectListItem> YearSource { get; set; }
+
+        public IList<SelectListItem> OrganizationSource { get; set; }
+
+        public IList<SelectListItem> InputOrganizationSource { get; set; }
+
+        public IList<SelectListItem> UserTypeSource { get; set; }
+
+        public IList<SelectListItem> UsageLayerSource { get; set; }
+
+        public IList<SelectListItem> ActivityTypeSource { get; set; }
+
+        public IFormFile ExcelFile { get; set; }
+
+        public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
+            => YearSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => OrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => InputOrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetUserTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => UserTypeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetUsageLayerSource(IEnumerable<DropDownItemViewModel> source)
+            => UsageLayerSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetActivityTypeSource(IEnumerable<SelectListItem> source)
+            => ActivityTypeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Text,
+                Value = x.Value.ToString()
+            }).ToList();
+
+
+        public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
+            => Filter.OrganizationSource = source.Select(x => new SelectListItem
+            {
+                Selected = x.Id == selectedOrgId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
+            => Filter.YearSource = source.Select(x => new SelectListItem
+            {
+                Selected = x.Id == selectedYearId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
 
     }
 }
