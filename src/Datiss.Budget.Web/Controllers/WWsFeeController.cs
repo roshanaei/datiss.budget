@@ -21,6 +21,8 @@ using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Web.Helpers;
 using System.IO;
+using Datiss.Budget.Reports.Excel;
+using ClosedXML.Extensions;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -39,6 +41,8 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
+        public const string ACTION_ExportExcel = nameof(ExportExcel);
+
 
 
 
@@ -499,6 +503,16 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(model);
+        }
+
+        [HttpGet("[action]/{orgid}/{yearid}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
+        {
+            var result = await _wWsFeeService.GetExportItemsAsync(yearid, orgid);
+            if (result.Count() == 0)
+                return RedirectToAction("Index");
+            using var workbook = result.ExportExcel();
+            return workbook.Deliver("WWsFee.xlsx");
         }
 
 
