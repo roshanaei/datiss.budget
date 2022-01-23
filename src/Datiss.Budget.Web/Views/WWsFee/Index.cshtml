@@ -250,10 +250,13 @@
 
 @section headSection {
     <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
     <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
 }
 
 @section footSection {
+
+    <partial name="_overlay" />
 
     <div id="divCopy">
 
@@ -614,6 +617,8 @@
             fdata.append('ExcelFile', file);
             fdata.append('yearId', yearId);
 
+            $("#overlay").css("display", "block");
+
             $.ajax({
                 url: '@Url.Action(WWsFeeController.ACTION_ImportExcel)',
                 type: 'POST',
@@ -623,6 +628,7 @@
                 success: function (data, status, settings) {
                     console.log(data);
                     if (data.hasError) {
+                        $("#overlay").attr("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
                             html: `<span class="my-font">${data.message}</span>`,
@@ -637,6 +643,7 @@
                         return;
                     }
 
+                    $("#overlay").css("display", "none");
                     if (data.ask) {
                         Swal.fire({
                             html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
@@ -665,7 +672,8 @@
                                     processData: false,
                                     contentType: false,
                                     success: function(data, status, settings) {
-                                        if(data.hasError) {
+                                        if (data.hasError) {
+                                            $("#overlay").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">خطا</span>',
                                                 html: `<span class="my-font">${data.message}</span>`,
@@ -680,6 +688,7 @@
                                             return;
                                         }
 
+                                        $("#overlay").css("display", "none");
                                         if(!data.hasError) {
                                           Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
@@ -712,6 +721,8 @@
                             }
                         });
                     }
+
+                    $("#overlay").css("display", "none");
                     if (!data.hasError && !data.ask) {
                         Swal.fire({
                             title: '<span class="my-font">عملیات موفق</span>',
