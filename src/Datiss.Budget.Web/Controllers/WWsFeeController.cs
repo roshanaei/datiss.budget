@@ -12,6 +12,11 @@ using Datiss.Budget.Resources;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
 using Mapster;
+using System.Collections.Generic;
+using System.Linq;
+using Datiss.Budget.Common;
+using Datiss.Budget.Enum;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -22,8 +27,10 @@ namespace Datiss.Budget.Web.Controllers
     {
         public const string Name = "WWsFee";
         public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
 
+        private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
         private readonly ILogger<WWsFee> _logger;
         private readonly IWebHostEnvironment _env;
@@ -105,6 +112,79 @@ namespace Datiss.Budget.Web.Controllers
             );
         }
 
+        [HttpGet("{page?}")]
+        public async Task<IActionResult> Index(int page = 1)
+        {
+            var filter = new WWsFeeFilterDTO();
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<List<DropDownItemViewModel>>();
+            int firstOrgId = orgSource.FirstOrDefault().Id;
+
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<List<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(x => x.Id);
+
+            var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
+
+            var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToList();
+
+            var userTypeKeys = "";
+
+            foreach (var key in userTypeData)
+            {
+                userTypeKeys += $"'{key.ConstantKey}',";
+            }
+
+            ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
+
+            var usagelayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var activity = new ActivityType();
+            var activityTypeSource = EnumSelectListProvider.GetActivityTypeItems(activity);
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+                .Adapt<List<DropDownItemViewModel>>();
+
+            filter.YearId = maxYear;
+            filter.OrganizationId = firstOrgId;
+
+            var myfilter = TempData.Get<WWsFeeFilterViewModel>(_indexFilterKey);
+
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<WWsFeeFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
+
+            var result = await _wWsFeeService.GetListAsync(filter);
+            var model = result.Adapt<WWsFeeIndexViewModel>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetActivityTypeSource(activityTypeSource);
+            model.SetUserTypeSource(userTypeSource);
+            model.SetUsageLayerSource(usagelayerSource);
+
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+
+            model.Filter.YearId = filter.YearId;
+            model.Filter.OrganizationId = filter.OrganizationId;
+            model.PageNumber = filter.PageNumber;
+            model.PageSize = filter.PageSize;
+
+            return View(model);
+        }
 
     }
 }
