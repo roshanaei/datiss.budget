@@ -21,7 +21,7 @@ using LinqKit;
 using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Security;
 using Datiss.Budget.Enum;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Datiss.Budget.Common;
 using Datiss.Budget.Extensions;
 
@@ -349,9 +349,9 @@ namespace Datiss.Budget.Services
 
             result.Add(new CalculationItemData
             {
-                Key = "IncomeCurrentWNH_Cal9",
+                Key = "IncomeCurrentWNH_Cal10",
                 Value = await _uow.ExecuteScalar<int>(
-                                 "[dbo].[IncomeCurrentWNH_Cal9] @YearId, @OrganizationId",
+                                 "[dbo].[IncomeCurrentWNH_Cal10] @YearId, @OrganizationId",
                                  parameters: sqlParams.ToArray())
             });
 
