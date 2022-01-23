@@ -120,6 +120,33 @@
   <data name="ConsumeForcastWs_Cal1" xml:space="preserve">
     <value>توزیع مصرف</value>
   </data>
+  <data name="IncomeCurrentWH_Cal1" xml:space="preserve">
+    <value>مجموع درآمد آب بها مشترکین مسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWH_Cal2" xml:space="preserve">
+    <value>مجموع درآمد آبونمان مشترکین مسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWH_Cal3" xml:space="preserve">
+    <value>مجموع درآمد فصلی مشترکین مسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWH_Cal4" xml:space="preserve">
+    <value>مجموع درآمد تبصره 2 مشترکین مسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWH_Cal5" xml:space="preserve">
+    <value>مجموع درآمد تبصره 3 مشترکین مسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWH_Cal6" xml:space="preserve">
+    <value>مجموع درآمد کل مشترکین مسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWH_Cal7" xml:space="preserve">
+    <value>مجموع آحاد مشترکین مسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWH_Cal8" xml:space="preserve">
+    <value>مجموع تعداد مشترکین مسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWH_Cal9" xml:space="preserve">
+    <value>مجموع مصرف مشترکین مسکونی سالیانه</value>
+  </data>
   <data name="IncomeForcastOthers_Cal1" xml:space="preserve">
     <value>تعداد کل </value>
   </data>
