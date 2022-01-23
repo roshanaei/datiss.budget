@@ -186,5 +186,61 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
+        [HttpPost("{page?}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(WWsFeeIndexViewModel model)
+        {
+            var filter = model.Filter.Adapt<WWsFeeFilterDTO>();
+
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _wWsFeeService.GetListAsync(filter);
+
+            model = result.Adapt<WWsFeeIndexViewModel>();
+
+            model.Filter = filter.Adapt<WWsFeeFilterViewModel>();
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
+
+            var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToList();
+            var userTypeKeys = "";
+            foreach (var key in userTypeData)
+            {
+                userTypeKeys += $"'{key.ConstantKey}',";
+            }
+            ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
+
+            var usagelayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var activity = new ActivityType();
+            var activityTypeSource = EnumSelectListProvider.GetActivityTypeItems(activity);
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+                .Adapt<List<DropDownItemViewModel>>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+            model.SetUserTypeSource(userTypeSource);
+            model.SetUsageLayerSource(usagelayerSource);
+            model.SetActivityTypeSource(activityTypeSource);
+
+            return View(model);
+        }
+
+
     }
 }
