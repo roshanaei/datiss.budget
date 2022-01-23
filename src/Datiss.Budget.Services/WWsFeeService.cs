@@ -653,10 +653,12 @@ namespace Datiss.Budget.Services
 
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
+
             if (filter.OrganizationId.HasValue)
             {
                 var organizations = await _organizationService
                     .GetWithChildrenAsync(filter.OrganizationId.Value);
+
                 foreach (var org in organizations)
                 {
                     predicate.Or(_ => _.OrganizationId == org.Id);
@@ -666,8 +668,10 @@ namespace Datiss.Budget.Services
             }
             if (filter.UserTypeId.HasValue)
                 query = query.Where(x => x.UserTypeId == filter.UserTypeId.Value);
+
             if (filter.ActivityType.HasValue)
                 query = query.Where(x => x.ActivityType == filter.ActivityType);
+
             if (filter.UsageLayerId.HasValue)
                 query = query.Where(x => x.UsageLayerId == filter.UsageLayerId.Value);
 
@@ -685,30 +689,30 @@ namespace Datiss.Budget.Services
             orderBy = orderBy.ToLower();
             switch (orderBy)
             {
-                case "year":
-                    return desc
-                        ? query.OrderByDescending(x => x.FinanceYear.Year)
-                        : query.OrderBy(x => x.FinanceYear.Year);
+
                 case "organization":
                     return desc
                         ? query.OrderByDescending(x => x.Organization.Title)
                         : query.OrderBy(x => x.Organization.Title);
+
                 case "usertype":
                     return desc
                         ? query.OrderByDescending(x => x.UserType.DisplayOrder)
                         : query.OrderBy(x => x.UserType.DisplayOrder);
-                case "activitytype":
-                    return desc
-                        ? query.OrderByDescending(x => x.ActivityType)
-                        : query.OrderBy(x => x.ActivityType);
+
                 case "usagelayer":
                     return desc
                         ? query.OrderByDescending(x => x.UsageLayer.DisplayOrder)
                         : query.OrderBy(x => x.UsageLayer.DisplayOrder);
+
                 default:
-                    return desc
-                        ? query.OrderByDescending(x => x.Id)
-                        : query.OrderBy(x => x.Id);
+                    return query.Include(x => x.Organization)
+                                .Include(x => x.UserType)
+                                .Include(x => x.UsageLayer)
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.ActivityType)
+                                .ThenBy(x => x.UserType.DisplayOrder)
+                                .ThenBy(x => x.UsageLayer.DisplayOrder);
             }
         }
 
@@ -841,6 +845,7 @@ namespace Datiss.Budget.Services
                                               x.OrganizationId == organizationId &&
                                               x.ActivityType == activityType &&
                                               x.UserTypeId == userTypeId &&
+                                              x.UsageLayerId == UsageLayerId &&
                                               x.Id != id);
             return !result;
         }
