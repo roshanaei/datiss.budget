@@ -612,6 +612,7 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
                                     .Include(x => x.UserType)
+                                    .Include(x=> x.UsageLayer)
                                     .Select(x => new WWsFeeDTO
                                     {
                                         Id = x.Id,
@@ -633,6 +634,7 @@ namespace Datiss.Budget.Services
                                     }).ToListAsync();
 
             var ms = new MemoryStream();
+
             var result = _excelService.Export(items, ms);
 
             var mem1 = new MemoryStream(ms.ToArray());
