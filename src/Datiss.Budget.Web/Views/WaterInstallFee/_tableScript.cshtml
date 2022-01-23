@@ -1,6 +1,8 @@
 ﻿<script type="text/javascript">
 
     let isNewRow = false;
+    const rowData = {};
+
     function editRow(id) {
 
 
@@ -25,6 +27,12 @@
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.dWaterTypeId = $('#inputDWaterType_' + id).val();
+        rowData.wInstallFee = $('#inputWInstallFee_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -36,6 +44,16 @@
         $('#divInput_Org_' + id).hide();
         $('#divInput_DWaterType_' + id).hide();
         $('#divInput_WInstallFee_' + id).hide();
+
+        //Reverting to OriginalData
+        if(rowData != null) {
+            console.log('reverting to original data.');
+            console.log(rowData);
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputDWaterType_' + id).val(rowData.dWaterTypeId);
+            $('#inputWInstallFee_' + id).val(rowData.wInstallFee);
+        }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
