@@ -42,9 +42,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
-
-
-
+        public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
@@ -503,6 +501,65 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(model);
+        }
+
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var userTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
+
+            var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType);
+            var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
+
+            var activity = new ActivityType();
+            var activityTypes = EnumSelectListProvider.GetActivityTypeItems(activity);
+
+            var items = new List<WWsFeeDTO>();
+
+            foreach (var org in organizations)
+            {
+                foreach (var activityType in activityTypes)
+                {
+                    userTypes.Where(ut => ut.ConstantKey == ConstantKeys.__House)
+                        .ToList()
+                        .ForEach(ut => items.AddRange(houseUsageLayer
+                                            .Select(hul => new WWsFeeDTO
+                                            {
+                                                ActivityType = System.Enum.Parse<ActivityType>(activityType.Value),
+                                                ActivityTypeDisplay = activityType.Text,
+                                                UserTypeDisplay = ut.Title,
+                                                UserTypeId = ut.Id,
+                                                UsageLayerDisplay = hul.Title,
+                                                UsageLayerId = hul.Id,
+                                                OrganizationId = org.Id,
+                                                OrganizationDisplay = org.Title,
+                                                Year = year.Year,
+                                                YearId = year.Id
+                                            }).ToList())
+                        );
+                    userTypes.Where(ut => ut.ConstantKey != ConstantKeys.__House)
+                        .ToList()
+                        .ForEach(ut => items.AddRange(nhouseUsagelayer
+                                            .Select(hul => new WWsFeeDTO
+                                            {
+                                                ActivityType = System.Enum.Parse<ActivityType>(activityType.Value),
+                                                ActivityTypeDisplay = activityType.Text,
+                                                UserTypeDisplay = ut.Title,
+                                                UserTypeId = ut.Id,
+                                                UsageLayerDisplay = hul.Title,
+                                                UsageLayerId = hul.Id,
+                                                OrganizationId = org.Id,
+                                                OrganizationDisplay = org.Title,
+                                                Year = year.Year,
+                                                YearId = year.Id
+                                            }).ToList())
+                        );
+                }
+            }
+            using var workbook = items.GetImportTemplate(year.Year);
+            return workbook.Deliver("WWsFee-Import-Template.xlsx");
         }
 
         [HttpGet("[action]/{orgid}/{yearid}")]
