@@ -554,8 +554,14 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<IEnumerable<WWsFeeDTO>> GetExportItemsAsync(WWsFeeFilterDTO filter)
+        public async Task<IEnumerable<WWsFeeDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
+            var filter = new WWsFeeFilterDTO
+            {
+                OrganizationId = organizationId,
+                YearId = yearId
+            };
+
             filter.CheckArgumentIsNull(nameof(filter));
 
             var query = Query();
@@ -568,6 +574,7 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
                                     .Include(x => x.UserType)
+                                    .Include(x => x.UsageLayer)
                                     .Select(x => new WWsFeeDTO
                                     {
                                         Id = x.Id,
