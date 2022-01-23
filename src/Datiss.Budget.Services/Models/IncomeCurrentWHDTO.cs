@@ -13,6 +13,7 @@ namespace Datiss.Budget.Services.Models
         public int UserTypeId { get; set; }
         public string UserTypeTitle { get; set; }
         public int UsageLayerId { get; set; }
+        public string UsageLayerTitle { get; set; }
         public int NumberUser { get; set; }
         public int UnitUser { get; set; }
         public decimal AvgConsumeUser { get; set; }
