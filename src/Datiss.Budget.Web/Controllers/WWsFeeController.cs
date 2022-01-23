@@ -17,6 +17,9 @@ using System.Linq;
 using Datiss.Budget.Common;
 using Datiss.Budget.Enum;
 using Datiss.Budget.Extensions;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Common.Exceptions;
+using Datiss.Budget.Web.Helpers;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -29,6 +32,10 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
+
+
+        public const string ACTION_ImportExcel = nameof(ImportExcel);
+
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
@@ -241,6 +248,74 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            if (model.ExcelFile == null || model.ExcelFile.Length == 0)
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelInvalidFile
+                });
+
+            try
+            {
+                var result = await _wWsFeeService.ImportExcelAsync(
+                                                                    model.ExcelFile,
+                                                                    model.YearId,
+                                                                    model.ContinueIfAnyOrgMissing);
+
+                if (result.AskToImport)
+                {
+                    return Json(new
+                    {
+                        ask = true,
+                        message = result.Message
+                    });
+                }
+
+                if (result.Success)
+                {
+                    return Json(new
+                    {
+                        hasError = false,
+                        message = result.Message
+                    });
+
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
+            }
+            catch (ImportExcelFileFormatInvalidException)
+            {
+                showMessage(CssClassNames.Error,
+                    ViewMessages.ImportExcelFileFormatInvalid);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileFormatInvalid
+                });
+            }
+            catch (ImportExcelFileSizeInvalidException)
+            {
+                showMessage(CssClassNames.Error,
+                    ViewMessages.ImportExcelFileSizeInvalid);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileSizeInvalid
+                });
+            }
+
+        }
 
     }
 }
