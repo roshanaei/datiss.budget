@@ -244,9 +244,11 @@ namespace Datiss.Budget.Services
 
             return await Task.FromResult(result);
         }
+
         public async Task<PagedResult<WWsFeeDTO>> GetListAsync(WWsFeeFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
+
             var result = new PagedResult<WWsFeeDTO>
             {
                 PageSize = filter.PageSize,
@@ -268,6 +270,7 @@ namespace Datiss.Budget.Services
             result.Items = await query.Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
                                     .Include(x => x.UserType)
+                                    .Include(x => x.UsageLayer)
                                     .Select(x => new WWsFeeDTO
                                     {
                                         Id = x.Id,
