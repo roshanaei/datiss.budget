@@ -20,6 +20,7 @@ using Datiss.Budget.Extensions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Web.Helpers;
+using System.IO;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -37,6 +38,8 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
+        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
+
 
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
@@ -426,6 +429,17 @@ namespace Datiss.Budget.Web.Controllers
             return PartialView("_calculationModal", viewModel);
         }
 
+        [HttpGet("[action]")]
+        public async Task<IActionResult> DownloadExcelTemplate()
+        {
+            var filePath = $"{_env.WebRootPath}\\Excel\\WWsFeeImport.xlsx";
+
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return File(
+                stream,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "WWsFee.xlsx");
+        }
 
         [HttpGet("[action]")]
         public async Task<IActionResult> Copy()
