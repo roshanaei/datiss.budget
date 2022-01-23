@@ -100,10 +100,18 @@ namespace Datiss.Budget.Services.Identity
                 CreatedDateTime = _dateService.Now
             };
 
+            foreach (var roleId in model.SelectedRoles) {
+                user.Roles.Add(new UserRole {
+                    RoleId = roleId
+                });
+            }
+
             var result = await _userManager.CreateAsync(user, model.Password);
             if(!result.Succeeded) {
                 throw new CreateUserException(result.Errors);
             }
+
+            
 
             //var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
             //if (!passwordResult.Succeeded) {

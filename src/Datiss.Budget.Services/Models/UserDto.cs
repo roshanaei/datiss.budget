@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Services.Models
@@ -47,6 +48,7 @@ namespace Datiss.Budget.Services.Models
         public int? PositionId { get; set; }
         public string NationalCode { get; set; }
         public int? OrganizationId { get; set; }
+        public IEnumerable<int> SelectedRoles { get; set; }
     }
 
     public class UpdateUserDTO
@@ -61,6 +63,7 @@ namespace Datiss.Budget.Services.Models
         public int? PositionId { get; set; }
         public string NationalCode { get; set; }
         public int? OrganizationId { get; set; }
+        public IEnumerable<int> SelectedRoles { get; set; }
     }
 
 }

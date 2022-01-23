@@ -74,6 +74,7 @@
                                     <div class="col-md-10">
                                         <select asp-for="SelectedRoles" id="selectRoles" asp-items="@Model.RoleSource" class="form-control my-font">
                                         </select>
+                                        <span asp-validation-for="SelectedRoles" class="text-danger"></span>
                                     </div>
                                 </fieldset>
 
@@ -133,7 +134,7 @@
                                 data-dismiss="modal">
                                 <i class="fa fa-times"></i> انصراف
                             </a>
-                            <button type="submit" class="btn btn-primary my-font">
+                            <button type="submit" onclick="return inputIsValid();" class="btn btn-primary my-font">
                                             <i class="fa fa-check"></i> ارسال
                             </button>
                         </div>
@@ -185,6 +186,16 @@
     function numberOnly(id) {
         var element = document.getElementById(id);
         element.value = element.value.replace(/[^0-9]/gi, "");
+    }
+
+    function inputIsValid() {
+        console.log($('#selectRoles').val());
+        if(!$('#selectRoles').val()) {
+            alert('لطفاً حداقل یک نقش برای کاربر تعیین کنید.');
+            return false;
+        }
+
+        return true;
     }
 
 </script>

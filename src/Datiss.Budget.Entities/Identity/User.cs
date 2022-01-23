@@ -19,6 +19,9 @@ namespace Datiss.Budget.Entities.Identity
         {
             UserUsedPasswords = new HashSet<UserUsedPassword>();
             UserTokens = new HashSet<UserToken>();
+            Roles = new HashSet<UserRole>();
+            Claims = new HashSet<UserClaim>();
+            Logins = new HashSet<UserLogin>();
         }
 
         #region Properties

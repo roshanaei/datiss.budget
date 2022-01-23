@@ -122,6 +122,7 @@ namespace Datiss.Budget.ViewModels.Identity
         public int? OrganizationId { get; set; }
         public IEnumerable<SelectListItem> OrganizationSource { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         public IEnumerable<int> SelectedRoles { get; set; }
         public IEnumerable<SelectListItem> RoleSource { get; set; }
 
