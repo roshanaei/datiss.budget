@@ -33,7 +33,6 @@
         rowData.organizationId = $('#inputOrg_' + id).val();
         rowData.dWaterTypeId = $('#inputDWaterType_' + id).val();
         rowData.wInstallFee = $('#inputWInstallFee_' + id).val();
-        console.log(`originalData: ${rowData}`);
     }
 
     function cancelEditRow(id) {
@@ -50,10 +49,10 @@
         if(rowData != null) {
             console.log('reverting to original data.');
             console.log(rowData);
-            $('#inputYear_' + id).attr('value', rowData.yearId);
-            $('#inputOrg_' + id).attr('value', rowData.organizationId);
-            $('#inputDWaterType_' + id).attr('value', rowData.dWaterTypeId);
-            $('#inputWInstallFee_' + id).attr('value', rowData.wInstallFee);
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputDWaterType_' + id).val(rowData.dWaterTypeId);
+            $('#inputWInstallFee_' + id).val(rowData.wInstallFee);
         }
 
         //Show output elements
