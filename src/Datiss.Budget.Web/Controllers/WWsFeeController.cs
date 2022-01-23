@@ -22,6 +22,7 @@ namespace Datiss.Budget.Web.Controllers
     {
         public const string Name = "WWsFee";
         public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Edit = nameof(Edit);
 
 
         private readonly ILogger<WWsFee> _logger;
@@ -77,6 +78,31 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(result.Result.Adapt<WWsFeeViewModel>());
+        }
+
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Edit(UpdateWWsFeeViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+
+            var data = model.Adapt<UpdateWWsFeeDTO>();
+            var result = await _wWsFeeService.UpdateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(
+                result.Result.Adapt<WWsFeeViewModel>()
+            );
         }
 
 
