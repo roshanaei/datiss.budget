@@ -62,6 +62,11 @@ namespace Datiss.Budget.ViewModels
             => EnumSelectListProvider.GetActivityTypeItems(ActivityType);
     }
 
+    public class UpdateWWsFeeViewModel : CreateWWsFeeViewModel
+    {
+        public int Id { get; set; }
+    }
+
     public class WWsFeeViewModel
     {
         public int Id { get; set; }
