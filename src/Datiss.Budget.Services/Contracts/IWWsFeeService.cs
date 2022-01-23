@@ -33,6 +33,6 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<IEnumerable<WWsFeeDTO>> GetExportItemsAsync(WWsFeeFilterDTO filter);
 
-        Task ImportExcelAsync(IFormFile fileInfo);
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
     }
 }

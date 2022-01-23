@@ -1,4 +1,5 @@
-﻿using Datiss.Budget.Common.Exceptions;
+﻿using Datiss.Budget.Common;
+using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Entities;
@@ -308,6 +309,12 @@ namespace Datiss.Budget.Services
 
             var result = new List<WWsFee>();
 
+            if (await Query()
+                .Where(_ => _.OrganizationId == sourceOrgId)
+                .Where(_ => _.YearId == destYearId).AnyAsync())
+                throw new CopyDestYearHasDataException();
+
+
             var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
                                         .Where(_ => _.YearId == sourceYearId)
                                         .ToListAsync();
@@ -316,6 +323,9 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.ActivityType, item.UserTypeId, item.UsageLayerId))
+                        throw new CopyDestYearHasDataException();
+
                     var entity = new WWsFee
                     {
                         UserTypeId = item.UserTypeId,
@@ -346,13 +356,164 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task ImportExcelAsync(IFormFile fileInfo)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<WWsFeeImportModel>(fileInfo);
+            var data = await _excelService.ImportAsync<WWsFeeImportModel>
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
 
             var records = data.Adapt<List<WWsFee>>();
 
             int rowIndex = 1;
+
+            var descendents = await _organizationService
+                .GetAllDescendentsAsync(_userContext.OrganizationId);
+
+            var usertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType &&
+                                                 x.Status != EntityStatus.Deleted);
+
+            var usagelayers = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UsageLayerType &&
+                                                 x.Status != EntityStatus.Deleted);
+
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
+
+            foreach (var rec in records)
+            {
+                rec.YearId = yearId;
+
+                var org = await _orgDbSet.FindAsync(rec.OrganizationId);
+                if (year == null || year.Status == EntityStatus.Disbaled)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
+                        );
+                }
+                if (org == null)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
+                        );
+                }
+                if (!await usertypes.AnyAsync(x => x.Id == rec.UserTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.UserTypeId)
+                        );
+                }
+                if (!await usagelayers.AnyAsync(x => x.Id == rec.UsageLayerId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayer, rowIndex + 2, rec.UserTypeId)
+                        );
+                }
+                if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
+                        );
+                }
+
+                rowIndex++;
+            }
+
+            //Start Missing Org
+            var missingOrgs = new List<Organization>();
+            var existOrgs = new List<Organization>();
+
+            foreach (var item in descendents)
+            {
+                var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                if (!existInExcel)
+                {
+                    if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                        missingOrgs.Add(item);
+                }
+                else
+                    existOrgs.Add(item);
+            }
+            //End
+
+            //Start Missing Type
+            var missingUserType = new List<Constant>();
+            var missingUsageLayers = new List<Constant>();
+
+            string orgTitle = "";
+            string userTypeTitle = "";
+
+            foreach (var org in existOrgs)
+            {
+                if (orgTitle != "")
+                    break;
+                foreach (var usert in usertypes)
+                {
+                    var existUserTypeInExcel = records.Any(_ => _.UserTypeId == usert.Id &&
+                                                                _.OrganizationId == org.Id);
+                    if (!existUserTypeInExcel)
+                    {
+                        missingUserType.Add(usert);
+                        orgTitle = org.Title;
+                    }
+                    else if (!missingUserType.Any())
+                    {
+                        foreach (var usagel in usagelayers)
+                        {
+                            var existUsageLayersInExcel = records.Any(_ => _.UserTypeId == usert.Id &&
+                                                                           _.UsageLayerId == usagel.Id &&
+                                                                           _.OrganizationId == org.Id);
+
+                            if (!existUsageLayersInExcel)
+                            {
+                                missingUsageLayers.Add(usagel);
+                                orgTitle = org.Title;
+                                userTypeTitle = usert.Title;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (missingUserType.Any())
+            {
+                string userTypeNames = "";
+                foreach (var item in missingUserType)
+                {
+                    userTypeNames += "- " + item.Title + "<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, userTypeNames, orgTitle));
+            }
+
+            if (missingUsageLayers.Any())
+            {
+                string usageLayerNames = "";
+                foreach (var item in missingUsageLayers)
+                {
+                    usageLayerNames += "- [" + item.Title + "]<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelUsageLayerUserTypeOrgNotInExcel, usageLayerNames, userTypeTitle, orgTitle));
+            }
+            //End
+
+            rowIndex = 1;
+
+            if (!continueIfAnyOrgMissing)
+            {
+                if (missingOrgs.Any())
+                {
+                    string orgNames = "";
+                    foreach (var item in missingOrgs)
+                    {
+                        orgNames += "- " + item.Title + "<br>";
+                    }
+
+                    return new ImportResult
+                    {
+                        Message = orgNames,
+                        AskToImport = true
+                    };
+                }
+            }
 
             foreach (var record in records)
             {
@@ -363,14 +524,34 @@ namespace Datiss.Budget.Services
                 if (!await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
-                    record.UserTypeId))
-                    throw new ImportExcelFileException(rowIndex);
+                    record.ActivityType,
+                    record.UserTypeId,
+                    record.UsageLayerId))
+                {
+
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
+                        );
+                }
 
                 rowIndex++;
             }
 
             await _dbSet.AddRangeAsync(records);
-            await _uow.SaveChangesAsync();
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelCalculationField)
+                    );
+            }
+
+            return ImportResult.Succeed(
+                string.Format(ServiceMessages.ImportExcelSuccess)
+                );
         }
 
         public async Task<IEnumerable<WWsFeeDTO>> GetExportItemsAsync(WWsFeeFilterDTO filter)
