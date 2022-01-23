@@ -1,0 +1,480 @@
+﻿<script type="text/javascript">
+    let isNewRow = false;
+    const rowData = {};
+
+    function editRow(id)
+    {
+        let usertypeid = $('#hidUserTypeId_' + id).val();
+        let selectval = $('#hidUsageLayerTypeId_' + id).val();
+        FillDropDown(usertypeid, selectval);
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_UserType_' + id).hide();
+        $('#divOutput_UsageLayerType_' + id).hide();
+        $('#divOutput_P1Fee_' + id).hide();
+        $('#divOutput_P2Fee_' + id).hide();
+        $('#divOutput_P1Note3_' + id).hide();
+        $('#divOutput_P1Note7_' + id).hide();
+        $('#divOutput_P2Note3_' + id).hide();
+        $('#divOutput_P2Note7_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_UserType_' + id).show();
+        $('#divInput_UsageLayerType_' + id).show();
+        $('#divInput_P1Fee_' + id).show();
+        $('#divInput_P2Fee_' + id).show();
+        $('#divInput_P1Note3_' + id).show();
+        $('#divInput_P1Note7_' + id).show();
+        $('#divInput_P2Note3_' + id).show();
+        $('#divInput_P2Note7_' + id).show();
+
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.activityTypeId = $('#inputActivityType_' + id).val();
+        rowData.userTypeId = $('#inputUserType_' + id).val();
+        rowData.usageLayerId = $('#inputUsageLayer_' + id).val();
+        rowData.p1Fee = $('#inputP1Fee_' + id).val();
+        rowData.p2Fee = $('#inputP2Fee_' + id).val();
+        rowData.p1Note3 = $('#inputP1Note3_' + id).val();
+        rowData.p1Note7 = $('#inputP1Note7_' + id).val();
+        rowData.p2Note3 = $('#inputP2Note3_' + id).val();
+        rowData.p2Note7 = $('#inputP2Note7_' + id).val();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_ActivityType_' + id).hide();
+        $('#divInput_UserType_' + id).hide();
+        $('#divInput_UsageLayer_' + id).hide();
+        $('#divInput_P1Fee_' + id).hide();
+        $('#divInput_P2Fee_' + id).hide();
+        $('#divInput_P1Note3_' + id).hide();
+        $('#divInput_P1Note7_' + id).hide();
+        $('#divInput_P2Note3_' + id).hide();
+        $('#divInput_P2Note7_' + id).hide();
+
+        //Reverting to OriginalData
+        if (rowData != null) {
+            console.log(rowData);
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputActivityType_' + id).val(rowData.activityType);
+            $('#inputUserType_' + id).val(rowData.userTypeId);
+            $('#inputUsageLayer_' + id).val(rowData.usageLayerId);
+            $('#inputP1Fee_' + id).val(rowData.p1Fee);
+            $('#inputP2Fee_' + id).val(rowData.p2Fee);
+            $('#inputP1Note3_' + id).val(rowData.p1Note3);
+            $('#inputP1Note7_' + id).val(rowData.p1Note7);
+            $('#inputP2Note3_' + id).val(rowData.p2Note3);
+            $('#inputP2Note7_' + id).val(rowData.p2Note7);
+        }
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_ActivityType_' + id).show();
+        $('#divOutput_UserType_' + id).show();
+        $('#divOutput_UsageLayer_' + id).show();
+        $('#divOutput_P1Fee_' + id).show();
+        $('#divOutput_P2Fee_' + id).show();
+        $('#divOutput_P1Note3_' + id).show();
+        $('#divOutput_P1Note7_' + id).show();
+        $('#divOutput_P2Note3_' + id).show();
+        $('#divOutput_P2Note7_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.activityType = $('#inputActivityType_' + id).val();
+        model.userTypeId = $('#inputUserType_' + id).val();
+        model.usageLayerId = $('#inputUsageLayerType_' + id).val();
+        model.p1Fee = $('#inputP1Fee_' + id).val();
+        model.p2Fee = $('#inputP2Fee_' + id).val();
+        model.p1Note3 = $('#inputP1Note3_' + id).val();
+        model.p1Note7 = $('#inputP1Note7_' + id).val();
+        model.p2Note3 = $('#inputP2Note3_' + id).val();
+        model.p2Note7 = $('#inputP2Note7_' + id).val();
+
+
+        $.ajax({
+            url: '@Url.Action(WWsFeeController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+                console.log(data);
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#hidActivity_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanActivityType_' + id).text(data.activityTypeDisplay);
+                $('#spanUserType_' + id).text(data.userTypeDisplay);
+                $('#spanUsageLayerType_' + id).text(data.usageLayerDisplay);
+                $('#spanP1Fee_' + id).text(data.p1Fee);
+                $('#spanP2Fee_' + id).text(data.p2Fee);
+                $('#spanP1Note3_' + id).text(data.p1Note3);
+                $('#spanP1Note7_' + id).text(data.p1Note7);
+                $('#spanP2Note3_' + id).text(data.p2Note3);
+                $('#spanP2Note7_' + id).text(data.p2Note7);
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.activityType = $(e).find('#inputActivityType_').val();
+        model.userTypeId = $(e).find('#inputUserType_').val();
+        model.usageLayerId = $(e).find('#inputUsageLayerType_').val();
+        model.p1Fee = $(e).find('#inputP1Fee_').val();
+        if (model.p1Fee == "") {
+            model.p1Fee = 0;
+        }
+        model.p2Fee = $(e).find('#inputP2Fee_').val();
+        if (model.p2Fee == "") {
+            model.p2Fee = 0;
+        }
+        model.p1Note3 = $(e).find('#inputP1Note3_').val();
+        if (model.p1Note3 == "") {
+            model.p1Note3 = 0;
+        }
+        model.p1Note7 = $(e).find('#inputP1Note7_').val();
+        if (model.p1Note7 == "") {
+            model.p1Note7 = 0;
+        }
+        model.p2Note3 = $(e).find('#inputP2Note3_').val();
+        if (model.p2Note3 == "") {
+            model.p2Note3 = 0;
+        }
+        model.p2Note7 = $(e).find('#inputP2Note7_').val();
+        if (model.p2Note7 == "") {
+            model.p2Note7 = 0;
+        }
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(WWsFeeController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //ActivityType
+                $(e).find('#divInput_ActivityType_').attr('id', 'divInput_ActivityType_' + data.id);
+                $(e).find('#hidActivityTypeId_').attr('id', 'hidActivityTypeId_' + data.id);
+                $(e).find('#inputActivityType_').attr('id', 'inputActivityType_' + data.id);
+                $(e).find('#divOutput_ActivityType_').attr('id', 'divOutput_ActivityType_' + data.id);
+                $(e).find('#spanActivityType_').attr('id', 'spanActivityType_' + data.id);
+
+                $('#divInput_ActivityType_' + data.id).hide();
+                $('#spanActivityType_' + data.id).text(data.activityTypeDisplay);
+                $('#divOutput_ActivityType_' + data.id).show();
+
+                //UserType
+                $(e).find('#divInput_UserType_').attr('id', 'divInput_UserType_' + data.id);
+                $(e).find('#hidUserTypeId_').attr('id', 'hidUserTypeId_' + data.id);
+                $(e).find('#inputUserType_').attr('id', 'inputUserType_' + data.id);
+                $(e).find('#divOutput_UserType_').attr('id', 'divOutput_UserType_' + data.id);
+                $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
+
+                $('#divInput_UserType_' + data.id).hide();
+                $('#spanUserType_' + data.id).text(data.userTypeDisplay);
+                $('#divOutput_UserType_' + data.id).show();
+
+                //UsageLayerType
+                $(e).find('#divInput_UsageLayerType_').attr('id', 'divInput_UsageLayerType_' + data.id);
+                $(e).find('#hidUsageLayerTypeId_').attr('id', 'hidUsageLayerTypeId_' + data.id);
+                $(e).find('#inputUsageLayerType_').attr('id', 'inputUsageLayerType_' + data.id);
+                $(e).find('#divOutput_UsageLayerType_').attr('id', 'divOutput_UsageLayerType_' + data.id);
+                $(e).find('#spanUsageLayerType_').attr('id', 'spanUsageLayerType_' + data.id);
+
+                $('#divInput_UsageLayerType_' + data.id).hide();
+                $('#spanUsageLayerType_' + data.id).text(data.usageLayerDisplay);
+                $('#divOutput_UsageLayerType_' + data.id).show();
+
+                //P1Fee
+                $(e).find('#divInput_P1Fee_').attr('id', 'divInput_P1Fee_' + data.id);
+                $(e).find('#inputP1Fee_').attr('id', 'inputP1Fee_' + data.id);
+                $(e).find('#divOutput_P1Fee_').attr('id', 'divOutput_P1Fee_' + data.id);
+                $(e).find('#spanP1Fee_').attr('id', 'spanP1Fee_' + data.id);
+
+                $('#divInput_P1Fee_' + data.id).hide();
+                $('#spanP1Fee_' + data.id).text(data.p1Fee);
+                $('#divOutput_P1Fee_' + data.id).show();
+
+                //P2Fee
+                $(e).find('#divInput_P2Fee_').attr('id', 'divInput_P2Fee_' + data.id);
+                $(e).find('#inputP2Fee_').attr('id', 'inputP2Fee_' + data.id);
+                $(e).find('#divOutput_P2Fee_').attr('id', 'divOutput_P2Fee_' + data.id);
+                $(e).find('#spanP2Fee_').attr('id', 'spanP2Fee_' + data.id);
+
+                $('#divInput_P2Fee_' + data.id).hide();
+                $('#spanP2Fee_' + data.id).text(data.p2Fee);
+                $('#divOutput_P2Fee_' + data.id).show();
+
+                //P1Note3
+                $(e).find('#divInput_P1Note3_').attr('id', 'divInput_P1Note3_' + data.id);
+                $(e).find('#inputP1Note3_').attr('id', 'inputP1Note3_' + data.id);
+                $(e).find('#divOutput_P1Note3_').attr('id', 'divOutput_P1Note3_' + data.id);
+                $(e).find('#spanP1Note3_').attr('id', 'spanP1Note3_' + data.id);
+
+                $('#divInput_P1Note3_' + data.id).hide();
+                $('#spanP1Note3_' + data.id).text(data.p1Note3);
+                $('#divOutput_P1Note3_' + data.id).show();
+
+                //P1Note7
+                $(e).find('#divInput_P1Note7_').attr('id', 'divInput_P1Note7_' + data.id);
+                $(e).find('#inputP1Note7_').attr('id', 'inputP1Note7_' + data.id);
+                $(e).find('#divOutput_P1Note7_').attr('id', 'divOutput_P1Note7_' + data.id);
+                $(e).find('#spanP1Note7_').attr('id', 'spanP1Note7_' + data.id);
+
+                $('#divInput_P1Note7_' + data.id).hide();
+                $('#spanP1Note7_' + data.id).text(data.p1Note7);
+                $('#divOutput_P1Note7_' + data.id).show();
+
+                //P2Note3
+                $(e).find('#divInput_P2Note3_').attr('id', 'divInput_P2Note3_' + data.id);
+                $(e).find('#inputP2Note3_').attr('id', 'inputP2Note3_' + data.id);
+                $(e).find('#divOutput_P2Note3_').attr('id', 'divOutput_P2Note3_' + data.id);
+                $(e).find('#spanP2Note3_').attr('id', 'spanP2Note3_' + data.id);
+
+                $('#divInput_P2Note3_' + data.id).hide();
+                $('#spanP2Note3_' + data.id).text(data.p2Note3);
+                $('#divOutput_P2Note3_' + data.id).show();
+
+                //P2Note7
+                $(e).find('#divInput_P2Note7_').attr('id', 'divInput_P2Note7_' + data.id);
+                $(e).find('#inputP2Note7_').attr('id', 'inputP2Note7_' + data.id);
+                $(e).find('#divOutput_P2Note7_').attr('id', 'divOutput_P2Note7_' + data.id);
+                $(e).find('#spanP2Note7_').attr('id', 'spanP2Note7_' + data.id);
+
+                $('#divInput_P2Note7_' + data.id).hide();
+                $('#spanP2Note7_' + data.id).text(data.p2Note7);
+                $('#divOutput_P2Note7_' + data.id).show();
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        resetTableBackColor("my-table");
+
+        let usertypeid = $('#inputUserType_').val();
+        FillDropDown(usertypeid);
+
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(WWsFeeController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    alert(data.message);
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                console.log(err);
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+    function RelatedDropDown(e, event) {
+        let usertypeid = event.target.value;
+        FillDropDown(usertypeid);
+    }
+
+    function FillDropDown(id, selectval = null) {
+
+        let key = userType_source[id];
+        if (key != 'UserType.House') {
+            key = 'UsageLayer';
+        }
+
+        $.ajax({
+            url: '@Url.Action("GetUsageLayerAsync")',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'key': key
+                }
+        }).done(function (data) {
+            var options = $('.selectUsageLayerType');
+            options.empty();
+            $.each(data,
+                function (i, item) {
+                    options.append($('<option />')
+                        .val(item.id)
+                        .text(item.title));
+                });
+            if (selectval != null) {
+                options.val(selectval);
+            }
+        }).fail(function (error) {
+            alert(error);
+        });
+    }
+</script>
