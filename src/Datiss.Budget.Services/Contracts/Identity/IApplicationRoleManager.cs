@@ -211,6 +211,8 @@ namespace Datiss.Budget.Services.Contracts.Identity
 
         #region CustomMethods
 
+        IQueryable<Role> Query();
+
         IList<Role> FindUserRoles(int userId);
 
         Task<List<Role>> GetAllCustomRolesAsync();

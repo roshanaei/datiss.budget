@@ -30,14 +30,28 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public const string Name = "Roles";
         public const string ACTION_Index = nameof(Index);
 
+        private readonly IRoleService _roleService;
+        private readonly IAppClaimTypeService _claimTypeService;
 
-        public RolesController() {
-
+        public RolesController(
+            IRoleService roleService,
+            IAppClaimTypeService claimTypeService) {
+            _roleService = roleService ?? throw new ArgumentNullException(nameof(roleService));
+            _claimTypeService = claimTypeService ?? throw new ArgumentNullException(nameof(claimTypeService));
         }
 
         [HttpGet]
-        public IActionResult Index() {
-            return View();
+        public async Task<IActionResult> Index() {
+            var roles = (await _roleService.GetAllAsync())
+                .Adapt<List<RoleViewModel>>();
+
+            var claimTypes = (await _claimTypeService.GetEnabledTypesAsync())
+                .Adapt<List<AppClaimTypeViewModel>>();
+
+            var model = new RolesIndexViewModel(roles, claimTypes);
+            
+            return View(model);
         }
+        
     }
 }
