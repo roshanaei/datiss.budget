@@ -13,7 +13,9 @@ namespace Datiss.Budget.Common.IdentityToolkit
 
         public static string OrganizationTitle = "OrganizationTitle";
 
+        public static string BranchFeeAmount = nameof(BranchFeeAmount);
         public static string WaterInstallFee = nameof(WaterInstallFee);
+
     }
 
     public static class BudgetPermissions {
