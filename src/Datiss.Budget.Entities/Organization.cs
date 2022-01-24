@@ -98,6 +98,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<NHCo> NHCo { get; set; }
 
+        public ICollection<Cofficient> Cofficients { get; set; }
+
 
         #endregion
     }
