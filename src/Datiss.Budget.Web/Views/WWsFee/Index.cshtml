@@ -103,7 +103,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu" style="width:200%">
+                                        <div class="dropdown-menu" style="width:280px">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -157,18 +157,7 @@
                                                                name="col-5"
                                                                id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>طبقه مصرف</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-5"
-                                                               id="col-5" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-5"><span>توزیع تعدادی</span></label>
+                                                               for="col-5"><span>طبقات مصرف مسکونی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -179,7 +168,7 @@
                                                                name="col-6"
                                                                id="col-6" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-6"><span>توزیع آحادی</span></label>
+                                                               for="col-6"><span>پارامتر اول تعرفه بهای خدمات</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -190,7 +179,7 @@
                                                                name="col-7"
                                                                id="col-7" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-7"><span>توزیع مصرف</span></label>
+                                                               for="col-7"><span>پارامتر دوم تعرفه بهای خدمات</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -201,7 +190,7 @@
                                                                name="col-8"
                                                                id="col-8" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-8"><span>میانگین مصرف</span></label>
+                                                               for="col-8"><span>پارامتر اول خدمات تبصره 3</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -212,7 +201,29 @@
                                                                name="col-9"
                                                                id="col-9" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-9"><span style="">پیش بینی توزیع مصرف</span></label>
+                                                               for="col-9"><span>پارامتر دوم خدمات تبصره 3</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-10"
+                                                               id="col-10" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-10"><span>پارامتر اول خدمات تبصره 7</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-11"
+                                                               id="col-11" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-11"><span>پارامتر دوم خدمات تبصره 7</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -276,10 +287,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8,9';
+        let allColumns = '1,2,3,4,5,6,7,8,9,10,11';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,9,";
+        let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -464,7 +475,7 @@
             let input3 = document.getElementById('inputP1Note3_' + id);
             let input4 = document.getElementById('inputP1Note7_' + id);
             let input5 = document.getElementById('inputP2Note3_' + id);
-            let input5 = document.getElementById('inputP2Note7_' + id);
+            let input6 = document.getElementById('inputP2Note7_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -617,7 +628,7 @@
             fdata.append('ExcelFile', file);
             fdata.append('yearId', yearId);
 
-            $("#overlay").css("display", "block");
+            $(".olvy").css("display", "block");
 
             $.ajax({
                 url: '@Url.Action(WWsFeeController.ACTION_ImportExcel)',
@@ -627,8 +638,9 @@
                 contentType: false,
                 success: function (data, status, settings) {
                     console.log(data);
+
+                    $(".olvy").css("display", "none");
                     if (data.hasError) {
-                        $("#overlay").attr("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
                             html: `<span class="my-font">${data.message}</span>`,
@@ -643,8 +655,8 @@
                         return;
                     }
 
-                    $("#overlay").css("display", "none");
                     if (data.ask) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
                             //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
@@ -664,7 +676,7 @@
                             if(result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
                                 console.log(fdata);
-
+                                $(".olvy").css("display", "block");
                                 $.ajax({
                                     url: '@Url.Action(WWsFeeController.ACTION_ImportExcel)',
                                     type: 'POST',
@@ -688,8 +700,8 @@
                                             return;
                                         }
 
-                                        $("#overlay").css("display", "none");
-                                        if(!data.hasError) {
+                                        if (!data.hasError) {
+                                          $("#overlay").css("display", "block");
                                           Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
                                                 html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -722,8 +734,8 @@
                         });
                     }
 
-                    $("#overlay").css("display", "none");
                     if (!data.hasError && !data.ask) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">عملیات موفق</span>',
                             html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',

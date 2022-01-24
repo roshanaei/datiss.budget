@@ -125,9 +125,11 @@ namespace Datiss.Budget.Services
 
         public async Task<ValidationResult<WWsFeeDTO>> UpdateAsync(UpdateWWsFeeDTO model)
         {
+            model.CheckArgumentIsNull(nameof(model));
+
             model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
-            var usageLayerDisplay = (await _orgDbSet.FindAsync(model.UsageLayerId)).Title;
+            var usageLayerDisplay = (await _constSet.FindAsync(model.UsageLayerId)).Title;
 
             try
             {
@@ -144,7 +146,7 @@ namespace Datiss.Budget.Services
                     entity.P1Note3 = model.P1Note3;
                     entity.P1Note7 = model.P1Note7;
                     entity.P2Note3 = model.P2Note3;
-                    entity.P2Note7 = model.P1Note7;
+                    entity.P2Note7 = model.P2Note7;
 
                     await _uow.SaveChangesAsync();
 
@@ -155,6 +157,12 @@ namespace Datiss.Budget.Services
                         UserTypeId = model.UserTypeId,
                         ActivityType = model.ActivityType,
                         UsageLayerId = model.UsageLayerId,
+                        P1Fee = model.P1Fee,
+                        P2Fee = model.P2Fee,
+                        P1Note3 = model.P1Note3,
+                        P1Note7 = model.P1Note7,
+                        P2Note3 = model.P2Note3,
+                        P2Note7 = model.P2Note7,
                         OrganizationDisplay = organizationDisplay,
                         UserTypeDisplay = model.UserTypeTitle,
                         UsageLayerDisplay = usageLayerDisplay,

@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace Datiss.Budget.Reports.Excel
                 var item = items.ElementAt(i);
                 sheet.Cell(row, 1).Value = item.Year.ToString();
                 sheet.Cell(row, 2).Value = item.OrganizationDisplay;
-                sheet.Cell(row, 3).Value = item.ActivityTypeDisplay;
+                sheet.Cell(row, 3).Value = item.ActivityType.ToDisplay();
                 sheet.Cell(row, 3).DataType = XLDataType.Text;
                 sheet.Cell(row, 4).Value = item.UserTypeDisplay;
                 sheet.Cell(row, 4).DataType = XLDataType.Text;
