@@ -1,9 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Datiss.Budget.Enum;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Datiss.Budget.ViewModels.Identity
 {
-    public class RoleViewModel
+    public class PrevRoleViewModel
     {
         [HiddenInput]
         public string Id { set; get; }
@@ -12,4 +14,33 @@ namespace Datiss.Budget.ViewModels.Identity
         [Display(Name = "نام نقش")]
         public string Name { set; get; }
     }
+
+    public class RolesIndexViewModel
+    {
+
+        public RolesIndexViewModel() {
+            Items = new List<RoleViewModel>();
+            ClaimTypeSource = new List<AppClaimTypeViewModel>();
+        }
+
+        public IEnumerable<RoleViewModel> Items { get; set; }
+
+        public IEnumerable<AppClaimTypeViewModel> ClaimTypeSource { get; set; }
+    }
+
+    public class RoleViewModel {
+
+        public int Id { set; get; }
+        public string Name { set; get; }
+        public string Title { set; get; }
+        public string Description { set; get; }
+    }
+
+    public class AppClaimTypeViewModel {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Title { get; set; }
+        public EntityStatus Status { get; set; }
+    }
+
 }
