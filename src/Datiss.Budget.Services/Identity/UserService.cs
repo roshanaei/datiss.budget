@@ -22,7 +22,6 @@ using Microsoft.AspNetCore.Authorization;
 namespace Datiss.Budget.Services.Identity
 {
 
-    [Authorize(Roles = ConstantRoles.Admin)]
     public class UserService : IUserService
     {
 

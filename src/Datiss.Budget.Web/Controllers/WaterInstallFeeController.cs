@@ -205,7 +205,7 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-        [HttpPost("[action]")]
+        [HttpPost("[action]")] 
         public async Task<IActionResult> ImportExcel(ImportExcelViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
 
