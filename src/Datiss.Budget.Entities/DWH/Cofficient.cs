@@ -1,5 +1,5 @@
 ﻿using Datiss.Budget.Entities.AuditableEntity;
-using Datiss.Budget.Entities.Enum;
+using Datiss.Budget.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +19,7 @@ namespace Datiss.Budget.Entities.DWH
         public int YearId { get; set; }
         public int OrganizationId { get; set; }
         public CofficientsGroup GroupName { get; set; }
+        public EntityStatus Status { get; set; }
         public int CofficientTypeId { get; set; }
         public decimal Fee { get; set; }
         #endregion

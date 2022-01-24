@@ -1,4 +1,4 @@
-﻿namespace Datiss.Budget.Entities.Enum
+﻿namespace Datiss.Budget.Enum
 {
     public enum CofficientsGroup
     {

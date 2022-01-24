@@ -1,5 +1,5 @@
 ﻿using Datiss.Budget.Entities.DWH;
-using Datiss.Budget.Entities.Enum;
+using Datiss.Budget.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -23,6 +23,9 @@ namespace Datiss.Budget.DataLayer.Configurations
 
             builder.Property(x => x.GroupName)
                 .HasDefaultValue(CofficientsGroup.CurrentIncome);
+
+            builder.Property(x => x.Status)
+                .HasDefaultValue(EntityStatus.Enabled);
 
             builder.Property(x => x.Fee).HasColumnType("decimal(18,6)");
 
