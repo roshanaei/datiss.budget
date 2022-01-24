@@ -1,5 +1,5 @@
-﻿@model IncomeCurrentWHIndexViewModel
-@{ ViewData["Title"] = "درآمد آب بهای مشترکین مسکونی سالیانه"; }
+﻿@model IncomeCurrentWNHIndexViewModel
+@{ ViewData["Title"] = "درآمد آب بهای مشترکین غیرمسکونی سالیانه"; }
 
 <!--Title-->
 <div class="row">
@@ -19,8 +19,8 @@
                         <!--Filters-->
                         <form method="post"
                               id="filterForm"
-                              asp-controller="@IncomeCurrentWHController.Name"
-                              asp-action="@IncomeCurrentWHController.ACTION_Index"
+                              asp-controller="@IncomeCurrentWNHController.Name"
+                              asp-action="@IncomeCurrentWNHController.ACTION_Index"
                               asp-antiforgery="true">
                             <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
                             <div class="rowACJSB">
@@ -46,6 +46,7 @@
                                 </fieldset>
                                 <fieldset>
                                     <div class="rowACJE">
+
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
@@ -82,8 +83,10 @@
                                             <span style="margin-right:10px">رکورد</span>
 
                                         </label>
+
                                     </fieldset>
-                                    <!--DropDown Menu-->
+                                    @* drop down menu *@
+
                                     <div class="btn-group dropdown form-group">
                                         <button type="button"
                                                 class="btn btn-light my-font dropdown-toggle"
@@ -92,7 +95,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu" style="width:200%">
+                                        <div class="dropdown-menu" style="width:180%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -135,7 +138,7 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>طبقه مصرف</span></label>
+                                                               for="col-4"><span>تعداد مشترک</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -146,7 +149,7 @@
                                                                name="col-5"
                                                                id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>تعداد مشترک</span></label>
+                                                               for="col-5"><span>آحاد مشترک</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -157,7 +160,7 @@
                                                                name="col-6"
                                                                id="col-6" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-6"><span>آحاد مشترک</span></label>
+                                                               for="col-6"><span>متوسط مصرف ماهیانه</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -168,7 +171,7 @@
                                                                name="col-7"
                                                                id="col-7" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-7"><span>قیمت هر طبقه</span></label>
+                                                               for="col-7"><span>مصرف آب</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -179,7 +182,7 @@
                                                                name="col-8"
                                                                id="col-8" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-8"><span>متوسط مصرف هر طبقه</span></label>
+                                                               for="col-8"><span>ظرفیت قراردادی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -190,7 +193,7 @@
                                                                name="col-9"
                                                                id="col-9" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-9"><span style="">مصرف آب</span></label>
+                                                               for="col-9"><span>قیمت هر کاربری</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -201,7 +204,7 @@
                                                                name="col-10"
                                                                id="col-10" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-10"><span style="">درآمد آب بها</span></label>
+                                                               for="col-10"><span>درآمد آب بها</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -212,7 +215,7 @@
                                                                name="col-11"
                                                                id="col-11" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-11"><span style="">درآمد آبونمان</span></label>
+                                                               for="col-11"><span>درآمد آب بها مازاد بر ظرفیت</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -223,7 +226,7 @@
                                                                name="col-12"
                                                                id="col-12" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-12"><span style="">درآمد بها فصلی</span></label>
+                                                               for="col-12"><span>درآمد آب بها فصلی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -234,7 +237,7 @@
                                                                name="col-13"
                                                                id="col-13" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-13"><span style="">درآمد کل آب بها</span></label>
+                                                               for="col-13"><span>قیمت آب تبصره 3</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -245,7 +248,7 @@
                                                                name="col-14"
                                                                id="col-14" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-14"><span style="">قیمت تبصره 3 آب بها خانگی</span></label>
+                                                               for="col-14"><span>درآمد تبصره 3 آب بها</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -256,7 +259,7 @@
                                                                name="col-15"
                                                                id="col-15" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-15"><span style="">درآمد تبصره 3 آب بها</span></label>
+                                                               for="col-15"><span>درآمد آبونمان</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -267,7 +270,7 @@
                                                                name="col-16"
                                                                id="col-16" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-16"><span style="">تفاوت حجم مصرف آب و دفع فاضلاب</span></label>
+                                                               for="col-16"><span>درآمد کل آب بها</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -278,7 +281,7 @@
                                                                name="col-17"
                                                                id="col-17" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-17"><span style="">درآمد تبصره 2 آب بها</span></label>
+                                                               for="col-17"><span>درآمد تبصره 2 آب بها</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -289,10 +292,23 @@
                                                                name="col-18"
                                                                id="col-18" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-18"><span style="">حجم دفع فاضلاب</span></label>
+                                                               for="col-18"><span>حجم دفع</span></label>
                                                     </div>
                                                 </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-19"
+                                                               id="col-19" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-19"><span>تفاوت حجم مصرف آب و دفع فاضلاب</span></label>
+                                                    </div>
+                                                </div>
+
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -301,12 +317,12 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@IncomeCurrentWHController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@IncomeCurrentWNHController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
-                                           asp-asp-controller="@IncomeCurrentWHController.Name"
-                                           asp-action="@IncomeCurrentWHController.ACTION_GetExcelTemplate"
+                                           asp-asp-controller="@IncomeCurrentWNHController.Name"
+                                           asp-action="@IncomeCurrentWNHController.ACTION_GetExcelTemplate"
                                            asp-route-yearId="@Model.Filter.YearId"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
@@ -331,7 +347,6 @@
 }
 
 @section footSection {
-
     <div id="divCopy">
 
     </div>
@@ -343,6 +358,7 @@
     </div>
 
 
+
     <div id="divCalc">
 
     </div>
@@ -350,10 +366,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18';
+        let allColumns = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,";
+        let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -363,13 +379,9 @@
         </script>
     }
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
-
-    $(document).ready(function () {
-        console.log(userType_source);
-        console.log(userType_Ids);
-        console.log(userType_keys);
+        $(document).ready(function () {
             console.log('ready');
             document.getElementById("hidColumns").value = showingColmuns;
 
@@ -444,7 +456,7 @@
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
                     console.log(params);
-                    let deleteUrl = '@Url.Action(IncomeCurrentWHController.ACTION_DeleteRecords)';
+                    let deleteUrl = '@Url.Action(IncomeCurrentWNHController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
 
                     $.ajax({
@@ -479,7 +491,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(IncomeCurrentWHController.ACTION_Index)';
+                                document.location.href = '@Url.Action(IncomeCurrentWNHController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
@@ -511,8 +523,7 @@
             addNewRow();
         });
 
-    $(document).on('click', '.edit-row', function () {
-
+        $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
 
@@ -520,108 +531,123 @@
             let input2 = document.getElementById('inputUnitUser_' + id);
             let input3 = document.getElementById('inputAvgConsumeUser_' + id);
             let input4 = document.getElementById('inputConsumptionUser_' + id);
-            let input5 = document.getElementById('inputCost_' + id);
-            let input6 = document.getElementById('inputNote3Price_' + id);
+            let input5 = document.getElementById('inputCapacity_' + id);
+            let input6 = document.getElementById('inputCost_' + id);
             let input7 = document.getElementById('inputIncome_' + id);
-            let input8 = document.getElementById('inputNote3Income_' + id);
-            let input9 = document.getElementById('inputSubscriptionIncome_' + id);
-            let input10 = document.getElementById('inputSeasonalIncome_' + id);
-            let input11 = document.getElementById('inputTIncome_' + id);
-            let input12 = document.getElementById('inputDiff_ConsWsVolume_' + id);
-            let input13 = document.getElementById('inputNote2Income_' + id);
-            let input14 = document.getElementById('inputWasteVolume_' + id);
+            let input8 = document.getElementById('inputExcessIncome_' + id);
+            let input9 = document.getElementById('inputSeasonalIncome_' + id);
+            let input10 = document.getElementById('inputNote3Price_' + id);
+            let input11 = document.getElementById('inputNote3Income_' + id);
+            let input12 = document.getElementById('inputSubscriptionIncome_' + id);
+            let input13 = document.getElementById('inputTotalIncome_' + id);
+            let input14 = document.getElementById('inputDiff_ConsWsVolume_' + id);
+            let input15 = document.getElementById('inputNote2Income_' + id);
+            let input16 = document.getElementById('inputWasteVolume_' + id);
+
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
-            input1.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input2.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input3.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input4.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input5.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input6.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input7.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input8.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input9.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input10.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input11.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input12.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input13.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input14.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-
-
-            btnSaveEdit.addEventListener('click', function (evenrt) {
+            btnSaveEdit.addEventListener('click', function(event) {
                 event.preventDefault();
                 $(btnSaveEdit).attr('disabled', true);
+                $(btnSaveEdit).unbind('keyup');
+            });
+
+            input1.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input2.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input3.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input4.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input5.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input6.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input7.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input8.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input9.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input10.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input11.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input12.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input13.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input14.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input15.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input16.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
             });
 
             editRow(id);
@@ -679,12 +705,12 @@
         $(document).on('click', '.openCopy', function() {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action(IncomeCurrentWHController.ACTION_Copy)',
+                url: '@Url.Action(IncomeCurrentWNHController.ACTION_Copy)',
                 success: function (data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
                     $('#CopyModal').modal('show');
-                    $('#CopyModal').on('hidden.bs.modal', function () {
+                    $('#CopyModal').on('hidden.bs.modal', function() {
                         $('#divCopy').html('');
                         $('.modal-backdrop').remove();
                     });
@@ -696,8 +722,8 @@
             });
         });
 
-        $(document).ready(function () {
-            $('.modal').on('hidden.bs.modal', function () {
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal', function() {
                 $('.modal-backdrop').remove();
             });
         });
@@ -711,7 +737,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(IncomeCurrentWHController.ACTION_Calculation)',
+                url: '@Url.Action(IncomeCurrentWNHController.ACTION_Calculation)',
                 data: model,
                 success: function (data, status, settings) {
                     $('#divCalc').html('');
@@ -738,7 +764,7 @@
             fdata.append('yearId', yearId);
 
             $.ajax({
-                url: '@Url.Action(IncomeCurrentWHController.ACTION_ImportExcel)',
+                url: '@Url.Action(IncomeCurrentWNHController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
@@ -763,6 +789,7 @@
                     if (data.ask) {
                         Swal.fire({
                             html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
+                            //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
                             type: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#2F8BE6',
@@ -776,18 +803,18 @@
                             buttonsStyling: false,
                         }).then(function (result) {
 
-                            if(result.value) {
+                            if (result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
                                 console.log(fdata);
 
                                 $.ajax({
-                                    url: '@Url.Action(IncomeCurrentWHController.ACTION_ImportExcel)',
+                                    url: '@Url.Action(IncomeCurrentWNHController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
                                     contentType: false,
-                                    success: function(data, status, settings) {
-                                        if(data.hasError) {
+                                    success: function (data, status, settings) {
+                                        if (data.hasError) {
                                             Swal.fire({
                                                 title: '<span class="my-font">خطا</span>',
                                                 html: `<span class="my-font">${data.message}</span>`,
@@ -802,8 +829,8 @@
                                             return;
                                         }
 
-                                        if(!data.hasError) {
-                                          Swal.fire({
+                                        if (!data.hasError) {
+                                            Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
                                                 html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
                                                 type: 'success',
@@ -814,15 +841,15 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                document.location.href = '@Url.Action(IncomeCurrentWHController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(IncomeCurrentWNHController.ACTION_Index)';
                                             });
                                         }
 
-                                        if(data.ask) {
+                                        if (data.ask) {
                                             alert('dont ask again');
                                         }
                                     },
-                                    error: function(request, options, err) {
+                                    error: function (request, options, err) {
                                         console.log(err);
                                     }
                                 });
@@ -834,6 +861,7 @@
                             }
                         });
                     }
+
                     if (!data.hasError && !data.ask) {
                         Swal.fire({
                             title: '<span class="my-font">عملیات موفق</span>',
@@ -846,14 +874,14 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(IncomeCurrentWHController.ACTION_Index)';
+                            document.location.href = '@Url.Action(IncomeCurrentWNHController.ACTION_Index)';
                         });
                     }
 
                 },
                 error: function(request, options, err) {
                     console.log(err);
-                    alert('مشکلی به وجود آمده است ،لطفا مجددا عملیات را تکرار کنید . با تشکر');
+                    alert('مشکلی پیش آمده است ، کمی بعد سعی کنید . با تشکر');
                 }
             });
 
@@ -869,7 +897,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(IncomeCurrentWHController.ACTION_Copy)',
+                url: '@Url.Action(IncomeCurrentWNHController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
                 success: function (data, status, settings) {
@@ -916,6 +944,6 @@
             $('#filterForm').submit();
         };
 
-    </script>
+</script>
 
 }

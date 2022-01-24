@@ -147,6 +147,36 @@
   <data name="IncomeCurrentWH_Cal9" xml:space="preserve">
     <value>مجموع مصرف مشترکین مسکونی سالیانه</value>
   </data>
+  <data name="IncomeCurrentWNH_Cal1" xml:space="preserve">
+    <value>مجموع درآمد آب بها مشترکین غیرمسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWNH_Cal10" xml:space="preserve">
+    <value>مجموع مصرف مشترکین غیرمسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWNH_Cal2" xml:space="preserve">
+    <value>مجموع درآمد مازاد بر ظرفیت آب بها مشترکین غیرمسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWNH_Cal3" xml:space="preserve">
+    <value>مجموع درآمد فصلی آب بها مشترکین غیرمسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWNH_Cal4" xml:space="preserve">
+    <value>مجموع درآمد تبصره 2 آب بها مشترکین غیرمسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWNH_Cal5" xml:space="preserve">
+    <value>مجموع درآمد تبصره 3 آب بها مشترکین غیرمسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWNH_Cal6" xml:space="preserve">
+    <value>مجموع درآمد آبونمان آب بها مشترکین غیرمسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWNH_Cal7" xml:space="preserve">
+    <value>مجموع درآمد آب بها کل مشترکین غیرمسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWNH_Cal8" xml:space="preserve">
+    <value>مجموع تعداد مشترکین غیرمسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWNH_Cal9" xml:space="preserve">
+    <value>مجموع آحاد مشترکین غیرمسکونی سالیانه</value>
+  </data>
   <data name="IncomeForcastOthers_Cal1" xml:space="preserve">
     <value>تعداد کل </value>
   </data>

@@ -117,8 +117,19 @@ namespace Datiss.Budget.Services
                             Id = x.Id,
                             Title = x.Title
                         }).ToListAsync();
-        public async Task<IEnumerable<DropDownItem>> GetByKeyAsync(string key,string parentkey)
-            => await _dbSet
+        public async Task<IEnumerable<DropDownItem>> GetByKeyAsync(string key,string parentkey,bool none = false)
+            => none 
+            ? await _dbSet
+                        .Include(x => x.Parent)
+                        .Where(x => x.ConstantKey.ToUpper() != key.ToUpper() &&
+                                    x.Parent.ConstantKey.ToUpper() == parentkey.ToUpper())
+                        .OrderBy(x => x.DisplayOrder)
+                        .Select(x => new DropDownItem
+                        {
+                            Id = x.Id,
+                            Title = x.Title
+                        }).ToListAsync()
+            : await _dbSet
                         .Include(x=>x.Parent)
                         .Where(x => x.ConstantKey.ToUpper() == key.ToUpper() &&
                                     x.Parent.ConstantKey.ToUpper() == parentkey.ToUpper())
