@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Common.IdentityToolkit
 {
+
     public static class BudgetClaimTypes
     {
         public static string OrganizationId = "OrganizationId";
@@ -16,9 +17,9 @@ namespace Datiss.Budget.Common.IdentityToolkit
     }
 
     public static class BudgetPermissions {
-        public static string List = nameof(List);
-        public static string Create = nameof(Create);
-        public static string Edit = nameof(Edit);
-        public static string Delete = nameof(Delete);
+        public static string List = nameof(List).ToLower();
+        public static string Create = nameof(Create).ToLower();
+        public static string Edit = nameof(Edit).ToLower();
+        public static string Delete = nameof(Delete).ToLower();
     }
 }
