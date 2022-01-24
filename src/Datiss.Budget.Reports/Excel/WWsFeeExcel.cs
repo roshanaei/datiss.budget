@@ -121,12 +121,17 @@ namespace Datiss.Budget.Reports.Excel
 
             var range = sheet.Range(2, 1, row - 1, 14);
             range.Column(9).Style.NumberFormat.Format = "#,##0";
+            range.Column(9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(10).Style.NumberFormat.Format = "#,##0";
+            range.Column(10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(11).Style.NumberFormat.Format = "#,##0";
+            range.Column(11).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(12).Style.NumberFormat.Format = "#,##0";
+            range.Column(12).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(13).Style.NumberFormat.Format = "#,##0";
+            range.Column(13).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(14).Style.NumberFormat.Format = "#,##0";
-            range.Column(15).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(14).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
