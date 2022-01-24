@@ -56,7 +56,7 @@ namespace Datiss.Budget.ViewModels
         public int CofficientTypeId { get; set; }
         public string CofficientTypeTitle { get; set; }
         public decimal Fee { get; set; }
-        public string WInstallFeeDisplay => Fee.ToString("N2");
+        public string FeeDisplay => Fee.ToString("N2");
     }
 
     public class CofficientFilterViewModel : FilterViewModel
