@@ -382,6 +382,10 @@ namespace Datiss.Budget.Services
             var usagelayers = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UsageLayerType &&
                                                  x.Status != EntityStatus.Deleted);
 
+            var houseUsageLayer = await usagelayers.Where(x => x.ConstantKey == ConstantKeys.__House).ToListAsync();
+            var noneHouseUsageLayer = await usagelayers.Where(x => x.ConstantKey == ConstantKeys.__UsageLayerType).ToListAsync();
+
+
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull($"Year not found with id: {yearId}");
 
@@ -414,6 +418,23 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelInvalidUsageLayer, rowIndex + 2, rec.UserTypeId)
                         );
                 }
+
+                var userType = await _constSet.FindAsync(rec.UserTypeId);
+
+                if (userType.ConstantKey == ConstantKeys.__House && !houseUsageLayer.Any(x => x.Id == rec.UsageLayerId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerUserType, rowIndex + 2, rec.UsageLayerId, userType.Title)
+                        );
+                }
+
+                if (userType.ConstantKey != ConstantKeys.__House && !noneHouseUsageLayer.Any(x => x.Id == rec.UsageLayerId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerUserType, rowIndex + 2, rec.UsageLayerId, userType.Title)
+                        );
+                }
+
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
                     return ImportResult.Failed(
@@ -443,15 +464,18 @@ namespace Datiss.Budget.Services
 
             //Start Missing Type
             var missingUserType = new List<Constant>();
-            var missingUsageLayers = new List<Constant>();
+            var missingHUsageLayerType = new List<Constant>();
+            var missingNHUsageLayerType = new List<Constant>();
 
             string orgTitle = "";
-            string userTypeTitle = "";
+            string orgTitleHouse = "";
+            string orgTitleNHouse = "";
+
+            string hUsageLayerTitle = "";
+            string nHUsageLayerTitle = "";
 
             foreach (var org in existOrgs)
             {
-                if (orgTitle != "")
-                    break;
                 foreach (var usert in usertypes)
                 {
                     var existUserTypeInExcel = records.Any(_ => _.UserTypeId == usert.Id &&
@@ -461,19 +485,36 @@ namespace Datiss.Budget.Services
                         missingUserType.Add(usert);
                         orgTitle = org.Title;
                     }
-                    else if (!missingUserType.Any())
+                    else 
                     {
-                        foreach (var usagel in usagelayers)
+                        if (usert.ConstantKey == ConstantKeys.__House)
                         {
-                            var existUsageLayersInExcel = records.Any(_ => _.UserTypeId == usert.Id &&
-                                                                           _.UsageLayerId == usagel.Id &&
-                                                                           _.OrganizationId == org.Id);
-
-                            if (!existUsageLayersInExcel)
+                            foreach (var usage in houseUsageLayer)
                             {
-                                missingUsageLayers.Add(usagel);
-                                orgTitle = org.Title;
-                                userTypeTitle = usert.Title;
+                                var exist = records.Any(_ => _.UserTypeId == usert.Id &&
+                                                             _.OrganizationId == org.Id &&
+                                                             _.UsageLayerId == usage.Id);
+                                if (!exist)
+                                {
+                                    missingHUsageLayerType.Add(usage);
+                                    hUsageLayerTitle = usert.Title;
+                                    orgTitleHouse = org.Title;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (var nhusage in noneHouseUsageLayer)
+                            {
+                                var exist = records.Any(_ => _.UserTypeId == usert.Id &&
+                                                             _.OrganizationId == org.Id &&
+                                                             _.UsageLayerId == nhusage.Id);
+                                if (!exist)
+                                {
+                                    missingNHUsageLayerType.Add(nhusage);
+                                    nHUsageLayerTitle = usert.Title;
+                                    orgTitleNHouse = org.Title;
+                                }
                             }
                         }
                     }
@@ -491,15 +532,26 @@ namespace Datiss.Budget.Services
                     string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, userTypeNames, orgTitle));
             }
 
-            if (missingUsageLayers.Any())
+            if (missingHUsageLayerType.Any())
             {
-                string usageLayerNames = "";
-                foreach (var item in missingUsageLayers)
+                string usageTypeNames = "";
+                foreach (var item in missingHUsageLayerType)
                 {
-                    usageLayerNames += "- [" + item.Title + "]<br>";
+                    usageTypeNames += "- " + item.Title + "<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelUsageLayerUserTypeOrgNotInExcel, usageLayerNames, userTypeTitle, orgTitle));
+                    string.Format(ServiceMessages.ImportExcelUsageLayerUserTypeOrgNotInExcel, usageTypeNames, hUsageLayerTitle, orgTitleHouse));
+            }
+
+            if (missingNHUsageLayerType.Any())
+            {
+                string usageTypeNames = "";
+                foreach (var item in missingNHUsageLayerType)
+                {
+                    usageTypeNames += "- " + item.Title + "<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelUsageLayerUserTypeOrgNotInExcel, usageTypeNames, nHUsageLayerTitle, orgTitleNHouse));
             }
             //End
 
