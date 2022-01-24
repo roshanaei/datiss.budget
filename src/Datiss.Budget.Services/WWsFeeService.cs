@@ -5,6 +5,7 @@ using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Entities;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Extensions;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
@@ -13,6 +14,7 @@ using Datiss.Budget.Services.Excel;
 using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
 using LinqKit;
 using Mapster;
 using Microsoft.AspNetCore.Http;
@@ -735,6 +737,28 @@ namespace Datiss.Budget.Services
             if (filter.UsageLayerId.HasValue)
                 query = query.Where(x => x.UsageLayerId == filter.UsageLayerId.Value);
 
+            if (filter.Search.IsNotNullOrEmpty())
+            {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+
+                bool isNum = int.TryParse(filter.Search, out int res);
+
+                if (isNum)
+                {
+                    query = query.Where(_ => _.P1Fee.ToString().Contains(filter.Search) ||
+                                             _.P2Fee.ToString().Contains(filter.Search) ||
+                                             _.P1Note3.ToString().Contains(filter.Search) ||
+                                             _.P1Note7.ToString().Contains(filter.Search) ||
+                                             _.P2Note3.ToString().Contains(filter.Search) ||
+                                             _.P2Note7.ToString().Contains(filter.Search));
+                }
+                else
+                {
+                    query = query.Where(_ => _.UserType.Title.ToUpper().Contains(filter.Search)||
+                                             _.Organization.Title.ToUpper().Contains(filter.Search)||
+                                             _.UsageLayer.Title.ToUpper().Contains(filter.Search));
+                }
+            }
             return query;
         }
 
