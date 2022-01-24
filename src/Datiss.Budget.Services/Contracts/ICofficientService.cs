@@ -1,5 +1,10 @@
-﻿using System;
+﻿using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Services.Infrastructure;
+using Datiss.Budget.Services.Models;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,26 +13,24 @@ namespace Datiss.Budget.Services.Contracts
 {
     public interface ICofficientService
     {
-        //Task<WaterInstallFee> GetByIdAsync(int id);
+        Task<Cofficient> GetByIdAsync(int id);
 
-        //Task<ValidationResult<WaterInstallFeeDTO>> CreateAsync(CreateWaterInstallFeeDTO model);
+        Task<ValidationResult<CofficientDTO>> CreateAsync(CreateCofficientDTO model);
 
-        //Task<ValidationResult<WaterInstallFeeDTO>> UpdateAsync(UpdateWaterInstallFeeDTO model);
+        Task<ValidationResult<CofficientDTO>> UpdateAsync(UpdateCofficientDTO model);
 
-        //Task HardDeleteAsync(int Id);
+        Task HardDeleteAsync(int Id);
 
-        //Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
-        //Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId);
+        Task<PagedResult<CofficientDTO>> GetListAsync(CofficientFilterDTO filter);
 
-        //Task<PagedResult<WaterInstallFeeDTO>> GetListAsync(WaterInstallFeeFilterDTO filter);
+        Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
 
-        //Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
+        Task<Stream> ExportExcelAsync(CofficientFilterDTO filter);
 
-        //Task<Stream> ExportExcelAsync(WaterInstallFeeFilterDTO filter);
+        Task<IEnumerable<CofficientDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
-        //Task<IEnumerable<WaterInstallFeeDTO>> GetExportItemsAsync(int yearId, int organizationId);
-
-        //Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
     }
 }
