@@ -22,7 +22,8 @@ using ClosedXML.Extensions;
 using Datiss.Budget.Reports.Excel;
 using Microsoft.Extensions.Logging;
 using Datiss.Budget.Common;
-using Datiss.Budget.Enum;
+using Datiss.Budget.Enum; 
+using Datiss.Budget.Security;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -121,6 +122,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("{page?}")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.List)]
         public async Task<IActionResult> Index(int page = 1) 
         {
             var filter = new WaterInstallFeeFilterDTO();

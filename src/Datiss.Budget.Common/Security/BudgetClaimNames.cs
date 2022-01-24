@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Datiss.Budget.Common.IdentityToolkit
+{
+    public static class BudgetClaimTypes
+    {
+        public static string OrganizationId = "OrganizationId";
+
+        public static string OrganizationTitle = "OrganizationTitle";
+
+        public static string WaterInstallFee = nameof(WaterInstallFee);
+    }
+
+    public static class BudgetPermissions {
+        public static string List = nameof(List);
+        public static string Create = nameof(Create);
+        public static string Edit = nameof(Edit);
+        public static string Delete = nameof(Delete);
+    }
+}

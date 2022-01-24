@@ -17,10 +17,12 @@ using Datiss.Budget.Services.Contracts.Identity;
 using DNTPersianUtils.Core;
 using LinqKit;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Datiss.Budget.Services.Identity
 {
 
+    [Authorize(Roles = ConstantRoles.Admin)]
     public class UserService : IUserService
     {
 
@@ -110,8 +112,6 @@ namespace Datiss.Budget.Services.Identity
             if(!result.Succeeded) {
                 throw new CreateUserException(result.Errors);
             }
-
-            
 
             //var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
             //if (!passwordResult.Succeeded) {
