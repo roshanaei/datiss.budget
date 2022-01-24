@@ -22,6 +22,6 @@ namespace Datiss.Budget.Services.Excel.Models
         public int CofficientTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
-        public int Fee { get; set; }
+        public decimal Fee { get; set; }
     }
 }
