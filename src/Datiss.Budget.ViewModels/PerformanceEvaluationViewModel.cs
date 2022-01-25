@@ -73,7 +73,8 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> OrganizationSource { get; set; }
 
-        public IFormFile ExcelFile { get; set; }
+        public IList<SelectListItem> InputOrganizationSource { get; set; }
+
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
             => YearSource = source.Select(x => new SelectListItem
@@ -84,6 +85,12 @@ namespace Datiss.Budget.ViewModels
 
         public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
             => OrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+        public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => InputOrganizationSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()

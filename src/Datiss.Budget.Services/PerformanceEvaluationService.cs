@@ -115,7 +115,7 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task HardDeleteAsync(int yearId, int organizationId)
+        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId)
         {
             var organization = await _orgDbSet.FindAsync(organizationId);
             organization.CheckReferenceIsNull(nameof(organization));
@@ -142,7 +142,16 @@ namespace Datiss.Budget.Services
                 item.Status = EntityStatus.Deleted;
             }
 
+            var result = new OrganizationDeleteDataResult
+            {
+                OrganizationTitle = organization.Title,
+                Year = year.Year,
+                YearTitle = year.Title
+            };
+
             await _uow.SaveChangesAsync();
+
+            return await Task.FromResult(result);
         }
 
         public async Task<PagedResult<PerformanceEvaluationDTO>> GetListAsync(PerformanceEvaluationFilterDTO filter)
@@ -359,39 +368,6 @@ namespace Datiss.Budget.Services
                                     }).ToListAsync();
 
             return items;
-        }
-
-        public async Task<Stream> ExportExcelAsync(PerformanceEvaluationFilterDTO filter)
-        {
-            filter.CheckArgumentIsNull(nameof(filter));
-
-            var query = Query();
-
-            query = await setFilter(query, filter);
-
-            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
-
-            var items = await query
-                                    .Include(x => x.FinanceYear)
-                                    .Include(x => x.Organization)
-                                    .Select(x => new PerformanceEvaluationDTO
-                                    {
-                                        Id = x.Id,
-                                        OrganizationDisplay = x.Organization.Title,
-                                        OrganizationId = x.OrganizationId,
-                                        Year = x.FinanceYear.Year,
-                                        YearId = x.YearId,
-                                        Target = x.Target,
-                                        Month = x.Month,
-                                        Operation = x.Operation
-                                    }).ToListAsync();
-
-            var ms = new MemoryStream();
-            var result = _excelService.Export(items, ms);
-
-            var mem1 = new MemoryStream(ms.ToArray());
-
-            return mem1;
         }
 
 

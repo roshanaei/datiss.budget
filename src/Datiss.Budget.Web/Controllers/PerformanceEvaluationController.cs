@@ -11,13 +11,13 @@ using Datiss.Budget.Web.Helpers;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Datiss.Budget.Reports.Excel;
+using ClosedXML.Extensions;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -26,11 +26,14 @@ namespace Datiss.Budget.Web.Controllers
     public class PerformanceEvaluationController : Controller
     {
         public const string Name = "PerformanceEvaluation";
-        public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
-        public const string ACTION_Delete = nameof(Delete);
+        public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
+        public const string ACTION_ExportExcel = nameof(ExportExcel);
+        public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
+
+        private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
         private readonly IWebHostEnvironment _env;
         private readonly IPerformanceEvaluationService _performanceEvalutionService;
@@ -56,81 +59,13 @@ namespace Datiss.Budget.Web.Controllers
         }
 
 
-        private void showMessage(string type, string message)
-        {
-            ViewData["type"] = type;
-            ViewData["message"] = message;
-        }
-
-        [HttpGet("[action]")]
-        public async Task<IActionResult> Create()
-        {
-            var model = new CreatePerformanceEvaluationViewModel();
-
-            //var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            //model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem
-            //{
-            //    Text = x.Title,
-            //    Value = x.Id.ToString()
-            //});
-
-            return PartialView("_create", model);
-        }
-
         [HttpPost("[action]")]
-        public async Task<IActionResult> Create(CreatePerformanceEvaluationViewModel model)
+        public async Task<IActionResult> Edit(UpdatePerformanceEvaluationViewModel model)
         {
-            var result = await _performanceEvalutionService.CreateAsync(new CreatePerformanceEvaluationDTO
-            {
-                TableFieldId = model.TableFieldId,
-                OrganizationId = model.OrganizationId,
-                Operation = model.Operation,
-                YearId = model.YearId,
-                Target = model.Target
-            });
-
-            if (!result.IsValid)
-            {
-                model.AddError(result.Message);
-                return Json(model);
-            }
-
-            return Json(result.Result.Adapt<PerformanceEvaluationViewModel>());
-        }
-
-        [HttpGet("[action]/{id}")]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var entity = await _performanceEvalutionService.GetByIdAsync(id);
-
-            if (entity == null)
-            {
-                return RedirectToAction("Index");
-            }
-
-            var model = entity.Adapt<UpdatePerformanceEvaluationViewModel>();
-            //var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("usertype");
-            //model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem
-            //{
-            //    Text = x.Title,
-            //    Value = x.Id.ToString()
-            //});
-
-            return View(model);
-        }
-
-        [HttpPost("[action]/{id}")]
-        public async Task<IActionResult> Edit(int id, UpdatePerformanceEvaluationViewModel model)
-        {
-            //var dwaterTypeSource = await _constantService.GetByConstantKeyAsync("[usertype]");
-            //model.DWaterTypeSource = dwaterTypeSource.Select(x => new SelectListItem {
-            //    Text = x.Title,
-            //    Value = x.Id.ToString()
-            //});
 
             if (!ModelState.IsValid)
             {
-                model.AddError("خطاهای داده ای را بررسی نمایید.");
+                model.AddError(ViewMessages.InvalidData);
                 return Json(model);
             }
 
@@ -146,53 +81,64 @@ namespace Datiss.Budget.Web.Controllers
             return Json(
                 result.Result.Adapt<PerformanceEvaluationViewModel>()
             );
-
-            //return RedirectToAction("Index", new { page = model._CurrentPage });
         }
 
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1)
         {
+            var filter = new PerformanceEvaluationFilterDTO();
             var orgSource = (await _organizationService.GetDropDownDataAsync())
-               .Adapt<List<DropDownItemViewModel>>();
+              .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
 
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var filterInput = new PerformanceEvaluationFilterDTO
-            {
-                OrderBy = "displayorder",
-                PageNumber = page,
-                YearId = maxYear,
-                tableNames = TablesName.CurrentIncome,
-                OrganizationId = firstOrgId
-            };
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
 
-            var result = await _performanceEvalutionService.GetListAsync(filterInput);
+            filter.YearId = maxYear;
+            filter.OrganizationId = firstOrgId;
+
+            var myfilter = TempData.Get<PerformanceEvaluationFilterViewModel>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<PerformanceEvaluationFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
+
+            var result = await _performanceEvalutionService.GetListAsync(filter);
             var model = result.Adapt<PerformanceEvaluationIndexViewModel>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
 
-            model.SetFinanceYearFilterSource(yearSource, maxYear);
-            model.SetOrganizationFilterSource(orgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
 
-            model.Filter.YearId = filterInput.YearId;
-            model.Filter.OrganizationId = filterInput.OrganizationId;
+            model.Filter.YearId = filter.YearId;
+            model.Filter.OrganizationId = filter.OrganizationId;
+            model.PageNumber = filter.PageNumber;
+            model.PageSize = filter.PageSize;
 
             return View(model);
         }
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(PerformanceEvaluationIndexViewModel model, int page = 1)
+        public async Task<IActionResult> Index(PerformanceEvaluationIndexViewModel model)
         {
-            var filterInput = model.Filter.Adapt<PerformanceEvaluationFilterDTO>();
+            var filter = model.Filter.Adapt<PerformanceEvaluationFilterDTO>();
 
-            var result = await _performanceEvalutionService.GetListAsync(filterInput);
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _performanceEvalutionService.GetListAsync(filter);
             model = result.Adapt<PerformanceEvaluationIndexViewModel>();
+            model.Filter = filter.Adapt<PerformanceEvaluationFilterViewModel>();
 
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
@@ -200,13 +146,14 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync("usertype"))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
-            model.SetFinanceYearFilterSource(yearSource);
-            model.SetOrganizationFilterSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
 
             return View(model);
         }
@@ -216,45 +163,147 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            if (model.ExcelFile == null ||
-                model.ExcelFile.Length == 0)
-                return RedirectToAction("Index");
+            if (model.ExcelFile == null || model.ExcelFile.Length == 0)
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelInvalidFile
+                });
 
             try
             {
-                await _performanceEvalutionService.ImportExcelAsync(model.ExcelFile);
-            }
-            catch (ImportExcelFileFormatInvalidException ex)
-            {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileFormatInvalid);
-            }
-            catch (ImportExcelFileSizeInvalidException ex)
-            {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileSizeInvalid);
-            }
-            catch (ImportExcelFileException ex)
-            {
-                showMessage(CssClassNames.Error,
-                    string.Format(
-                        ViewMessages.ImportExcelFileItemExist, ex.ExcelRowIndex)
-                    );
-            }
+                var result = await _performanceEvalutionService.ImportExcelAsync(
+                                                                    model.ExcelFile,
+                                                                    model.YearId,
+                                                                    model.ContinueIfAnyOrgMissing);
 
-            showMessage(CssClassNames.Success,
-                ViewMessages.ImportExcelSuccess);
+                if (result.AskToImport)
+                {
+                    return Json(new
+                    {
+                        ask = true,
+                        message = result.Message
+                    });
+                }
 
-            return RedirectToAction("Index");
+                if (result.Success)
+                {
+                    return Json(new
+                    {
+                        hasError = false,
+                        message = result.Message
+                    });
+
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
+            }
+            catch (ImportExcelFileFormatInvalidException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileFormatInvalid
+                });
+            }
+            catch (ImportExcelFileSizeInvalidException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileSizeInvalid
+                });
+            }
         }
 
 
-        [HttpPost("[action]"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(IFormCollection form)
+        [HttpPost("records/delete")]
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
         {
-            var orgId = int.Parse(form["filterOrganizationId"].ToString());
-            await _performanceEvalutionService.SoftDeleteAsync(orgId);
-            return RedirectToAction("Index");
+            try
+            {
+                var result = await _performanceEvalutionService.HardDeleteAsync(yearId, orgId);
+
+                return Json(new
+                {
+                    success = true,
+                    message = string.Format(
+                        ViewMessages.DeleteMultipleDataForOrg,
+                        result.OrganizationTitle,
+                        result.Year)
+                });
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
+            catch (DeleteNullRecordException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteNullRecord
+                });
+            }
+            catch (NullReferenceException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.NullRef
+                });
+            }
+            catch (Exception)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteRelatedData
+                });
+            }
+        }
+
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+
+            var items = new List<PerformanceEvaluationDTO>();
+
+            foreach (var org in organizations)
+            {
+                items.Add(new PerformanceEvaluationDTO
+                {
+                    OrganizationId = org.Id,
+                    OrganizationDisplay = org.Title,
+                    Year = year.Year,
+                    YearId = year.Id
+                });
+            }
+
+            using var workbook = items.GetImportTemplate(year.Year);
+            return workbook.Deliver("PerformanceEvaluation-Import-Template.xlsx");
+        }
+
+        [HttpGet("[action]/{orgid}/{yearid}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
+        {
+            var result = await _performanceEvalutionService.GetExportItemsAsync(yearid, orgid);
+            if (result.Count() == 0)
+                return RedirectToAction("Index");
+            using var workbook = result.ExportExcel();
+            return workbook.Deliver("PerformanceEvaluation.xlsx");
         }
     }
 }

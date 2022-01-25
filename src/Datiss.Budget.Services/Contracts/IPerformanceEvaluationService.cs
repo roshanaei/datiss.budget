@@ -14,13 +14,10 @@ namespace Datiss.Budget.Services.Contracts
     public interface IPerformanceEvaluationService
     {
         Task<PerformanceEvaluation> GetByIdAsync(int id);
-
-        //Task<ValidationResult<PerformanceEvaluationDTO>> CreateAsync(CreatePerformanceEvaluationDTO model);
         Task<ValidationResult<PerformanceEvaluationDTO>> UpdateAsync(UpdatePerformanceEvaluationDTO model);
-        Task HardDeleteAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
         Task<PagedResult<PerformanceEvaluationDTO>> GetListAsync(PerformanceEvaluationFilterDTO filter);
         Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
-        Task<Stream> ExportExcelAsync(PerformanceEvaluationFilterDTO filter);
         Task<IEnumerable<PerformanceEvaluationDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
     }
