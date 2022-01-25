@@ -269,11 +269,11 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("records/delete")]
-        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId , CofficientsGroup group)
         {
             try
             {
-                var result = await _cofficientService.HardDeleteAsync(yearId, orgId);
+                var result = await _cofficientService.HardDeleteAsync(yearId, orgId , group);
 
                 return Json(new
                 {
@@ -374,7 +374,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Copy(CopyViewModel model)
+        public async Task<IActionResult> Copy(CopyViewModel model, CofficientsGroup group)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -383,7 +383,8 @@ namespace Datiss.Budget.Web.Controllers
                 await _cofficientService.CopyAsync(
                                                     model.SourceYearId,
                                                     model.SourceOrgId,
-                                                    model.TargetYearId);
+                                                    model.TargetYearId,
+                                                    group);
                 model.Succeed(ViewMessages.CopySuccess);
             }
             catch (CopySameYearException)

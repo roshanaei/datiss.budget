@@ -22,11 +22,11 @@ namespace Datiss.Budget.Services.Contracts
 
         Task HardDeleteAsync(int Id);
 
-        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId, CofficientsGroup group);
 
         Task<PagedResult<CofficientDTO>> GetListAsync(CofficientFilterDTO filter);
 
-        Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
+        Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId, CofficientsGroup group);
 
         Task<Stream> ExportExcelAsync(CofficientFilterDTO filter);
 

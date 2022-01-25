@@ -219,7 +219,7 @@
         </script>
     }
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function () {
             console.log('ready');
@@ -298,6 +298,7 @@
                     let params = {};
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
+                    params.group = $('#GroupName').val();
                     console.log(params);
                     let deleteUrl = '@Url.Action(CofficientController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
@@ -333,8 +334,8 @@
                                 confirmButtonText: 'بستن',
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
-                            }).then(function(result) {
-                                document.location.href = '@Url.Action(CofficientController.ACTION_Index, new {  page = 1})';
+                            }).then(function (result) {
+                                document.location.href = '@Url.Action(CofficientController.ACTION_Index, new {page = 1 , group = Model.Filter.GroupName } )';
                             });
                         },
                         error: function(request, option, err) {
@@ -550,7 +551,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                document.location.href = '@Url.Action(CofficientController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(CofficientController.ACTION_Index, new {page = 1 , group = Model.Filter.GroupName } )';
                                             });
                                         }
 
@@ -601,6 +602,8 @@
             model.sourceYearId = $('#SourceYearId option:selected').val();
             model.sourceOrgId = $('#SourceOrgId').val();
             model.targetYearId = $('#TargetYearId option:selected').val();
+            model.group = $('#GroupName').val();
+
 
             console.log(model);
 
@@ -653,6 +656,6 @@
             $('#filterForm').submit();
         };
 
-    </script>
+</script>
 
 }
