@@ -33,6 +33,17 @@
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
+
+        rowData = {}
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.userTypeId = $('#inputUserType_' + id).val();
+        rowData.numberUser = $('#inputNumberUser_' + id).val();
+        rowData.unitUser = $('#inputUnitUser_' + id).val();
+        rowData.wasteInstallIncome = $('#inputWasteInstallIncome_' + id).val();
+        rowData.wasteBranchIncome = $('#inputWasteBranchIncome_' + id).val();
+        rowData.wasteNote3Income = $('#inputWasteNote3Income_' + id).val();
+        rowData.wsNote11Income = $('#inputWsNote11Income_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -49,6 +60,19 @@
         $('#divInput_WasteBranchIncome_' + id).hide();
         $('#divInput_WasteNote3Income_' + id).hide();
         $('#divInput_WsNote11Income_' + id).hide();
+
+        //Retriving to OrginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputUserType_' + id).val(rowData.userTypeId);
+            $('#inputNumberUser_' + id).val(rowData.numberUser);
+            $('#inputUnitUser_' + id).val(rowData.unitUser);
+            $('#inputWasteInstallIncome_' + id).val(rowData.wasteInstallIncome);
+            $('#inputWasteBranchIncome_' + id).val(rowData.wasteBranchIncome);
+            $('#inputWasteNote3Income_' + id).val(rowData.wasteNote3Income);
+            $('#inputWsNote11Income_' + id).val(rowData.wsNote11Income);
+        }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
@@ -91,7 +115,7 @@
         model.wsNote11Income = $('#inputWsNote11Income_' + id).val();
 
         $.ajax({
-            url: '@Url.Action(IncomeForcastController.ACTION_Edit)',
+            url: '@Url.Action(IncomeForcastWsController.ACTION_Edit)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -108,6 +132,17 @@
                         });
                         return;
                 }
+
+                rowData = {};
+                rowData.yearId = model.yearId
+                rowData.organizationId = model.organizationId;
+                rowData.userTypeId = model.userTypeId;
+                rowData.numberUser = model.numberUser;
+                rowData.unitUser = model.unitUser;
+                rowData.wasteInstallIncome = model.wasteInstallIncome;
+                rowData.wasteBranchIncome = model.wasteBranchIncome;
+                rowData.wasteNote3Income = model.wasteNote3Income;
+                rowData.wsNote11Income = model.wsNote11Income;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
@@ -166,7 +201,7 @@
         console.log(model);
 
         $.ajax({
-            url: '@Url.Action(IncomeForcastController.ACTION_Create)',
+            url: '@Url.Action(IncomeForcastWsController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -350,7 +385,7 @@
         console.log(e);
 
         $.ajax({
-            url: '@Url.Action(IncomeForcastController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(IncomeForcastWsController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {
