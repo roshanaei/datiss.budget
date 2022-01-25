@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Resources;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Datiss.Budget.ViewModels.Identity
 {
+
     public class PrevRoleViewModel
     {
         [HiddenInput]
@@ -37,6 +40,8 @@ namespace Datiss.Budget.ViewModels.Identity
         }
 
         public IEnumerable<RoleViewModel> Items { get; set; }
+
+        public int TotalCount => Items.Count();
 
         public IEnumerable<AppClaimTypeViewModel> ClaimTypeSource { get; set; }
     }
@@ -71,6 +76,34 @@ namespace Datiss.Budget.ViewModels.Identity
         public string RoleTitle { get; set; }
         public string ClaimType { get; set; }
         public string ClaimValue { get; set; }
+    }
+
+
+    public class CreateRoleViewModel : BaseViewModel {
+
+        public CreateRoleViewModel() {
+            ClaimTypeSource = new List<AppClaimTypeViewModel>();
+        }
+
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(255,ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string Title { get; set; }
+
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [MaxLength(255, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public bool Enabled { get; set; }
+
+        public IEnumerable<AppClaimTypeViewModel> ClaimTypeSource { get; set; }
+
+    }
+
+
+    public class UpdateRoleViewModel : CreateRoleViewModel {
+        public int Id { get; set; }
     }
 
 }

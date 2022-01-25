@@ -29,6 +29,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
 
         public const string Name = "Roles";
         public const string ACTION_Index = nameof(Index);
+        public const string ACTION_Create = nameof(Create);
 
         private readonly IRoleService _roleService;
         private readonly IAppClaimTypeService _claimTypeService;
@@ -53,5 +54,41 @@ namespace Datiss.Budget.Web.Admin.Controllers
             return View(model);
         }
         
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Create() {
+            var model = new CreateRoleViewModel {
+                ClaimTypeSource = (await _claimTypeService.GetEnabledTypesAsync())
+                    .Adapt<List<AppClaimTypeViewModel>>()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost("[action]"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateRoleViewModel model) {
+            if(!ModelState.IsValid) {
+                model.AddError(ViewMessages.ModelState);
+                model.ClaimTypeSource = (await _claimTypeService.GetEnabledTypesAsync())
+                    .Adapt<List<AppClaimTypeViewModel>>();
+                return View(model);
+            }
+
+            var form = HttpContext.Request.Form;
+            foreach(var key in form.Keys) {
+                if(key.StartsWith(""))
+            }
+
+            return View(model);
+        }
+
+        [HttpGet("[action]/{id}")]
+        public async Task<IActionResult> Edit(int id) {
+            try {
+                return NotFound();
+            }
+            catch(Exception ex) {
+                return NotFound();
+            }
+        }
     }
 }

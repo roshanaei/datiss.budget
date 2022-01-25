@@ -32,4 +32,15 @@ namespace Datiss.Budget.Services.Models
         public string ClaimValue { get; set; }
     }
 
+    public class CreateRoleDTO {
+        public string Title { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public bool Enabled { get; set; }
+    }
+
+    public class UpdateRoleDTO {
+
+    }
+
 }

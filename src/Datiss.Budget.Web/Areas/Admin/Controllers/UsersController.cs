@@ -201,7 +201,8 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 var model = user.Adapt<UpdateUserViewModel>();
                 model.SetPositionSource((await getPostionDropDownAsync()), user.PositionId);
                 model.SetOrganizationSource((await getOrganizationDropDownAsync()), user.OrganizationId);
-                
+                model.SetRoleSource(await getRoleDropDownAsync());
+
                 return View(model);
             }
             catch(NullReferenceException) {
@@ -221,6 +222,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 if(result.NotValid) {
                     model.SetOrganizationSource(await getOrganizationDropDownAsync());
                     model.SetPositionSource(await getPostionDropDownAsync());
+                    model.SetRoleSource(await getRoleDropDownAsync());
                     model.AddError(result.Message);
                     return View(model);
                 }
@@ -236,6 +238,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
             if (model._HasError) {
                 model.SetOrganizationSource(await getOrganizationDropDownAsync());
                 model.SetPositionSource(await getPostionDropDownAsync());
+                model.SetRoleSource(await getRoleDropDownAsync());
                 return View(model);
             }
             
