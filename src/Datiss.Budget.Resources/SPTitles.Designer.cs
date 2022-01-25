@@ -151,6 +151,96 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد آب بها مشترکین غیرمسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWNH_Cal1 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWNH_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع مصرف مشترکین غیرمسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWNH_Cal10 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWNH_Cal10", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد مازاد بر ظرفیت آب بها مشترکین غیرمسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWNH_Cal2 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWNH_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد فصلی آب بها مشترکین غیرمسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWNH_Cal3 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWNH_Cal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد تبصره 2 آب بها مشترکین غیرمسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWNH_Cal4 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWNH_Cal4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد تبصره 3 آب بها مشترکین غیرمسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWNH_Cal5 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWNH_Cal5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد آبونمان آب بها مشترکین غیرمسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWNH_Cal6 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWNH_Cal6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد آب بها کل مشترکین غیرمسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWNH_Cal7 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWNH_Cal7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع تعداد مشترکین غیرمسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWNH_Cal8 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWNH_Cal8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع آحاد مشترکین غیرمسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWNH_Cal9 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWNH_Cal9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to درآمد ماده 11 آب سالیانه.
         /// </summary>
         public static string IncomeForcast_Cal1 {
