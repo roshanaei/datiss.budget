@@ -39,7 +39,23 @@ namespace Datiss.Budget.Services.Models
         public decimal Target { get; set; }
         public decimal Operation { get; set; }
         public int Month { get; set; }
-        public decimal PercentRealization { get; set; }
-        public decimal Budget { get; set; }
+        public decimal PercentRealization
+        {
+            get
+            {
+                if (Budget == 0 || Operation == 0)
+                    return 0;
+                return (Budget/Operation)*100;
+            }
+        }
+        public decimal Budget
+        {
+            get
+            {
+                if (Month == 0 || Target == 0)
+                    return 0;
+                return (Target / 12) * Month;
+            }
+        }
     }
 }
