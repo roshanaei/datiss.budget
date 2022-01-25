@@ -26,6 +26,13 @@
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
+
+        rowData = {}
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.p1Capacity = $('#inputP1Capacity_' + id).val();
+        rowData.fixCostCo = $('#inputFixCostCo_' + id).val();
+        rowData.p1CostCo = $('#inputP1CostCo_' + id).val();
+        rowData.p2CostCo = $('#inputP2CostCo_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -38,6 +45,15 @@
         $('#divInput_FixCostCo_' + id).hide();
         $('#divInput_P1CostCo_' + id).hide();
         $('#divInput_P2CostCo_' + id).hide();
+
+        //Retriving to OriginalData 
+        if (rowData != null) {
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputP1Capacity_' + id).val(rowData.p1Capacity);
+            $('#inputFixCostCo_' + id).val(rowData.fixCostCo);
+            $('#inputP1CostCo_' + id).val(rowData.p1CostCo);
+            $('#inputP2CostCo_' + id).val(rowData.p2CostCo);
+        }
 
         //Show output elements
         $('#divOutput_Org_' + id).show();
@@ -91,6 +107,13 @@
                         });
                         return;
                 }
+
+                rowData = {};
+                rowData.organizationId = model.organizationId;
+                rowData.p1Capacity = model.p1Capacity;
+                rowData.fixCostCo = model.fixCostCo;
+                rowData.p1CostCo = model.p1CostCo;
+                rowData.p2CostCo = model.p2CostCo;
 
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
