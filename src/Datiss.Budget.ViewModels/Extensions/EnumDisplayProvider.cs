@@ -42,5 +42,13 @@ namespace Datiss.Budget.ViewModels
                 TablesName.CurrentCost => EnumText.TablesName_CurrentCost,
                 _=>EnumText.Unknown
             };
+        public static string ToDisplay(this CofficientsGroup group)
+            => group switch
+            {
+                CofficientsGroup.CurrentIncome => EnumText.CofficientsGroup_CurrentIncome,
+                CofficientsGroup.CurrentCost => EnumText.CofficientsGroup_CurrentCost,
+                CofficientsGroup.ForcastCost => EnumText.CofficientsGroup_ForcastCost,
+                _ => EnumText.Unknown
+            };
     }
 }

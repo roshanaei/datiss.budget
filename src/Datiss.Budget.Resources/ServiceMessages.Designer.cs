@@ -151,6 +151,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ضرایب :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelCofficientNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelCofficientNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to قطر لوله های :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelDiameterPipeOrgNotInExcel {
@@ -165,6 +174,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelDiameterPipeUserTypeOrgNotInExcel {
             get {
                 return ResourceManager.GetString("ImportExcelDiameterPipeUserTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد ضریب &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidCofficient {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidCofficient", resourceCulture);
             }
         }
         
@@ -318,6 +336,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_ActivityDuplicate {
             get {
                 return ResourceManager.GetString("Logic_ActivityDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ضریب {0} برای &quot;{1}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_CofficientTypeDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_CofficientTypeDuplicate", resourceCulture);
             }
         }
         

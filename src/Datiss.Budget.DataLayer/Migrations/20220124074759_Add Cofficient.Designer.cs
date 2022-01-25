@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220124074759_Add Cofficient")]
+    partial class AddCofficient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -408,8 +410,9 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .HasColumnName("CofficientId")
                         .UseIdentityColumn();
 
-                    b.Property<int>("CofficientTypeId")
-                        .HasColumnType("int");
+                    b.Property<int>("CofficientId")
+                        .HasColumnType("int")
+                        .HasColumnName("CofficientId1");
 
                     b.Property<string>("CreatedByBrowserName")
                         .HasMaxLength(1000)
@@ -450,17 +453,12 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<int>("OrganizationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
-
                     b.Property<int>("YearId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CofficientTypeId");
+                    b.HasIndex("CofficientId");
 
                     b.HasIndex("OrganizationId");
 
@@ -3124,7 +3122,7 @@ namespace Datiss.Budget.DataLayer.Migrations
                 {
                     b.HasOne("Datiss.Budget.Entities.Constant", "CofficientType")
                         .WithMany("Cofficients")
-                        .HasForeignKey("CofficientTypeId")
+                        .HasForeignKey("CofficientId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
