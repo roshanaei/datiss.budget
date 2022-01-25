@@ -39,6 +39,18 @@
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.userTypeId = $('#inputUserType_' + id).val();
+        rowData.usageLayerTypeId = $('#inputUsageLayerType_' + id).val();
+        rowData.usageLayerTypeId = $('#inputUsageLayerType_' + id).val();
+        rowData.countUser = $('#inputCountUser_' + id).val();
+        rowData.unitUser = $('#inputUnitUser_' + id).val();
+        rowData.consumeUser = $('#inputConsumeUser_' + id).val();
+        rowData.avgConsumeUser = $('#inputAvgConsumeUser_' + id).val();
+        rowData.consumeUserForcast = $('#inputConsumeUserForcast_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -56,6 +68,18 @@
         $('#divInput_AvgConsumeUser_' + id).hide();
         $('#divInput_ConsumeUserForcast_' + id).hide();
 
+        //Retriving to OrginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputUserType_' + id).val(rowData.userTypeId);
+            $('#inputUsageLayerType_' + id).val(rowData.usageLayerTypeId);
+            $('#inputCountUser_' + id).val(rowData.countUser);
+            $('#inputUnitUser_' + id).val(rowData.unitUser);
+            $('#inputConsumeUser_' + id).val(rowData.consumeUser);
+            $('#inputAvgConsumeUser_' + id).val(rowData.avgConsumeUser);
+            $('#inputConsumeUserForcast_' + id).val(rowData.consumeUserForcast);
+        }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
@@ -116,6 +140,17 @@
                         });
                         return;
                 }
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.userTypeId = model.userTypeId;
+                rowData.usageLayerTypeId = model.usageLayerId;
+                rowData.countUser = model.countUser;
+                rowData.unitUser = model.unitUser;
+                rowData.consumeUser = model.consumeUser;
+                rowData.avgConsumeUser = model.avgConsumeUser;
+                rowData.consumeUserForcast = model.consumeUserForcast;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
