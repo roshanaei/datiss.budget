@@ -84,24 +84,26 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("{page?}")]
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1, TablesName tableName = TablesName.CurrentIncome)
         {
             var filter = new PerformanceEvaluationFilterDTO();
-            var orgSource = (await _organizationService.GetDropDownDataAsync())
-              .Adapt<List<DropDownItemViewModel>>();
+            var orgSource = (await _organizationService.GetDropDownDataAsync());
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true));
+            var dropDownList = orgSource.Except(inputOrgSource)
+                .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
+
 
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-               .Adapt<List<DropDownItemViewModel>>();
 
+            filter.TableName = tableName;
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
 
-            var myfilter = TempData.Get<PerformanceEvaluationFilterViewModel>(_indexFilterKey);
+            var myfilter = TempData.Get<PerformanceEvaluationFilterViewModel>(_indexFilterKey + $"_{tableName}");
             if (myfilter != null)
             {
                 filter = myfilter.Adapt<PerformanceEvaluationFilterDTO>();
@@ -114,46 +116,45 @@ namespace Datiss.Budget.Web.Controllers
             var model = result.Adapt<PerformanceEvaluationIndexViewModel>();
 
             model.SetYearSource(yearSource);
-            model.SetOrganizationSource(orgSource);
-            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetOrganizationSource(dropDownList);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
-            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+            model.SetOrganizationFilterSource(dropDownList, filter.OrganizationId);
 
             model.Filter.YearId = filter.YearId;
             model.Filter.OrganizationId = filter.OrganizationId;
             model.PageNumber = filter.PageNumber;
             model.PageSize = filter.PageSize;
+            model.Filter.TableName = filter.TableName;
+
 
             return View(model);
         }
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(PerformanceEvaluationIndexViewModel model)
+        public async Task<IActionResult> Index(PerformanceEvaluationIndexViewModel model ,TablesName tableName = TablesName.CurrentIncome)
         {
             var filter = model.Filter.Adapt<PerformanceEvaluationFilterDTO>();
-
-            TempData.Put(_indexFilterKey, filter);
+            filter.TableName = tableName;
+            TempData.Put(_indexFilterKey + $"_{tableName}", filter);
 
             var result = await _performanceEvalutionService.GetListAsync(filter);
             model = result.Adapt<PerformanceEvaluationIndexViewModel>();
             model.Filter = filter.Adapt<PerformanceEvaluationFilterViewModel>();
 
-            var orgSource = (await _organizationService.GetDropDownDataAsync())
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            var orgSource = (await _organizationService.GetDropDownDataAsync());
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true));
+            var dropDownList = orgSource.Except(inputOrgSource)
+                .Adapt<List<DropDownItemViewModel>>();
 
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-               .Adapt<List<DropDownItemViewModel>>();
-
             model.SetYearSource(yearSource);
-            model.SetOrganizationSource(orgSource);
-            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetOrganizationSource(dropDownList);
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
-            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+            model.SetOrganizationFilterSource(dropDownList, filter.OrganizationId);
 
             return View(model);
         }

@@ -185,6 +185,8 @@ namespace Datiss.Budget.Services
                                         OrganizationId = x.OrganizationId,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId,
+                                        TableFieldId = x.TableFieldId , 
+                                        TableFieldDisplay = x.TablesFiled.Title,
                                         Target = x.Target,
                                         Month = x.Month,
                                         Operation = x.Operation
@@ -397,6 +399,9 @@ namespace Datiss.Budget.Services
 
                 query = query.Where(predicate);
             }
+
+            if (filter.TableName.HasValue)
+                query = query.Where(x=>x.TablesFiled.TableName == filter.TableName);
 
             if (filter.Search.IsNotNullOrEmpty())
             {
