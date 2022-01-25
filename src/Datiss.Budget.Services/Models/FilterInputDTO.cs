@@ -138,7 +138,6 @@ namespace Datiss.Budget.Services.Models
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
-        public int? DisplayOrder { get; set; }
         public TablesName? tableNames { get; set; }
     }
     public class ConsumeForcastFilterDTO : FilterInputDTO

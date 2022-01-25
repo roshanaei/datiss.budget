@@ -16,12 +16,14 @@ namespace Datiss.Budget.Services.Models
         public string TableFieldTitle { get; set; }
         public decimal Target { get; set; }
         public decimal Operation { get; set; }
+        public int Month { get; set; }
+        public decimal PercentRealization { get; set; }
+        public decimal Budget { get; set; }
     }
 
     public class UpdatePerformanceEvaluationDTO : CreatePerformanceEvaluationDTO
     {
         public int Id { get; set; }
-
     }
 
     public class PerformanceEvaluationDTO
@@ -36,5 +38,8 @@ namespace Datiss.Budget.Services.Models
         public string TableFieldDisplay { get; set; }
         public decimal Target { get; set; }
         public decimal Operation { get; set; }
+        public int Month { get; set; }
+        public decimal PercentRealization { get; set; }
+        public decimal Budget { get; set; }
     }
 }
