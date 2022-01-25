@@ -24,6 +24,12 @@
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.domesticPrice = $('#inputDomesticPrice_' + id).val();
+        rowData.nDomesticPrice = $('#inputNDomesticPrice_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -35,6 +41,14 @@
         $('#divInput_Org_' + id).hide();
         $('#divInput_DomesticPrice_' + id).hide();
         $('#divInput_NDomesticPrice_' + id).hide();
+
+        //Retriving to OrginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputDomesticPrice_' + id).val(rowData.domesticPrice);
+            $('#inputNDomesticPrice_' + id).val(rowData.nDomesticPrice);
+        }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
@@ -84,6 +98,12 @@
                         });
                         return;
                 }
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.domesticPrice = model.domesticPrice;
+                rowData.nDomesticPrice = model.nDomesticPrice;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
