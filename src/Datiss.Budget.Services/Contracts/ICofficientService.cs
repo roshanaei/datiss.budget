@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Microsoft.AspNetCore.Http;
@@ -29,8 +30,8 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<Stream> ExportExcelAsync(CofficientFilterDTO filter);
 
-        Task<IEnumerable<CofficientDTO>> GetExportItemsAsync(int yearId, int organizationId);
+        Task<IEnumerable<CofficientDTO>> GetExportItemsAsync(int yearId, int organizationId, CofficientsGroup groupname);
 
-        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, CofficientsGroup group, bool continueIfAnyOrgMissing = false);
     }
 }

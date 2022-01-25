@@ -77,14 +77,14 @@ namespace Datiss.Budget.Services
                 OrganizationId = model.OrganizationId,
                 CofficientTypeId = model.CofficientTypeId,
                 GroupName = model.GroupName,
-                Fee = model.Fee              
+                Fee = model.Fee
             };
 
             model.CofficientTypeTitle = (await _constSet.FindAsync(model.CofficientTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CofficientTypeId))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CofficientTypeId, model.GroupName))
                 {
                     await _dbSet.AddAsync(entity);
                     await _uow.SaveChangesAsync();
@@ -119,7 +119,7 @@ namespace Datiss.Budget.Services
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CofficientTypeId, model.Id))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CofficientTypeId, model.GroupName, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.OrganizationId = model.OrganizationId;
@@ -272,7 +272,7 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.CofficientTypeId))
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.CofficientTypeId, item.GroupName))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new Cofficient
@@ -299,7 +299,7 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, CofficientsGroup group, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<CofficientImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
@@ -309,7 +309,8 @@ namespace Datiss.Budget.Services
             int rowIndex = 1;
 
             var cofficienttypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                                   x.Parent.ConstantKey == ConstantKeys.__Cofficients);
+                                                       x.Parent.ConstantKey == ConstantKeys.__Cofficients &&
+                                                       x.ConstantKey.Contains(group.ToString()));
             var descendents = await _organizationService
                              .GetAllDescendentsAsync(_userContext.OrganizationId);
 
@@ -371,9 +372,10 @@ namespace Datiss.Budget.Services
             {
                 foreach (var Cofficient in cofficienttypes)
                 {
-                    var existDWTypeInExcel = records.Any(_ => _.CofficientTypeId == Cofficient.Id &&
-                                              _.OrganizationId == org.Id);
-                    if (!existDWTypeInExcel)
+                    var existTypeInExcel = records.Any(_ => _.CofficientTypeId == Cofficient.Id &&
+                                                            _.OrganizationId == org.Id &&
+                                                            _.GroupName == group);
+                    if (!existTypeInExcel)
                     {
                         missingCofficientType.Add(Cofficient);
                         orgTitle = org.Title;
@@ -424,7 +426,8 @@ namespace Datiss.Budget.Services
                 if (!await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
-                    record.CofficientTypeId))
+                    record.CofficientTypeId,
+                    record.GroupName))
                 {
 
                     return ImportResult.Failed(
@@ -443,10 +446,11 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<IEnumerable<CofficientDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<CofficientDTO>> GetExportItemsAsync(int yearId, int organizationId, CofficientsGroup groupname)
         {
             var filter = new CofficientFilterDTO
             {
+                GroupName = groupname,
                 OrganizationId = organizationId,
                 YearId = yearId
             };
@@ -542,6 +546,9 @@ namespace Datiss.Budget.Services
             if (filter.CofficientTypeId.HasValue)
                 query = query.Where(x => x.CofficientTypeId == filter.CofficientTypeId.Value);
 
+            if (filter.GroupName.HasValue)
+                query = query.Where(x => x.GroupName == filter.GroupName);
+
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
@@ -612,7 +619,7 @@ namespace Datiss.Budget.Services
 
                 foreach (var item in data)
                 {
-                    if (!await checkLogicAsync(targetYearId, org.Id, item.CofficientTypeId))
+                    if (!await checkLogicAsync(targetYearId, org.Id, item.CofficientTypeId, item.GroupName))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new Cofficient
@@ -683,6 +690,7 @@ namespace Datiss.Budget.Services
             int yearId,
             int organizationId,
             int cofficientTypeId,
+            CofficientsGroup group,
             int? id = null)
         {
             var year = await _yearSet.FindAsync(yearId);
@@ -694,11 +702,13 @@ namespace Datiss.Budget.Services
             var result = id == null
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&
-                                                x.CofficientTypeId == cofficientTypeId)
+                                                x.CofficientTypeId == cofficientTypeId &&
+                                                x.GroupName == group)
 
                 : await Query().AnyAsync(x => x.YearId == yearId &&
                                             x.OrganizationId == organizationId &&
                                             x.CofficientTypeId == cofficientTypeId &&
+                                            x.GroupName == group &&
                                             x.Id != id);
             return !result;
         }

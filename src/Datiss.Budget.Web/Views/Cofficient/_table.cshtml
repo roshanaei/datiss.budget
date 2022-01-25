@@ -1,5 +1,8 @@
 ﻿@model CofficientIndexViewModel
 <div class="table-responsive">
+
+    <input id="GroupName" value="@Model.Filter.GroupName" type="hidden"/>
+
     <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
         <thead class="thead-light">
             <tr>
@@ -209,6 +212,7 @@
                            asp-controller="@CofficientController.Name"
                            asp-action="@CofficientController.ACTION_Index"
                            asp-route-page="@Model.PreviousPage"
+                           asp-route-group="@Model.Filter.GroupName"
                            aria-label="Previous">«</a>
                     </li>
                 }
@@ -225,7 +229,9 @@
                             <a class="page-link"
                                asp-controller="@CofficientController.Name"
                                asp-action="@CofficientController.ACTION_Index"
-                               asp-route-page="@i">@i.ToString() </a>
+                               asp-route-page="@i"
+                               asp-route-group="@Model.Filter.GroupName"
+                               >@i.ToString() </a>
                         </li>
                     }
                 }
@@ -237,6 +243,7 @@
                            asp-controller="@CofficientController.Name"
                            asp-action="@CofficientController.ACTION_Index"
                            asp-route-page="@Model.NextPage"
+                           asp-route-group="@Model.Filter.GroupName"
                            aria-label="Next">»</a>
                     </li>
                 }

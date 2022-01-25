@@ -64,6 +64,8 @@ namespace Datiss.Budget.ViewModels
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
         public int? CofficientTypeId { get; set; }
+        public CofficientsGroup? GroupName { get; set; }
+
 
         public IList<SelectListItem> YearSource { get; set; }
 

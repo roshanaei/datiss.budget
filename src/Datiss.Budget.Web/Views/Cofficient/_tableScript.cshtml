@@ -78,6 +78,8 @@
         model.organizationId = $('#inputOrg_' + id).val();
         model.cofficientTypeId = $('#inputCofficientType_' + id).val();
         model.fee = $('#inputFee_' + id).val();
+        model.groupName = $('#GroupName').val();
+
 
         $.ajax({
             url: '@Url.Action(CofficientController.ACTION_Edit)',
@@ -122,11 +124,12 @@
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
         model.cofficientTypeId = $(e).find('#inputCofficientType_').val();
+        model.groupName = $('#GroupName').val();
         model.fee = $(e).find('#inputFee_').val();
         if (model.fee == "") {
             model.fee = 0;
         }
-
+        
         console.log(model);
 
         $.ajax({

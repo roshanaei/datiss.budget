@@ -113,7 +113,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("{page?}")]
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1 , CofficientsGroup group = CofficientsGroup.CurrentIncome)
         {
             var filter = new CofficientFilterDTO();
             var orgSource = (await _organizationService.GetDropDownDataAsync())
@@ -124,16 +124,17 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var cofficientSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__Cofficients))
+            var cofficientSource = (await _constantService.GetCofficientByKeysAsync(group.ToString(),ConstantKeys.__Cofficients))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                .Adapt<List<DropDownItemViewModel>>();
 
+            filter.GroupName = group;
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
 
-            var myfilter = TempData.Get<CofficientFilterViewModel>(_indexFilterKey);
+            var myfilter = TempData.Get<CofficientFilterViewModel>(_indexFilterKey + $"_{group}");
             if (myfilter != null)
             {
                 filter = myfilter.Adapt<CofficientFilterDTO>();
@@ -141,7 +142,7 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             filter.PageNumber = page;
-
+            
             var result = await _cofficientService.GetListAsync(filter);
             var model = result.Adapt<CofficientIndexViewModel>();
 
@@ -157,18 +158,21 @@ namespace Datiss.Budget.Web.Controllers
             model.Filter.OrganizationId = filter.OrganizationId;
             model.PageNumber = filter.PageNumber;
             model.PageSize = filter.PageSize;
+            model.Filter.GroupName = filter.GroupName;
+
+            ViewData["GroupTitle"] = group.ToDisplay();
 
             return View(model);
         }
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(CofficientIndexViewModel model)
+        public async Task<IActionResult> Index(CofficientIndexViewModel model, CofficientsGroup group = CofficientsGroup.CurrentIncome)
         {
 
             var filter = model.Filter.Adapt<CofficientFilterDTO>();
-
-            TempData.Put(_indexFilterKey, filter);
+            filter.GroupName = group;
+            TempData.Put(_indexFilterKey + $"_{group}", filter);
 
             var result = await _cofficientService.GetListAsync(filter);
             model = result.Adapt<CofficientIndexViewModel>();
@@ -180,7 +184,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var cofficientSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__Cofficients))
+            var cofficientSource = (await _constantService.GetCofficientByKeysAsync(group.ToString(), ConstantKeys.__Cofficients))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -193,11 +197,13 @@ namespace Datiss.Budget.Web.Controllers
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
             model.SetCofficientTypeSource(cofficientSource);
 
+            ViewData["GroupTitle"] = group.ToDisplay();
+
             return View(model);
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model ,CofficientsGroup group)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -213,6 +219,7 @@ namespace Datiss.Budget.Web.Controllers
                 var result = await _cofficientService.ImportExcelAsync(
                                                                     model.ExcelFile,
                                                                     model.YearId,
+                                                                    group,
                                                                     model.ContinueIfAnyOrgMissing);
 
                 if (result.AskToImport)
@@ -403,12 +410,12 @@ namespace Datiss.Budget.Web.Controllers
             return Json(model);
         }
 
-        [HttpGet("import/template/{yearId}/{orgId?}")]
-        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        [HttpGet("import/template/{yearId}/{orgId?}/{group}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId , CofficientsGroup group)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var cofficientTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__Cofficients);
+            var cofficientTypes = await _constantService.GetCofficientByKeysAsync(group.ToString(), ConstantKeys.__Cofficients);
 
             var items = new List<CofficientDTO>();
 
@@ -428,18 +435,18 @@ namespace Datiss.Budget.Web.Controllers
                 }
             }
 
-            using var workbook = items.GetImportTemplate(year.Year);
-            return workbook.Deliver("Cofficient-Import-Template.xlsx");
+            using var workbook = items.GetImportTemplate(year.Year , group);
+            return workbook.Deliver($"Cofficient-{group}-Import-Template.xlsx");
         }
 
-        [HttpGet("[action]/{orgid}/{yearid}")]
-        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
+        [HttpGet("[action]/{orgid}/{yearid}/{group}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid , CofficientsGroup group)
         {
-            var result = await _cofficientService.GetExportItemsAsync(yearid, orgid);
+            var result = await _cofficientService.GetExportItemsAsync(yearid, orgid ,group);
             if (result.Count() == 0)
-                return RedirectToAction("Index");
+                return Redirect("");
             using var workbook = result.ExportExcel();
-            return workbook.Deliver("Cofficient.xlsx");
+            return workbook.Deliver($"Cofficient_{group}.xlsx");
         }
 
     }

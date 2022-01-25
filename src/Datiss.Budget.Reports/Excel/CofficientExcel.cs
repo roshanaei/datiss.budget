@@ -1,5 +1,7 @@
 ﻿using ClosedXML.Excel;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,7 +51,7 @@ namespace Datiss.Budget.Reports.Excel
 
             return workbook;
         }
-        public static XLWorkbook GetImportTemplate(this IEnumerable<CofficientDTO> items, int year)
+        public static XLWorkbook GetImportTemplate(this IEnumerable<CofficientDTO> items, int year, CofficientsGroup group)
         {
             if (items == null || !items.Any())
                 return null;
@@ -58,7 +60,7 @@ namespace Datiss.Budget.Reports.Excel
             var sheet = workbook.Worksheets.Add(_sheetName);
 
             sheet.RightToLeft = true;
-            sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
+            sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year + "و ضرایب افزایش " + group.ToDisplay();
             sheet.Range(1, 1, 1, 5).Merge();
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
