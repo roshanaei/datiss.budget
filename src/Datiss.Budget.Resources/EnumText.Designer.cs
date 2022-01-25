@@ -79,6 +79,33 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to هزینه سرمایه ای.
+        /// </summary>
+        public static string CofficientsGroup_CurrentCost {
+            get {
+                return ResourceManager.GetString("CofficientsGroup_CurrentCost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to درآمد جاری.
+        /// </summary>
+        public static string CofficientsGroup_CurrentIncome {
+            get {
+                return ResourceManager.GetString("CofficientsGroup_CurrentIncome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to هزینه جاری.
+        /// </summary>
+        public static string CofficientsGroup_ForcastCost {
+            get {
+                return ResourceManager.GetString("CofficientsGroup_ForcastCost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to حذف شده.
         /// </summary>
         public static string EntityStatus_Deleted {

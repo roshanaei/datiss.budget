@@ -21,6 +21,7 @@ namespace Datiss.Budget.Services.Contracts
         Task<IEnumerable<DropDownItem>> GetByConstantKeyAsync(string key);
 
         Task<IEnumerable<DropDownItem>> GetByKeyAsync(string key,string parentkey,bool none = false);
+        Task<IEnumerable<DropDownItem>> GetCofficientByKeysAsync(string key, string parentkey);
 
         Task<IEnumerable<ConstantDTO>> GetDataByKeyAsync(string key);
 

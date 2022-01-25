@@ -156,11 +156,17 @@
   <data name="ImportExcelCalculationField" xml:space="preserve">
     <value>امکان انجام این عملیات به دلیل نبود رکورد در جدول وابسته، وجود ندارد.</value>
   </data>
+  <data name="ImportExcelCofficientNotInExcel" xml:space="preserve">
+    <value>ضرایب :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
   <data name="ImportExcelDiameterPipeOrgNotInExcel" xml:space="preserve">
     <value>قطر لوله های :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
   <data name="ImportExcelDiameterPipeUserTypeOrgNotInExcel" xml:space="preserve">
     <value>در فایل اکسل شما اطلاعات قطر لوله :&lt;br&gt;{0} برای کاربری "{1}" ، "{2}" وجود ندارد.</value>
+  </data>
+  <data name="ImportExcelInvalidCofficient" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد ضریب "{1}" معتبر نیست .</value>
   </data>
   <data name="ImportExcelInvalidDiameterPipe" xml:space="preserve">
     <value>در سطر {0} فایل اکسل، کد قطر لوله "{1}" معتبر نیست .</value>
@@ -215,6 +221,9 @@
   </data>
   <data name="Logic_ActivityDuplicate" xml:space="preserve">
     <value>اطلاعات "{1}" برای فعالیت {0} قبلا ثبت شده است.</value>
+  </data>
+  <data name="Logic_CofficientTypeDuplicate" xml:space="preserve">
+    <value>ضریب {0} برای "{1}" قبلا ثبت شده است.</value>
   </data>
   <data name="Logic_DiameterPipeOrgDuplicate" xml:space="preserve">
     <value>اطلاعات قطر لوله {0} برای "{1}" قبلا ثبت شده است.</value>
