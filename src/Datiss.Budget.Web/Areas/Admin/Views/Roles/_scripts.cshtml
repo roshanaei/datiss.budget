@@ -1,0 +1,41 @@
+﻿<script type="text/javascript">
+
+    var isNewRole = false;
+
+    function addNewRole() {
+        if (isNewRole) return;
+
+        //var tabTemplate = $('#tab_temp').clone()
+        //    .appendTo('#divTabs')
+        //    .attr('id', 'tab_new')
+        //    .show();
+
+        //var listItem = $('#listItem_temp').clone()
+        //    .appendTo('#listRoles')
+        //    .attr('id', 'listItem_new')
+        //    .show();
+
+        isNewRole = true;
+    }
+
+    var lastEditedRole = {};
+    function editRole(id) {
+        var form = $('#form_' + id);
+        form.removeClass('disabled-div');
+
+        $('#txtTitle_' + id).focus();
+        $('#edit_' + id).hide();
+        $('#delete_' + id).hide();
+        $('#save_' + id).show();
+        $('#cancel_' + id).show();
+        lastEditedRole.title = $('#txtTitle_' + id).val();
+        lastEditedRole.name = $('#txtName_' + id).val();
+        lastEditedRole.status = $('#switch_' + id).val();
+    }
+
+    function cancelEdit(id) {
+        var form = $('#form_' + id);
+        form.addClass('disabled-div');
+    }
+
+</script>
