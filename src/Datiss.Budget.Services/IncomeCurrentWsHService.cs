@@ -24,6 +24,7 @@ using Datiss.Budget.Extensions;
 using Microsoft.AspNetCore.Http;
 using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Common;
+using System.IO;
 
 namespace Datiss.Budget.Services
 {
@@ -634,6 +635,54 @@ namespace Datiss.Budget.Services
             return items;
         }
 
+        public async Task<Stream> ExportExcelAsync(IncomeCurrentWsHFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.UserType)
+                                    .Include(x => x.UsageLayer)
+                                    .Select(x => new IncomeCurrentWsHDTO
+                                    {
+                                        Id = x.Id,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        OrganizationDisaplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        UserTypeDisplay = x.UserType.Title,
+                                        UserTypeId = x.UserTypeId,
+                                        UsageLayerDisplay = x.UsageLayer.Title,
+                                        NumberUser = x.NumberUser,
+                                        UnitUser = x.UnitUser,
+                                        AvgConsumeUser = x.AvgConsumeUser,
+                                        ConsumptionUser = x.ConsumptionUser,
+                                        Cost = x.Cost,
+                                        Note3Price = x.Note3Price,
+                                        Note3Income = x.Note3Income,
+                                        Income = x.Income,
+                                        SubscriptionIncome = x.SubscriptionIncome,
+                                        SeasonalIncome = x.SeasonalIncome,
+                                        TIncome = x.TIncome,
+                                        Note7Income = x.Note7Income,
+                                        Note7Price = x.Note7Price
+                                    }).ToListAsync();
+
+            var ms = new MemoryStream();
+            var result = _excelService.Export(items, ms);
+
+            var mem1 = new MemoryStream(ms.ToArray());
+
+            return mem1;
+        }
+
         #region Privte Helper Methods
         private async Task<IQueryable<IncomeCurrentWsH>> setFilter(
             IQueryable<IncomeCurrentWsH> query,
@@ -819,13 +868,13 @@ namespace Datiss.Budget.Services
         }
         #endregion
 
-            #region Logics
-            private async Task<bool> checkLogicAsync(
-             int yearId,
-             int organizationId,
-             int userTypeId,
-             int usageLayerId,
-             int? id = null)
+        #region Logics
+        private async Task<bool> checkLogicAsync(
+            int yearId,
+            int organizationId,
+            int userTypeId,
+            int usageLayerId,
+            int? id = null)
         {
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull(nameof(year));
