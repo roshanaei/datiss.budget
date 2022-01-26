@@ -726,12 +726,8 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                    _.UserType.Title.ToUpper().Contains(filter.Search) ||
-                                    _.WsPipeDiameter.Title.ToUpper().Contains(filter.Search) ||
-                                    _.NumberSales.ToString().Contains(filter.Search) ||
-                                    _.UnitSales.ToString().Contains(filter.Search) ||
-                                    _.WsInstallationCosts.ToString().Contains(filter.Search));
+                query = query.Where(_ => _.UserType.Title.ToUpper().Contains(filter.Search) ||
+                                         _.WsPipeDiameter.Title.ToUpper().Contains(filter.Search));
             }
             return query;
         }
