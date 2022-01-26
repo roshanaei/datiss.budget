@@ -24,6 +24,12 @@
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.dWasteTypeId = $('#inputDWasteType_' + id).val();
+        rowData.wsInstallFee = $('#inputWsInstallFee_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -35,6 +41,14 @@
         $('#divInput_Org_' + id).hide();
         $('#divInput_DWasteType_' + id).hide();
         $('#divInput_WsInstallFee_' + id).hide();
+
+        //Reverting to OriginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputDWasteType_' + id).val(rowData.dWasteTypeId);
+            $('#inputWsInstallFee_' + id).val(rowData.wsInstallFee);
+        }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
@@ -56,7 +70,7 @@
         model.yearId = $('#inputYear_' + id).val();
         model.organizationId = $('#inputOrg_' + id).val();
         model.dWasteTypeId = $('#inputDWasteType_' + id).val();
-        model.WsInstallFee = $('#inputWsInstallFee_' + id).val();
+        model.wsInstallFee = $('#inputWsInstallFee_' + id).val();
 
         $.ajax({
             url: '@Url.Action(WasteInstallFeeController.ACTION_Edit)',
@@ -77,12 +91,19 @@
                     return;
                 }
 
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.dWasteTypeId = model.dWasteTypeId;
+                rowData.wsInstallFee = model.wsInstallFee;
+
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
                 $('#spanDWasteType_' + id).text(data.dWasteTypeDisplay);
-                $('#spanWsInstallFee_' + id).text(data.WsInstallFee);
+                $('#spanWsInstallFee_' + id).text(data.wsInstallFee);
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
