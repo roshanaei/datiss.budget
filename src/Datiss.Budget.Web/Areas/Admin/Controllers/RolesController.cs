@@ -1,23 +1,16 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Datiss.Budget.Enum;
-using Datiss.Budget.Common;
-using Datiss.Budget.ViewModels;
 using Datiss.Budget.Services.Models;
-using Datiss.Budget.Entities.Identity;
 using Datiss.Budget.Services.Identity;
-using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.ViewModels.Identity;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Contracts.Identity;
 using Mapster;
 using Datiss.Budget.Resources;
-using Datiss.Budget.Common.Exceptions;
-using Datiss.Budget.Services.Infrastructure;
 
 namespace Datiss.Budget.Web.Admin.Controllers
 {
@@ -30,6 +23,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public const string Name = "Roles";
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Edit = nameof(Edit);
 
         private readonly IRoleService _roleService;
         private readonly IAppClaimTypeService _claimTypeService;
@@ -77,35 +71,57 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 return View(model);
             }
 
-            var claimTypes = new List<string>();
-            var form = HttpContext.Request.Form;
-            foreach(var key in form.Keys) {
-                var claimValue = "";
-                if(key.StartsWith("list_")) {
-                    claimValue = "create;";
-                }
-                else if(key.StartsWith("create_")) {
-                    
-                }
-                else if(key.StartsWith("edit_")) {
-
-                }
-                else if(key.StartsWith("delete_")) {
-
-                }
+            var data = model.Adapt<CreateRoleDTO>();
+            var result = await _roleService.CreateAsync(data);
+            if(result.NotValid) {
+                model.AddError(result.Message);
+                model.ClaimTypeSource = (await _claimTypeService.GetEnabledTypesAsync())
+                    .Adapt<List<AppClaimTypeViewModel>>();
+                return View(model);
             }
 
-            return View(model);
+            return RedirectToAction(ACTION_Index);
         }
 
         [HttpGet("[action]/{id}")]
         public async Task<IActionResult> Edit(int id) {
             try {
-                return NotFound();
+                var data = await _roleService.GetByIdAsync(id);
+                var model = data.Adapt<UpdateRoleViewModel>();
+                foreach (var claim in data.Claims) {
+                    model.SelectedClaims.Add(claim.ClaimType, claim.ClaimValue);
+                }
+                model.ClaimTypeSource = (await _claimTypeService.GetEnabledTypesAsync())
+                    .Adapt<List<AppClaimTypeViewModel>>();
+                return View(model);
             }
             catch(Exception ex) {
                 return NotFound();
             }
         }
+
+        [HttpPost("[action]"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(UpdateRoleViewModel model) 
+        {
+            model.CheckArgumentIsNull(nameof(model));
+            if (!ModelState.IsValid) {
+                model.AddError(ViewMessages.ModelState);
+                model.ClaimTypeSource = (await _claimTypeService.GetEnabledTypesAsync())
+                    .Adapt<List<AppClaimTypeViewModel>>();
+                return View(model);
+            }
+
+            var data = model.Adapt<UpdateRoleDTO>();
+            var result = await _roleService.UpdateAsync(data);
+            if(result.NotValid) {
+                model.AddError(result.Message);
+                model.ClaimTypeSource = (await _claimTypeService.GetEnabledTypesAsync())
+                    .Adapt<List<AppClaimTypeViewModel>>();
+                return View(model);
+            }
+
+            return RedirectToAction(ACTION_Index);
+        }
+
     }
 }

@@ -37,11 +37,10 @@ namespace Datiss.Budget.Services.Identity
         {
             var result = await _dbSet.AsNoTracking()
                 .Include(_=> _.Claims)
-                .Where(_=> !_.IsConstantRole)
                 .Select(_=> _.Adapt<RoleDTO>())
                 .ToListAsync();
 
-            return await Task.FromResult(result);
+            return await Task.FromResult(result.Where(_=> !_.IsConstantRole).ToList());
         }
 
         /// <inheritdoc />
@@ -50,19 +49,7 @@ namespace Datiss.Budget.Services.Identity
             var role = await _dbSet
                 .Include(_ => _.Claims)
                 .SingleOrDefaultAsync(_ => _.Id == id);
-
             var result = role.Adapt<RoleDTO>();
-            foreach(var claim in role.Claims) 
-            {
-                result.Claims.Add(new RoleClaimDTO
-                {
-                    ClaimType = claim.ClaimType,
-                    ClaimValue = claim.ClaimValue,
-                    RoleId = role.Id,
-                    RoleTitle = role.Title
-                });
-            }
-
             return await Task.FromResult(result);
         }
 
@@ -82,14 +69,7 @@ namespace Datiss.Budget.Services.Identity
                     ServiceMessages.Role_Title_Exist);
 
             var role = model.Adapt<Role>();
-            foreach(var claim in model.SelectedClaims) 
-            {
-                role.Claims.Add(new RoleClaim
-                {
-                    ClaimType = claim.Key,
-                    ClaimValue = claim.Value
-                });
-            }
+            addCustomClaims(role, model.SelectedClaims);
 
             _dbSet.Add(role);
             await _uow.SaveChangesAsync();
@@ -112,11 +92,16 @@ namespace Datiss.Budget.Services.Identity
                     ValidationMode.Update,
                     ServiceMessages.Role_Title_Exist);
 
-            var role = await _dbSet.FindAsync(model.Id);
+            var role = await _dbSet
+                .Include(_ => _.Claims)
+                .SingleOrDefaultAsync(_ => _.Id == model.Id);
             role.CheckReferenceIsNull(nameof(role));
             role.Name = model.Name;
             role.Title = model.Title;
             role.Description = model.Description;
+            role.Claims.Clear();
+            addCustomClaims(role, model.SelectedClaims);
+
             _dbSet.Update(role);
             await _uow.SaveChangesAsync();
 
@@ -146,10 +131,20 @@ namespace Datiss.Budget.Services.Identity
                 ? await _dbSet.AnyAsync(_ => _.NormalizedName == name.ToUpper() && _.Id != roleId)
                 : await _dbSet.AnyAsync(_ => _.NormalizedName == name.ToUpper());
 
-        public async Task<bool> existByTitleAsync(string title, int? roleId = null)
+        private async Task<bool> existByTitleAsync(string title, int? roleId = null)
             => roleId.HasValue
                 ? await _dbSet.AnyAsync(_ => _.Title.ToUpper() == title.ToUpper() && _.Id != roleId)
                 : await _dbSet.AnyAsync(_ => _.Title.ToUpper() == title.ToUpper());
+
+        private void addCustomClaims(Role role, Dictionary<string, string> claims) {
+            foreach (var claim in claims) {
+                role.Claims.Add(new RoleClaim
+                {
+                    ClaimType = claim.Key,
+                    ClaimValue = claim.Value
+                });
+            }
+        }
 
         #endregion
     }

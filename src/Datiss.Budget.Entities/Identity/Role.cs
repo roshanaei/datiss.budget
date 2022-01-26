@@ -11,20 +11,26 @@ namespace Datiss.Budget.Entities.Identity
     /// </summary>
     public class Role : IdentityRole<int>, IAuditableEntity
     {
-        public Role() {}
+        public Role() {
+            Users = new HashSet<UserRole>();
+            Claims = new HashSet<RoleClaim>();
+        }
+        
 
         #region Properties
 
-        public Role(string name)
-            : this()
+        public Role(string name) : this()
         {
             Name = name;
+            Claims = new HashSet<RoleClaim>();
+            Users = new HashSet<UserRole>();
         }
 
-        public Role(string name, string description)
-            : this(name)
+        public Role(string name, string description) : this(name)
         {
             Description = description;
+            Claims = new HashSet<RoleClaim>();
+            Users = new HashSet<UserRole>();
         }
 
         public string Title { get; set; }
