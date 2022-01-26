@@ -47,6 +47,11 @@ namespace Datiss.Budget.Services.Models
         public int Note7Income { get; set; }
     }
 
+    public class UpdateIncomeCurrentWsHDTO : CreateIncomeCurrentWsHDTO
+    {
+        public int Id { get; set; }
+    }
+
     public class IncomeCurrentWsHDTO
     {
         public int Id { get; set; }
