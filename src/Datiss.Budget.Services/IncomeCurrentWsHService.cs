@@ -586,6 +586,53 @@ namespace Datiss.Budget.Services
                 );
         }
 
+        public async Task<IEnumerable<IncomeCurrentWsHDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        {
+            var filter = new IncomeCurrentWsHFilterDTO
+            {
+                OrganizationId = organizationId,
+                YearId = yearId
+            };
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.UserType)
+                                    .Include(x => x.UsageLayer)
+                                    .Select(x => new IncomeCurrentWsHDTO
+                                    {
+                                        Id = x.Id,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        OrganizationDisaplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        UserTypeDisplay = x.UserType.Title,
+                                        UserTypeId = x.UserTypeId,
+                                        UsageLayerDisplay = x.UsageLayer.Title,
+                                        NumberUser = x.NumberUser,
+                                        UnitUser = x.UnitUser,
+                                        AvgConsumeUser = x.AvgConsumeUser,
+                                        ConsumptionUser = x.ConsumptionUser,
+                                        Cost = x.Cost,
+                                        Note3Price = x.Note3Price,
+                                        Note3Income = x.Note3Income,
+                                        Income = x.Income,
+                                        SubscriptionIncome = x.SubscriptionIncome,
+                                        SeasonalIncome = x.SeasonalIncome,
+                                        TIncome = x.TIncome,
+                                        Note7Income = x.Note7Income,
+                                        Note7Price = x.Note7Price
+                                    }).ToListAsync();
+
+            return items;
+        }
 
         #region Privte Helper Methods
         private async Task<IQueryable<IncomeCurrentWsH>> setFilter(
