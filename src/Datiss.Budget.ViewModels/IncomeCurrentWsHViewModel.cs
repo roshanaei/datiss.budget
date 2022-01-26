@@ -6,6 +6,47 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.ViewModels
 {
+    public class CreateIncomeCurrentWsHViewModel : BaseViewModel
+    {
+        public int YearId { get; set; }
+
+        public int Year { get; set; }
+
+        public int OrganizationId { get; set; }
+
+        public string OrganizationDisplay { get; set; }
+
+        public int UserTypeId { get; set; }
+
+        public int UsageLayerId { get; set; }
+
+        public int NumberUser { get; set; }
+
+        public int UnitUser { get; set; }
+
+        public decimal AvgConsumeUser { get; set; }
+
+        public int ConsumptionUser { get; set; }
+
+        public int Cost { get; set; }
+
+        public int Income { get; set; }
+
+        public int SubscriptionIncome { get; set; }
+
+        public int Note3Price { get; set; }
+
+        public int Note3Income { get; set; }
+
+        public int SeasonalIncome { get; set; }
+
+        public int TIncome { get; set; }
+
+        public int Note7Price { get; set; }
+
+        public int Note7Income { get; set; }
+    }
+
     public class IncomeCurrentWsHViewModel
     {
         public int Id { get; set; }
@@ -72,10 +113,10 @@ namespace Datiss.Budget.ViewModels
 
         public int Note7Price { get; set; }
 
-        public string Note7PriceDisplay { get; set; }
+        public string Note7PriceDisplay => Note7Price.ToString("N0");
 
         public int Note7Income { get; set; }
 
-        public string Note7IncomeDisplay { get; set; }
+        public string Note7IncomeDisplay => Note7Income.ToString("N0");
     }
 }
