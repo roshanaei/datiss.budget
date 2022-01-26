@@ -318,6 +318,70 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
+        {
+            if (sourceYearId == destYearId)
+                throw new CopySameYearException();
+            if (destYearId < sourceYearId)
+                throw new CopySameYearException();
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
+                throw new CopyOrgNullDataException();
+
+            var result = new List<IncomeCurrentWsH>();
+
+            if (await Query()
+            .Where(_ => _.OrganizationId == sourceOrgId)
+            .Where(_ => _.YearId == destYearId).AnyAsync())
+                throw new CopyDestYearHasDataException();
+
+            var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
+                                        .Where(_ => _.YearId == sourceYearId)
+                                        .ToListAsync();
+
+            if (selfData.Any())
+            {
+                foreach (var item in selfData)
+                {
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.UserTypeId, item.UsageLayerId))
+                        throw new CopyDestYearHasDataException();
+
+                    var entity = new IncomeCurrentWsH
+                    {
+                        YearId = destYearId,
+                        OrganizationId = item.OrganizationId,
+                        UserTypeId = item.UserTypeId,
+                        UsageLayerId = item.UsageLayerId,
+                        NumberUser = item.NumberUser,
+                        UnitUser = item.UnitUser,
+                        AvgConsumeUser = item.AvgConsumeUser,
+                        ConsumptionUser = item.ConsumptionUser,
+                        Cost = item.Cost,
+                        Note3Price = item.Note3Price,
+                        Note3Income = item.Note3Income,
+                        Income = item.Income,
+                        SubscriptionIncome = item.SubscriptionIncome,
+                        SeasonalIncome = item.SeasonalIncome,
+                        TIncome = item.TIncome,
+                        Note7Income = item.Note7Income,
+                        Note7Price = item.Note7Price
+                    };
+                    result.Add(entity);
+                }
+            }
+
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+
+            if (childrens.Any())
+            {
+                result.AddRange(childrens);
+            }
+
+            _dbSet.AddRange(result);
+
+            await _uow.SaveChangesAsync();
+        }
+
+
 
         #region Privte Helper Methods
         private async Task<IQueryable<IncomeCurrentWsH>> setFilter(
@@ -398,6 +462,67 @@ namespace Datiss.Budget.Services
             }
         }
 
+        private async Task<IEnumerable<IncomeCurrentWsH>> getChildrenData(
+            int parentOrganizationId,
+            int yearId,
+            int targetYearId)
+        {
+
+            var children = await _orgDbSet
+                .Where(x => x.Status != EntityStatus.Deleted &&
+                            x.ParentId == parentOrganizationId)
+                .ToListAsync();
+
+            var result = new List<IncomeCurrentWsH>();
+
+            foreach (var org in children)
+            {
+                if (await Query()
+                            .Where(x => x.OrganizationId == org.Id)
+                            .Where(x => x.YearId == targetYearId).AnyAsync())
+                {
+                    throw new CopyDestYearHasDataException();
+                }
+
+                var data = await Query()
+                                .Where(x => x.YearId == yearId)
+                                .Where(x => x.OrganizationId == org.Id)
+                                .ToListAsync();
+
+                foreach (var item in data)
+                {
+                    if (!await checkLogicAsync(targetYearId, org.Id, item.UserTypeId, item.UsageLayerId))
+                        throw new CopyDestYearHasDataException();
+
+                    var entity = new IncomeCurrentWsH
+                    {
+                        UserTypeId = item.UserTypeId,
+                        UsageLayerId = item.UsageLayerId,
+                        OrganizationId = item.OrganizationId,
+                        YearId = targetYearId,
+                        NumberUser = item.NumberUser,
+                        UnitUser = item.UnitUser,
+                        AvgConsumeUser = item.AvgConsumeUser,
+                        ConsumptionUser = item.ConsumptionUser,
+                        Cost = item.Cost,
+                        Note3Price = item.Note3Price,
+                        Note3Income = item.Note3Income,
+                        Income = item.Income,
+                        SubscriptionIncome = item.SubscriptionIncome,
+                        SeasonalIncome = item.SeasonalIncome,
+                        TIncome = item.TIncome,
+                        Note7Income = item.Note7Income,
+                        Note7Price = item.Note7Price
+                    };
+
+                    result.Add(entity);
+                }
+
+                result.AddRange(await getChildrenData(org.Id, yearId, targetYearId));
+            }
+            return result;
+        }
+
         private async Task<IEnumerable<IncomeCurrentWsH>> getChildren(
             int parentOrganizationId,
             int yearId)
@@ -422,10 +547,29 @@ namespace Datiss.Budget.Services
             }
             return result;
         }
+
+        private async Task<bool> hasAnyDataAsync(int orgid, int yearid)
+        {
+            bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
+                                                x.YearId == yearid);
+            if (any)
+            {
+                return true;
+            }
+            else
+            {
+                var childs = await _organizationService.GetWithChildrenAsync(orgid);
+                foreach (var child in childs)
+                    if (await Query().AnyAsync(x => x.YearId == yearid && x.OrganizationId == child.Id))
+                        return true;
+            }
+
+            return false;
+        }
         #endregion
 
-        #region Logics
-        private async Task<bool> checkLogicAsync(
+            #region Logics
+            private async Task<bool> checkLogicAsync(
              int yearId,
              int organizationId,
              int userTypeId,
