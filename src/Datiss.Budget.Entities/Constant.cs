@@ -98,6 +98,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<BranchingRateIncrease> BranchingRateIncrease { get;set;}
 
+        public ICollection<Cofficient> Cofficients { get;set;}
+
         #endregion
     }
 }
