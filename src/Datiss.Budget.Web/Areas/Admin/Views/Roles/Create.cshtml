@@ -34,6 +34,7 @@
                                         </div>
                                         <div class="col-9">
                                             <input type="text" asp-for="Title" placeholder="عنوان نقش" class="form-control my-font"/>
+                                            <span asp-validation-for="Title"></span>
                                         </div>
                                     </div>
                                     <div class="row form-group">
@@ -44,6 +45,7 @@
                                         </div>
                                         <div class="col-9">
                                             <input type="text" asp-for="Name" dir="ltr" placeholder="نام نقش" class="form-control my-font"/>
+                                            <span asp-validation-for="Name"></span>
                                         </div>
                                     </div>
                                     <div class="row form-group">
@@ -54,6 +56,7 @@
                                         </div>
                                         <div class="col-9">
                                             <input type="checkbox" asp-for="Enabled" class="switchery switchery-default" />
+                                            <span asp-validation-for="Enabled"></span>
                                         </div>
                                     </div>
                                     <div class="scrollable-container" style="max-height: 500px;">
@@ -67,29 +70,33 @@
                                                 <th>حذف</th>
                                             </tr>
                                             </thead>
+                                            @{ int i = 0;}
                                             @foreach (var claimType in Model.ClaimTypeSource) {
                                                 <tr>
                                                     <td>
                                                         <span>@claimType.Title</span>
+                                                        <input type="hidden" name="SelectedClaims[@i].Key" value="@claimType.Name" />
+                                                        <input type="hidden" id="claimValue_@claimType.Id" name="SelectedClaims[@i].Value" />
                                                     </td>
                                                     <td>
                                                         @{ var chkListId = $"list_{claimType.Id}"; }
-                                                        <input type="checkbox" id="@chkListId" class="switchery switchery-default"/>
+                                                        <input type="checkbox" id="@chkListId" value="list" class="switchery switchery-default"/>
 
                                                     </td>
                                                     <td>
                                                         @{ var chkCreateId = $"create_{claimType.Id}"; }
-                                                        <input type="checkbox" id="@chkCreateId" class="switchery switchery-default"/>
+                                                        <input type="checkbox" id="@chkCreateId" value="create" class="switchery switchery-default"/>
                                                     </td>
                                                     <td>
                                                         @{ var chkEditId = $"edit_{claimType.Id}"; }
-                                                        <input type="checkbox" id="@chkEditId" class="switchery switchery-default"/>
+                                                        <input type="checkbox" id="@chkEditId" value="edit" class="switchery switchery-default"/>
                                                     </td>
                                                     <td>
                                                         @{ var chkDeleteId = $"delete_{claimType.Id}"; }
-                                                        <input type="checkbox" id="@chkDeleteId" class="switchery switchery-default"/>
+                                                        <input type="checkbox" id="@chkDeleteId" value="delete" class="switchery switchery-default"/>
                                                     </td>
                                                 </tr>
+                                                i++;
                                             }
                                         </table>
                                     </div>
@@ -100,7 +107,7 @@
                                    data-dismiss="modal">
                                     <i class="fa fa-times"></i> انصراف
                                 </a>
-                                <button type="submit" onclick="return inputIsValid();" class="btn btn-primary my-font">
+                                <button type="submit" class="btn btn-primary my-font">
                                     <i class="fa fa-check"></i> ارسال
                                 </button>
                             </div>
@@ -127,6 +134,37 @@
             if ($(this).valid()) {
                 $(this).find(':submit').attr('disabled', 'disabled');
             }
+        });
+
+        $('.switchery').on('change', function() {
+            var id = $(this).attr('id');
+            var checked = $(this).is(':checked');
+            var val = $(this).val();
+            console.log(`switch id: ${id} is ${checked} and value: ${val}`);
+            var id_idx = id.indexOf('_');
+            var myid = id.substring(id_idx+1, id.length);
+            console.log(myid);
+            var hidClaimValueId = `claimValue_${myid}`;
+            var hidden = document.getElementById(hidClaimValueId);
+            console.log(hidClaimValueId);
+            var hidClaimValue = $(hidden).val();
+            console.log('claimVal: ' + hidClaimValue);
+            if(hidClaimValue === undefined) {
+                hidClaimValue = '';
+            }
+            if(checked) {
+                if(hidClaimValue.indexOf(val) < 0) {
+                    hidClaimValue = hidClaimValue + `${val};`;
+                    $(hidden).attr('value', hidClaimValue);
+                }
+            }
+            else {
+                if(hidClaimValue.indexOf(val) >= 0) {
+                    hidClaimValue = hidClaimValue.replace(`${val};`, '');
+                    $(hidden).attr('value', hidClaimValue);
+                }
+            }
+            
         });
 
     </script>

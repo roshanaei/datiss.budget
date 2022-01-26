@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using Datiss.Budget.Entities.AuditableEntity;
 using Microsoft.AspNetCore.Identity;
 
@@ -29,6 +30,10 @@ namespace Datiss.Budget.Entities.Identity
         public string Title { get; set; }
 
         public string Description { get; set; }
+
+        [NotMapped]
+        public bool IsConstantRole => Name.ToUpper() == "ADMIN";
+
         #endregion
 
         #region Navigations

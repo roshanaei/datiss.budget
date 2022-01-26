@@ -83,6 +83,7 @@ namespace Datiss.Budget.ViewModels.Identity
 
         public CreateRoleViewModel() {
             ClaimTypeSource = new List<AppClaimTypeViewModel>();
+            SelectedClaims = new Dictionary<string, string>();
         }
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
@@ -99,8 +100,8 @@ namespace Datiss.Budget.ViewModels.Identity
 
         public IEnumerable<AppClaimTypeViewModel> ClaimTypeSource { get; set; }
 
+        public Dictionary<string, string> SelectedClaims { get; set; }
     }
-
 
     public class UpdateRoleViewModel : CreateRoleViewModel {
         public int Id { get; set; }

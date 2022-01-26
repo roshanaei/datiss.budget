@@ -61,6 +61,10 @@ namespace Datiss.Budget.Web.Admin.Controllers
                     .Adapt<List<AppClaimTypeViewModel>>()
             };
 
+            foreach(var claim in model.ClaimTypeSource) {
+                model.SelectedClaims.Add(claim.Name, "");
+            }
+
             return View(model);
         }
 
@@ -73,9 +77,22 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 return View(model);
             }
 
+            var claimTypes = new List<string>();
             var form = HttpContext.Request.Form;
             foreach(var key in form.Keys) {
-                if(key.StartsWith(""))
+                var claimValue = "";
+                if(key.StartsWith("list_")) {
+                    claimValue = "create;";
+                }
+                else if(key.StartsWith("create_")) {
+                    
+                }
+                else if(key.StartsWith("edit_")) {
+
+                }
+                else if(key.StartsWith("delete_")) {
+
+                }
             }
 
             return View(model);

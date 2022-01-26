@@ -273,4 +273,10 @@
   <data name="SystemError" xml:space="preserve">
     <value>خطای سیستمی. لطفاً با پشتیبانی تماس بگیرید.</value>
   </data>
+  <data name="Role_Name_Exist" xml:space="preserve">
+    <value>نام نقش تکراری است.</value>
+  </data>
+  <data name="Role_Title_Exist" xml:space="preserve">
+    <value>عنوان نقش نباید تکراری باشد.</value>
+  </data>
 </root>

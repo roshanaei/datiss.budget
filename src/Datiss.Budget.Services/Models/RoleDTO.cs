@@ -18,9 +18,9 @@ namespace Datiss.Budget.Services.Models
         public string Name { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public bool IsConstantRole => Name.ToUpper() == "ADMIN";
+        public bool IsConstantRole { get; set; }
         public int UsersCount { get; set; }
-        public IEnumerable<RoleClaimDTO> Claims { get; set; }
+        public IList<RoleClaimDTO> Claims { get; set; }
     }   
 
     public class RoleClaimDTO 
@@ -37,10 +37,11 @@ namespace Datiss.Budget.Services.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public bool Enabled { get; set; }
+        public Dictionary<string, string> SelectedClaims { get; set; }
     }
 
-    public class UpdateRoleDTO {
-
+    public class UpdateRoleDTO : CreateRoleDTO {
+        public int Id { get; set; }
     }
 
 }

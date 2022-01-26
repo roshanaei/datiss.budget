@@ -349,20 +349,20 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to خطاهای داده ای را بررسی کنید..
-        /// </summary>
-        public static string InvalidData {
-            get {
-                return ResourceManager.GetString("InvalidData", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to فرمت کد ملی وارد شده اشتباه است..
         /// </summary>
         public static string Invalid_NationalCode {
             get {
                 return ResourceManager.GetString("Invalid_NationalCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to خطاهای داده ای را بررسی کنید..
+        /// </summary>
+        public static string InvalidData {
+            get {
+                return ResourceManager.GetString("InvalidData", resourceCulture);
             }
         }
         
@@ -507,6 +507,24 @@ namespace Datiss.Budget.Resources {
         public static string Req_Username {
             get {
                 return ResourceManager.GetString("Req_Username", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to نام نقش تکراری است..
+        /// </summary>
+        public static string Role_Name_Exist {
+            get {
+                return ResourceManager.GetString("Role_Name_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to عنوان نقش نباید تکراری باشد..
+        /// </summary>
+        public static string Role_Title_Exist {
+            get {
+                return ResourceManager.GetString("Role_Title_Exist", resourceCulture);
             }
         }
         
