@@ -267,6 +267,26 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId)
+        {
+            var result = new List<CalculationItemData>();
+            List<SqlParameter> sqlParams = new List<SqlParameter>
+            {
+                new SqlParameter("YearId", yearId),
+                new SqlParameter("OrganizationId", organizationId)
+            };
+
+            result.Add(new CalculationItemData
+            {
+                Key = "",
+                Value = await _uow.ExecuteScalar<int>(
+                                    "",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            return await Task.FromResult(result);
+        }
+
         public async Task<PagedResult<IncomeCurrentWsHDTO>> GetListAsync(IncomeCurrentWsHFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
