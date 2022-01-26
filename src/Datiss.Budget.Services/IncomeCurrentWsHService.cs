@@ -18,6 +18,9 @@ using Mapster;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Enum;
+using System.Data.SqlClient;
+using LinqKit;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services
 {
@@ -260,7 +263,141 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task<PagedResult<IncomeCurrentWsHDTO>> GetListAsync(IncomeCurrentWsHFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var result = new PagedResult<IncomeCurrentWsHDTO>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            result.TotalCount = await query.CountAsync();
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            query = query
+                    .Skip(filter.StartIndex)
+                    .Take(filter.PageSize);
+
+            result.Items = await query.Include(x => x.FinanceYear)
+                                        .Include(x => x.Organization)
+                                        .Include(x => x.UserType)
+                                        .Include(x => x.UsageLayer)
+                                        .Select(x => new IncomeCurrentWsHDTO
+                                        {
+                                            Id = x.Id,
+                                            YearId = x.YearId,
+                                            Year = x.FinanceYear.Year,
+                                            OrganizationId = x.OrganizationId,
+                                            OrganizationDisaplay = x.Organization.Title,
+                                            UserTypeId = x.UserTypeId,
+                                            UserTypeDisplay = x.UserType.Title,
+                                            UsageLayerId = x.UsageLayerId,
+                                            UsageLayerDisplay = x.UsageLayer.Title,
+                                            NumberUser = x.NumberUser,
+                                            UnitUser = x.UnitUser,
+                                            AvgConsumeUser = x.AvgConsumeUser,
+                                            ConsumptionUser = x.ConsumptionUser,
+                                            Cost = x.Cost,
+                                            Note3Price = x.Note3Price,
+                                            Note3Income = x.Note3Income,
+                                            Income = x.Income,
+                                            SubscriptionIncome = x.SubscriptionIncome,
+                                            SeasonalIncome = x.SeasonalIncome,
+                                            TIncome = x.TIncome,
+                                            Note7Income = x.Note7Income,
+                                            Note7Price = x.Note7Price
+                                        }).ToListAsync();
+
+            return await Task.FromResult(result);
+        }
+
+
         #region Privte Helper Methods
+        private async Task<IQueryable<IncomeCurrentWsH>> setFilter(
+            IQueryable<IncomeCurrentWsH> query,
+            IncomeCurrentWsHFilterDTO filter)
+        {
+            query.CheckArgumentIsNull(nameof(query));
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var predicate = PredicateBuilder.New<IncomeCurrentWsH>();
+
+            if (filter.YearId.HasValue)
+                query = query.Where(x => x.YearId == filter.YearId.Value);
+
+            if (filter.OrganizationId.HasValue)
+            {
+                var organizations = await _organizationService
+                    .GetWithChildrenAsync(filter.OrganizationId.Value);
+
+                foreach (var org in organizations)
+                {
+                    predicate.Or(x => x.OrganizationId == org.Id);
+                }
+
+                query = query.Where(predicate);
+            }
+
+            if (filter.Search.IsNotNullOrEmpty())
+            {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Where(x => x.UserType.Title.ToUpper().Contains(filter.Search) ||
+                                         x.UsageLayer.Title.ToUpper().Contains(filter.Search));
+            }
+
+            return query;
+        }
+
+        private IQueryable<IncomeCurrentWsH> setOrder(
+            IQueryable<IncomeCurrentWsH> query,
+            string orderBy = "id",
+            bool desc = false)
+        {
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "id";
+
+            orderBy = orderBy.ToLower();
+            switch (orderBy)
+            {
+                case "year":
+                    return desc
+                        ? query.OrderByDescending(x => x.FinanceYear.Year)
+                        : query.OrderBy(x => x.FinanceYear.Year);
+
+                case "organization":
+                    return desc
+                        ? query.OrderByDescending(x => x.Organization.Title)
+                        : query.OrderBy(x => x.Organization.Title);
+
+                case "UserType":
+                    return desc
+                        ? query.OrderByDescending(x => x.UserType.DisplayOrder)
+                        : query.OrderBy(x => x.UserType.DisplayOrder);
+
+                case "UsageLayer":
+                    return desc
+                        ? query.OrderByDescending(x => x.UsageLayer.DisplayOrder)
+                        : query.OrderBy(x => x.UsageLayer.DisplayOrder);
+
+                default:
+                    return query.Include(x => x.Organization)
+                                .Include(x => x.UserType)
+                                .Include(x => x.UsageLayer)
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.Organization.Type)
+                                .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.UserType.DisplayOrder)
+                                .ThenBy(x => x.UsageLayer.DisplayOrder);
+            }
+        }
+
         private async Task<IEnumerable<IncomeCurrentWsH>> getChildren(
             int parentOrganizationId,
             int yearId)
