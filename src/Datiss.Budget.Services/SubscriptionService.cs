@@ -459,17 +459,7 @@ namespace Datiss.Budget.Services
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
 
-                bool isNum = int.TryParse(filter.Search, out int res);
-
-                if (isNum)
-                {
-                    query = query.Where(_ => _.SubW.ToString().Contains(filter.Search) ||
-                                        _.SubWs.ToString().Contains(filter.Search));
-                }
-                else
-                {
-                    query = query.Where(_ => _.UserType.Title.ToUpper().Contains(filter.Search));
-                }
+                query = query.Where(_ => _.UserType.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;
