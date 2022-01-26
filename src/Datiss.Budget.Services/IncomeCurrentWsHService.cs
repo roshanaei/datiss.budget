@@ -11,7 +11,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-
+using Datiss.Budget.Services.Infrastructure;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.Common.GuardToolkit;
+using Mapster;
+using Datiss.Budget.Common.Exceptions;
+using Datiss.Budget.Resources;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Services
 {
@@ -54,5 +60,108 @@ namespace Datiss.Budget.Services
             var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
+
+        public async Task<ValidationResult<IncomeCurrentWsHDTO>> CreateAsync(CreateIncomeCurrentWsHDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var entity = new IncomeCurrentWsH
+            {
+                YearId = model.YearId,
+                OrganizationId = model.OrganizationId,
+                UserTypeId = model.UserTypeId,
+                UsageLayerId = model.UsageLayerId,
+                NumberUser = model.NumberUser,
+                UnitUser = model.UnitUser,
+                AvgConsumeUser = model.AvgConsumeUser,
+                ConsumptionUser = model.ConsumptionUser,
+                Cost = model.Cost,
+                Note3Price = model.Note3Price,
+                Note3Income = model.Note3Income,
+                Income = model.Income,
+                SubscriptionIncome = model.SubscriptionIncome,
+                SeasonalIncome = model.SeasonalIncome,
+                TIncome = model.TIncome,
+                Note7Income = model.Note7Income,
+                Note7Price = model.Note7Price
+            };
+
+            model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
+            model.UsageLayerTitle = (await _constSet.FindAsync(model.UsageLayerId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.UsageLayerId))
+                {
+                    await _dbSet.AddAsync(entity);
+                    await _uow.SaveChangesAsync();
+
+                    var result = entity.Adapt<IncomeCurrentWsHDTO>();
+                    result.UsageLayerDisplay = model.UsageLayerTitle;
+                    result.UserTypeDisplay = model.UserTypeTitle;
+                    result.OrganizationDisaplay = organizationDisplay;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.NumberUser = model.NumberUser;
+                    result.UnitUser = model.UnitUser;
+                    result.AvgConsumeUser = model.AvgConsumeUser;
+                    result.ConsumptionUser = model.ConsumptionUser;
+                    result.Cost = model.Cost;
+                    result.Note3Price = model.Note3Price;
+                    result.Note3Income = model.Note3Income;
+                    result.Income = model.Income;
+                    result.SubscriptionIncome = model.SubscriptionIncome;
+                    result.SeasonalIncome = model.SeasonalIncome;
+                    result.TIncome = model.TIncome;
+                    result.Note7Income = model.Note7Income;
+                    result.Note7Price = model.Note7Price;
+
+                    return ValidationResult<IncomeCurrentWsHDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<IncomeCurrentWsHDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+
+            return ValidationResult<IncomeCurrentWsHDTO>.Failed(
+                string.Format(ServiceMessages.Logic_UserTypeUsageLayerDuplicate,
+                                                model.UserTypeTitle,
+                                                model.UsageLayerTitle,
+                                                organizationDisplay)
+                );
+        }
+
+        #region Logics
+        private async Task<bool> checkLogicAsync(
+             int yearId,
+             int organizationId,
+             int userTypeId,
+             int usageLayerId,
+             int? id = null)
+        {
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
+            var result = id == null
+                   ? await Query().AnyAsync(x => x.YearId == yearId &&
+                                                   x.OrganizationId == organizationId &&
+                                                   x.UserTypeId == userTypeId &&
+                                                   x.UsageLayerId == usageLayerId)
+
+                   : await Query().AnyAsync(x => x.YearId == yearId &&
+                                                x.OrganizationId == organizationId &&
+                                                x.UserTypeId == userTypeId &&
+                                                x.UsageLayerId == usageLayerId &&
+                                                x.Id != id);
+
+            return !result;
+        }
+
+        #endregion
     }
 }
