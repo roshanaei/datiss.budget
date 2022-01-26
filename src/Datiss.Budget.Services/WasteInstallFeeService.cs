@@ -534,9 +534,7 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                    _.DWasteType.Title.ToUpper().Contains(filter.Search) ||
-                                    _.WsInstallFee.ToString().Contains(filter.Search));
+                query = query.Where(_ => _.DWasteType.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;
