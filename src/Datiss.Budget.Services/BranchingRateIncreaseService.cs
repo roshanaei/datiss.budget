@@ -607,17 +607,7 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                         _.UserType.Title.ToUpper().Contains(filter.Search) ||
-                                         _.WaterRateIncrease.ToString().Contains(filter.Search) ||
-                                         _.WasteRateIncrease.ToString().Contains(filter.Search) ||
-                                         _.WastePersentIncrease.ToString().Contains(filter.Search) ||
-                                         _.FixAmountBusiness.ToString().Contains(filter.Search) ||
-                                         _.CapacityFixAmount.ToString().Contains(filter.Search) ||
-                                         _.WaterInstallRateIncrease.ToString().Contains(filter.Search) ||
-                                         _.WsInstalIncrease.ToString().Contains(filter.Search) ||
-                                         _.WaterFixNote2.ToString().Contains(filter.Search) ||
-                                         _.WasteFixNote2.ToString().Contains(filter.Search));
+                query = query.Where(_ => _.UserType.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;
