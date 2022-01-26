@@ -600,10 +600,7 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                    _.OIFType.Title.ToUpper().Contains(filter.Search) ||
-                                    _.OIFPrice.ToString().Contains(filter.Search) ||
-                                    _.OIFPrice.ToString().Contains(filter.Search));
+                query = query.Where(_ => _.OIFType.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;
