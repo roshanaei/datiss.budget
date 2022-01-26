@@ -185,14 +185,18 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@PerformanceEvaluationController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@PerformanceEvaluationController.ACTION_ExportExcel" 
+                                                                                                                                         asp-route-orgid="@Model.Filter.OrganizationId" 
+                                                                                                                                         asp-route-yearid="@Model.Filter.YearId" 
+                                                                                                                                         asp-route-tablesname="@Model.Filter.TableName" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
                                            asp-asp-controller="@PerformanceEvaluationController.Name"
                                            asp-action="@PerformanceEvaluationController.ACTION_GetExcelTemplate"
                                            asp-route-yearId="@Model.Filter.YearId"
-                                           asp-route-orgId="@Model.Filter.OrganizationId">
+                                           asp-route-orgId="@Model.Filter.OrganizationId"
+                                           asp-route-tablesname="@Model.Filter.TableName">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
                                         </a>
                                     </div>
@@ -377,20 +381,13 @@
             $('#ExcellModal').modal('show');
         }
 
-        $(window).keydown(function (event) {
-            if (event.altKey && event.keyCode == 78) {
-                addNewRow();
-            }
-        });
-
-
         $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
-            let input = document.getElementById('inputWInstallFee_' + id);
+            let input = document.getElementById('inputOperation_' + id);
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
-            btnSaveEdit.addEventListener('click', function(event) {
+            btnSaveEdit.addEventListener('click', function (event) {
                 event.preventDefault();
                 $(btnSaveEdit).attr('disabled', true);
                 $(btnSaveEdit).unbind('keyup');
@@ -405,6 +402,19 @@
 
             editRow(id);
         });
+
+        $(document).on('click', '.cancel-edit-row', function () {
+            let id = $(this).data('id');
+            cancelEditRow(id);
+        });
+
+        $(document).on('click', '.save-edit-row', function () {
+            let id = $(this).data('id');
+            $(this).prop('disabled', true);
+            saveEditRow(id);
+            $(this).prop('disabled', false);
+        });
+
 
         $(document).ready(function() {
             $('.modal').on('hidden.bs.modal', function() {

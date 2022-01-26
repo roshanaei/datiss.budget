@@ -37,9 +37,9 @@ namespace Datiss.Budget.Web.Controllers
 
         private readonly IWebHostEnvironment _env;
         private readonly IPerformanceEvaluationService _performanceEvalutionService;
-        private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
+        private readonly ITablesFieldTitleService _tablesFieldTitleService;
         private readonly ISecurityTrimmingService _securityTrimmingService;
 
         public PerformanceEvaluationController(
@@ -47,6 +47,7 @@ namespace Datiss.Budget.Web.Controllers
             IPerformanceEvaluationService performanceEvalutionService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
+            ITablesFieldTitleService tablesFieldTitleService,
             IConstantService constantService,
             ISecurityTrimmingService securityTrimmingService)
         {
@@ -54,7 +55,7 @@ namespace Datiss.Budget.Web.Controllers
             _performanceEvalutionService = performanceEvalutionService ?? throw new ArgumentNullException(nameof(performanceEvalutionService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
-            _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
+            _tablesFieldTitleService = tablesFieldTitleService ?? throw new ArgumentNullException(nameof(tablesFieldTitleService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
 
@@ -133,7 +134,7 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(PerformanceEvaluationIndexViewModel model ,TablesName tableName = TablesName.CurrentIncome)
+        public async Task<IActionResult> Index(PerformanceEvaluationIndexViewModel model, TablesName tableName = TablesName.CurrentIncome)
         {
             var filter = model.Filter.Adapt<PerformanceEvaluationFilterDTO>();
             filter.TableName = tableName;
@@ -274,37 +275,43 @@ namespace Datiss.Budget.Web.Controllers
             }
         }
 
-        [HttpGet("import/template/{yearId}/{orgId?}")]
-        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        [HttpGet("import/template/{yearId}/{orgId?}/{tablesname}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId, TablesName tablesName)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var tableName = await _tablesFieldTitleService.GetByTableSectionNameAsync(tablesName);
 
             var items = new List<PerformanceEvaluationDTO>();
 
             foreach (var org in organizations)
             {
-                items.Add(new PerformanceEvaluationDTO
+                foreach (var tname in tableName)
                 {
-                    OrganizationId = org.Id,
-                    OrganizationDisplay = org.Title,
-                    Year = year.Year,
-                    YearId = year.Id
-                });
+                    items.Add(new PerformanceEvaluationDTO
+                    {
+                        TableFieldId = tname.Id,
+                        TableFieldDisplay = tname.Title,
+                        OrganizationId = org.Id,
+                        OrganizationDisplay = org.Title,
+                        Year = year.Year,
+                        YearId = year.Id
+                    });
+                }
             }
 
             using var workbook = items.GetImportTemplate(year.Year);
-            return workbook.Deliver("PerformanceEvaluation-Import-Template.xlsx");
+            return workbook.Deliver($"PerformanceEvaluation-{tablesName}-Import-Template.xlsx");
         }
 
-        [HttpGet("[action]/{orgid}/{yearid}")]
-        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
+        [HttpGet("[action]/{orgid}/{yearid}/{tablesname}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid, TablesName tablesName)
         {
             var result = await _performanceEvalutionService.GetExportItemsAsync(yearid, orgid);
             if (result.Count() == 0)
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
-            return workbook.Deliver("PerformanceEvaluation.xlsx");
+            return workbook.Deliver($"PerformanceEvaluation_{tablesName}.xlsx");
         }
     }
 }

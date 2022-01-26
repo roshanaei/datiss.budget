@@ -1,5 +1,151 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    let rowData = {};
+
+    function editRow(id) {
+
+
+        resetTableBackColor("my-table");
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_TableField_' + id).hide();
+        $('#divOutput_Target_' + id).hide();
+        $('#divOutput_Budget_' + id).hide();
+        $('#divOutput_Operation_' + id).hide();
+        $('#divOutput_PercentRealization_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_TableFieldDisplay_' + id).show();
+        $('#divInput_Target_' + id).show();
+        $('#divInput_Budget_' + id).show();
+        $('#divInput_Operation_' + id).show();
+        $('#divInput_PercentRealization_' + id).show();
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.tableFieldId = $('#inputTableField_' + id).val();
+        rowData.target = $('#inputTarget_' + id).val();
+        rowData.budget = $('#inputBudget_' + id).val();
+        rowData.operation = $('#inputOperation_' + id).val();
+        rowData.percentRealization = $('#inputPercentRealization_' + id).val();
+    }
+
+    function cancelEditRow(id) {
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_TableFieldDisplay_' + id).hide();
+        $('#divInput_Target_' + id).hide();
+        $('#divInput_Budget_' + id).hide();
+        $('#divInput_Operation_' + id).hide();
+        $('#divInput_PercentRealization_' + id).hide();
+
+        //Reverting to OriginalData
+        if(rowData != null) {
+            console.log('reverting to original data.');
+            console.log(rowData);
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputTableField_' + id).val(rowData.tableFieldId);
+            $('#inputTarget_' + id).val(rowData.target);
+            $('#inputBudget_' + id).val(rowData.budget);
+            $('#inputOperation_' + id).val(rowData.operation);
+            $('#inputPercentRealization_' + id).val(rowData.percentRealization);
+        }
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_TableField_' + id).show();
+        $('#divOutput_Target_' + id).show();
+        $('#divOutput_Budget_' + id).show();
+        $('#divOutput_Operation_' + id).show();
+        $('#divOutput_PercentRealization_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.tableFieldId = $('#inputTableField_' + id).val();
+        model.target = $('#inputTarget_' + id).val();
+        model.budget = $('#inputBudget_' + id).val();
+        model.operation = $('#inputOperation_' + id).val();
+        model.percentRealization = $('#inputPercentRealization_' + id).val();
+
+        $.ajax({
+            url: '@Url.Action(PerformanceEvaluationController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#hidTableFieldId_' + id).attr('value', model.tableFieldId);
+                $('#spanTableField_' + id).text(data.tableFieldDisplay);
+                $('#spanTarget_' + id).text(data.target);
+                $('#spanBudget_' + id).text(data.budget);
+                $('#spanOperation_' + id).text(data.operation);
+                $('#spanPercentRealization_' + id).text(data.percentRealization);
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+            }
+        });
+    }
+
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+</script>

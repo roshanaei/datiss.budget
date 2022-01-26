@@ -38,7 +38,7 @@
                             </select>
                             <script>
                                 $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
-                                $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_Org_@item.Id">
@@ -49,6 +49,12 @@
                         <div id="divInput_TableField_@item.Id" style="display: none">
                             <input class="form-control" id="inputTableField_@item.Id" value="@item.TableFieldId" type="number" />
                         </div>
+                        <div id="divInput_TableFieldDisplay_@item.Id" style="display: none">
+                            <input class="form-control" id="inputTableFieldDisplay_@item.Id" value="@item.TableFieldDisplay" />
+                            <script>
+                                $('#inputTableFieldDisplay_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
                         <div id="divOutput_TableField_@item.Id">
                             <span id="spanTableField_@item.Id">@item.TableFieldDisplay </span>
                         </div>
@@ -56,6 +62,9 @@
                     <td>
                         <div id="divInput_Target_@item.Id" style="display: none">
                             <input class="form-control" id="inputTarget_@item.Id" value="@item.Target" type="number" />
+                            <script>
+                                $('#inputTarget_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
                         </div>
                         <div id="divOutput_Target_@item.Id">
                             <span id="spanTarget_@item.Id">@item.TargetDisplay </span>
@@ -64,6 +73,9 @@
                     <td>
                         <div id="divInput_Budget_@item.Id" style="display: none">
                             <input class="form-control" id="inputBudget_@item.Id" value="@item.Budget" type="number" />
+                            <script>
+                                $('#inputBudget_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
                         </div>
                         <div id="divOutput_Budget_@item.Id">
                             <span id="spanBudget_@item.Id">@item.BudgetDisplay </span>
@@ -80,6 +92,9 @@
                     <td>
                         <div id="divInput_PercentRealization_@item.Id" style="display: none">
                             <input class="form-control" id="inputPercentRealization_@item.Id" value="@item.PercentRealization" type="number" />
+                            <script>
+                                $('#inputPercentRealization_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
                         </div>
                         <div id="divOutput_PercentRealization_@item.Id">
                             <span id="spanPercentRealization_@item.Id">@item.PercentRealizationDisplay </span>

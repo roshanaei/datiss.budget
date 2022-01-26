@@ -70,36 +70,26 @@ namespace Datiss.Budget.Services
         public async Task<ValidationResult<PerformanceEvaluationDTO>> UpdateAsync(UpdatePerformanceEvaluationDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
-
-            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
-
             try
             {
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.TableFieldId , model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
-                    entity.OrganizationId = model.OrganizationId;
-                    entity.YearId = model.YearId;
-                    entity.Month = model.Month;
-                    entity.Target = model.Target;
                     entity.Operation = model.Operation;
-                    entity.Status = model.Status;
-
 
                     await _uow.SaveChangesAsync();
 
-
                     var result = new PerformanceEvaluationDTO
                     {
-                        OrganizationId = model.OrganizationId,
-                        YearId = model.YearId,
-                        TableFieldId = model.TableFieldId,
-                        TableFieldDisplay = (await _tableTitleSet.FindAsync(model.TableFieldId)).Title,
-                        OrganizationDisplay = organizationDisplay,
-                        Year = (await _yearSet.FindAsync(model.YearId)).Year,
-                        Month = model.Month,
-                        Operation = model.Operation,
-                        Target = model.Target
+                        OrganizationId = entity.OrganizationId,
+                        YearId = entity.YearId,
+                        TableFieldId = entity.TableFieldId,
+                        TableFieldDisplay = (await _tableTitleSet.FindAsync(entity.TableFieldId)).Title,
+                        OrganizationDisplay = (await _orgDbSet.FindAsync(entity.OrganizationId)).Title,
+                        Year = (await _yearSet.FindAsync(entity.YearId)).Year,
+                        Month = entity.Month,
+                        Operation = entity.Operation,
+                        Target = entity.Target
                     };
 
                     return ValidationResult<PerformanceEvaluationDTO>.Success(result);
@@ -111,7 +101,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<PerformanceEvaluationDTO>.Failed(
-                string.Format(ServiceMessages.Logic_TitleDuplicate,organizationDisplay)
+                string.Format(ServiceMessages.Logic_TitleDuplicate)
                 );
         }
 
