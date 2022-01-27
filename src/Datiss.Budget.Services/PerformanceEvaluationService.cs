@@ -24,6 +24,7 @@ using Datiss.Budget.Security;
 using Datiss.Budget.Common;
 using System.IO;
 using Datiss.Budget.Extensions;
+using ClosedXML.Excel;
 
 namespace Datiss.Budget.Services
 {
@@ -59,7 +60,7 @@ namespace Datiss.Budget.Services
         }
 
         private IQueryable<PerformanceEvaluation> Query()
-            => _dbSet.AsNoTracking();
+            => _dbSet.AsNoTracking().Where(x => x.Status != EntityStatus.Deleted);
 
         public async Task<PerformanceEvaluation> GetByIdAsync(int id)
         {
@@ -72,7 +73,7 @@ namespace Datiss.Budget.Services
             model.CheckArgumentIsNull(nameof(model));
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.TableFieldId , model.Id))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.TableFieldId, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.Operation = model.Operation;
@@ -105,7 +106,7 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId)
+        public async Task<OrganizationDeleteDataResult> SoftDeleteAsync(int yearId, int organizationId , TablesName tablesName)
         {
             var organization = await _orgDbSet.FindAsync(organizationId);
             organization.CheckReferenceIsNull(nameof(organization));
@@ -116,10 +117,13 @@ namespace Datiss.Budget.Services
             if (year.Status == EntityStatus.Disbaled)
                 throw new DisbaledYearDataInputException();
 
-            var self = await _dbSet.Where(_ => _.YearId == yearId)
+            var self = await _dbSet.Where(_ => _.YearId == yearId &&
+                                               _.Status != EntityStatus.Deleted)
                                     .Where(_ => _.OrganizationId == organizationId)
+                                    .Where(_=>_.TablesFiled.TableName == tablesName)
                                     .ToListAsync();
-            var childrens = await getChildren(organizationId, yearId);
+            var childrens = await getChildren(organizationId, yearId , tablesName);
+
             if (self.Count() == 0 && childrens.Count() == 0)
                 throw new DeleteNullRecordException();
 
@@ -175,7 +179,7 @@ namespace Datiss.Budget.Services
                                         OrganizationId = x.OrganizationId,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId,
-                                        TableFieldId = x.TableFieldId , 
+                                        TableFieldId = x.TableFieldId,
                                         TableFieldDisplay = x.TablesFiled.Title,
                                         Target = x.Target,
                                         Month = x.Month,
@@ -185,17 +189,42 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, TablesName tablesName, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<PerformanceEvaluationImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
-
+            //GET Month
+            int month = 0;
+            using var stream = new MemoryStream();
+            await fileInfo.CopyToAsync(stream);
+            using var wbook = new XLWorkbook(stream);
+            if (!wbook.Worksheet(1).Row(1).Cell(5).IsEmpty())
+            {
+                try
+                {
+                    month = Convert.ToInt32(wbook.Worksheet(1).Row(1).Cell(5).Value);
+                    if(month > 12 || month<0)
+                        return ImportResult.Failed(
+                            ServiceMessages.ImportExcelInvalidMonth
+                            );
+                }
+                catch
+                {
+                    return ImportResult.Failed(
+                        ServiceMessages.ImportExcelInvalidMonth
+                        );
+                }
+            }
+            //
             var records = data.Adapt<List<PerformanceEvaluation>>();
 
             int rowIndex = 1;
 
-            var table = _tableTitleSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                                   x.TableName == TablesName.CurrentCost);
+            var tableTitle = _tableTitleSet.Where(x => x.ParentId != null &&
+                                                       x.Status != EntityStatus.Deleted &&
+                                                       x.TableName == tablesName &&
+                                                       x.SectionName == SectionName.A);
+
             var descendents = await _organizationService
                              .GetAllDescendentsAsync(_userContext.OrganizationId);
 
@@ -205,6 +234,7 @@ namespace Datiss.Budget.Services
             foreach (var rec in records)
             {
                 rec.YearId = yearId;
+                rec.Month = month;
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
 
                 if (year == null || year.Status == EntityStatus.Disbaled)
@@ -219,13 +249,13 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
-                //if (!await dwatertypes.AnyAsync(x => x.Id == rec.DWaterTypeId))
-                //{
-                //    return ImportResult.Failed(
-                //        string.Format(ServiceMessages.ImportExcelInvalidDiameterPipe, rowIndex + 2, rec.DWaterTypeId)
-                //        );
-                //}
-                if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
+                if (!await tableTitle.AnyAsync(x => x.Id == rec.TableFieldId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex + 2, rec.TableFieldId)
+                        );
+                }
+                if (org.Type == Enum.OrganizationType.City || org.Type == Enum.OrganizationType.Village)
                 {
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
@@ -243,40 +273,40 @@ namespace Datiss.Budget.Services
                 var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
                 if (!existInExcel)
                 {
-                    if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                    if (item.Type == Enum.OrganizationType.Root || item.Type == Enum.OrganizationType.County)
                         missingOrgs.Add(item);
                 }
                 else
                     existOrgs.Add(item);
             }
             //
-            //Start DWaterType
-            //var missingDWType = new List<Constant>();
-            //string orgTitle = "";
-            //foreach (var org in existOrgs)
-            //{
-            //    foreach (var item in dwatertypes)
-            //    {
-            //        var existDWTypeInExcel = records.Any(_ => _.DWaterTypeId == item.Id &&
-            //                                  _.OrganizationId == org.Id);
-            //        if (!existDWTypeInExcel)
-            //        {
-            //            missingDWType.Add(item);
-            //            orgTitle = org.Title;
-            //        }
+            //Start TitleType
+            var missingTitleType = new List<TablesFiledTitle>();
+            string orgTitle = "";
+            foreach (var org in existOrgs)
+            {
+                foreach (var item in tableTitle)
+                {
+                    var existTitleTypeInExcel = records.Any(_ => _.TableFieldId == item.Id &&
+                                              _.OrganizationId == org.Id);
+                    if (!existTitleTypeInExcel)
+                    {
+                        missingTitleType.Add(item);
+                        orgTitle = org.Title;
+                    }
 
-            //    }
-            //}
-            //if (missingDWType.Any())
-            //{
-            //    string dWaterTypeNames = "";
-            //    foreach (var item in missingDWType)
-            //    {
-            //        dWaterTypeNames += "- [" + item.Title + "]<br>";
-            //    }
-            //    return ImportResult.Failed(
-            //        string.Format(ServiceMessages.ImportExcelDiameterPipeOrgNotInExcel, dWaterTypeNames, orgTitle));
-            //}
+                }
+            }
+            if (missingTitleType.Any())
+            {
+                string titleTypeNames = "";
+                foreach (var item in missingTitleType)
+                {
+                    titleTypeNames += "- [" + item.Title + "]<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelTitleNotInExcel, titleTypeNames, orgTitle));
+            }
             //end
 
             rowIndex = 1;
@@ -312,10 +342,11 @@ namespace Datiss.Budget.Services
                     record.OrganizationId,
                     record.TableFieldId))
                 {
-
-                    return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
-                        );
+                    var row = await _dbSet.SingleOrDefaultAsync(x => x.YearId == record.YearId &&
+                                                                     x.Status != EntityStatus.Deleted &&
+                                                                     x.OrganizationId == record.OrganizationId &&
+                                                                     x.TableFieldId == record.TableFieldId);
+                    row.Status = EntityStatus.Deleted;
                 }
 
                 rowIndex++;
@@ -329,10 +360,11 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<IEnumerable<PerformanceEvaluationDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<PerformanceEvaluationDTO>> GetExportItemsAsync(int yearId, int organizationId, TablesName tablesName)
         {
             var filter = new PerformanceEvaluationFilterDTO
             {
+                TableName = tablesName,
                 OrganizationId = organizationId,
                 YearId = yearId
             };
@@ -347,6 +379,7 @@ namespace Datiss.Budget.Services
             var items = await query
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
+                                    .Include(x => x.TablesFiled)
                                     .Select(x => new PerformanceEvaluationDTO
                                     {
                                         Id = x.Id,
@@ -354,6 +387,8 @@ namespace Datiss.Budget.Services
                                         OrganizationId = x.OrganizationId,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId,
+                                        TableFieldId = x.TableFieldId,
+                                        TableFieldDisplay = x.TablesFiled.Title,
                                         Target = x.Target,
                                         Month = x.Month,
                                         Operation = x.Operation
@@ -391,7 +426,7 @@ namespace Datiss.Budget.Services
             }
 
             if (filter.TableName.HasValue)
-                query = query.Where(x=>x.TablesFiled.TableName == filter.TableName);
+                query = query.Where(x => x.TablesFiled.TableName == filter.TableName);
 
             if (filter.Search.IsNotNullOrEmpty())
             {
@@ -429,59 +464,10 @@ namespace Datiss.Budget.Services
             }
         }
 
-        private async Task<IEnumerable<PerformanceEvaluation>> getChildrenData(
-            int parentOrganizationId,
-            int yearId,
-            int targetYearId)
-        {
-
-            var children = await _orgDbSet
-                .Where(_ => _.Status != EntityStatus.Deleted &&
-                            _.ParentId == parentOrganizationId)
-                .ToListAsync();
-
-            var result = new List<PerformanceEvaluation>();
-
-            foreach (var org in children)
-            {
-                if (await Query()
-                            .Where(_ => _.OrganizationId == org.Id)
-                            .Where(_ => _.YearId == targetYearId).AnyAsync())
-                {
-                    throw new CopyDestYearHasDataException();
-                }
-
-                var data = await Query()
-                                .Where(_ => _.YearId == yearId)
-                                .Where(_ => _.OrganizationId == org.Id)
-                                .ToListAsync();
-
-                foreach (var item in data)
-                {
-                    if (!await checkLogicAsync(targetYearId, org.Id, item.TableFieldId))
-                        throw new CopyDestYearHasDataException();
-
-                    var entity = new PerformanceEvaluation
-                    {
-                        OrganizationId = item.OrganizationId,
-                        YearId = targetYearId,
-                        TableFieldId = item.TableFieldId,
-                        Target = item.Target,
-                        Month = item.Month,
-                        Operation = item.Operation
-                    };
-
-                    result.Add(entity);
-                }
-
-                result.AddRange(await getChildrenData(org.Id, yearId, targetYearId));
-            }
-
-            return result;
-        }
         private async Task<IEnumerable<PerformanceEvaluation>> getChildren(
             int parentOrganizationId,
-            int yearId)
+            int yearId , 
+            TablesName tablesName)
         {
             var children = await _orgDbSet
                 .Where(_ => _.Status != EntityStatus.Deleted &&
@@ -490,37 +476,20 @@ namespace Datiss.Budget.Services
             var result = new List<PerformanceEvaluation>();
             foreach (var org in children)
             {
-                var data = await Query()
+                var data = await _dbSet
+                                .Where(_ => _.Status != EntityStatus.Deleted)
                                 .Where(_ => _.YearId == yearId)
                                 .Where(_ => _.OrganizationId == org.Id)
+                                .Where(_=>_.TablesFiled.TableName == tablesName)
                                 .ToListAsync();
 
                 foreach (var item in data)
                 {
                     result.Add(item);
                 }
-                result.AddRange(await getChildren(org.Id, yearId));
+                result.AddRange(await getChildren(org.Id, yearId , tablesName));
             }
             return result;
-        }
-        private async Task<bool> hasAnyDataAsync(int orgid, int yearid)
-        {
-            bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
-                                                x.YearId == yearid);
-            if (any)
-            {
-                return true;
-            }
-            else
-            {
-                var childs = await _organizationService.GetWithChildrenAsync(orgid);
-                foreach (var child in childs)
-                    if (await Query().AnyAsync(x => x.YearId == yearid && x.OrganizationId == child.Id))
-                        return true;
-            }
-
-            return false;
-
         }
         #endregion
 

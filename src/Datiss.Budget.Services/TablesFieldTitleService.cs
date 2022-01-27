@@ -16,22 +16,15 @@ namespace Datiss.Budget.Services
 {
     public class TablesFieldTitleService : ITablesFieldTitleService
     {
-        private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
-        private readonly IUserService _userService;
 
         private readonly DbSet<TablesFiledTitle> _dbSet;
 
-
         public TablesFieldTitleService(
-            IUserContext userContext,
-            IUnitOfWork uow,
-            IUserService userService)
+            IUnitOfWork uow)
         {
-            _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<TablesFiledTitle>();
-            _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         }
         private IQueryable<TablesFiledTitle> Query()
             => _dbSet.AsNoTracking();

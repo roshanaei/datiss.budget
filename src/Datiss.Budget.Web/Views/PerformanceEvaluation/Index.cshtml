@@ -44,6 +44,8 @@
                                     </label>
                                     <input asp-for="Filter.OrderBy" type="hidden" />
                                     <input asp-for="Filter.OrderDesc" type="hidden" />
+                                    <input asp-for="@Model.Filter.TableName" type="hidden" id="TableName" />
+
                                 </fieldset>
                                 <fieldset>
                                     <div class="rowACJE">
@@ -185,10 +187,10 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@PerformanceEvaluationController.ACTION_ExportExcel" 
-                                                                                                                                         asp-route-orgid="@Model.Filter.OrganizationId" 
-                                                                                                                                         asp-route-yearid="@Model.Filter.YearId" 
-                                                                                                                                         asp-route-tablesname="@Model.Filter.TableName" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@PerformanceEvaluationController.ACTION_ExportExcel"
+                                           asp-route-orgid="@Model.Filter.OrganizationId"
+                                           asp-route-yearid="@Model.Filter.YearId"
+                                           asp-route-tablesname="@Model.Filter.TableName" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
@@ -223,6 +225,8 @@
     <div id="divCopy">
 
     </div>
+
+    <partial name="_excelModal" model="new ImportExcelViewModel()" />
 
 
     <div id="divCalc">
@@ -303,7 +307,7 @@
 
         }
 
-        function hardDelete(e) {
+        function softDelete(e) {
             Swal.fire({
                 title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
                 html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
@@ -323,6 +327,8 @@
                     let params = {};
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
+                    params.tablesName = $('#TableName').val();
+
                     console.log(params);
                     let deleteUrl = '@Url.Action(PerformanceEvaluationController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
@@ -359,7 +365,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(PerformanceEvaluationController.ACTION_Index, new {  page = 1})';
+                                document.location.href = '@Url.Action(PerformanceEvaluationController.ACTION_Index, new {page = 1 , tableName = Model.Filter.TableName })';
                             });
                         },
                         error: function(request, option, err) {
@@ -422,13 +428,17 @@
             });
         });
 
-        $(document).on('click', '#btnDoImportExcel', function() {
+        $(document).on('click', '#btnDoImportExcel', function () {
+
             var fdata = new FormData();
             var fileInput = $('#ExcelFile')[0];
             var file = fileInput.files[0];
             var yearId = $('#yearId').val();
+            var tablesName = $('#TableName').val();
+
             fdata.append('ExcelFile', file);
             fdata.append('yearId', yearId);
+            fdata.append('tablesName', tablesName);
 
             $.ajax({
                 url: '@Url.Action(PerformanceEvaluationController.ACTION_ImportExcel)',
@@ -456,7 +466,6 @@
                     if (data.ask) {
                         Swal.fire({
                             html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
-                            //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
                             type: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#2F8BE6',
@@ -508,7 +517,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                document.location.href = '@Url.Action(PerformanceEvaluationController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(PerformanceEvaluationController.ACTION_Index , new { page = 1, tableName = Model.Filter.TableName })';
                                             });
                                         }
 
@@ -541,7 +550,7 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(PerformanceEvaluationController.ACTION_Index)';
+                            document.location.href = '@Url.Action(PerformanceEvaluationController.ACTION_Index , new { page = 1, tableName = Model.Filter.TableName })';
                         });
                     }
 

@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Microsoft.AspNetCore.Http;
@@ -15,10 +16,10 @@ namespace Datiss.Budget.Services.Contracts
     {
         Task<PerformanceEvaluation> GetByIdAsync(int id);
         Task<ValidationResult<PerformanceEvaluationDTO>> UpdateAsync(UpdatePerformanceEvaluationDTO model);
-        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> SoftDeleteAsync(int yearId, int organizationId , TablesName tablesName);
         Task<PagedResult<PerformanceEvaluationDTO>> GetListAsync(PerformanceEvaluationFilterDTO filter);
-        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
-        Task<IEnumerable<PerformanceEvaluationDTO>> GetExportItemsAsync(int yearId, int organizationId);
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, TablesName tablesName, bool continueIfAnyOrgMissing = false);
+        Task<IEnumerable<PerformanceEvaluationDTO>> GetExportItemsAsync(int yearId, int organizationId, TablesName tablesName);
 
     }
 }

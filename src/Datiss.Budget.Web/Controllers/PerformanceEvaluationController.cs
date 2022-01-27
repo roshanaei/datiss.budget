@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Datiss.Budget.Reports.Excel;
 using ClosedXML.Extensions;
+using Datiss.Budget.Entities;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -88,10 +89,19 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Index(int page = 1, TablesName tableName = TablesName.CurrentIncome)
         {
             var filter = new PerformanceEvaluationFilterDTO();
-            var orgSource = (await _organizationService.GetDropDownDataAsync());
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true));
-            var dropDownList = orgSource.Except(inputOrgSource)
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync()).ToList();
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true)).ToList();
+            var exceptOrgList = new List<DropDownItem>();
+            foreach (var Torg in orgSource)
+                if (!inputOrgSource.Any(x => x.Id == Torg.Id))
+                    exceptOrgList.Add(Torg);
+
+            var dropDownList = exceptOrgList
                 .Adapt<List<DropDownItemViewModel>>();
+            //var test1 = orgSource.Except(inputOrgSource)
+            //.Adapt<List<DropDownItemViewModel>>();
+
             int firstOrgId = orgSource.FirstOrDefault().Id;
 
 
@@ -160,8 +170,8 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-        [HttpPost("[action]"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model, TablesName tablesName)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -177,6 +187,7 @@ namespace Datiss.Budget.Web.Controllers
                 var result = await _performanceEvalutionService.ImportExcelAsync(
                                                                     model.ExcelFile,
                                                                     model.YearId,
+                                                                    tablesName,
                                                                     model.ContinueIfAnyOrgMissing);
 
                 if (result.AskToImport)
@@ -226,11 +237,11 @@ namespace Datiss.Budget.Web.Controllers
 
 
         [HttpPost("records/delete")]
-        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId, TablesName tablesName)
         {
             try
             {
-                var result = await _performanceEvalutionService.HardDeleteAsync(yearId, orgId);
+                var result = await _performanceEvalutionService.SoftDeleteAsync(yearId, orgId, tablesName);
 
                 return Json(new
                 {
@@ -279,12 +290,22 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId, TablesName tablesName)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
-            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+
+            var orgSource = (await _organizationService.GetWithChildrenAsync(orgId)).ToList();
+            var inputOrgSource = (await _organizationService.GetWithChildrenAsync(orgId, true)).ToList();
+            var exceptOrgList = new List<Organization>();
+            foreach (var Torg in orgSource)
+                if (!inputOrgSource.Any(x => x.Id == Torg.Id))
+                    exceptOrgList.Add(Torg);
+
+            var dropDownList = exceptOrgList
+                .Adapt<List<DropDownItemViewModel>>();
+
             var tableName = await _tablesFieldTitleService.GetByTableSectionNameAsync(tablesName);
 
             var items = new List<PerformanceEvaluationDTO>();
 
-            foreach (var org in organizations)
+            foreach (var org in dropDownList)
             {
                 foreach (var tname in tableName)
                 {
@@ -307,9 +328,15 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("[action]/{orgid}/{yearid}/{tablesname}")]
         public async Task<IActionResult> ExportExcel(int orgid, int yearid, TablesName tablesName)
         {
-            var result = await _performanceEvalutionService.GetExportItemsAsync(yearid, orgid);
+            var result = await _performanceEvalutionService.GetExportItemsAsync(yearid, orgid, tablesName);
             if (result.Count() == 0)
-                return RedirectToAction("Index");
+                return RedirectToAction(
+                    PerformanceEvaluationController.ACTION_Index,
+                    PerformanceEvaluationController.Name,
+                    new
+                    {
+                        tableName = tablesName
+                    });
             using var workbook = result.ExportExcel();
             return workbook.Deliver($"PerformanceEvaluation_{tablesName}.xlsx");
         }
