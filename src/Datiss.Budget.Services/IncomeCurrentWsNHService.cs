@@ -136,6 +136,78 @@ namespace Datiss.Budget.Services
                 );
         }
 
+        public async Task<ValidationResult<IncomeCurrentWsNHDTO>> UpdateAsync(UpdateIncomeCurrentWsNHDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var usertypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.Id))
+                {
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.YearId = model.YearId;
+                    entity.UserTypeId = model.UserTypeId;
+                    entity.NumberUser = model.NumberUser;
+                    entity.UnitUser = model.UnitUser;
+                    entity.AvgConsumeUser = model.AvgConsumeUser;
+                    entity.ConsumptionUser = model.ConsumptionUser;
+                    entity.Capacity = model.Capacity;
+                    entity.Cost = model.Cost;
+                    entity.Income = model.Income;
+                    entity.ExcessIncome = model.ExcessIncome;
+                    entity.SeasonalIncome = model.SeasonalIncome;
+                    entity.Note3Price = model.Note3Price;
+                    entity.Note3Income = model.Note3Income;
+                    entity.SubscriptionIncome = model.SubscriptionIncome;
+                    entity.TotalIncome = model.TotalIncome;
+                    entity.Note7Price = model.Note7Price;
+                    entity.Note7Income = model.Note7Price;
+
+                    await _uow.SaveChangesAsync();
+
+                    var result = new IncomeCurrentWsNHDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        UserTypeId = model.UserTypeId,
+                        NumberUser = model.NumberUser,
+                        UnitUser = model.UnitUser,
+                        AvgConsumeUser = model.AvgConsumeUser,
+                        ConsumptionUser = model.ConsumptionUser,
+                        Capacity = model.Capacity,
+                        Cost = model.Cost,
+                        Income = model.Income,
+                        ExcessIncome = model.ExcessIncome,
+                        SeasonalIncome = model.SeasonalIncome,
+                        Note3Price = model.Note3Price,
+                        Note3Income = model.Note3Income,
+                        SubscriptionIncome = model.SubscriptionIncome,
+                        TotalIncome = model.TotalIncome,
+                        Note7Price = model.Note7Income,
+                        Note7Income = model.Note7Income,
+                        OrganizationDisplay = organizationDisplay,
+                        UserTypeDisplay = usertypeDisplay,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
+
+                    return ValidationResult<IncomeCurrentWsNHDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<IncomeCurrentWsNHDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+            return ValidationResult<IncomeCurrentWsNHDTO>.Failed(
+                string.Format(ServiceMessages.Logic_DiameterPipeOrgDuplicate,
+                usertypeDisplay, organizationDisplay)
+                );
+        }
+
         #region Logics
         private async Task<bool> checkLogicAsync(
             int yearId,
