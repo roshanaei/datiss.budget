@@ -69,19 +69,26 @@
                         <ul class="menu-content" id="CollapseAccount" parent="CollapseAccount">
 
                             <li class="">
-                                <a class="menu-item" asp-area="Identity" asp-controller="UsersManager" asp-action="Index">
+                                <a class="menu-item" 
+                                    asp-area="@AreaConstants.AdminArea" 
+                                    asp-controller="@UsersController.Name" 
+                                    asp-action="@UsersController.ACTION_Index">
                                     <i class="ft-arrow-right submenu-icon"></i>
                                     <span class="menu-item" data-i18n="کاربران"> کاربران</span>
                                 </a>
                             </li>
 
                             <li class="">
-                                <a class="menu-item" asp-area="" asp-controller="" asp-action="">
+                                <a class="menu-item" 
+                                    asp-area="@AreaConstants.AdminArea" 
+                                    asp-controller="@RolesController.Name" 
+                                    asp-action="@RolesController.ACTION_Index">
                                     <i class="ft-arrow-right submenu-icon"></i>
-                                    <span class="menu-item" data-i18n="دسترسی ها">دسترسی ها</span>
+                                    <span class="menu-item" data-i18n="دسترسی ها">
+                                        نقش های کاربری
+                                    </span>
                                 </a>
                             </li>
-
                         </ul>
                     </li>
                     <!--  پیش بینی بودجه-->
