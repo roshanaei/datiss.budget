@@ -45,22 +45,22 @@ namespace Datiss.Budget.Areas.Identity.Controllers
 
             if (model == null || model.Id == 0)
             {
-                return PartialView("_Create", model: new RoleViewModel());
+                return PartialView("_Create", model: new PrevRoleViewModel());
             }
 
             var role = await _roleManager.FindByIdAsync(model.Id.ToString());
             if (role == null)
             {
                 ModelState.AddModelError("", RoleNotFound);
-                return PartialView("_Create", model: new RoleViewModel());
+                return PartialView("_Create", model: new PrevRoleViewModel());
             }
-            return PartialView("_Create", model: new RoleViewModel { Id = role.Id.ToString(), Name = role.Name });
+            return PartialView("_Create", model: new PrevRoleViewModel { Id = role.Id.ToString(), Name = role.Name });
         }
 
         [AjaxOnly]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditRole(RoleViewModel model)
+        public async Task<IActionResult> EditRole(PrevRoleViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace Datiss.Budget.Areas.Identity.Controllers
         [AjaxOnly]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddRole(RoleViewModel model)
+        public async Task<IActionResult> AddRole(PrevRoleViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -117,15 +117,15 @@ namespace Datiss.Budget.Areas.Identity.Controllers
             if (role == null)
             {
                 ModelState.AddModelError("", RoleNotFound);
-                return PartialView("_Delete", model: new RoleViewModel());
+                return PartialView("_Delete", model: new PrevRoleViewModel());
             }
-            return PartialView("_Delete", model: new RoleViewModel { Id = role.Id.ToString(), Name = role.Name });
+            return PartialView("_Delete", model: new PrevRoleViewModel { Id = role.Id.ToString(), Name = role.Name });
         }
 
         [AjaxOnly]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(RoleViewModel model)
+        public async Task<IActionResult> Delete(PrevRoleViewModel model)
         {
             if (!ModelState.IsValid)
             {

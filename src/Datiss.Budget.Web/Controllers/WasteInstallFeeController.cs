@@ -21,10 +21,12 @@ using Datiss.Budget.Resources;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Datiss.Budget.Common;
+using Datiss.Budget.Common.IdentityToolkit;
 using Microsoft.Extensions.Logging;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Identity;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Security;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -77,6 +79,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> Create(CreateWasteInstallFeeViewModel model)
         {
             if (!ModelState.IsValid)
@@ -97,6 +100,7 @@ namespace Datiss.Budget.Web.Controllers
             return Json(result.Result.Adapt<WasteInstallFeeViewModel>());
         }
         [HttpPost("[action]")]
+        [HasPermission(Name, PermissionActionType.Edit)]
         public async Task<IActionResult> Edit(UpdateWasteInstallFeeViewModel model)
         {
 

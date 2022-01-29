@@ -268,10 +268,6 @@ namespace Datiss.Budget.Services.Identity
                     query = query.Where(x => x.UserName.Contains(model.TextToFind));
                 }
 
-                if (model.IsPartOfLocation)
-                {
-                    query = query.Where(x => x.Location.Contains(model.TextToFind));
-                }
             }
 
             if (model.HasEmailConfirmed)

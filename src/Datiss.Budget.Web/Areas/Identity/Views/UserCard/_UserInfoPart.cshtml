@@ -39,15 +39,7 @@
                 </li>
             }
 
-            @if (!string.IsNullOrWhiteSpace(user.Location))
-            {
-                <li>
-                    <span aria-hidden="true" class="fas fa-home"></span>
-                    <strong>محل اقامت:</strong>
-                    @user.Location
-                </li>
-            }
-
+            
             @if (user.LastVisitDateTime != null)
             {
                 <li>
@@ -61,16 +53,7 @@
     </div>
     <div class="col-md-6">
         <ul class="list-unstyled">
-            @if (user.BirthDate.HasValue)
-            {
-                <li>
-                    <span aria-hidden="true" class="fas fa-calendar"></span>
-                    <strong>سن:</strong>
-                    <abbr title="@user.BirthDate.Value.ToString("yyyy/MM/dd", CultureInfo.InvariantCulture), @user.BirthDate.Value.ToShortPersianDateString()">
-                        @user.BirthDate.Value.GetAge().ToPersianNumbers()
-                    </abbr>
-                </li>
-            }
+            
         </ul>
     </div>
    </div>

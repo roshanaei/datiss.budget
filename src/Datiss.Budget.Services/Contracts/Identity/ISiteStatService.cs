@@ -10,10 +10,7 @@ namespace Datiss.Budget.Services.Contracts.Identity
     {
         Task<List<User>> GetOnlineUsersListAsync(int numbersToTake, int minutesToTake);
 
-        Task<List<User>> GetTodayBirthdayListAsync();
-
         Task UpdateUserLastVisitDateTimeAsync(ClaimsPrincipal claimsPrincipal);
 
-        Task<AgeStatViewModel> GetUsersAverageAge();
     }
 }

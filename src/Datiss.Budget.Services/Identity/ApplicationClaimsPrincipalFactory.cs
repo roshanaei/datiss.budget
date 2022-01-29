@@ -58,12 +58,12 @@ namespace Datiss.Budget.Services.Identity
                 new Claim(ClaimTypes.Surname, user.LastName ?? string.Empty),
                 new Claim(PhotoFileName, user.PhotoFileName ?? string.Empty, ClaimValueTypes.String),
 
-                new Claim(BudgetClaimNames.OrganizationId,
+                new Claim(BudgetClaimTypes.OrganizationId,
                                 user.OrganizationId.HasValue
                                     ? user.OrganizationId.ToString()
                                     : string.Empty),
 
-                new Claim(BudgetClaimNames.OrganizationTitle,
+                new Claim(BudgetClaimTypes.OrganizationTitle,
                                 user.OrganizationId.HasValue
                                     ? user.Organization.Title
                                     : string.Empty)

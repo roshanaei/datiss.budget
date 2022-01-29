@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Datiss.Budget.Common.EFCoreToolkit;
+using Datiss.Budget.DataLayer.Configurations;
 using Datiss.Budget.Entities.DWH;
 
 namespace Datiss.Budget.DataLayer.Context
@@ -260,13 +261,16 @@ namespace Datiss.Budget.DataLayer.Context
             builder.AddAuditableShadowProperties();
 
             //TODO : Add all mapping configuration
-            builder.ApplyConfiguration(new WaterInstallFeeConfiguration())
+            builder
+                .ApplyConfiguration(new WaterInstallFeeConfiguration())
                 .ApplyConfiguration(new FinanceYearConfiguration())
                 .ApplyConfiguration(new WasteInstallFeeConfiguration())
                 .ApplyConfiguration(new WasteSalesSplitConfiguration())
                 .ApplyConfiguration(new WaterSalesSplitConfiguration())
                 .ApplyConfiguration(new ReportConfiguration())
-                .ApplyConfiguration(new ReportParamConfiguration());
+                .ApplyConfiguration(new ReportParamConfiguration())
+                .ApplyConfiguration(new RoleConfiguration())
+                .ApplyConfiguration(new AppClaimTypeConfiguration());
 
         }
     }

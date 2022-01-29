@@ -20,19 +20,44 @@ namespace Datiss.Budget.Services.Infrastructure
     {
         public T Result { get; set; }
 
-        public static ValidationResult<T> Success(T result) {
-            return new ValidationResult<T> {
+        public static ValidationResult<T> Success(T result)
+            => new ValidationResult<T> {
                 IsValid = true,
                 Result = result
             };
-        }
 
-        public static new ValidationResult<T> Failed(string message) {
-            return new ValidationResult<T> {
+        public static ValidationResult<T> Success(T result, ValidationMode mode, string message = "")
+            => new ValidationResult<T>
+            {
+                Result = result,
+                IsValid = true,
+                Message = message,
+                Mode = mode
+            };
+
+        public static new ValidationResult<T> Failed(string message)
+            => new ValidationResult<T> {
                 IsValid = false,
                 Message = message
             };
-        }
+
+        public static new ValidationResult<T> Failed(ValidationMode mode, string message)
+            => new ValidationResult<T>
+            {
+                IsValid = false,
+                Message = message,
+                Mode = mode
+            };
+
+
+        public static new ValidationResult<T> Failed(T result, ValidationMode mode, string message)
+            => new ValidationResult<T>
+            {
+                Result = result,
+                IsValid = false,
+                Message = message,
+                Mode = mode
+            };
 
     }
 
@@ -50,6 +75,8 @@ namespace Datiss.Budget.Services.Infrastructure
 
         public bool IsValid { get; set; }
 
+        public bool NotValid => !IsValid;
+
         public string Message { get; set; }
 
         public void AddError(string key, string errorMessage)
@@ -57,17 +84,33 @@ namespace Datiss.Budget.Services.Infrastructure
             _errors.Add(key, errorMessage);
         }
 
-        public static ValidationResult Success() {
-            return new ValidationResult {
+        public static ValidationResult Success()
+            => new ValidationResult {
                 IsValid = true
             };
-        }
+        
+        public static ValidationResult Success(ValidationMode mode, string message = "")
+            => new ValidationResult
+            {
+                IsValid = true,
+                Message = message,
+                Mode = mode
+            };
 
-        public static ValidationResult Failed(string message) {
-            return new ValidationResult {
+        public static ValidationResult Failed(string message)
+            => new ValidationResult
+            {
                 IsValid = false,
                 Message = message
             };
-        }
+
+        public static ValidationResult Failed(ValidationMode mode, string message)
+            => new ValidationResult
+            {
+                IsValid = false,
+                Message = message,
+                Mode = mode
+            };
+
     }
 }

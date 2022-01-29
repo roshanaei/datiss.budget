@@ -24,7 +24,7 @@ namespace Datiss.Budget.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Index(RoleViewModel model)
+        public IActionResult Index(PrevRoleViewModel model)
         {
             return View(model);
         }

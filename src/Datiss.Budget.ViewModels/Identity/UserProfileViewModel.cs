@@ -43,13 +43,6 @@ namespace Datiss.Budget.ViewModels.Identity
         [DataType(DataType.Upload)]
         public IFormFile Photo { get; set; }
 
-        public int? DateOfBirthYear { set; get; }
-        public int? DateOfBirthMonth { set; get; }
-        public int? DateOfBirthDay { set; get; }
-
-        [Display(Name = "محل اقامت")]
-        public string Location { set; get; }
-
         [Display(Name = "نمایش عمومی ایمیل")]
         public bool IsEmailPublic { set; get; }
 

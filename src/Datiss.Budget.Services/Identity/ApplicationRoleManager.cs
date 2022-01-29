@@ -57,6 +57,8 @@ namespace Datiss.Budget.Services.Identity
 
         #region CustomMethods
 
+        public IQueryable<Role> Query() => Roles;
+
         public IList<Role> FindCurrentUserRoles()
         {
             var userId = getCurrentUserId();

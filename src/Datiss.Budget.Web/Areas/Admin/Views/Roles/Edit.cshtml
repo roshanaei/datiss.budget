@@ -1,0 +1,225 @@
+﻿@model UpdateRoleViewModel
+@{
+    ViewData["Title"] = $"ویرایش نقش - {Model.Title}";
+}
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title my-font">
+                        <i class="fa fa-plus"></i> @ViewData["Title"]
+                    </h5>
+                </div>
+                <div class="card-content">
+                    <div class="card-body" dir="rtl">
+                        @if (Model._HasError) {
+                            <div class="alert alert-danger" role="alert">
+                                <a href="#" class="close" data-dismiss="alert">×</a>
+                                @Html.Raw(Model._ErrorMessage)
+                            </div>
+                        }
+                        <form id="my-form"
+                              novalidate
+                              asp-controller="@RolesController.Name"
+                              asp-action="@RolesController.ACTION_Edit"
+                              method="POST">
+
+                            <input asp-for="Id" type="hidden" />
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <label class="col-form-label my-font">
+                                        عنوان
+                                    </label>
+                                </div>
+                                <div class="col-9">
+                                    <input type="text" asp-for="Title" placeholder="عنوان نقش" class="form-control my-font" />
+                                    <span asp-validation-for="Title"></span>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <label class="col-form-label my-font">
+                                        نام انگلیسی نقش
+                                    </label>
+                                </div>
+                                <div class="col-9">
+                                    <input type="text" asp-for="Name" dir="ltr" placeholder="نام نقش" class="form-control my-font" />
+                                    <span asp-validation-for="Name"></span>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <label class="col-form-label my-font">
+                                        وضعیت
+                                    </label>
+                                </div>
+                                <div class="col-9">
+                                    <input type="checkbox" asp-for="Enabled" class="switchery switchery-default" />
+                                    <span asp-validation-for="Enabled"></span>
+                                </div>
+                            </div>
+                            <div class="scrollable-container" style="max-height: 500px;">
+                                <table class="table table-striped my-font">
+                                    <thead>
+                                        <tr>
+                                            <th>دسترسی</th>
+                                            <th>لیست</th>
+                                            <th>ایجاد</th>
+                                            <th>ویرایش</th>
+                                            <th>حذف</th>
+                                        </tr>
+                                    </thead>
+                                    @{
+                                        int i = 0;
+                                    }
+                                    @foreach (var claimType in Model.ClaimTypeSource) {
+                                        <tr>
+                                            <td>
+                                                <span>@claimType.Title</span>
+                                                <input type="hidden" name="SelectedClaims[@i].Key" value="@claimType.Name" />
+                                                <input type="hidden" id="claimValue_@claimType.Id" name="SelectedClaims[@i].Value" />
+                                            </td>
+                                            <td>
+                                                @{
+                                                    var chkListId = $"list_{claimType.Id}";
+                                                }
+                                                <input type="checkbox" id="@chkListId" value="list" class="" />
+
+                                            </td>
+                                            <td>
+                                                @{
+                                                    var chkCreateId = $"create_{claimType.Id}";
+                                                }
+                                                <input type="checkbox" id="@chkCreateId" value="create" class="" />
+                                            </td>
+                                            <td>
+                                                @{
+                                                    var chkEditId = $"edit_{claimType.Id}";
+                                                }
+                                                <input type="checkbox" id="@chkEditId" value="edit" class="" />
+                                            </td>
+                                            <td>
+                                                @{
+                                                    var chkDeleteId = $"delete_{claimType.Id}";
+                                                }
+                                                <input type="checkbox" id="@chkDeleteId" value="delete" class="" />
+                                            </td>
+                                        </tr>
+                                        i++;
+                                    }
+                                </table>
+                            </div>
+
+                            <div class="row" style="padding-top: 20px;">
+                                <a  asp-controller="@RolesController.Name" 
+                                    asp-action="@RolesController.ACTION_Index"
+                                   class="btn btn-secondary bg-light-secondary mr-1 my-font"
+                                   data-dismiss="modal">
+                                    <i class="fa fa-times"></i> انصراف
+                                </a>
+                                <button type="submit" class="btn btn-primary my-font">
+                                    <i class="fa fa-check"></i> ارسال
+                                </button>
+                            </div>
+
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+@section footSection {
+
+    <script type="text/javascript">
+        function checkClaim(id, claims) {
+            var chkList = document.getElementById(`list_${id}`);
+            console.log(chkList);
+            var chkCreate = document.getElementById(`create_${id}`);
+            var chkEdit = document.getElementById(`edit_${id}`);
+            var chkDelete = document.getElementById(`delete_${id}`);
+
+            if(claims.indexOf('list') >= 0) {
+                $(chkList).prop('checked', 'checked');
+                console.log(`list of ${id} checked`);
+                //$(chkList).prop('checked', true);
+                //document.getElementById(`list_${id}`).checked = 'checked';
+            }
+
+            if(claims.indexOf('create') >= 0)
+                $(chkCreate).prop('checked', true);
+        
+            if(claims.indexOf('edit') >= 0)
+                $(chkEdit).prop('checked', true);
+        
+            if(claims.indexOf('delete') >= 0)
+                $(chkDelete).prop('checked', true);
+        }
+    </script>
+
+@foreach(var claim in Model.SelectedClaims) {
+    var claimToCheck = Model.ClaimTypeSource.FirstOrDefault(_=> _.Name == claim.Key);
+    var myid = claimToCheck.Id;
+
+    <script type="text/javascript">
+        checkClaim(@myid, '@claim.Value');
+    </script>
+}
+
+<script type="text/javascript">
+    const elem = $('input:checkbox');
+    var filan = new Switchery(elem);
+    elem.addClass('switchery switchery-default');
+    console.log(filan);
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#Title').focus();
+    });
+
+    $('#my-form').submit(function () {
+        if ($(this).valid()) {
+            $(this).find(':submit').attr('disabled', 'disabled');
+        }
+    });
+
+    $('.switchery').on('change', function() {
+        var id = $(this).attr('id');
+        var checked = $(this).is(':checked');
+        var val = $(this).val();
+        console.log(`switch id: ${id} is ${checked} and value: ${val}`);
+        var id_idx = id.indexOf('_');
+        var myid = id.substring(id_idx+1, id.length);
+        console.log(myid);
+        var hidClaimValueId = `claimValue_${myid}`;
+        var hidden = document.getElementById(hidClaimValueId);
+        console.log(hidClaimValueId);
+        var hidClaimValue = $(hidden).val();
+        console.log('claimVal: ' + hidClaimValue);
+        if(hidClaimValue === undefined) {
+            hidClaimValue = '';
+        }
+        if(checked) {
+            if(hidClaimValue.indexOf(val) < 0) {
+                hidClaimValue = hidClaimValue + `${val};`;
+                $(hidden).attr('value', hidClaimValue);
+            }
+        }
+        else {
+            if(hidClaimValue.indexOf(val) >= 0) {
+                hidClaimValue = hidClaimValue.replace(`${val};`, '');
+                $(hidden).attr('value', hidClaimValue);
+            }
+        }
+    });
+
+</script>
+}
+
