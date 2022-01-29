@@ -1,6 +1,8 @@
 ﻿<script type="text/javascript">
 
     let isNewRow = false;
+    let rowData = {};
+
     function editRow(id) {
 
 
@@ -30,6 +32,15 @@
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.userTypeId = $('#inputUserType_' + id).val();
+        rowData.averageCapacityW = $('#inputAverageCapacityW_' + id).val();
+        rowData.averageCapacityWs = $('#inputAverageCapacityWs_' + id).val();
+        rowData.averageCapacityWIncome = $('#inputAverageCapacityWIncome_' + id).val();
+        rowData.averageCapacityWsIncome = $('#inputAverageCapacityWsIncome_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -44,6 +55,17 @@
         $('#divInput_AverageCapacityWs_' + id).hide();
         $('#divInput_AverageCapacityWIncome_' + id).hide();
         $('#divInput_AverageCapacityWsIncome_' + id).hide();
+
+        //Reverting to OriginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputUserType_' + id).val(rowData.userTypeId);
+            $('#inputAverageCapacityW_' + id).val(rowData.averageCapacityW);
+            $('#inputAverageCapacityWs_' + id).val(rowData.averageCapacityWs);
+            $('#inputAverageCapacityWIncome_' + id).val(rowData.averageCapacityWIncome);
+            $('#inputAverageCapacityWsIncome_' + id).val(rowData.averageCapacityWsIncome);
+        }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
@@ -99,6 +121,15 @@
                         });
                         return;
                 }
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.userTypeId = model.userTypeId;
+                rowData.averageCapacityW = model.averageCapacityW;
+                rowData.averageCapacityWs = model.averageCapacityWs;
+                rowData.averageCapacityWIncome = model.averageCapacityWIncome;
+                rowData.averageCapacityWsIncome = model.averageCapacityWsIncome;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
