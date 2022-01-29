@@ -225,6 +225,69 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
+
+        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId)
+        {
+            var organization = await _orgDbSet.FindAsync(organizationId);
+            organization.CheckReferenceIsNull(nameof(organization));
+
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
+            var self = await _dbSet.Where(_ => _.YearId == yearId)
+                                    .Where(_ => _.OrganizationId == organizationId)
+                                    .ToListAsync();
+            var childrens = await getChildren(organizationId, yearId);
+
+            if (self.Count() == 0 && childrens.Count() == 0)
+                throw new DeleteNullRecordException();
+            _dbSet.RemoveRange(self);
+
+            _dbSet.RemoveRange(childrens);
+
+            var result = new OrganizationDeleteDataResult
+            {
+                OrganizationTitle = organization.Title,
+                Year = year.Year,
+                YearTitle = year.Title
+            };
+
+            await _uow.SaveChangesAsync();
+
+            return await Task.FromResult(result);
+        }
+
+        #region Private Helper Methods
+        private async Task<IEnumerable<IncomeCurrentWsNH>> getChildren(
+            int parentOrganizationId,
+            int yearId)
+        {
+            var children = await _orgDbSet
+                .Where(_ => _.Status != EntityStatus.Deleted &&
+                            _.ParentId == parentOrganizationId)
+                .ToListAsync();
+            var result = new List<IncomeCurrentWsNH>();
+            foreach (var org in children)
+            {
+                var data = await Query()
+                                .Where(_ => _.YearId == yearId)
+                                .Where(_ => _.OrganizationId == org.Id)
+                                .ToListAsync();
+
+                foreach (var item in data)
+                {
+                    result.Add(item);
+                }
+                result.AddRange(await getChildren(org.Id, yearId));
+            }
+            return result;
+        }
+
+        #endregion
+
         #region Logics
         private async Task<bool> checkLogicAsync(
             int yearId,
