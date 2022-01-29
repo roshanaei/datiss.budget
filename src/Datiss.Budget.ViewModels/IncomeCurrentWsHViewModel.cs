@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,30 +22,43 @@ namespace Datiss.Budget.ViewModels
 
         public int UsageLayerId { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public int NumberUser { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public int UnitUser { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public decimal AvgConsumeUser { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public int ConsumptionUser { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public int Cost { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public int Income { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public int SubscriptionIncome { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public int Note3Price { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public int Note3Income { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public int SeasonalIncome { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public int TIncome { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public int Note7Price { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public int Note7Income { get; set; }
     }
 
