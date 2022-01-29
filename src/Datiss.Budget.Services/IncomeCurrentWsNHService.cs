@@ -57,5 +57,9 @@ namespace Datiss.Budget.Services
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
+
+        private IQueryable<IncomeCurrentWsNH> Query()
+            => _dbSet.AsNoTracking();
+
     }
 }
