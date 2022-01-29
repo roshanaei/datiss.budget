@@ -38,7 +38,6 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
-
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
         private readonly ILogger<IncomeCurrentWsHController> _logger;
@@ -139,7 +138,7 @@ namespace Datiss.Budget.Web.Controllers
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
 
-            var myfilter = TempData.Get<IncomeCurrentWHFilterViewModel>(_indexFilterKey);
+            var myfilter = TempData.Get<IncomeCurrentWsHFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
             {
                 filter = myfilter.Adapt<IncomeCurrentWsHFilterDTO>();
@@ -497,17 +496,16 @@ namespace Datiss.Budget.Web.Controllers
         private string getCalcTitle(string key)
             => key switch
             {
-                "IncomeCurrentWH_Cal1" => SPTitles.IncomeCurrentWsH_Cal1,
-                "IncomeCurrentWH_Cal2" => SPTitles.IncomeCurrentWsH_Cal2,
-                "IncomeCurrentWH_Cal3" => SPTitles.IncomeCurrentWsH_Cal3,
-                "IncomeCurrentWH_Cal4" => SPTitles.IncomeCurrentWsH_Cal4,
-                "IncomeCurrentWH_Cal5" => SPTitles.IncomeCurrentWsH_Cal5,
-                "IncomeCurrentWH_Cal6" => SPTitles.IncomeCurrentWsH_Cal6,
-                "IncomeCurrentWH_Cal7" => SPTitles.IncomeCurrentWsH_Cal7,
-                "IncomeCurrentWH_Cal8" => SPTitles.IncomeCurrentWsH_Cal8,
+                "IncomeCurrentWsH_Cal1" => SPTitles.IncomeCurrentWsH_Cal1,
+                "IncomeCurrentWsH_Cal2" => SPTitles.IncomeCurrentWsH_Cal2,
+                "IncomeCurrentWsH_Cal3" => SPTitles.IncomeCurrentWsH_Cal3,
+                "IncomeCurrentWsH_Cal4" => SPTitles.IncomeCurrentWsH_Cal4,
+                "IncomeCurrentWsH_Cal5" => SPTitles.IncomeCurrentWsH_Cal5,
+                "IncomeCurrentWsH_Cal6" => SPTitles.IncomeCurrentWsH_Cal6,
+                "IncomeCurrentWsH_Cal7" => SPTitles.IncomeCurrentWsH_Cal7,
+                "IncomeCurrentWsH_Cal8" => SPTitles.IncomeCurrentWsH_Cal8,
                 _ => ""
             };
         #endregion
-
     }
 }
