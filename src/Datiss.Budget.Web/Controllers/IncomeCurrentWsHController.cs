@@ -22,6 +22,7 @@ namespace Datiss.Budget.Web.Controllers
     {
         public const string Name = "IncomeCurrentWsH";
         public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Edit = nameof(Edit);
         public const string ACTION_Index = nameof(Index);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
@@ -72,6 +73,30 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(result.Result.Adapt<IncomeCurrentWsHViewModel>());
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Edit(UpdateIncomeCurrentWsHViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+
+            var data = model.Adapt<UpdateIncomeCurrentWsHDTO>();
+            var result = await _incomeCurrentWsHService.UpdateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(
+                result.Result.Adapt<IncomeCurrentWsHViewModel>()
+            );
         }
 
 
