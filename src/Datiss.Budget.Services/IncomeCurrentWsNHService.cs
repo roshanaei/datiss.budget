@@ -289,7 +289,133 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task<PagedResult<IncomeCurrentWsNHDTO>> GetListAsync(IncomeCurrentWsNHFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var result = new PagedResult<IncomeCurrentWsNHDTO>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            result.TotalCount = await query.CountAsync();
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            query = query
+                .Skip(filter.StartIndex)
+                .Take(filter.PageSize);
+
+            result.Items = await query.Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.UserType)
+                                    .Select(x => new IncomeCurrentWsNHDTO
+                                    {
+                                        Id = x.Id,
+                                        UserTypeDisplay = x.UserType.Title,
+                                        UserTypeId = x.UserTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        NumberUser = x.NumberUser,
+                                        UnitUser = x.UnitUser,
+                                        AvgConsumeUser = x.AvgConsumeUser,
+                                        ConsumptionUser = x.ConsumptionUser,
+                                        Capacity = x.Capacity,
+                                        Cost = x.Cost,
+                                        Income = x.Income,
+                                        ExcessIncome = x.ExcessIncome,
+                                        SeasonalIncome = x.SeasonalIncome,
+                                        Note3Price = x.Note3Price,
+                                        Note3Income = x.Note3Income,
+                                        SubscriptionIncome = x.SubscriptionIncome,
+                                        TotalIncome = x.TotalIncome,
+                                        Note7Price = x.Note7Price,
+                                        Note7Income = x.Note7Income,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
+                                    }).ToListAsync();
+
+            return await Task.FromResult(result);
+        }
+
+
         #region Private Helper Methods
+        private async Task<IQueryable<IncomeCurrentWsNH>> setFilter(
+    IQueryable<IncomeCurrentWsNH> query,
+    IncomeCurrentWsNHFilterDTO filter)
+        {
+            query.CheckArgumentIsNull(nameof(query));
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var predicate = PredicateBuilder.New<IncomeCurrentWsNH>();
+
+            if (filter.YearId.HasValue)
+                query = query.Where(x => x.YearId == filter.YearId.Value);
+
+            if (filter.OrganizationId.HasValue)
+            {
+                var organizations = await _organizationService
+                    .GetWithChildrenAsync(filter.OrganizationId.Value);
+
+                foreach (var org in organizations)
+                {
+                    predicate.Or(_ => _.OrganizationId == org.Id);
+                }
+
+                query = query.Where(predicate);
+            }
+
+            if (filter.UserTypeId.HasValue)
+                query = query.Where(x => x.UserTypeId == filter.UserTypeId.Value);
+
+
+            if (filter.Search.IsNotNullOrEmpty())
+            {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Where(_ =>  _.Organization.Title.ToUpper().Contains(filter.Search) ||
+                                          _.UserType.Title.ToUpper().Contains(filter.Search));
+            }
+
+            return query;
+        }
+
+        private IQueryable<IncomeCurrentWsNH> setOrder(
+           IQueryable<IncomeCurrentWsNH> query,
+           string orderBy = "id",
+           bool desc = false)
+        {
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "id";
+
+            orderBy = orderBy.ToLower();
+            switch (orderBy)
+            {
+
+                case "organization":
+                    return desc
+                        ? query.OrderByDescending(x => x.Organization.Title)
+                        : query.OrderBy(x => x.Organization.Title);
+
+                case "usertype":
+                    return desc
+                        ? query.OrderByDescending(x => x.UserType.DisplayOrder)
+                        : query.OrderBy(x => x.UserType.DisplayOrder);
+
+                default:
+                    return query.Include(x => x.Organization)
+                                .Include(x => x.UserType)
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.Organization.Type)
+                                .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.UserType.DisplayOrder);
+            }
+        }
+
         private async Task<IEnumerable<IncomeCurrentWsNH>> getChildren(
             int parentOrganizationId,
             int yearId)
