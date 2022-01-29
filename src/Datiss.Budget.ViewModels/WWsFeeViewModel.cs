@@ -1,5 +1,6 @@
 ﻿using Datiss.Budget.Enum;
 using Datiss.Budget.Extensions;
+using Datiss.Budget.Resources;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -23,28 +24,28 @@ namespace Datiss.Budget.ViewModels
 
         public int UsageLayerId { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        [Range(0, int.MaxValue, ErrorMessage = "پارامتر اول تعرفه بهای خدمات باید به صورت عددی وارد شود")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int P1Fee { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        [Range(0, int.MaxValue, ErrorMessage = "پارامتر دوم تعرفه بهای خدمات باید به صورت عددی وارد شود")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int P2Fee { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        [Range(0, int.MaxValue, ErrorMessage = "پارامتر اول خدمات تبصره 3 باید به صورت عددی وارد شود")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int P1Note3 { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        [Range(0, int.MaxValue, ErrorMessage = "پارامتر دوم خدمات تبصره 3 باید به صورت عددی وارد شود")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int P2Note3 { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        [Range(0, int.MaxValue, ErrorMessage = "پارامتر اول خدمات تبصره 7 باید به صورت عددی وارد شود")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int P1Note7 { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        [Range(0, int.MaxValue, ErrorMessage = "پارامتر اول خدمات تبصره 7 باید به صورت عددی وارد شود")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int P2Note7 { get; set; }
 
         public IEnumerable<SelectListItem> UserTypeSource { get; set; }
