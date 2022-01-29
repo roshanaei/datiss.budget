@@ -1,0 +1,458 @@
+﻿@model UsersIndexViewModel
+@{
+    ViewData["Title"] = "مدیریت کاربران سیستم";
+}
+
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <form id="filterForm"
+                            asp-controller="@UsersController.Name"
+                            asp-action="@UsersController.ACTION_Index"
+                            method="POST"
+                            asp-asp-antiforgery="true">
+                            <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
+                            <div class="rowACJSB">
+                                <fieldset class="form-group mt-3">
+                                    <label asp-for="Filter.OrganizationId" class="my-font">
+                                        سازمان:
+                                        <select asp-for="Filter.OrganizationId"
+                                                asp-items="Model.Filter.OrganizationSource"
+                                                class="form-control d-inline-block width-100"
+                                                id="organizationId">
+                                        </select>
+                                    </label>
+                                    <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
+                                        سمت:
+                                        <select asp-for="Filter.PositionId"
+                                                asp-items="Model.Filter.PositionSource"
+                                                class="form-control d-inline-block width-300"
+                                                id="positionId">
+                                        </select>
+                                    </label>
+                                    <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
+                                        وضعیت:
+                                        <select asp-for="Filter.Status"
+                                                asp-items="Model.Filter.StatusSource"
+                                                class="form-control d-inline-block width-300"
+                                                id="statusId">
+                                        </select>
+                                    </label>
+                                    <input asp-for="Filter.OrderBy" type="hidden" />
+                                    <input asp-for="Filter.OrderDesc" type="hidden" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="rowACJE">
+                                        
+                                        <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+                                        </button>
+                                        <a asp-action="@UsersController.ACTION_Create" data-toggle="tooltip" data-placement="top" title="رکورد جدید" class="btn btn-success bg-light-success my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                        </a>
+                                        @*<button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                        </button>*@
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <hr />
+                             <fieldset class="form-group position-relative has-icon-left">
+                                <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
+                                <div class="form-control-position">
+                                    <i class="ft-search font-medium-4"></i>
+                                </div>
+                            </fieldset>
+                            <!--SearchBox-->
+                            <div class="rowACJSB">
+                                <div class="d-flex flex-row-reverse align-items-center">
+
+                                    <fieldset class="form-group" style="margin-right:20px">
+                                        <label class="my-font rowAC">
+                                            <span>نمایش</span>
+
+                                            <select asp-for="Filter.PageSize"
+                                                    style="margin-right:10px"
+                                                    class="form-control"
+                                                    onchange="changePageSize();"
+                                                    id="ddlPageSize">
+                                                <option>10</option>
+                                                <option>20</option>
+                                                <option>30</option>
+                                            </select>
+                                            <span style="margin-right:10px">رکورد</span>
+
+                                        </label>
+
+                                    </fieldset>
+                                    @* drop down menu *@
+                                    <div class="btn-group dropdown form-group">
+                                        <button type="button"
+                                                class="btn btn-light my-font dropdown-toggle"
+                                                data-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                            ستون ها
+                                        </button>
+                                        <div class="dropdown-menu" style="width:150%">
+                                            <div id="columnSelector">
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-1"
+                                                               id="col-1" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-1"><span>نام کاربری</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-2"
+                                                               id="col-2" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-2"><span>نام</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-3"
+                                                               id="col-3" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-3"><span>نام خانوادگی</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-4"
+                                                               id="col-4" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-4"><span>کد ملی</span></label>
+                                                    </div>
+                                                </div>
+                                                 <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-5"
+                                                               id="col-5" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-5"><span>سازمان</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-6"
+                                                               id="col-6" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-6"><span>شماره تماس</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <fieldset>
+                                    <div class="rowACJE">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.PositionId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
+                                        </a>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </form>
+
+                        <partial name="_table" model="Model" />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+
+@section headSection {
+    <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
+}
+
+@section footSection {
+    <div id="divCreate">
+
+    </div>
+    
+    <div id="divSetUserPassword">
+
+    </div>
+    
+    <script type="text/javascript">
+        let allColumns = '1,2,3,4,5,6';
+        let columnIndices = allColumns.split(',');
+        console.log(columnIndices);
+        let showingColmuns = "1,2,3,4,5,6";
+    </script>
+
+    @if(Model.Filter.Columns.IsNotNullOrEmpty()) {
+        <script type="text/javascript">
+            showingColmuns = '@Model.Filter.Columns' ;
+        </script>
+    }
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //fill input hidden with initial columns showing
+            document.getElementById("hidColumns").value = showingColmuns;
+
+            //setDataColumns();
+
+            $('#organizationId').select2({
+                dir: 'rtl'
+            });
+
+            $('#positionId').select2({
+                dir: 'rtl'
+            });
+
+            $(".dropdown-menu").click(function (e) {
+                e.stopPropagation();
+            });
+
+            $("#columnSelector input:checkbox:checked").change(function () {
+                const index = parseInt($(this)[0].id.split('-')[1]);
+                console.log(`showing or hiding col : ${index}`);
+                const checked = $(this)[0].checked;
+                if (checked) {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                    showingColmuns = showingColmuns + `${index},`
+                    document.getElementById("hidColumns").value = showingColmuns ;
+                } else {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+                    showingColmuns = showingColmuns.replace(`${index},`, '');
+                    document.getElementById("hidColumns").value = showingColmuns;
+                }
+            });
+
+            //$('#btnCreate').on('click', function() {
+            //    openCreate();
+            //});
+
+        });
+
+
+        function setDataColumns() {
+            const columnsToShow = document.getElementById("hidColumns").value.split(',');
+            console.log('ColumnsToShow ');
+            console.log(columnsToShow);
+            const checkBoxes = $("#columnSelector input:checkbox");
+            for(let i = 0; i < columnIndices.length; i++) {
+                const index = parseInt(columnIndices[i]);
+                const showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
+                console.log(`Column : ${index} show = ${showColumn}`);
+                checkBoxes[i].checked = showColumn;
+                if(showColumn)
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                else
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+            }
+        }
+
+        function resetDataColumns() {
+            $('th,tr td').show();
+            const inputs = $("#columnSelector input:checkbox");
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].checked = true
+            }
+        }
+
+        function openCreate() {
+            const div = document.getElementById('divCreate');
+            console.log(div);
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action(UsersController.ACTION_Create)',
+                success: function(data, status, settings) {
+                    $(div).html('');
+                    $(div).html(data);
+                    $('#OrganizationId').select2({
+                        dir: 'rtl'
+                    });
+                    const mymodal = document.getElementById('modalCreateUser');
+                    const btnSave = document.getElementById('btnSaveCreateUser');
+                    btnSave.addEventListener('click',
+                        function(event) {
+                            event.preventDefault();
+                            //if($form.valid()) {
+                            //    createUser();
+                            //}
+                        });
+                    const form = $('#create-form');
+                    form.unbind();
+                    form.removeData('validator');
+                    form.removeData('unobtrusiveValidation');
+                    $.validator.unobtrusive.parse(form);
+                    form.validate(form.data("unobtrusiveValidation").options);
+                    $(mymodal).modal('show');
+                    $(mymodal).on('hidden.bs.modal',
+                        function() {
+                            $(div).html('');
+                            $('.modal-backdrop').remove();
+                        });
+                },
+                error: function(request, options, err) {
+
+                }
+            });
+        }
+
+
+        function openSetPassword(id) {
+            const div = document.getElementById('divSetUserPassword');
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action(UsersController.ACTION_SetUserPassword)' + '/' + id,
+                success: function(data, status, settings) {
+                    $(div).html('');
+                    $(div).html(data);
+                    const mymodal = document.getElementById('modalSetUserPassword');
+                    const btnSave = document.getElementById('btnSetUserPassword');
+                    btnSave.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        setUserPassword();
+                    });
+                    $(mymodal).modal('show');
+                    $(mymodal).on('hidden.bs.modal',
+                        function() {
+                            $(div).html('');
+                            $('.modal-backdrop').remove();
+                        }
+                    );
+                    $('#SetPassword_NewPassword').focus();
+                },
+                error: function(request, options, err) {
+                    console.log(err);
+                }
+            });
+        }
+        
+        function setUserPassword() {
+            const model = {};
+            model.userId = $('#SetPassword_UserId').val();
+            model.newPassword = $('#SetPassword_NewPassword').val();
+            model.verifyNewPassword = $('#SetPassword_VerifyNewPassword').val();
+            console.log(model);
+
+            if(model.newPassword === '') {
+                $('#validateNewPassword').html('لطفاً کلمه عبور را وارد نمایید.');
+                $('#validateNewPassword').focus();
+                return;
+            }
+
+            if(model.verifyNewPassword === '') {
+                $('#validateVerifyNewPassword').html('لطفاً کلمه عبور را دوباره وارد نمایید.');
+                $('#validateVerifyNewPassword').focus();
+                return;
+            }
+
+            if(model.newPassword != model.verifyNewPassword) {
+                alert('کلمات عبور با هم مطابقت ندارند. لطفاً برای تایید کلمه عبور وارد شده، آن را دوباره و به درستی وارد نمایید.');
+                $('validateVerifyNewPassword').focus();
+                return;
+            }
+
+            const mymodal = document.getElementById('modalSetUserPassword');
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(UsersController.ACTION_SetUserPassword)',
+                data: model,
+                success: function(data, status, settings) {
+                    if(data.hasError) {
+                        alert(data.message);
+                    }
+                    $(mymodal).modal('hide');
+                },
+                error: function(request, options, err) {
+                    console.log(err);
+                }
+            });
+        }
+
+        var createUserSuccess = function(context) {
+            console.log(context);
+            console.log(context.data);
+        };
+
+        var createUserComplete = function(context) {
+            console.log(context);
+        };
+
+        var createUserFailure = function(context) {
+            console.log(context);
+        };
+
+        function createUser() {
+            const model = {};
+            model.firstName = $('#FirstName').val();
+            model.lastName = $('#LastName').val();
+            model.userName = $('#UserName').val();
+            model.nationalCode = $('#NationalCode').val();
+            model.organizationId = $('#OrganizationId option:selected').val();
+            model.positionId = $('#PositionId option:selected').val();
+            model.email = $('#Email').val();
+            model.phoneNumber = $('#phoneNumber').val();
+
+            console.log(model);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(UsersController.ACTION_Create)',
+                data: model
+            }).done(function(data, status, setting) {
+                const $form = $('#create-form'); 
+                $form.removeData('validator');
+                $form.removeData('unobtrusiveValidation');
+                if(data.hasError) {
+                    alert(data.message);
+                }
+
+                if(data.success) {
+                    alert('success');
+                }
+            }).fail(function(request, options, err) {
+                console.log(err);
+            });
+        }
+
+    </script>
+
+
+}

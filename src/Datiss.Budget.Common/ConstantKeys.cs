@@ -7,6 +7,8 @@
         public const string __UsageLayerType = "UsageLayer";
         public const string __WasteDiameter = "WasteDiameter";
         public const string __OIFType = "OIF";
+        public const string __Position = "Position";
         public const string __House = "UserType.House";
+        public const string __Cofficients = "Cofficients";
     }
 }

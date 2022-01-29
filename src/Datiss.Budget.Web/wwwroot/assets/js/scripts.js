@@ -1,6 +1,6 @@
 (function(window, undefined) {
   'use strict';
-    $(() => $('table').floatThead());
+    /*$(() => $('table').floatThead());*/
   /*
   NOTE:
   ------

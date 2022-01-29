@@ -1,6 +1,8 @@
 ﻿<script type="text/javascript">
 
     let isNewRow = false;
+    let rowData = {};
+
     function editRow(id) {
 
 
@@ -41,6 +43,20 @@
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.userTypeId = $('#inputUserType_' + id).val();
+        rowData.waterRateIncrease = $('#inputWaterRateIncrease_' + id).val();
+        rowData.wasteRateIncrease = $('#inputWasteRateIncrease_' + id).val();
+        rowData.wastePersentIncrease = $('#inputWastePersentIncrease_' + id).val();
+        rowData.fixAmountBusiness = $('#inputFixAmountBusiness_' + id).val();
+        rowData.capacityFixAmount = $('#inputCapacityFixAmount_' + id).val();
+        rowData.waterInstallRateIncrease = $('#inputWaterInstallRateIncrease_' + id).val();
+        rowData.wsInstalIncrease = $('#inputWsInstalIncrease_' + id).val();
+        rowData.waterFixNote2 = $('#inputWaterFixNote2_' + id).val();
+        rowData.wasteFixNote2 = $('#inputWasteFixNote2_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -60,6 +76,22 @@
         $('#divInput_WsInstalIncrease_' + id).hide();
         $('#divInput_WaterFixNote2_' + id).hide();
         $('#divInput_WasteFixNote2_' + id).hide();
+
+        //Retriving to OrginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputUserType_' + id).val(rowData.userTypeId);
+            $('#inputWaterRateIncrease_' + id).val(rowData.waterRateIncrease);
+            $('#inputWasteRateIncrease_' + id).val(rowData.wasteRateIncrease);
+            $('#inputWastePersentIncrease_' + id).val(rowData.wastePersentIncrease);
+            $('#inputFixAmountBusiness_' + id).val(rowData.fixAmountBusiness);
+            $('#inputCapacityFixAmount_' + id).val(rowData.capacityFixAmount);
+            $('#inputWaterInstallRateIncrease_' + id).val(rowData.waterInstallRateIncrease);
+            $('#inputWsInstalIncrease_' + id).val(rowData.wsInstalIncrease);
+            $('#inputWaterFixNote2_' + id).val(rowData.waterFixNote2);
+            $('#inputWasteFixNote2_' + id).val(rowData.wasteFixNote2);
+        }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
@@ -128,6 +160,20 @@
                         return;
                 }
                 console.log(data);
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.userTypeId = model.userTypeId;
+                rowData.waterRateIncrease = model.waterRateIncrease;
+                rowData.wasteRateIncrease = model.wasteRateIncrease;
+                rowData.wastePersentIncrease = model.wastePersentIncrease;
+                rowData.fixAmountBusiness = model.fixAmountBusiness;
+                rowData.capacityFixAmount = model.capacityFixAmount;
+                rowData.waterInstallRateIncrease = model.waterInstallRateIncrease;
+                rowData.wsInstalIncrease = model.wsInstalIncrease;
+                rowData.waterFixNote2 = model.waterFixNote2;
+                rowData.wasteFixNote2 = model.wasteFixNote2;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);

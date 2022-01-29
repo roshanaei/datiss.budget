@@ -40,7 +40,20 @@ namespace Datiss.Budget.ViewModels
             {
                 TablesName.CurrentIncome => EnumText.TablesName_CurrentIncome,
                 TablesName.CurrentCost => EnumText.TablesName_CurrentCost,
+                TablesName.OtherCurrentCost => EnumText.TablesName_OtherCurrentCost,
+                TablesName.ResourcesFunction => EnumText.TablesName_ResourcesFunction,
+                TablesName.ConsumptionFunction => EnumText.TablesName_ConsumptionFunction,
+                TablesName.WTotalBudget => EnumText.TablesName_WTotalBudget,
+                TablesName.WsTotalBudget => EnumText.TablesName_WsTotalBudget,
                 _=>EnumText.Unknown
+            };
+        public static string ToDisplay(this CofficientsGroup group)
+            => group switch
+            {
+                CofficientsGroup.CurrentIncome => EnumText.CofficientsGroup_CurrentIncome,
+                CofficientsGroup.CurrentCost => EnumText.CofficientsGroup_CurrentCost,
+                CofficientsGroup.ForcastCost => EnumText.CofficientsGroup_ForcastCost,
+                _ => EnumText.Unknown
             };
     }
 }

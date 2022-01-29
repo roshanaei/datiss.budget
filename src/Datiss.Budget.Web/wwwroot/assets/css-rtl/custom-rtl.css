@@ -110,6 +110,8 @@ body .sidebar-content .ps__rail-y
 
 .field-validation-error {
     color: red;
+    font-family: 'Vazir', Arial, Tahoma;
+    font-size: 12px;
 }
 
 .input-validation-error {
@@ -168,4 +170,13 @@ th:last-child, td:last-child {
 .swal2-content {
     max-height: 35vh;
     overflow-y: auto;
+}
+
+.dashboardcode-bsmultiselect {
+    font-family: 'Vazir';
+}
+
+.alert {
+    font-family: 'Vazir', Arial, Tahoma;
+    font-size: 14px;
 }

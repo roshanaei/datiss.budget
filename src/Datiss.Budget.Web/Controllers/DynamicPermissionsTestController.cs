@@ -24,7 +24,7 @@ namespace Datiss.Budget.Controllers
         }
 
         [HttpPost] // More info: http://www.dotnettips.info/post/2468/ and http://www.dotnettips.info/post/2470/
-        public IActionResult Index([FromBody]RoleViewModel model)
+        public IActionResult Index([FromBody]PrevRoleViewModel model)
         {
             return Json(model);
         }

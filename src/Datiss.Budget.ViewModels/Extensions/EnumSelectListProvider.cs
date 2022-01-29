@@ -68,5 +68,27 @@ namespace Datiss.Budget.Extensions
                         Selected = type == OrganizationType.Village
                     }                    
                 };
+        public static IEnumerable<SelectListItem> GetSectionNameTypeItem(SectionName? sectionName = null)
+            => new List<SelectListItem>
+                {
+                    new SelectListItem
+                    {
+                        Text = "آب",
+                        Value = ((int)SectionName.A).ToString(),
+                        Selected = sectionName == SectionName.A
+                    },
+                    new SelectListItem
+                    {
+                        Text = "فاضلاب",
+                        Value = ((int)SectionName.B).ToString(),
+                        Selected = sectionName == SectionName.B
+                    },
+                    new SelectListItem
+                    {
+                        Text = "انبار و تدارکات",
+                        Value = ((int)SectionName.C).ToString(),
+                        Selected = sectionName == SectionName.C
+                    }
+                };
     }
 }
