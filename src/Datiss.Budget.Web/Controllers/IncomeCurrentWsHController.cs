@@ -1,7 +1,9 @@
-﻿using Datiss.Budget.Common;
+﻿using ClosedXML.Extensions;
+using Datiss.Budget.Common;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Reports.Excel;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
@@ -33,6 +35,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
+        public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
@@ -430,6 +433,41 @@ namespace Datiss.Budget.Web.Controllers
             return Json(model);
         }
 
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+
+            var userTypes = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType);
+            var houseUsageLayerTypes = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType);
+
+            var items = new List<IncomeCurrentWsHDTO>();
+
+            foreach (var org in organizations)
+            {
+                foreach (var usert in userTypes)
+                {
+                    foreach (var hult in houseUsageLayerTypes)
+                    {
+                        items.Add(new IncomeCurrentWsHDTO
+                        {
+                            UserTypeDisplay = usert.Title,
+                            UserTypeId = usert.Id,
+                            OrganizationId = org.Id,
+                            OrganizationDisaplay = org.Title,
+                            UsageLayerId = hult.Id,
+                            UsageLayerDisplay = hult.Title,
+                            Year = year.Year,
+                            YearId = year.Id
+                        });
+                    }
+                }
+            }
+
+            using var workbook = items.GetImportTemplate(year.Year);
+            return workbook.Deliver("IncomeCurrentWsH-Import-Template.xlsx");
+        }
 
         #region Private Helper Methods
         private string getCalcTitle(string key)

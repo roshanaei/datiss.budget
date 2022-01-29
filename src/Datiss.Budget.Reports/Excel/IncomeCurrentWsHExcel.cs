@@ -113,7 +113,7 @@ namespace Datiss.Budget.Reports.Excel
             return workbook;
         }
 
-        public static XLWorkbook GetImportTemplate(this IEnumerable<IncomeCurrentWHDTO> items, int year)
+        public static XLWorkbook GetImportTemplate(this IEnumerable<IncomeCurrentWsHDTO> items, int year)
         {
             if (items == null || !items.Any())
                 return null;
