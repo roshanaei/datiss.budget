@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Enum;
+using Datiss.Budget.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -39,24 +40,32 @@ namespace Datiss.Budget.ViewModels
         public int Id { get; set; }
         public int YearId { get; set; }
         public int Year { get; set; }
+        public int Month { get; set; }
         public int OrganizationId { get; set; }
         public string OrganizationDisplay { get; set; }
         public bool Status { get; set; }
         public int TableFieldId { get; set; }
         public string TableFieldDisplay { get; set; }
         public decimal Target { get; set; }
+        public string TargetDisplay => Target.ToString("N2");
         public decimal Operation { get; set; }
+        public string OperationDisplay => Operation.ToString("N2");
+        public decimal Budget { get; set; }
+        public string BudgetDisplay => Budget.ToString("N2");
+        public decimal PercentRealization { get; set; }
+        public string PercentRealizationDisplay => PercentRealization.ToString("N2");
+
     }
 
     public class PerformanceEvaluationFilterViewModel : FilterViewModel
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
-        public int? DisplayOrer { get; set; }
-
+        public TablesName? TableName { get; set; }
+        public SectionName? SectionName { get; set; }
         public IList<SelectListItem> YearSource { get; set; }
-
         public IList<SelectListItem> OrganizationSource { get; set; }
+        public IList<SelectListItem> SectionNameSource => EnumSelectListProvider.GetSectionNameTypeItem(SectionName).ToList().AddEmptySelectListItem();
     }
 
     public class PerformanceEvaluationIndexViewModel : PagedViewModel<PerformanceEvaluationViewModel>
@@ -73,7 +82,6 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> OrganizationSource { get; set; }
 
-        public IFormFile ExcelFile { get; set; }
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
             => YearSource = source.Select(x => new SelectListItem
@@ -95,7 +103,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedOrgId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
+            }).ToList();
 
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
@@ -104,7 +112,7 @@ namespace Datiss.Budget.ViewModels
                 Selected = x.Id == selectedYearId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList().AddEmptySelectListItem();
+            }).ToList();
 
     }
 }
