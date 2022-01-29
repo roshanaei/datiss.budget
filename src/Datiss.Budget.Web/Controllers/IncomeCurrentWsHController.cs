@@ -455,7 +455,7 @@ namespace Datiss.Budget.Web.Controllers
                             UserTypeDisplay = usert.Title,
                             UserTypeId = usert.Id,
                             OrganizationId = org.Id,
-                            OrganizationDisaplay = org.Title,
+                            OrganizationDisplay = org.Title,
                             UsageLayerId = hult.Id,
                             UsageLayerDisplay = hult.Title,
                             Year = year.Year,

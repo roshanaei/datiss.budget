@@ -45,7 +45,7 @@ namespace Datiss.Budget.Reports.Excel
             {
                 var item = items.ElementAt(i);
                 sheet.Cell(row, 1).Value = item.Year.ToString();
-                sheet.Cell(row, 2).Value = item.OrganizationDisaplay;
+                sheet.Cell(row, 2).Value = item.OrganizationDisplay;
                 sheet.Cell(row, 3).Value = item.UserTypeDisplay;
                 sheet.Cell(row, 4).Value = item.UsageLayerDisplay;
                 sheet.Cell(row, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
@@ -150,7 +150,7 @@ namespace Datiss.Budget.Reports.Excel
             for (int i = 0; i < totalCount; i++)
             {
                 var item = items.ElementAt(i);
-                sheet.Cell(row, 1).Value = item.OrganizationDisaplay;
+                sheet.Cell(row, 1).Value = item.OrganizationDisplay;
                 sheet.Cell(row, 2).Value = item.OrganizationId;
                 sheet.Cell(row, 3).Value = item.UserTypeDisplay;
                 sheet.Cell(row, 4).Value = item.UserTypeId;

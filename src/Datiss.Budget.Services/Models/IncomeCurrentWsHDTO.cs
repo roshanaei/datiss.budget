@@ -62,7 +62,7 @@ namespace Datiss.Budget.Services.Models
 
         public int OrganizationId { get; set; }
 
-        public string OrganizationDisaplay { get; set; }
+        public string OrganizationDisplay { get; set; }
 
         public int UserTypeId { get; set; }
 

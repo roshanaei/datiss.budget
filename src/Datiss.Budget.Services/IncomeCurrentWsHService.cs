@@ -1,30 +1,29 @@
-﻿using Datiss.Budget.DataLayer.Context;
-using Datiss.Budget.Entities;
-using Datiss.Budget.Entities.DWH;
-using Datiss.Budget.Security;
-using Datiss.Budget.Services.Contracts;
-using Datiss.Budget.Services.Contracts.Identity;
-using Datiss.Budget.Services.Excel;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
-using Datiss.Budget.Common.GuardToolkit;
-using Mapster;
-using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Resources;
-using Datiss.Budget.Enum;
-using System.Data.SqlClient;
+using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Entities;
+using Datiss.Budget.Common.Exceptions;
+using Datiss.Budget.DataLayer.Context;
+using Datiss.Budget.Services.Contracts.Identity;
+using Mapster;
 using LinqKit;
-using Datiss.Budget.Extensions;
-using Microsoft.AspNetCore.Http;
 using Datiss.Budget.Services.Excel.Models;
+using Datiss.Budget.Security;
+using Datiss.Budget.Enum;
+using Microsoft.Data.SqlClient;
 using Datiss.Budget.Common;
-using System.IO;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services
 {
@@ -107,7 +106,7 @@ namespace Datiss.Budget.Services
                     var result = entity.Adapt<IncomeCurrentWsHDTO>();
                     result.UsageLayerDisplay = model.UsageLayerTitle;
                     result.UserTypeDisplay = model.UserTypeTitle;
-                    result.OrganizationDisaplay = organizationDisplay;
+                    result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.NumberUser = model.NumberUser;
                     result.UnitUser = model.UnitUser;
@@ -181,7 +180,7 @@ namespace Datiss.Budget.Services
                         UserTypeId = model.UserTypeId,
                         UsageLayerId = model.UsageLayerId,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year,
-                        OrganizationDisaplay = organizationDisplay,
+                        OrganizationDisplay = organizationDisplay,
                         UserTypeDisplay = model.UserTypeTitle,
                         UsageLayerDisplay = model.UsageLayerTitle,
                         NumberUser = model.NumberUser,
@@ -269,75 +268,75 @@ namespace Datiss.Budget.Services
 
         public async Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId)
         {
-            var result = new List<CalculationItemData>();
             List<SqlParameter> sqlParams = new List<SqlParameter>
             {
                 new SqlParameter("YearId", yearId),
                 new SqlParameter("OrganizationId", organizationId)
             };
+            var result = new List<CalculationItemData>();
 
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsH_Cal1",
                 Value = await _uow.ExecuteScalar<int>(
-                                    "[dbo].[IncomeCurrentWsH_Cal1] @YearId, @OrganizationId",
-                                    parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal1] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsH_Cal2",
                 Value = await _uow.ExecuteScalar<int>(
-                                    "[dbo].[IncomeCurrentWsH_Cal2] @YearId, @OrganizationId",
-                                    parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal2] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsH_Cal3",
                 Value = await _uow.ExecuteScalar<int>(
-                                    "[dbo].[IncomeCurrentWsH_Cal3] @YearId, @OrganizationId",
-                                    parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal3] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsH_Cal4",
                 Value = await _uow.ExecuteScalar<int>(
-                                    "[dbo].[IncomeCurrentWsH_Cal4] @YearId, @OrganizationId",
-                                    parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal4] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsH_Cal5",
                 Value = await _uow.ExecuteScalar<int>(
-                                    "[dbo].[IncomeCurrentWsH_Cal5] @YearId, @OrganizationId",
-                                    parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal5] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsH_Cal6",
                 Value = await _uow.ExecuteScalar<int>(
-                                    "[dbo].[IncomeCurrentWsH_Cal6] @YearId, @OrganizationId",
-                                    parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal6] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsH_Cal7",
                 Value = await _uow.ExecuteScalar<int>(
-                                    "[dbo].[IncomeCurrentWsH_Cal7] @YearId, @OrganizationId",
-                                    parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal7] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsH_Cal8",
                 Value = await _uow.ExecuteScalar<int>(
-                                    "[dbo].[IncomeCurrentWsH_Cal8] @YearId, @OrganizationId",
-                                    parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal8] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             return await Task.FromResult(result);
@@ -375,7 +374,7 @@ namespace Datiss.Budget.Services
                                             YearId = x.YearId,
                                             Year = x.FinanceYear.Year,
                                             OrganizationId = x.OrganizationId,
-                                            OrganizationDisaplay = x.Organization.Title,
+                                            OrganizationDisplay = x.Organization.Title,
                                             UserTypeId = x.UserTypeId,
                                             UserTypeDisplay = x.UserType.Title,
                                             UsageLayerId = x.UsageLayerId,
@@ -688,7 +687,7 @@ namespace Datiss.Budget.Services
                                         Id = x.Id,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId,
-                                        OrganizationDisaplay = x.Organization.Title,
+                                        OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
                                         UserTypeDisplay = x.UserType.Title,
                                         UserTypeId = x.UserTypeId,
@@ -731,7 +730,7 @@ namespace Datiss.Budget.Services
                                         Id = x.Id,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId,
-                                        OrganizationDisaplay = x.Organization.Title,
+                                        OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
                                         UserTypeDisplay = x.UserType.Title,
                                         UserTypeId = x.UserTypeId,
