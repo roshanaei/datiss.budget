@@ -1,4 +1,5 @@
-﻿using Datiss.Budget.Resources;
+﻿using Datiss.Budget.Common;
+using Datiss.Budget.Resources;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Identity;
@@ -99,10 +100,99 @@ namespace Datiss.Budget.Web.Controllers
             );
         }
 
-
-        public IActionResult Index()
+        [HttpGet("{page?}")]
+        public async Task<IActionResult> Index(int page = 1)
         {
-            return View();
+            var filter = new IncomeCurrentWsHFilterDTO();
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<List<DropDownItemViewModel>>();
+            int firstOrgId = orgSource.FirstOrDefault().Id;
+
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<List<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(x => x.Id);
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+                .Adapt<List<DropDownItemViewModel>>();
+
+            var userTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var usageLayerTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            filter.YearId = maxYear;
+            filter.OrganizationId = firstOrgId;
+
+            var myfilter = TempData.Get<IncomeCurrentWHFilterViewModel>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<IncomeCurrentWsHFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
+
+            var result = await _incomeCurrentWsHService.GetListAsync(filter);
+            var model = result.Adapt<IncomeCurrentWsHIndexViewModel>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetUserTypeSource(userTypeSource);
+            model.SetUsageLayerTypeSource(usageLayerTypeSource);
+
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+
+            model.Filter.YearId = filter.YearId;
+            model.Filter.OrganizationId = filter.OrganizationId;
+
+            return View(model);
         }
+
+        [HttpPost("{page?}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(IncomeCurrentWsHIndexViewModel model)
+        {
+            var filter = model.Filter.Adapt<IncomeCurrentWsHFilterDTO>();
+
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _incomeCurrentWsHService.GetListAsync(filter);
+            model = result.Adapt<IncomeCurrentWsHIndexViewModel>();
+            model.Filter = filter.Adapt<IncomeCurrentWsHFilterViewModel>();
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var userTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var usageLayerTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+                .Adapt<List<DropDownItemViewModel>>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetFinanceYearFilterSource(yearSource);
+            model.SetOrganizationFilterSource(orgSource);
+            model.SetUserTypeSource(userTypeSource);
+            model.SetUsageLayerTypeSource(usageLayerTypeSource);
+
+
+            return View(model);
+        }
+
+
     }
 }
