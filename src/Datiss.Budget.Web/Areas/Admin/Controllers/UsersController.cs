@@ -200,6 +200,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
             try {
                 var user = await _userService.GetByIdAsync(id);
                 var model = user.Adapt<UpdateUserViewModel>();
+                model.Enabled = user.Status == EntityStatus.Enabled;
                 model.SetPositionSource((await getPostionDropDownAsync()), user.PositionId);
                 model.SetOrganizationSource((await getOrganizationDropDownAsync()), user.OrganizationId);
                 model.SetRoleSource(await getRoleDropDownAsync());
@@ -217,6 +218,9 @@ namespace Datiss.Budget.Web.Admin.Controllers
             model.CheckArgumentIsNull(nameof(model));
 
             var data = model.Adapt<UpdateUserDTO>();
+            data.Status = model.Enabled 
+                ? EntityStatus.Enabled 
+                : EntityStatus.Disbaled;
             ValidationResult<UserResultDTO> result = null;
             try {
                 result = await _userService.UpdateAsync(data);

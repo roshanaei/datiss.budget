@@ -97,6 +97,7 @@ namespace Datiss.Budget.ViewModels.Identity
         public string LastName { get; set; }
 
         [MaxLength(256, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        [EmailAddress(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Invalid_Email_Format")]
         public string Email { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
@@ -183,6 +184,7 @@ namespace Datiss.Budget.ViewModels.Identity
         public string LastName { get; set; }
 
         [MaxLength(256, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
+        [EmailAddress(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Invalid_Email_Format")]
         public string Email { get; set; }
 
         [MaxLength(30, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
@@ -200,6 +202,8 @@ namespace Datiss.Budget.ViewModels.Identity
 
         public IEnumerable<int> SelectedRoles { get; set; }
         public IEnumerable<SelectListItem> RoleSource { get; set; }
+
+        public bool Enabled { get; set; }
 
         public void SetPositionSource(IEnumerable<DropDownItemViewModel> source, int? selectedPositionId = null)
             => PositionSource = source.Select(x => new SelectListItem

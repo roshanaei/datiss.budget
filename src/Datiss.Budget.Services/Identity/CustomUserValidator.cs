@@ -48,18 +48,8 @@ namespace Datiss.Budget.Services.Identity
         private void validateEmail(User user, List<IdentityError> errors)
         {
             var userEmail = user?.Email;
-            if (string.IsNullOrWhiteSpace(userEmail))
-            {
-                if (string.IsNullOrWhiteSpace(userEmail))
-                {
-                    errors.Add(new IdentityError
-                    {
-                        Code = "EmailIsNotSet",
-                        Description = "لطفا اطلاعات ایمیل را تکمیل کنید."
-                    });
-                }
-                return; // base.ValidateAsync() will cover this case
-            }
+            if (string.IsNullOrWhiteSpace(user.Email))
+                return;
 
             if (_emailsBanList.Any(email => userEmail.EndsWith(email, StringComparison.OrdinalIgnoreCase)))
             {
@@ -87,14 +77,14 @@ namespace Datiss.Budget.Services.Identity
                 return;  // base.ValidateAsync() will cover this case
             }
 
-            if (userName.IsNumeric() || userName.ContainsNumber())
-            {
-                errors.Add(new IdentityError
-                {
-                    Code = "BadUserNameError",
-                    Description = "نام کاربری وارد شده نمی‌تواند حاوی اعداد باشد."
-                });
-            }
+            //if (userName.IsNumeric() || userName.ContainsNumber())
+            //{
+            //    errors.Add(new IdentityError
+            //    {
+            //        Code = "BadUserNameError",
+            //        Description = "نام کاربری وارد شده نمی‌تواند حاوی اعداد باشد."
+            //    });
+            //}
 
             if (userName.HasConsecutiveChars())
             {
