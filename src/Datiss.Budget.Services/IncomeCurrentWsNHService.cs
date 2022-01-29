@@ -67,5 +67,101 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
 
+        public async Task<ValidationResult<IncomeCurrentWsNHDTO>> CreateAsync(CreateIncomeCurrentWsNHDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var entity = new IncomeCurrentWsNH
+            {
+                YearId = model.YearId,
+                OrganizationId = model.OrganizationId,
+                UserTypeId = model.UserTypeId,
+                NumberUser = model.NumberUser,
+                UnitUser = model.UnitUser,
+                AvgConsumeUser = model.AvgConsumeUser,
+                ConsumptionUser = model.ConsumptionUser,
+                Capacity = model.Capacity,
+                Cost = model.Cost,
+                Income = model.Income,
+                ExcessIncome = model.ExcessIncome,
+                SeasonalIncome = model.SeasonalIncome,
+                Note3Price = model.Note3Price,
+                Note3Income = model.Note3Income,
+                SubscriptionIncome = model.SubscriptionIncome,
+                TotalIncome = model.TotalIncome,
+                Note7Price = model.Note7Price,
+                Note7Income = model.Note7Income
+            };
+
+            var usertypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId))
+                {
+                    await _dbSet.AddAsync(entity);
+                    await _uow.SaveChangesAsync();
+
+                    var result = entity.Adapt<IncomeCurrentWsNHDTO>();
+                    result.UserTypeDisplay = usertypeDisplay;
+                    result.OrganizationDisplay = organizationDisplay;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.NumberUser = model.NumberUser;
+                    result.UnitUser = model.UnitUser;
+                    result.AvgConsumeUser = model.AvgConsumeUser;
+                    result.ConsumptionUser = model.ConsumptionUser;
+                    result.Capacity = model.Capacity;
+                    result.Cost = model.Cost;
+                    result.Income = model.Income;
+                    result.ExcessIncome = model.ExcessIncome;
+                    result.SeasonalIncome = model.SeasonalIncome;
+                    result.Note3Price = model.Note3Price;
+                    result.Note3Income = model.Note3Income;
+                    result.SubscriptionIncome = model.SubscriptionIncome;
+                    result.TotalIncome = model.TotalIncome;
+                    result.Note7Price = model.Note7Price;
+                    result.Note7Income = model.Note7Income;
+
+                    return ValidationResult<IncomeCurrentWsNHDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<IncomeCurrentWsNHDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+            return ValidationResult<IncomeCurrentWsNHDTO>.Failed(
+                string.Format(ServiceMessages.Logic_UserTypeDuplicate,
+                usertypeDisplay, organizationDisplay)
+                );
+        }
+
+        #region Logics
+        private async Task<bool> checkLogicAsync(
+            int yearId,
+            int organizationId,
+            int userTypeId,
+            int? id = null)
+        {
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
+            var result = id == null
+                ? await Query().AnyAsync(x => x.YearId == yearId &&
+                                                x.OrganizationId == organizationId &&
+                                                x.UserTypeId == userTypeId)
+
+                : await Query().AnyAsync(x => x.YearId == yearId &&
+                                            x.OrganizationId == organizationId &&
+                                            x.UserTypeId == userTypeId &&
+                                            x.Id != id);
+            return !result;
+        }
+
+        #endregion
+
     }
 }
