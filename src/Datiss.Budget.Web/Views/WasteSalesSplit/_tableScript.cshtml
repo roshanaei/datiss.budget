@@ -1,5 +1,8 @@
 ﻿<script type="text/javascript">
+
     let isNewRow = false;
+    let rowData = {};
+
     function editRow(id) {
 
         resetTableBackColor("my-table");
@@ -30,6 +33,16 @@
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.userTypeId = $('#inputUserType_' + id).val();
+        rowData.wsPipeDiameterId = $('#inputWsPipeDiameter_' + id).val();
+        rowData.numberSales = $('#inputNumberSales_' + id).val();
+        rowData.unitSales = $('#inputUnitSales_' + id).val();
+        rowData.averageCapacity = $('#inputAverageCapacity_' + id).val();
+        rowData.wsInstallationCosts = $('#inputWsInstallationCosts_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -45,6 +58,18 @@
         $('#divInput_UnitSales_' + id).hide();
         $('#divInput_AverageCapacity_' + id).hide();
         $('#divInput_WsInstallationCosts_' + id).hide();
+
+        //Reverting to OriginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputUserType__' + id).val(rowData.userTypeId);
+            $('#inputWsPipeDiameter_' + id).val(rowData.wsPipeDiameterId);
+            $('#inputNumberSales_' + id).val(rowData.numberSales);
+            $('#inputUnitSales_' + id).val(rowData.unitSales);
+            $('#inputAverageCapacity_' + id).val(rowData.averageCapacity);
+            $('#inputWsInstallationCosts_' + id).val(rowData.wsInstallationCosts);
+        }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
@@ -101,6 +126,17 @@
                     });
                     return;
                 }
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.userTypeId = model.userTypeId;
+                rowData.wsPipeDiameterId = model.wsPipeDiameterId;
+                rowData.numberSales = model.numberSales;
+                rowData.unitSales = model.unitSales;
+                rowData.averageCapacity = model.averageCapacity;
+                rowData.wsInstallationCosts = model.wsInstallationCosts;
+
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#hidUserTypeId_' + id).attr('value', model.userTypeId);

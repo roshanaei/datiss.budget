@@ -200,6 +200,26 @@
                         return;
                 }
 
+                rowData = {};
+                rowData.organizationId = model.organizationId;
+                rowData.userTypeId = model.userTypeId;
+                rowData.numberUser = model.numberUser;
+                rowData.unitUser = model.unitUser;
+                rowData.avgConsumeUser = model.avgConsumeUser;
+                rowData.consumptionUser = model.consumptionUser;
+                rowData.capacity = model.capacity;
+                rowData.cost = model.cost;
+                rowData.income = model.income;
+                rowData.excessIncome = model.excessIncome;
+                rowData.seasonalIncome = model.seasonalIncome;
+                rowData.note3Price = model.note3Price;
+                rowData.note3Income = model.note3Income;
+                rowData.subscriptionIncome = model.subscriptionIncome;
+                rowData.totalIncome = model.totalIncome;
+                rowData.diff_ConsWsVolume = model.diff_ConsWsVolume;
+                rowData.note2Income = model.note2Income;
+                rowData.wasteVolume = model.wasteVolume;
+
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
