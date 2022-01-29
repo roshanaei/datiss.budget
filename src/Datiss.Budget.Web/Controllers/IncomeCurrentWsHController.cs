@@ -35,6 +35,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
+        public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
 
@@ -482,6 +483,15 @@ namespace Datiss.Budget.Web.Controllers
 
         }
 
+
+        [HttpPost, Route("GetUsageLayerAsync")]
+        public async Task<JsonResult> GetUsageLayerAsync(string key)
+        {
+            var result = await _constantService
+                .GetByKeyAsync(key, ConstantKeys.__UsageLayerType);
+
+            return new JsonResult(result);
+        }
 
         #region Private Helper Methods
         private string getCalcTitle(string key)
