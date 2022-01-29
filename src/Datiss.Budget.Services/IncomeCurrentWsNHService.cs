@@ -600,6 +600,53 @@ namespace Datiss.Budget.Services
             return items;
         }
 
+        public async Task<Stream> ExportExcelAsync(IncomeCurrentWsNHFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.UserType)
+                                    .Select(x => new IncomeCurrentWsNHDTO
+                                    {
+                                        Id = x.Id,
+                                        UserTypeDisplay = x.UserType.Title,
+                                        UserTypeId = x.UserTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        NumberUser = x.NumberUser,
+                                        UnitUser = x.UnitUser,
+                                        AvgConsumeUser = x.AvgConsumeUser,
+                                        ConsumptionUser = x.ConsumptionUser,
+                                        Capacity = x.Capacity,
+                                        Cost = x.Cost,
+                                        Income = x.Income,
+                                        ExcessIncome = x.ExcessIncome,
+                                        SeasonalIncome = x.SeasonalIncome,
+                                        Note3Price = x.Note3Price,
+                                        Note3Income = x.Note3Income,
+                                        SubscriptionIncome = x.SubscriptionIncome,
+                                        TotalIncome = x.TotalIncome,
+                                        Note7Price = x.Note7Price,
+                                        Note7Income = x.Note7Income,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
+                                    }).ToListAsync();
+
+            var ms = new MemoryStream();
+            var result = _excelService.Export(items, ms);
+
+            var mem1 = new MemoryStream(ms.ToArray());
+
+            return mem1;
+        }
 
         #region Private Helper Methods
         private async Task<IQueryable<IncomeCurrentWsNH>> setFilter(
