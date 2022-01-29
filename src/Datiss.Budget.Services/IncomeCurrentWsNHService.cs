@@ -61,5 +61,11 @@ namespace Datiss.Budget.Services
         private IQueryable<IncomeCurrentWsNH> Query()
             => _dbSet.AsNoTracking();
 
+        public async Task<IncomeCurrentWsNH> GetByIdAsync(int id)
+        {
+            var entity = await _dbSet.FindAsync(id);
+            return await Task.FromResult(entity);
+        }
+
     }
 }
