@@ -1,6 +1,7 @@
 ﻿using Datiss.Budget.Common;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
@@ -26,10 +27,12 @@ namespace Datiss.Budget.Web.Controllers
         public const string Name = "IncomeCurrentWsH";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Copy = nameof(Copy);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
+        public const string ACTION_Calculation = nameof(Calculation);
 
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
@@ -366,6 +369,30 @@ namespace Datiss.Budget.Web.Controllers
 
             return PartialView("_calculationModal", viewModel);
         }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Copy()
+        {
+            var model = new CopyViewModel();
+
+            model.SetOrganizationSource(
+              (await _organizationService.GetDropDownDataAsync())
+                  .Adapt<IEnumerable<DropDownItemViewModel>>()
+          );
+
+            model.SetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Disbaled))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            model.SetTargetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Enabled))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            return PartialView("_copyModal", model);
+        }
+
 
         #region Private Helper Methods
         private string getCalcTitle(string key)
