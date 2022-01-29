@@ -110,9 +110,6 @@ namespace Datiss.Budget.Areas.Identity.Controllers
                 user.LastName = model.LastName;
                 user.IsEmailPublic = model.IsEmailPublic;
                 user.TwoFactorEnabled = model.TwoFactorEnabled;
-                user.Location = model.Location;
-
-                updateUserBirthDate(model, user);
 
                 if (!await updateUserName(model, user))
                 {
@@ -178,22 +175,6 @@ namespace Datiss.Budget.Areas.Identity.Controllers
             return Json(result.Succeeded ? "true" : result.DumpErrors(useHtmlNewLine: true));
         }
 
-        private static void updateUserBirthDate(UserProfileViewModel model, User user)
-        {
-            if (model.DateOfBirthYear.HasValue &&
-                model.DateOfBirthMonth.HasValue &&
-                model.DateOfBirthDay.HasValue)
-            {
-                var date =
-                    $"{model.DateOfBirthYear.Value.ToString()}/{model.DateOfBirthMonth.Value.ToString("00")}/{model.DateOfBirthDay.Value.ToString("00")}";
-                user.BirthDate = date.ToGregorianDateTime(convertToUtc: true);
-            }
-            else
-            {
-                user.BirthDate = null;
-            }
-        }
-
         private async Task<IActionResult> renderForm(User user, bool isAdminEdit)
         {
             _usersPhotoService.SetUserDefaultPhoto(user);
@@ -203,7 +184,6 @@ namespace Datiss.Budget.Areas.Identity.Controllers
                 IsAdminEdit = isAdminEdit,
                 Email = user.Email,
                 PhotoFileName = user.PhotoFileName,
-                Location = user.Location,
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -212,14 +192,6 @@ namespace Datiss.Budget.Areas.Identity.Controllers
                 TwoFactorEnabled = user.TwoFactorEnabled,
                 IsPasswordTooOld = await _usedPasswordsService.IsLastUserPasswordTooOldAsync(user.Id)
             };
-
-            if (user.BirthDate.HasValue)
-            {
-                var pDateParts = user.BirthDate.Value.ToPersianYearMonthDay();
-                userProfile.DateOfBirthYear = pDateParts.Year;
-                userProfile.DateOfBirthMonth = pDateParts.Month;
-                userProfile.DateOfBirthDay = pDateParts.Day;
-            }
 
             return View(viewName: nameof(Index), model: userProfile);
         }

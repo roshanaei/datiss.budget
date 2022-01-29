@@ -22,9 +22,6 @@ namespace Datiss.Budget.ViewModels.Identity
         [Display(Name = "قسمتی از نام کاربری")]
         public bool IsPartOfUserName { set; get; }
 
-        [Display(Name = "قسمتی از محل اقامت")]
-        public bool IsPartOfLocation { set; get; }
-
         [Display(Name = "دارای ایمیل تائید شده")]
         public bool HasEmailConfirmed { set; get; }
 

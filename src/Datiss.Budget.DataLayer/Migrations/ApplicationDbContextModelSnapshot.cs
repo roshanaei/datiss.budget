@@ -2192,6 +2192,34 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.ToTable("FinanceYears");
                 });
 
+            modelBuilder.Entity("Datiss.Budget.Entities.Identity.AppClaimType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(255)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppClaimTypes");
+                });
+
             modelBuilder.Entity("Datiss.Budget.Entities.Identity.AppDataProtectionKey", b =>
                 {
                     b.Property<int>("Id")
@@ -2349,6 +2377,11 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("Title")
+                        .HasMaxLength(255)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(255)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
@@ -2420,9 +2453,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -2454,9 +2484,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsEmailPublic")
                         .HasColumnType("bit");
 
@@ -2468,9 +2495,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Property<DateTime?>("LastVisitDateTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -2491,6 +2515,9 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Property<DateTime?>("ModifiedDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("NationalCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
