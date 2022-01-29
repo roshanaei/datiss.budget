@@ -1,6 +1,10 @@
-﻿using Datiss.Budget.Services.Contracts;
+﻿using Datiss.Budget.Resources;
+using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Identity;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +21,7 @@ namespace Datiss.Budget.Web.Controllers
     public class IncomeCurrentWsHController : Controller
     {
         public const string Name = "IncomeCurrentWsH";
+        public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
@@ -46,6 +51,29 @@ namespace Datiss.Budget.Web.Controllers
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create(CreateIncomeCurrentWsHViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+
+            var data = model.Adapt<CreateIncomeCurrentWsHDTO>();
+
+            var result = await _incomeCurrentWsHService.CreateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(result.Result.Adapt<IncomeCurrentWsHViewModel>());
+        }
+
 
         public IActionResult Index()
         {
