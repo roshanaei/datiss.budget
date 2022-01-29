@@ -169,7 +169,16 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to عملکرد هزینه های جاری.
+        ///   Looks up a localized string similar to مصارف وجوه.
+        /// </summary>
+        public static string TablesName_ConsumptionFunction {
+            get {
+                return ResourceManager.GetString("TablesName_ConsumptionFunction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to هزینه های جاری.
         /// </summary>
         public static string TablesName_CurrentCost {
             get {
@@ -187,7 +196,43 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ناشناخته.
+        ///   Looks up a localized string similar to سایر هزینه ها جاری.
+        /// </summary>
+        public static string TablesName_OtherCurrentCost {
+            get {
+                return ResourceManager.GetString("TablesName_OtherCurrentCost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to منابع وجوه.
+        /// </summary>
+        public static string TablesName_ResourcesFunction {
+            get {
+                return ResourceManager.GetString("TablesName_ResourcesFunction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات کلی فاضلاب.
+        /// </summary>
+        public static string TablesName_WsTotalBudget {
+            get {
+                return ResourceManager.GetString("TablesName_WsTotalBudget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات کلی آب.
+        /// </summary>
+        public static string TablesName_WTotalBudget {
+            get {
+                return ResourceManager.GetString("TablesName_WTotalBudget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to شناخته نشده.
         /// </summary>
         public static string Unknown {
             get {

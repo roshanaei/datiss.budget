@@ -1,12 +1,11 @@
 ﻿@model PerformanceEvaluationIndexViewModel
-@{ ViewData["Title"] = "جدول ارزیابی"; }
+@{ ViewData["Title"] = "ارزیابی عملکرد"; }
 
 <!--Title-->
 <div class="row">
     <div class="col-12">
         <div class="content-header">
-            @*<i class="ft-settings mr-1"></i>*@
-            <span class="my-font-bold">@ViewData["Title"]</span>
+            <span class="my-font-bold">@ViewData["Title"] @ViewData["Month"] ماهه @ViewData["TablesName"]</span>
         </div>
     </div>
 </div>
@@ -15,17 +14,6 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-
-                @if (ViewData["message"] != null)
-                {
-                    <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
-                        </button>
-                        <span>@ViewData["message"]</span>
-                    </div>
-                }
-
                 <div class="card-content">
                     <div class="card-body">
                         <!--Filters-->
@@ -33,25 +21,43 @@
                               id="filterForm"
                               asp-controller="@PerformanceEvaluationController.Name"
                               asp-action="@PerformanceEvaluationController.ACTION_Index"
+                              asp-route-tableName="@Model.Filter.TableName"
                               asp-antiforgery="true">
-
-                            <div class="class=" rowACJSB"">
+                            <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
+                            <div class="rowACJSB">
                                 <fieldset class="form-group mt-3">
                                     <label asp-for="Filter.YearId" class="my-font">
                                         سال:
-                                        <select class="form-control d-inline-block width-100" id="yearId" asp-for="Filter.YearId" asp-items="Model.Filter.YearSource" onchange="loadCreateLink()">
+                                        <select asp-for="Filter.YearId"
+                                                asp-items="Model.Filter.YearSource"
+                                                class="form-control d-inline-block width-100"
+                                                id="yearId">
                                         </select>
                                     </label>
+                                    @*<label asp-for="Filter.SectionName" class="my-font">
+                                        بخش :
+                                        <select asp-for="Filter.SectionName"
+                                                asp-items="Model.Filter.SectionNameSource"
+                                                class="form-control d-inline-block width-150"
+                                                id="sectionNameId">
+                                        </select>
+                                    </label>*@
                                     <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
                                         سازمان:
-                                        <select class="form-control d-inline-block width-300" id="organizationId" asp-for="Filter.OrganizationId" asp-items="Model.Filter.OrganizationSource" onchange="loadCreateLink()">
+                                        <select asp-for="Filter.OrganizationId"
+                                                asp-items="Model.Filter.OrganizationSource"
+                                                class="form-control d-inline-block width-300"
+                                                id="organizationId">
                                         </select>
                                     </label>
                                     <input asp-for="Filter.OrderBy" type="hidden" />
                                     <input asp-for="Filter.OrderDesc" type="hidden" />
+                                    <input asp-for="@Model.Filter.TableName" type="hidden" id="TableName" />
+
                                 </fieldset>
                                 <fieldset>
                                     <div class="rowACJE">
+
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
@@ -61,18 +67,18 @@
                                     </div>
                                 </fieldset>
                             </div>
-
                             <hr />
+                            <fieldset class="form-group position-relative has-icon-left">
+                                <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
+                                <div class="form-control-position">
+                                    <i class="ft-search font-medium-4"></i>
+                                </div>
+                            </fieldset>
                             <!--SearchBox-->
                             <div class="rowACJSB">
-                                <div class="rowAC" style="flex:1">
-                                    <fieldset class="form-group">
-                                        <label for="ngx-filter-ref" class="my-font">
-                                            جستجو:
-                                            <input id="ngx-filter-ref" type="text" placeholder="..." class="form-control form-control-sm d-inline-block width-200">
-                                        </label>
-                                    </fieldset>
-                                    <fieldset class="form-group" style="margin-right:10px">
+                                <div class="d-flex flex-row-reverse align-items-center">
+
+                                    <fieldset class="form-group" style="margin-right:20px">
                                         <label class="my-font rowAC">
                                             <span>نمایش</span>
 
@@ -81,303 +87,298 @@
                                                     class="form-control"
                                                     onchange="changePageSize();"
                                                     id="ddlPageSize">
-                                                <option>10</option>
-                                                <option>20</option>
-                                                <option>30</option>
+                                                <option>25</option>
+                                                <option>50</option>
                                             </select>
                                             <span style="margin-right:10px">رکورد</span>
 
                                         </label>
+
                                     </fieldset>
+                                    @* drop down menu *@
+
+                                    <div class="btn-group dropdown form-group">
+                                        <button type="button"
+                                                class="btn btn-light my-font dropdown-toggle"
+                                                data-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                            ستون ها
+                                        </button>
+                                        <div class="dropdown-menu" style="width:150%">
+                                            <div id="columnSelector">
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-1"
+                                                               id="col-1" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-1"><span>سال</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-2"
+                                                               id="col-2" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-2"><span>سازمان</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-3"
+                                                               id="col-3" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-3"><span>عنوان</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-4"
+                                                               id="col-4" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-4"><span>هدف سالیانه</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-5"
+                                                               id="col-5" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-5"><span>بودجه</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-6"
+                                                               id="col-6" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-6"><span>عملکرد</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-7"
+                                                               id="col-7" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-7"><span>درصد تحقق</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
                                 <fieldset>
                                     <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
+                                        </button>
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@PerformanceEvaluationController.ACTION_ExportExcel"
+                                           asp-route-orgid="@Model.Filter.OrganizationId"
+                                           asp-route-yearid="@Model.Filter.YearId"
+                                           asp-route-tablesname="@Model.Filter.TableName" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
+                                        </a>
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
+                                           asp-asp-controller="@PerformanceEvaluationController.Name"
+                                           asp-action="@PerformanceEvaluationController.ACTION_GetExcelTemplate"
+                                           asp-route-yearId="@Model.Filter.YearId"
+                                           asp-route-orgId="@Model.Filter.OrganizationId"
+                                           asp-route-tablesname="@Model.Filter.TableName">
+                                            <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
+                                        </a>
                                     </div>
                                 </fieldset>
                             </div>
+
                         </form>
                         <!--DataTable-->
-                        <div class="table-responsive">
-                            <table id="" class=" table table-hover table-bordered m-0 my-font ">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>سال</th>
-                                        <th>سازمان</th>
-                                        <th>نام جدول</th>
-                                        <th>وضعیت</th>
-                                        <th>هدف</th>
-                                        <th>عملکرد</th>
-                                        <th>مدیریت</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr id="rowTemplate" style="display: none">
-                                        <td>
-                                            <div id="divInput_Year_">
-                                                <input id="hidYearId_" type="hidden" />
-                                                <select class="form-control" id="inputYear_" asp-items="Model.YearSource">
-                                                </select>
-                                            </div>
-                                            <div id="divOutput_Year_" style="display: none">
-                                                <span id="spanYear_"></span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div id="divInput_Org_">
-                                                <input id="hidOrgId_" type="hidden" />
-                                                <select class="form-control" id="inputOrg_" asp-items="Model.OrganizationSource">
-                                                </select>
-                                            </div>
-                                            <div id="divOutput_Org_">
-                                                <span id="spanOrg_"> </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div id="divInput_tablename_">
-                                                <input class="form-control" id="inputtablename_" type="number" />
-                                            </div>
-                                            <div id="divOutput_tablename_" style="display: none">
-                                                <span id="spantablename_"> </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div id="divInput_status_">
-                                                <input class="form-control" id="inputstatus_" type="number" />
-                                            </div>
-                                            <div id="divOutput_status_" style="display: none">
-                                                <span id="spanstatus_"> </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div id="divInput_target_">
-                                                <input class="form-control" id="inputtarget_" type="number" />
-                                            </div>
-                                            <div id="divOutput_target_" style="display: none">
-                                                <span id="spantarget_"> </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div id="divInput_operation_">
-                                                <input class="form-control" id="inputoperation_" type="number" />
-                                            </div>
-                                            <div id="divOutput_operation_" style="display: none">
-                                                <span id="spanoperation_"> </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <a id="btnEdit_" class="edit-row btn btn-sm btn-primary" style="display: none">
-                                                <i class="fa fa-pencil"></i> ویرایش
-                                            </a>
-
-                                            <a id="btnSaveEdit_" class="save-edit-row btn btn-sm btn-success" style="display: none">
-                                                <i class="fa fa-check"></i> ثبت
-                                            </a>
-
-                                            <a id="btnCancelEdit_" class="cancel-edit-row btn btn-sm btn-danger" style="display: none">
-                                                <i class="fa fa-times"></i> انصراف
-                                            </a>
-
-                                            <a id="btnSaveCreate_" class="save-new-row btn btn-sm btn-success">
-                                                <i class="fa fa-check"></i> ثبت
-                                            </a>
-
-                                            <a id="btnCancelCreate_" class="cancel-new-row btn btn-sm btn-danger">
-                                                <i class="fa fa-times"></i> انصراف
-                                            </a>
-
-                                        </td>
-                                    </tr>
-                                    @foreach (var item in Model.Items)
-                                    {
-                                <tr id="row_@item.Id">
-                                    <td>
-                                        <div id="divInput_Year_@item.Id" style="display: none">
-                                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
-                                            <select class="form-control" id="inputYear_@item.Id" asp-items="Model.YearSource">
-                                            </select>
-                                            <script>
-                                                        $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
-                                            </script>
-                                        </div>
-                                        <div id="divOutput_Year_@item.Id">
-                                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div id="divInput_Org_@item.Id" style="display: none">
-                                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
-                                            <select class="form-control" id="inputOrg_@item.Id" asp-items="Model.OrganizationSource">
-                                            </select>
-                                            <script>
-                                                        $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
-                                            </script>
-                                        </div>
-                                        <div id="divOutput_Org_@item.Id">
-                                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        <div id="divInput_tablename_@item.Id" style="display: none">
-                                            <input class="form-control" id="inputtablename_@item.Id" value="@item.TableFieldId" type="number" />
-                                        </div>
-                                        <div id="divOutput_tablename_@item.Id">
-                                            <span id="spantablename_@item.Id">@item.TableFieldDisplay.ToString() </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div id="divInput_status_@item.Id" style="display: none">
-                                            <input class="form-control" id="inputstatus_@item.Id" value="@item.Status" type="number" />
-                                        </div>
-                                        <div id="divOutput_status_@item.Id">
-                                            <span id="spanstatus_@item.Id">@item.Status.ToString() </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div id="divInput_target_@item.Id" style="display: none">
-                                            <input class="form-control" id="inputtarget_@item.Id" value="@item.Target" type="number" />
-                                        </div>
-                                        <div id="divOutput_target_@item.Id">
-                                            <span id="spantarget_@item.Id">@item.Target.ToString() </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div id="divInput_operation_@item.Id" style="display: none">
-                                            <input class="form-control" id="inputoperation_@item.Id" value="@item.Operation" type="number" />
-                                        </div>
-                                        <div id="divOutput_operation_@item.Id">
-                                            <span id="spanoperation_@item.Id">@item.Operation.ToString() </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn btn-sm btn-primary">
-                                            <i class="fa fa-pencil"></i> ویرایش
-                                        </a>
-
-                                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-sm btn-success" style="display: none">
-                                            <i class="fa fa-check"></i> ثبت
-                                        </a>
-
-                                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-sm btn-danger" style="display: none">
-                                            <i class="fa fa-times"></i> انصراف
-                                        </a>
-                                    </td>
-                                </tr>
-                                    }
-                                </tbody>
-                            </table>
-                            <div class="rowACJSB" style="margin-top:20px">
-                                <!--Tools-->
-                                <div class="rowACJS">
-                                    <form id="toolForm"
-                                          enctype="multipart/form-data"
-                                          method="post"
-                                          asp-antiforgery="true">
-                                        <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
-                                        <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
-
-                                        <span data-toggle="modal" data-target="#backdrop">
-                                            <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                                                <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
-                                            </button>
-                                        </span>
-                                        <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
-                                        </button>
-                                    </form>
-                                    <!--Pagination-->
-                                    @if (Model.PagesCount > 1)
-                                    {
-                                        <nav aria-label="Page navigation">
-                                            <ul class="pagination justify-content-center">
-                                                @if (Model.PageNumber > 1)
-                                                {
-                                                    <li class="page-item">
-                                                        <a class="page-link"
-                                                           asp-controller="@WasteInstallFeeController.Name"
-                                                           asp-action="@WasteInstallFeeController.ACTION_Index"
-                                                           asp-route-page="@Model.PreviousPage"
-                                                           aria-label="Previous">«</a>
-                                                    </li>
-                                                }
-
-                                                @for (int i = 1; i <= Model.PagesCount; i++)
-                                                {
-                                                    if (i == Model.PageNumber)
-                                                    {
-                                                        <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
-                                                    }
-                                                    else
-                                                    {
-                                                        <li class="page-item">
-                                                            <a class="page-link"
-                                                               asp-controller="@WasteInstallFeeController.Name"
-                                                               asp-action="@WasteInstallFeeController.ACTION_Index"
-                                                               asp-route-page="@i">@i.ToString() </a>
-                                                        </li>
-                                                    }
-                                                }
-
-                                                @if (Model.PageNumber < Model.PagesCount)
-                                                {
-                                                    <li class="page-item">
-                                                        <a class="page-link"
-                                                           asp-controller="@WasteInstallFeeController.Name"
-                                                           asp-action="@WasteInstallFeeController.ACTION_Index"
-                                                           asp-route-page="@Model.NextPage"
-                                                           aria-label="Next">»</a>
-                                                    </li>
-                                                }
-
-                                            </ul>
-                                        </nav>
-                                    }
-                                </div>
-                            </div>
-                        </div>
+                        <partial name="_table" model="Model" />
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
-
 </section>
 
-
+@section headSection {
+    <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
+}
 
 @section footSection {
 
-    <div id="divCreate">
+    <div id="divCopy">
 
     </div>
 
-    <div id="modaldiv">
+    <partial name="_excelModal" model="new ImportExcelViewModel()" />
+
+
+    <div id="divCalc">
 
     </div>
-    <partial name="_editorScript" />
+
+    <partial name="_tableScript" />
 
     <script type="text/javascript">
-        function hardDelete(e) {
+        let allColumns = '1,2,3,4,5,6,7';
+        let columnIndices = allColumns.split(',');
+        console.log(columnIndices);
+        let showingColmuns = "1,2,3,4,5,6,7,";
+    </script>
+
+    @if (Model.Filter.Columns.IsNotNullOrEmpty())
+    {
+        <script type="text/javascript">
+            showingColmuns = '@Model.Filter.Columns' ;
+        </script>
+    }
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            console.log('ready');
+            document.getElementById("hidColumns").value = showingColmuns;
+
+            setDataColumns();
+
+            $(".dropdown-menu").click(function (e) {
+                e.stopPropagation();
+            });
+
+            $("#columnSelector input:checkbox:checked").change(function () {
+                let index = parseInt($(this)[0].id.split('-')[1]);
+                console.log(`showing or hiding col : ${index}`);
+                let checked = $(this)[0].checked;
+                if (checked) {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                    showingColmuns = showingColmuns + `${index},`
+                    document.getElementById("hidColumns").value = showingColmuns ;
+                } else {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+                    showingColmuns = showingColmuns.replace(`${index},`, '');
+                    document.getElementById("hidColumns").value = showingColmuns;
+                }
+            });
+
+            $('#organizationId').select2({
+                dir: 'rtl'
+            });
+        });
+
+        function resetDataColumns() {
+            $('th,tr td').show();
+            let inputs = $("#columnSelector input:checkbox");
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].checked = true
+            }
+        }
+
+        function setDataColumns() {
+            let columnsToShow = document.getElementById("hidColumns").value.split(',');
+            console.log('ColumnsToShow ');
+            console.log(columnsToShow);
+            let checkBoxes = $("#columnSelector input:checkbox");
+            for(let i = 0; i < columnIndices.length; i++) {
+                let index = parseInt(columnIndices[i]);
+                let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
+                console.log(`Column : ${index} show = ${showColumn}`);
+                checkBoxes[i].checked = showColumn;
+                if(showColumn)
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                else
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+            }
+
+        }
+
+        function softDelete(e) {
             Swal.fire({
-                title: 'برای حذف اطمینان دارید؟',
-                text: "You won't be able to revert this!",
-                type: 'warning',
+                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
+                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
+                type: 'error',
                 showCancelButton: true,
-                confirmButtonColor: '#2F8BE6',
+                //confirmButtonColor: '#2F8BE6',
                 animation: false,
                 customClass: 'animated flipInX',
-                cancelButtonColor: '#F55252',
+                //cancelButtonColor: '#F55252',
                 cancelButtonText: 'انصراف',
                 confirmButtonText: 'حذف اطلاعات!',
-
-                confirmButtonClass: 'btn btn-warning my-font',
-                cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                cancelButtonClass:  'btn btn-outline-secondary mr-1 my-font',
                 buttonsStyling: false,
             }).then(function (result) {
                 if (result.value) {
-                    $('#toolForm').attr('action', '@Url.Action("Delete")');
-                    $('#toolForm').submit();
+                    let params = {};
+                    params.yearId = $('#yearId option:selected').val();
+                    params.orgId = $('#organizationId option:selected').val();
+                    params.tablesName = $('#TableName').val();
+
+                    console.log(params);
+                    let deleteUrl = '@Url.Action(PerformanceEvaluationController.ACTION_DeleteRecords)';
+                    console.log(deleteUrl);
+
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'POST',
+                        data: params,
+                        success: function(data, status, settings) {
+                            console.log(status);
+                            if(data.hasError) {
+                                Swal.fire({
+                                    title: '<span class="my-font">خطا</span>',
+                                    html: `<span class="my-font">${data.message}</span>`,
+                                    type: 'error',
+                                    confirmButtonColor: '#2F8BE6',
+                                    animation: false,
+                                    customClass: 'animated flipInX',
+                                    confirmButtonText: 'بستن',
+                                    confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                                    buttonsStyling: false,
+                                });
+                                return;
+                            }
+
+                            Swal.fire({
+                                title: '<span class="my-font">عملیات موفق</span>',
+                                html: `<span class="my-font">${data.message}</span>`,
+                                type: 'success',
+                                confirmButtonColor: '#2F8BE6',
+                                animation: true,
+                                customClass: 'animated flipInX',
+                                confirmButtonText: 'بستن',
+                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                                buttonsStyling: false,
+                            }).then(function(result) {
+                                document.location.href = '@Url.Action(PerformanceEvaluationController.ACTION_Index, new {page = 1 , tableName = Model.Filter.TableName })';
+                            });
+                        },
+                        error: function(request, option, err) {
+                            console.log(err);
+                        }
+                    });
 
                     return true;
                 }
@@ -386,35 +387,34 @@
                     return false;
                 }
             });
-        }
 
-
-        function loadCreateLink() {
-            var a = document.getElementById("createLink");
-            var organizationId = document.getElementById('organizationId').value;
-
-            var yearId = document.getElementById('yearId').value;
-
-            var url = 'performanceevaluation/create'
-
-            a.href = url + "/" + organizationId + "/" + yearId;
         }
 
         function openImportExcelForm() {
-            $('#importExcelForm').attr(
-                'action',
-                '@Url.Action(PerformanceEvaluationController.ACTION_ImportExcel)'
-            );
             $('#ExcellModal').modal('show');
         }
 
-
-        $(document).on('click', '#btnCreate', function () {
-            addNewRow();
-        });
-
         $(document).on('click', '.edit-row', function () {
+            resetDataColumns()
             let id = $(this).data('id');
+
+            let input = document.getElementById('inputOperation_' + id);
+
+            let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
+
+            btnSaveEdit.addEventListener('click', function (event) {
+                event.preventDefault();
+                $(btnSaveEdit).attr('disabled', true);
+                $(btnSaveEdit).unbind('keyup');
+            });
+
+            input.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
             editRow(id);
         });
 
@@ -430,58 +430,154 @@
             $(this).prop('disabled', false);
         });
 
-        $(document).on('click', '.save-new-row', function () {
-            let row = $(this).closest('tr');
-            saveNewRow(row);
+
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal', function() {
+                $('.modal-backdrop').remove();
+            });
         });
 
-        $(document).on('click', '.cancel-new-row', function () {
-            cancelNewRow(this);
-        });
+        $(document).on('click', '#btnDoImportExcel', function () {
 
-        $(document).on('click', '.modallink', function() {
+            var fdata = new FormData();
+            var fileInput = $('#ExcelFile')[0];
+            var file = fileInput.files[0];
+            var yearId = $('#yearId').val();
+            var tablesName = $('#TableName').val();
 
-            let myurl = '@Url.Action("Copy")';
+            fdata.append('ExcelFile', file);
+            fdata.append('yearId', yearId);
+            fdata.append('tablesName', tablesName);
 
             $.ajax({
-                type: 'GET',
-                url: myurl,
+                url: '@Url.Action(PerformanceEvaluationController.ACTION_ImportExcel)',
+                type: 'POST',
+                data: fdata,
+                processData: false,
+                contentType: false,
                 success: function (data, status, settings) {
-                    $('#modaldiv').html('');
-                    $("#modaldiv").html(data);
-                    $('#CopyModal').modal('show');
-                },
-                error: function (ajaxrequest, ajaxOptions, thrownError) {
+                    console.log(data);
+                    if (data.hasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data.message}</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
 
-                    $("#modaldiv").html('Failed to load more content');
+                    if (data.ask) {
+                        Swal.fire({
+                            html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            cancelButtonColor: '#F55252',
+                            cancelButtonText: 'خیر',
+                            confirmButtonText: 'بله',
+                            confirmButtonClass: 'btn btn-warning my-font',
+                            cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                            buttonsStyling: false,
+                        }).then(function (result) {
+
+                            if (result.value) {
+                                fdata.append('ContinueIfAnyOrgMissing', true);
+                                console.log(fdata);
+
+                                $.ajax({
+                                    url: '@Url.Action(PerformanceEvaluationController.ACTION_ImportExcel)',
+                                    type: 'POST',
+                                    data: fdata,
+                                    processData: false,
+                                    contentType: false,
+                                    success: function (data, status, settings) {
+                                        if (data.hasError) {
+                                            Swal.fire({
+                                                title: '<span class="my-font">خطا</span>',
+                                                html: `<span class="my-font">${data.message}</span>`,
+                                                type: 'error',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: false,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                                                buttonsStyling: false,
+                                            });
+                                            return;
+                                        }
+
+                                        if (!data.hasError) {
+                                            Swal.fire({
+                                                title: '<span class="my-font">عملیات موفق</span>',
+                                                html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                                                type: 'success',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: true,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                                                buttonsStyling: false,
+                                            }).then(function (result) {
+                                                document.location.href = '@Url.Action(PerformanceEvaluationController.ACTION_Index , new { page = 1, tableName = Model.Filter.TableName })';
+                                            });
+                                        }
+
+                                        if (data.ask) {
+                                            alert('dont ask again');
+                                        }
+                                    },
+                                    error: function (request, options, err) {
+                                        console.log(err);
+                                    }
+                                });
+
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        });
+                    }
+
+                    if (!data.hasError && !data.ask) {
+                        Swal.fire({
+                            title: '<span class="my-font">عملیات موفق</span>',
+                            html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                            type: 'success',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: true,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                            buttonsStyling: false,
+                        }).then(function (result) {
+                            document.location.href = '@Url.Action(PerformanceEvaluationController.ACTION_Index , new { page = 1, tableName = Model.Filter.TableName })';
+                        });
+                    }
+
+                },
+                error: function(request, options, err) {
+                    console.log(err);
+                    alert('مشکلی پیش آمده است ، کمی بعد سعی کنید . با تشکر');
                 }
             });
 
         });
-
 
         function changePageSize() {
             let pageSize = $('#ddlPageSize').attr('value');
             console.log(pageSize);
             $('#filterForm').submit();
-        }
-
-         function exportExcel() {
-             let exportUrl = '@Url.Action("ExportExcel")';
-             console.log(exportUrl);
-            $.ajax({
-                type: 'POST',
-                url: exportUrl,
-                success: function (data, status, settings) {
-                    console.log(data);
-                },
-                error: function (ajaxrequest, ajaxOptions, thrownError) {
-                    console.log('erorr');
-                }
-            });
         };
 
     </script>
 
 }
-

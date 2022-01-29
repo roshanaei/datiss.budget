@@ -174,6 +174,9 @@
   <data name="ImportExcelInvalidFinanceYear" xml:space="preserve">
     <value>در سطر {0} فایل اکسل، کد سال "{1}" معتبر نیست .</value>
   </data>
+  <data name="ImportExcelInvalidMonth" xml:space="preserve">
+    <value>مقدار وارد شده برای ماه مورد نظر نامعتبر است .</value>
+  </data>
   <data name="ImportExcelInvalidTitle" xml:space="preserve">
     <value>در سطر {0} فایل اکسل، کد "{1}" معتبر نیست .</value>
   </data>

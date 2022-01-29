@@ -285,7 +285,7 @@
                                 </a>
                                 <ul class="menu-content" id="CurrentCost" parent="CollapseForcastManagment">
                                     <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CofficientController.Name" asp-action="index" asp-route-group="@CofficientsGroup.ForcastCost">
+                                        <a asp-area="" asp-controller="@CofficientController.Name" asp-action="index" asp-route-group="@CofficientsGroup.CurrentIncome">
                                             <span data-i18n="ضرایب" class="menu-item my-font-light">ضرایب</span>
                                         </a>
                                     </li>
@@ -353,12 +353,6 @@
                         </a>
                     </li>
                     <!--  ارزیابی بودجه-->
-                    @*<li class="nav-item">
-                        <a asp-area="" asp-controller="PerformanceEvaluation" asp-action="Index">
-                            <i class="ft-refresh-cw"></i>
-                            <span data-i18n="ارزیابی بودجه" class="menu-title my-font"> ارزیابی بودجه </span>
-                        </a>
-                    </li>*@
                     <li class="has-sub nav-item ">
                         <a href="#">
                             <div>
@@ -368,43 +362,43 @@
                         </a>
                         <ul class="menu-content" id="CollapseBase" parent="Base">
                             <li class="nav-item">
-                                <a asp-area="" asp-controller="PerformanceEvaluation" asp-action="Index">
+                                <a asp-area="" asp-controller="PerformanceEvaluation" asp-action="Index" asp-route-tableName="@TablesName.CurrentIncome">
                                     <i class="ft-arrow-left-circle"></i>
                                     <span data-i18n="درآمدهای جاری" class="menu-title my-font">درآمدهای جاری</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a asp-area="" asp-controller="" asp-action="">
+                                <a asp-area="" asp-controller="PerformanceEvaluation" asp-action="Index" asp-route-tableName="@TablesName.CurrentCost">
                                     <i class="ft-arrow-left-circle"></i>
                                     <span data-i18n="هزینه های جاری" class="menu-title my-font">هزینه های جاری</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a asp-area="" asp-controller="" asp-action="">
+                                <a asp-area="" asp-controller="PerformanceEvaluation" asp-action="Index" asp-route-tableName="@TablesName.OtherCurrentCost">
                                     <i class="ft-arrow-left-circle"></i>
                                     <span data-i18n="سایر هزینه های جاری" class="menu-title my-font">سایر هزینه های جاری</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a asp-area="" asp-controller="" asp-action="">
+                                <a asp-area="" asp-controller="PerformanceEvaluation" asp-action="Index" asp-route-tableName="@TablesName.ResourcesFunction">
                                     <i class="ft-arrow-left-circle"></i>
                                     <span data-i18n="عملکرد منابع وجوه" class="menu-title my-font">عملکرد منابع وجوه</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a asp-area="" asp-controller="" asp-action="">
+                                <a asp-area="" asp-controller="PerformanceEvaluation" asp-action="Index" asp-route-tableName="@TablesName.ConsumptionFunction">
                                     <i class="ft-arrow-left-circle"></i>
                                     <span data-i18n="عملکرد مصارف وجوه" class="menu-title my-font">عملکرد مصارف وجوه</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a asp-area="" asp-controller="" asp-action="">
+                                <a asp-area="" asp-controller="PerformanceEvaluation" asp-action="Index" asp-route-tableName="@TablesName.WTotalBudget">
                                     <i class="ft-arrow-left-circle"></i>
                                     <span data-i18n="اطلاعات کلی آب" class="menu-title my-font">اطلاعات کلی آب</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a asp-area="" asp-controller="" asp-action="">
+                                <a asp-area="" asp-controller="PerformanceEvaluation" asp-action="Index" asp-route-tableName="@TablesName.WsTotalBudget">
                                     <i class="ft-arrow-left-circle"></i>
                                     <span data-i18n="اطلاعات کلی فاضلاب" class="menu-title my-font">اطلاعات کلی فاضلاب</span>
                                 </a>
