@@ -33,8 +33,8 @@
                                         عنوان
                                     </th>
                                     <th>نام</th>
-                                    <th>تاریخ ایجاد</th>
-                                    <th>وضعیت</th>
+                                    @*<th>تاریخ ایجاد</th>
+                                    <th>وضعیت</th>*@
                                     <th>عملیات</th>
                                 </tr>
                                 </thead>
@@ -47,12 +47,12 @@
                                         <td>
                                             <span>@item.Name</span>
                                         </td>
-                                        <td>
+                                        @*<td>
 
                                         </td>
                                         <td>
                                             <span>@item.Status</span>
-                                        </td>
+                                        </td>*@
                                         <td>
                                             <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font"
                                                asp-controller="@RolesController.Name"

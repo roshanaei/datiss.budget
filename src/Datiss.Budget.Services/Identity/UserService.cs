@@ -244,11 +244,9 @@ namespace Datiss.Budget.Services.Identity
             var user = await _dbSet.FindAsync(userId);
             user.CheckReferenceIsNull(nameof(user));
 
-            var result = await _userManager.UpdatePasswordHash(
-                user, 
-                newPassword, 
-                validatePassword: true);
-            
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
             if (!result.Succeeded)
                 throw new UserChangePasswordException(result.Errors);
         }

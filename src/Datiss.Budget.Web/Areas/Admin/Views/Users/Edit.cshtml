@@ -68,7 +68,6 @@
                                         </select>
                                     </div>
                                 </fieldset>
-
                             </div>
 
                             <div class="col-md-6">
@@ -102,6 +101,15 @@
                                     <div class="col-md-10">
                                         <input dir="ltr" type="text" asp-for="Email" class="form-control my-font" />
                                         <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <label class="col-md-4 col-form-label text-md-left my-font">
+                                        وضعیت کاربر
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input asp-for="Enabled" class="switchery switchery-default" type="checkbox" />
                                     </div>
                                 </fieldset>
                             </div>
