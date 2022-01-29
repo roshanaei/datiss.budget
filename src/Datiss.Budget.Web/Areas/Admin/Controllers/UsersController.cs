@@ -144,6 +144,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
             if (model._HasError) {
                 model.SetOrganizationSource(await getOrganizationDropDownAsync());
                 model.SetPositionSource(await getPostionDropDownAsync());
+                model.SetRoleSource(await getRoleDropDownAsync());
                 return View(model);
             }
 
@@ -220,8 +221,8 @@ namespace Datiss.Budget.Web.Admin.Controllers
             try {
                 result = await _userService.UpdateAsync(data);
                 if(result.NotValid) {
-                    model.SetOrganizationSource(await getOrganizationDropDownAsync());
-                    model.SetPositionSource(await getPostionDropDownAsync());
+                    model.SetOrganizationSource(await getOrganizationDropDownAsync(), model.OrganizationId);
+                    model.SetPositionSource(await getPostionDropDownAsync(), model.PositionId);
                     model.SetRoleSource(await getRoleDropDownAsync());
                     model.AddError(result.Message);
                     return View(model);

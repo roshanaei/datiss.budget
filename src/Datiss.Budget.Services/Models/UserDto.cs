@@ -7,6 +7,10 @@ namespace Datiss.Budget.Services.Models
 
     public class UserResultDTO
     {
+        public UserResultDTO() {
+            SelectedRoles = new List<int>();
+        }
+
         public int Id { get; set; }
         public string UserName { get; set; }
         public string FirstName { get; set; }
@@ -24,6 +28,7 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
         public string OrganizationTitle { get; set; }
         public EntityStatus Status { get; set; }
+        public IEnumerable<int> SelectedRoles { get; set; }
     }
 
     public class UserFilterDTO : FilterInputDTO

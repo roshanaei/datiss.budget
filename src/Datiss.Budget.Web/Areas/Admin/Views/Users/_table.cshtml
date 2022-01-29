@@ -65,25 +65,10 @@
                   enctype="multipart/form-data"
                   method="post"
                   asp-antiforgery="true">
-                <input name="filterPositionId" type="hidden" value="@Model.Filter.PositionId" />
-                <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
-
-                <span data-toggle="modal" data-target="#backdrop">
-                    <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                        <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
-                    </button>
-                </span>
-                <span data-toggle="modal" data-target="#CopyModal">
-                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
-                        <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
-                    </button>
-                </span>
-                <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
-                </button>
-                <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <a asp-controller="@UsersController.Name" asp-action="@UsersController.ACTION_Create"
+                    data-toggle="tooltip" data-placement="top" title="رکورد جدید" class="btn btn-success bg-light-success my-font">
                     <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
-                </button>
+                </a>
             </form>
 
         </div>

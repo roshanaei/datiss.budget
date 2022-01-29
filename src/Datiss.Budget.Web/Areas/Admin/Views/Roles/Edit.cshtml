@@ -85,26 +85,26 @@
                                                 @{
                                                     var chkListId = $"list_{claimType.Id}";
                                                 }
-                                                <input type="checkbox" id="@chkListId" value="list" class="switchery switchery-default" />
+                                                <input type="checkbox" id="@chkListId" value="list" class="" />
 
                                             </td>
                                             <td>
                                                 @{
                                                     var chkCreateId = $"create_{claimType.Id}";
                                                 }
-                                                <input type="checkbox" id="@chkCreateId" value="create" class="switchery switchery-default" />
+                                                <input type="checkbox" id="@chkCreateId" value="create" class="" />
                                             </td>
                                             <td>
                                                 @{
                                                     var chkEditId = $"edit_{claimType.Id}";
                                                 }
-                                                <input type="checkbox" id="@chkEditId" value="edit" class="switchery switchery-default" />
+                                                <input type="checkbox" id="@chkEditId" value="edit" class="" />
                                             </td>
                                             <td>
                                                 @{
                                                     var chkDeleteId = $"delete_{claimType.Id}";
                                                 }
-                                                <input type="checkbox" id="@chkDeleteId" value="delete" class="switchery switchery-default" />
+                                                <input type="checkbox" id="@chkDeleteId" value="delete" class="" />
                                             </td>
                                         </tr>
                                         i++;
@@ -145,11 +145,12 @@
             var chkDelete = document.getElementById(`delete_${id}`);
 
             if(claims.indexOf('list') >= 0) {
-                $(chkList).attr('checked', 'checked');
-                document.getElementById(`list_${id}`).checked = true;
-                alert('list found');
+                $(chkList).prop('checked', 'checked');
+                console.log(`list of ${id} checked`);
+                //$(chkList).prop('checked', true);
+                //document.getElementById(`list_${id}`).checked = 'checked';
             }
-        
+
             if(claims.indexOf('create') >= 0)
                 $(chkCreate).prop('checked', true);
         
@@ -170,9 +171,14 @@
     </script>
 }
 
+<script type="text/javascript">
+    const elem = $('input:checkbox');
+    var filan = new Switchery(elem);
+    elem.addClass('switchery switchery-default');
+    console.log(filan);
+</script>
 
 <script type="text/javascript">
-
 
     $(document).ready(function () {
         $('#Title').focus();
@@ -212,13 +218,8 @@
                 $(hidden).attr('value', hidClaimValue);
             }
         }
-
     });
 
-    
-
 </script>
-
-
 }
 

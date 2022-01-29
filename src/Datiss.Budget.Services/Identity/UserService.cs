@@ -52,9 +52,12 @@ namespace Datiss.Budget.Services.Identity
         private IQueryable<User> QueryActiveUsers()
             => _dbSet.Where(_ => _.Status != EntityStatus.Enabled).AsNoTracking();
 
-
         public async Task<UserResultDTO> GetByIdAsync(int id) {
-            var user = await _dbSet.FindAsync(id);
+            var user = await _dbSet
+                .Include(_ => _.Organization)
+                .Include(_ => _.Position)
+                .Include(_ => _.Roles)
+                .SingleOrDefaultAsync(_ => _.Id == id);
             user.CheckReferenceIsNull(nameof(user));
 
             return await Task.FromResult(user.Adapt<UserResultDTO>());
@@ -151,7 +154,9 @@ namespace Datiss.Budget.Services.Identity
             }
 
             //Update entity
-            var user = await _dbSet.FindAsync(model.Id);
+            var user = await _dbSet
+                .Include(_=> _.Roles)
+                .SingleOrDefaultAsync(_=> _.Id == model.Id);
             user.CheckReferenceIsNull(nameof(user));
             user.FirstName = model.FirstName.ApplyCorrectYeKe().Trim();
             user.LastName = model.LastName.ApplyCorrectYeKe().Trim();
@@ -163,11 +168,19 @@ namespace Datiss.Budget.Services.Identity
             user.UserName = model.UserName;
             user.OrganizationId = model.OrganizationId;
 
-            var result = await _userManager.UpdateAsync(user);
-            if(!result.Succeeded) {
-                throw new UpdateUserException(result.Errors);
+            user.Roles.Clear();
+            foreach(var roleId in model.SelectedRoles) 
+            {
+                user.Roles.Add(new UserRole
+                {
+                    RoleId = roleId
+                });
             }
 
+            var result = await _userManager.UpdateAsync(user);
+            if(!result.Succeeded)
+                throw new UpdateUserException(result.Errors);
+            
             //if (!string.IsNullOrWhiteSpace(model.Password)) {
             //    var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
             //    if(!passwordResult.Succeeded) {
