@@ -28,7 +28,7 @@ using Datiss.Budget.Security;
 namespace Datiss.Budget.Web.Controllers
 {
 
-    [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+    [Authorize]
     [Route("[controller]")]
     public class WaterInstallFeeController : Controller {
 
