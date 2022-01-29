@@ -343,6 +343,45 @@ namespace Datiss.Budget.Web.Controllers
             });
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Calculation(CalculationInputViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var result = await _incomeCurrentWsHService.CalculationAsync(
+                model.YearId,
+                model.OrganizationId);
+
+            List<CalculationResultViewModel> viewModel = new List<CalculationResultViewModel>();
+            foreach (var item in result)
+            {
+                viewModel.Add(
+                    new CalculationResultViewModel
+                    {
+                        Result = item.Value,
+                        Title = getCalcTitle(item.Key)
+                    }
+                );
+            }
+
+            return PartialView("_calculationModal", viewModel);
+        }
+
+        #region Private Helper Methods
+        private string getCalcTitle(string key)
+            => key switch
+            {
+                "IncomeCurrentWH_Cal1" => SPTitles.IncomeCurrentWsH_Cal1,
+                "IncomeCurrentWH_Cal2" => SPTitles.IncomeCurrentWsH_Cal2,
+                "IncomeCurrentWH_Cal3" => SPTitles.IncomeCurrentWsH_Cal3,
+                "IncomeCurrentWH_Cal4" => SPTitles.IncomeCurrentWsH_Cal4,
+                "IncomeCurrentWH_Cal5" => SPTitles.IncomeCurrentWsH_Cal5,
+                "IncomeCurrentWH_Cal6" => SPTitles.IncomeCurrentWsH_Cal6,
+                "IncomeCurrentWH_Cal7" => SPTitles.IncomeCurrentWsH_Cal7,
+                "IncomeCurrentWH_Cal8" => SPTitles.IncomeCurrentWsH_Cal8,
+                _ => ""
+            };
+        #endregion
 
     }
 }

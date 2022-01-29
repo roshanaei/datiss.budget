@@ -241,6 +241,78 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد کارمزد دفع مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWsH_Cal1 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsH_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد فصلی کارمزد دفع مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWsH_Cal2 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsH_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع آبونمان کارمزد دفع مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWsH_Cal3 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsH_Cal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد تبصره3 کارمزد دفع مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWsH_Cal4 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsH_Cal4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد کل کارمزد دفع مشترکین مسکونی سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWsH_Cal5 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsH_Cal5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع تعداد مشترکین فاضلاب سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWsH_Cal6 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsH_Cal6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع آحاد مشترکین فاضلاب سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWsH_Cal7 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsH_Cal7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع حجم دفع فاضلاب سالیانه.
+        /// </summary>
+        public static string IncomeCurrentWsH_Cal8 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsH_Cal8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to درآمد ماده 11 آب سالیانه.
         /// </summary>
         public static string IncomeForcast_Cal1 {
