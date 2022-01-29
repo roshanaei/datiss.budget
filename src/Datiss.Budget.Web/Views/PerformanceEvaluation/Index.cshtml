@@ -1,11 +1,11 @@
 ﻿@model PerformanceEvaluationIndexViewModel
-@{ ViewData["Title"] = "ارزیابی"; }
+@{ ViewData["Title"] = "ارزیابی عملکرد"; }
 
 <!--Title-->
 <div class="row">
     <div class="col-12">
         <div class="content-header">
-            <span class="my-font-bold">@ViewData["Title"]</span>
+            <span class="my-font-bold">@ViewData["Title"] @ViewData["Month"] ماهه @ViewData["TablesName"]</span>
         </div>
     </div>
 </div>
@@ -34,6 +34,14 @@
                                                 id="yearId">
                                         </select>
                                     </label>
+                                    @*<label asp-for="Filter.SectionName" class="my-font">
+                                        بخش :
+                                        <select asp-for="Filter.SectionName"
+                                                asp-items="Model.Filter.SectionNameSource"
+                                                class="form-control d-inline-block width-150"
+                                                id="sectionNameId">
+                                        </select>
+                                    </label>*@
                                     <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
                                         سازمان:
                                         <select asp-for="Filter.OrganizationId"
@@ -79,9 +87,8 @@
                                                     class="form-control"
                                                     onchange="changePageSize();"
                                                     id="ddlPageSize">
-                                                <option>10</option>
-                                                <option>20</option>
-                                                <option>30</option>
+                                                <option>25</option>
+                                                <option>50</option>
                                             </select>
                                             <span style="margin-right:10px">رکورد</span>
 
@@ -390,7 +397,9 @@
         $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
+
             let input = document.getElementById('inputOperation_' + id);
+
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
             btnSaveEdit.addEventListener('click', function (event) {

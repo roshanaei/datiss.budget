@@ -6,11 +6,11 @@
                 <th>سال</th>
                 <th>سازمان</th>
                 <th>عنوان</th>
-                <th>هدف سالیانه</th>
-                <th>بودجه</th>
-                <th>عملکرد</th>
-                <th>درصد تحقق</th>
-                <th>مدیریت</th>
+                <th style="min-width:140px">هدف سالیانه</th>
+                <th style="min-width:110px">بودجه</th>
+                <th style="min-width:140px">عملکرد</th>
+                <th style="min-width:130px">درصد تحقق</th>
+                <th style="min-width:190px">مدیریت</th>
             </tr>
         </thead>
         <tbody>
@@ -176,6 +176,7 @@
                                asp-controller="@PerformanceEvaluationController.Name"
                                asp-action="@PerformanceEvaluationController.ACTION_Index"
                                asp-route-page="@Model.PreviousPage"
+                               asp-route-tableName="@Model.Filter.TableName"
                                aria-label="Previous">«</a>
                         </li>
                     }
@@ -192,7 +193,8 @@
                                 <a class="page-link"
                                    asp-controller="@PerformanceEvaluationController.Name"
                                    asp-action="@PerformanceEvaluationController.ACTION_Index"
-                                   asp-route-page="@i">@i.ToString() </a>
+                                   asp-route-page="@i"
+                                   asp-route-tableName="@Model.Filter.TableName">@i.ToString() </a>
                             </li>
                         }
                     }
@@ -204,6 +206,7 @@
                                asp-controller="@PerformanceEvaluationController.Name"
                                asp-action="@PerformanceEvaluationController.ACTION_Index"
                                asp-route-page="@Model.NextPage"
+                               asp-route-tableName="@Model.Filter.TableName"
                                aria-label="Next">»</a>
                         </li>
                     }

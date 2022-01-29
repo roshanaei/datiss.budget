@@ -428,6 +428,9 @@ namespace Datiss.Budget.Services
             if (filter.TableName.HasValue)
                 query = query.Where(x => x.TablesFiled.TableName == filter.TableName);
 
+            if (filter.SectionName.HasValue)
+                query = query.Where(x => x.TablesFiled.SectionName == filter.SectionName);
+
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();

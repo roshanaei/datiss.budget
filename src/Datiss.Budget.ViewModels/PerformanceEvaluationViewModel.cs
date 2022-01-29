@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Enum;
+using Datiss.Budget.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -64,6 +65,7 @@ namespace Datiss.Budget.ViewModels
         public SectionName? SectionName { get; set; }
         public IList<SelectListItem> YearSource { get; set; }
         public IList<SelectListItem> OrganizationSource { get; set; }
+        public IList<SelectListItem> SectionNameSource => EnumSelectListProvider.GetSectionNameTypeItem(SectionName).ToList().AddEmptySelectListItem();
     }
 
     public class PerformanceEvaluationIndexViewModel : PagedViewModel<PerformanceEvaluationViewModel>

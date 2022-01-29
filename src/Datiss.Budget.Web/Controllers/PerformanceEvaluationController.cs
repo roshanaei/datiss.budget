@@ -89,6 +89,7 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Index(int page = 1, TablesName tableName = TablesName.CurrentIncome)
         {
             var filter = new PerformanceEvaluationFilterDTO();
+            filter.PageSize = 25;
 
             var orgSource = (await _organizationService.GetDropDownDataAsync()).ToList();
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true)).ToList();
@@ -99,8 +100,7 @@ namespace Datiss.Budget.Web.Controllers
 
             var dropDownList = exceptOrgList
                 .Adapt<List<DropDownItemViewModel>>();
-            //var test1 = orgSource.Except(inputOrgSource)
-            //.Adapt<List<DropDownItemViewModel>>();
+
 
             int firstOrgId = orgSource.FirstOrDefault().Id;
 
@@ -135,9 +135,14 @@ namespace Datiss.Budget.Web.Controllers
             model.Filter.YearId = filter.YearId;
             model.Filter.OrganizationId = filter.OrganizationId;
             model.PageNumber = filter.PageNumber;
-            model.PageSize = filter.PageSize;
+            model.PageSize = 25;
             model.Filter.TableName = filter.TableName;
 
+            int month = 0;
+            if(result.Items.Count() != 0)
+                month = result.Items.Select(x => x.Month).First();
+            ViewData["Month"] = month;
+            ViewData["TablesName"] = tableName.ToDisplay();
 
             return View(model);
         }
