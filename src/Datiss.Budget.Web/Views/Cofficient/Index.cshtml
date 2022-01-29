@@ -584,7 +584,7 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(CofficientController.ACTION_Index)';
+                            document.location.href = '@Url.Action(CofficientController.ACTION_Index, new { page = 1, group = Model.Filter.GroupName })';
                         });
                     }
 

@@ -18,6 +18,8 @@ namespace Datiss.Budget.Entities.DWH
 
         public int TableFieldId { get; set; }
 
+        public int Month { get; set; }
+
         public decimal Target { get; set; }
 
         public decimal Operation { get; set; }

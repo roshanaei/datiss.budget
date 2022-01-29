@@ -1,6 +1,8 @@
 ﻿<script type="text/javascript">
 
     let isNewRow = false;
+    let rowData = {};
+
     function editRow(id) {
 
 
@@ -25,6 +27,12 @@
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.userTypeId = $('#inputUserType_' + id).val();
+        rowData.subW = $('#inputSubW_' + id).val();
+        rowData.subWs = $('#inputSubWs_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -36,6 +44,14 @@
         $('#divInput_UserType_' + id).hide();
         $('#divInput_SubW_' + id).hide();
         $('#divInput_SubWs_' + id).hide();
+
+        //Reverting to OriginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputUserType_' + id).val(rowData.userTypeId);
+            $('#inputSubW_' + id).val(rowData.subW);
+            $('#inputSubWs_' + id).val(rowData.subWs);
+        }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
@@ -85,6 +101,12 @@
                         });
                         return;
                 }
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.userTypeId = model.userTypeId;
+                rowData.subW = model.subW;
+                rowData.subWs = model.subWs;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidUserTypeId_' + id).attr('value', model.userTypeId);

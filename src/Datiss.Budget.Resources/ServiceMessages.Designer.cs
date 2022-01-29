@@ -205,6 +205,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to مقدار وارد شده برای ماه مورد نظر نامعتبر است ..
+        /// </summary>
+        public static string ImportExcelInvalidMonth {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد &quot;{1}&quot; معتبر نیست ..
         /// </summary>
         public static string ImportExcelInvalidTitle {
