@@ -469,6 +469,20 @@ namespace Datiss.Budget.Web.Controllers
             return workbook.Deliver("IncomeCurrentWsH-Import-Template.xlsx");
         }
 
+        [HttpGet("[action]/{orgid}/{yearid}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
+        {
+            var result = await _incomeCurrentWsHService.GetExportItemsAsync(yearid, orgid);
+
+            if (result.Count() == 0)
+                return RedirectToAction("Index");
+
+            using var workbook = result.ExportExcel();
+            return workbook.Deliver("IncomeCurrentWsH.xlsx");
+
+        }
+
+
         #region Private Helper Methods
         private string getCalcTitle(string key)
             => key switch
