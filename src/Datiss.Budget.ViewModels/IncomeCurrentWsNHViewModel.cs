@@ -175,4 +175,16 @@ namespace Datiss.Budget.ViewModels
 
         public string Note7IncomeDisplay => Note7Income.ToString("N0");
     }
+
+    public class IncomeCurrentWsNHFilterViewModel : FilterViewModel
+    {
+        public int? YearId { get; set; }
+
+        public int? OrganizationId { get; set; }
+
+        public IList<SelectListItem> YearSource { get; set; }
+
+        public IList<SelectListItem> OrganizationSource { get; set; }
+    }
+
 }
