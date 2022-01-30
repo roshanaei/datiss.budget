@@ -158,5 +158,41 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
+        [HttpPost("{page?}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(IncomeCurrentWsNHIndexViewModel model)
+        {
+
+            var filter = model.Filter.Adapt<IncomeCurrentWsNHFilterDTO>();
+
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _incomeCurrentWsNHService.GetListAsync(filter);
+            model = result.Adapt<IncomeCurrentWsNHIndexViewModel>();
+            model.Filter = filter.Adapt<IncomeCurrentWsNHFilterViewModel>();
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var userSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+            model.SetUserTypeSource(userSource);
+
+            return View(model);
+        }
+
+
     }
 }
