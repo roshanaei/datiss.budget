@@ -73,7 +73,32 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            return Json(result.Result.Adapt<WaterInstallFeeViewModel>());
+            return Json(result.Result.Adapt<IncomeCurrentWsNHViewModel>());
+        }
+
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Edit)]
+        public async Task<IActionResult> Edit(UpdateIncomeCurrentWsNHViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+
+            var data = model.Adapt<UpdateIncomeCurrentWsNHDTO>();
+            var result = await _incomeCurrentWsNHService.UpdateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(
+                result.Result.Adapt<IncomeCurrentWsNHViewModel>()
+            );
         }
 
     }
