@@ -89,8 +89,6 @@ namespace Datiss.Budget.Services
                 Note3Income = model.Note3Income,
                 SubscriptionIncome = model.SubscriptionIncome,
                 TotalIncome = model.TotalIncome,
-                Note7Price = model.Note7Price,
-                Note7Income = model.Note7Income
             };
 
             var usertypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title;
@@ -119,8 +117,6 @@ namespace Datiss.Budget.Services
                     result.Note3Income = model.Note3Income;
                     result.SubscriptionIncome = model.SubscriptionIncome;
                     result.TotalIncome = model.TotalIncome;
-                    result.Note7Price = model.Note7Price;
-                    result.Note7Income = model.Note7Income;
 
                     return ValidationResult<IncomeCurrentWsNHDTO>.Success(result);
                 }
@@ -164,8 +160,6 @@ namespace Datiss.Budget.Services
                     entity.Note3Income = model.Note3Income;
                     entity.SubscriptionIncome = model.SubscriptionIncome;
                     entity.TotalIncome = model.TotalIncome;
-                    entity.Note7Price = model.Note7Price;
-                    entity.Note7Income = model.Note7Price;
 
                     await _uow.SaveChangesAsync();
 
@@ -187,8 +181,6 @@ namespace Datiss.Budget.Services
                         Note3Income = model.Note3Income,
                         SubscriptionIncome = model.SubscriptionIncome,
                         TotalIncome = model.TotalIncome,
-                        Note7Price = model.Note7Income,
-                        Note7Income = model.Note7Income,
                         OrganizationDisplay = organizationDisplay,
                         UserTypeDisplay = usertypeDisplay,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
@@ -390,8 +382,6 @@ namespace Datiss.Budget.Services
                                         Note3Income = x.Note3Income,
                                         SubscriptionIncome = x.SubscriptionIncome,
                                         TotalIncome = x.TotalIncome,
-                                        Note7Price = x.Note7Price,
-                                        Note7Income = x.Note7Income,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -647,8 +637,6 @@ namespace Datiss.Budget.Services
                                         Note3Income = x.Note3Income,
                                         SubscriptionIncome = x.SubscriptionIncome,
                                         TotalIncome = x.TotalIncome,
-                                        Note7Price = x.Note7Price,
-                                        Note7Income = x.Note7Income,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -690,8 +678,6 @@ namespace Datiss.Budget.Services
                                         Note3Income = x.Note3Income,
                                         SubscriptionIncome = x.SubscriptionIncome,
                                         TotalIncome = x.TotalIncome,
-                                        Note7Price = x.Note7Price,
-                                        Note7Income = x.Note7Income,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
