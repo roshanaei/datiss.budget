@@ -26,19 +26,17 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 3).Value = "کاربری";
             sheet.Cell(1, 4).Value = "تعداد مشترک";
             sheet.Cell(1, 5).Value = "آحاد مشترک";
-            sheet.Cell(1, 6).Value = "متوسط مصرف ماهیانه";
-            sheet.Cell(1, 7).Value = "ظرفیت قراردادی";
-            sheet.Cell(1, 8).Value = "مصرف فاضلاب";
-            sheet.Cell(1, 9).Value = "قیمت هر کاربری";
-            sheet.Cell(1, 10).Value = "درآمد فاضلاب بها";
-            sheet.Cell(1, 11).Value = "درآمد آبونمان";
-            sheet.Cell(1, 12).Value = "درآمد فاضلاب بها مازاد بر ظرفیت";
-            sheet.Cell(1, 13).Value = "درآمد فاضلاب بها فصلی";
-            sheet.Cell(1, 14).Value = "قیمت تبصره 3 فاضلاب بها";
-            sheet.Cell(1, 15).Value = "درآمد تبصره 3 فاضلاب بها";
-            sheet.Cell(1, 16).Value = "درآمد کل فاضلاب بها";
-            sheet.Cell(1, 17).Value = "قیمت تبصره 7 فاضلاب بها";
-            sheet.Cell(1, 18).Value = "درآمد تبصره 7 فاضلاب بها";
+            sheet.Cell(1, 6).Value = "متوسط حجم دفع";
+            sheet.Cell(1, 7).Value = "حجم دفع";
+            sheet.Cell(1, 8).Value = "قیمت هر کاربری";
+            sheet.Cell(1, 9).Value = "درآمد کارمزد دفع";
+            sheet.Cell(1, 10).Value = "درآمد آبونمان";
+            sheet.Cell(1, 11).Value = "درآمد فاضلاب بهاء مازاد بر ظرفیت";
+            sheet.Cell(1, 12).Value = "درآمد فاضلاب بهاء فصلی";
+            sheet.Cell(1, 13).Value = "درآمد کل فاضلاب بهاء";
+            sheet.Cell(1, 14).Value = "ظرفیت قراردادی";
+            sheet.Cell(1, 15).Value = "قیمت فاضلاب تبصره 3";
+            sheet.Cell(1, 16).Value = "درآمد تبصره 3 فاضلاب بهاء";
 
             var totalCount = items.Count();
             int row = 2;
@@ -62,14 +60,14 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0.00";
                 sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 7).Value = item.Capacity;
-                sheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0.00";
+                sheet.Cell(row, 7).Value = item.ConsumptionUser;
+                sheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 8).Value = item.ConsumptionUser;
-                sheet.Cell(row, 8).Style.NumberFormat.Format = "#,##0";
+                sheet.Cell(row, 8).Value = item.Capacity;
+                sheet.Cell(row, 8).Style.NumberFormat.Format = "#,##0.00";
                 sheet.Cell(row, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                                
+
                 sheet.Cell(row, 9).Value = item.Cost;
                 sheet.Cell(row, 9).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -102,17 +100,9 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 16).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 16).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 17).Value = item.Note3Price;
-                sheet.Cell(row, 17).Style.NumberFormat.Format = "#,##0";
-                sheet.Cell(row, 17).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-
-                sheet.Cell(row, 18).Value = item.Note3Income;
-                sheet.Cell(row, 18).Style.NumberFormat.Format = "#,##0";
-                sheet.Cell(row, 18).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-
                 row++;
             }
-            var range = sheet.Range(1, 1, row - 1, 18);
+            var range = sheet.Range(1, 1, row - 1, 16);
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
@@ -130,27 +120,25 @@ namespace Datiss.Budget.Reports.Excel
 
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
-            sheet.Range(1, 1, 1, 19).Merge();
+            sheet.Range(1, 1, 1, 17).Merge();
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
             sheet.Cell(2, 2).Value = "کد سازمان";
             sheet.Cell(2, 3).Value = "عنوان کاربری";
             sheet.Cell(2, 4).Value = "کد کاربری";
-            sheet.Cell(1, 5).Value = "تعداد مشترک";
-            sheet.Cell(1, 6).Value = "آحاد مشترک";
-            sheet.Cell(1, 7).Value = "متوسط مصرف ماهیانه";
-            sheet.Cell(1, 8).Value = "ظرفیت قراردادی";
-            sheet.Cell(1, 9).Value = "مصرف فاضلاب";
-            sheet.Cell(1, 10).Value = "قیمت هر کاربری";
-            sheet.Cell(1, 11).Value = "درآمد فاضلاب بها";
-            sheet.Cell(1, 12).Value = "درآمد آبونمان";
-            sheet.Cell(1, 13).Value = "درآمد فاضلاب بها مازاد بر ظرفیت";
-            sheet.Cell(1, 14).Value = "درآمد فاضلاب بها فصلی";
-            sheet.Cell(1, 15).Value = "قیمت تبصره 3 فاضلاب بها";
-            sheet.Cell(1, 16).Value = "درآمد تبصره 3 فاضلاب بها";
-            sheet.Cell(1, 17).Value = "درآمد کل فاضلاب بها";
-            sheet.Cell(1, 18).Value = "قیمت تبصره 7 فاضلاب بها";
-            sheet.Cell(1, 19).Value = "درآمد تبصره 7 فاضلاب بها";
+            sheet.Cell(2, 5).Value = "تعداد مشترک";
+            sheet.Cell(2, 6).Value = "آحاد مشترک";
+            sheet.Cell(2, 7).Value = "متوسط حجم دفع";
+            sheet.Cell(2, 8).Value = "حجم دفع";
+            sheet.Cell(2, 9).Value = "قیمت هر کاربری";
+            sheet.Cell(2, 10).Value = "درآمد کارمزد دفع";
+            sheet.Cell(2, 11).Value = "درآمد آبونمان";
+            sheet.Cell(2, 12).Value = "درآمد فاضلاب بهاء مازاد بر ظرفیت";
+            sheet.Cell(2, 13).Value = "درآمد فاضلاب بهاء فصلی";
+            sheet.Cell(2, 14).Value = "درآمد کل فاضلاب بهاء";
+            sheet.Cell(2, 15).Value = "ظرفیت قراردادی";
+            sheet.Cell(2, 16).Value = "قیمت فاضلاب تبصره 3";
+            sheet.Cell(2, 17).Value = "درآمد تبصره 3 فاضلاب بهاء";
 
             var totalCount = items.Count();
             int row = 3;
@@ -203,11 +191,6 @@ namespace Datiss.Budget.Reports.Excel
             range.Column(17).Style.NumberFormat.Format = "#,##0";
             range.Column(17).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             
-            range.Column(18).Style.NumberFormat.Format = "#,##0";
-            range.Column(18).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            
-            range.Column(19).Style.NumberFormat.Format = "#,##0";
-            range.Column(19).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             //
 
             var table = range.CreateTable($"{_sheetName}_Table");
