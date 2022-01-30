@@ -15,10 +15,11 @@ using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Enum;
 using DNTPersianUtils.Core;
+using Datiss.Budget.Security;
 
 namespace Datiss.Budget.Web.Controllers
 {
-    [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+    [Authorize]
     [Route("[controller]")]
     public class FinanceYearController : Controller
     {
@@ -46,6 +47,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("{page?}")]
+        [HasPermission(claimType: Name, PermissionActionType.List)]
         public async Task<IActionResult> Index(int page = 1)
         {
             var filterInput = new FinanceYearFilterDTO
@@ -69,13 +71,8 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-        [HttpGet("[action]")]
-        public async Task<IActionResult> Create()
-        {
-            var model = new CreateFinanceYearViewModel();
-            return PartialView("_createModal", model);
-        }
         [HttpPost("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> Create(CreateFinanceYearViewModel model)
         {
             if (!ModelState.IsValid)
@@ -96,6 +93,7 @@ namespace Datiss.Budget.Web.Controllers
             return Json(result);
         }
         [HttpGet("[action]/{id}")]
+        [HasPermission(claimType: Name, PermissionActionType.Edit)]
         public async Task<IActionResult> Edit(int id)
         {
             var entity = await _financeYearService.GetByIdAsync(id);
@@ -137,6 +135,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]/{id}")]
+        [HasPermission(claimType: Name, PermissionActionType.Delete)]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -160,6 +159,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Delete)]
         public async Task<IActionResult> Deleted()
         {
             var filterInput = new FinanceYearFilterDTO
