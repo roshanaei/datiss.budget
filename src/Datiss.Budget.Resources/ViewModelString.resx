@@ -120,6 +120,9 @@
   <data name="isNumber" xml:space="preserve">
     <value>این فیلد باید به صورت عددی وارد شود</value>
   </data>
+  <data name="Invalid_Email_Format" xml:space="preserve">
+    <value>فرمت ایمیل اشتباه است.</value>
+  </data>
   <data name="MaxLen" xml:space="preserve">
     <value>تعداد کاراکترهای وارد شده بیش از حد مجاز است.</value>
   </data>

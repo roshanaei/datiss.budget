@@ -70,6 +70,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to فرمت ایمیل اشتباه است..
+        /// </summary>
+        public static string Invalid_Email_Format {
+            get {
+                return ResourceManager.GetString("Invalid_Email_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to تعداد کاراکترهای وارد شده بیش از حد مجاز است..
         /// </summary>
         public static string MaxLen {

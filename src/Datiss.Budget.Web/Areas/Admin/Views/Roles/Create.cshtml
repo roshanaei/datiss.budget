@@ -21,9 +21,9 @@
                             </div>
                         }
                         <form id="my-form"
-                              novalidate
                               asp-controller="@RolesController.Name"
                               asp-action="@RolesController.ACTION_Create"
+                              asp-antiforgery="true"
                               method="POST">
                             
                             <div class="row form-group">
@@ -48,18 +48,8 @@
                                             <span asp-validation-for="Name"></span>
                                         </div>
                                     </div>
-                                    <div class="row form-group">
-                                        <div class="col-3">
-                                            <label class="col-form-label my-font">
-                                                وضعیت
-                                            </label>
-                                        </div>
-                                        <div class="col-9">
-                                            <input type="checkbox" asp-for="Enabled" class="switchery switchery-default" />
-                                            <span asp-validation-for="Enabled"></span>
-                                        </div>
-                                    </div>
-                                    <div class="scrollable-container" style="max-height: 500px;">
+                                   
+                                    <div class="table-responsive" style="max-height: 500px;">
                                         <table class="table table-striped my-font">
                                             <thead>
                                             <tr>
