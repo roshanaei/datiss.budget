@@ -48,6 +48,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ICofficientService, CofficientService>();
             services.AddScoped<ITablesFieldTitleService, TablesFieldTitleService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<IWWsFeeService, WWsFeeService>();
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IPerformanceEvaluationService, PerformanceEvaluationService>();
             services.AddScoped<IReportEngine, ReportEngine>();
