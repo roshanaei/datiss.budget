@@ -93,6 +93,12 @@ namespace Datiss.Budget.ViewModels
             }
         }
     }
+
+    public class UpdateIncomeCurrentWsNHViewModel : CreateIncomeCurrentWsNHViewModel
+    {
+        public int Id { get; set; }
+    }
+
     public class IncomeCurrentWsNHViewModel
     {
         public int Id { get; set; }
