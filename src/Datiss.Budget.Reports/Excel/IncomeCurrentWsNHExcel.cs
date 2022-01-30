@@ -119,5 +119,102 @@ namespace Datiss.Budget.Reports.Excel
 
             return workbook;
         }
+
+        public static XLWorkbook GetImportTemplate(this IEnumerable<IncomeCurrentWsNHDTO> items, int year)
+        {
+            if (items == null || !items.Any())
+                return null;
+
+            var workbook = new XLWorkbook();
+            var sheet = workbook.Worksheets.Add(_sheetName);
+
+            sheet.RightToLeft = true;
+            sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
+            sheet.Range(1, 1, 1, 19).Merge();
+
+            sheet.Cell(2, 1).Value = "عنوان سازمان";
+            sheet.Cell(2, 2).Value = "کد سازمان";
+            sheet.Cell(2, 3).Value = "عنوان کاربری";
+            sheet.Cell(2, 4).Value = "کد کاربری";
+            sheet.Cell(1, 5).Value = "تعداد مشترک";
+            sheet.Cell(1, 6).Value = "آحاد مشترک";
+            sheet.Cell(1, 7).Value = "متوسط مصرف ماهیانه";
+            sheet.Cell(1, 8).Value = "ظرفیت قراردادی";
+            sheet.Cell(1, 9).Value = "مصرف فاضلاب";
+            sheet.Cell(1, 10).Value = "قیمت هر کاربری";
+            sheet.Cell(1, 11).Value = "درآمد فاضلاب بها";
+            sheet.Cell(1, 12).Value = "درآمد آبونمان";
+            sheet.Cell(1, 13).Value = "درآمد فاضلاب بها مازاد بر ظرفیت";
+            sheet.Cell(1, 14).Value = "درآمد فاضلاب بها فصلی";
+            sheet.Cell(1, 15).Value = "قیمت تبصره 3 فاضلاب بها";
+            sheet.Cell(1, 16).Value = "درآمد تبصره 3 فاضلاب بها";
+            sheet.Cell(1, 17).Value = "درآمد کل فاضلاب بها";
+            sheet.Cell(1, 18).Value = "قیمت تبصره 7 فاضلاب بها";
+            sheet.Cell(1, 19).Value = "درآمد تبصره 7 فاضلاب بها";
+
+            var totalCount = items.Count();
+            int row = 3;
+            for (int i = 0; i < totalCount; i++)
+            {
+                var item = items.ElementAt(i);
+                sheet.Cell(row, 1).Value = item.OrganizationDisplay;
+                sheet.Cell(row, 2).Value = item.OrganizationId;
+                sheet.Cell(row, 3).Value = item.UserTypeDisplay;
+                sheet.Cell(row, 4).Value = item.UserTypeId;
+                row++; //for keeping index in table records
+            }
+
+            var range = sheet.Range(2, 1, row - 1, 19);
+            range.Column(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            //Other
+            range.Column(6).Style.NumberFormat.Format = "#,##0";
+            range.Column(6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+            range.Column(7).Style.NumberFormat.Format = "#,##0";
+            range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
+            range.Column(8).Style.NumberFormat.Format = "#,##0";
+            range.Column(8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
+            range.Column(9).Style.NumberFormat.Format = "#,##0.00";
+            range.Column(9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
+            range.Column(10).Style.NumberFormat.Format = "#,##0";
+            range.Column(10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
+            range.Column(11).Style.NumberFormat.Format = "#,##0";
+            range.Column(11).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
+            range.Column(12).Style.NumberFormat.Format = "#,##0";
+            range.Column(12).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
+            range.Column(13).Style.NumberFormat.Format = "#,##0";
+            range.Column(13).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
+            range.Column(14).Style.NumberFormat.Format = "#,##0";
+            range.Column(14).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
+            range.Column(15).Style.NumberFormat.Format = "#,##0";
+            range.Column(15).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
+            range.Column(16).Style.NumberFormat.Format = "#,##0";
+            range.Column(16).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
+            range.Column(17).Style.NumberFormat.Format = "#,##0";
+            range.Column(17).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
+            range.Column(18).Style.NumberFormat.Format = "#,##0";
+            range.Column(18).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
+            range.Column(19).Style.NumberFormat.Format = "#,##0";
+            range.Column(19).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            //
+
+            var table = range.CreateTable($"{_sheetName}_Table");
+            table.Theme = XLTableTheme.TableStyleMedium16;
+            sheet.Columns().AdjustToContents();
+
+            return workbook;
+        }
     }
 }
