@@ -1,4 +1,5 @@
-﻿using Datiss.Budget.Resources;
+﻿using Datiss.Budget.Common;
+using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
@@ -21,6 +22,12 @@ namespace Datiss.Budget.Web.Controllers
     public class IncomeCurrentWsNHController : Controller
     {
         public const string Name = "IncomeCurrentWsNH";
+        public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Index = nameof(Index);
+        public const string ACTION_Edit = nameof(Edit);
+
+        private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
+
         private readonly ILogger<IncomeCurrentWsNHController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly IIncomeCurrentWsNHService _incomeCurrentWsNHService;
@@ -99,6 +106,56 @@ namespace Datiss.Budget.Web.Controllers
             return Json(
                 result.Result.Adapt<IncomeCurrentWsNHViewModel>()
             );
+        }
+
+        [HttpGet("{page?}")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.List)]
+        public async Task<IActionResult> Index(int page = 1)
+        {
+            var filter = new IncomeCurrentWsNHFilterDTO();
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+              .Adapt<List<DropDownItemViewModel>>();
+            int firstOrgId = orgSource.FirstOrDefault().Id;
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(_ => _.Id);
+
+            var userTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
+
+            filter.YearId = maxYear;
+            filter.OrganizationId = firstOrgId;
+
+            var myfilter = TempData.Get<IncomeCurrentWsNHFilterViewModel>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<IncomeCurrentWsNHFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
+
+            var result = await _incomeCurrentWsNHService.GetListAsync(filter);
+            var model = result.Adapt<IncomeCurrentWsNHIndexViewModel>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetUserTypeSource(userTypeSource);
+
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+
+            model.Filter.YearId = filter.YearId;
+            model.Filter.OrganizationId = filter.OrganizationId;
+            model.PageNumber = filter.PageNumber;
+            model.PageSize = filter.PageSize;
+
+            return View(model);
         }
 
     }
