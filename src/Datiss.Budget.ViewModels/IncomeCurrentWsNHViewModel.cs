@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Datiss.Budget.Resources;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -21,65 +22,57 @@ namespace Datiss.Budget.ViewModels
 
         public int UserTypeId { get; set; }
 
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int NumberUser { get; set; }
 
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int UnitUser { get; set; }
 
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public decimal AvgConsumeUser { get; set; }
 
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public decimal Capacity { get; set; }
 
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int ConsumptionUser { get; set; }
 
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int Cost { get; set; }
 
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int Income { get; set; }
 
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int SubscriptionIncome { get; set; }
 
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int ExcessIncome { get; set; }
 
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int SeasonalIncome { get; set; }
 
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int Note3Price { get; set; }
 
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int Note3Income { get; set; }
 
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
         public int TotalIncome { get; set; }
-
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
-        public int Note7Price { get; set; }
-
-        [Required(ErrorMessage = "")]
-        [Range(0, int.MaxValue, ErrorMessage = "")]
-        public int Note7Income { get; set; }
 
         public IEnumerable<SelectListItem> UserTypeSource { get; set; }
 
@@ -167,14 +160,6 @@ namespace Datiss.Budget.ViewModels
         public int TotalIncome { get; set; }
 
         public string TotalIncomeDisplay => TotalIncome.ToString("N0");
-
-        public int Note7Price { get; set; }
-
-        public string Note7PriceDisplay => Note7Price.ToString("N0");
-
-        public int Note7Income { get; set; }
-
-        public string Note7IncomeDisplay => Note7Income.ToString("N0");
     }
 
     public class IncomeCurrentWsNHFilterViewModel : FilterViewModel
