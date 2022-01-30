@@ -787,7 +787,8 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(x => x.UserType.Title.ToUpper().Contains(filter.Search) ||
+                query = query.Where(x => x.Organization.Title.ToUpper().Contains(filter.Search) ||
+                                         x.UserType.Title.ToUpper().Contains(filter.Search) ||
                                          x.UsageLayer.Title.ToUpper().Contains(filter.Search));
             }
 
