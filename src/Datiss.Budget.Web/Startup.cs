@@ -6,10 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Datiss.Budget.IocConfig;
 using DNTCommon.Web.Core;
-using Datiss.Budget.Common.WebToolkit;
 using Microsoft.Extensions.Hosting;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Razor.Runtime;
 
 namespace Datiss.Budget
 {
@@ -66,16 +63,14 @@ namespace Datiss.Budget
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
+            if (env.IsDevelopment()) {
                 app.UseDeveloperExceptionPage();
             }
             else {
                 app.UseExceptionHandler("/error/index/500");
-                app.UseStatusCodePagesWithReExecute("/error/index/{0}");
+                app.UseStatusCodePagesWithReExecute("/error/{0}");
             }
 
-            
             app.UseHsts();
             app.UseHttpsRedirection();
             app.UseContentSecurityPolicy();
