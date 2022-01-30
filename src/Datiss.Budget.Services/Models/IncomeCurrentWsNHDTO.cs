@@ -40,10 +40,6 @@ namespace Datiss.Budget.Services.Models
 
         public int TotalIncome { get; set; }
 
-        public int Note7Price { get; set; }
-
-        public int Note7Income { get; set; }
-
         public string UserTypeTitle { get; set; }
     }
 
@@ -93,9 +89,5 @@ namespace Datiss.Budget.Services.Models
         public int Note3Income { get; set; }
 
         public int TotalIncome { get; set; }
-
-        public int Note7Price { get; set; }
-
-        public int Note7Income { get; set; }
     }
 }
