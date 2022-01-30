@@ -43,12 +43,14 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ISalesSplitTotalService, SalesSplitTotalService>();
             services.AddScoped<IFeeCityService, FeeCityService>();
             services.AddScoped<IIncomeCurrentWHService, IncomeCurrentWHService>();
+            services.AddScoped<IIncomeCurrentWsHService, IncomeCurrentWsHService>();
             services.AddScoped<IIncomeCurrentWNHService, IncomeCurrentWNHService>();
             services.AddScoped<IIncomeCurrentWsNHService, IncomeCurrentWsNHService>();
             services.AddScoped<IPerformanceEvaluationService, PerformanceEvaluationService>();
             services.AddScoped<ICofficientService, CofficientService>();
             services.AddScoped<ITablesFieldTitleService, TablesFieldTitleService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<IWWsFeeService, WWsFeeService>();
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IPerformanceEvaluationService, PerformanceEvaluationService>();
             services.AddScoped<IReportEngine, ReportEngine>();

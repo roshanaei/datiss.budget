@@ -611,20 +611,7 @@ namespace Datiss.Budget.Services
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
 
-                query = query.Where(x => x.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                       x.UrbanAdjustmentFactor.ToString().ToUpper().Contains(filter.Search) ||
-                                       x.WasteRateInWater.ToString().ToUpper().Contains(filter.Search) ||
-                                       x.WaterBranchingPerHousing.ToString().ToUpper().Contains(filter.Search) ||
-                                       x.TubingCost.ToString().ToUpper().Contains(filter.Search) ||
-                                       x.WaterPartnershipAmountDomestic.ToString().ToUpper().Contains(filter.Search) ||
-                                       x.WaterPartnershipAmountNDomestic.ToString().ToUpper().Contains(filter.Search) ||
-                                       x.WastePartnershipAmountDomestic.ToString().ToUpper().Contains(filter.Search) ||
-                                       x.WastePartnershipAmountNDomestic.ToString().ToUpper().Contains(filter.Search) ||
-                                       x.FixCostNote11H.ToString().ToUpper().Contains(filter.Search) ||
-                                       x.FixCostNote11NH.ToString().ToUpper().Contains(filter.Search) ||
-                                       x.FixCostNote11HWs.ToString().ToUpper().Contains(filter.Search) ||
-                                       x.FixCostNote11NHWs.ToString().ToUpper().Contains(filter.Search) ||
-                                       x.WsTubingCost.ToString().ToUpper().Contains(filter.Search));
+                query = query.Where(x => x.Organization.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;

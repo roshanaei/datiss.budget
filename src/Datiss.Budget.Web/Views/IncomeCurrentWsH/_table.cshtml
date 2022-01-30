@@ -1,0 +1,477 @@
+﻿@model IncomeCurrentWsHIndexViewModel
+<div class="table-responsive">
+    <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
+        <thead class="thead-light">
+            <tr>
+                <th style="min-width: 135px;">سال</th>
+                <th style="min-width: 250px;">سازمان</th>
+                <th style="min-width: 235px;">کاربری</th>
+                <th style="min-width: 185px;">طبقه مصرف</th>
+                <th style="min-width: 150px;">تعداد مشترک</th>
+                <th style="min-width: 150px;">آحاد مشترک</th>
+                <th style="min-width: 250px;">متوسط دفع فاضلاب هر طبقه</th>
+                <th style="min-width: 200px;">حجم دفع فاضلاب</th>
+                <th style="min-width: 160px;">قیمت هر طبقه</th>
+                <th style="min-width: 180px;">درآمد کارمزد دفع</th>
+                <th style="min-width: 150px;">درآمد آبونمان</th>
+                <th style="min-width: 200px;">قیمت تبصره 3 فاضلاب بهاء خانگی</th>
+                <th style="min-width: 180px;">درآمد تبصره 3 فاضلاب بهاء خانگی</th>
+                <th style="min-width: 210px;">درآمد فاضلاب بهاء فصلی</th>
+                <th style="min-width: 200px;">درآمد کل فاضلاب بهاء</th>
+                <th style="min-width: 280px;">قیمت تبصره 7 فاضلاب بهاء خانگی</th>
+                <th style="min-width: 280px;">درآمد تبصره 7 فاضلاب بهاء خانگی</th>
+                <th style="min-width: 190px;">مدیریت</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowTemplate" style="display: none">
+                <td>
+                    <div id="divInput_Year_">
+                        <input id="hidYearId_" type="hidden" />
+                        <select class="form-control selectYear" id="inputYear_" asp-items="Model.YearSource">
+                        </select>
+                        <script>
+                            $('select#inputYear_ option[value=' + $('#yearId').val() + ']').attr('selected', true);
+                            $('#inputYear_').attr('disabled', 'disabled');
+                        </script>
+                    </div>
+                    <div id="divOutput_Year_" style="display: none">
+                        <span id="spanYear_"></span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Org_">
+                        <input id="hidOrgId_" type="hidden" />
+                        <select class="form-control selectOrganization" id="inputOrg_" asp-items="Model.InputOrganizationSource">
+                        </select>
+                        <script>
+                            $('select#inputOrg_ option[value=' + $('#organizationId').val() + ']').attr('selected', true);
+                        </script>
+                    </div>
+                    <div id="divOutput_Org_">
+                        <span id="spanOrg_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_UserType_">
+                        <input id="hidUserTypeId_" type="hidden" />
+                        <select class="form-control selectUserType" id="inputUserType_" asp-items="Model.UserTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_UserType_" style="display: none">
+                        <span id="spanUserType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_UsageLayerType_">
+                        <input id="hidUsageLayerTypeId_" type="hidden" />
+                        <select class="form-control selectUsageLayerType" id="inputUsageLayerType_" asp-items="Model.UsageLayerTypeSource" onchange="RelatedDropDown(this,event)">
+                        </select>
+                    </div>
+                    <div id="divOutput_UsageLayerType_" style="display: none">
+                        <span id="spanUsageLayerType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_NumberUser_">
+                        <input class="form-control input-keyup default-input" id="inputNumberUser_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_NumberUser_" style="display: none">
+                        <span id="spanNumberUser_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_UnitUser_">
+                        <input class="form-control input-keyup" id="inputUnitUser_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_UnitUser_" style="display: none">
+                        <span id="spanUnitUser_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_AvgConsumeUser_">
+                        <input class="form-control input-keyup" id="inputAvgConsumeUser_" type="number" />
+                    </div>
+                    <div id="divOutput_AvgConsumeUser_" style="display: none">
+                        <span id="spanAvgConsumeUser_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ConsumptionUser_">
+                        <input class="form-control input-keyup" id="inputConsumptionUser_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_ConsumptionUser_" style="display: none">
+                        <span id="spanConsumptionUser_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Cost_">
+                        <input class="form-control input-keyup" id="inputCost_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_Cost_" style="display: none">
+                        <span id="spanCost_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Income_">
+                        <input class="form-control input-keyup" id="inputIncome_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_Income_" style="display: none">
+                        <span id="spanIncome_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_SubscriptionIncome_">
+                        <input class="form-control input-keyup" id="inputSubscriptionIncome_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_SubscriptionIncome_" style="display: none">
+                        <span id="spanSubscriptionIncome_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Note3Price_">
+                        <input class="form-control input-keyup" id="inputNote3Price_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_Note3Price_" style="display: none">
+                        <span id="spanNote3Price_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Note3Income_">
+                        <input class="form-control input-keyup" id="inputNote3Income_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_Note3Income_" style="display: none">
+                        <span id="spanNote3Income_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_SeasonalIncome_">
+                        <input class="form-control input-keyup" id="inputSeasonalIncome_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_SeasonalIncome_" style="display: none">
+                        <span id="spanSeasonalIncome_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_TIncome_">
+                        <input class="form-control input-keyup" id="inputTIncome_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_TIncome_" style="display: none">
+                        <span id="spanTIncome_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Note7Price_">
+                        <input class="form-control input-keyup" id="inputNote7Price_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_Note7Price_" style="display: none">
+                        <span id="spanNote7Price_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Note7Income_">
+                        <input class="form-control input-keyup" id="inputNote7Income_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_Note7Income_" style="display: none">
+                        <span id="spanNote7Income_"> </span>
+                    </div>
+                </td>
+
+                <td>
+                    <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
+                        <i class="fa ft-edit fa-1x"></i>
+                    </a>
+
+                    <a id="btnDelete_" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" style="display: none">
+                        <i class="fa ft-trash-2"></i>
+                    </a>
+
+                    <a id="btnSaveEdit_" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+                    <a id="btnCancelEdit_" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                    <a id="btnSaveCreate_" class="save-new-row btn btn-success my-font mr-1">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+
+                    <a id="btnCancelCreate_" class="cancel-new-row btn btn-danger my-font">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                </td>
+            </tr>
+            @foreach (var item in Model.Items)
+            {
+        <tr id="row_@item.Id">
+            <td>
+                <div id="divInput_Year_@item.Id" style="display: none">
+                    <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                    <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                    </select>
+                    <script>
+                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
+                    </script>
+                </div>
+                <div id="divOutput_Year_@item.Id">
+                    <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_Org_@item.Id" style="display: none">
+                    <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                    <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
+                    </select>
+                    <script>
+                                $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
+                    </script>
+                </div>
+                <div id="divOutput_Org_@item.Id">
+                    <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_UserType_@item.Id" style="display: none">
+                    <input id="hidUserTypeId_@item.Id" type="hidden" value="@item.UserTypeId" />
+                    <select class="form-control selectUserType" id="inputUserType_@item.Id" asp-items="Model.UserTypeSource">
+                    </select>
+                    <script>
+                                $('select#inputUserType_' + @item.Id + ' option[value=' + @item.UserTypeId + ']').attr('selected', true);
+                    </script>
+                </div>
+                <div id="divOutput_UserType_@item.Id">
+                    <span id="spanUserType_@item.Id">@item.UserTypeDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_UsageLayerType_@item.Id" style="display: none">
+                    <input id="hidUsageLayerTypeId_@item.Id" type="hidden" value="@item.UsageLayerId" />
+                    <select class="form-control" id="inputUsageLayerType_@item.Id" asp-items="Model.UsageLayerTypeSource">
+                    </select>
+                    <script>
+                                $('select#inputUsageLayerType_' + @item.Id + ' option[value=' + @item.UsageLayerId + ']').attr('selected', true);
+                    </script>
+                </div>
+                <div id="divOutput_UsageLayerType_@item.Id">
+                    <span id="spanUsageLayerType_@item.Id">@item.UsageLayerDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_NumberUser_@item.Id" style="display: none">
+                    <input class="form-control" id="inputNumberUser_@item.Id" value="@item.NumberUser" type="number" min="0" />
+                </div>
+                <div id="divOutput_NumberUser_@item.Id">
+                    <span id="spanNumberUser_@item.Id">@item.NumberUserDisplay </span>
+                </div>
+            </td>
+
+            <td>
+                <div id="divInput_UnitUser_@item.Id" style="display: none">
+                    <input class="form-control" id="inputUnitUser_@item.Id" value="@item.UnitUser" type="number" min="0" />
+                </div>
+                <div id="divOutput_UnitUser_@item.Id">
+                    <span id="spanUnitUser_@item.Id">@item.UnitUserDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_AvgConsumeUser_@item.Id" style="display: none">
+                    <input class="form-control" id="inputAvgConsumeUser_@item.Id" value="@item.AvgConsumeUser" type="number" min="0" />
+                </div>
+                <div id="divOutput_AvgConsumeUser_@item.Id">
+                    <span id="spanAvgConsumeUser_@item.Id">@item.AvgConsumeUserDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_ConsumptionUser_@item.Id" style="display: none">
+                    <input class="form-control" id="inputConsumptionUser_@item.Id" value="@item.ConsumptionUser" type="number" min="0" />
+                </div>
+                <div id="divOutput_ConsumptionUser_@item.Id">
+                    <span id="spanConsumptionUser_@item.Id">@item.ConsumptionUserDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_Cost_@item.Id" style="display: none">
+                    <input class="form-control" id="inputCost_@item.Id" value="@item.Cost" type="number" min="0" />
+                </div>
+                <div id="divOutput_Cost_@item.Id">
+                    <span id="spanCost_@item.Id">@item.CostDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_Income_@item.Id" style="display: none">
+                    <input class="form-control" id="inputIncome_@item.Id" value="@item.Income" type="number" min="0" />
+                </div>
+                <div id="divOutput_Income_@item.Id">
+                    <span id="spanIncome_@item.Id">@item.IncomeDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_SubscriptionIncome_@item.Id" style="display: none">
+                    <input class="form-control" id="inputSubscriptionIncome_@item.Id" value="@item.SubscriptionIncome" type="number" min="0" />
+                </div>
+                <div id="divOutput_SubscriptionIncome_@item.Id">
+                    <span id="spanSubscriptionIncome_@item.Id">@item.SubscriptionIncomeDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_Note3Price_@item.Id" style="display: none">
+                    <input class="form-control" id="inputNote3Price_@item.Id" value="@item.Note3Price" type="number" min="0" />
+                </div>
+                <div id="divOutput_Note3Price_@item.Id">
+                    <span id="spanNote3Price_@item.Id">@item.Note3PriceDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_Note3Income_@item.Id" style="display: none">
+                    <input class="form-control" id="inputNote3Income_@item.Id" value="@item.Note3Income" type="number" min="0" />
+                </div>
+                <div id="divOutput_Note3Income_@item.Id">
+                    <span id="spanNote3Income_@item.Id">@item.Note3IncomeDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_SeasonalIncome_@item.Id" style="display: none">
+                    <input class="form-control" id="inputSeasonalIncome_@item.Id" value="@item.SeasonalIncome" type="number" min="0" />
+                </div>
+                <div id="divOutput_SeasonalIncome_@item.Id">
+                    <span id="spanSeasonalIncome_@item.Id">@item.SeasonalIncomeDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_TIncome_@item.Id" style="display: none">
+                    <input class="form-control" id="inputTIncome_@item.Id" value="@item.TIncome" type="number" min="0" />
+                </div>
+                <div id="divOutput_TIncome_@item.Id">
+                    <span id="spanTIncome_@item.Id">@item.TIncomeDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_Note7Price_@item.Id" style="display: none">
+                    <input class="form-control" id="inputNote7Price_@item.Id" value="@item.Note7Price" type="number" min="0" />
+                </div>
+                <div id="divOutput_Note7Price_@item.Id">
+                    <span id="spanNote7Price_@item.Id">@item.Note7PriceDisplay </span>
+                </div>
+            </td>
+            <td>
+                <div id="divInput_Note7Income_@item.Id" style="display: none">
+                    <input class="form-control" id="inputNote7Income_@item.Id" value="@item.Note7Income" type="number" min="0" />
+                </div>
+                <div id="divOutput_Note7Income_@item.Id">
+                    <span id="spanNote7Income_@item.Id">@item.Note7IncomeDisplay </span>
+                </div>
+            </td>
+
+            <td>
+                <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                    <i class="fa ft-edit fa-1x"></i>
+                </a>
+
+                <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                    <i class="fa ft-trash-2"></i>
+                </a>
+
+                <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                    <i class="fa ft-check-square"></i>
+                </a>
+
+                <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                    <i class="fa ft-x-square"></i>
+                </a>
+            </td>
+        </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+            @*<input asp-for="ExcelFile" type="file" />*@
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                </button>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                </button>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </button>
+            <span data-toggle="modal" data-target="#CalculationModal">
+                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                </button>
+            </span>
+        </form>
+
+    </div>
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">(صفحه <b class="font-medium-2">@Model.PageNumber</b> از <b class="font-medium-2">@Model.PagesCount</b>)</div>
+    </div>
+    @if (Model.PagesCount > 1)
+    {
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                @if (Model.PageNumber > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-controller="@IncomeCurrentWsHController.Name"
+                           asp-action="@IncomeCurrentWsHController.ACTION_Index"
+                           asp-route-page="@Model.PreviousPage"
+                           aria-label="Previous">«</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.PagesCount; i++)
+                {
+                    if (i == Model.PageNumber)
+                    {
+                        <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-controller="@IncomeCurrentWsHController.Name"
+                               asp-action="@IncomeCurrentWsHController.ACTION_Index"
+                               asp-route-page="@i">@i.ToString() </a>
+                        </li>
+                    }
+                }
+
+                @if (Model.PageNumber < Model.PagesCount)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-controller="@IncomeCurrentWsHController.Name"
+                           asp-action="@IncomeCurrentWsHController.ACTION_Index"
+                           asp-route-page="@Model.NextPage"
+                           aria-label="Next">»</a>
+                    </li>
+                }
+
+            </ul>
+        </nav>
+    }
+</div>

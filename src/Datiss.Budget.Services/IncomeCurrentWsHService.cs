@@ -21,13 +21,13 @@ using LinqKit;
 using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Security;
 using Datiss.Budget.Enum;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Datiss.Budget.Common;
 using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services
 {
-    public class IncomeCurrentWHService : IIncomeCurrentWHService
+    public class IncomeCurrentWsHService : IIncomeCurrentWsHService
     {
         private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
@@ -35,12 +35,12 @@ namespace Datiss.Budget.Services
         private readonly IUserService _userService;
         private readonly IOrganizationService _organizationService;
 
-        private readonly DbSet<IncomeCurrentWH> _dbSet;
+        private readonly DbSet<IncomeCurrentWsH> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
         private readonly DbSet<FinanceYear> _yearSet;
         private readonly DbSet<Constant> _constSet;
 
-        public IncomeCurrentWHService(
+        public IncomeCurrentWsHService(
             IUserContext userContext,
             IUnitOfWork uow,
             IExcelService excelService,
@@ -49,7 +49,7 @@ namespace Datiss.Budget.Services
         {
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _dbSet = _uow.Set<IncomeCurrentWH>();
+            _dbSet = _uow.Set<IncomeCurrentWsH>();
             _orgDbSet = _uow.Set<Organization>();
             _yearSet = _uow.Set<FinanceYear>();
             _constSet = _uow.Set<Constant>();
@@ -58,20 +58,20 @@ namespace Datiss.Budget.Services
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
-        private IQueryable<IncomeCurrentWH> Query()
+        private IQueryable<IncomeCurrentWsH> Query()
             => _dbSet.AsNoTracking();
 
-        public async Task<IncomeCurrentWH> GetByIdAsync(int id)
+        public async Task<IncomeCurrentWsH> GetByIdAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult<IncomeCurrentWHDTO>> CreateAsync(CreateIncomeCurrentWHDTO model)
+        public async Task<ValidationResult<IncomeCurrentWsHDTO>> CreateAsync(CreateIncomeCurrentWsHDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var entity = new IncomeCurrentWH
+            var entity = new IncomeCurrentWsH
             {
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
@@ -88,9 +88,8 @@ namespace Datiss.Budget.Services
                 SubscriptionIncome = model.SubscriptionIncome,
                 SeasonalIncome = model.SeasonalIncome,
                 TIncome = model.TIncome,
-                Diff_ConsWsVolume = model.Diff_ConsWsVolume,
-                Note2Income = model.Note2Income,
-                WasteVolume = model.WasteVolume
+                Note7Income = model.Note7Income,
+                Note7Price = model.Note7Price
             };
 
             model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
@@ -104,7 +103,7 @@ namespace Datiss.Budget.Services
                     await _dbSet.AddAsync(entity);
                     await _uow.SaveChangesAsync();
 
-                    var result = entity.Adapt<IncomeCurrentWHDTO>();
+                    var result = entity.Adapt<IncomeCurrentWsHDTO>();
                     result.UsageLayerDisplay = model.UsageLayerTitle;
                     result.UserTypeDisplay = model.UserTypeTitle;
                     result.OrganizationDisplay = organizationDisplay;
@@ -120,20 +119,19 @@ namespace Datiss.Budget.Services
                     result.SubscriptionIncome = model.SubscriptionIncome;
                     result.SeasonalIncome = model.SeasonalIncome;
                     result.TIncome = model.TIncome;
-                    result.Diff_ConsWsVolume = model.Diff_ConsWsVolume;
-                    result.Note2Income = model.Note2Income;
-                    result.WasteVolume = model.WasteVolume;
+                    result.Note7Income = model.Note7Income;
+                    result.Note7Price = model.Note7Price;
 
-                    return ValidationResult<IncomeCurrentWHDTO>.Success(result);
+                    return ValidationResult<IncomeCurrentWsHDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<IncomeCurrentWHDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<IncomeCurrentWsHDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
 
-            return ValidationResult<IncomeCurrentWHDTO>.Failed(
+            return ValidationResult<IncomeCurrentWsHDTO>.Failed(
                 string.Format(ServiceMessages.Logic_UserTypeUsageLayerDuplicate,
                                                 model.UserTypeTitle,
                                                 model.UsageLayerTitle,
@@ -141,7 +139,7 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<ValidationResult<IncomeCurrentWHDTO>> UpdateAsync(UpdateIncomeCurrentWHDTO model)
+        public async Task<ValidationResult<IncomeCurrentWsHDTO>> UpdateAsync(UpdateIncomeCurrentWsHDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -170,13 +168,12 @@ namespace Datiss.Budget.Services
                     entity.SubscriptionIncome = model.SubscriptionIncome;
                     entity.SeasonalIncome = model.SeasonalIncome;
                     entity.TIncome = model.TIncome;
-                    entity.Diff_ConsWsVolume = model.Diff_ConsWsVolume;
-                    entity.Note2Income = model.Note2Income;
-                    entity.WasteVolume = model.WasteVolume;
+                    entity.Note7Income = model.Note7Income;
+                    entity.Note7Price = model.Note7Price;
 
                     await _uow.SaveChangesAsync();
 
-                    var result = new IncomeCurrentWHDTO
+                    var result = new IncomeCurrentWsHDTO
                     {
                         YearId = model.YearId,
                         OrganizationId = model.OrganizationId,
@@ -197,20 +194,19 @@ namespace Datiss.Budget.Services
                         SubscriptionIncome = model.SubscriptionIncome,
                         SeasonalIncome = model.SeasonalIncome,
                         TIncome = model.TIncome,
-                        Diff_ConsWsVolume = model.Diff_ConsWsVolume,
-                        Note2Income = model.Note2Income,
-                        WasteVolume = model.WasteVolume
+                        Note7Income = model.Note7Income,
+                        Note7Price = model.Note7Price,
                     };
 
-                    return ValidationResult<IncomeCurrentWHDTO>.Success(result);
+                    return ValidationResult<IncomeCurrentWsHDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<IncomeCurrentWHDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<IncomeCurrentWsHDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
-            return ValidationResult<IncomeCurrentWHDTO>.Failed(
+            return ValidationResult<IncomeCurrentWsHDTO>.Failed(
                 string.Format(ServiceMessages.Logic_UserTypeUsageLayerDuplicate,
                                     model.UserTypeTitle,
                                     model.UsageLayerTitle,
@@ -272,94 +268,85 @@ namespace Datiss.Budget.Services
 
         public async Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId)
         {
-            var result = new List<CalculationItemData>();
             List<SqlParameter> sqlParams = new List<SqlParameter>
             {
                 new SqlParameter("YearId", yearId),
                 new SqlParameter("OrganizationId", organizationId)
             };
+            var result = new List<CalculationItemData>();
 
             result.Add(new CalculationItemData
             {
-                Key = "IncomeCurrentWH_Cal1",
+                Key = "IncomeCurrentWsH_Cal1",
                 Value = await _uow.ExecuteScalar<int>(
-                                    "[dbo].[IncomeCurrentWH_Cal1] @YearId, @OrganizationId",
-                                    parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal1] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "IncomeCurrentWH_Cal2",
+                Key = "IncomeCurrentWsH_Cal2",
                 Value = await _uow.ExecuteScalar<int>(
-                                    "[dbo].[IncomeCurrentWH_Cal2] @YearId, @OrganizationId",
-                                    parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal2] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "IncomeCurrentWH_Cal3",
+                Key = "IncomeCurrentWsH_Cal3",
                 Value = await _uow.ExecuteScalar<int>(
-                         "[dbo].[IncomeCurrentWH_Cal3] @YearId, @OrganizationId",
-                         parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal3] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "IncomeCurrentWH_Cal4",
+                Key = "IncomeCurrentWsH_Cal4",
                 Value = await _uow.ExecuteScalar<int>(
-                         "[dbo].[IncomeCurrentWH_Cal4] @YearId, @OrganizationId",
-                         parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal4] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "IncomeCurrentWH_Cal5",
+                Key = "IncomeCurrentWsH_Cal5",
                 Value = await _uow.ExecuteScalar<int>(
-                         "[dbo].[IncomeCurrentWH_Cal5] @YearId, @OrganizationId",
-                         parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal5] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "IncomeCurrentWH_Cal6",
+                Key = "IncomeCurrentWsH_Cal6",
                 Value = await _uow.ExecuteScalar<int>(
-             "[dbo].[IncomeCurrentWH_Cal6] @YearId, @OrganizationId",
-             parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal6] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "IncomeCurrentWH_Cal7",
+                Key = "IncomeCurrentWsH_Cal7",
                 Value = await _uow.ExecuteScalar<int>(
-                     "[dbo].[IncomeCurrentWH_Cal7] @YearId, @OrganizationId",
-                     parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal7] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "IncomeCurrentWH_Cal8",
+                Key = "IncomeCurrentWsH_Cal8",
                 Value = await _uow.ExecuteScalar<int>(
-                     "[dbo].[IncomeCurrentWH_Cal8] @YearId, @OrganizationId",
-                     parameters: sqlParams.ToArray())
+                        "[dbo].[IncomeCurrentWsH_Cal8] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
             });
-
-            result.Add(new CalculationItemData
-            {
-                Key = "IncomeCurrentWH_Cal9",
-                Value = await _uow.ExecuteScalar<int>(
-                     "[dbo].[IncomeCurrentWH_Cal9] @YearId, @OrganizationId",
-                     parameters: sqlParams.ToArray())
-            });
-
 
             return await Task.FromResult(result);
         }
 
-        public async Task<PagedResult<IncomeCurrentWHDTO>> GetListAsync(IncomeCurrentWHFilterDTO filter)
+        public async Task<PagedResult<IncomeCurrentWsHDTO>> GetListAsync(IncomeCurrentWsHFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var result = new PagedResult<IncomeCurrentWHDTO>
+            var result = new PagedResult<IncomeCurrentWsHDTO>
             {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -381,7 +368,7 @@ namespace Datiss.Budget.Services
                                         .Include(x => x.Organization)
                                         .Include(x => x.UserType)
                                         .Include(x => x.UsageLayer)
-                                        .Select(x => new IncomeCurrentWHDTO
+                                        .Select(x => new IncomeCurrentWsHDTO
                                         {
                                             Id = x.Id,
                                             YearId = x.YearId,
@@ -403,9 +390,8 @@ namespace Datiss.Budget.Services
                                             SubscriptionIncome = x.SubscriptionIncome,
                                             SeasonalIncome = x.SeasonalIncome,
                                             TIncome = x.TIncome,
-                                            Diff_ConsWsVolume = x.Diff_ConsWsVolume,
-                                            Note2Income = x.Note2Income,
-                                            WasteVolume = x.WasteVolume
+                                            Note7Income = x.Note7Income,
+                                            Note7Price = x.Note7Price
                                         }).ToListAsync();
 
             return await Task.FromResult(result);
@@ -420,7 +406,7 @@ namespace Datiss.Budget.Services
             if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
                 throw new CopyOrgNullDataException();
 
-            var result = new List<IncomeCurrentWH>();
+            var result = new List<IncomeCurrentWsH>();
 
             if (await Query()
             .Where(_ => _.OrganizationId == sourceOrgId)
@@ -438,7 +424,7 @@ namespace Datiss.Budget.Services
                     if (!await checkLogicAsync(destYearId, sourceOrgId, item.UserTypeId, item.UsageLayerId))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new IncomeCurrentWH
+                    var entity = new IncomeCurrentWsH
                     {
                         YearId = destYearId,
                         OrganizationId = item.OrganizationId,
@@ -455,9 +441,8 @@ namespace Datiss.Budget.Services
                         SubscriptionIncome = item.SubscriptionIncome,
                         SeasonalIncome = item.SeasonalIncome,
                         TIncome = item.TIncome,
-                        Diff_ConsWsVolume = item.Diff_ConsWsVolume,
-                        Note2Income = item.Note2Income,
-                        WasteVolume = item.WasteVolume
+                        Note7Income = item.Note7Income,
+                        Note7Price = item.Note7Price
                     };
                     result.Add(entity);
                 }
@@ -477,10 +462,10 @@ namespace Datiss.Budget.Services
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<IncomeCurrentWHImportModel>
+            var data = await _excelService.ImportAsync<IncomeCurrentWsHImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
 
-            var records = data.Adapt<List<IncomeCurrentWH>>();
+            var records = data.Adapt<List<IncomeCurrentWsH>>();
 
             int rowIndex = 1;
 
@@ -488,7 +473,7 @@ namespace Datiss.Budget.Services
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
             var usertypes = _constSet.Where(x => x.Parent.ConstantKey.ToUpper() == ConstantKeys.__UserType.ToUpper() &&
-                                                 x.ConstantKey.ToUpper() == ConstantKeys.__House.ToUpper() && 
+                                                 x.ConstantKey.ToUpper() == ConstantKeys.__House.ToUpper() &&
                                                  x.Status != EntityStatus.Deleted);
 
             var usagelayer = _constSet.Where(x => x.Parent.ConstantKey.ToUpper() == ConstantKeys.__UsageLayerType.ToUpper() &&
@@ -677,9 +662,9 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<IEnumerable<IncomeCurrentWHDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<IncomeCurrentWsHDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
-            var filter = new IncomeCurrentWHFilterDTO
+            var filter = new IncomeCurrentWsHFilterDTO
             {
                 OrganizationId = organizationId,
                 YearId = yearId
@@ -697,7 +682,7 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.Organization)
                                     .Include(x => x.UserType)
                                     .Include(x => x.UsageLayer)
-                                    .Select(x => new IncomeCurrentWHDTO
+                                    .Select(x => new IncomeCurrentWsHDTO
                                     {
                                         Id = x.Id,
                                         Year = x.FinanceYear.Year,
@@ -718,15 +703,14 @@ namespace Datiss.Budget.Services
                                         SubscriptionIncome = x.SubscriptionIncome,
                                         SeasonalIncome = x.SeasonalIncome,
                                         TIncome = x.TIncome,
-                                        Diff_ConsWsVolume = x.Diff_ConsWsVolume,
-                                        Note2Income = x.Note2Income,
-                                        WasteVolume = x.WasteVolume
+                                        Note7Income = x.Note7Income,
+                                        Note7Price = x.Note7Price
                                     }).ToListAsync();
 
             return items;
         }
 
-        public async Task<Stream> ExportExcelAsync(IncomeCurrentWHFilterDTO filter)
+        public async Task<Stream> ExportExcelAsync(IncomeCurrentWsHFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 
@@ -741,7 +725,7 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.Organization)
                                     .Include(x => x.UserType)
                                     .Include(x => x.UsageLayer)
-                                    .Select(x => new IncomeCurrentWHDTO
+                                    .Select(x => new IncomeCurrentWsHDTO
                                     {
                                         Id = x.Id,
                                         Year = x.FinanceYear.Year,
@@ -762,9 +746,8 @@ namespace Datiss.Budget.Services
                                         SubscriptionIncome = x.SubscriptionIncome,
                                         SeasonalIncome = x.SeasonalIncome,
                                         TIncome = x.TIncome,
-                                        Diff_ConsWsVolume = x.Diff_ConsWsVolume,
-                                        Note2Income = x.Note2Income,
-                                        WasteVolume = x.WasteVolume
+                                        Note7Income = x.Note7Income,
+                                        Note7Price = x.Note7Price
                                     }).ToListAsync();
 
             var ms = new MemoryStream();
@@ -775,16 +758,15 @@ namespace Datiss.Budget.Services
             return mem1;
         }
 
-
         #region Privte Helper Methods
-        private async Task<IQueryable<IncomeCurrentWH>> setFilter(
-            IQueryable<IncomeCurrentWH> query,
-            IncomeCurrentWHFilterDTO filter)
+        private async Task<IQueryable<IncomeCurrentWsH>> setFilter(
+            IQueryable<IncomeCurrentWsH> query,
+            IncomeCurrentWsHFilterDTO filter)
         {
             query.CheckArgumentIsNull(nameof(query));
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var predicate = PredicateBuilder.New<IncomeCurrentWH>();
+            var predicate = PredicateBuilder.New<IncomeCurrentWsH>();
 
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
@@ -805,16 +787,15 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(x => x.Organization.Title.ToUpper().Contains(filter.Search) || 
-                                         x.UserType.Title.ToUpper().Contains(filter.Search) ||
+                query = query.Where(x => x.UserType.Title.ToUpper().Contains(filter.Search) ||
                                          x.UsageLayer.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;
         }
 
-        private IQueryable<IncomeCurrentWH> setOrder(
-            IQueryable<IncomeCurrentWH> query,
+        private IQueryable<IncomeCurrentWsH> setOrder(
+            IQueryable<IncomeCurrentWsH> query,
             string orderBy = "id",
             bool desc = false)
         {
@@ -856,18 +837,18 @@ namespace Datiss.Budget.Services
             }
         }
 
-        private async Task<IEnumerable<IncomeCurrentWH>> getChildrenData(
+        private async Task<IEnumerable<IncomeCurrentWsH>> getChildrenData(
             int parentOrganizationId,
             int yearId,
             int targetYearId)
         {
 
             var children = await _orgDbSet
-                .Where(x => x.Status!=EntityStatus.Deleted &&
+                .Where(x => x.Status != EntityStatus.Deleted &&
                             x.ParentId == parentOrganizationId)
                 .ToListAsync();
 
-            var result = new List<IncomeCurrentWH>();
+            var result = new List<IncomeCurrentWsH>();
 
             foreach (var org in children)
             {
@@ -888,7 +869,7 @@ namespace Datiss.Budget.Services
                     if (!await checkLogicAsync(targetYearId, org.Id, item.UserTypeId, item.UsageLayerId))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new IncomeCurrentWH
+                    var entity = new IncomeCurrentWsH
                     {
                         UserTypeId = item.UserTypeId,
                         UsageLayerId = item.UsageLayerId,
@@ -905,9 +886,8 @@ namespace Datiss.Budget.Services
                         SubscriptionIncome = item.SubscriptionIncome,
                         SeasonalIncome = item.SeasonalIncome,
                         TIncome = item.TIncome,
-                        Diff_ConsWsVolume = item.Diff_ConsWsVolume,
-                        Note2Income = item.Note2Income,
-                        WasteVolume = item.WasteVolume
+                        Note7Income = item.Note7Income,
+                        Note7Price = item.Note7Price
                     };
 
                     result.Add(entity);
@@ -918,15 +898,15 @@ namespace Datiss.Budget.Services
             return result;
         }
 
-        private async Task<IEnumerable<IncomeCurrentWH>> getChildren(
+        private async Task<IEnumerable<IncomeCurrentWsH>> getChildren(
             int parentOrganizationId,
             int yearId)
         {
             var children = await _orgDbSet
-                .Where(x => x.Status != EntityStatus.Deleted && 
+                .Where(x => x.Status != EntityStatus.Deleted &&
                             x.ParentId == parentOrganizationId)
                 .ToListAsync();
-            var result = new List<IncomeCurrentWH>();
+            var result = new List<IncomeCurrentWsH>();
             foreach (var org in children)
             {
                 var data = await Query()
@@ -961,16 +941,15 @@ namespace Datiss.Budget.Services
 
             return false;
         }
-
         #endregion
 
         #region Logics
         private async Task<bool> checkLogicAsync(
-             int yearId,
-             int organizationId,
-             int userTypeId,
-             int usageLayerId,
-             int? id = null)
+            int yearId,
+            int organizationId,
+            int userTypeId,
+            int usageLayerId,
+            int? id = null)
         {
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull(nameof(year));

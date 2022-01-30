@@ -61,6 +61,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to این فیلد باید به صورت عددی وارد شود.
+        /// </summary>
+        public static string isNumber {
+            get {
+                return ResourceManager.GetString("isNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to فرمت ایمیل اشتباه است..
         /// </summary>
         public static string Invalid_Email_Format {

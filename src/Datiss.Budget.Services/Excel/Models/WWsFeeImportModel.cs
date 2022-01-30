@@ -9,29 +9,46 @@ namespace Datiss.Budget.Services.Excel.Models
 {
     public class WWsFeeImportModel
     {
-        [Column(0, MappingDirections.Both, Letter = "A")]
-        public int YearId { get; set; }
+        [Column(MappingDirections.Both, Letter = "A")]
+        public string OrganizationDisplay { get; set; }
 
-        [Column(1, MappingDirections.Both, Letter = "B")]
+        [Column(MappingDirections.Both, Letter = "B")]
         public int OrganizationId { get; set; }
 
-        [Column(2, MappingDirections.Both, Letter = "C")]
+        [Column(MappingDirections.Both, Letter = "C")]
+        public string ActivityTypeDisplay { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "D")]
+        public int ActivityType { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "E")]
+        public string UserTypeDisplay { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "F")]
         public int UserTypeId { get; set; }
-        [Column(3, MappingDirections.Both, Letter = "D")]
-        public bool ActivityType { get; set; }
-        [Column(4, MappingDirections.Both, Letter = "E")]
+
+        [Column(MappingDirections.Both, Letter = "G")]
+        public string UsageLayerDisplay { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "H")]
         public int UsageLayerId { get; set; }
-        [Column(5, MappingDirections.Both, Letter = "F")]
+
+        [Column(MappingDirections.Both, Letter = "I")]
         public int P1Fee { get; set; }
-        [Column(6, MappingDirections.Both, Letter = "G")]
+
+        [Column(MappingDirections.Both, Letter = "J")]
         public int P2Fee { get; set; }
-        [Column(7, MappingDirections.Both, Letter = "H")]
+
+        [Column(MappingDirections.Both, Letter = "K")]
         public int P1Note3 { get; set; }
-        [Column(8, MappingDirections.Both, Letter = "I")]
+
+        [Column(MappingDirections.Both, Letter = "L")]
         public int P2Note3 { get; set; }
-        [Column(9, MappingDirections.Both, Letter = "J")]
+
+        [Column(MappingDirections.Both, Letter = "M")]
         public int P1Note7 { get; set; }
-        [Column(10, MappingDirections.Both, Letter = "K")]
+
+        [Column(MappingDirections.Both, Letter = "N")]
         public int P2Note7 { get; set; }
     }
 }
