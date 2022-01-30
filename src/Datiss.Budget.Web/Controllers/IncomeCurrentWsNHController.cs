@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -383,6 +384,19 @@ namespace Datiss.Budget.Web.Controllers
 
             return PartialView("_calculationModal", viewModel);
         }
+
+        [HttpGet("[action]")]
+        public async Task<IActionResult> DownloadExcelTemplate()
+        {
+            var filePath = $"{_env.WebRootPath}\\Excel\\IncomeCurrentWsNHImport.xlsx";
+
+            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            return File(
+                stream,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "IncomeCurrentWsNH.xlsx");
+        }
+
 
         #region Private Helper Methods
         private string getCalcTitle(string key)
