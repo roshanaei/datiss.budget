@@ -19,10 +19,11 @@ using System.Threading.Tasks;
 using Datiss.Budget.Reports.Excel;
 using ClosedXML.Extensions;
 using Datiss.Budget.Entities;
+using Datiss.Budget.Security;
 
 namespace Datiss.Budget.Web.Controllers
 {
-    [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+    [Authorize]
     [Route("[controller]")]
     public class PerformanceEvaluationController : Controller
     {
@@ -49,7 +50,6 @@ namespace Datiss.Budget.Web.Controllers
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             ITablesFieldTitleService tablesFieldTitleService,
-            IConstantService constantService,
             ISecurityTrimmingService securityTrimmingService)
         {
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
@@ -62,6 +62,7 @@ namespace Datiss.Budget.Web.Controllers
 
 
         [HttpPost("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Edit)]
         public async Task<IActionResult> Edit(UpdatePerformanceEvaluationViewModel model)
         {
 
@@ -86,6 +87,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("{page?}")]
+        [HasPermission(claimType: Name, PermissionActionType.List)]
         public async Task<IActionResult> Index(int page = 1, TablesName tableName = TablesName.CurrentIncome)
         {
             var filter = new PerformanceEvaluationFilterDTO();
@@ -176,6 +178,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> ImportExcel(ImportExcelViewModel model, TablesName tablesName)
         {
             model.CheckArgumentIsNull(nameof(model));
@@ -242,6 +245,7 @@ namespace Datiss.Budget.Web.Controllers
 
 
         [HttpPost("records/delete")]
+        [HasPermission(claimType: Name, PermissionActionType.Delete)]
         public async Task<IActionResult> DeleteRecords(int yearId, int orgId, TablesName tablesName)
         {
             try
