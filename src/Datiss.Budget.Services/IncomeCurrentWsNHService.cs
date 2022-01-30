@@ -286,6 +286,62 @@ namespace Datiss.Budget.Services
                                     parameters: sqlParams.ToArray())
             });
 
+            result.Add(new CalculationItemData
+            {
+                Key = "IncomeCurrentWsNH_Cal3",
+                Value = await _uow.ExecuteScalar<int>(
+                                    "[dbo].[IncomeCurrentWsNH_Cal3] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "IncomeCurrentWsNH_Cal4",
+                Value = await _uow.ExecuteScalar<int>(
+                                    "[dbo].[IncomeCurrentWsNH_Cal4] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "IncomeCurrentWsNH_Cal5",
+                Value = await _uow.ExecuteScalar<int>(
+                                    "[dbo].[IncomeCurrentWsNH_Cal5] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "IncomeCurrentWsNH_Cal6",
+                Value = await _uow.ExecuteScalar<int>(
+                                    "[dbo].[IncomeCurrentWsNH_Cal6] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "IncomeCurrentWsNH_Cal7",
+                Value = await _uow.ExecuteScalar<int>(
+                                    "[dbo].[IncomeCurrentWsNH_Cal7] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "IncomeCurrentWsNH_Cal8",
+                Value = await _uow.ExecuteScalar<int>(
+                                    "[dbo].[IncomeCurrentWsNH_Cal8] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "IncomeCurrentWsNH_Cal9",
+                Value = await _uow.ExecuteScalar<int>(
+                                    "[dbo].[IncomeCurrentWsNH_Cal9] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
             return await Task.FromResult(result);
         }
 
