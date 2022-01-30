@@ -1,11 +1,98 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Datiss.Budget.ViewModels
 {
+    public class CreateIncomeCurrentWsNHViewModel : BaseViewModel
+    {
+        public int YearId { get; set; }
+
+        public string YearDisplay { get; set; }
+
+        public int OrganizationId { get; set; }
+
+        public string OrganizationDisplay { get; set; }
+
+        public int UserTypeId { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public int NumberUser { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public int UnitUser { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public decimal AvgConsumeUser { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public decimal Capacity { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public int ConsumptionUser { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public int Cost { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public int Income { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public int SubscriptionIncome { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public int ExcessIncome { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public int SeasonalIncome { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public int Note3Price { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public int Note3Income { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public int TotalIncome { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public int Note7Price { get; set; }
+
+        [Required(ErrorMessage = "")]
+        [Range(0, int.MaxValue, ErrorMessage = "")]
+        public int Note7Income { get; set; }
+
+        public IEnumerable<SelectListItem> UserTypeSource { get; set; }
+
+        public string UserTypeTitle
+        {
+            get
+            {
+                if (UserTypeSource == null || !UserTypeSource.Any())
+                    return string.Empty;
+
+                return UserTypeSource.FirstOrDefault(x => x.Value.ToString() == UserTypeId.ToString()).Text;
+            }
+        }
+    }
     public class IncomeCurrentWsNHViewModel
     {
         public int Id { get; set; }
