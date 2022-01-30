@@ -35,7 +35,7 @@ namespace Datiss.Budget.Security
             var claim = user.Identity.GetUserClaimValue(_claimType);
             var permissions = claim?.ExtractPermissionActionTypesFromString();
             if (permissions == null || !permissions.Contains(_actionType))
-                context.Result = new ForbidResult();
+                context.Result = new UnauthorizedResult();
         }
     }
 }
