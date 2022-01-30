@@ -3,9 +3,40 @@
     this.Context.Response.StatusCode = (int)HttpStatusCode.Gone;
 }
 
-<div class="mt-5">
+@*<div class="mt-5">
     <div class="alert alert-warning">
         <h1><span aria-hidden="true" class="fas fa-warning"></span>خطا</h1>
         <h3>اطلاعات درخواستی یافت نشد.</h3>
+    </div>
+</div>*@
+<div class="wrapper">
+    <div class="main-panel">
+        <!-- BEGIN : Main Content-->
+        <div class="" style="margin-top:-100px">
+            <div class="content-overlay"></div>
+            <div class="content-wrapper">
+                <!--Error page starts-->
+                <section id="error" class="auth-height">
+                    <div class="container-fluid">
+                        <div class="row full-height-vh">
+                            <div class="col-12 d-flex align-items-center justify-content-center">
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <img src="~/assets/img/gallery/maintenance.png" alt="" class="img-fluid error-img mt-2" height="300" width="400">
+                                        <h1 class="my-font" style="color:red">صفحه مورد نظر یافت نشد - 404 !</h1>
+                                        <div class="w-75 error-text mx-auto mt-4">
+                                            <p class="my-font">شما به صفحه مورد نظر دسترسی ندارید .</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!--Error page ends-->
+
+            </div>
+        </div>
+        <!-- END : End Main Content-->
     </div>
 </div>
