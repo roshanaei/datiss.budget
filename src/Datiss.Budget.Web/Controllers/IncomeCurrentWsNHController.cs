@@ -359,5 +359,22 @@ namespace Datiss.Budget.Web.Controllers
                 message = ViewMessages.DeleteRowSuccess
             });
         }
-    }
+
+        #region Private Helper Methods
+        private string getCalcTitle(string key)
+            => key switch
+            {
+                "IncomeCurrentWsNH_Cal1" => SPTitles.IncomeCurrentWsNH_Cal1,
+                "IncomeCurrentWsNH_Cal2" => SPTitles.IncomeCurrentWsNH_Cal1,
+                "IncomeCurrentWsNH_Cal3" => SPTitles.IncomeCurrentWsNH_Cal1,
+                "IncomeCurrentWsNH_Cal4" => SPTitles.IncomeCurrentWsNH_Cal1,
+                "IncomeCurrentWsNH_Cal5" => SPTitles.IncomeCurrentWsNH_Cal1,
+                "IncomeCurrentWsNH_Cal6" => SPTitles.IncomeCurrentWsNH_Cal1,
+                "IncomeCurrentWsNH_Cal7" => SPTitles.IncomeCurrentWsNH_Cal1,
+                "IncomeCurrentWsNH_Cal8" => SPTitles.IncomeCurrentWsNH_Cal1,
+                "IncomeCurrentWsNH_Cal9" => SPTitles.IncomeCurrentWsNH_Cal1,
+                _ => ""
+            };
+        }
+    #endregion
 }
