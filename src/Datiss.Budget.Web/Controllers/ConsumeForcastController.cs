@@ -5,6 +5,7 @@ using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Enum;
 using Datiss.Budget.Reports.Excel;
 using Datiss.Budget.Resources;
+using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Identity;
@@ -24,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Web.Controllers
 {
-    [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+    [Authorize]
     [Route("[controller]")]
     public class ConsumeForcastController : Controller
     {
@@ -70,6 +71,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> Create(CreateConsumeForcastViewModel model)
         {
             if (!ModelState.IsValid)
@@ -93,6 +95,7 @@ namespace Datiss.Budget.Web.Controllers
 
 
         [HttpPost("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Edit)]
         public async Task<IActionResult> Edit(UpdateConsumeForcastViewModel model)
         {
 
@@ -117,6 +120,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("{page?}")]
+        [HasPermission(claimType: Name, PermissionActionType.List)]
         public async Task<IActionResult> Index(int page = 1)
         {
             var filter = new ConsumeForcastFilterDTO();
@@ -223,6 +227,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
         {
             model.CheckArgumentIsNull(nameof(model));
@@ -285,6 +290,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("records/delete")]
+        [HasPermission(claimType: Name, PermissionActionType.Delete)]
         public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
         {
             try
@@ -335,6 +341,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]/{id}")]
+        [HasPermission(claimType: Name, PermissionActionType.Delete)]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -385,6 +392,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> Copy()
         {
             var model = new CopyViewModel();
