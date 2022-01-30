@@ -567,11 +567,7 @@ namespace Datiss.Budget.Services
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
                 query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                         _.UserType.Title.ToUpper().Contains(filter.Search) ||
-                                         _.AverageCapacityW.ToString().Contains(filter.Search) ||
-                                         _.AverageCapacityWs.ToString().Contains(filter.Search) ||
-                                         _.AverageCapacityWIncome.ToString().Contains(filter.Search) ||
-                                         _.AverageCapacityWsIncome.ToString().Contains(filter.Search));
+                                         _.UserType.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;

@@ -555,7 +555,8 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.CofficientType.Title.ToUpper().Contains(filter.Search));
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) || 
+                                         _.CofficientType.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;
