@@ -28,8 +28,14 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Copy = nameof(Copy);
+        public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
+        public const string ACTION_Calculation = nameof(Calculation);
+        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
+        public const string ACTION_ExportExcel = nameof(ExportExcel);
+        public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
@@ -271,7 +277,6 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("records/delete")]
         [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
-
         public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
         {
             try
@@ -321,5 +326,38 @@ namespace Datiss.Budget.Web.Controllers
             }
         }
 
+
+        [HttpPost("[action]/{id}")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _incomeCurrentWsNHService.HardDeleteAsync(id);
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.GetBaseException().Message);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.InvalidUpdateData
+                });
+            }
+
+            return Json(new
+            {
+                hasError = false,
+                message = ViewMessages.DeleteRowSuccess
+            });
+        }
     }
 }
