@@ -177,6 +177,30 @@
   <data name="IncomeCurrentWNH_Cal9" xml:space="preserve">
     <value>مجموع آحاد مشترکین غیرمسکونی سالیانه</value>
   </data>
+  <data name="IncomeCurrentWsH_Cal1" xml:space="preserve">
+    <value>مجموع درآمد کارمزد دفع مشترکین مسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWsH_Cal2" xml:space="preserve">
+    <value>مجموع درآمد فصلی کارمزد دفع مشترکین مسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWsH_Cal3" xml:space="preserve">
+    <value>مجموع آبونمان کارمزد دفع مشترکین مسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWsH_Cal4" xml:space="preserve">
+    <value>مجموع درآمد تبصره3 کارمزد دفع مشترکین مسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWsH_Cal5" xml:space="preserve">
+    <value>مجموع درآمد کل کارمزد دفع مشترکین مسکونی سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWsH_Cal6" xml:space="preserve">
+    <value>مجموع تعداد مشترکین فاضلاب سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWsH_Cal7" xml:space="preserve">
+    <value>مجموع آحاد مشترکین فاضلاب سالیانه</value>
+  </data>
+  <data name="IncomeCurrentWsH_Cal8" xml:space="preserve">
+    <value>مجموع حجم دفع فاضلاب سالیانه</value>
+  </data>
   <data name="IncomeForcastOthers_Cal1" xml:space="preserve">
     <value>تعداد کل </value>
   </data>

@@ -43,6 +43,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ISalesSplitTotalService, SalesSplitTotalService>();
             services.AddScoped<IFeeCityService, FeeCityService>();
             services.AddScoped<IIncomeCurrentWHService, IncomeCurrentWHService>();
+            services.AddScoped<IIncomeCurrentWsHService, IncomeCurrentWsHService>();
             services.AddScoped<IIncomeCurrentWNHService, IncomeCurrentWNHService>();
             services.AddScoped<IPerformanceEvaluationService, PerformanceEvaluationService>();
             services.AddScoped<ICofficientService, CofficientService>();
