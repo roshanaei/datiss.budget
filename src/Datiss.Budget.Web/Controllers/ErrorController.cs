@@ -7,7 +7,7 @@ using System.Text;
 namespace Datiss.Budget.Controllers
 {
     [BreadCrumb(Title = "خطا", UseDefaultRouteUrl = true, Order = 0, GlyphIcon = "fas fa-warning")]
-    [Route("[controller]/[action]")]
+    [Route("[controller]")]
     public class ErrorController : Controller
     {
         private readonly ILogger<ErrorController> _logger;
@@ -21,6 +21,7 @@ namespace Datiss.Budget.Controllers
         /// More info: http://www.dotnettips.info/post/2446
         /// </summary>
         [BreadCrumb(Title = "ایندکس", Order = 2, GlyphIcon = "fas fa-navicon")]
+        [Route("{id?}")]
         public IActionResult Index(int? id)
         {
             var logBuilder = new StringBuilder();
