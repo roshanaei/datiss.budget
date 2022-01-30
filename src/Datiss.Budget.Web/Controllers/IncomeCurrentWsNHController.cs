@@ -1,5 +1,10 @@
-﻿using Datiss.Budget.Services.Contracts;
+﻿using Datiss.Budget.Resources;
+using Datiss.Budget.Security;
+using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +20,7 @@ namespace Datiss.Budget.Web.Controllers
     [Route("[controller]")]
     public class IncomeCurrentWsNHController : Controller
     {
-        public const string Name = "WaterInstallFee";
+        public const string Name = "IncomeCurrentWsNH";
         private readonly ILogger<IncomeCurrentWsNHController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly IIncomeCurrentWsNHService _incomeCurrentWsNHService;
@@ -49,6 +54,27 @@ namespace Datiss.Budget.Web.Controllers
             ViewData["message"] = message;
         }
 
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        public async Task<IActionResult> Create(CreateIncomeCurrentWsNHViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+            var data = model.Adapt<CreateIncomeCurrentWsNHDTO>();
+
+            var result = await _incomeCurrentWsNHService.CreateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(result.Result.Adapt<WaterInstallFeeViewModel>());
+        }
 
     }
 }
