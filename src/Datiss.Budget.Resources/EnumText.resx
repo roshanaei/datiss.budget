@@ -153,13 +153,28 @@
   <data name="OrganizationType_Village" xml:space="preserve">
     <value>روستا</value>
   </data>
+  <data name="TablesName_ConsumptionFunction" xml:space="preserve">
+    <value>مصارف وجوه</value>
+  </data>
   <data name="TablesName_CurrentCost" xml:space="preserve">
-    <value>عملکرد هزینه های جاری</value>
+    <value>هزینه های جاری</value>
   </data>
   <data name="TablesName_CurrentIncome" xml:space="preserve">
     <value>درآمدهای جاری</value>
   </data>
+  <data name="TablesName_OtherCurrentCost" xml:space="preserve">
+    <value>سایر هزینه ها جاری</value>
+  </data>
+  <data name="TablesName_ResourcesFunction" xml:space="preserve">
+    <value>منابع وجوه</value>
+  </data>
+  <data name="TablesName_WsTotalBudget" xml:space="preserve">
+    <value>اطلاعات کلی فاضلاب</value>
+  </data>
+  <data name="TablesName_WTotalBudget" xml:space="preserve">
+    <value>اطلاعات کلی آب</value>
+  </data>
   <data name="Unknown" xml:space="preserve">
-    <value>ناشناخته</value>
+    <value>شناخته نشده</value>
   </data>
 </root>

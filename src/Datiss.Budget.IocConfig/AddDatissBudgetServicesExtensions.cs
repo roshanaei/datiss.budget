@@ -1,4 +1,5 @@
-﻿using Datiss.Budget.Services;
+﻿using Datiss.Budget.Common;
+using Datiss.Budget.Services;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Excel;
@@ -6,6 +7,7 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Identity;
 using Datiss.Budget.Reports;
 using Datiss.Budget.Reports.Contracts;
+using Datiss.Budget.Services.Infrastructure;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -17,6 +19,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IExcelService, ExcelService>();
             
             services.AddScoped<IUserContext, UserContext>();
+            services.AddScoped<IDateService, DateService>();
+
+            MapperConfig.Config();
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IConstantService, ConstantService>();
@@ -40,12 +45,16 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IIncomeCurrentWHService, IncomeCurrentWHService>();
             services.AddScoped<IIncomeCurrentWsHService, IncomeCurrentWsHService>();
             services.AddScoped<IIncomeCurrentWNHService, IncomeCurrentWNHService>();
+            services.AddScoped<IPerformanceEvaluationService, PerformanceEvaluationService>();
             services.AddScoped<ICofficientService, CofficientService>();
+            services.AddScoped<ITablesFieldTitleService, TablesFieldTitleService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
+            services.AddScoped<IWWsFeeService, WWsFeeService>();
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IPerformanceEvaluationService, PerformanceEvaluationService>();
             services.AddScoped<IReportEngine, ReportEngine>();
-
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IAppClaimTypeService, AppClaimTypeService>();
 
             return services;
         }

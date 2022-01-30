@@ -86,7 +86,7 @@ namespace Datiss.Budget.Common.IdentityToolkit
 
         public static int? GetOrganizationId(this IIdentity identity) {
             var claim_value = identity?.
-                GetUserClaimValue(BudgetClaimNames.OrganizationId);
+                GetUserClaimValue(BudgetClaimTypes.OrganizationId);
             if (string.IsNullOrWhiteSpace(claim_value))
                 return null;
             // TODO : Check security Issue with this claim
@@ -94,7 +94,7 @@ namespace Datiss.Budget.Common.IdentityToolkit
         }
 
         public static string GetOrganizationTitle(this IIdentity identity)
-            => identity?.GetUserClaimValue(BudgetClaimNames.OrganizationTitle);
+            => identity?.GetUserClaimValue(BudgetClaimTypes.OrganizationTitle);
                     
     }
 }

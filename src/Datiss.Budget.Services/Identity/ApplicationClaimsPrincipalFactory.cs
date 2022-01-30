@@ -2,7 +2,9 @@
 using Datiss.Budget.Services.Contracts.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -45,6 +47,19 @@ namespace Datiss.Budget.Services.Identity
                 user.Organization = org;
 
             var principal = await base.CreateAsync(user); // adds all `Options.ClaimsIdentity.RoleClaimType -> Role Claims` automatically + `Options.ClaimsIdentity.UserIdClaimType -> userId` & `Options.ClaimsIdentity.UserNameClaimType -> userName`
+            //add role claims
+            var roles = await _uow.Set<UserRole>()
+                .Include(_=> _.Role)
+                .ThenInclude(_=> _.Claims)
+                .Where(_ => _.UserId == user.Id)
+                .ToListAsync();
+            foreach(var role in roles) {
+                var roleClaims = role.Role.Claims.Where(_ => _.RoleId == role.RoleId);  /*await _uow.Set<RoleClaim>().Where(_ => _.RoleId == role.RoleId).ToListAsync();*/
+                foreach(var claim in roleClaims.Where(_=> !string.IsNullOrWhiteSpace(_.ClaimValue))) {
+                    addPermissions(user, principal, claim.ClaimType, claim.ClaimValue);
+                }
+            }
+            
             addCustomClaims(user, principal);
             return principal;
         }
@@ -58,16 +73,23 @@ namespace Datiss.Budget.Services.Identity
                 new Claim(ClaimTypes.Surname, user.LastName ?? string.Empty),
                 new Claim(PhotoFileName, user.PhotoFileName ?? string.Empty, ClaimValueTypes.String),
 
-                new Claim(BudgetClaimNames.OrganizationId,
+                new Claim(BudgetClaimTypes.OrganizationId,
                                 user.OrganizationId.HasValue
                                     ? user.OrganizationId.ToString()
                                     : string.Empty),
 
-                new Claim(BudgetClaimNames.OrganizationTitle,
+                new Claim(BudgetClaimTypes.OrganizationTitle,
                                 user.OrganizationId.HasValue
                                     ? user.Organization.Title
                                     : string.Empty)
             });
+        }
+
+
+        private static void addPermissions(User user, IPrincipal principal, string claimType, string claimValue) {
+            ((ClaimsIdentity)principal.Identity).AddClaim(
+                new Claim(claimType,claimValue)
+                );
         }
     }
 }

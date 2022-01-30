@@ -1,6 +1,8 @@
 ﻿<script type="text/javascript">
 
     let isNewRow = false;
+    let rowData = {};
+
     function editRow(id) {
 
 
@@ -38,6 +40,19 @@
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.userTypeId = $('#inputUserType_' + id).val();
+        rowData.wNumber = $('#inputWNumber_' + id).val();
+        rowData.wUnit = $('#inputWUnit_' + id).val();
+        rowData.wsNumber = $('#inputWsNumber_' + id).val();
+        rowData.wsUnit = $('#inputWsUnit_' + id).val();
+        rowData.wNumber_2 = $('#inputWNumber_2_' + id).val();
+        rowData.wUnit_2 = $('#inputWUnit_2_' + id).val();
+        rowData.wsNumber_2 = $('#inputWsNumber_2_' + id).val();
+        rowData.wsUnit_2 = $('#inputWsUnit_2_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -55,6 +70,21 @@
         $('#divInput_WUnit_2_' + id).hide();
         $('#divInput_WsNumber_2_' + id).hide();
         $('#divInput_WsUnit_2_' + id).hide();
+
+        //Retriving to OrginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputUserType_' + id).val(rowData.userTypeId);
+            $('#inputWNumber_' + id).val(rowData.wNumber);
+            $('#inputWUnit_' + id).val(rowData.wUnit);
+            $('#inputWsNumber_' + id).val(rowData.wsNumber);
+            $('#inputWsUnit_' + id).val(rowData.wsUnit);
+            $('#inputWNumber_2_' + id).val(rowData.wNumber_2);
+            $('#inputWUnit_2_' + id).val(rowData.wUnit_2);
+            $('#inputWsNumber_2_' + id).val(rowData.wsNumber_2);
+            $('#inputWsUnit_2_' + id).val(rowData.wsUnit_2);
+        }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
@@ -118,6 +148,19 @@
                         });
                         return;
                 }
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.userTypeId = model.userTypeId;
+                rowData.wNumber = model.wNumber;
+                rowData.wUnit = model.wUnit;
+                rowData.wsNumber = model.wsNumber;
+                rowData.wsUnit = model.wsUnit;
+                rowData.wNumber_2 = model.wNumber_2;
+                rowData.wUnit_2 = model.wUnit_2;
+                rowData.wsNumber_2 = model.wsNumber_2;
+                rowData.wsUnit_2 = model.wsUnit_2;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);

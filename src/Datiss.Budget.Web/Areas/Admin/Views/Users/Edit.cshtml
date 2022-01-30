@@ -1,0 +1,179 @@
+﻿@model UpdateUserViewModel
+@{
+    ViewData["Title"] = $"ویرایش کاربر '{Model.FullName}'";
+}
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title my-font">
+                        <i class="fa fa-plus"></i> @ViewData["Title"]
+                    </h5>
+                </div>
+                <div class="card-content">
+                    <div class="card-body" dir="rtl">
+                        @if (Model._HasError) {
+                            <div class="alert alert-danger" role="alert">
+                                <a href="#" class="close" data-dismiss="alert">×</a>
+                                @Html.Raw(Model._ErrorMessage)
+                            </div>
+                        }
+                        <form id="create-user-form"
+                                novalidate
+                                  asp-controller="@UsersController.Name"
+                                  asp-action="@UsersController.ACTION_Edit"
+                                  method="POST">
+                        <div class="row">
+                            <input type="hidden" asp-for="Id" />
+                            <div class="col-md-6">
+                                <fieldset class="form-group">
+                                    <label asp-for="FirstName" class="col-md-4 col-form-label text-md-left my-font">نام</label>
+                                    <div class="col-md-10">
+                                        <input dir="rtl" asp-for="FirstName" class="form-control my-font" />
+                                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <label asp-for="UserName" class="col-md-4 col-form-label text-md-left my-font">نام کاربری</label>
+                                    <div class="col-md-10">
+                                        <input dir="ltr" asp-for="UserName" class="form-control my-font" />
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <label asp-for="OrganizationId" class="col-md-4 col-form-label text-md-left my-font">سازمان</label>
+                                    <div class="col-md-10">
+                                        <select asp-for="OrganizationId" asp-items="Model.OrganizationSource" class="form-control my-font">
+                                        </select>
+                                        <span asp-validation-for="OrganizationId" class="text-danger"></span>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <label asp-for="PhoneNumber" class="col-md-4 col-form-label text-md-left my-font">شماره تماس</label>
+                                    <div class="col-md-10">
+                                        <input dir="ltr" type="text" oninput="numberOnly(this.id);" asp-for="PhoneNumber" inputmode="numeric" maxlength="13" pattern="[0-9]*" class="form-control my-font" />
+                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <label class="col-md-4 col-form-label text-md-left my-font">نقش های کاربری</label>
+                                    <div class="col-md-10">
+                                        <select asp-for="SelectedRoles" id="selectRoles" asp-items="@Model.RoleSource" class="form-control my-font">
+                                        </select>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="col-md-6">
+                                <fieldset class="form-group">
+                                        <label asp-for="LastName" class="col-md-4 col-form-label text-md-left my-font">نام خانوادگی</label>
+                                    <div class="col-md-10">
+                                        <input dir="rtl" asp-for="LastName" class="form-control my-font" />
+                                        <span asp-validation-for="LastName" class="text-danger"></span>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <label asp-for="NationalCode" class="col-md-4 col-form-label text-md-left my-font">کد ملی</label>
+                                    <div class="col-md-10">
+                                        <input dir="ltr" type="text" oninput="numberOnly(this.id);" asp-for="NationalCode" inputmode="numeric" maxlength="10" pattern="[0-9]*" class="form-control my-font" />
+                                        <span asp-validation-for="NationalCode" class="text-danger"></span>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <label asp-for="PositionId" class="col-md-4 col-form-label text-md-left my-font">سمت</label>
+                                    <div class="col-md-10">
+                                        <select asp-for="PositionId" asp-items="Model.PositionSource" class="form-control my-font">
+                                        </select>
+                                        <span asp-validation-for="PositionId" class="text-danger"></span>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <label asp-for="Email" class="col-md-4 col-form-label text-md-left my-font">آدرس ایمیل</label>
+                                    <div class="col-md-10">
+                                        <input dir="ltr" type="text" asp-for="Email" class="form-control my-font" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset class="form-group">
+                                    <label class="col-md-4 col-form-label text-md-left my-font">
+                                        وضعیت کاربر
+                                    </label>
+                                    <div class="col-md-10">
+                                        <input asp-for="Enabled" class="switchery switchery-default" type="checkbox" />
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="row" style="padding-top: 20px;">
+                            <a asp-controller="@UsersController.Name" asp-action="@UsersController.ACTION_Index"
+                                class="btn btn-secondary bg-light-secondary mr-1 my-font"
+                                data-dismiss="modal">
+                                <i class="fa fa-times"></i> انصراف
+                            </a>
+                            <button type="submit" class="btn btn-primary my-font">
+                                            <i class="fa fa-check"></i> ارسال
+                            </button>
+                        </div>
+                        
+                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+@section headSection {
+<link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+<link href="~/assets/vendors/BsMultiSelect/css/BsMultiSelect.min.css" rel="stylesheet" />
+
+
+}
+
+@section footSection {
+<script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
+<script type="text/javascript" src="~/assets/vendors/BsMultiSelect/js/BsMultiSelect.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#FirstName').focus();
+
+        $('#selectRoles').bsMultiSelect();
+
+        $('#OrganizationId').select2({
+            dir: 'rtl'
+        });
+
+        $('#PositionId').select2({
+            dir: 'rtl'
+        });
+
+        $('#create-user-form').submit(function () {
+            if ($(this).valid()) {
+                $(this).find(':submit').attr('disabled', 'disabled');
+            }
+        });
+    });
+
+
+    function numberOnly(id) {
+        var element = document.getElementById(id);
+        element.value = element.value.replace(/[^0-9]/gi, "");
+    }
+
+</script>
+
+}

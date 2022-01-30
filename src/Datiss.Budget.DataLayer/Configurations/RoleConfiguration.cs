@@ -9,6 +9,7 @@ namespace Datiss.Budget.DataLayer.Mappings
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             builder.ToTable("AppRoles");
+            builder.Property(x => x.Title).HasMaxLength(255).IsUnicode();
         }
     }
 }

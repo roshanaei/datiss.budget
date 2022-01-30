@@ -1,6 +1,8 @@
 ﻿<script type="text/javascript">
 
     let isNewRow = false;
+    let rowData = {};
+
     function editRow(id) {
 
 
@@ -28,6 +30,14 @@
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.oifTypeId = $('#inputOIFType_' + id).val();
+        rowData.activityId = $('#inputActivityId_' + id).val();
+        rowData.oifCount = $('#inputOIFCount_' + id).val();
+        rowData.oifPrice = $('#inputOIFPrice_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -41,6 +51,15 @@
         $('#divInput_ActivityId_' + id).hide();
         $('#divInput_OIFCount_' + id).hide();
         $('#divInput_OIFPrice_' + id).hide();
+
+        //Retriving to OrginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputActivityId_' + id).val(rowData.activityId);
+            $('#inputOIFCount_' + id).val(rowData.oifCount);
+            $('#inputOIFPrice_' + id).val(rowData.oifPrice);
+        }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
@@ -77,7 +96,7 @@
         model.oifPrice = $('#inputOIFPrice_' + id).val();
 
         $.ajax({
-            url: '@Url.Action(WaterInstallFeeController.ACTION_Edit)',
+            url: '@Url.Action(IncomeForcastOtherController.ACTION_Edit)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -94,6 +113,14 @@
                         });
                         return;
                 }
+
+                rowData = {};
+                rowData.yearId = model.yearId
+                rowData.organizationId = model.organizationId;
+                rowData.oifTypeId = model.oifTypeId;
+                rowData.activityId = model.activityId;
+                rowData.oifCount = model.oifCount;
+                rowData.oifPrice = model.oifPrice;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
@@ -134,7 +161,7 @@
         console.log(model);
 
         $.ajax({
-            url: '@Url.Action(WaterInstallFeeController.ACTION_Create)',
+            url: '@Url.Action(IncomeForcastOtherController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -291,7 +318,7 @@
         console.log(e);
 
         $.ajax({
-            url: '@Url.Action(WaterInstallFeeController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(IncomeForcastOtherController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {

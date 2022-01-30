@@ -124,7 +124,7 @@ namespace Datiss.Budget.IocConfig
 
         private static void setUserOptions(UserOptions identityOptionsUser)
         {
-            identityOptionsUser.RequireUniqueEmail = true;
+            identityOptionsUser.RequireUniqueEmail = false;
         }
     }
 }

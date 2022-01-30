@@ -1,0 +1,90 @@
+﻿@model RolesIndexViewModel
+@{
+    ViewData["Title"] = "مدیریت نقش های سیستم";
+}
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="rowACJSB">
+                            <fieldset>
+                                <div class="rowACJE">
+                                    <a asp-action="Create" data-toggle="tooltip" data-placement="top" title="رکورد جدید" class="btn btn-success bg-light-success my-font">
+                                        <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i> تعریف نقش جدید
+                                    </a>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="table-responsive" style="padding-top: 20px;">
+                            <table style="width: 100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th>
+                                        عنوان
+                                    </th>
+                                    <th>نام</th>
+                                    @*<th>تاریخ ایجاد</th>
+                                    <th>وضعیت</th>*@
+                                    <th>عملیات</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var item in Model.Items) {
+                                    <tr>
+                                        <td>
+                                            <span>@item.Title</span>
+                                        </td>
+                                        <td>
+                                            <span>@item.Name</span>
+                                        </td>
+                                        @*<td>
+
+                                        </td>
+                                        <td>
+                                            <span>@item.Status</span>
+                                        </td>*@
+                                        <td>
+                                            <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font"
+                                               asp-controller="@RolesController.Name"
+                                               asp-action="@RolesController.ACTION_Edit"
+                                               asp-route-id="@item.Id">
+                                                <i class="fa ft-edit fa-1x"></i>
+                                            </a>
+
+                                            <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                                                <i class="fa ft-trash-2"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+
+                            <div class="rowACJSB" style="margin-top: 20px">
+                                <!--Tools-->
+
+                                <div class="rowAC">
+                                    <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+

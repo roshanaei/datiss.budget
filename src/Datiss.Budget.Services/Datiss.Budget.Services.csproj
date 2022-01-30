@@ -4,6 +4,9 @@
     <NoWarn>RCS1090</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Identity\RoleService.cs~RF15e2e4d.TMP" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Datiss.Budget.Common\Datiss.Budget.Common.csproj" />
     <ProjectReference Include="..\Datiss.Budget.DataLayer\Datiss.Budget.DataLayer.csproj" />
     <ProjectReference Include="..\Datiss.Budget.Entities\Datiss.Budget.Entities.csproj" />
@@ -11,6 +14,7 @@
     <ProjectReference Include="..\Datiss.Budget.Resources\Datiss.Budget.Resources.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.95.4" />
     <PackageReference Include="DNTCommon.Web.Core" Version="2.9.1" />
     <PackageReference Include="ExcelMapper" Version="5.2.314" />
     <PackageReference Include="LinqKit" Version="1.1.26" />

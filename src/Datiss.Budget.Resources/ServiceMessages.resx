@@ -129,6 +129,15 @@
   <data name="DuplicateNames" xml:space="preserve">
     <value>عنوان ({0}) تکراری است.</value>
   </data>
+  <data name="Err_Password_Format" xml:space="preserve">
+    <value>کلمه عبور مطابق با الگوی تعریف شده نیست.</value>
+  </data>
+  <data name="Exist_NationalCode" xml:space="preserve">
+    <value>کد ملی '{0}' قبلاً برای کاربر دیگری ثبت شده است</value>
+  </data>
+  <data name="Exist_Username" xml:space="preserve">
+    <value>نام کاربری '{0}' قبلاً ثبت شده است.</value>
+  </data>
   <data name="FinanceYearCopyLength" xml:space="preserve">
     <value>بازه سال مالی وارد شده تکراری است .</value>
   </data>
@@ -165,6 +174,9 @@
   <data name="ImportExcelInvalidFinanceYear" xml:space="preserve">
     <value>در سطر {0} فایل اکسل، کد سال "{1}" معتبر نیست .</value>
   </data>
+  <data name="ImportExcelInvalidMonth" xml:space="preserve">
+    <value>مقدار وارد شده برای ماه مورد نظر نامعتبر است .</value>
+  </data>
   <data name="ImportExcelInvalidTitle" xml:space="preserve">
     <value>در سطر {0} فایل اکسل، کد "{1}" معتبر نیست .</value>
   </data>
@@ -194,6 +206,9 @@
   </data>
   <data name="ImportExcelTitleNotInExcel" xml:space="preserve">
     <value>عنوان های :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="Invalid_NationalCode" xml:space="preserve">
+    <value>فرمت کد ملی وارد شده اشتباه است.</value>
   </data>
   <data name="ImportExcelUsageLayerUserTypeOrgNotInExcel" xml:space="preserve">
     <value>در فایل اکسل شما اطلاعات طبقه مصرف :&lt;br&gt;{0} برای کاربری "{1}" ، "{2}" وجود ندارد.</value>
@@ -243,10 +258,28 @@
   <data name="RelationDataSoftDeleted" xml:space="preserve">
     <value>به دلیل وجود داده وابسته امکان حذف نمی باشد.</value>
   </data>
+  <data name="Req_FirstName" xml:space="preserve">
+    <value>لطفاً نام کاربر را وراد نمایید.</value>
+  </data>
+  <data name="Req_LastName" xml:space="preserve">
+    <value>لطفاً نام خانوادگی کاربر را وارد نمایید.</value>
+  </data>
+  <data name="Req_NationalCode" xml:space="preserve">
+    <value>لطفاً کد ملی کاربر را وارد نمایید</value>
+  </data>
+  <data name="Req_Username" xml:space="preserve">
+    <value>نام کاربری را وارد نمایید.</value>
+  </data>
   <data name="Succeed" xml:space="preserve">
     <value>عملیات با موفقیت انجام شد.</value>
   </data>
   <data name="SystemError" xml:space="preserve">
     <value>خطای سیستمی. لطفاً با پشتیبانی تماس بگیرید.</value>
+  </data>
+  <data name="Role_Name_Exist" xml:space="preserve">
+    <value>نام نقش تکراری است.</value>
+  </data>
+  <data name="Role_Title_Exist" xml:space="preserve">
+    <value>عنوان نقش نباید تکراری باشد.</value>
   </data>
 </root>

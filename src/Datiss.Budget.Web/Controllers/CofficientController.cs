@@ -445,7 +445,13 @@ namespace Datiss.Budget.Web.Controllers
         {
             var result = await _cofficientService.GetExportItemsAsync(yearid, orgid ,group);
             if (result.Count() == 0)
-                return Redirect("");
+                return RedirectToAction(
+                    CofficientController.ACTION_Index,
+                    CofficientController.Name,
+                    new
+                    {
+                        group = group
+                    });
             using var workbook = result.ExportExcel();
             return workbook.Deliver($"Cofficient_{group}.xlsx");
         }

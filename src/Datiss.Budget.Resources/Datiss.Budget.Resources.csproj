@@ -25,6 +25,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ViewMessages.resx</DependentUpon>
     </Compile>
+    <Compile Update="ViewModelString.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ViewModelString.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +48,10 @@
     <EmbeddedResource Update="ViewMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ViewMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ViewModelString.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewModelString.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

@@ -9,20 +9,19 @@ namespace Datiss.Budget.Services.Excel.Models
 {
     public class PerformanceEvaluationImportModel
     {
-        [Column(0, MappingDirections.Both, Letter = "A")]
-        public int YearId { get; set; }
+        [Column(MappingDirections.Both, Letter = "A")]
+        public string OrganizationDisplay { get; set; }
 
-        [Column(1, MappingDirections.Both, Letter = "B")]
+        [Column(MappingDirections.Both, Letter = "B")]
         public int OrganizationId { get; set; }
 
-        [Column(2, MappingDirections.Both, Letter = "C")]
+        [Column(MappingDirections.Both, Letter = "C")]
+        public string TableFieldDisplay { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "D")]
         public int TableFieldId { get; set; }
 
-        [Column(3, MappingDirections.Both, Letter = "D")]
-        public bool Status { get; set; }
-        [Column(4, MappingDirections.Both, Letter = "E")]
-        public decimal Target { get; set; }
-        [Column(5, MappingDirections.Both, Letter = "F")]
+        [Column(MappingDirections.Both, Letter = "E")]
         public decimal Operation { get; set; }
 
     }
