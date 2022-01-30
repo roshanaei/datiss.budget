@@ -240,8 +240,9 @@
                     });
                 },
                 error: function (ajaxrequest, ajaxOptions, thrownError) {
-
-                    $("#modaldiv").html('Failed to load more content');
+                    if (ajaxrequest.status == 401) {
+                        ErorrPermission();
+                    }
                 }
             });
         }
@@ -318,8 +319,9 @@
                     });
                 },
                 error: function (ajaxrequest, ajaxOptions, thrownError) {
-
-                    $("#modaldiv").html('Failed to load more content');
+                    if (ajaxrequest.status == 401) {
+                        ErorrPermission();
+                    }
                 }
             });
         }
@@ -427,8 +429,9 @@
                     $(e).closest('tr').remove();
                 },
                 error: function (request, options, err) {
-                    console.log(err);
-                    alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+                    if (request.status == 401) {
+                        ErorrPermission();
+                    }
                 }
             });
         }
