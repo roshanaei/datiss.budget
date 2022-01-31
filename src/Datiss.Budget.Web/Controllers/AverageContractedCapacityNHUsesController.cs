@@ -1,8 +1,10 @@
-﻿using Datiss.Budget.Common;
+﻿using ClosedXML.Extensions;
+using Datiss.Budget.Common;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Reports.Excel;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
@@ -454,6 +456,35 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(model);
+        }
+
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var userTypes = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType, true);
+
+            var items = new List<AverageContractedCapacityNHUsesDTO>();
+
+            foreach (var org in organizations)
+            {
+                foreach (var ut in userTypes)
+                {
+                    items.Add(new AverageContractedCapacityNHUsesDTO
+                    {
+                        UserTypeDisplay = ut.Title,
+                        UserTypeId = ut.Id,
+                        OrganizationId = org.Id,
+                        OrganizationDisplay = org.Title,
+                        Year = year.Year,
+                        YearId = year.Id
+                    });
+                }
+            }
+
+            using var workbook = items.GetImportTamplate(year.Year);
+            return workbook.Deliver("AverageContractedCapacityNHUses-Import-Template.xlsx");
         }
 
 
