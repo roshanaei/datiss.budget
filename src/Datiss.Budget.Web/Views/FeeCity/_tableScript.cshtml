@@ -118,7 +118,9 @@
                 cancelEditRow(id);
             },
             error: function (request, options, err) {
-                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+                if (request.status == 401) {
+                    ErorrPermission();
+                }
             }
         });
     }
@@ -227,7 +229,9 @@
                 isNewRow = false;
             },
             error: function (request, options, err) {
-                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+                if (request.status == 401) {
+                    ErorrPermission();
+                }
             }
         });
     }
@@ -293,8 +297,9 @@
                 $(e).closest('tr').remove();
             },
             error: function (request, options, err) {
-                console.log(err);
-                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+                if (request.status == 401) {
+                    ErorrPermission();
+                }
             }
         });
     }
