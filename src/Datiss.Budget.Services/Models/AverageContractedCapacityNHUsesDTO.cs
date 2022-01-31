@@ -25,6 +25,11 @@ namespace Datiss.Budget.Services.Models
         public string UserTypeTitle { get; set; }
     }
 
+    public class UpdateAverageContractedCapacityNHUsesDTO : CreateAverageContractedCapacityNHUsesDTO
+    {
+        public int Id { get; set; }
+    }
+
     public class AverageContractedCapacityNHUsesDTO
     {
         public int Id { get; set; }
