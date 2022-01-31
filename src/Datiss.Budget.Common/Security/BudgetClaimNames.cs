@@ -17,6 +17,8 @@ namespace Datiss.Budget.Common.IdentityToolkit
         public static string WaterInstallFee = nameof(WaterInstallFee);
         public static string WasteInstallFee = nameof(WasteInstallFee);
 
+        public static string AverageContractedCapacityNHUses = nameof(AverageContractedCapacityNHUses);
+
     }
 
     public static class BudgetPermissions {
