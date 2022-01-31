@@ -63,15 +63,15 @@ namespace Datiss.Budget
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //if (env.IsDevelopment()) {
-            //    app.UseDeveloperExceptionPage();
-            //}
-            //else {
-            //    app.UseExceptionHandler("/error/index/500");
-            //    app.UseStatusCodePagesWithReExecute("/error/{0}");
-            //}
-            app.UseExceptionHandler("/error/index/500");
-            app.UseStatusCodePagesWithReExecute("/error/{0}");
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/error/index/500");
+                app.UseStatusCodePagesWithReExecute("/error/{0}");
+            }
 
             app.UseHsts();
             app.UseHttpsRedirection();
