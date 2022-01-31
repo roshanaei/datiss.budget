@@ -21,6 +21,8 @@ using Mapster;
 using Datiss.Budget.Resources;
 using LinqKit;
 using Datiss.Budget.Extensions;
+using Microsoft.AspNetCore.Http;
+using Datiss.Budget.Common;
 
 namespace Datiss.Budget.Services
 {
@@ -326,6 +328,152 @@ namespace Datiss.Budget.Services
             _dbSet.AddRange(result);
 
             await _uow.SaveChangesAsync();
+        }
+
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
+        {
+            var data = await _excelService.ImportAsync<AverageContractedCapacityNHUsesImportModel>
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
+
+            var records = data.Adapt<List<AverageContractedCapacityNHUses>>();
+
+            int rowIndex = 1;
+
+            var usertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                   x.Parent.ConstantKey == ConstantKeys.__UserType &&
+                                                   x.ConstantKey != ConstantKeys.__House);
+
+            var descendents = await _organizationService
+                             .GetAllDescendentsAsync(_userContext.OrganizationId);
+
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
+
+            foreach (var rec in records)
+            {
+                rec.YearId = yearId;
+                var org = await _orgDbSet.FindAsync(rec.OrganizationId);
+
+                if (year == null || year.Status == EntityStatus.Disbaled)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
+                        );
+                }
+                if (org == null)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
+                        );
+                }
+                if (!await usertypes.AnyAsync(x => x.Id == rec.UserTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidDiameterPipe, rowIndex + 2, rec.UserTypeId)
+                        );
+                }
+                if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
+                        );
+                }
+
+                rowIndex++;
+            }
+            //
+            var missingOrgs = new List<Organization>();
+            var existOrgs = new List<Organization>();
+
+            foreach (var item in descendents)
+            {
+                var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                if (!existInExcel)
+                {
+                    if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                        missingOrgs.Add(item);
+                }
+                else
+                    existOrgs.Add(item);
+            }
+            //
+            //Start DWaterType
+            var missingUserType = new List<Constant>();
+            string orgTitle = "";
+            foreach (var org in existOrgs)
+            {
+                foreach (var item in usertypes)
+                {
+                    var existDWTypeInExcel = records.Any(_ => _.UserTypeId == item.Id &&
+                                              _.OrganizationId == org.Id);
+                    if (!existDWTypeInExcel)
+                    {
+                        missingUserType.Add(item);
+                        orgTitle = org.Title;
+                    }
+
+                }
+            }
+            if (missingUserType.Any())
+            {
+                string userTypeNames = "";
+                foreach (var item in missingUserType)
+                {
+                    userTypeNames += "- [" + item.Title + "]<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, userTypeNames, orgTitle));
+            }
+            //end
+
+            rowIndex = 1;
+
+            if (!continueIfAnyOrgMissing)
+            {
+                if (missingOrgs.Any())
+                {
+                    string orgNames = "";
+                    foreach (var item in missingOrgs)
+                    {
+                        orgNames += "- " + item.Title + "<br>";
+                    }
+
+                    return new ImportResult
+                    {
+                        Message = orgNames,
+                        AskToImport = true
+                    };
+                }
+            }
+
+            foreach (var record in records)
+            {
+
+                if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
+                        );
+
+                if (!await checkLogicAsync(
+                    record.YearId,
+                    record.OrganizationId,
+                    record.UserTypeId))
+                {
+
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
+                        );
+                }
+
+                rowIndex++;
+            }
+
+            await _dbSet.AddRangeAsync(records);
+            await _uow.SaveChangesAsync();
+
+            return ImportResult.Succeed(
+                string.Format(ServiceMessages.ImportExcelSuccess)
+                );
         }
 
 
