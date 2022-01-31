@@ -46,5 +46,8 @@ namespace Datiss.Budget.Services
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
+        private IQueryable<AverageContractedCapacityNHUses> Query()
+            => _dbSet.AsNoTracking();
+
     }
 }
