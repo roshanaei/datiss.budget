@@ -67,7 +67,7 @@ namespace Datiss.Budget
                 app.UseDeveloperExceptionPage();
             }
             else {
-                app.UseExceptionHandler("/error/index/500");
+                app.UseExceptionHandler("/error/500");
                 app.UseStatusCodePagesWithReExecute("/error/{0}");
             }
 
