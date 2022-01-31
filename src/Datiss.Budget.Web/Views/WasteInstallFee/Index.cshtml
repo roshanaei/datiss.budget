@@ -333,7 +333,11 @@
                             });
                         },
                         error: function(request, option, err) {
-                            console.log(err);
+                            if (request.status == 401 || request.status == 403) {
+                                ShowPermissionErorr();
+                                return;
+                            }
+                            ShowCommonErorr();
                         }
                     });
 
@@ -441,8 +445,11 @@
                     });
                 },
                 error: function (request, options, err) {
-                    console.log(err);
-                    $("#divCopy").html('Failed to load more content');
+                    if (request.status == 401 || request.status == 403) {
+                        ShowPermissionErorr();
+                        return;
+                    }
+                    ShowCommonErorr();
                 }
             });
 
@@ -549,7 +556,11 @@
                                         }
                                     },
                                     error: function (request, options, err) {
-                                        console.log(err);
+                                        if (request.status == 401 || request.status == 403) {
+                                            ShowPermissionErorr();
+                                            return;
+                                        }
+                                        ShowCommonErorr();
                                     }
                                 });
 

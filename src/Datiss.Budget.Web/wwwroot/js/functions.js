@@ -116,3 +116,31 @@ function askWarningMsg(title, message, cancelText, confirmText) {
         return result.value;
     });
 }
+
+function ShowPermissionErorr() {
+    Swal.fire({
+        title: '<span class="my-font">خطا</span>',
+        html: `<span class="my-font">شما مجاز به انجام این عملیات نمی باشید.</span>`,
+        type: 'error',
+        confirmButtonColor: '#2F8BE6',
+        animation: false,
+        customClass: 'animated flipInX',
+        confirmButtonText: 'بستن',
+        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+        buttonsStyling: false,
+    });
+}
+
+function ShowCommonErorr() {
+    Swal.fire({
+        title: '<span class="my-font">خطا</span>',
+        html: `<span class="my-font">مشکلی به وجود آمده است لطفا مجددا تلاش کنید .</span>`,
+        type: 'error',
+        confirmButtonColor: '#2F8BE6',
+        animation: false,
+        customClass: 'animated flipInX',
+        confirmButtonText: 'بستن',
+        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+        buttonsStyling: false,
+    });
+}
