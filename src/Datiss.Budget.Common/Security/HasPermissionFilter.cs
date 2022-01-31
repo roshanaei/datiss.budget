@@ -32,6 +32,9 @@ namespace Datiss.Budget.Security
             if(user.Identity == null || !user.Identity.IsAuthenticated)
                 context.Result = new ForbidResult();
 
+            if (user.IsInRole("Admin"))
+                return;
+
             var claim = user.Identity.GetUserClaimValue(_claimType);
             var permissions = claim?.ExtractPermissionActionTypesFromString();
             if (permissions == null || !permissions.Contains(_actionType))
