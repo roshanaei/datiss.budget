@@ -240,9 +240,11 @@
                     });
                 },
                 error: function (ajaxrequest, ajaxOptions, thrownError) {
-                    if (ajaxrequest.status == 401) {
-                        ErorrPermission();
+                    if (ajaxrequest.status == 401 || ajaxrequest.status == 403) {
+                        ShowPermissionErorr();
+                        return;
                     }
+                    ShowCommonErorr();
                 }
             });
         }
@@ -319,9 +321,11 @@
                     });
                 },
                 error: function (ajaxrequest, ajaxOptions, thrownError) {
-                    if (ajaxrequest.status == 401) {
-                        ErorrPermission();
+                    if (ajaxrequest.status == 401 || ajaxrequest.status == 403) {
+                        ShowPermissionErorr();
+                        return;
                     }
+                    ShowCommonErorr();
                 }
             });
         }
@@ -429,9 +433,11 @@
                     $(e).closest('tr').remove();
                 },
                 error: function (request, options, err) {
-                    if (request.status == 401) {
-                        ErorrPermission();
+                    if (request.status == 401 || request.status == 403) {
+                        ShowPermissionErorr();
+                        return;
                     }
+                    ShowCommonErorr();
                 }
             });
         }

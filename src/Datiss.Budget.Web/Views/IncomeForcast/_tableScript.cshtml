@@ -172,8 +172,11 @@
                 cancelEditRow(id);
             },
             error: function (request, options, err) {
-                if (request.status == 401) {
-                    ErorrPermission();
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
             }
         });
     }
@@ -367,8 +370,11 @@
                 isNewRow = false;
             },
             error: function (request, options, err) {
-                if (request.status == 401) {
-                    ErorrPermission();
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
             }
         });
     }
@@ -438,8 +444,11 @@
                 $(e).closest('tr').remove();
             },
             error: function (request, options, err) {
-                if (request.status == 401) {
-                    ErorrPermission();
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
             }
         });
     }
