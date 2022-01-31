@@ -6,6 +6,25 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Models
 {
+    public class CreateAverageContractedCapacityNHUsesDTO
+    {
+        public int YearId { get; set; }
+
+        public int OrganizationId { get; set; }
+
+        public int UserTypeId { get; set; }
+
+        public decimal AverageCapacity { get; set; }
+
+        public decimal AverageCapacityWs { get; set; }
+
+        public decimal AverageCapacityIncome { get; set; }
+
+        public decimal AverageCapacityWsIncome { get; set; }
+        
+        public string UserTypeTitle { get; set; }
+    }
+
     public class AverageContractedCapacityNHUsesDTO
     {
         public int Id { get; set; }
