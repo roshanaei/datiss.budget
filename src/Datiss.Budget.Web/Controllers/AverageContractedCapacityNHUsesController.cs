@@ -1,4 +1,6 @@
 ﻿using Datiss.Budget.Common;
+using Datiss.Budget.Common.Exceptions;
+using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
@@ -6,6 +8,7 @@ using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
+using Datiss.Budget.Web.Helpers;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -201,5 +204,76 @@ namespace Datiss.Budget.Web.Controllers
 
             return View(model);
         }
+
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            if (model.ExcelFile == null || model.ExcelFile.Length == 0)
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelInvalidFile
+                });
+
+            try
+            {
+                var result = await _averageContractedCapacityNHUsesService.ImportExcelAsync(model.ExcelFile,
+                                                                                            model.YearId,
+                                                                                            model.ContinueIfAnyOrgMissing);
+
+                if (result.AskToImport)
+                {
+                    return Json(new
+                    {
+                        ask = true,
+                        message = result.Message
+                    });
+                }
+
+                if (result.Success)
+                {
+                    return Json(new
+                    {
+                        hasError = false,
+                        message = result.Message
+                    });
+
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
+            }
+            catch (ImportExcelFileFormatInvalidException)
+            {
+                showMessage(CssClassNames.Error,
+                    ViewMessages.ImportExcelFileFormatInvalid);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileFormatInvalid
+                });
+            }
+            catch (ImportExcelFileSizeInvalidException)
+            {
+                showMessage(CssClassNames.Error,
+                    ViewMessages.ImportExcelFileSizeInvalid);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileSizeInvalid
+                });
+            }
+
+        }
+
+
     }
 }
