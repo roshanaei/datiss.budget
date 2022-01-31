@@ -110,6 +110,56 @@ namespace Datiss.Budget.Services
 
         }
 
+        public async Task<ValidationResult<AverageContractedCapacityNHUsesDTO>> UpdateAsync(UpdateAverageContractedCapacityNHUsesDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.Id))
+                {
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.YearId = model.YearId;
+                    entity.UserTypeId = model.UserTypeId;
+                    entity.AverageCapacity = model.AverageCapacity;
+                    entity.AverageCapacityWs = model.AverageCapacityWs;
+                    entity.AverageCapacityIncome = model.AverageCapacityIncome;
+                    entity.AverageCapacityWsIncome = model.AverageCapacityWsIncome;
+
+                    await _uow.SaveChangesAsync();
+
+                    var result = new AverageContractedCapacityNHUsesDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        UserTypeId = model.UserTypeId,
+                        AverageCapacity = model.AverageCapacity,
+                        AverageCapacityWs = model.AverageCapacityWs,
+                        AverageCapacityIncome = model.AverageCapacityIncome,
+                        AverageCapacityWsIncome = model.AverageCapacityWsIncome,
+                        OrganizationDisplay = organizationDisplay,
+                        UserTypeDisplay = model.UserTypeTitle,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
+
+                    return ValidationResult<AverageContractedCapacityNHUsesDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<AverageContractedCapacityNHUsesDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+            return ValidationResult<AverageContractedCapacityNHUsesDTO>.Failed(
+                string.Format(ServiceMessages.Logic_UserTypeDuplicate,
+                model.UserTypeTitle, organizationDisplay)
+                );
+        }
+
         #region Logics
         private async Task<bool> checkLogicAsync(
             int yearId,
