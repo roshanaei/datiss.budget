@@ -55,6 +55,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IReportEngine, ReportEngine>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAppClaimTypeService, AppClaimTypeService>();
+            services.AddScoped<IAverageContractedCapacityNHUsesService, AverageContractedCapacityNHUsesService>();
 
             return services;
         }
