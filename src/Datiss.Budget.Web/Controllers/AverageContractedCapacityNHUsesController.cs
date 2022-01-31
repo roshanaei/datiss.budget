@@ -1,4 +1,5 @@
-﻿using Datiss.Budget.Entities.DWH;
+﻿using Datiss.Budget.Common;
+using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
@@ -116,6 +117,89 @@ namespace Datiss.Budget.Web.Controllers
             );
         }
 
+        [HttpGet("{page?}")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.List)]
+        public async Task<IActionResult> Index(int page = 1)
+        {
+            var filter = new AverageContractedCapacityNHUsesFilterDTO();
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+              .Adapt<List<DropDownItemViewModel>>();
+            int firstOrgId = orgSource.FirstOrDefault().Id;
 
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(_ => _.Id);
+
+            var userSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House,ConstantKeys.__UserType,true))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
+
+            filter.YearId = maxYear;
+            filter.OrganizationId = firstOrgId;
+
+            var myfilter = TempData.Get<AverageContractedCapacityNHUsesFilterViewModel>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<AverageContractedCapacityNHUsesFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
+
+            var result = await _averageContractedCapacityNHUsesService.GetListAsync(filter);
+            var model = result.Adapt<AverageContractedCapacityNHUsesIndexViewModel>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetUserTypeSource(userSource);
+
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+
+            model.Filter.YearId = filter.YearId;
+            model.Filter.OrganizationId = filter.OrganizationId;
+            model.PageNumber = filter.PageNumber;
+            model.PageSize = filter.PageSize;
+
+            return View(model);
+        }
+
+        [HttpPost("{page?}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(AverageContractedCapacityNHUsesIndexViewModel model)
+        {
+
+            var filter = model.Filter.Adapt<AverageContractedCapacityNHUsesFilterDTO>();
+
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _averageContractedCapacityNHUsesService.GetListAsync(filter);
+            model = result.Adapt<AverageContractedCapacityNHUsesIndexViewModel>();
+            model.Filter = filter.Adapt<AverageContractedCapacityNHUsesFilterViewModel>();
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var userSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House,ConstantKeys.__UserType,true))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+            model.SetUserTypeSource(userSource);
+
+            return View(model);
+        }
     }
 }
