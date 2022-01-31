@@ -91,6 +91,31 @@ namespace Datiss.Budget.Web.Controllers
             return Json(result.Result.Adapt<AverageContractedCapacityNHUsesViewModel>());
         }
 
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Edit)]
+        public async Task<IActionResult> Edit(UpdateAverageContractedCapacityNHUsesViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+
+            var data = model.Adapt<UpdateAverageContractedCapacityNHUsesDTO>();
+            var result = await _averageContractedCapacityNHUsesService.UpdateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(
+                result.Result.Adapt<AverageContractedCapacityNHUsesViewModel>()
+            );
+        }
+
 
     }
 }
