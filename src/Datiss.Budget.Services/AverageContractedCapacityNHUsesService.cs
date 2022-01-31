@@ -19,6 +19,8 @@ using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Mapster;
 using Datiss.Budget.Resources;
+using LinqKit;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services
 {
@@ -177,6 +179,173 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
+        #region Private Helper Methods
+        private async Task<IQueryable<AverageContractedCapacityNHUses>> setFilter(
+            IQueryable<AverageContractedCapacityNHUses> query,
+            AverageContractedCapacityNHUsesFilterDTO filter)
+        {
+            query.CheckArgumentIsNull(nameof(query));
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var predicate = PredicateBuilder.New<AverageContractedCapacityNHUses>();
+
+            if (filter.YearId.HasValue)
+                query = query.Where(x => x.YearId == filter.YearId.Value);
+
+            if (filter.OrganizationId.HasValue)
+            {
+                var organizations = await _organizationService
+                    .GetWithChildrenAsync(filter.OrganizationId.Value);
+
+                foreach (var org in organizations)
+                {
+                    predicate.Or(_ => _.OrganizationId == org.Id);
+                }
+
+                query = query.Where(predicate);
+            }
+
+            if (filter.UserTypeId.HasValue)
+                query = query.Where(x => x.UserTypeId == filter.UserTypeId.Value);
+
+
+            if (filter.Search.IsNotNullOrEmpty())
+            {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
+                                         _.UserType.Title.ToUpper().Contains(filter.Search));
+            }
+
+            return query;
+        }
+
+        private IQueryable<AverageContractedCapacityNHUses> setOrder(
+           IQueryable<AverageContractedCapacityNHUses> query,
+           string orderBy = "id",
+           bool desc = false)
+        {
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "id";
+
+            orderBy = orderBy.ToLower();
+            switch (orderBy)
+            {
+
+                case "organization":
+                    return desc
+                        ? query.OrderByDescending(x => x.Organization.Title)
+                        : query.OrderBy(x => x.Organization.Title);
+
+                case "dwatertype":
+                    return desc
+                        ? query.OrderByDescending(x => x.UserType.DisplayOrder)
+                        : query.OrderBy(x => x.UserType.DisplayOrder);
+
+                default:
+                    return query.Include(x => x.Organization)
+                                .Include(x => x.UserType)
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.Organization.Type)
+                                .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.UserType.DisplayOrder);
+            }
+        }
+
+        private async Task<IEnumerable<AverageContractedCapacityNHUses>> getChildrenData(
+            int parentOrganizationId,
+            int yearId,
+            int targetYearId)
+        {
+
+            var children = await _orgDbSet
+                .Where(_ => _.Status != EntityStatus.Deleted &&
+                            _.ParentId == parentOrganizationId)
+                .ToListAsync();
+
+            var result = new List<AverageContractedCapacityNHUses>();
+
+            foreach (var org in children)
+            {
+                if (await Query()
+                            .Where(_ => _.OrganizationId == org.Id)
+                            .Where(_ => _.YearId == targetYearId).AnyAsync())
+                {
+                    throw new CopyDestYearHasDataException();
+                }
+
+                var data = await Query()
+                                .Where(_ => _.YearId == yearId)
+                                .Where(_ => _.OrganizationId == org.Id)
+                                .ToListAsync();
+
+                foreach (var item in data)
+                {
+                    if (!await checkLogicAsync(targetYearId, org.Id, item.UserTypeId))
+                        throw new CopyDestYearHasDataException();
+
+                    var entity = new AverageContractedCapacityNHUses
+                    {
+                        UserTypeId = item.UserTypeId,
+                        OrganizationId = item.OrganizationId,
+                        YearId = targetYearId,
+                        AverageCapacity = item.AverageCapacity,
+                        AverageCapacityWs = item.AverageCapacityWs,
+                        AverageCapacityIncome = item.AverageCapacityIncome,
+                        AverageCapacityWsIncome= item.AverageCapacityWsIncome
+                    };
+
+                    result.Add(entity);
+                }
+
+                result.AddRange(await getChildrenData(org.Id, yearId, targetYearId));
+            }
+
+            return result;
+        }
+        private async Task<IEnumerable<AverageContractedCapacityNHUses>> getChildren(
+            int parentOrganizationId,
+            int yearId)
+        {
+            var children = await _orgDbSet
+                .Where(_ => _.Status != EntityStatus.Deleted &&
+                            _.ParentId == parentOrganizationId)
+                .ToListAsync();
+            var result = new List<AverageContractedCapacityNHUses>();
+            foreach (var org in children)
+            {
+                var data = await Query()
+                                .Where(_ => _.YearId == yearId)
+                                .Where(_ => _.OrganizationId == org.Id)
+                                .ToListAsync();
+
+                foreach (var item in data)
+                {
+                    result.Add(item);
+                }
+                result.AddRange(await getChildren(org.Id, yearId));
+            }
+            return result;
+        }
+        private async Task<bool> hasAnyDataAsync(int orgid, int yearid)
+        {
+            bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
+                                                x.YearId == yearid);
+            if (any)
+            {
+                return true;
+            }
+            else
+            {
+                var childs = await _organizationService.GetWithChildrenAsync(orgid);
+                foreach (var child in childs)
+                    if (await Query().AnyAsync(x => x.YearId == yearid && x.OrganizationId == child.Id))
+                        return true;
+            }
+
+            return false;
+
+        }
+        #endregion
 
         #region Logics
         private async Task<bool> checkLogicAsync(
