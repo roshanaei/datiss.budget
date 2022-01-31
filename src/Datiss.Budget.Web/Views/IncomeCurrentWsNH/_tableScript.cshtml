@@ -64,7 +64,6 @@
         rowData.note3Price = $('#inputNote3Price_' + id).val();
         rowData.note3Income = $('#inputNote3Income_' + id).val();
         rowData.totalIncome = $('#inputTotalIncome_' + id).val();
-        rowData.diff_ConsWsVolume = $('#inputDiff_ConsWsVolume_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -96,15 +95,15 @@
             $('#inputNumberUser_' + id).attr(rowData.numberUser);
             $('#inputUnitUser_' + id).attr(rowData.unitUser);
             $('#inputAvgConsumeUser_' + id).attr(rowData.avgConsumeUser);
-            $('#inputConsumptionUser_' + id).attr(rowData.consumptionUser);
             $('#inputCapacity_' + id).attr(rowData.capacity);
+            $('#inputConsumptionUser_' + id).attr(rowData.consumptionUser);
             $('#inputCost_' + id).attr(rowData.cost);
             $('#inputIncome_' + id).attr(rowData.income);
+            $('#inputSubscriptionIncome_' + id).attr(rowData.subscriptionIncome);
             $('#inputExcessIncome_' + id).attr(rowData.excessIncome);
             $('#inputSeasonalIncome_' + id).attr(rowData.seasonalIncome);
             $('#inputNote3Price_' + id).attr(rowData.note3Price);
             $('#inputNote3Income_' + id).attr(rowData.note3Income);
-            $('#inputSubscriptionIncome_' + id).attr(rowData.subscriptionIncome);
             $('#inputTotalIncome_' + id).attr(rowData.totalIncome);
         }
 
@@ -184,20 +183,21 @@
                 }
 
                 rowData = {};
+                rowData.yearId = model.yearId;
                 rowData.organizationId = model.organizationId;
                 rowData.userTypeId = model.userTypeId;
                 rowData.numberUser = model.numberUser;
                 rowData.unitUser = model.unitUser;
+                rowData.capacity = model.capacity;
                 rowData.avgConsumeUser = model.avgConsumeUser;
                 rowData.consumptionUser = model.consumptionUser;
-                rowData.capacity = model.capacity;
                 rowData.cost = model.cost;
                 rowData.income = model.income;
+                rowData.subscriptionIncome = model.subscriptionIncome;
                 rowData.excessIncome = model.excessIncome;
                 rowData.seasonalIncome = model.seasonalIncome;
                 rowData.note3Price = model.note3Price;
                 rowData.note3Income = model.note3Income;
-                rowData.subscriptionIncome = model.subscriptionIncome;
                 rowData.totalIncome = model.totalIncome;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);

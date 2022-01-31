@@ -137,7 +137,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var userTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+            var userTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType, true))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -193,7 +193,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var userSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
+            var userSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType, true))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -466,7 +466,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var userTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
+            var userTypes = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType, true);
 
             var items = new List<IncomeCurrentWsNHDTO>();
 

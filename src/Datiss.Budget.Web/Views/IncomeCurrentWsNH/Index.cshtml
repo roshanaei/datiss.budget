@@ -180,7 +180,7 @@
                                                                name="col-7"
                                                                id="col-7" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-7"><span>حجم دفع</span></label>
+                                                               for="col-7"><span>ظرفیت قراردادی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -191,7 +191,7 @@
                                                                name="col-8"
                                                                id="col-8" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-8"><span>قیمت هر کاربری</span></label>
+                                                               for="col-8"><span>حجم دفع</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -202,7 +202,7 @@
                                                                name="col-9"
                                                                id="col-9" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-9"><span>درآمد کارمزد دفع</span></label>
+                                                               for="col-9"><span>قیمت هر کاربری</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -213,7 +213,7 @@
                                                                name="col-10"
                                                                id="col-10" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-10"><span>درآمد آبونمان</span></label>
+                                                               for="col-10"><span>درآمد کارمزد دفع</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -224,7 +224,7 @@
                                                                name="col-11"
                                                                id="col-11" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-11"><span>درآمد فاضلاب بهاء مازاد بر ظرفیت</span></label>
+                                                               for="col-11"><span>درآمد آبونمان</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -235,7 +235,7 @@
                                                                name="col-12"
                                                                id="col-12" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-12"><span>درآمد فاضلاب بهاء فصلی</span></label>
+                                                               for="col-12"><span>درآمد فاضلاب بهاء مازاد بر ظرفیت</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -246,7 +246,7 @@
                                                                name="col-13"
                                                                id="col-13" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-13"><span>درآمد کل فاضلاب بهاء</span></label>
+                                                               for="col-13"><span>درآمد فاضلاب بهاء فصلی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -257,7 +257,7 @@
                                                                name="col-14"
                                                                id="col-14" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-14"><span>ظرفیت قراردادی</span></label>
+                                                               for="col-14"><span>درآمد کل فاضلاب بهاء</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -472,7 +472,19 @@
                             });
                         },
                         error: function(request, option, err) {
-                            console.log(err);
+                            if (request.status == 401) {
+                                Swal.fire({
+                                    title: '<span class="my-font">خطا</span>',
+                                    html: `<span class="my-font">شما مجاز به انجام این عملیات نمی باشید.</span>`,
+                                    type: 'error',
+                                    confirmButtonColor: '#2F8BE6',
+                                    animation: false,
+                                    customClass: 'animated flipInX',
+                                    confirmButtonText: 'بستن',
+                                    confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                                    buttonsStyling: false,
+                                });
+                            }
                         }
                     });
 
@@ -508,15 +520,15 @@
             let input2 = document.getElementById('inputUnitUser_' + id);
             let input3 = document.getElementById('inputAvgConsumeUser_' + id);
             let input4 = document.getElementById('inputConsumptionUser_' + id);
-            let input6 = document.getElementById('inputCost_' + id);
-            let input7 = document.getElementById('inputIncome_' + id);
-            let input8 = document.getElementById('inputSubscriptionIncome_' + id);
-            let input9 = document.getElementById('inputExcessIncome_' + id);
-            let input10 = document.getElementById('inputSeasonalIncome_' + id);
-            let input11 = document.getElementById('inputTotalIncome_' + id);
-            let input12 = document.getElementById('inputCapacity_' + id);
-            let input13 = document.getElementById('inputNote3Price_' + id);
-            let input14 = document.getElementById('inputNote3Income_' + id);
+            let input5 = document.getElementById('inputCost_' + id);
+            let input6 = document.getElementById('inputIncome_' + id);
+            let input7 = document.getElementById('inputSubscriptionIncome_' + id);
+            let input8 = document.getElementById('inputExcessIncome_' + id);
+            let input9 = document.getElementById('inputSeasonalIncome_' + id);
+            let input10 = document.getElementById('inputTotalIncome_' + id);
+            let input11 = document.getElementById('inputCapacity_' + id);
+            let input12 = document.getElementById('inputNote3Price_' + id);
+            let input13 = document.getElementById('inputNote3Income_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -593,12 +605,6 @@
                 }
             });
             input13.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input14.addEventListener("keyup", function (event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
