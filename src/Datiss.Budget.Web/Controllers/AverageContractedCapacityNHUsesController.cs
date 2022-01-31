@@ -358,6 +358,37 @@ namespace Datiss.Budget.Web.Controllers
             });
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Calculation(CalculationInputViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
 
+            var result = await _averageContractedCapacityNHUsesService.CalculationAsync(
+                model.YearId,
+                model.OrganizationId);
+
+            List<CalculationResultViewModel> viewModel = new List<CalculationResultViewModel>();
+            foreach (var item in result)
+            {
+                viewModel.Add(
+                    new CalculationResultViewModel
+                    {
+                        Result = item.Value,
+                        Title = getCalcTitle(item.Key)
+                    }
+                );
+            }
+
+            return PartialView("_calculationModal", viewModel);
+        }
+
+        #region Private Helper Methods
+        private string getCalcTitle(string key)
+            => key switch
+            {
+                //"AverageContractedCapacityNHUses_Cal1" => SPTitles.AverageContractedCapacityNHUses_Cal1,
+                _ => ""
+            };
+        #endregion
     }
 }
