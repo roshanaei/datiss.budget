@@ -23,6 +23,7 @@ using LinqKit;
 using Datiss.Budget.Extensions;
 using Microsoft.AspNetCore.Http;
 using Datiss.Budget.Common;
+using System.IO;
 
 namespace Datiss.Budget.Services
 {
@@ -511,6 +512,43 @@ namespace Datiss.Budget.Services
                                     }).ToListAsync();
 
             return items;
+        }
+
+        public async Task<Stream> ExportExcelAsync(AverageContractedCapacityNHUsesFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.UserType)
+                                    .Select(x => new AverageContractedCapacityNHUsesDTO
+                                    {
+                                        Id = x.Id,
+                                        UserTypeDisplay = x.UserType.Title,
+                                        UserTypeId = x.UserTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        AverageCapacity = x.AverageCapacity,
+                                        AverageCapacityWs = x.AverageCapacityWs,
+                                        AverageCapacityIncome = x.AverageCapacityIncome,
+                                        AverageCapacityWsIncome = x.AverageCapacityWsIncome,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
+                                    }).ToListAsync();
+
+            var ms = new MemoryStream();
+            var result = _excelService.Export(items, ms);
+
+            var mem1 = new MemoryStream(ms.ToArray());
+
+            return mem1;
         }
 
 
