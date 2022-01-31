@@ -275,6 +275,59 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
+        {
+
+            if (sourceYearId == destYearId)
+                throw new CopySameYearException();
+            if (destYearId < sourceYearId)
+                throw new CopyDestYearExxeption();
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
+                throw new CopyOrgNullDataException();
+            var result = new List<AverageContractedCapacityNHUses>();
+
+            if (await Query()
+                        .Where(_ => _.OrganizationId == sourceOrgId)
+                        .Where(_ => _.YearId == destYearId).AnyAsync())
+                throw new CopyDestYearHasDataException();
+
+            var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
+                                        .Where(_ => _.YearId == sourceYearId)
+                                        .ToListAsync();
+
+            if (selfData.Any())
+            {
+                foreach (var item in selfData)
+                {
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.UserTypeId))
+                        throw new CopyDestYearHasDataException();
+
+                    var entity = new AverageContractedCapacityNHUses
+                    {
+                        UserTypeId = item.UserTypeId,
+                        OrganizationId = item.OrganizationId,
+                        YearId = destYearId,
+                        AverageCapacity = item.AverageCapacity,
+                        AverageCapacityWs = item.AverageCapacityWs,
+                        AverageCapacityIncome = item.AverageCapacityIncome,
+                        AverageCapacityWsIncome = item.AverageCapacityWsIncome
+                    };
+                    result.Add(entity);
+                }
+            }
+
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+
+            if (childrens.Any())
+            {
+                result.AddRange(childrens);
+            }
+
+            _dbSet.AddRange(result);
+
+            await _uow.SaveChangesAsync();
+        }
+
 
         #region Private Helper Methods
         private async Task<IQueryable<AverageContractedCapacityNHUses>> setFilter(
