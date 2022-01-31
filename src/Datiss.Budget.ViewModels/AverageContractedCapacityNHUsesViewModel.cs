@@ -51,6 +51,11 @@ namespace Datiss.Budget.ViewModels
         }
     }
 
+    public class UpdateAverageContractedCapacityNHUsesViewModel : CreateAverageContractedCapacityNHUsesViewModel
+    {
+        public int Id { get; set; }
+    }
+
     public class AverageContractedCapacityNHUsesViewModel
     {
         public int Id { get; set; }
