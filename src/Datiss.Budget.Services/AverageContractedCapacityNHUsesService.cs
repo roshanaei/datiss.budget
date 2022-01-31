@@ -476,6 +476,43 @@ namespace Datiss.Budget.Services
                 );
         }
 
+        public async Task<IEnumerable<AverageContractedCapacityNHUsesDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        {
+            var filter = new AverageContractedCapacityNHUsesFilterDTO
+            {
+                OrganizationId = organizationId,
+                YearId = yearId
+            };
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.UserType)
+                                    .Select(x => new AverageContractedCapacityNHUsesDTO
+                                    {
+                                        Id = x.Id,
+                                        UserTypeDisplay = x.UserType.Title,
+                                        UserTypeId = x.UserTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        AverageCapacity = x.AverageCapacity,
+                                        AverageCapacityWs = x.AverageCapacityWs,
+                                        AverageCapacityIncome = x.AverageCapacityIncome,
+                                        AverageCapacityWsIncome = x.AverageCapacityWsIncome,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
+                                    }).ToListAsync();
+
+            return items;
+        }
+
 
         #region Private Helper Methods
         private async Task<IQueryable<AverageContractedCapacityNHUses>> setFilter(
