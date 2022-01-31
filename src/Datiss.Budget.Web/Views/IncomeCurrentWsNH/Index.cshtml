@@ -472,19 +472,11 @@
                             });
                         },
                         error: function(request, option, err) {
-                            if (request.status == 401) {
-                                Swal.fire({
-                                    title: '<span class="my-font">خطا</span>',
-                                    html: `<span class="my-font">شما مجاز به انجام این عملیات نمی باشید.</span>`,
-                                    type: 'error',
-                                    confirmButtonColor: '#2F8BE6',
-                                    animation: false,
-                                    customClass: 'animated flipInX',
-                                    confirmButtonText: 'بستن',
-                                    confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
-                                    buttonsStyling: false,
-                                });
+                            if (request.status == 401 || request.status == 403) {
+                                ShowPermissionErorr();
+                                return;
                             }
+                            ShowCommonErorr();
                         }
                     });
 
@@ -683,8 +675,11 @@
                     });
                 },
                 error: function (request, options, err) {
-                    console.log(err);
-                    $("#divCopy").html('Failed to load more content');
+                    if (request.status == 401 || request.status == 403) {
+                        ShowPermissionErorr();
+                        return;
+                    }
+                    ShowCommonErorr();
                 }
             });
         });
@@ -847,8 +842,11 @@
 
                 },
                 error: function(request, options, err) {
-                    console.log(err);
-                    alert('مشکلی پیش آمده است ، کمی بعد سعی کنید . با تشکر');
+                    if (request.status == 401 || request.status == 403) {
+                        ShowPermissionErorr();
+                        return;
+                    }
+                    ShowCommonErorr();
                 }
             });
 
