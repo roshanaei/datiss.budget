@@ -177,8 +177,9 @@
                     });
                 },
                 error: function (ajaxrequest, ajaxOptions, thrownError) {
-
-                    $("#modaldiv").html('Failed to load more content');
+                    if (ajaxrequest.status == 401) {
+                        ErorrPermission();
+                    }
                 }
             });
         }
@@ -290,8 +291,9 @@
                     });
                 },
                 error: function (request, options, err) {
-                    console.log(err);
-                    alert('عملیات افزودن سال مالی جدید با خطا مواجه شد.');
+                    if (request.status == 401) {
+                        ErorrPermission();
+                    }
                 }
             });
         });
@@ -299,7 +301,6 @@
         $(document).on('click', '.delete-row', function () {
             let id = $(this).data('id');
             let btn = this;
-
             Swal.fire({
                 title: '<span class="my-font">برای حذف اطمینان دارید ؟</span>',
                 text: "",
@@ -328,8 +329,6 @@
             });
         });
         function deleteRow(e, id) {
-        console.log(e);
-
         $.ajax({
             url: '@Url.Action(FinanceYearController.ACTION_Delete)' + '/' + id,
             type: 'POST',
@@ -352,8 +351,9 @@
                 $(e).closest('tr').remove();
             },
             error: function (request, options, err) {
-                console.log(err);
-                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+                if (request.status == 401) {
+                    ErorrPermission();
+                }
             }
         });
     }

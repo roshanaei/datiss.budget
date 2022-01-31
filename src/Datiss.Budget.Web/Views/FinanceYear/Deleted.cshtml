@@ -77,7 +77,6 @@
         });
 
         function returnRow(e, id) {
-
             $.ajax({
             url: '@Url.Action(FinanceYearController.ACTION_UndoDelete)' + '/' + id,
             type: 'POST',
@@ -111,8 +110,9 @@
                     });
             },
             error: function (request, options, err) {
-                console.log(err);
-                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+                if (request.status == 401) {
+                    ErorrPermission();
+                }
             }
         });
         }
@@ -184,8 +184,9 @@
                     });
             },
             error: function (request, options, err) {
-                console.log(err);
-                alert('خطا در بروز رسانی اطلاعات. لطفاً دوباره سعی نمایید!');
+                if (request.status == 401) {
+                    ErorrPermission();
+                }
             }
         });
     }
