@@ -1,6 +1,11 @@
 ﻿using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Resources;
+using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -62,6 +67,28 @@ namespace Datiss.Budget.Web.Controllers
         {
             ViewData["type"] = type;
             ViewData["message"] = message;
+        }
+
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        public async Task<IActionResult> Create(CreateAverageContractedCapacityNHUsesViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+            var data = model.Adapt<CreateAverageContractedCapacityNHUsesDTO>();
+
+            var result = await _averageContractedCapacityNHUsesService.CreateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(result.Result.Adapt<AverageContractedCapacityNHUsesViewModel>());
         }
 
 
