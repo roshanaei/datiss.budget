@@ -36,7 +36,7 @@ namespace Datiss.Budget.ViewModels.Identity
                 Selected = x.Id == selectedPositionId,
                 Text = x.Title,
                 Value = x.Id.ToString()
-            }).ToList();
+            }).ToList().AddEmptySelectListItem();
     }
 
     public class UserViewModel

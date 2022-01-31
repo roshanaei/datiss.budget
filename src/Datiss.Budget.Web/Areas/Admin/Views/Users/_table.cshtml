@@ -5,23 +5,20 @@
     <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
         <thead class="thead-light">
             <tr>
+                <th>نام</th>
+                <th>نام خانوادگی</th>
                 <th>
                     <i class="fa fa-user"></i> نام کاربری
                 </th>
-                <th>نام</th>
-                <th>نام خانوادگی</th>
-                <th>کد ملی</th>
                 <th>سازمان</th>
-                <th>شماره تماس</th>
+                <th>سمت</th>
                 <th>عملیات</th>
             </tr>
         </thead>
         <tbody>
-            @foreach(var item in Model.Items) {
+            @foreach (var item in Model.Items)
+            {
                 <tr>
-                    <td>
-                        <span>@item.UserName</span>
-                    </td>
                     <td>
                         <span>@item.FirstName</span>
                     </td>
@@ -29,23 +26,23 @@
                         <span>@item.LastName</span>
                     </td>
                     <td>
-                        <span>@item.NationalCode</span>
+                        <span>@item.UserName</span>
                     </td>
                     <td>
                         <span>@item.OrganizationTitle</span>
                     </td>
                     <td>
-                        <span>@item.PhoneNumber</span>
+                        <span>@item.PositionTitle</span>
                     </td>
                     <td>
                         <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font"
-                            asp-controller="@UsersController.Name" 
-                            asp-action="@UsersController.ACTION_Edit"
-                            asp-route-id="@item.Id">
+                           asp-controller="@UsersController.Name"
+                           asp-action="@UsersController.ACTION_Edit"
+                           asp-route-id="@item.Id">
                             <i class="fa ft-edit fa-1x"></i>
                         </a>
-                        
-                        <button id="btnSetUserPassword_@item.Id" onclick="openSetPassword(@item.Id);" type="button" data-id="@item.Id" class="set-password btn bg-glass-1 btn-primary mr-1 myfont">
+
+                        <button id="btnSetUserPassword_@item.Id" onclick="openSetPassword(@item.Id);" type="button" data-id="@item.Id" class="set-password btn btn-secondary bg-light-secondary mr-1 myfont">
                             <i class="fa fa-lock"></i>
                         </button>
 
@@ -58,29 +55,18 @@
         </tbody>
     </table>
 
-     <div class="rowACJSB" style="margin-top:20px">
+    <div class="rowACJSB" style="margin-top:20px">
         <!--Tools-->
-        <div class="rowACJS">
-            <form id="toolForm"
-                  enctype="multipart/form-data"
-                  method="post"
-                  asp-antiforgery="true">
-                <a asp-controller="@UsersController.Name" asp-action="@UsersController.ACTION_Create"
-                    data-toggle="tooltip" data-placement="top" title="رکورد جدید" class="btn btn-success bg-light-success my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
-                </a>
-            </form>
-
-        </div>
-
         <div class="rowAC">
             <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
             <div class="my-font ml-2">
                 (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
-                <b class="font-medium-2">@if (Model.PagesCount == 0)
-                {<span>1</span>}
-                else
-                {<span>@Model.PagesCount</span>}</b>)
+                <b class="font-medium-2">
+                    @if (Model.PagesCount == 0)
+                    {<span>1</span>}
+                    else
+                    {<span>@Model.PagesCount</span>}
+                </b>)
             </div>
         </div>
 

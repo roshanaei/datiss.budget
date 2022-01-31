@@ -30,7 +30,7 @@
                                         سازمان:
                                         <select asp-for="Filter.OrganizationId"
                                                 asp-items="Model.Filter.OrganizationSource"
-                                                class="form-control d-inline-block width-100"
+                                                class="form-control d-inline-block width-300"
                                                 id="organizationId">
                                         </select>
                                     </label>
@@ -38,7 +38,7 @@
                                         سمت:
                                         <select asp-for="Filter.PositionId"
                                                 asp-items="Model.Filter.PositionSource"
-                                                class="form-control d-inline-block width-300"
+                                                class="form-control d-inline-block width-200"
                                                 id="positionId">
                                         </select>
                                     </label>
@@ -46,7 +46,7 @@
                                         وضعیت:
                                         <select asp-for="Filter.Status"
                                                 asp-items="Model.Filter.StatusSource"
-                                                class="form-control d-inline-block width-300"
+                                                class="form-control d-inline-block width-150"
                                                 id="statusId">
                                         </select>
                                     </label>
@@ -97,94 +97,13 @@
                                         </label>
 
                                     </fieldset>
-                                    @* drop down menu *@
-                                    <div class="btn-group dropdown form-group">
-                                        <button type="button"
-                                                class="btn btn-light my-font dropdown-toggle"
-                                                data-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false">
-                                            ستون ها
-                                        </button>
-                                        <div class="dropdown-menu" style="width:150%">
-                                            <div id="columnSelector">
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-1"
-                                                               id="col-1" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-1"><span>نام کاربری</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-2"
-                                                               id="col-2" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-2"><span>نام</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-3"
-                                                               id="col-3" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-3"><span>نام خانوادگی</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-4"
-                                                               id="col-4" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-4"><span>کد ملی</span></label>
-                                                    </div>
-                                                </div>
-                                                 <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-5"
-                                                               id="col-5" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-5"><span>سازمان</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-6"
-                                                               id="col-6" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-6"><span>شماره تماس</span></label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
                                 </div>
                                 <fieldset>
-                                    <div class="rowACJE">
+                                    @*<div class="rowACJE">
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.PositionId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
-                                    </div>
+                                    </div>*@
                                 </fieldset>
                             </div>
                         </form>
@@ -214,34 +133,17 @@
     <div id="divSetUserPassword">
 
     </div>
-    
-    <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6';
-        let columnIndices = allColumns.split(',');
-        console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6";
-    </script>
-
-    @if(Model.Filter.Columns.IsNotNullOrEmpty()) {
-        <script type="text/javascript">
-            showingColmuns = '@Model.Filter.Columns' ;
-        </script>
-    }
 
     <script type="text/javascript">
-        $(document).ready(function() {
-            //fill input hidden with initial columns showing
-            document.getElementById("hidColumns").value = showingColmuns;
-
-            //setDataColumns();
+        $(document).ready(function () {
 
             $('#organizationId').select2({
                 dir: 'rtl'
             });
+            //fill input hidden with initial columns showing
+            document.getElementById("hidColumns").value = showingColmuns;
 
-            $('#positionId').select2({
-                dir: 'rtl'
-            });
+            //setDataColumns();
 
             $(".dropdown-menu").click(function (e) {
                 e.stopPropagation();
@@ -452,7 +354,11 @@
             });
         }
 
+        function changePageSize() {
+            let pageSize = $('#ddlPageSize').attr('value');
+            console.log(pageSize);
+            $('#filterForm').submit();
+        };
+
     </script>
-
-
 }

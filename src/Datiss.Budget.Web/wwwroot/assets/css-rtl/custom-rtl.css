@@ -180,3 +180,17 @@ th:last-child, td:last-child {
     font-family: 'Vazir', Arial, Tahoma;
     font-size: 14px;
 }
+
+.badge {
+    margin-left: 5px;
+    padding-left: 8px !important;
+    padding-right: 8px;
+    direction: ltr;
+}
+
+.close {
+    font-size: 1.5em;
+    line-height: 0.9em;
+    float: none;
+    margin-left: 6px;
+}
