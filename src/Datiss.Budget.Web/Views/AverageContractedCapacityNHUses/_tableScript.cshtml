@@ -14,14 +14,20 @@
         //Hide output elements
         $('#divOutput_Year_' + id).hide();
         $('#divOutput_Org_' + id).hide();
-        $('#divOutput_DWaterType_' + id).hide();
-        $('#divOutput_WInstallFee_' + id).hide();
+        $('#divOutput_UserType_' + id).hide();
+        $('#divOutput_AverageCapacity_' + id).hide();
+        $('#divOutput_AverageCapacityWs_' + id).hide();
+        $('#divOutput_AverageCapacityIncome_' + id).hide();
+        $('#divOutput_AverageCapacityWsIncome_' + id).hide();
 
         //show input elements
         $('#divInput_Year_' + id).show();
         $('#divInput_Org_' + id).show();
-        $('#divInput_DWaterType_' + id).show();
-        $('#divInput_WInstallFee_' + id).show();
+        $('#divInput_UserType_' + id).show();
+        $('#divInput_AverageCapacity_' + id).show();
+        $('#divInput_AverageCapacityWs_' + id).show();
+        $('#divInput_AverageCapacityIncome_' + id).show();
+        $('#divInput_AverageCapacityWsIncome_' + id).show();
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -31,8 +37,11 @@
         rowData = {};
         rowData.yearId = $('#inputYear_' + id).val();
         rowData.organizationId = $('#inputOrg_' + id).val();
-        rowData.dWaterTypeId = $('#inputDWaterType_' + id).val();
-        rowData.wInstallFee = $('#inputWInstallFee_' + id).val();
+        rowData.userTypeId = $('#inputUserType_' + id).val();
+        rowData.averageCapacity = $('#inputAverageCapacity_' + id).val();
+        rowData.averageCapacityWs = $('#inputAverageCapacityWs_' + id).val();
+        rowData.averageCapacityIncome = $('#inputAverageCapacityIncome_' + id).val();
+        rowData.averageCapacityWsIncome = $('#inputAverageCapacityWsIncome_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -42,24 +51,31 @@
         //Hide input elements
         $('#divInput_Year_' + id).hide();
         $('#divInput_Org_' + id).hide();
-        $('#divInput_DWaterType_' + id).hide();
-        $('#divInput_WInstallFee_' + id).hide();
+        $('#divInput_UserType_' + id).hide();
+        $('#divInput_AverageCapacity_' + id).hide();
+        $('#divInput_AverageCapacityWs_' + id).hide();
+        $('#divInput_AverageCapacityIncome_' + id).hide();
+        $('#divInput_AverageCapacityWsIncome_' + id).hide();
 
         //Reverting to OriginalData
         if(rowData != null) {
-            console.log('reverting to original data.');
-            console.log(rowData);
             $('#inputYear_' + id).val(rowData.yearId);
             $('#inputOrg_' + id).val(rowData.organizationId);
-            $('#inputDWaterType_' + id).val(rowData.dWaterTypeId);
-            $('#inputWInstallFee_' + id).val(rowData.wInstallFee);
+            $('#inputUserType_' + id).val(rowData.userTypeId);
+            $('#inputAverageCapacity_' + id).val(rowData.averageCapacity);
+            $('#inputAverageCapacityWs_' + id).val(rowData.averageCapacityWs);
+            $('#inputAverageCapacityIncome_' + id).val(rowData.averageCapacityIncome);
+            $('#inputAverageCapacityWsIncome_' + id).val(rowData.averageCapacityWsIncome);
         }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
         $('#divOutput_Org_' + id).show();
-        $('#divOutput_DWaterType_' + id).show();
-        $('#divOutput_WInstallFee_' + id).show();
+        $('#divOutput_UserType_' + id).show();
+        $('#divOutput_AverageCapacity_' + id).show();
+        $('#divOutput_AverageCapacityWs_' + id).show();
+        $('#divOutput_AverageCapacityIncome_' + id).show();
+        $('#divOutput_AverageCapacityWsIncome_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -82,11 +98,14 @@
         model.id = id;
         model.yearId = $('#inputYear_' + id).val();
         model.organizationId = $('#inputOrg_' + id).val();
-        model.dWaterTypeId = $('#inputDWaterType_' + id).val();
-        model.wInstallFee = $('#inputWInstallFee_' + id).val();
+        model.userTypeId = $('#inputUserType_' + id).val();
+        model.averageCapacity = $('#inputAverageCapacity_' + id).val();
+        model.averageCapacityWs = $('#inputAverageCapacityWs_' + id).val();
+        model.averageCapacityIncome = $('#inputAverageCapacityIncome_' + id).val();
+        model.averageCapacityWsIncome = $('#inputAverageCapacityWsIncome_' + id).val();
 
         $.ajax({
-            url: '@Url.Action(WaterInstallFeeController.ACTION_Edit)',
+            url: '@Url.Action(AverageContractedCapacityNHUsesController.ACTION_Edit)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -104,12 +123,24 @@
                         return;
                 }
 
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.userTypeId = model.userTypeId;
+                rowData.averageCapacity = model.averageCapacity;
+                rowData.averageCapacityWs = model.averageCapacityWs;
+                rowData.averageCapacityIncome = model.averageCapacityIncome;
+                rowData.averageCapacityWsIncome = model.averageCapacityWsIncome;
+
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
-                $('#spanDWaterType_' + id).text(data.dWaterTypeDisplay);
-                $('#spanWInstallFee_' + id).text(data.wInstallFee);
+                $('#spanUserType_' + id).text(data.userTypeDisplay);
+                $('#spanAverageCapacity_' + id).text(data.averageCapacity);
+                $('#spanAverageCapacityWs_' + id).text(data.averageCapacityWs);
+                $('#spanAverageCapacityIncome_' + id).text(data.averageCapacityIncome);
+                $('#spanAverageCapacityWsIncome_' + id).text(data.averageCapacityWsIncome);
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
                 cancelEditRow(id);
@@ -131,16 +162,26 @@
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
-        model.dWaterTypeId = $(e).find('#inputDWaterType_').val();
-        model.wInstallFee = $(e).find('#inputWInstallFee_').val();
-        if (model.wInstallFee == "") {
-            model.wInstallFee = 0;
+        model.userTypeId = $(e).find('#inputUserType_').val();
+        model.averageCapacity = $(e).find('#inputAverageCapacity_').val();
+        if (model.averageCapacity == "") {
+            model.averageCapacity = 0;
+        }
+        model.averageCapacityWs = $(e).find('#inputAverageCapacityWs_').val();
+        if (model.averageCapacityWs == "") {
+            model.averageCapacityWs = 0;
+        }
+        model.averageCapacityIncome = $(e).find('#inputAverageCapacityIncome_').val();
+        if (model.averageCapacityIncome == "") {
+            model.averageCapacityIncome = 0;
+        }
+        model.averageCapacityWsIncome = $(e).find('#inputAverageCapacityWsIncome_').val();
+        if (model.averageCapacityWsIncome == "") {
+            model.averageCapacityWsIncome = 0;
         }
 
-        console.log(model);
-
         $.ajax({
-            url: '@Url.Action(WaterInstallFeeController.ACTION_Create)',
+            url: '@Url.Action(AverageContractedCapacityNHUsesController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -180,26 +221,56 @@
                 $('#spanOrg_' + data.id).text(data.organizationDisplay);
                 $('#divOutput_Org_' + data.id).show();
 
-                //DWaterType
-                $(e).find('#divInput_DWaterType_').attr('id', 'divInput_DWaterType_' + data.id);
-                $(e).find('#hidDWaterTypeId_').attr('id', 'hidDWaterTypeId_' + data.id);
-                $(e).find('#inputDWaterType_').attr('id', 'inputDWaterType_' + data.id);
-                $(e).find('#divOutput_DWaterType_').attr('id', 'divOutput_DWaterType_' + data.id);
-                $(e).find('#spanDWaterType_').attr('id', 'spanDWaterType_' + data.id);
+                //UserType
+                $(e).find('#divInput_UserType_').attr('id', 'divInput_UserType_' + data.id);
+                $(e).find('#hidUserTypeId_').attr('id', 'hidUserTypeId_' + data.id);
+                $(e).find('#inputUserType_').attr('id', 'inputUserType_' + data.id);
+                $(e).find('#divOutput_UserType_').attr('id', 'divOutput_UserType_' + data.id);
+                $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
 
-                $('#divInput_DWaterType_' + data.id).hide();
-                $('#spanDWaterType_' + data.id).text(data.dWaterTypeDisplay);
-                $('#divOutput_DWaterType_' + data.id).show();
+                $('#divInput_UserType_' + data.id).hide();
+                $('#spanUserType_' + data.id).text(data.userTypeDisplay);
+                $('#divOutput_UserType_' + data.id).show();
 
-                //WInstallFee
-                $(e).find('#divInput_WInstallFee_').attr('id', 'divInput_WInstallFee_' + data.id);
-                $(e).find('#inputWInstallFee_').attr('id', 'inputWInstallFee_' + data.id);
-                $(e).find('#divOutput_WInstallFee_').attr('id', 'divOutput_WInstallFee_' + data.id);
-                $(e).find('#spanWInstallFee_').attr('id', 'spanWInstallFee_' + data.id);
+                //AverageCapacity
+                $(e).find('#divInput_AverageCapacity_').attr('id', 'divInput_AverageCapacity_' + data.id);
+                $(e).find('#inputAverageCapacity_').attr('id', 'inputAverageCapacity_' + data.id);
+                $(e).find('#divOutput_AverageCapacity_').attr('id', 'divOutput_AverageCapacity_' + data.id);
+                $(e).find('#spanAverageCapacity_').attr('id', 'spanAverageCapacity_' + data.id);
 
-                $('#divInput_WInstallFee_' + data.id).hide();
-                $('#spanWInstallFee_' + data.id).text(data.wInstallFee);
-                $('#divOutput_WInstallFee_' + data.id).show();
+                $('#divInput_AverageCapacity_' + data.id).hide();
+                $('#spanAverageCapacity_' + data.id).text(data.averageCapacity);
+                $('#divOutput_AverageCapacity_' + data.id).show();
+
+                //AverageCapacityWs
+                $(e).find('#divInput_AverageCapacityWs_').attr('id', 'divInput_AverageCapacityWs_' + data.id);
+                $(e).find('#inputAverageCapacityWs_').attr('id', 'inputAverageCapacityWs_' + data.id);
+                $(e).find('#divOutput_AverageCapacityWs_').attr('id', 'divOutput_AverageCapacityWs_' + data.id);
+                $(e).find('#spanAverageCapacityWs_').attr('id', 'spanAverageCapacityWs_' + data.id);
+
+                $('#divInput_AverageCapacityWs_' + data.id).hide();
+                $('#spanAverageCapacityWs_' + data.id).text(data.averageCapacityWs);
+                $('#divOutput_AverageCapacityWs_' + data.id).show();
+
+                //AverageCapacityIncome
+                $(e).find('#divInput_AverageCapacityIncome_').attr('id', 'divInput_AverageCapacityIncome_' + data.id);
+                $(e).find('#inputAverageCapacityIncome_').attr('id', 'inputAverageCapacityIncome_' + data.id);
+                $(e).find('#divOutput_AverageCapacityIncome_').attr('id', 'divOutput_AverageCapacityIncome_' + data.id);
+                $(e).find('#spanAverageCapacityIncome_').attr('id', 'spanAverageCapacityIncome_' + data.id);
+
+                $('#divInput_AverageCapacityIncome_' + data.id).hide();
+                $('#spanAverageCapacityIncome_' + data.id).text(data.averageCapacityIncome);
+                $('#divOutput_AverageCapacityIncome_' + data.id).show();
+
+                //AverageCapacityWs
+                $(e).find('#divInput_AverageCapacityWsIncome_').attr('id', 'divInput_AverageCapacityWsIncome_' + data.id);
+                $(e).find('#inputAverageCapacityWsIncome_').attr('id', 'inputAverageCapacityWsIncome_' + data.id);
+                $(e).find('#divOutput_AverageCapacityWsIncome_').attr('id', 'divOutput_AverageCapacityWsIncome_' + data.id);
+                $(e).find('#spanAverageCapacityWsIncome_').attr('id', 'spanAverageCapacityWsIncome_' + data.id);
+
+                $('#divInput_AverageCapacityWsIncome_' + data.id).hide();
+                $('#spanAverageCapacityWsIncome_' + data.id).text(data.averageCapacityWsIncome);
+                $('#divOutput_AverageCapacityWsIncome_' + data.id).show();
 
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);
@@ -251,7 +322,7 @@
             dir: 'rtl'
         });
 
-        $('.selectDWaterType:last').select2({
+        $('.selectUserType:last').select2({
             dir : 'rtl'
         });
 
@@ -279,7 +350,7 @@
         console.log(e);
 
         $.ajax({
-            url: '@Url.Action(WaterInstallFeeController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(AverageContractedCapacityNHUsesController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {
@@ -316,5 +387,4 @@
             rows[i].style = "";
         }
     }
-
 </script>
