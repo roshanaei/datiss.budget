@@ -114,9 +114,6 @@ body .sidebar-content .ps__rail-y
     font-size: 12px;
 }
 
-.input-validation-error {
-    border-color: red;
-}
 
 .select2.select2-container .select2-selection {
     font-family: 'Vazir';

@@ -10,6 +10,8 @@ namespace Datiss.Budget.Security
         bool IsAuthenticated { get; }
         int UserId { get; }
         string DisplayName { get; }
+        string DisplayFirstName { get; }
+        string DisplayLastName { get; }
         int? OrganizationId { get; }
         string OrganizationTitle { get; }
     }
@@ -34,6 +36,10 @@ namespace Datiss.Budget.Security
 
         public string DisplayName { get; protected set; }
 
+        public string DisplayFirstName { get; protected set; }
+
+        public string DisplayLastName { get; protected set; }
+
         public int? OrganizationId { get; protected set; }
 
         public string OrganizationTitle { get; protected set; }
@@ -41,6 +47,8 @@ namespace Datiss.Budget.Security
         private void loadData(HttpContext httpContext) {
             UserId = Principal.Identity.GetUserId();
             DisplayName = Principal.Identity.GetUserDisplayName();
+            DisplayFirstName = Principal.Identity.GetUserFirstName();
+            DisplayLastName = Principal.Identity.GetUserLastName();
             OrganizationId = Principal.Identity.GetOrganizationId();
             OrganizationTitle = Principal.Identity.GetOrganizationTitle();
         }

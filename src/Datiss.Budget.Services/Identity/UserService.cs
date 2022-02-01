@@ -18,6 +18,7 @@ using DNTPersianUtils.Core;
 using LinqKit;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services.Identity
 {
@@ -443,9 +444,23 @@ namespace Datiss.Budget.Services.Identity
                 query = query.Where(predicate);
             }
 
+            if (filter.PositionId.HasValue)
+            {
+                query = query.Where(_=>_.PositionId == filter.PositionId.Value);
+            }
+
             if (filter.Status.HasValue)
             {
                 query = query.Where(_ => _.Status == filter.Status.Value);
+            }
+            if (filter.Search.IsNotNullOrEmpty())
+            {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Include(x => x.Position)
+                             .Where(_ => _.FirstName.ToUpper().Contains(filter.Search) ||
+                                         _.LastName.ToUpper().Contains(filter.Search) ||
+                                         _.UserName.ToUpper().Contains(filter.Search) ||
+                                         _.Position.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;
