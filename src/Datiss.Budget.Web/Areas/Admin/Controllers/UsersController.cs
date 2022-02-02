@@ -210,6 +210,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
             catch(NullReferenceException) {
                 return NotFound();
             }
+            var role = await _roleManager.GetAllCustomRolesAsync();
         }
 
         [HttpPost("edit/{id}")]
@@ -308,7 +309,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
             => (await _roleManager.GetAllCustomRolesAsync())
                 .Select(x => new DropDownItemViewModel {
                     Id = x.Id,
-                    Title = x.Name
+                    Title = x.Title
                 }).ToList();
 
         #endregion
