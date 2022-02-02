@@ -18,6 +18,7 @@ using DNTPersianUtils.Core;
 using LinqKit;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services.Identity
 {
@@ -33,11 +34,12 @@ namespace Datiss.Budget.Services.Identity
         private readonly IApplicationUserManager _userManager;
 
         public UserService(
-            IUnitOfWork uow, 
+            IUnitOfWork uow,
             IUserContext userContext,
             IDateService dateService,
             IOrganizationService organizationService,
-            IApplicationUserManager userManager) {
+            IApplicationUserManager userManager)
+        {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _dateService = dateService ?? throw new ArgumentNullException(nameof(DateService));
@@ -52,7 +54,8 @@ namespace Datiss.Budget.Services.Identity
         private IQueryable<User> QueryActiveUsers()
             => _dbSet.Where(_ => _.Status != EntityStatus.Enabled).AsNoTracking();
 
-        public async Task<UserResultDTO> GetByIdAsync(int id) {
+        public async Task<UserResultDTO> GetByIdAsync(int id)
+        {
             var user = await _dbSet
                 .Include(_ => _.Organization)
                 .Include(_ => _.Position)
@@ -63,7 +66,8 @@ namespace Datiss.Budget.Services.Identity
             return await Task.FromResult(user.Adapt<UserResultDTO>());
         }
 
-        public async Task<ValidationResult<UserResultDTO>> CreateAsync(CreateUserDTO model) {
+        public async Task<ValidationResult<UserResultDTO>> CreateAsync(CreateUserDTO model)
+        {
             model.CheckArgumentIsNull(nameof(model));
 
             //First normalize model data
@@ -81,7 +85,8 @@ namespace Datiss.Budget.Services.Identity
                     .Failed(ValidationMode.Create, validation.Message);
 
             var existingUser = await _userManager.FindByNameAsync(model.UserName);
-            if(existingUser != null) {
+            if (existingUser != null)
+            {
                 return ValidationResult<UserResultDTO>.Failed(
                     existingUser.Adapt<UserResultDTO>(),
                     ValidationMode.Create,
@@ -104,14 +109,17 @@ namespace Datiss.Budget.Services.Identity
                 CreatedDateTime = _dateService.Now
             };
 
-            foreach (var roleId in model.SelectedRoles) {
-                user.Roles.Add(new UserRole {
+            foreach (var roleId in model.SelectedRoles)
+            {
+                user.Roles.Add(new UserRole
+                {
                     RoleId = roleId
                 });
             }
 
             var result = await _userManager.CreateAsync(user, model.Password);
-            if(!result.Succeeded) {
+            if (!result.Succeeded)
+            {
                 throw new CreateUserException(result.Errors);
             }
 
@@ -127,7 +135,8 @@ namespace Datiss.Budget.Services.Identity
                     .Success(user.Adapt<UserResultDTO>());
         }
 
-        public async Task<ValidationResult<UserResultDTO>> UpdateAsync(UpdateUserDTO model) {
+        public async Task<ValidationResult<UserResultDTO>> UpdateAsync(UpdateUserDTO model)
+        {
             model.CheckArgumentIsNull(nameof(model));
 
             //First normalize model data
@@ -146,7 +155,8 @@ namespace Datiss.Budget.Services.Identity
 
             var existingUser = await _dbSet.FirstOrDefaultAsync(_ => _.UserName.ToUpper() == model.UserName.ToUpper()
                                                                         && _.Id != model.Id);
-            if(existingUser != null) {
+            if (existingUser != null)
+            {
                 return ValidationResult<UserResultDTO>.Failed(
                     existingUser.Adapt<UserResultDTO>(),
                     ValidationMode.Update,
@@ -155,8 +165,8 @@ namespace Datiss.Budget.Services.Identity
 
             //Update entity
             var user = await _dbSet
-                .Include(_=> _.Roles)
-                .SingleOrDefaultAsync(_=> _.Id == model.Id);
+                .Include(_ => _.Roles)
+                .SingleOrDefaultAsync(_ => _.Id == model.Id);
             user.CheckReferenceIsNull(nameof(user));
             user.FirstName = model.FirstName.ApplyCorrectYeKe().Trim();
             user.LastName = model.LastName.ApplyCorrectYeKe().Trim();
@@ -169,7 +179,7 @@ namespace Datiss.Budget.Services.Identity
             user.OrganizationId = model.OrganizationId;
 
             user.Roles.Clear();
-            foreach(var roleId in model.SelectedRoles) 
+            foreach (var roleId in model.SelectedRoles)
             {
                 user.Roles.Add(new UserRole
                 {
@@ -178,9 +188,9 @@ namespace Datiss.Budget.Services.Identity
             }
 
             var result = await _userManager.UpdateAsync(user);
-            if(!result.Succeeded)
+            if (!result.Succeeded)
                 throw new UpdateUserException(result.Errors);
-            
+
             //if (!string.IsNullOrWhiteSpace(model.Password)) {
             //    var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
             //    if(!passwordResult.Succeeded) {
@@ -195,7 +205,8 @@ namespace Datiss.Budget.Services.Identity
                     .Success(user.Adapt<UserResultDTO>());
         }
 
-        public async Task<PagedResult<UserResultDTO>> GetListAsync(UserFilterDTO filter) {
+        public async Task<PagedResult<UserResultDTO>> GetListAsync(UserFilterDTO filter)
+        {
             filter.CheckArgumentIsNull(nameof(filter));
 
             var result = new PagedResult<UserResultDTO>
@@ -214,24 +225,43 @@ namespace Datiss.Budget.Services.Identity
 
             result.Items = await query
                 .OrderByDescending(_ => _.Id)
-                .Select(_ => _.Adapt<UserResultDTO>())
+                .Select(x => new UserResultDTO
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Email = x.Email,
+                    Password = x.PasswordHash,
+                    PhoneNumber = x.PhoneNumber,
+                    PositionId = x.PositionId,
+                    PositionTitle = x.Position.Title,
+                    CreatedDateTime = x.CreatedDateTime,
+                    LastVisitDateTime = x.LastVisitDateTime,
+                    IsEmailPublic = x.IsEmailPublic,
+                    NationalCode = x.NationalCode,
+                    OrganizationId = x.OrganizationId,
+                    OrganizationTitle = x.Organization.Title,
+                    Status = x.Status
+                })
                 .ToListAsync();
-
             return await Task.FromResult(result);
         }
 
-        public async Task<bool> HasAccessToOrganizationAsync(int organizationId) {
-            if(_userContext.OrganizationId == null 
+        public async Task<bool> HasAccessToOrganizationAsync(int organizationId)
+        {
+            if (_userContext.OrganizationId == null
                 || _userContext.OrganizationId == organizationId)
-                    return true;
+                return true;
 
             return await _organizationService.IsDescendentOfAsync(
-                _userContext.OrganizationId.Value, 
+                _userContext.OrganizationId.Value,
                 organizationId
             );
         }
 
-        public async Task SetUserStatusAsync(int id, EntityStatus status) {
+        public async Task SetUserStatusAsync(int id, EntityStatus status)
+        {
             var user = await _dbSet.FindAsync(id);
             user.CheckReferenceIsNull(nameof(user));
 
@@ -240,7 +270,8 @@ namespace Datiss.Budget.Services.Identity
             await _uow.SaveChangesAsync();
         }
 
-        public async Task SetUserPasswordAsync(int userId, string newPassword) {
+        public async Task SetUserPasswordAsync(int userId, string newPassword)
+        {
             var user = await _dbSet.FindAsync(userId);
             user.CheckReferenceIsNull(nameof(user));
 
@@ -252,12 +283,12 @@ namespace Datiss.Budget.Services.Identity
         }
 
         #region private methods
-        
+
         private void validateRequiredFields(
             string userName,
             string firstName,
             string lastName,
-            string nationalCode) 
+            string nationalCode)
         {
             if (string.IsNullOrWhiteSpace(userName))
                 throw new RequiredFieldException(nameof(userName));
@@ -272,7 +303,8 @@ namespace Datiss.Budget.Services.Identity
                 throw new RequiredFieldException(nameof(nationalCode));
         }
 
-        private async Task validateNationalCodeAsync(string nationalCode, int? userId = null) {
+        private async Task validateNationalCodeAsync(string nationalCode, int? userId = null)
+        {
             if (string.IsNullOrWhiteSpace(nationalCode))
                 throw new RequiredFieldException(nameof(nationalCode));
 
@@ -280,25 +312,29 @@ namespace Datiss.Budget.Services.Identity
                 throw new InvalidNationalCodeException(nationalCode);
 
             //Check if the user with the given NationalCode already existed in DB.
-            if (userId.HasValue) {
-                var existingUser = await _dbSet.FirstOrDefaultAsync(_ => _.NationalCode == nationalCode 
+            if (userId.HasValue)
+            {
+                var existingUser = await _dbSet.FirstOrDefaultAsync(_ => _.NationalCode == nationalCode
                                                                             && _.Id != userId.Value);
                 if (existingUser != null)
                     throw new UserNationalCodeAlreadyExistException(nationalCode);
             }
-            
+
             var user = await _dbSet.FirstOrDefaultAsync(_ => _.NationalCode == nationalCode);
             if (user != null)
                 throw new UserNationalCodeAlreadyExistException(nationalCode);
         }
 
-        private async Task<ValidationResult> validateCreateAsync(CreateUserDTO model) {
+        private async Task<ValidationResult> validateCreateAsync(CreateUserDTO model)
+        {
             model.CheckArgumentIsNull(nameof(model));
 
-            try {
+            try
+            {
                 validateRequiredFields(model.UserName, model.FirstName, model.LastName, model.NationalCode);
             }
-            catch(RequiredFieldException ex) {
+            catch (RequiredFieldException ex)
+            {
                 if (ex.FieldName == "userName")
                     ValidationResult.Failed(ServiceMessages.Req_Username);
                 if (ex.FieldName == "firstName")
@@ -308,14 +344,17 @@ namespace Datiss.Budget.Services.Identity
                 if (ex.FieldName == "nationalCode")
                     ValidationResult.Failed(ServiceMessages.Req_NationalCode);
             }
-            
-            try {
+
+            try
+            {
                 await validateNationalCodeAsync(model.NationalCode);
             }
-            catch(InvalidNationalCodeException ex) {
+            catch (InvalidNationalCodeException ex)
+            {
                 ValidationResult.Failed(ServiceMessages.Invalid_NationalCode);
             }
-            catch(UserNationalCodeAlreadyExistException) {
+            catch (UserNationalCodeAlreadyExistException)
+            {
                 ValidationResult.Failed(string.Format(
                     ServiceMessages.Exist_NationalCode, model.NationalCode)
                 );
@@ -325,13 +364,16 @@ namespace Datiss.Budget.Services.Identity
         }
 
 
-        private async Task<ValidationResult> validateUpdateAsync(UpdateUserDTO model) {
+        private async Task<ValidationResult> validateUpdateAsync(UpdateUserDTO model)
+        {
             model.CheckArgumentIsNull(nameof(model));
 
-            try {
+            try
+            {
                 validateRequiredFields(model.UserName, model.FirstName, model.LastName, model.NationalCode);
             }
-            catch (RequiredFieldException ex) {
+            catch (RequiredFieldException ex)
+            {
                 if (ex.FieldName == "userName")
                     ValidationResult.Failed(ServiceMessages.Req_Username);
                 if (ex.FieldName == "firstName")
@@ -342,13 +384,16 @@ namespace Datiss.Budget.Services.Identity
                     ValidationResult.Failed(ServiceMessages.Req_NationalCode);
             }
 
-            try {
-                await validateNationalCodeAsync(model.NationalCode, userId : model.Id);
+            try
+            {
+                await validateNationalCodeAsync(model.NationalCode, userId: model.Id);
             }
-            catch (InvalidNationalCodeException ex) {
+            catch (InvalidNationalCodeException ex)
+            {
                 ValidationResult.Failed(ServiceMessages.Invalid_NationalCode);
             }
-            catch (UserNationalCodeAlreadyExistException) {
+            catch (UserNationalCodeAlreadyExistException)
+            {
                 ValidationResult.Failed(string.Format(
                     ServiceMessages.Exist_NationalCode, model.NationalCode)
                 );
@@ -357,31 +402,37 @@ namespace Datiss.Budget.Services.Identity
             return ValidationResult.Success();
         }
 
-        private async Task<IQueryable<User>> setFilterAsync(IQueryable<User> query, UserFilterDTO filter) {
+        private async Task<IQueryable<User>> setFilterAsync(IQueryable<User> query, UserFilterDTO filter)
+        {
             filter.CheckArgumentIsNull(nameof(filter));
 
-            if(filter.UserName.IsNotNullOrEmpty()) {
+            if (filter.UserName.IsNotNullOrEmpty())
+            {
                 filter.UserName = filter.UserName.ToUpper();
                 query = query.Where(_ => _.UserName.ToUpper().Contains(filter.UserName));
             }
-            
-            if(filter.DisplayName.IsNotNullOrEmpty()) {
+
+            if (filter.DisplayName.IsNotNullOrEmpty())
+            {
                 filter.DisplayName = filter.DisplayName.ApplyCorrectYeKe().ToUpper();
                 query = query.Where(_ => _.FirstName.ToUpper().Contains(filter.DisplayName) ||
                                             _.LastName.ToUpper().Contains(filter.DisplayName));
             }
 
-            if(filter.NationalCode.IsNotNullOrEmpty()) {
+            if (filter.NationalCode.IsNotNullOrEmpty())
+            {
                 filter.NationalCode = filter.NationalCode.ToEnglishNumbers();
                 query = query.Where(_ => _.NationalCode.Contains(filter.NationalCode));
             }
 
-            if(filter.PhoneNumber.IsNotNullOrEmpty()) {
+            if (filter.PhoneNumber.IsNotNullOrEmpty())
+            {
                 filter.PhoneNumber = filter.PhoneNumber.ToEnglishNumbers().Trim();
                 query = query.Where(_ => _.PhoneNumber.Contains(filter.PhoneNumber));
             }
 
-            if(filter.OrganizationId.HasValue) {
+            if (filter.OrganizationId.HasValue)
+            {
                 var predicate = PredicateBuilder.New<User>();
 
                 var organizations = await _organizationService
@@ -393,8 +444,23 @@ namespace Datiss.Budget.Services.Identity
                 query = query.Where(predicate);
             }
 
-            if(filter.Status.HasValue) {
+            if (filter.PositionId.HasValue)
+            {
+                query = query.Where(_=>_.PositionId == filter.PositionId.Value);
+            }
+
+            if (filter.Status.HasValue)
+            {
                 query = query.Where(_ => _.Status == filter.Status.Value);
+            }
+            if (filter.Search.IsNotNullOrEmpty())
+            {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Include(x => x.Position)
+                             .Where(_ => _.FirstName.ToUpper().Contains(filter.Search) ||
+                                         _.LastName.ToUpper().Contains(filter.Search) ||
+                                         _.UserName.ToUpper().Contains(filter.Search) ||
+                                         _.Position.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;
