@@ -138,11 +138,18 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var userTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
-
-            var usageLayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
+            var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToList();
+            var userTypeKeys = "";
+            foreach (var key in userTypeData)
+            {
+                userTypeKeys += $"'{key.ConstantKey}',";
+            }
+            ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                .Adapt<List<DropDownItemViewModel>>();
@@ -166,7 +173,6 @@ namespace Datiss.Budget.Web.Controllers
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetUserTypeSource(userTypeSource);
-            model.SetUsageLayerSource(usageLayerSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
@@ -515,6 +521,18 @@ namespace Datiss.Budget.Web.Controllers
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
             return workbook.Deliver("ConsumeForcastWs.xlsx");
+        }
+
+        [HttpPost, Route("GetUsageLayerAsync")]
+        public async Task<JsonResult> GetUsageLayerAsync(string key)
+        {
+            bool isHouse = false;
+            if (key == ConstantKeys.__House)
+                isHouse = true;
+            var result = await _constantService
+                .GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType,isHouse);
+
+            return new JsonResult(result);
         }
 
         #region Private Helper Methods

@@ -49,7 +49,7 @@
                 <td>
                     <div id="divInput_UserType_">
                         <input id="hidUserTypeId_" type="hidden" />
-                        <select class="form-control selectUserType" id="inputUserType_" asp-items="Model.UserTypeSource">
+                        <select class="form-control selectUserType" id="inputUserType_" asp-items="Model.UserTypeSource" onchange="RelatedDropDown(this,event)">
                         </select>
                     </div>
                     <div id="divOutput_UserType_" style="display: none">
@@ -166,7 +166,7 @@
                     <td>
                         <div id="divInput_UserType_@item.Id" style="display: none">
                             <input id="hidUserTypeId_@item.Id" type="hidden" value="@item.UserTypeId" />
-                            <select class="form-control selectUserType" id="inputUserType_@item.Id" asp-items="Model.UserTypeSource">
+                            <select class="form-control selectUserType" id="inputUserType_@item.Id" asp-items="Model.UserTypeSource" onchange="RelatedDropDown(this,event)">
                             </select>
                             <script>
                                 $('select#inputUserType_' + @item.Id + ' option[value=' + @item.UserTypeId + ']').attr('selected', true);

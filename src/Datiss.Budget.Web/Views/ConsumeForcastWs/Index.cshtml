@@ -273,6 +273,21 @@
 
 <script type="text/javascript">
 
+        var userType_Ids = [
+        @Html.Raw(Model.UserTypeSourceIdArray)
+    ];
+
+    var userType_keys = [
+        @Html.Raw(ViewData["userTypeKeys"].ToString())
+    ];
+
+    var userType_source = {};
+
+    for (var i = 0; i < userType_Ids.length; i++) {
+        userType_source[userType_Ids[i]] = userType_keys[i];
+    }
+
+
         $(document).ready(function () {
             console.log('ready');
             //fill input hidden with initial columns showing

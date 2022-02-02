@@ -122,7 +122,7 @@
         model.avgConsumeUser = $('#inputAvgConsumeUser_' + id).val();
         model.consumeUserForcast = $('#inputConsumeUserForcast_' + id).val();
 
-        
+
         $.ajax({
             url: '@Url.Action(ConsumeForcastWsController.ACTION_Edit)',
             type: 'POST',
@@ -245,7 +245,7 @@
                 $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
 
                 $('#divInput_UserType_' + data.id).hide();
-                $('#spanUserType_' + data.id).text(data.userTypeDisplay);
+                $('#spanUserType_' + data.id).text(data.userTypeTitle);
                 $('#divOutput_UserType_' + data.id).show();
 
 
@@ -257,7 +257,7 @@
                 $(e).find('#spanUsageLayerType_').attr('id', 'spanUsageLayerType_' + data.id);
 
                 $('#divInput_UsageLayerType_' + data.id).hide();
-                $('#spanUsageLayerType_' + data.id).text(data.usageLayerTypeDisplay);
+                $('#spanUsageLayerType_' + data.id).text(data.usageLayerTitle);
                 $('#divOutput_UsageLayerType_' + data.id).show();
 
                 //CountUser
@@ -356,7 +356,7 @@
             .attr('id', 'newRow')
             .css('background-color', 'rgb(230 247 228)')
             .show();
-        
+
         $('.selectOrganization:last').select2({
             dir: 'rtl'
         });
@@ -428,6 +428,42 @@
             console.log(i);
             rows[i].style.backgroundColor = "#00000000"
         }
+    }
+
+    function RelatedDropDown(e, event) {
+        let usertypeid = event.target.value;
+        FillDropDown(usertypeid);
+    }
+
+        function FillDropDown(id, selectval = null) {
+
+        let key = userType_source[id];
+        if (key != 'UserType.House') {
+            key = 'UsageLayer';
+        }
+
+        $.ajax({
+            url: '@Url.Action("GetUsageLayerAsync")',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'key': key
+                }
+        }).done(function (data) {
+            var options = $('.selectUsageLayerType');
+            options.empty();
+            $.each(data,
+                function (i, item) {
+                    options.append($('<option />')
+                        .val(item.id)
+                        .text(item.title));
+                });
+            if (selectval != null) {
+                options.val(selectval);
+            }
+        }).fail(function (error) {
+            alert(error);
+        });
     }
 
 </script>
