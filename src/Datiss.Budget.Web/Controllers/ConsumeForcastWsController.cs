@@ -130,13 +130,15 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Index(int page = 1)
         {
             var filter = new ConsumeForcastWsFilterDTO();
+
             var orgSource = (await _organizationService.GetDropDownDataAsync())
-              .Adapt<List<DropDownItemViewModel>>();
+                .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
 
+
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
-            int maxYear = yearSource.Max(_ => _.Id);
+                .Adapt<List<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(x => x.Id);
 
             var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
             var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
@@ -152,7 +154,7 @@ namespace Datiss.Budget.Web.Controllers
             ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-               .Adapt<List<DropDownItemViewModel>>();
+                .Adapt<List<DropDownItemViewModel>>();
 
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
@@ -185,12 +187,10 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(ConsumeForcastWsIndexViewModel model, int page = 1)
+        public async Task<IActionResult> Index(ConsumeForcastWsIndexViewModel model)
         {
-            model.Filter.PageNumber = 1;
             var filter = model.Filter.Adapt<ConsumeForcastWsFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
@@ -205,22 +205,29 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var usertypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
+            var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToList();
+            var userTypeKeys = "";
+            foreach (var key in userTypeData)
+            {
+                userTypeKeys += $"'{key.ConstantKey}',";
+            }
+            ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
 
-            var usagelayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-               .Adapt<List<DropDownItemViewModel>>();
+                .Adapt<List<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
-            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
-            model.SetUserTypeSource(usertypeSource);
-            model.SetUsageLayerSource(usagelayerSource);
+            model.SetFinanceYearFilterSource(yearSource);
+            model.SetOrganizationFilterSource(orgSource);
+            model.SetUserTypeSource(userTypeSource);
 
             return View(model);
         }
@@ -482,31 +489,45 @@ namespace Datiss.Budget.Web.Controllers
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var userTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
-            var usageLayerTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType);
+            var userTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
 
+            var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType,true);
+            var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
 
             var items = new List<ConsumeForcastWsDTO>();
 
             foreach (var org in organizations)
             {
-                foreach (var usr in userTypes)
-                {
-                    foreach(var usl in usageLayerTypes)
-                    {
-                        items.Add(new ConsumeForcastWsDTO
-                        {
-                            UsageLayerTitle = usl.Title,
-                            UsageLayerId = usl.Id,
-                            UserTypeTitle = usr.Title,
-                            UserTypeId = usr.Id,
-                            OrganizationId = org.Id,
-                            OrganizationDisplay = org.Title,
-                            Year = year.Year,
-                            YearId = year.Id
-                        });
-                    }
-                }
+                userTypes.Where(ut => ut.ConstantKey == ConstantKeys.__House)
+                    .ToList()
+                    .ForEach(ut => items.AddRange(houseUsageLayer
+                                        .Select(hul => new ConsumeForcastWsDTO
+                                        {
+                                            UserTypeTitle = ut.Title,
+                                            UserTypeId = ut.Id,
+                                            UsageLayerTitle = hul.Title,
+                                            UsageLayerId = hul.Id,
+                                            OrganizationId = org.Id,
+                                            OrganizationDisplay = org.Title,
+                                            Year = year.Year,
+                                            YearId = year.Id
+                                        }).ToList())
+                    );
+                userTypes.Where(ut => ut.ConstantKey != ConstantKeys.__House)
+                    .ToList()
+                    .ForEach(ut => items.AddRange(nhouseUsagelayer
+                                        .Select(hul => new ConsumeForcastWsDTO
+                                        {
+                                            UserTypeTitle = ut.Title,
+                                            UserTypeId = ut.Id,
+                                            UsageLayerTitle = hul.Title,
+                                            UsageLayerId = hul.Id,
+                                            OrganizationId = org.Id,
+                                            OrganizationDisplay = org.Title,
+                                            Year = year.Year,
+                                            YearId = year.Id
+                                        }).ToList())
+                    );
             }
 
             using var workbook = items.GetImportTemplate(year.Year);

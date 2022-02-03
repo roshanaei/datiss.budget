@@ -5,13 +5,13 @@
 
     function editRow(id) {
 
-        //$('th,tr td').css('background-color', 'rgb(255 255 255)');
-        //resetTableBackColor("my-table");
+        let usertypeid = $('#hidUserTypeId_' + id).val();
+        let selectval = $('#hidUsageLayerTypeId_' + id).val();
+        FillDropDown(usertypeid, selectval);
 
-        //do reset all row background
+        resetTableBackColor("my-table");
 
         let row = $('#row_' + id);
-        //row.css('background-color', '#7598f3');
 
         //Hide output elements
         $('#divOutput_Year_' + id).hide();
@@ -157,8 +157,8 @@
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
-                $('#spanUserType_' + id).text(data.userTypeDisplay);
-                $('#spanUsageLayerType_' + id).text(data.usageLayerTypeDisplay);
+                $('#spanUserType_' + id).text(data.userTypeTitle);
+                $('#spanUsageLayerType_' + id).text(data.usageLayerTitle);
                 $('#spanCountUser_' + id).text(data.countUser);
                 $('#spanUnitUser_' + id).text(data.unitUser);
                 $('#spanConsumeUser_' + id).text(data.consumeUser);
@@ -349,7 +349,10 @@
     function addNewRow() {
         if (isNewRow) return;
 
-        //do reset all row background
+        resetTableBackColor("my-table");
+
+        let usertypeid = $('#inputUserType_').val();
+        FillDropDown(usertypeid);
 
         var template = $('#rowTemplate').clone()
             .appendTo($('#my-table tbody'))
