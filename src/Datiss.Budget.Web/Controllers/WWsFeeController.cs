@@ -157,9 +157,6 @@ namespace Datiss.Budget.Web.Controllers
 
             ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
 
-            var usagelayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
-
             var activity = new ActivityType();
             var activityTypeSource = EnumSelectListProvider.GetActivityTypeItems(activity);
 
@@ -187,7 +184,6 @@ namespace Datiss.Budget.Web.Controllers
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetActivityTypeSource(activityTypeSource);
             model.SetUserTypeSource(userTypeSource);
-            model.SetUsageLayerSource(usagelayerSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
@@ -234,9 +230,6 @@ namespace Datiss.Budget.Web.Controllers
             }
             ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
 
-            var usagelayerSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
-
             var activity = new ActivityType();
             var activityTypeSource = EnumSelectListProvider.GetActivityTypeItems(activity);
 
@@ -249,7 +242,6 @@ namespace Datiss.Budget.Web.Controllers
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
             model.SetUserTypeSource(userTypeSource);
-            model.SetUsageLayerSource(usagelayerSource);
             model.SetActivityTypeSource(activityTypeSource);
 
             return View(model);
@@ -510,7 +502,7 @@ namespace Datiss.Budget.Web.Controllers
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
             var userTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
 
-            var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType);
+            var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType, true);
             var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
 
             var activity = new ActivityType();
@@ -575,8 +567,11 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost, Route("GetUsageLayerAsync")]
         public async Task<JsonResult> GetUsageLayerAsync(string key)
         {
+            bool isHouse = false;
+            if (key == ConstantKeys.__House)
+                isHouse = true;
             var result = await _constantService
-                .GetByKeyAsync(key, ConstantKeys.__UsageLayerType);
+                .GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType, isHouse);
 
             return new JsonResult(result);
         }
