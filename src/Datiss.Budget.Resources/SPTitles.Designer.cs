@@ -313,6 +313,87 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد خدمات دفع فاضلاب مشترکین غیر مسکونی.
+        /// </summary>
+        public static string IncomeCurrentWsNH_Cal1 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsNH_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد مازاد بر ظرفیت خدمات دفع فاضلاب مشترکین غیر مسکونی.
+        /// </summary>
+        public static string IncomeCurrentWsNH_Cal2 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsNH_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد فصلی خدمات دفع فاضلاب مشترکین غیر مسکونی.
+        /// </summary>
+        public static string IncomeCurrentWsNH_Cal3 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsNH_Cal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد تبصره 3 خدمات دفع فاضلاب مشترکین غیر مسکونی.
+        /// </summary>
+        public static string IncomeCurrentWsNH_Cal4 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsNH_Cal4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد کل خدمات دفع فاضلاب مشترکین غیر مسکونی.
+        /// </summary>
+        public static string IncomeCurrentWsNH_Cal5 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsNH_Cal5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع درآمد آبونمان خدمات دفع فاضلاب مشترکین غیر مسکونی.
+        /// </summary>
+        public static string IncomeCurrentWsNH_Cal6 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsNH_Cal6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع تعداد مشترکین فاضلاب غیر مسکونی.
+        /// </summary>
+        public static string IncomeCurrentWsNH_Cal7 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsNH_Cal7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع آحاد مشترکین فاضلاب غیر مسکونی.
+        /// </summary>
+        public static string IncomeCurrentWsNH_Cal8 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsNH_Cal8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع حجم دفع فاضلاب غیر مسکونی.
+        /// </summary>
+        public static string IncomeCurrentWsNH_Cal9 {
+            get {
+                return ResourceManager.GetString("IncomeCurrentWsNH_Cal9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to درآمد ماده 11 آب سالیانه.
         /// </summary>
         public static string IncomeForcast_Cal1 {

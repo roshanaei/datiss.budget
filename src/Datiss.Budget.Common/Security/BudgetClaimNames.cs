@@ -16,6 +16,7 @@ namespace Datiss.Budget.Common.IdentityToolkit
         public static string BranchFeeAmount = nameof(BranchFeeAmount);
         public static string WaterInstallFee = nameof(WaterInstallFee);
         public static string WasteInstallFee = nameof(WasteInstallFee);
+        public static string IncomeCurrentWsNH = nameof(IncomeCurrentWsNH);
 
     }
 

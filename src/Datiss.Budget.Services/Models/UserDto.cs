@@ -37,6 +37,8 @@ namespace Datiss.Budget.Services.Models
         public string NationalCode { get; set; }
         public string DisplayName { get; set; }
         public string PhoneNumber { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public int? OrganizationId { get; set; }
         public int? PositionId { get; set; }
         public EntityStatus? Status { get; set; }
