@@ -1,18 +1,18 @@
 ﻿@using Stimulsoft.Report.Mvc;
 @using Stimulsoft.Report.Web;
 
-@Html.StiNetCoreViewer(new StiNetCoreViewerOptions() {
+@Html.StiNetCoreViewer(new StiNetCoreViewerOptions()
+{
     Actions =
     {
-        GetReport = "GetReport",
-        ViewerEvent = "ViewerEvent"    
+        GetReport = "GetReport1",
+        ViewerEvent = "ViewerEvent"
     },
     Server =
     {
-        Controller = "Report",
+        Controller = "Viewer",
         RequestTimeout = 60000,
-        CacheMode = StiServerCacheMode.None,
-        RouteTemplate = "Report/{action}"
+        CacheMode = StiServerCacheMode.None
     },
     Appearance =
     {

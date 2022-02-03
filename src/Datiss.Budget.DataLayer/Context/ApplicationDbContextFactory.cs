@@ -33,7 +33,7 @@ namespace Datiss.Budget.DataLayer.Context
             var siteSettings = services.BuildServiceProvider().GetRequiredService<IOptionsSnapshot<SiteSettings>>();
 			//siteSettings.Value.ActiveDatabase = ActiveDatabase.LocalDb;
 
-            services.AddEntityFrameworkSqlServer(); // It's added to access services from the dbcontext, remove it if you are using the normal `AddDbContext` and normal constructor dependency injection.
+            //services.AddEntityFrameworkSqlServer(); // It's added to access services from the dbcontext, remove it if you are using the normal `AddDbContext` and normal constructor dependency injection.
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
             optionsBuilder.UseConfiguredApplicationDbContext(siteSettings.Value, services.BuildServiceProvider());
 
