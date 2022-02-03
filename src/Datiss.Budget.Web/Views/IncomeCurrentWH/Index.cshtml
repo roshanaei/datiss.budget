@@ -366,11 +366,9 @@
     <script type="text/javascript">
 
 
-    $(document).ready(function () {
-        console.log(userType_source);
-        console.log(userType_Ids);
-        console.log(userType_keys);
+        $(document).ready(function () {
             console.log('ready');
+            //fill input hidden with initial columns showing
             document.getElementById("hidColumns").value = showingColmuns;
 
             setDataColumns();
@@ -386,7 +384,7 @@
                 if (checked) {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
                     showingColmuns = showingColmuns + `${index},`
-                    document.getElementById("hidColumns").value = showingColmuns ;
+                    document.getElementById("hidColumns").value = showingColmuns;
                 } else {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
                     showingColmuns = showingColmuns.replace(`${index},`, '');
@@ -412,12 +410,12 @@
             console.log('ColumnsToShow ');
             console.log(columnsToShow);
             let checkBoxes = $("#columnSelector input:checkbox");
-            for(let i = 0; i < columnIndices.length; i++) {
+            for (let i = 0; i < columnIndices.length; i++) {
                 let index = parseInt(columnIndices[i]);
                 let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
                 console.log(`Column : ${index} show = ${showColumn}`);
                 checkBoxes[i].checked = showColumn;
-                if(showColumn)
+                if (showColumn)
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
                 else
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
