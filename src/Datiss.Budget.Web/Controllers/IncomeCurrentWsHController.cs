@@ -132,7 +132,7 @@ namespace Datiss.Budget.Web.Controllers
             var userTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var usageLayerTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType))
+            var usageLayerTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType,true))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             filter.YearId = maxYear;
@@ -186,7 +186,7 @@ namespace Datiss.Budget.Web.Controllers
             var userTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var usageLayerTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType))
+            var usageLayerTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType,true))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
@@ -440,7 +440,7 @@ namespace Datiss.Budget.Web.Controllers
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
 
             var userTypes = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType);
-            var houseUsageLayerTypes = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UsageLayerType);
+            var houseUsageLayerTypes = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType,true);
 
             var items = new List<IncomeCurrentWsHDTO>();
 
