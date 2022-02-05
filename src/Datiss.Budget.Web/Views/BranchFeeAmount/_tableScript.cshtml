@@ -55,6 +55,7 @@
         rowData = {};
         rowData.yearId = $('#inputYear_' + id).val();
         rowData.organizationId = $('#inputOrg_' + id).val();
+        console.log(rowData.organizationId);
         rowData.urbanAdjustmentFactor = $('#inputUrbanAdjustmentFactor_' + id).val();
         rowData.wasteRateInWater = $('#inputWasteRateInWater_' + id).val();
         rowData.waterBranchingPerHousing = $('#inputWaterBranchingPerHousing_' + id).val();
@@ -188,6 +189,7 @@
 
                 rowData = {};
                 rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
                 rowData.urbanAdjustmentFactor = model.urbanAdjustmentFactor;
                 rowData.wasteRateInWater = model.wasteRateInWater;
                 rowData.waterBranchingPerHousing = model.waterBranchingPerHousing;
