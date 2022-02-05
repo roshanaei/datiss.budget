@@ -191,7 +191,12 @@
                                     </li>
                                     <li class="nav-item">
                                         <a asp-area="" asp-controller="@SubscriptionController.Name" asp-action="index">
-                                            <span data-i18n="حجم مصرف آب" class="menu-item my-font-light">آبونمان</span>
+                                            <span data-i18n="آبونمان" class="menu-item my-font-light">آبونمان</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="@WWsFeeController.Name" asp-action="index">
+                                            <span data-i18n="تعرفه آب و خدمات دفع فاضلاب" class="menu-item my-font-light">تعرفه آب و خدمات دفع فاضلاب</span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -215,12 +220,12 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                        <a asp-area="" asp-controller="IncomeCurrentWsH" asp-action="Index">
                                             <span data-i18n="درآمد فاضلاب بها مسکونی" class="menu-item my-font-light">درآمد فاضلاب بها مسکونی</span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                        <a asp-area="" asp-controller="IncomeCurrentWsNH" asp-action="Index">
                                             <span data-i18n="درآمد فاضلاب بها غیر مسکونی" class="menu-item my-font-light">درآمد فاضلاب بها غیر مسکونی</span>
                                         </a>
                                     </li>
