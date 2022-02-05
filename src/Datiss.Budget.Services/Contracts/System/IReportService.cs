@@ -1,4 +1,6 @@
 ﻿using Datiss.Budget.Entities;
+using Datiss.Budget.Services.Infrastructure;
+using Datiss.Budget.Services.Models;
 using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Contracts
@@ -10,5 +12,12 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<Report> GetAsync(string name);
 
+        Task<PagedResult<ReportDTO>> GetListAsync(ReportFilterDTO filter);
+
+        Task<ValidationResult<ReportDTO>> CreateAsync(CreateReportData model);
+
+        Task<ValidationResult<ReportDTO>> UpdateAsync(UpdateReportData model);
+
     }
+
 }
