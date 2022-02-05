@@ -142,7 +142,7 @@
         console.log(model);
 
         $.ajax({
-            url: '@Url.Action(WaterInstallFeeController.ACTION_Edit)',
+            url: '@Url.Action(BranchingRateIncreaseController.ACTION_Edit)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -188,7 +188,7 @@
                 $('#spanWaterInstallRateIncrease_' + id).text(data.waterInstallRateIncrease);
                 $('#spanWsInstalIncrease_' + id).text(data.wsInstalIncrease);
                 $('#spanWaterFixNote2_' + id).text(data.waterFixNote2);
-                $('#inputWasteFixNote2_' + id).text(data.wasteFixNote2);
+                $('#spanWasteFixNote2_' + id).text(data.wasteFixNote2);
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
@@ -252,7 +252,7 @@
         console.log(model);
 
         $.ajax({
-            url: '@Url.Action(WaterInstallFeeController.ACTION_Create)',
+            url: '@Url.Action(BranchingRateIncreaseController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -471,7 +471,7 @@
         console.log(e);
 
         $.ajax({
-            url: '@Url.Action(WaterInstallFeeController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(BranchingRateIncreaseController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {

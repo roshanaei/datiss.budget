@@ -72,7 +72,7 @@
         rowData.totalIncome = $('#inputTotalIncome_' + id).val();
         rowData.diff_ConsWsVolume = $('#inputDiff_ConsWsVolume_' + id).val();
         rowData.note2Income = $('#inputNote2Income_' + id).val();
-        rowData.wasteVolume = $('#inputWasteVolume_' + id).val();
+        rowData.wasteVolume = $('#inputwasteVolume_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -100,26 +100,26 @@
         $('#divInput_Note2Income_' + id).hide();
         $('#divInput_WasteVolume_' + id).hide();
 
+        //Reverting to OriginalData
         if (rowData != null) {
-            console.log(rowData);
-            $('#inputOrg_' + id).attr('value', rowData.organizationId);
-            $('#inputUserType_' + id).attr(rowData.userTypeId);
-            $('#inputNumberUser_' + id).attr(rowData.numberUser);
-            $('#inputUnitUser_' + id).attr(rowData.unitUser);
-            $('#inputAvgConsumeUser_' + id).attr(rowData.avgConsumeUser);
-            $('#inputConsumptionUser_' + id).attr(rowData.consumptionUser);
-            $('#inputCapacity_' + id).attr(rowData.capacity);
-            $('#inputCost_' + id).attr(rowData.cost);
-            $('#inputIncome_' + id).attr(rowData.income);
-            $('#inputExcessIncome_' + id).attr(rowData.excessIncome);
-            $('#inputSeasonalIncome_' + id).attr(rowData.seasonalIncome);
-            $('#inputNote3Price_' + id).attr(rowData.note3Price);
-            $('#inputNote3Income_' + id).attr(rowData.note3Income);
-            $('#inputSubscriptionIncome_' + id).attr(rowData.subscriptionIncome);
-            $('#inputTotalIncome_' + id).attr(rowData.totalIncome);
-            $('#inputDiff_ConsWsVolume_' + id).attr(rowData.diff_ConsWsVolume);
-            $('#inputNote2Income_' + id).attr(rowData.note2Income);
-            $('#inputWasteVolume_' + id).attr(rowData.wasteVolume);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputUserType_' + id).val(rowData.userTypeId);
+            $('#inputNumberUser_' + id).val(rowData.numberUser);
+            $('#inputUnitUser_' + id).val(rowData.unitUser);
+            $('#inputAvgConsumeUser_' + id).val(rowData.avgConsumeUser);
+            $('#inputConsumptionUser_' + id).val(rowData.consumptionUser);
+            $('#inputCapacity_' + id).val(rowData.capacity);
+            $('#inputCost_' + id).val(rowData.cost);
+            $('#inputIncome_' + id).val(rowData.income);
+            $('#inputExcessIncome_' + id).val(rowData.excessIncome);
+            $('#inputSeasonalIncome_' + id).val(rowData.seasonalIncome);
+            $('#inputNote3Price_' + id).val(rowData.note3Price);
+            $('#inputNote3Income_' + id).val(rowData.note3Income);
+            $('#inputSubscriptionIncome_' + id).val(rowData.subscriptionIncome);
+            $('#inputTotalIncome_' + id).val(rowData.totalIncome);
+            $('#inputDiff_ConsWsVolume_' + id).val(rowData.diff_ConsWsVolume);
+            $('#inputNote2Income_' + id).val(rowData.note2Income);
+            $('#inputwasteVolume_' + id).val(rowData.wasteVolume);
         }
 
         //Show output elements

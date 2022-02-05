@@ -4,7 +4,7 @@
     let rowData = {};
 
     function editRow(id) {
-
+        debugger
         let usertypeid = $('#hidUserTypeId_' + id).val();
         let selectval = $('#hidUsageLayerTypeId_' + id).val();
         FillDropDown(usertypeid, selectval);
@@ -168,6 +168,7 @@
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#hidUsageLayerTypeId_' + id).attr('value', model.usageLayerId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
                 $('#spanActivityType_' + id).text(data.activityTypeDisplay);

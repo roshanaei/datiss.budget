@@ -418,6 +418,7 @@ namespace Datiss.Budget.Web.Controllers
                 {
                     OrganizationId = org.Id,
                     OrganizationDisplay = org.Title,
+                    ActivityType = activity,
                     Year = year.Year,
                     YearId = year.Id
                 });
