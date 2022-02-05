@@ -140,6 +140,7 @@ namespace Datiss.Budget.Services
                             Title = x.Title
                         }).ToListAsync();
 
+
         public async Task<IEnumerable<DropDownItem>> GetCofficientByKeysAsync(string key, string parentkey)
             => await _dbSet
                         .Include(x => x.Parent)
@@ -229,9 +230,9 @@ namespace Datiss.Budget.Services
         private async Task<bool> ExistByKeyAsync(string contantKey, int? id = null)
             => id == null
                 ? await _dbSet.AnyAsync
-                    (_ => _.ConstantKey.ToUpper() == contantKey.ToUpper()) != null
+                    (_ => _.ConstantKey.ToUpper() == contantKey.ToUpper())
                 : await _dbSet.AnyAsync
-                    (_ => _.Id != id.Value && _.ConstantKey.ToUpper() == contantKey.ToUpper()) != null;
+                    (_ => _.Id != id.Value && _.ConstantKey.ToUpper() == contantKey.ToUpper());
 
         #endregion
     }
