@@ -23,6 +23,7 @@ using Datiss.Budget.Web.Helpers;
 using System.IO;
 using Datiss.Budget.Reports.Excel;
 using ClosedXML.Extensions;
+using Datiss.Budget.Security;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -81,6 +82,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
         public async Task<IActionResult> Create(CreateWWsFeeViewModel model)
         {
             if (!ModelState.IsValid)
@@ -103,6 +105,7 @@ namespace Datiss.Budget.Web.Controllers
 
 
         [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Edit)]
         public async Task<IActionResult> Edit(UpdateWWsFeeViewModel model)
         {
 
@@ -127,6 +130,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("{page?}")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.List)]
         public async Task<IActionResult> Index(int page = 1)
         {
             var filter = new WWsFeeFilterDTO();
@@ -248,6 +252,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
         public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
         {
             model.CheckArgumentIsNull(nameof(model));
@@ -317,6 +322,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("records/delete")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
         public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
         {
             try
@@ -367,6 +373,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]/{id}")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -436,6 +443,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
         public async Task<IActionResult> Copy()
         {
             var model = new CopyViewModel();
