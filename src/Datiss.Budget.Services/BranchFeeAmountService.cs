@@ -342,7 +342,7 @@ namespace Datiss.Budget.Services
 
                     var entity = new BranchFeeAmount
                     {
-                        YearId = item.YearId,
+                        YearId = destYearId,
                         OrganizationId = item.OrganizationId,
                         UrbanAdjustmentFactor = item.UrbanAdjustmentFactor,
                         WasteRateInWater = item.WasteRateInWater,
@@ -649,7 +649,7 @@ namespace Datiss.Budget.Services
 
                     var entity = new BranchFeeAmount
                     {
-                        YearId = item.YearId,
+                        YearId = targetYearId,
                         OrganizationId = item.OrganizationId,
                         UrbanAdjustmentFactor = item.UrbanAdjustmentFactor,
                         WasteRateInWater = item.WasteRateInWater,

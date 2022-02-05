@@ -9,34 +9,34 @@ namespace Datiss.Budget.Services.Excel
 {
     public class ConsumeForcastWsImportModel
     {
-        [Column(0, MappingDirections.Both, Letter = "A")]
+        [Column(MappingDirections.Both, Letter = "A")]
         public string OrganizationDisplay { get; set; }
 
-        [Column(1, MappingDirections.Both, Letter = "B")]
+        [Column(MappingDirections.Both, Letter = "B")]
         public int OrganizationId { get; set; }
 
-        [Column(2, MappingDirections.Both, Letter = "C")]
+        [Column(MappingDirections.Both, Letter = "C")]
+        public string UserTypeDisplay { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "D")]
         public int UserTypeId { get; set; }
 
-        [Column(2, MappingDirections.Both, Letter = "D")]
-        public int UserTypeDisplay { get; set; }
+        [Column(MappingDirections.Both, Letter = "E")]
+        public string UsageLayerDisplay { get; set; }
 
-        [Column(3, MappingDirections.Both, Letter = "E")]
+        [Column(MappingDirections.Both, Letter = "F")]
         public int UsageLayerId { get; set; }
 
-        [Column(3, MappingDirections.Both, Letter = "F")]
-        public int UsageLayerDisplay { get; set; }
-
-        [Column(4, MappingDirections.Both, Letter = "G")]
+        [Column(MappingDirections.Both, Letter = "G")]
         public decimal CountUser { get; set; }
 
-        [Column(5, MappingDirections.Both, Letter = "H")]
+        [Column(MappingDirections.Both, Letter = "H")]
         public decimal UnitUser { get; set; }
 
-        [Column(6, MappingDirections.Both, Letter = "I")]
+        [Column(MappingDirections.Both, Letter = "I")]
         public decimal ConsumeUser { get; set; }
 
-        [Column(7, MappingDirections.Both, Letter = "J")]
+        [Column(MappingDirections.Both, Letter = "J")]
         public decimal AvgConsumeUser { get; set; }
     }
 }

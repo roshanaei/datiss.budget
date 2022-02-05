@@ -384,7 +384,7 @@ namespace Datiss.Budget.Services
             var usagelayers = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UsageLayerType &&
                                                  x.Status != EntityStatus.Deleted);
 
-            var houseUsageLayer = await usagelayers.Where(x => x.ConstantKey == ConstantKeys.__House).ToListAsync();
+            var houseUsageLayer = await usagelayers.Where(x => x.ConstantKey != ConstantKeys.__UsageLayerType).ToListAsync();
             var noneHouseUsageLayer = await usagelayers.Where(x => x.ConstantKey == ConstantKeys.__UsageLayerType).ToListAsync();
 
 

@@ -55,19 +55,20 @@
         rowData = {};
         rowData.yearId = $('#inputYear_' + id).val();
         rowData.organizationId = $('#inputOrg_' + id).val();
+        console.log(rowData.organizationId);
         rowData.urbanAdjustmentFactor = $('#inputUrbanAdjustmentFactor_' + id).val();
         rowData.wasteRateInWater = $('#inputWasteRateInWater_' + id).val();
         rowData.waterBranchingPerHousing = $('#inputWaterBranchingPerHousing_' + id).val();
         rowData.tubingCost = $('#inputTubingCost_' + id).val();
         rowData.waterPartnershipAmountDomestic = $('#inputWaterPartnershipAmountDomestic_' + id).val();
-        rowData.waterPartnershipAmountNDomestic = $("#inputWaterPartnershipAmountNDomestic_" + id).val();
-        rowData.wastePartnershipAmountDomestic = $("#inputWastePartnershipAmountDomestic_" + id).val();
-        rowData.wastePartnershipAmountNDomestic = $("#inputWastePartnershipAmountNDomestic" + id).val();
-        rowData.fixCostNote11H = $("#inputFixCostNote11H_" + id).val();
-        rowData.fixCostNote11NH = $("#inputFixCostNote11NH_" + id).val();
-        rowData.fixCostNote11HWs = $("#inputFixCostNote11HWs_" + id).val();
-        rowData.fixCostNote11NHWs = $("#inputFixCostNote11NHWs_" + id).val();
-        rowData.wsTubingCost = $("#inputWsTubingCost_" + id).val();
+        rowData.waterPartnershipAmountNDomestic = $('#inputWaterPartnershipAmountNDomestic_' + id).val();
+        rowData.wastePartnershipAmountDomestic = $('#inputWastePartnershipAmountDomestic_' + id).val();
+        rowData.wastePartnershipAmountNDomestic = $('#inputWastePartnershipAmountNDomestic_' + id).val();
+        rowData.fixCostNote11H = $('#inputFixCostNote11H_' + id).val();
+        rowData.fixCostNote11NH = $('#inputFixCostNote11NH_' + id).val();
+        rowData.fixCostNote11HWs = $('#inputFixCostNote11HWs_' + id).val();
+        rowData.fixCostNote11NHWs = $('#inputFixCostNote11NHWs_' + id).val();
+        rowData.wsTubingCost = $('#inputWsTubingCost_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -91,7 +92,7 @@
         $('#divInput_FixCostNote11NHWs_' + id).hide();
         $('#divInput_WsTubingCost_' + id).hide();
 
-        //Retriving to OrginalData
+        //Reverting to OriginalData
         if (rowData != null) {
             $('#inputYear_' + id).val(rowData.yearId);
             $('#inputOrg_' + id).val(rowData.organizationId);
@@ -101,13 +102,13 @@
             $('#inputTubingCost_' + id).val(rowData.tubingCost);
             $('#inputWaterPartnershipAmountDomestic_' + id).val(rowData.waterPartnershipAmountDomestic);
             $('#inputWaterPartnershipAmountNDomestic_' + id).val(rowData.waterPartnershipAmountNDomestic);
-            $("#inputWastePartnershipAmountDomestic_" + id).val(rowData.wastePartnershipAmountDomestic);
-            $("#inputWastePartnershipAmountNDomestic_" + id).val(rowData.wastePartnershipAmountNDomestic);
-            $("#inputFixCostNote11H_" + id).val(rowData.fixCostNote11H);
-            $("#inputFixCostNote11NH_" + id).val(rowData.fixCostNote11NH);
-            $("#inputFixCostNote11HWs_" + id).val(rowData.fixCostNote11HWs);
-            $("#inputFixCostNote11NHWs_" + id).val(rowData.fixCostNote11NHWs);
-            $("#inputWsTubingCost_" + id).val(rowData.wsTubingCost);
+            $('#inputWastePartnershipAmountDomestic_' + id).val(rowData.wastePartnershipAmountDomestic);
+            $('#inputWastePartnershipAmountNDomestic_' + id).val(rowData.wastePartnershipAmountNDomestic);
+            $('#inputFixCostNote11H_' + id).val(rowData.fixCostNote11H);
+            $('#inputFixCostNote11NH_' + id).val(rowData.fixCostNote11NH);
+            $('#inputFixCostNote11HWs_' + id).val(rowData.fixCostNote11HWs);
+            $('#inputFixCostNote11NHWs_' + id).val(rowData.fixCostNote11NHWs);
+            $('#inputWsTubingCost_' + id).val(rowData.wsTubingCost);
         }
 
         //Show output elements
@@ -201,9 +202,8 @@
                 rowData.fixCostNote11NH = model.fixCostNote11NH;
                 rowData.fixCostNote11HWs = model.fixCostNote11HWs;
                 rowData.fixCostNote11NHWs = model.fixCostNote11NHWs;
-                rowData.wsTubingCost = model.wsTubingCost;
+                rowData.wsTubingCost = model.fixCostNote11NHWs;
 
-                console.log(data);
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);

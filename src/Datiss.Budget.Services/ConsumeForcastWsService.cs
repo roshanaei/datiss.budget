@@ -358,11 +358,20 @@ namespace Datiss.Budget.Services
             var records = data.Adapt<List<ConsumeForcastWs>>();
 
             int rowIndex = 1;
+            //Organization
+            var descendents = await _organizationService
+                .GetAllDescendentsAsync(_userContext.OrganizationId);
+            //Constant
+            var usertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                 x.Parent.ConstantKey == ConstantKeys.__UserType);
 
-            var usertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UserType);
+            var usagelayers = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                   x.Parent.ConstantKey == ConstantKeys.__UsageLayerType);
 
-            var usagetypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__UsageLayerType);
+            var houseUsageLayer = await usagelayers.Where(x => x.ConstantKey != ConstantKeys.__UsageLayerType).ToListAsync();
+            var noneHouseUsageLayer = await usagelayers.Where(x => x.ConstantKey == ConstantKeys.__UsageLayerType).ToListAsync();
 
+            //Year
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull($"Year not found with id: {yearId}");
 
@@ -371,87 +380,172 @@ namespace Datiss.Budget.Services
                 rec.YearId = yearId;
 
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
-
-                if (year == null || year.Status == EntityStatus.Disbaled)
+                if (year == null || year.Status == Enum.EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 1, rec.YearId)
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
                         );
                 }
-
                 if (org == null)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 1, rec.OrganizationId)
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
-
                 if (!await usertypes.AnyAsync(x => x.Id == rec.UserTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 1, rec.UserTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.UserTypeId)
+                        );
+                }
+                if (!await usagelayers.AnyAsync(x => x.Id == rec.UsageLayerId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayer, rowIndex + 2, rec.UsageLayerId)
                         );
                 }
 
-                if (!await usagetypes.AnyAsync(x => x.Id == rec.UsageLayerId))
+                var userType = await _constSet.FindAsync(rec.UserTypeId);
+
+                if (userType.ConstantKey == ConstantKeys.__House && !houseUsageLayer.Any(x => x.Id == rec.UsageLayerId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayer, rowIndex + 1, rec.UsageLayerId)
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerUserType, rowIndex + 2, rec.UsageLayerId, userType.Title)
+                        );
+                }
+
+                if (userType.ConstantKey != ConstantKeys.__House && !noneHouseUsageLayer.Any(x => x.Id == rec.UsageLayerId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayerUserType, rowIndex + 2, rec.UsageLayerId, userType.Title)
                         );
                 }
 
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
                         );
                 }
 
                 rowIndex++;
             }
 
-            //Strat UserType
-            var missingUserType = new List<Constant>();
+            //
+            var missingOrgs = new List<Organization>();
+            var existOrgs = new List<Organization>();
 
-            foreach (var item in usertypes)
+            foreach (var item in descendents)
             {
-                var existUserTypeInExcel = records.Any(x => x.UserTypeId == item.Id);
-                if (!existUserTypeInExcel)
-                    missingUserType.Add(item);
-            }
-            if (missingUserType.Any())
-            {
-                string userTypeNames = "";
-                foreach (var item in missingUserType)
+                var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                if (!existInExcel)
                 {
-                    userTypeNames += "- " + item.Title + "<br>";
+                    if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                        missingOrgs.Add(item);
+                }
+                else
+                    existOrgs.Add(item);
+            }
+            //
+
+            //Start Check Type
+            var missingUType = new List<Constant>();
+            var missingHUsageLayerType = new List<Constant>();
+            var missingNHUsageLayerType = new List<Constant>();
+
+            string orgTitle = "";
+            string orgTitleHouse = "";
+            string orgTitleNHouse = "";
+
+            string hUsageLayerTitle = "";
+            string nHUsageLayerTitle = "";
+
+            foreach (var org in existOrgs)
+            {
+                foreach (var usert in usertypes)
+                {
+                    var existUTypeInExcel = records.Any(_ => _.UserTypeId == usert.Id &&
+                                                              _.OrganizationId == org.Id);
+                    if (!existUTypeInExcel)
+                    {
+                        missingUType.Add(usert);
+                        orgTitle = org.Title;
+                    }
+                    else
+                    {
+                        if (usert.ConstantKey == ConstantKeys.__House)
+                        {
+                            foreach (var usage in houseUsageLayer)
+                            {
+                                var exist = records.Any(_ => _.UserTypeId == usert.Id &&
+                                                             _.OrganizationId == org.Id &&
+                                                             _.UsageLayerId == usage.Id);
+                                if (!exist)
+                                {
+                                    missingHUsageLayerType.Add(usage);
+                                    hUsageLayerTitle = usert.Title;
+                                    orgTitleHouse = org.Title;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (var nhusage in noneHouseUsageLayer)
+                            {
+                                var exist = records.Any(_ => _.UserTypeId == usert.Id &&
+                                                             _.OrganizationId == org.Id &&
+                                                             _.UsageLayerId == nhusage.Id);
+                                if (!exist)
+                                {
+                                    missingNHUsageLayerType.Add(nhusage);
+                                    nHUsageLayerTitle = usert.Title;
+                                    orgTitleNHouse = org.Title;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (missingUType.Any())
+            {
+                string uTypeNames = "";
+                foreach (var item in missingUType)
+                {
+                    uTypeNames += "- [" + item.Title + "]<br>";
                 }
                 return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, userTypeNames , ""));
-
+                    string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, uTypeNames, orgTitle));
             }
-            //End UserType
 
-            //start Usagelayer
-            //End UsageLayer
+            if (missingHUsageLayerType.Any())
+            {
+                string usageTypeNames = "";
+                foreach (var item in missingHUsageLayerType)
+                {
+                    usageTypeNames += "- " + item.Title + "<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelUsageLayerUserTypeOrgNotInExcel, usageTypeNames, hUsageLayerTitle, orgTitleHouse));
+            }
+
+            if (missingNHUsageLayerType.Any())
+            {
+                string usageTypeNames = "";
+                foreach (var item in missingNHUsageLayerType)
+                {
+                    usageTypeNames += "- " + item.Title + "<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelUsageLayerUserTypeOrgNotInExcel, usageTypeNames, nHUsageLayerTitle, orgTitleNHouse));
+            }
+
+            //End Check Type
 
             rowIndex = 1;
 
-            var descendents = await _organizationService
-                .GetAllDescendentsAsync(_userContext.OrganizationId);
-
             if (!continueIfAnyOrgMissing)
             {
-                var missingOrgs = new List<Organization>();
-
-                foreach (var item in descendents)
-                {
-                    var existInExcel = records.Any(x => x.OrganizationId == item.Id);
-                    if (!existInExcel)
-                        if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
-                            missingOrgs.Add(item);
-                }
-
                 if (missingOrgs.Any())
                 {
                     string orgNames = "";
@@ -467,12 +561,12 @@ namespace Datiss.Budget.Services
                     };
                 }
             }
+
             foreach (var record in records)
             {
-
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
                         );
 
                 if (!await checkLogicAsync(
@@ -481,9 +575,8 @@ namespace Datiss.Budget.Services
                     record.UserTypeId,
                     record.UsageLayerId))
                 {
-
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 1)
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
                         );
                 }
 
@@ -497,7 +590,7 @@ namespace Datiss.Budget.Services
                 string.Format(ServiceMessages.ImportExcelSuccess)
                 );
         }
-        
+
         public async Task<IEnumerable<ConsumeForcastWsDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
             var filter = new ConsumeForcastWsFilterDTO
