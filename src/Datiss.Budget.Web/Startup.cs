@@ -27,6 +27,7 @@ namespace Datiss.Budget
             services.Configure<SiteSettings>(options => Configuration.Bind(options));
             services.Configure<ContentSecurityPolicyConfig>(options => Configuration.GetSection("ContentSecurityPolicyConfig").Bind(options));
 
+            services.AddMemoryCache();
             // Adds all of the ASP.NET Core Identity related services and configurations at once.
             services.AddCustomIdentityServices();
             services.AddDatissBudgetServices();
