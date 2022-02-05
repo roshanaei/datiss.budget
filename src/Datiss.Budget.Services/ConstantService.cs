@@ -230,9 +230,9 @@ namespace Datiss.Budget.Services
         private async Task<bool> ExistByKeyAsync(string contantKey, int? id = null)
             => id == null
                 ? await _dbSet.AnyAsync
-                    (_ => _.ConstantKey.ToUpper() == contantKey.ToUpper()) != null
+                    (_ => _.ConstantKey.ToUpper() == contantKey.ToUpper())
                 : await _dbSet.AnyAsync
-                    (_ => _.Id != id.Value && _.ConstantKey.ToUpper() == contantKey.ToUpper()) != null;
+                    (_ => _.Id != id.Value && _.ConstantKey.ToUpper() == contantKey.ToUpper());
 
         #endregion
     }
