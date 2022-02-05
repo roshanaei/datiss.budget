@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220110085412_InitDb")]
+    [Migration("20220205132654_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -400,6 +400,75 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("BranchingRateIncrease");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.Cofficient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("CofficientId")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("CofficientTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Fee")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<int>("GroupName")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<string>("ModifiedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ModifiedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("ModifiedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.Property<int>("YearId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CofficientTypeId");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("YearId");
+
+                    b.ToTable("Cofficients");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.ConsumeForcast", b =>
@@ -1414,6 +1483,9 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<DateTime?>("ModifiedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Month")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Operation")
                         .HasColumnType("decimal(18,6)");
 
@@ -2122,6 +2194,34 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.ToTable("FinanceYears");
                 });
 
+            modelBuilder.Entity("Datiss.Budget.Entities.Identity.AppClaimType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.Property<string>("Title")
+                        .HasMaxLength(255)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppClaimTypes");
+                });
+
             modelBuilder.Entity("Datiss.Budget.Entities.Identity.AppDataProtectionKey", b =>
                 {
                     b.Property<int>("Id")
@@ -2279,6 +2379,11 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("Title")
+                        .HasMaxLength(255)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(255)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
@@ -2350,9 +2455,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("BirthDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -2384,9 +2486,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsEmailPublic")
                         .HasColumnType("bit");
 
@@ -2398,9 +2497,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Property<DateTime?>("LastVisitDateTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -2421,6 +2517,9 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Property<DateTime?>("ModifiedDateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("NationalCode")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -3051,6 +3150,33 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("Organization");
 
                     b.Navigation("UserType");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.Cofficient", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Constant", "CofficientType")
+                        .WithMany("Cofficients")
+                        .HasForeignKey("CofficientTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
+                        .WithMany("Cofficients")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
+                        .WithMany("Cofficients")
+                        .HasForeignKey("YearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CofficientType");
+
+                    b.Navigation("FinanceYear");
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.ConsumeForcast", b =>
@@ -3774,6 +3900,8 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("Childrens");
 
+                    b.Navigation("Cofficients");
+
                     b.Navigation("ConsumeForcast");
 
                     b.Navigation("ConsumeForcastWs");
@@ -3843,6 +3971,8 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("BranchFeeAmounts");
 
                     b.Navigation("BranchingRateIncrease");
+
+                    b.Navigation("Cofficients");
 
                     b.Navigation("ConsumeForcast");
 
@@ -3918,6 +4048,8 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("BranchingRateIncrease");
 
                     b.Navigation("Childrens");
+
+                    b.Navigation("Cofficients");
 
                     b.Navigation("ConsumeForcast");
 

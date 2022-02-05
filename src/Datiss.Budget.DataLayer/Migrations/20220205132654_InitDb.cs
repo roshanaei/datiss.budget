@@ -11,6 +11,21 @@ namespace Datiss.Budget.DataLayer.Migrations
                 name: "dbo");
 
             migrationBuilder.CreateTable(
+                name: "AppClaimTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppClaimTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AppDataProtectionKeys",
                 columns: table => new
                 {
@@ -56,6 +71,7 @@ namespace Datiss.Budget.DataLayer.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedByBrowserName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     CreatedByIp = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
@@ -310,12 +326,10 @@ namespace Datiss.Budget.DataLayer.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
                     PhotoFileName = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: true),
-                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LastVisitDateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsEmailPublic = table.Column<bool>(type: "bit", nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    NationalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OrganizationId = table.Column<int>(type: "int", nullable: true),
                     PositionId = table.Column<int>(type: "int", nullable: true),
                     Status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
@@ -449,6 +463,50 @@ namespace Datiss.Budget.DataLayer.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BranchingRateIncrease_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "OrganizationId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cofficients",
+                columns: table => new
+                {
+                    CofficientId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    YearId = table.Column<int>(type: "int", nullable: false),
+                    OrganizationId = table.Column<int>(type: "int", nullable: false),
+                    GroupName = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    Status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
+                    CofficientTypeId = table.Column<int>(type: "int", nullable: false),
+                    Fee = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    CreatedByBrowserName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    CreatedByIp = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    CreatedByUserId = table.Column<int>(type: "int", nullable: true),
+                    CreatedDateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ModifiedByBrowserName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    ModifiedByIp = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    ModifiedByUserId = table.Column<int>(type: "int", nullable: true),
+                    ModifiedDateTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cofficients", x => x.CofficientId);
+                    table.ForeignKey(
+                        name: "FK_Cofficients_Constants_CofficientTypeId",
+                        column: x => x.CofficientTypeId,
+                        principalTable: "Constants",
+                        principalColumn: "ConstantId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Cofficients_FinanceYears_YearId",
+                        column: x => x.YearId,
+                        principalTable: "FinanceYears",
+                        principalColumn: "FinanceYearId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Cofficients_Organizations_OrganizationId",
                         column: x => x.OrganizationId,
                         principalTable: "Organizations",
                         principalColumn: "OrganizationId",
@@ -1530,6 +1588,7 @@ namespace Datiss.Budget.DataLayer.Migrations
                     OrganizationId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     TableFieldId = table.Column<int>(type: "int", nullable: false),
+                    Month = table.Column<int>(type: "int", nullable: false),
                     Target = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
                     Operation = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
                     CreatedByBrowserName = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
@@ -1802,6 +1861,21 @@ namespace Datiss.Budget.DataLayer.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_BranchingRateIncrease_YearId",
                 table: "BranchingRateIncrease",
+                column: "YearId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cofficients_CofficientTypeId",
+                table: "Cofficients",
+                column: "CofficientTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cofficients_OrganizationId",
+                table: "Cofficients",
+                column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cofficients_YearId",
+                table: "Cofficients",
                 column: "YearId");
 
             migrationBuilder.CreateIndex(
@@ -2188,6 +2262,9 @@ namespace Datiss.Budget.DataLayer.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AppClaimTypes");
+
+            migrationBuilder.DropTable(
                 name: "AppDataProtectionKeys");
 
             migrationBuilder.DropTable(
@@ -2220,6 +2297,9 @@ namespace Datiss.Budget.DataLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "BranchingRateIncrease");
+
+            migrationBuilder.DropTable(
+                name: "Cofficients");
 
             migrationBuilder.DropTable(
                 name: "ConsumeForcast");
