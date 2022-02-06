@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -24,11 +23,12 @@ using Datiss.Budget.Enum;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 
-namespace Datiss.Budget.Web.Controllers
+namespace Datiss.Budget.Web.Admin.Controllers
 {
 
-    [Authorize]
-    [Route("[controller]")]
+    [Authorize(Roles = ConstantRoles.Admin)]
+    [Area(AreaConstants.AdminArea)]
+    [Route("[area]/[controller]")]
     public class OrganizationController : Controller
     {
         public const string Name = "Organization";
