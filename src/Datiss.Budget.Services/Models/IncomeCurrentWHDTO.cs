@@ -18,18 +18,18 @@ namespace Datiss.Budget.Services.Models
         public int UnitUser { get; set; }
         public decimal AvgConsumeUser { get; set; }
         public int ConsumptionUser { get; set; }
-        public int Cost { get; set; }
-        public int Note3Price { get; set; }
-        public int Income { get; set; }
-        public int Note3Income { get; set; }
-        public int SubscriptionIncome { get; set; }
-        public int SeasonalIncome { get; set; }
-        public int TIncome { get; set; }
+        public long Cost { get; set; }
+        public long Note3Price { get; set; }
+        public long Income { get; set; }
+        public long Note3Income { get; set; }
+        public long SubscriptionIncome { get; set; }
+        public long SeasonalIncome { get; set; }
+        public long TIncome { get; set; }
         public int Diff_ConsWsVolume { get; set; }
         public int Note2Income { get; set; }
         public int WasteVolume { get; set; }
-        public int Note7Price { get; set; }
-        public int Note7Income { get; set; }
+        public long Note7Price { get; set; }
+        public long Note7Income { get; set; }
     }
     public class UpdateIncomeCurrentWHDTO : CreateIncomeCurrentWHDTO
     {
@@ -50,17 +50,17 @@ namespace Datiss.Budget.Services.Models
         public int UnitUser { get; set; }
         public decimal AvgConsumeUser { get; set; }
         public int ConsumptionUser { get; set; }
-        public int Cost { get; set; }
-        public int Note3Price { get; set; }
-        public int Income { get; set; }
-        public int Note3Income { get; set; }
-        public int SubscriptionIncome { get; set; }
-        public int SeasonalIncome { get; set; }
-        public int TIncome { get; set; }
+        public long Cost { get; set; }
+        public long Note3Price { get; set; }
+        public long Income { get; set; }
+        public long Note3Income { get; set; }
+        public long SubscriptionIncome { get; set; }
+        public long SeasonalIncome { get; set; }
+        public long TIncome { get; set; }
         public int Diff_ConsWsVolume { get; set; }
         public int Note2Income { get; set; }
         public int WasteVolume { get; set; }
-        public int Note7Price { get; set; }
-        public int Note7Income { get; set; }
+        public long Note7Price { get; set; }
+        public long Note7Income { get; set; }
     }
 }

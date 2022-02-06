@@ -31,15 +31,15 @@ namespace Datiss.Budget.ViewModels
         [Required(ErrorMessage = "*")]
         public int UnitUser { get; set; }
         [Required(ErrorMessage = "*")]
-        public int WaterInstllIncome { get; set; }
+        public long WaterInstllIncome { get; set; }
         [Required(ErrorMessage = "*")]
-        public int WaterBranchIncome { get; set; }
+        public long WaterBranchIncome { get; set; }
         [Required(ErrorMessage = "*")]
-        public int WaterNote2Income { get; set; }
+        public long WaterNote2Income { get; set; }
         [Required(ErrorMessage = "*")]
-        public int WaterNote3Income { get; set; }
+        public long WaterNote3Income { get; set; }
         [Required(ErrorMessage = "*")]
-        public int WNote11Income { get; set; }
+        public long WNote11Income { get; set; }
     }
     public class UpdateIncomeForcastViewModel : CreateIncomeForcastViewModel
     {
@@ -58,15 +58,15 @@ namespace Datiss.Budget.ViewModels
         public string NumberUserDisplay => NumberUser.ToString("N0");
         public int UnitUser { get; set; }
         public string UnitUserDisplay => UnitUser.ToString("N0");
-        public int WaterInstllIncome { get; set; }
+        public long WaterInstllIncome { get; set; }
         public string WaterInstllIncomeDisplay => WaterInstllIncome.ToString("N0");
-        public int WaterBranchIncome { get; set; }
+        public long WaterBranchIncome { get; set; }
         public string WaterBranchIncomeDisplay => WaterBranchIncome.ToString("N0");
-        public int WaterNote2Income { get; set; }
+        public long WaterNote2Income { get; set; }
         public string WaterNote2IncomeDisplay => WaterNote2Income.ToString("N0");
-        public int WaterNote3Income { get; set; }
+        public long WaterNote3Income { get; set; }
         public string WaterNote3IncomeDisplay => WaterNote3Income.ToString("N0");
-        public int WNote11Income { get; set; }
+        public long WNote11Income { get; set; }
         public string WNote11IncomeDisplay => WNote11Income.ToString("N0");
     }
     public class IncomeForcastFilterViewModel : FilterViewModel
