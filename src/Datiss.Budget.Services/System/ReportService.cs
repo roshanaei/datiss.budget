@@ -8,8 +8,8 @@ using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Enum;
 using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Entities;
+using Datiss.Budget.Resources;
 using Datiss.Budget.Extensions;
-using Datiss.Budget.ViewModels;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
@@ -87,11 +87,11 @@ namespace Datiss.Budget.Services
 
             if (checkMandatoryFieldsIsEmpty(model.Title, model.Name))
                 return ValidationResult<ReportDTO>
-                    .Failed(ValidationMode.Create, "");
+                    .Failed(ValidationMode.Create, ServiceMessages.MandatoryFields);
 
             if (await existByNameAsync(model.Name))
                 return ValidationResult<ReportDTO>
-                    .Failed(ValidationMode.Create, "");
+                    .Failed(ValidationMode.Create, ServiceMessages.ReportExistByName);
 
             var report = new Report
             {
@@ -123,11 +123,11 @@ namespace Datiss.Budget.Services
 
             if(checkMandatoryFieldsIsEmpty(model.Title, model.Name))
                 return ValidationResult<ReportDTO>
-                    .Failed(ValidationMode.Update, "");
+                    .Failed(ValidationMode.Update, ServiceMessages.MandatoryFields);
 
             if (await existByNameAsync(model.Name, model.Id))
                 return ValidationResult<ReportDTO>
-                    .Failed(ValidationMode.Update, "");
+                    .Failed(ValidationMode.Update, ServiceMessages.ReportExistByName);
 
             report.Name = model.Name.CorrectYeKe();
             report.Title = model.Title.CorrectYeKe();
