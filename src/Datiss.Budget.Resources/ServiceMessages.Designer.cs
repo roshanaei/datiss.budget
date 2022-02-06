@@ -480,6 +480,11 @@ namespace Datiss.Budget.Resources {
         public static string OrganizationInvalidParentId {
             get {
                 return ResourceManager.GetString("OrganizationInvalidParentId", resourceCulture);
+        ///   Looks up a localized string similar to لطفاً اطلاعات فیلدهای اجباری را وارد نمایید..
+        /// </summary>
+        public static string MandatoryFields {
+            get {
+                return ResourceManager.GetString("MandatoryFields", resourceCulture);
             }
         }
         
@@ -489,6 +494,15 @@ namespace Datiss.Budget.Resources {
         public static string RelationDataSoftDeleted {
             get {
                 return ResourceManager.GetString("RelationDataSoftDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to گزارش با نام &apos;{0}&apos; قبلاً در سیستم ثبت شده است. لطفاً نام دیگری وارد نمایید..
+        /// </summary>
+        public static string ReportExistByName {
+            get {
+                return ResourceManager.GetString("ReportExistByName", resourceCulture);
             }
         }
         

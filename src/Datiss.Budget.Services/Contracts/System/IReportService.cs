@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Contracts
 {
+
     public interface IReportService
     {
 
