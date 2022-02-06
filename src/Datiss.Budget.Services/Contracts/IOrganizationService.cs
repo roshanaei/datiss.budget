@@ -23,7 +23,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<IEnumerable<DropDownItem>> GetDropDownDataAsync(bool input = false);
 
-        Task<IEnumerable<DropDownItem>> GetDropDownTypeOrgDataAsync(OrganizationType type);
+        Task<IEnumerable<DropDownItem>> GetDropDownTypeOrgDataAsync(OrganizationType type, bool none = false);
 
         Task<bool> IsDescendentOfAsync(int parentId, int targetOrganizationId);
 

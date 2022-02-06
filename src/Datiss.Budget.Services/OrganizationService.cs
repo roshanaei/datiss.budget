@@ -53,6 +53,12 @@ namespace Datiss.Budget.Services
         public async Task<ValidationResult> CreateAsync(CreateOrganizationDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
+            if (await checkLogicTypeAsync(model.Type, model.ParentId))
+            {
+                return ValidationResult.Failed(
+                    string.Format(ServiceMessages.OrganizationInvalidParentId)
+                    );
+            }
             var displayOrder = await getDisplayOrder(model.Type, model.ParentId);
             var entity = new Organization
             {
@@ -80,7 +86,18 @@ namespace Datiss.Budget.Services
         public async Task<ValidationResult> UpdateAsync(UpdateOrganizationDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
-
+            if (model.Id == model.ParentId)
+            {
+                return ValidationResult.Failed(
+                    string.Format(ServiceMessages.OrganizationInvalidParentId)
+                    );
+            }
+            if (await checkLogicTypeAsync(model.Type, model.ParentId))
+            {
+                return ValidationResult.Failed(
+                    string.Format(ServiceMessages.OrganizationInvalidParentId)
+                    );
+            }
             if (await checkLogicAsync(model.Title, model.ParentId, model.Id))
             {
                 var entity = await _dbSet.FindAsync(model.Id);
@@ -175,8 +192,15 @@ namespace Datiss.Budget.Services
                         Title = x.Title,
                         Selected = x.Id == _userContext.OrganizationId
                     }).ToList();
-        public async Task<IEnumerable<DropDownItem>> GetDropDownTypeOrgDataAsync(OrganizationType type)
-            => await Query().Where(x => x.Type == type)
+        public async Task<IEnumerable<DropDownItem>> GetDropDownTypeOrgDataAsync(OrganizationType type, bool none = false)
+            => none
+            ? await Query().Where(x => x.Type != type)
+            .Select(x => new DropDownItem
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToListAsync()
+            : await Query().Where(x => x.Type == type)
             .Select(x => new DropDownItem
             {
                 Id = x.Id,
@@ -343,7 +367,7 @@ namespace Datiss.Budget.Services
                 }
             }
 
-            var children = await getByParnetIdAsync(myself != null ? myself.Id : null, input , queryTracked);
+            var children = await getByParnetIdAsync(myself != null ? myself.Id : null, input, queryTracked);
 
             if (input)
             {
@@ -386,7 +410,7 @@ namespace Datiss.Budget.Services
         {
             if (type == OrganizationType.County)
             {
-                var child = await getWithChildrenAsync(orgId,queryTracked : true);
+                var child = await getWithChildrenAsync(orgId, queryTracked: true);
                 foreach (var item in child)
                 {
                     item.DisplayOrder = displayOrder;
@@ -419,6 +443,17 @@ namespace Datiss.Budget.Services
                                               x.ParentId == parentId &&
                                               x.Id != id);
             return !result;
+        }
+        private async Task<bool> checkLogicTypeAsync(
+            OrganizationType organizationType,
+            int? parentId)
+        {
+            var parentType = await GetByIdAsync(parentId.Value);
+            if (organizationType <= parentType.Type)
+            {
+                return true;
+            }
+            return false;
         }
 
         #endregion

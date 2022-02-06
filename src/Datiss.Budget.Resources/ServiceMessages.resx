@@ -282,4 +282,7 @@
   <data name="Role_Title_Exist" xml:space="preserve">
     <value>عنوان نقش نباید تکراری باشد.</value>
   </data>
+  <data name="OrganizationInvalidParentId" xml:space="preserve">
+    <value>پدر سازمان مورد نظر با اطلاعات سازمان همخوانی ندارد.</value>
+  </data>
 </root>
