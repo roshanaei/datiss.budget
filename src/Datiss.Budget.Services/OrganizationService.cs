@@ -160,8 +160,6 @@ namespace Datiss.Budget.Services
 
         public async Task<bool> IsDescendentOfAsync(int parentId, int targetOrganizationId)
         {
-            var query = Query();
-
             var targetOrg = await _dbSet.FindAsync(targetOrganizationId);
             targetOrg.CheckReferenceIsNull(nameof(targetOrg));
 
@@ -195,12 +193,15 @@ namespace Datiss.Budget.Services
         public async Task<IEnumerable<DropDownItem>> GetDropDownTypeOrgDataAsync(OrganizationType type, bool none = false)
             => none
             ? await Query().Where(x => x.Type != type)
+                           .OrderBy(_ => _.Type)
+                           .ThenBy(_=>_.DisplayOrder)
             .Select(x => new DropDownItem
             {
                 Id = x.Id,
                 Title = x.Title
             }).ToListAsync()
             : await Query().Where(x => x.Type == type)
+                           .OrderBy(_=>_.DisplayOrder)
             .Select(x => new DropDownItem
             {
                 Id = x.Id,
@@ -410,6 +411,14 @@ namespace Datiss.Budget.Services
         {
             if (type == OrganizationType.County)
             {
+                if (await Query().AnyAsync(_ => _.DisplayOrder == displayOrder))
+                {
+                    var Org = await _dbSet.Where(_ => _.DisplayOrder >= displayOrder).ToListAsync();
+                    foreach (var item in Org)
+                    {
+                        item.DisplayOrder += 1;
+                    }
+                }
                 var child = await getWithChildrenAsync(orgId, queryTracked: true);
                 foreach (var item in child)
                 {
