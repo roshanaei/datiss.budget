@@ -21,13 +21,13 @@ namespace Datiss.Budget.ViewModels
         [Required(ErrorMessage = "*")]
         public int UnitUser { get; set; }
         [Required(ErrorMessage = "*")]
-        public int WasteInstallIncome { get; set; }
+        public long WasteInstallIncome { get; set; }
         [Required(ErrorMessage = "*")]
-        public int WasteBranchIncome { get; set; }
+        public long WasteBranchIncome { get; set; }
         [Required(ErrorMessage = "*")]
-        public int WasteNote3Income { get; set; }
+        public long WasteNote3Income { get; set; }
         [Required(ErrorMessage = "*")]
-        public int WsNote11Income { get; set; }
+        public long WsNote11Income { get; set; }
     }
     public class UpdateIncomeForcastWsViewModel : CreateIncomeForcastWsViewModel
     {
@@ -46,13 +46,13 @@ namespace Datiss.Budget.ViewModels
         public string NumberUserDisplay => NumberUser.ToString("N0");
         public int UnitUser { get; set; }
         public string UnitUserDisplay => UnitUser.ToString("N0");
-        public int WasteInstallIncome { get; set; }
+        public long WasteInstallIncome { get; set; }
         public string WasteInstallIncomeDisplay => WasteInstallIncome.ToString("N0");
-        public int WasteBranchIncome { get; set; }
+        public long WasteBranchIncome { get; set; }
         public string WasteBranchIncomeDisplay => WasteBranchIncome.ToString("N0");
-        public int WasteNote3Income { get; set; }
+        public long WasteNote3Income { get; set; }
         public string WasteNote3IncomeDisplay => WasteNote3Income.ToString("N0");
-        public int WsNote11Income { get; set; }
+        public long WsNote11Income { get; set; }
         public string WsNote11IncomeDisplay => WsNote11Income.ToString("N0");
     }
     public class IncomeForcastWsFilterViewModel : FilterViewModel

@@ -27,21 +27,21 @@ namespace Datiss.Budget.ViewModels
 
         public decimal Capacity { get; set; }
 
-        public int Cost { get; set; }
+        public long Cost { get; set; }
 
-        public int Income { get; set; }
+        public long Income { get; set; }
 
         public int ExcessIncome { get; set; }
 
-        public int SeasonalIncome { get; set; }
+        public long SeasonalIncome { get; set; }
 
-        public int Note3Price { get; set; }
+        public long Note3Price { get; set; }
 
-        public int Note3Income { get; set; }
+        public long Note3Income { get; set; }
 
-        public int SubscriptionIncome { get; set; }
+        public long SubscriptionIncome { get; set; }
 
-        public int TotalIncome { get; set; }
+        public long TotalIncome { get; set; }
 
         public int Diff_ConsWsVolume { get; set; }
 
@@ -78,21 +78,21 @@ namespace Datiss.Budget.ViewModels
         public string ConsumptionUserDisplay => ConsumptionUser.ToString("N0");
         public decimal Capacity { get; set; }
         public string CapacityDisplay => Capacity.ToString("N2");
-        public int Cost { get; set; }
+        public long Cost { get; set; }
         public string CostDisplay => Cost.ToString("N0");
-        public int Income { get; set; }
+        public long Income { get; set; }
         public string IncomeDisplay => Income.ToString("N0");
         public int ExcessIncome { get; set; }
         public string ExcessIncomeDisplay => ExcessIncome.ToString("N0");
-        public int SeasonalIncome { get; set; }
+        public long SeasonalIncome { get; set; }
         public string SeasonalIncomeDisplay => SeasonalIncome.ToString("N0");
-        public int Note3Price { get; set; }
+        public long Note3Price { get; set; }
         public string Note3PriceDisplay => Note3Price.ToString("N0");
-        public int Note3Income { get; set; }
+        public long Note3Income { get; set; }
         public string Note3IncomeDisplay => Note3Income.ToString("N0");
-        public int SubscriptionIncome { get; set; }
+        public long SubscriptionIncome { get; set; }
         public string SubscriptionIncomeDisplay => SubscriptionIncome.ToString("N0");
-        public int TotalIncome { get; set; }
+        public long TotalIncome { get; set; }
         public string TotalIncomeDisplay => TotalIncome.ToString("N0");
         public int Diff_ConsWsVolume { get; set; }
         public string Diff_ConsWsVolumeDisplay => Diff_ConsWsVolume.ToString("N0");

@@ -28,7 +28,7 @@ namespace Datiss.Budget.Services.Models
     public class UpdateWaterSalesSplitDTO : CreateWaterSalesSplitDTO
     {
         public int Id { get; set; }
-        public int WInstallationCosts { get; set; }
+        public long WInstallationCosts { get; set; }
     }
 
     public class WaterSalesSplitDTO
@@ -45,7 +45,7 @@ namespace Datiss.Budget.Services.Models
         public int NumberSales { get; set; }
         public int UnitSales { get; set; }
         public decimal AverageCapacity { get; set; }
-        public int WInstallationCosts { get; set; }
+        public long WInstallationCosts { get; set; }
     }
 
 }

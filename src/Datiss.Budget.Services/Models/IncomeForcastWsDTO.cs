@@ -14,10 +14,10 @@ namespace Datiss.Budget.Services.Models
         public string UserTypeTitle { get; set; }
         public int NumberUser { get; set; }
         public int UnitUser { get; set; }
-        public int WasteInstallIncome { get; set; }
-        public int WasteBranchIncome { get; set; }
-        public int WasteNote3Income { get; set; }
-        public int WsNote11Income { get; set; }
+        public long WasteInstallIncome { get; set; }
+        public long WasteBranchIncome { get; set; }
+        public long WasteNote3Income { get; set; }
+        public long WsNote11Income { get; set; }
     }
 
     public class UpdateIncomeForcastWsDTO : CreateIncomeForcastWsDTO
@@ -36,9 +36,9 @@ namespace Datiss.Budget.Services.Models
         public string UserTypeDisplay { get; set; }
         public int NumberUser { get; set; }
         public int UnitUser { get; set; }
-        public int WasteInstallIncome { get; set; }
-        public int WasteBranchIncome { get; set; }
-        public int WasteNote3Income { get; set; }
-        public int WsNote11Income { get; set; }
+        public long WasteInstallIncome { get; set; }
+        public long WasteBranchIncome { get; set; }
+        public long WasteNote3Income { get; set; }
+        public long WsNote11Income { get; set; }
     }
 }
