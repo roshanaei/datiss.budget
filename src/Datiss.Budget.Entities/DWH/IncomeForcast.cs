@@ -19,15 +19,15 @@ namespace Datiss.Budget.Entities.DWH
 
         public int UnitUser { get; set; }
 
-        public int WaterInstllIncome { get; set; }
+        public long WaterInstllIncome { get; set; }
 
-        public int WaterBranchIncome { get; set; }
+        public long WaterBranchIncome { get; set; }
 
-        public int WaterNote2Income { get; set; }
+        public long WaterNote2Income { get; set; }
 
-        public int WaterNote3Income { get; set; }
+        public long WaterNote3Income { get; set; }
 
-        public int WNote11Income { get; set; }
+        public long WNote11Income { get; set; }
 
         #endregion
 
