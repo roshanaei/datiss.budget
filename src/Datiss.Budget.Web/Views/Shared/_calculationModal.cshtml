@@ -26,10 +26,18 @@
                                         <td class="my-font-light">
                                             @item.Title
                                         </td>
-                                        <td class="my-font-light">
-                                            @item.ResultDisplay
-                                        </td>
-
+                                        @if (item.DecimalResult == null)
+                                        {
+                                            <td class="my-font-light">
+                                                @item.ResultDisplay
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td class="my-font-light">
+                                                @item.DecimalResultDisplay
+                                            </td>
+                                        }
                                     </tr>
                                 }
                             </tbody>

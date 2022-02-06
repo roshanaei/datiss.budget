@@ -403,6 +403,7 @@ namespace Datiss.Budget.Web.Controllers
                     new CalculationResultViewModel
                     {
                         Result = item.Value,
+                        DecimalResult = item.DecimalValue,
                         Title = getCalcTitle(item.Key)
                     }
                 );
@@ -561,6 +562,9 @@ namespace Datiss.Budget.Web.Controllers
             => key switch
             {
                 "ConsumeForcastWs_Cal1" => SPTitles.ConsumeForcastWs_Cal1,
+                "ConsumeForcastWs_Cal2" => SPTitles.ConsumeForcastWs_Cal2,
+                "ConsumeForcastWs_Cal3" => SPTitles.ConsumeForcastWs_Cal3,
+                "ConsumeForcastWs_Cal4" => SPTitles.ConsumeForcastWs_Cal4,
                 _ => ""
             };
         #endregion
