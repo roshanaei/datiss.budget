@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Datiss.Budget.Enum;
+﻿using Datiss.Budget.Enum;
 using Datiss.Budget.Resources;
 
 namespace Datiss.Budget.ViewModels
@@ -55,5 +50,21 @@ namespace Datiss.Budget.ViewModels
                 CofficientsGroup.ForcastCost => EnumText.CofficientsGroup_ForcastCost,
                 _ => EnumText.Unknown
             };
+
+        public static string ToDisplay(this ReportParamType paramType)
+            => paramType switch
+            {
+                ReportParamType.Constant => EnumText.ReportParamType_Constant,
+                ReportParamType.Date => EnumText.ReportParamType_Date,
+                ReportParamType.Organization => EnumText.ReportParamType_Organization,
+                ReportParamType.Year => EnumText.ReportParamType_Year,
+                ReportParamType.Number => EnumText.ReportParamType_Number,
+                ReportParamType.Text => EnumText.ReportParamType_Text,
+                ReportParamType.County => EnumText.OrganizationType_County,
+                ReportParamType.City => EnumText.ReportParamType_City,
+                ReportParamType.Village => EnumText.ReportParamType_Village,
+                _ => EnumText.Unknown
+            };
+
     }
 }
