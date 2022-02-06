@@ -1,6 +1,6 @@
-﻿@model CreateReportViewModel
+﻿@model UpdateReportViewModel
 @{
-    ViewData["Title"] = "ایجاد گزارش جدید";
+    ViewData["Title"] = $"ویرایش گزارش {Model.Title}";
 }
 
 <!--Title-->
@@ -98,6 +98,32 @@
                                             </button>
                                         </div>
                                     </div>
+                                    @{
+                                        int i = 0;
+                                        foreach(var p in Model.Params) {
+                                            <div class="form-row" id="p_@i">
+                                                <div class="col-md-3 mb-3">
+                                                    @*<label class="my-font">نام</label>*@
+                                                    <input name="ParamTitles[@i]" type="text" class="form-control my-font" placeholder="عنوان پارامتر" />
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    @*<label class="my-font">نام</label>*@
+                                                    <input name="ParamNames[@i]" type="text" class="form-control my-font" style="direction: ltr;" placeholder="نام پارامتر" />
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    @*<label class="my-font">نوع</label>*@
+                                                    <select name="ParamTypes[@i]" asp-items="Model.ParamTypeSource" class="form-control my-font">
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="my-font"></label>
+                                                    <button id="btnDeleteParam" onclick="return deleteParam(this);" class="btn btn-danger my-font" style="max-width: 50px;">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
                                     
                                 </div>
                             </div>
@@ -106,7 +132,7 @@
                                 <button type="submit" class="btn btn-warning bg-light-warning mr-1 my-font">
                                     <i class="fa fa-check"></i> ثبت
                                 </button>
-                                <a asp-controller="@ReportsController.Name" asp-action="@ReportsController.ACTION_Index"
+                                <a asp-controller="@ReportsController.Name" asp-action="@ReportsController.ACTION_Edit"
                                    class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                     <i class="fa fa-times"></i> انصراف
                                 </a>

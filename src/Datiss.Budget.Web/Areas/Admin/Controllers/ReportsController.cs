@@ -12,6 +12,8 @@ using Datiss.Budget.Services.Models;
 using Datiss.Budget.Web;
 using Mapster;
 using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Common.WebToolkit;
+using Datiss.Budget.Resources;
 
 namespace Datiss.Budget.Web.Admin.Controllers
 {
@@ -24,6 +26,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
 
         public const string Name = "Reports";
         public const string ACTION_Index = nameof(Index);
+        public const string ACTION_Create = nameof(Create);
         public const string ACTION_Edit = nameof(Edit);
 
         private readonly string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
@@ -71,11 +74,52 @@ namespace Datiss.Budget.Web.Admin.Controllers
             return View(model);
         }
 
+        [HttpPost("create"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateReportViewModel model) {
+            model.CheckArgumentIsNull(nameof(model));
+
+            if (!ModelState.IsValid) {
+                model.AddError(ViewMessages.ModelState);
+                return View(model);
+            }
+
+            var fileData = model.FileData.GetFormFileBytes();
+            //if(fileData == null) {
+            //    model.AddError("فایل را انتخاب کنید.");
+            //    return View(model);
+            //}
+
+            //if(!model.FileData.HasFileExtension("mrt")) {
+            //    model.AddError("نوع فایل انتخابی برای این گزارش مناسب نیست.");
+            //    return View(model);
+            //}
+            model.ReadParams();
+
+            var data = model.Adapt<CreateReportData>();
+            data.FileData = fileData;
+            try {
+                var result = await _reportService.CreateAsync(data);
+                if(result.NotValid) {
+                    model.AddError(result.Message);
+                }
+                else {
+                    return RedirectToAction(ACTION_Index);
+                }
+            }
+            catch {
+                model.AddError(ViewMessages.SystemError);
+            }
+
+            return View(model);
+        }
+
         [HttpGet("edit/{id}")]
         public async Task<IActionResult> Edit(int id) {
             try {
                 var data = await _reportService.GetAsync(id);
                 var model = data.Adapt<UpdateReportViewModel>();
+                if(model.Params.Any())
+                    model.LoadParams();
 
                 return View(model);
             }

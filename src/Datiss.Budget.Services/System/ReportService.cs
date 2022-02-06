@@ -29,30 +29,30 @@ namespace Datiss.Budget.Services
             _dbSet = _uow.Set<Report>();
         }
 
-        public async Task<Report> GetAsync(int id) {
+        public async Task<ReportData> GetAsync(int id) {
             var report = await _dbSet
                 .Include(_ => _.Params)
                 .SingleOrDefaultAsync(x => x.Id == id);
 
             report.CheckArgumentIsNull(nameof(report));
 
-            return report;
+            return report.Adapt<ReportData>();
         }
 
-        public async Task<Report> GetAsync(string name) {
+        public async Task<ReportData> GetAsync(string name) {
             var report = await _dbSet
                .Include(_ => _.Params)
                .SingleOrDefaultAsync(x => x.Name.ToUpper() == name.ToUpper());
 
             report.CheckArgumentIsNull(nameof(report));
 
-            return report;
+            return report.Adapt<ReportData>();
         }
 
-        public async Task<PagedResult<ReportDTO>> GetAdminListAsync(ReportFilterDTO filter) {
+        public async Task<PagedResult<ReportData>> GetAdminListAsync(ReportFilterDTO filter) {
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var result = new PagedResult<ReportDTO>
+            var result = new PagedResult<ReportData>
             {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -75,22 +75,22 @@ namespace Datiss.Budget.Services
                 .Take(filter.PageSize);
 
             result.Items = await query.Include(_ => _.Params)
-                                      .Select(_ => _.Adapt<ReportDTO>())
+                                      .Select(_ => _.Adapt<ReportData>())
                                       .ToListAsync();
 
             return await Task.FromResult(result);
         }
 
-        public async Task<ValidationResult<ReportDTO>> CreateAsync(CreateReportData model) 
+        public async Task<ValidationResult<ReportData>> CreateAsync(CreateReportData model) 
         {
             model.CheckArgumentIsNull(nameof(model));
 
             if (checkMandatoryFieldsIsEmpty(model.Title, model.Name))
-                return ValidationResult<ReportDTO>
+                return ValidationResult<ReportData>
                     .Failed(ValidationMode.Create, ServiceMessages.MandatoryFields);
 
             if (await existByNameAsync(model.Name))
-                return ValidationResult<ReportDTO>
+                return ValidationResult<ReportData>
                     .Failed(ValidationMode.Create, ServiceMessages.ReportExistByName);
 
             var report = new Report
@@ -102,18 +102,18 @@ namespace Datiss.Budget.Services
                 FileData = model.FileData
             };
 
-            foreach(var p in model.Parameters) {
+            foreach(var p in model.Params) {
                 report.Params.Add(p.Adapt<ReportParam>());
             }
 
             await _dbSet.AddAsync(report);
             await _uow.SaveChangesAsync();
 
-            return ValidationResult<ReportDTO>
-                .Success(report.Adapt<ReportDTO>(), ValidationMode.Create);
+            return ValidationResult<ReportData>
+                .Success(report.Adapt<ReportData>(), ValidationMode.Create);
         }
 
-        public async Task<ValidationResult<ReportDTO>> UpdateAsync(UpdateReportData model) 
+        public async Task<ValidationResult<ReportData>> UpdateAsync(UpdateReportData model) 
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -122,11 +122,11 @@ namespace Datiss.Budget.Services
             report.CheckReferenceIsNull(nameof(report));
 
             if(checkMandatoryFieldsIsEmpty(model.Title, model.Name))
-                return ValidationResult<ReportDTO>
+                return ValidationResult<ReportData>
                     .Failed(ValidationMode.Update, ServiceMessages.MandatoryFields);
 
             if (await existByNameAsync(model.Name, model.Id))
-                return ValidationResult<ReportDTO>
+                return ValidationResult<ReportData>
                     .Failed(ValidationMode.Update, ServiceMessages.ReportExistByName);
 
             report.Name = model.Name.CorrectYeKe();
@@ -134,15 +134,15 @@ namespace Datiss.Budget.Services
             report.Description = model.Description?.CorrectYeKe();
             report.Status = model.Status;
             report.Params.Clear();
-            foreach (var p in model.Parameters) {
+            foreach (var p in model.Params) {
                 report.Params.Add(p.Adapt<ReportParam>());
             }
 
             _dbSet.Update(report);
             await _uow.SaveChangesAsync();
 
-            return ValidationResult<ReportDTO>.Success(
-                report.Adapt<ReportDTO>(), 
+            return ValidationResult<ReportData>.Success(
+                report.Adapt<ReportData>(), 
                 ValidationMode.Update);
         }
 
