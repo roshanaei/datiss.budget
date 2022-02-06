@@ -49,7 +49,7 @@ namespace Datiss.Budget.Services
             return report;
         }
 
-        public async Task<PagedResult<ReportDTO>> GetListAsync(ReportFilterDTO filter) {
+        public async Task<PagedResult<ReportDTO>> GetAdminListAsync(ReportFilterDTO filter) {
             filter.CheckArgumentIsNull(nameof(filter));
 
             var result = new PagedResult<ReportDTO>
