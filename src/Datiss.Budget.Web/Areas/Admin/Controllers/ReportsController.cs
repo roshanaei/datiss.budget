@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Datiss.Budget.Services.Identity;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.ViewModels;
-using Datiss.Budget.Extensions;
 using Datiss.Budget.Services.Models;
-using Datiss.Budget.Web;
-using Mapster;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Common.WebToolkit;
 using Datiss.Budget.Resources;
+using Mapster;
 
 namespace Datiss.Budget.Web.Admin.Controllers
 {
@@ -126,6 +123,48 @@ namespace Datiss.Budget.Web.Admin.Controllers
             catch {
                 return NotFound();
             }
+        }
+
+        [HttpPost("edit/{id}"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, UpdateReportViewModel model) {
+            model.CheckArgumentIsNull(nameof(model));
+
+            if (!ModelState.IsValid) {
+                model.AddError(ViewMessages.ModelState);
+                return View(model);
+            }
+
+            var fileData = model.FileData.GetFormFileBytes();
+            //if(fileData == null) {
+            //    model.AddError("فایل را انتخاب کنید.");
+            //    return View(model);
+            //}
+
+            //if(!model.FileData.HasFileExtension("mrt")) {
+            //    model.AddError("نوع فایل انتخابی برای این گزارش مناسب نیست.");
+            //    return View(model);
+            //}
+            model.ReadParams();
+
+            var data = model.Adapt<UpdateReportData>();
+            data.FileData = fileData;
+            data.Status = model.Enabled 
+                ? Enum.EntityStatus.Enabled 
+                : Enum.EntityStatus.Disbaled;
+            try {
+                var result = await _reportService.UpdateAsync(data);
+                if(result.NotValid) {
+                    model.AddError(result.Message);
+                }
+                else {
+                    return RedirectToAction(ACTION_Index);
+                }
+            }
+            catch(Exception ex) {
+                model.AddError(ViewMessages.SystemError);
+            }
+
+            return View(model);
         }
 
     }

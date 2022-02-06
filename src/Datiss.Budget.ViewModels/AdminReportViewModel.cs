@@ -41,6 +41,9 @@ namespace Datiss.Budget.ViewModels
 
         public CreateReportViewModel() {
             Params = new List<CreateReportParamTypeViewModel>();
+            ParamNames = new List<string>();
+            ParamTypes = new List<int>();
+            ParamTitles = new List<string>();
         }
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
@@ -88,11 +91,11 @@ namespace Datiss.Budget.ViewModels
 
     }
 
-    
-
     public class UpdateReportViewModel : CreateReportViewModel
     {
         public int Id { get; set; }
+
+        public bool Enabled { get; set; }
 
         public void LoadParams() {
             foreach(var p in Params) {

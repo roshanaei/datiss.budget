@@ -133,7 +133,11 @@ namespace Datiss.Budget.Services
             report.Title = model.Title.CorrectYeKe();
             report.Description = model.Description?.CorrectYeKe();
             report.Status = model.Status;
-            report.Params.Clear();
+
+            //Delete previous params
+            _uow.RemoveRange(report.Params);
+            
+            //Add new params
             foreach (var p in model.Params) {
                 report.Params.Add(p.Adapt<ReportParam>());
             }

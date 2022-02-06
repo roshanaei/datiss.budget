@@ -25,7 +25,8 @@
                                 @Html.Raw(Model._ErrorMessage)
                             </div>
                         }
-                        <form asp-controller="@ReportsController.Name" asp-action="@ReportsController.ACTION_Create" asp-antiforgery="true">
+                        <form asp-controller="@ReportsController.Name" asp-action="@ReportsController.ACTION_Edit" asp-antiforgery="true">
+                            <input type="hidden" asp-for="Id" />
                             <div class="row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group row">
@@ -58,6 +59,16 @@
                                     <div class="form-group">
                                         <textarea asp-for="Description" rows="5" class="form-control my-font"></textarea>
                                         <span asp-validation-for="Description"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-12">
+                                    <label asp-for="Enabled" class="col-md-3 col-form-label my-font">
+                                        وضعیت نمایش گزارش
+                                    </label>
+                                    <div class="form-group">
+                                        <input asp-for="Enabled" class="switchery switchery-default" type="checkbox" />
                                     </div>
                                 </div>
                             </div>
@@ -102,18 +113,22 @@
                                         int i = 0;
                                         foreach(var p in Model.Params) {
                                             <div class="form-row" id="p_@i">
+                                                
                                                 <div class="col-md-3 mb-3">
                                                     @*<label class="my-font">نام</label>*@
-                                                    <input name="ParamTitles[@i]" type="text" class="form-control my-font" placeholder="عنوان پارامتر" />
+                                                    <input name="ParamTitles[@i]" value="@Model.ParamTitles[i]" type="text" class="form-control my-font" placeholder="عنوان پارامتر" />
                                                 </div>
                                                 <div class="col-md-3 mb-3">
                                                     @*<label class="my-font">نام</label>*@
-                                                    <input name="ParamNames[@i]" type="text" class="form-control my-font" style="direction: ltr;" placeholder="نام پارامتر" />
+                                                    <input name="ParamNames[@i]" value="@Model.ParamNames[i]" type="text" class="form-control my-font" style="direction: ltr;" placeholder="نام پارامتر" />
                                                 </div>
                                                 <div class="col-md-3 mb-3">
                                                     @*<label class="my-font">نوع</label>*@
-                                                    <select name="ParamTypes[@i]" asp-items="Model.ParamTypeSource" class="form-control my-font">
+                                                    <select id="ParamTypes_@i" name="ParamTypes[@i]" asp-items="Model.ParamTypeSource" class="form-control my-font">
                                                     </select>
+                                                    <script type="text/javascript">
+                                                        $('#ParamTypes_' + @i + ' option[value=' + @Model.ParamTypes[i] + ']').attr('selected', true);
+                                                    </script>
                                                 </div>
                                                 <div class="col-md-3 mb-3">
                                                     <label class="my-font"></label>
@@ -122,6 +137,7 @@
                                                     </button>
                                                 </div>
                                             </div>
+                                            i++;
                                         }
                                     }
                                     
