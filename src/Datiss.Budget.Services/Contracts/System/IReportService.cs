@@ -12,7 +12,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<Report> GetAsync(string name);
 
-        Task<PagedResult<ReportDTO>> GetListAsync(ReportFilterDTO filter);
+        Task<PagedResult<ReportDTO>> GetAdminListAsync(ReportFilterDTO filter);
 
         Task<ValidationResult<ReportDTO>> CreateAsync(CreateReportData model);
 

@@ -153,6 +153,33 @@
   <data name="OrganizationType_Village" xml:space="preserve">
     <value>روستا</value>
   </data>
+  <data name="ReportParamType_City" xml:space="preserve">
+    <value>شهر</value>
+  </data>
+  <data name="ReportParamType_Constant" xml:space="preserve">
+    <value>ثابت</value>
+  </data>
+  <data name="ReportParamType_County" xml:space="preserve">
+    <value>شهرستان</value>
+  </data>
+  <data name="ReportParamType_Date" xml:space="preserve">
+    <value>تاریخ</value>
+  </data>
+  <data name="ReportParamType_Number" xml:space="preserve">
+    <value>عدد</value>
+  </data>
+  <data name="ReportParamType_Organization" xml:space="preserve">
+    <value>سازمان</value>
+  </data>
+  <data name="ReportParamType_Text" xml:space="preserve">
+    <value>متن</value>
+  </data>
+  <data name="ReportParamType_Village" xml:space="preserve">
+    <value>روستا</value>
+  </data>
+  <data name="ReportParamType_Year" xml:space="preserve">
+    <value>سال مالی</value>
+  </data>
   <data name="TablesName_ConsumptionFunction" xml:space="preserve">
     <value>مصارف وجوه</value>
   </data>

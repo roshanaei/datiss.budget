@@ -19,7 +19,7 @@ namespace Datiss.Budget.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class EnumText {
@@ -165,6 +165,87 @@ namespace Datiss.Budget.Resources {
         public static string OrganizationType_Village {
             get {
                 return ResourceManager.GetString("OrganizationType_Village", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to شهر.
+        /// </summary>
+        public static string ReportParamType_City {
+            get {
+                return ResourceManager.GetString("ReportParamType_City", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ثابت.
+        /// </summary>
+        public static string ReportParamType_Constant {
+            get {
+                return ResourceManager.GetString("ReportParamType_Constant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to شهرستان.
+        /// </summary>
+        public static string ReportParamType_County {
+            get {
+                return ResourceManager.GetString("ReportParamType_County", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to تاریخ.
+        /// </summary>
+        public static string ReportParamType_Date {
+            get {
+                return ResourceManager.GetString("ReportParamType_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to عدد.
+        /// </summary>
+        public static string ReportParamType_Number {
+            get {
+                return ResourceManager.GetString("ReportParamType_Number", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سازمان.
+        /// </summary>
+        public static string ReportParamType_Organization {
+            get {
+                return ResourceManager.GetString("ReportParamType_Organization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to متن.
+        /// </summary>
+        public static string ReportParamType_Text {
+            get {
+                return ResourceManager.GetString("ReportParamType_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to روستا.
+        /// </summary>
+        public static string ReportParamType_Village {
+            get {
+                return ResourceManager.GetString("ReportParamType_Village", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سال مالی.
+        /// </summary>
+        public static string ReportParamType_Year {
+            get {
+                return ResourceManager.GetString("ReportParamType_Year", resourceCulture);
             }
         }
         
