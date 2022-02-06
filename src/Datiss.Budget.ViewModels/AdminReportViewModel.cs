@@ -1,9 +1,13 @@
 ﻿using Datiss.Budget.Enum;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using Datiss.Budget.Extensions;
+using System.Linq;
 
 namespace Datiss.Budget.ViewModels
 {
+
     public class ReportViewModel
     {
         public int Id { get; set; }
@@ -11,6 +15,7 @@ namespace Datiss.Budget.ViewModels
         public string Title { get; set; }
         public string Description { get; set; }
         public EntityStatus Status { get; set; }
+        public string StatusDisplay => Status.ToDisplay();
         public bool HasParameters { get; set; }
 
     }
@@ -46,6 +51,12 @@ namespace Datiss.Budget.ViewModels
         public string Description { get; set; }
         public IFormFile File { get; set; }
         public IList<CreateReportParamTypeViewModel> Parameters { get; set; }
+
+        public IList<string> ParamNames { get; set; }
+        public IList<int> ParamTypes { get; set; }
+        public IList<SelectListItem> ParamTypeSource 
+            => EnumSelectListProvider.GetReportParamTypes().ToList();
+
     }
 
     

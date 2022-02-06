@@ -1,0 +1,141 @@
+﻿@model CreateReportViewModel
+@{
+    ViewData["Title"] = "ایجاد گزارش جدید";
+}
+
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                         @if (Model._HasError)
+                        {
+                            <div class="alert alert-danger" role="alert">
+                                <a href="#" class="close" data-dismiss="alert">×</a>
+                                @Html.Raw(Model._ErrorMessage)
+                            </div>
+                        }
+                        <form asp-controller="@ReportsController.Name" asp-action="@ReportsController.ACTION_Edit" asp-antiforgery="true">
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group row">
+                                        <label asp-for="Title" class="col-md-3 col-form-label my-font">
+                                            عنوان گزارش
+                                        </label>
+                                        <div class="col-md-9">
+                                            <input asp-for="Title" type="text" class="form-control my-font" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <div class="form-group row">
+                                        <label asp-for="Name" class="col-md-3 col-form-label my-font">
+                                            نام گزارش
+                                        </label>
+                                        <div class="col-md-9">
+                                            <input asp-for="Name" type="text" class="form-control my-font" style="direction: ltr" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-12">
+                                    <label asp-for="Name" class="col-md-3 col-form-label my-font">
+                                        توضیحات
+                                    </label>
+                                    <div class="form-group">
+                                        <textarea asp-for="Description" rows="5" class="form-control my-font"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="File" class="control-label my-font">
+                                    انتخاب فایل گزارش
+                                </label>
+                                <input asp-for="File" class="form-control-file my-font" value="انتخاب فایل" />
+                            </div>
+
+                            <div style="padding-bottom: 40px;">
+                                <h5>پارامترهای گزارش</h5>
+                                <a data-toggle="tooltip" data-placement="top" title="رکورد جدید" 
+                                    class="btn btn-success bg-light-success my-font"
+                                    onclick="addParam();">
+                                    <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                </a>
+                                <div id="divParams" style="padding-top: 20px;">
+                                    <div class="form-row" id="tempParam" style="display: none;">
+                                        <div class="col-md-4 mb-4">
+                                            @*<label class="my-font">نام</label>*@
+                                            <input type="text" class="form-control my-font" placeholder="نام پارامتر" />
+                                        </div>
+                                        <div class="col-md-4 mb-4">
+                                            @*<label class="my-font">نوع</label>*@
+                                            <select class="form-control my-font">
+                                                <option value="0">متن</option>
+                                                <option value="0">عدد</option>
+                                                <option value="0">سازمان</option>
+                                                <option value="0">شهر</option>
+                                                <option value="0">شهرستان</option>
+                                                <option value="0">روستا</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-4">
+                                            <label class="my-font"></label>
+                                            <button id="btnDeleteParam" onclick="return deleteParam(this);" class="btn btn-danger my-font" style="max-width: 50px;">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <div class="row" style="direction:ltr;margin-left:110px">
+                                <button type="submit" class="btn btn-warning bg-light-warning mr-1 my-font">
+                                    <i class="fa fa-check"></i> ثبت
+                                </button>
+                                <a asp-controller="@ReportsController.Name" asp-action="@ReportsController.ACTION_Index"
+                                   class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                    <i class="fa fa-times"></i> انصراف
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</section>
+
+@section footSection 
+{
+    <script type="text/javascript">
+
+
+        function deleteParam(btn) {
+            $(btn).closest('.form-row').remove();
+            return false;
+        }
+        
+        function addParam() {
+            const divParams = $('#divParams');
+            var template = $('#tempParam').clone()
+                .appendTo('#divParams')
+                .attr('id', 'newRow')
+                .show();
+        }
+
+    </script>
+}
