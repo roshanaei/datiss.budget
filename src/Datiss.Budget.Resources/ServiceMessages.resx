@@ -282,4 +282,10 @@
   <data name="Role_Title_Exist" xml:space="preserve">
     <value>عنوان نقش نباید تکراری باشد.</value>
   </data>
+  <data name="MandatoryFields" xml:space="preserve">
+    <value>لطفاً اطلاعات فیلدهای اجباری را وارد نمایید.</value>
+  </data>
+  <data name="ReportExistByName" xml:space="preserve">
+    <value>گزارش با نام '{0}' قبلاً در سیستم ثبت شده است. لطفاً نام دیگری وارد نمایید.</value>
+  </data>
 </root>

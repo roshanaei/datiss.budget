@@ -475,11 +475,29 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to لطفاً اطلاعات فیلدهای اجباری را وارد نمایید..
+        /// </summary>
+        public static string MandatoryFields {
+            get {
+                return ResourceManager.GetString("MandatoryFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to به دلیل وجود داده وابسته امکان حذف نمی باشد..
         /// </summary>
         public static string RelationDataSoftDeleted {
             get {
                 return ResourceManager.GetString("RelationDataSoftDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to گزارش با نام &apos;{0}&apos; قبلاً در سیستم ثبت شده است. لطفاً نام دیگری وارد نمایید..
+        /// </summary>
+        public static string ReportExistByName {
+            get {
+                return ResourceManager.GetString("ReportExistByName", resourceCulture);
             }
         }
         
