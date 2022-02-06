@@ -44,7 +44,7 @@ namespace Datiss.Budget.ViewModels
     public class UpdateWaterSalesSplitViewModel : CreateWaterSalesSplitViewModel
     {
         public int Id { get; set; }
-        public int WInstallationCosts { get; set; }
+        public long WInstallationCosts { get; set; }
     }
 
 
@@ -65,7 +65,7 @@ namespace Datiss.Budget.ViewModels
         public string UnitSalesDisplay => UnitSales.ToString("N0");
         public decimal AverageCapacity { get; set; }
         public string AverageCapacityDisplay => AverageCapacity.ToString("N2");
-        public int WInstallationCosts { get; set; }
+        public long WInstallationCosts { get; set; }
         public string WInstallationCostsDisplay => WInstallationCosts.ToString("N0");
     }
 
