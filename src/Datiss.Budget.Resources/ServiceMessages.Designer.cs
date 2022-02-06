@@ -475,16 +475,20 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to پدر سازمان مورد نظر با اطلاعات سازمان همخوانی ندارد..
-        /// </summary>
-        public static string OrganizationInvalidParentId {
-            get {
-                return ResourceManager.GetString("OrganizationInvalidParentId", resourceCulture);
         ///   Looks up a localized string similar to لطفاً اطلاعات فیلدهای اجباری را وارد نمایید..
         /// </summary>
         public static string MandatoryFields {
             get {
                 return ResourceManager.GetString("MandatoryFields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to پدر سازمان مورد نظر با اطلاعات سازمان همخوانی ندارد..
+        /// </summary>
+        public static string OrganizationInvalidParentId {
+            get {
+                return ResourceManager.GetString("OrganizationInvalidParentId", resourceCulture);
             }
         }
         

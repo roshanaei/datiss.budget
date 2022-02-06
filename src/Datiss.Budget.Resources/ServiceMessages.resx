@@ -284,6 +284,7 @@
   </data>
   <data name="OrganizationInvalidParentId" xml:space="preserve">
     <value>پدر سازمان مورد نظر با اطلاعات سازمان همخوانی ندارد.</value>
+  </data>
   <data name="MandatoryFields" xml:space="preserve">
     <value>لطفاً اطلاعات فیلدهای اجباری را وارد نمایید.</value>
   </data>
