@@ -190,7 +190,7 @@
     <value>در سطر {0} فایل اکسل، کد کاربری "{1}" معتبر نیست .</value>
   </data>
   <data name="ImportExcelLogicError" xml:space="preserve">
-    <value>داده سطر {0} در اکسل مشکل دارد. لطفاً ورودی ها را بررسی نمایید.</value>
+    <value>داده سطر {0} اکسل شما ،در جدول وجود دارد .</value>
   </data>
   <data name="ImportExcelNotAllowedOrg" xml:space="preserve">
     <value>شما مجاز به ورود اطلاعات برای " {0} " نیستید.[سطر {1} فایل اکسل]</value>
