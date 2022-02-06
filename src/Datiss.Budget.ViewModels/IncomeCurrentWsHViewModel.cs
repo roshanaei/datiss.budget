@@ -35,31 +35,31 @@ namespace Datiss.Budget.ViewModels
         public int ConsumptionUser { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public int Cost { get; set; }
+        public long Cost { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public int Income { get; set; }
+        public long Income { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public int SubscriptionIncome { get; set; }
+        public long SubscriptionIncome { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public int Note3Price { get; set; }
+        public long Note3Price { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public int Note3Income { get; set; }
+        public long Note3Income { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public int SeasonalIncome { get; set; }
+        public long SeasonalIncome { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public int TIncome { get; set; }
+        public long TIncome { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public int Note7Price { get; set; }
+        public long Note7Price { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public int Note7Income { get; set; }
+        public long Note7Income { get; set; }
     }
 
     public class UpdateIncomeCurrentWsHViewModel : CreateIncomeCurrentWsHViewModel
@@ -103,39 +103,39 @@ namespace Datiss.Budget.ViewModels
 
         public string ConsumptionUserDisplay => ConsumptionUser.ToString("N0");
 
-        public int Cost { get; set; }
+        public long Cost { get; set; }
 
         public string CostDisplay => Cost.ToString("N0");
 
-        public int Income { get; set; }
+        public long Income { get; set; }
 
         public string IncomeDisplay => Income.ToString("N0");
 
-        public int SubscriptionIncome { get; set; }
+        public long SubscriptionIncome { get; set; }
 
         public string SubscriptionIncomeDisplay => SubscriptionIncome.ToString("N0");
 
-        public int Note3Price { get; set; }
+        public long Note3Price { get; set; }
 
         public string Note3PriceDisplay => Note3Price.ToString("N0");
 
-        public int Note3Income { get; set; }
+        public long Note3Income { get; set; }
 
         public string Note3IncomeDisplay => Note3Income.ToString("N0");
 
-        public int SeasonalIncome { get; set; }
+        public long SeasonalIncome { get; set; }
 
         public string SeasonalIncomeDisplay => SeasonalIncome.ToString("N0");
 
-        public int TIncome { get; set; }
+        public long TIncome { get; set; }
 
         public string TIncomeDisplay => TIncome.ToString("N0");
 
-        public int Note7Price { get; set; }
+        public long Note7Price { get; set; }
 
         public string Note7PriceDisplay => Note7Price.ToString("N0");
 
-        public int Note7Income { get; set; }
+        public long Note7Income { get; set; }
 
         public string Note7IncomeDisplay => Note7Income.ToString("N0");
     }

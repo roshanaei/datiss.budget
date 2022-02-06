@@ -20,7 +20,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public int OIFCount { get; set; }
 
-        public int OIFPrice { get; set; }
+        public long OIFPrice { get; set; }
 
         #endregion
 
