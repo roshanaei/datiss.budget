@@ -201,6 +201,12 @@
   <data name="OrganizationHasChild" xml:space="preserve">
     <value>سازمان مورد نظر دارای زیر مجموعه است . ابتدا آن ها را حذف کنید .</value>
   </data>
+  <data name="Report_Ext" xml:space="preserve">
+    <value>فرمت فایل انتخابی برای گزارش اشتباه است. لطفاً فایل با پسوند mrt انتخاب نمایید.</value>
+  </data>
+  <data name="Report_File_Req" xml:space="preserve">
+    <value>لطفاً فایل گزارش را انتخاب کنید.</value>
+  </data>
   <data name="SystemError" xml:space="preserve">
     <value>خطای سیستمی. لطفاً با پشتیبانی تماس بگیرید.</value>
   </data>
