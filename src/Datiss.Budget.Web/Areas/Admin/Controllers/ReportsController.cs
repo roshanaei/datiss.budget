@@ -28,7 +28,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public const string ACTION_Edit = nameof(Edit);
 
         private readonly string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
-        private const string _reportExt = "mrt";
+        private const string _reportExt = ".mrt";
 
         private readonly IReportService _reportService;
 
@@ -93,6 +93,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 model.AddError(ViewMessages.Report_Ext);
                 return View(model);
             }
+
             model.ReadParams();
 
             var data = model.Adapt<CreateReportData>();
@@ -139,17 +140,15 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 model.AddError(ViewMessages.ModelState);
                 return View(model);
             }
-
-            var fileData = model.ReportFile.GetFormFileBytes();
-            if (fileData == null) {
-                model.AddError(ViewMessages.Report_File_Req);
-                return View(model);
+            byte[] fileData = null;
+            if(model.ReportFile.IsNotNullOrEmpty()) {
+                fileData = model.ReportFile.GetFormFileBytes();
+                if (!model.ReportFile.HasFileExtension(_reportExt)) {
+                    model.AddError(ViewMessages.Report_Ext);
+                    return View(model);
+                }
             }
 
-            if (!model.ReportFile.HasFileExtension(_reportExt)) {
-                model.AddError(ViewMessages.Report_Ext);
-                return View(model);
-            }
             model.ReadParams();
 
             var data = model.Adapt<UpdateReportData>();
@@ -157,6 +156,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
             data.Status = model.Enabled 
                 ? Enum.EntityStatus.Enabled 
                 : Enum.EntityStatus.Disbaled;
+
             try {
                 var result = await _reportService.UpdateAsync(data);
                 if(result.NotValid) {

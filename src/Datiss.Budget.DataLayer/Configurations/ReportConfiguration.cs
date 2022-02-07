@@ -35,7 +35,8 @@ namespace Datiss.Budget.DataLayer.Mappings
             builder.HasOne(_ => _.Report)
                 .WithMany(_ => _.Params)
                 .HasForeignKey(_ => _.ReportId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
