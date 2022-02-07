@@ -57,7 +57,7 @@
                                 </fieldset>
                                 <fieldset>
                                     <div class="rowACJE">
-                                        
+
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
@@ -97,7 +97,7 @@
 
                                     </fieldset>
                                     @* drop down menu *@
-                                    
+
                                     <div class="btn-group dropdown form-group">
                                         <button type="button"
                                                 class="btn btn-light my-font dropdown-toggle"
@@ -286,14 +286,14 @@
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@BranchFeeAmountController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
-                                       @* <a data-toggle="tooltip" data-placement="top" asp-action="@WaterInstallFeeController.ACTION_DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
-                                        </a>*@
+                                        @* <a data-toggle="tooltip" data-placement="top" asp-action="@WaterInstallFeeController.ACTION_DownloadExcelTemplate" title="دانلود فرمت اکسل" name="btnDownloadExcelTemp" class="btn btn-warning bg-light-warning my-font">
+                                                <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
+                                            </a>*@
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
-                                            asp-asp-controller="@BranchFeeAmountController.Name"
-                                            asp-action="@BranchFeeAmountController.ACTION_GetExcelTemplate"
-                                            asp-route-yearId="@Model.Filter.YearId" 
-                                            asp-route-orgId="@Model.Filter.OrganizationId">
+                                           asp-asp-controller="@BranchFeeAmountController.Name"
+                                           asp-action="@BranchFeeAmountController.ACTION_GetExcelTemplate"
+                                           asp-route-yearId="@Model.Filter.YearId"
+                                           asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
                                         </a>
                                     </div>
@@ -312,10 +312,14 @@
 
 @section headSection {
     <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
     <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
 }
 
 @section footSection {
+
+    <partial name="_overlay" />
+
     <div id="divCopy">
 
     </div>
@@ -326,7 +330,7 @@
 
     </div>
 
-    
+
 
     <div id="divCalc">
 
@@ -341,13 +345,14 @@
         let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,";
     </script>
 
-    @if(Model.Filter.Columns.IsNotNullOrEmpty()) {
+    @if (Model.Filter.Columns.IsNotNullOrEmpty())
+    {
         <script type="text/javascript">
             showingColmuns = '@Model.Filter.Columns' ;
         </script>
     }
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
         $(document).ready(function () {
             console.log('ready');
@@ -717,6 +722,7 @@
             fdata.append('ExcelFile', file);
             fdata.append('yearId', yearId);
 
+            $(".olvy").css("display", "block");
 
             $.ajax({
                 url: '@Url.Action(BranchFeeAmountController.ACTION_ImportExcel)',
@@ -727,6 +733,7 @@
                 success: function (data, status, settings) {
                     console.log(data);
                     if (data.hasError) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
                             html: `<span class="my-font">${data.message}</span>`,
@@ -742,6 +749,7 @@
                     }
 
                     if (data.ask) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
                             //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
@@ -762,6 +770,8 @@
                                 fdata.append('ContinueIfAnyOrgMissing', true);
                                 console.log(fdata);
 
+                                $(".olvy").css("display", "block");
+
                                 $.ajax({
                                     url: '@Url.Action(BranchFeeAmountController.ACTION_ImportExcel)',
                                     type: 'POST',
@@ -770,6 +780,7 @@
                                     contentType: false,
                                     success: function (data, status, settings) {
                                         if (data.hasError) {
+                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">خطا</span>',
                                                 html: `<span class="my-font">${data.message}</span>`,
@@ -785,6 +796,7 @@
                                         }
 
                                         if (!data.hasError) {
+                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
                                                 html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -818,6 +830,7 @@
                     }
 
                     if (!data.hasError && !data.ask) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">عملیات موفق</span>',
                             html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -902,6 +915,6 @@
             $('#filterForm').submit();
         };
 
-</script>
+    </script>
 
 }
