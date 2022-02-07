@@ -123,7 +123,7 @@ namespace Datiss.Budget.ViewModels
         public string Diff_ConsWsVolumeDisplay => Diff_ConsWsVolume.ToString("N0");
 
 
-        public int Note2Income { get; set; }
+        public long Note2Income { get; set; }
         public string Note2IncomeDisplay => Note2Income.ToString("N0");
 
 

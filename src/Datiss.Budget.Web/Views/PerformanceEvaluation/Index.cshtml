@@ -35,13 +35,13 @@
                                         </select>
                                     </label>
                                     @*<label asp-for="Filter.SectionName" class="my-font">
-                                        بخش :
-                                        <select asp-for="Filter.SectionName"
-                                                asp-items="Model.Filter.SectionNameSource"
-                                                class="form-control d-inline-block width-150"
-                                                id="sectionNameId">
-                                        </select>
-                                    </label>*@
+                                            بخش :
+                                            <select asp-for="Filter.SectionName"
+                                                    asp-items="Model.Filter.SectionNameSource"
+                                                    class="form-control d-inline-block width-150"
+                                                    id="sectionNameId">
+                                            </select>
+                                        </label>*@
                                     <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
                                         سازمان:
                                         <select asp-for="Filter.OrganizationId"
@@ -224,10 +224,13 @@
 
 @section headSection {
     <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
     <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
 }
 
 @section footSection {
+
+    <partial name="_overlay" />
 
     <div id="divCopy">
 
@@ -453,6 +456,8 @@
             fdata.append('yearId', yearId);
             fdata.append('tablesName', tablesName);
 
+            $(".olvy").css("display", "block");
+
             $.ajax({
                 url: '@Url.Action(PerformanceEvaluationController.ACTION_ImportExcel)',
                 type: 'POST',
@@ -462,6 +467,7 @@
                 success: function (data, status, settings) {
                     console.log(data);
                     if (data.hasError) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
                             html: `<span class="my-font">${data.message}</span>`,
@@ -477,6 +483,7 @@
                     }
 
                     if (data.ask) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
                             type: 'warning',
@@ -496,6 +503,7 @@
                                 fdata.append('ContinueIfAnyOrgMissing', true);
                                 console.log(fdata);
 
+                                $(".olvy").css("display", "block");
                                 $.ajax({
                                     url: '@Url.Action(PerformanceEvaluationController.ACTION_ImportExcel)',
                                     type: 'POST',
@@ -504,6 +512,7 @@
                                     contentType: false,
                                     success: function (data, status, settings) {
                                         if (data.hasError) {
+                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">خطا</span>',
                                                 html: `<span class="my-font">${data.message}</span>`,
@@ -519,6 +528,7 @@
                                         }
 
                                         if (!data.hasError) {
+                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
                                                 html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -552,6 +562,7 @@
                     }
 
                     if (!data.hasError && !data.ask) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">عملیات موفق</span>',
                             html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',

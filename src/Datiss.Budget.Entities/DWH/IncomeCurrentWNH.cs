@@ -29,7 +29,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public long Income { get; set; }
 
-        public int ExcessIncome { get; set; }
+        public long ExcessIncome { get; set; }
         
         public long SeasonalIncome { get; set; }
 
@@ -43,7 +43,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public int Diff_ConsWsVolume { get; set; }
 
-        public int Note2Income { get; set; }
+        public long Note2Income { get; set; }
         
         public int WasteVolume { get; set; }
         
