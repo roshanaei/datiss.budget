@@ -20,15 +20,15 @@ namespace Datiss.Budget.Services.Models
 
         public int UnitUser { get; set; }
 
-        public int WaterInstllIncome { get; set; }
+        public long WaterInstllIncome { get; set; }
 
-        public int WaterBranchIncome { get; set; }
+        public long WaterBranchIncome { get; set; }
 
-        public int WaterNote2Income { get; set; }
+        public long WaterNote2Income { get; set; }
 
-        public int WaterNote3Income { get; set; }
+        public long WaterNote3Income { get; set; }
 
-        public int WNote11Income { get; set; }
+        public long WNote11Income { get; set; }
     }
 
     public class UpdateIncomeForcastDTO : CreateIncomeForcastDTO
@@ -47,10 +47,10 @@ namespace Datiss.Budget.Services.Models
         public string UserTypeDisplay { get; set; }
         public int NumberUser { get; set; }
         public int UnitUser { get; set; }
-        public int WaterInstllIncome { get; set; }
-        public int WaterBranchIncome { get; set; }
-        public int WaterNote2Income { get; set; }
-        public int WaterNote3Income { get; set; }
-        public int WNote11Income { get; set; }
+        public long WaterInstllIncome { get; set; }
+        public long WaterBranchIncome { get; set; }
+        public long WaterNote2Income { get; set; }
+        public long WaterNote3Income { get; set; }
+        public long WNote11Income { get; set; }
     }
 }

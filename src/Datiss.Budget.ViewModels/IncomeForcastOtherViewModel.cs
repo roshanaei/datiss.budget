@@ -35,7 +35,7 @@ namespace Datiss.Budget.ViewModels
 
         public int OIFCount { get; set; }
 
-        public int OIFPrice { get; set; }
+        public long OIFPrice { get; set; }
 
         public IEnumerable<SelectListItem> OIFTypeSource { get; set; }
 
@@ -59,7 +59,7 @@ namespace Datiss.Budget.ViewModels
         public string ActivityDisplay => ActivityId.ToDisplay();
         public int OIFCount { get; set; }
         public string OIFCountDisplay => OIFCount.ToString("N0");
-        public int OIFPrice { get; set; }
+        public long OIFPrice { get; set; }
         public string OIFPriceDisplay => OIFPrice.ToString("N0");
         public IEnumerable<SelectListItem> ActivitySource => EnumSelectListProvider.GetActivityTypeItems(ActivityId);
     }

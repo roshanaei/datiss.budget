@@ -16,7 +16,7 @@ namespace Datiss.Budget.Services.Models
         public string OIFTypeTitle { get; set; }
         public ActivityType ActivityId { get; set; }
         public int OIFCount { get; set; }
-        public int OIFPrice { get; set; }
+        public long OIFPrice { get; set; }
     }
 
     public class UpdateIncomeForcastOtherDTO : CreateIncomeForcastOtherDTO
@@ -37,6 +37,6 @@ namespace Datiss.Budget.Services.Models
         public ActivityType ActivityId { get; set; }
         public string ActivityDisplay => ActivityId.ToDisplay();
         public int OIFCount { get; set; }
-        public int OIFPrice { get; set; }
+        public long OIFPrice { get; set; }
     }
 }
