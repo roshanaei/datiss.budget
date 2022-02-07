@@ -41,7 +41,7 @@ namespace Datiss.Budget.Entities.DWH
         
         public int Diff_ConsWsVolume { get; set; }
         
-        public int Note2Income { get; set; }
+        public long Note2Income { get; set; }
         
         public int WasteVolume { get; set; }
         
