@@ -72,8 +72,6 @@ namespace Datiss.Budget.ViewModels
             if (!ParamNames.Any() || !ParamTitles.Any() || !ParamTypes.Any())
                 return;
 
-            FixParams();
-
             int i = 0;
             foreach (var n in ParamNames) {
                 Params.Add(new CreateReportParamTypeViewModel
