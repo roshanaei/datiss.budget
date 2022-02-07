@@ -1,0 +1,47 @@
+﻿@using Stimulsoft.Report.Web;
+@using Stimulsoft.Report.Mvc;
+
+@{ ViewData["Title"] = "گزارش ها"; }
+
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            @*<i class="ft-settings mr-1"></i>*@
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                   @*<partial name="_report1" />*@
+
+                   @Html.StiNetCoreViewer(new StiNetCoreViewerOptions() {
+				        Actions = {
+					        GetReport = "GetReport1",
+					        ViewerEvent = "ViewerEvent"
+				        },
+                        Server = {
+                            CacheMode = StiServerCacheMode.None
+                        }
+			        })
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+@section footSection {
+
+    <script type="text/javascript">
+
+
+    </script>
+}

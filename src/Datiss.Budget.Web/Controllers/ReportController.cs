@@ -68,38 +68,55 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("show/{id}")]
         public async Task<IActionResult> Report(int id) {
-            var model = new ReportViewData {
-                Id = id,
-                Params = new List<ReportParamViewData> {
-                    new ReportParamViewData {
-                        ParamType = Enum.ReportParamType.Year,
-                        Name = "YearId",
-                        Value = 1
-                    },
-                    new ReportParamViewData {
-                        ParamType = Enum.ReportParamType.Organization,
-                        Name = "OrganizationId",
-                        Value = 5
-                    },
-                    new ReportParamViewData {
-                        ParamType = Enum.ReportParamType.Constant,
-                        Name = "UserTypeId",
-                        Value = 3
-                    }
-                }
-            };
+            try {
+                var report = await _reportService.GetAsync(id);
+                var model = report.Adapt<ReportViewModel>();
 
-            //var myreport = await _reportEngine.GenerateReportAsync(model);
-
-            //myreport.Render(true);
-
-            //await myreport.ExportDocumentAsync(
-            //     Stimulsoft.Report.StiExportFormat.Pdf, @"E:\Projects\Datiss\datiss.budget\src\Datiss.Budget.Web\wwwroot\iman.pdf");
-
-            return View(model);
+                return View(model);
+            }
+            catch {
+                return NotFound();
+            }
         }
+
+
+        //[HttpGet("show/{id}")]
+        //public async Task<IActionResult> Report(int id) {
+
+
+
+        //    var model = new ReportViewData {
+        //        Id = id,
+        //        Params = new List<ReportParamViewData> {
+        //            new ReportParamViewData {
+        //                ParamType = Enum.ReportParamType.Year,
+        //                Name = "YearId",
+        //                Value = 1
+        //            },
+        //            new ReportParamViewData {
+        //                ParamType = Enum.ReportParamType.Organization,
+        //                Name = "OrganizationId",
+        //                Value = 5
+        //            },
+        //            new ReportParamViewData {
+        //                ParamType = Enum.ReportParamType.Constant,
+        //                Name = "UserTypeId",
+        //                Value = 3
+        //            }
+        //        }
+        //    };
+
+        //    //var myreport = await _reportEngine.GenerateReportAsync(model);
+
+        //    //myreport.Render(true);
+
+        //    //await myreport.ExportDocumentAsync(
+        //    //     Stimulsoft.Report.StiExportFormat.Pdf, @"E:\Projects\Datiss\datiss.budget\src\Datiss.Budget.Web\wwwroot\iman.pdf");
+
+        //    return View(model);
+        //}
 
         [HttpPost("report1")]
         public async Task<IActionResult> Report1(int id) {
@@ -107,6 +124,7 @@ namespace Datiss.Budget.Web.Controllers
             return PartialView("_report1");
         }
 
+        [HttpGet("getreport")]
         public async Task<IActionResult> GetReport() {
             var model = new ReportViewData {
                 Id = 1,

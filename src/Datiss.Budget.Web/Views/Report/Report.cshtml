@@ -1,33 +1,40 @@
-﻿@model Datiss.Budget.Reports.ReportViewData
-@using Stimulsoft.Report.Mvc;
-@using Stimulsoft.Report.Web;
-@using Stimulsoft.System.Web.UI.WebControls;
+﻿
+@model ReportViewModel
+@{
+    ViewData["Title"] = $"گزاش {Model.Title}";
+}
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            @*<i class="ft-settings mr-1"></i>*@
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
 
-<form asp-controller="@ReportController.Name"
-      asp-action="Report1"
-      data-ajax="true"
-      data-ajax-update="#Viewer"
-      method="post">
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <form>
+                            @foreach(var p in Model.Params) {
+                                
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <input asp-for="Id" type="hidden" />
-    <button type="submit">Send</button>
+    </div>
+    <div class="row">
 
-</form>
+    </div>
+</section>
 
-<p>
-    Hello
-</p>
+@section footSection {
 
-@Html.StiNetCoreViewer(new StiNetCoreViewerOptions() {
-    Actions =
-    {
-        ViewerEvent = "ViewerEvent",
-        GetReport = "GetReport"
-    },
-    Server =
-    {
-        Controller = "Report",
-        RequestTimeout = 360000
-        //RouteTemplate = "Report/{action}"
-    }
-})
+}
