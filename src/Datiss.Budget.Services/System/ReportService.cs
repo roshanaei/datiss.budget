@@ -156,7 +156,6 @@ namespace Datiss.Budget.Services
                 ValidationMode.Update);
         }
 
-
         #region private methods
 
         private bool checkMandatoryFieldsIsEmpty(string title, string name)
