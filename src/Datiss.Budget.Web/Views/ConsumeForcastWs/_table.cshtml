@@ -68,7 +68,7 @@
                 </td>
                 <td>
                     <div id="divInput_CountUser_">
-                        <input class="form-control" id="inputCountUser_" type="number" />
+                        <input class="form-control input-keyup default-input" id="inputCountUser_" type="number" />
                     </div>
                     <div id="divOutput_CountUser_" style="display: none">
                         <span id="spanCountUser_"> </span>
@@ -76,7 +76,7 @@
                 </td>
                 <td>
                     <div id="divInput_UnitUser_">
-                        <input class="form-control" id="inputUnitUser_" type="number" />
+                        <input class="form-control input-keyup" id="inputUnitUser_" type="number" />
                     </div>
                     <div id="divOutput_UnitUser_" style="display: none">
                         <span id="spanUnitUser_"> </span>
@@ -84,7 +84,7 @@
                 </td>
                 <td>
                     <div id="divInput_ConsumeUser_">
-                        <input class="form-control" id="inputConsumeUser_" type="number" />
+                        <input class="form-control input-keyup" id="inputConsumeUser_" type="number" />
                     </div>
                     <div id="divOutput_ConsumeUser_" style="display: none">
                         <span id="spanConsumeUser_"> </span>
@@ -92,7 +92,7 @@
                 </td>
                 <td>
                     <div id="divInput_AvgConsumeUser_">
-                        <input class="form-control" id="inputAvgConsumeUser_" type="number" />
+                        <input class="form-control input-keyup" id="inputAvgConsumeUser_" type="number" />
                     </div>
                     <div id="divOutput_AvgConsumeUser_" style="display: none">
                         <span id="spanAvgConsumeUser_"> </span>
@@ -100,7 +100,7 @@
                 </td>
                 <td>
                     <div id="divInput_ConsumeUserForcast_">
-                        <input class="form-control" id="inputConsumeUserForcast_" type="number" />
+                        <input class="form-control input-keyup" id="inputConsumeUserForcast_" type="number" />
                     </div>
                     <div id="divOutput_ConsumeUserForcast_" style="display: none">
                         <span id="spanConsumeUserForcast_"> </span>
@@ -277,6 +277,9 @@
             </span>
             <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
                 <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
             </button>
             <span data-toggle="modal" data-target="#CalculationModal">
                 <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
