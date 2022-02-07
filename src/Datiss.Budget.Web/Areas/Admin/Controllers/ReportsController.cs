@@ -10,6 +10,7 @@ using Datiss.Budget.Services.Models;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Common.WebToolkit;
 using Datiss.Budget.Resources;
+using Datiss.Budget.Enum;
 using Mapster;
 
 namespace Datiss.Budget.Web.Admin.Controllers
@@ -80,11 +81,11 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 return View(model);
             }
 
-            var fileData = model.FileData.GetFormFileBytes();
-            //if(fileData == null) {
-            //    model.AddError("فایل را انتخاب کنید.");
-            //    return View(model);
-            //}
+            var fileData = model.ReportFile.GetFormFileBytes();
+            if (fileData == null) {
+                model.AddError("فایل را انتخاب کنید.");
+                return View(model);
+            }
 
             //if(!model.FileData.HasFileExtension("mrt")) {
             //    model.AddError("نوع فایل انتخابی برای این گزارش مناسب نیست.");
@@ -115,6 +116,8 @@ namespace Datiss.Budget.Web.Admin.Controllers
             try {
                 var data = await _reportService.GetAsync(id);
                 var model = data.Adapt<UpdateReportViewModel>();
+                if (data.Status == EntityStatus.Enabled)
+                    model.Enabled = true;
                 if(model.Params.Any())
                     model.LoadParams();
 
@@ -134,7 +137,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 return View(model);
             }
 
-            var fileData = model.FileData.GetFormFileBytes();
+            var fileData = model.ReportFile.GetFormFileBytes();
             //if(fileData == null) {
             //    model.AddError("فایل را انتخاب کنید.");
             //    return View(model);

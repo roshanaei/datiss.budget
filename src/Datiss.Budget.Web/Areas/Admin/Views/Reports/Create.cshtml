@@ -62,11 +62,11 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label asp-for="FileData" class="control-label my-font">
+                                <label asp-for="ReportFile" class="control-label my-font">
                                     انتخاب فایل گزارش
                                 </label>
-                                <input asp-for="FileData" class="form-control-file my-font" value="انتخاب فایل" />
-                                <span asp-validation-for="FileData"></span>
+                                <input asp-for="ReportFile" type="file" class="form-control-file my-font" />
+                                <span asp-validation-for="ReportFile"></span>
                             </div>
 
                             <div style="padding-bottom: 40px;">
@@ -79,16 +79,13 @@
                                 <div id="divParams" style="padding-top: 20px;">
                                     <div class="form-row" id="tempParam" style="display: none;">
                                         <div class="col-md-3 mb-3">
-                                            @*<label class="my-font">نام</label>*@
-                                            <input name="ParamTitles" type="text" class="form-control my-font" placeholder="عنوان پارامتر" />
+                                            <input name="ParamTitles" type="text" class="form-control my-font paramTitle" placeholder="عنوان پارامتر" />
                                         </div>
                                         <div class="col-md-3 mb-3">
-                                            @*<label class="my-font">نام</label>*@
-                                            <input name="ParamNames" type="text" class="form-control my-font" style="direction: ltr;" placeholder="نام پارامتر" />
+                                            <input name="ParamNames" type="text" class="form-control my-font paramName" style="direction: ltr;" placeholder="نام پارامتر" />
                                         </div>
                                         <div class="col-md-3 mb-3">
-                                            @*<label class="my-font">نوع</label>*@
-                                            <select name="ParamTypes" asp-items="Model.ParamTypeSource" class="form-control my-font">
+                                            <select name="ParamTypes" asp-items="Model.ParamTypeSource" class="form-control my-font paramType">
                                             </select>
                                         </div>
                                         <div class="col-md-3 mb-3">
@@ -98,11 +95,10 @@
                                             </button>
                                         </div>
                                     </div>
-                                    
                                 </div>
                             </div>
 
-                            <div class="row" style="direction:ltr;margin-left:110px">
+                            <div class="row" style="direction:ltr; margin-left: 30px;">
                                 <button type="submit" class="btn btn-warning bg-light-warning mr-1 my-font">
                                     <i class="fa fa-check"></i> ثبت
                                 </button>
@@ -123,21 +119,5 @@
 
 @section footSection 
 {
-    <script type="text/javascript">
-
-
-        function deleteParam(btn) {
-            $(btn).closest('.form-row').remove();
-            return false;
-        }
-        
-        function addParam() {
-            const divParams = $('#divParams');
-            var template = $('#tempParam').clone()
-                .appendTo('#divParams')
-                .attr('id', 'newRow')
-                .show();
-        }
-
-    </script>
+    <partial name="_sharedScripts" />
 }

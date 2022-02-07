@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Datiss.Budget.Common.WebToolkit
 {
+
     public static class WebExtensions
     {
 
@@ -10,9 +11,14 @@ namespace Datiss.Budget.Common.WebToolkit
             if (file == null || file.Length <= 0)
                 return null;
 
-            using var ms = new MemoryStream();
-            file.CopyTo(ms);
-            var bytes = ms.ToArray();
+            using var fileStream = file.OpenReadStream();
+            byte[] bytes = new byte[file.Length];
+            fileStream.Read(bytes, 0, (int)file.Length);
+
+            //using var ms = new MemoryStream();
+            //file.CopyTo(ms);
+            //var bytes = ms.ToArray();
+
             return bytes;
         }
 

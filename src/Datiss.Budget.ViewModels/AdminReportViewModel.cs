@@ -57,7 +57,7 @@ namespace Datiss.Budget.ViewModels
         [MaxLength(500, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
         public string Description { get; set; }
 
-        public IFormFile FileData { get; set; }
+        public IFormFile ReportFile { get; set; }
 
         public void ReadParams() {
             if (!ParamNames.Any() || !ParamTitles.Any() || !ParamTypes.Any())

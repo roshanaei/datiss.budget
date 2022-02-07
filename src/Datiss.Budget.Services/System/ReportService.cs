@@ -158,9 +158,9 @@ namespace Datiss.Budget.Services
         
         private async Task<bool> existByNameAsync(string name, int? reportId = null)
             => reportId.HasValue
-                ? await _dbSet.AnyAsync(_ => _.Name.ToUpper() == name.ToUpper().CorrectYeKe())
-                : await _dbSet.AnyAsync(_ => _.Name.ToUpper() == name.ToUpper().CorrectYeKe() &&
-                                                _.Id != reportId);
+                ? await _dbSet.AnyAsync(_ => _.Name.ToUpper() == name.ToUpper().CorrectYeKe() && 
+                                                _.Id != reportId)
+                : await _dbSet.AnyAsync(_ => _.Name.ToUpper() == name.ToUpper().CorrectYeKe());
 
         private IQueryable<Report> setOrder(
             IQueryable<Report> query,
