@@ -22,6 +22,22 @@ namespace Datiss.Budget.ViewModels
 
     }
 
+    public class ReportFilterViewModel : FilterViewModel
+    {
+
+    }
+
+    public class ReportIndexViewModel : PagedViewModel<ReportViewModel>
+    {
+
+        public ReportIndexViewModel() {
+            Filter = new ReportFilterViewModel();
+            Items = new List<ReportViewModel>();
+        }
+
+        public ReportFilterViewModel Filter { get; set; }
+    }
+
     public class AdminReportFilterViewModel : FilterViewModel
     {
 

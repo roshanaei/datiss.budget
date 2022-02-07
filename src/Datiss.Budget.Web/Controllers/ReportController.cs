@@ -1,15 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
-using Datiss.Budget.Reports.Contracts;
-using Datiss.Budget.Reports;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Stimulsoft.Report.Mvc;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Reports.Contracts;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
+using Datiss.Budget.Reports;
+using Mapster;
 
 namespace Datiss.Budget.Web.Controllers
 {
 
+    [Authorize]
     [Route("[controller]")]  
     public class ReportController : Controller
     {
@@ -18,17 +24,48 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Report = nameof(Report);
 
+        private readonly string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
+
         private readonly IReportEngine _reportEngine;
+        private readonly IReportService _reportService;
 
         public ReportController(
-            IReportEngine reportEngine) {
+            IReportEngine reportEngine,
+            IReportService reportService) {
             _reportEngine = reportEngine 
                 ?? throw new ArgumentNullException(nameof(reportEngine));
+            _reportService = reportService
+                ?? throw new ArgumentNullException(nameof(reportService));
         }
 
-        [HttpGet]
-        public IActionResult Index() {
-            return View();
+        [HttpGet("{page?}")]
+        public async Task<IActionResult> Index(int page = 1) {
+            var filter = new ReportFilterDTO();
+            var myfilter = TempData.Get<ReportFilterViewModel>(_indexFilterKey);
+            if(myfilter != null) {
+                filter = myfilter.Adapt<ReportFilterDTO>();
+                TempData.Put(_indexFilterKey, filter);
+            }
+            filter.PageNumber = page;
+            var result = await _reportService.GetUserListAsync(filter);
+            var model = result.Adapt<ReportIndexViewModel>();
+            model.Filter = filter.Adapt<ReportFilterViewModel>();
+
+            return View(model);
+        }
+
+        [HttpPost("{page?}"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(ReportIndexViewModel model, int page = 1) {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var filter = model.Filter.Adapt<ReportFilterDTO>();
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _reportService.GetUserListAsync(filter);
+            model = result.Adapt<ReportIndexViewModel>();
+            model.Filter = filter.Adapt<ReportFilterViewModel>();
+
+            return View(model);
         }
 
         [HttpGet("{id}")]
