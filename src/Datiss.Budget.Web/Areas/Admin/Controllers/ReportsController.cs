@@ -28,6 +28,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public const string ACTION_Edit = nameof(Edit);
 
         private readonly string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
+        private const string _reportExt = "mrt";
 
         private readonly IReportService _reportService;
 
@@ -84,12 +85,12 @@ namespace Datiss.Budget.Web.Admin.Controllers
 
             var fileData = model.ReportFile.GetFormFileBytes();
             if (fileData == null) {
-                model.AddError("فایل را انتخاب کنید.");
+                model.AddError(ViewMessages.Report_File_Req);
                 return View(model);
             }
 
-            if (!model.ReportFile.HasFileExtension("mrt")) {
-                model.AddError("نوع فایل انتخابی برای این گزارش مناسب نیست.");
+            if (!model.ReportFile.HasFileExtension(_reportExt)) {
+                model.AddError(ViewMessages.Report_Ext);
                 return View(model);
             }
             model.ReadParams();
@@ -140,13 +141,13 @@ namespace Datiss.Budget.Web.Admin.Controllers
             }
 
             var fileData = model.ReportFile.GetFormFileBytes();
-            //if (fileData == null) {
-            //    model.AddError("فایل را انتخاب کنید.");
-            //    return View(model);
-            //}
+            if (fileData == null) {
+                model.AddError(ViewMessages.Report_File_Req);
+                return View(model);
+            }
 
-            if (!model.ReportFile.HasFileExtension("mrt")) {
-                model.AddError("نوع فایل انتخابی برای این گزارش مناسب نیست.");
+            if (!model.ReportFile.HasFileExtension(_reportExt)) {
+                model.AddError(ViewMessages.Report_Ext);
                 return View(model);
             }
             model.ReadParams();

@@ -15,10 +15,6 @@ namespace Datiss.Budget.Common.WebToolkit
             byte[] bytes = new byte[file.Length];
             fileStream.Read(bytes, 0, (int)file.Length);
 
-            //using var ms = new MemoryStream();
-            //file.CopyTo(ms);
-            //var bytes = ms.ToArray();
-
             return bytes;
         }
 
