@@ -56,7 +56,7 @@ namespace Datiss.Budget.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
-        public int ExcessIncome { get; set; }
+        public long ExcessIncome { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
@@ -141,7 +141,7 @@ namespace Datiss.Budget.ViewModels
 
         public string SubscriptionIncomeDisplay => SubscriptionIncome.ToString("N0");
 
-        public int ExcessIncome { get; set; }
+        public long ExcessIncome { get; set; }
 
         public string ExcessIncomeDisplay => ExcessIncome.ToString("N0");
 

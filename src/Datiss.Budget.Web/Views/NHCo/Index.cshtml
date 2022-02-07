@@ -186,7 +186,7 @@
                                            asp-asp-controller="@NHCoController.Name"
                                            asp-action="@NHCoController.ACTION_GetExcelTemplate"
                                            asp-route-yearId="@Model.Filter.YearId"
-                                           asp-route-activity= "@Model.Filter.ActivityType"
+                                           asp-route-activity="@Model.Filter.ActivityType"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
                                         </a>
@@ -206,10 +206,14 @@
 
 @section headSection {
     <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
     <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
 }
 
 @section footSection {
+
+    <partial name="_overlay" />
+
     <div id="divCopy">
 
     </div>
@@ -521,8 +525,10 @@
             var yearId = $('#yearId').val();
             var activityType = $('#activityType').val();
             fdata.append('ExcelFile', file);
-            fdata.append('yearId', yearId); 
-            fdata.append('activityType', activityType); 
+            fdata.append('yearId', yearId);
+            fdata.append('activityType', activityType);
+
+            $(".olvy").css("display", "block");
 
             $.ajax({
                 url: '@Url.Action(NHCoController.ACTION_ImportExcel)',
@@ -533,6 +539,8 @@
                 success: function (data, status, settings) {
                     console.log(data);
                     if (data.hasError) {
+                        $(".olvy").css("display", "none");
+
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
                             html: `<span class="my-font">${data.message}</span>`,
@@ -548,6 +556,8 @@
                     }
 
                     if (data.ask) {
+                        $(".olvy").css("display", "none");
+
                         Swal.fire({
                             html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
                             type: 'warning',
@@ -566,6 +576,7 @@
                             if (result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
                                 console.log(fdata);
+                                $(".olvy").css("display", "block");
 
                                 $.ajax({
                                     url: '@Url.Action(NHCoController.ACTION_ImportExcel)',
@@ -575,6 +586,7 @@
                                     contentType: false,
                                     success: function (data, status, settings) {
                                         if (data.hasError) {
+                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">خطا</span>',
                                                 html: `<span class="my-font">${data.message}</span>`,
@@ -590,6 +602,7 @@
                                         }
 
                                         if (!data.hasError) {
+                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
                                                 html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -623,6 +636,7 @@
                     }
 
                     if (!data.hasError && !data.ask) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">عملیات موفق</span>',
                             html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',

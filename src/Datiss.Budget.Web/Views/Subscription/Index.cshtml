@@ -182,10 +182,14 @@
 
 @section headSection {
     <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
     <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
 }
 
 @section footSection {
+
+    <partial name="_overlay" />
+
     <div id="divCopy">
 
     </div>
@@ -387,12 +391,12 @@
                 btnSaveEdit.click();
             }
             });
-    
+
             btnSaveEdit.addEventListener('click', function (evenrt) {
                 $(btnSaveEdit).attr('disabled', true);
                 console.log('Update via Click');
             });
-    
+
             editRow(id);
         });
 
@@ -508,6 +512,9 @@
             var yearId = $('#yearId').val();
             fdata.append('ExcelFile', file);
             fdata.append('yearId', yearId);
+
+            $(".olvy").css("display", "block");
+
             $.ajax({
                 url: '@Url.Action(SubscriptionController.ACTION_ImportExcel)',
                 type: 'POST',
@@ -516,6 +523,9 @@
                 contentType: false,
                 success: function (data, status, settings) {
                     console.log(data);
+
+                    $(".olvy").css("display", "none");
+
                     if (data.hasError) {
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
@@ -531,6 +541,7 @@
                         return;
                     }
                     if (!data.hasError) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">عملیات موفق</span>',
                             html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
