@@ -59,20 +59,28 @@ namespace Datiss.Budget.ViewModels
 
         public IFormFile ReportFile { get; set; }
 
+        public void FixParams() {
+            if(ParamNames.Any())
+                ParamNames = ParamNames.Where(_ => _ != null).ToList();
+            if(ParamTitles.Any())
+                ParamTitles = ParamTitles.Where(_ => _ != null).ToList();
+            if(ParamTypes.Count > 1)
+                ParamTypes = ParamTypes.Skip(1).Take(ParamTypes.Count - 1).ToList();
+        }
+
         public void ReadParams() {
             if (!ParamNames.Any() || !ParamTitles.Any() || !ParamTypes.Any())
                 return;
 
-            var names = ParamNames.Where(_ => _ != null).ToList();
-            var titles = ParamTitles.Where(_ => _ != null).ToList();
-            var paramTypes = ParamTypes.Skip(1).Take(ParamTypes.Count - 1).ToList();
+            FixParams();
+
             int i = 0;
-            foreach (var n in names) {
+            foreach (var n in ParamNames) {
                 Params.Add(new CreateReportParamTypeViewModel
                 {
                     Name = n,
-                    ParamType = (ReportParamType)paramTypes[i],
-                    Title = titles[i]
+                    ParamType = (ReportParamType)ParamTypes[i],
+                    Title = ParamTitles[i]
                 });
                 i++;
             }

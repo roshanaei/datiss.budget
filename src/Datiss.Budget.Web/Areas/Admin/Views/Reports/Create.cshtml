@@ -25,7 +25,12 @@
                                 @Html.Raw(Model._ErrorMessage)
                             </div>
                         }
-                        <form asp-controller="@ReportsController.Name" asp-action="@ReportsController.ACTION_Create" asp-antiforgery="true">
+                        <form id="my-form"
+                              asp-controller="@ReportsController.Name" 
+                              asp-action="@ReportsController.ACTION_Create" 
+                              asp-antiforgery="true"
+                              enctype="multipart/form-data">
+
                             <div class="row">
                                 <div class="col-md-6 col-12">
                                     <div class="form-group row">
@@ -56,12 +61,14 @@
                                         توضیحات
                                     </label>
                                     <div class="form-group">
-                                        <textarea asp-for="Description" rows="5" class="form-control my-font"></textarea>
+                                        <textarea asp-for="Description" rows="5" class="form-control my-font"
+                                            placeholder="توضیحات را کاربر در هنگام نمایش گزارش مشاهده خواهد کرد.">
+                                        </textarea>
                                         <span asp-validation-for="Description"></span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="padding-bottom: 20px;">
                                 <label asp-for="ReportFile" class="control-label my-font">
                                     انتخاب فایل گزارش
                                 </label>
@@ -71,7 +78,7 @@
 
                             <div style="padding-bottom: 40px;">
                                 <h5>پارامترهای گزارش</h5>
-                                <a data-toggle="tooltip" data-placement="top" title="رکورد جدید" 
+                                <a data-toggle="tooltip" data-placement="top" title="پارامتر جدید" 
                                     class="btn btn-success bg-light-success my-font"
                                     onclick="addParam();">
                                     <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
@@ -79,10 +86,10 @@
                                 <div id="divParams" style="padding-top: 20px;">
                                     <div class="form-row" id="tempParam" style="display: none;">
                                         <div class="col-md-3 mb-3">
-                                            <input name="ParamTitles" type="text" class="form-control my-font paramTitle" placeholder="عنوان پارامتر" />
+                                            <input name="ParamTitles" type="text" class="form-control my-font paramTitle" placeholder="عنوان پارامتر" required />
                                         </div>
                                         <div class="col-md-3 mb-3">
-                                            <input name="ParamNames" type="text" class="form-control my-font paramName" style="direction: ltr;" placeholder="نام پارامتر" />
+                                            <input name="ParamNames" type="text" class="form-control my-font paramName" style="direction: ltr;" placeholder="نام پارامتر" required />
                                         </div>
                                         <div class="col-md-3 mb-3">
                                             <select name="ParamTypes" asp-items="Model.ParamTypeSource" class="form-control my-font paramType">
@@ -95,6 +102,37 @@
                                             </button>
                                         </div>
                                     </div>
+                                    @if(Model.ParamNames.Any()) {
+                                        int i = 0;
+                                        foreach(var p in Model.ParamNames) {
+                                            <div class="form-row" id="p_@i">
+                                                
+                                                <div class="col-md-3 mb-3">
+                                                    @*<label class="my-font">نام</label>*@
+                                                    <input name="ParamTitles" value="@Model.ParamTitles[i]" type="text" class="form-control my-font paramTitle" placeholder="عنوان پارامتر" required />
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    @*<label class="my-font">نام</label>*@
+                                                    <input name="ParamNames" value="@Model.ParamNames[i]" type="text" class="form-control my-font paramName" style="direction: ltr;" placeholder="نام پارامتر" required />
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    @*<label class="my-font">نوع</label>*@
+                                                    <select id="ParamTypes_@i" name="ParamTypes" asp-items="Model.ParamTypeSource" class="form-control my-font paramType">
+                                                    </select>
+                                                    <script type="text/javascript">
+                                                        $('#ParamTypes_' + @i + ' option[value=' + @Model.ParamTypes[i] + ']').attr('selected', true);
+                                                    </script>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label class="my-font"></label>
+                                                    <button id="btnDeleteParam" onclick="return deleteParam(this);" class="btn btn-danger my-font" style="max-width: 50px;">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            i++;
+                                        }
+                                    }
                                 </div>
                             </div>
 

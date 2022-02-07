@@ -76,6 +76,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public async Task<IActionResult> Create(CreateReportViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
 
+            model.FixParams();
             if (!ModelState.IsValid) {
                 model.AddError(ViewMessages.ModelState);
                 return View(model);
@@ -87,10 +88,10 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 return View(model);
             }
 
-            //if(!model.FileData.HasFileExtension("mrt")) {
-            //    model.AddError("نوع فایل انتخابی برای این گزارش مناسب نیست.");
-            //    return View(model);
-            //}
+            if (!model.ReportFile.HasFileExtension("mrt")) {
+                model.AddError("نوع فایل انتخابی برای این گزارش مناسب نیست.");
+                return View(model);
+            }
             model.ReadParams();
 
             var data = model.Adapt<CreateReportData>();
@@ -132,21 +133,22 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public async Task<IActionResult> Edit(int id, UpdateReportViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
 
+            model.FixParams();
             if (!ModelState.IsValid) {
                 model.AddError(ViewMessages.ModelState);
                 return View(model);
             }
 
             var fileData = model.ReportFile.GetFormFileBytes();
-            //if(fileData == null) {
+            //if (fileData == null) {
             //    model.AddError("فایل را انتخاب کنید.");
             //    return View(model);
             //}
 
-            //if(!model.FileData.HasFileExtension("mrt")) {
-            //    model.AddError("نوع فایل انتخابی برای این گزارش مناسب نیست.");
-            //    return View(model);
-            //}
+            if (!model.ReportFile.HasFileExtension("mrt")) {
+                model.AddError("نوع فایل انتخابی برای این گزارش مناسب نیست.");
+                return View(model);
+            }
             model.ReadParams();
 
             var data = model.Adapt<UpdateReportData>();
