@@ -32,7 +32,7 @@ namespace Datiss.Budget.Entities.DWH
         
         public long SubscriptionIncome { get;set;}
 
-        public int ExcessIncome{ get; set; }
+        public long ExcessIncome{ get; set; }
 
         public long SeasonalIncome{ get; set; }
 
