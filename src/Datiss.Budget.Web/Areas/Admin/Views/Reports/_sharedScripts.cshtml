@@ -1,0 +1,28 @@
+﻿ <script type="text/javascript">
+
+        $(document).ready(function() {
+            $('#Title').focus();
+            $('#my-form').submit(function() {
+                if ($(this).valid()) {
+                    $(this).find(':submit').attr('disabled', 'disabled');
+                }
+            });
+        });
+
+        function deleteParam(btn) {
+            $(btn).closest('.form-row').remove();
+            return false;
+        }
+        
+        function addParam() {
+            const divParams = $('#divParams');
+            var template = $('#tempParam').clone()
+                .appendTo('#divParams')
+                .attr('id', 'newRow')
+                .show();
+
+            //focus on the last created input
+            $('.paramTitle:last').focus();
+        }
+
+</script>

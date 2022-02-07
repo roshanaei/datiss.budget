@@ -9,15 +9,15 @@ namespace Datiss.Budget.Services.Contracts
     public interface IReportService
     {
 
-        Task<Report> GetAsync(int id);
+        Task<ReportData> GetAsync(int id);
 
-        Task<Report> GetAsync(string name);
+        Task<ReportData> GetAsync(string name);
 
-        Task<PagedResult<ReportDTO>> GetAdminListAsync(ReportFilterDTO filter);
+        Task<PagedResult<ReportData>> GetAdminListAsync(ReportFilterDTO filter);
 
-        Task<ValidationResult<ReportDTO>> CreateAsync(CreateReportData model);
+        Task<ValidationResult<ReportData>> CreateAsync(CreateReportData model);
 
-        Task<ValidationResult<ReportDTO>> UpdateAsync(UpdateReportData model);
+        Task<ValidationResult<ReportData>> UpdateAsync(UpdateReportData model);
 
     }
 

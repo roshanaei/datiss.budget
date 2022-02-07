@@ -90,5 +90,47 @@ namespace Datiss.Budget.Extensions
                         Selected = sectionName == SectionName.C
                     }
                 };
+
+        public static IEnumerable<SelectListItem> GetReportParamTypes(ReportParamType? paramType = null)
+            => new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = EnumText.ReportParamType_Text,
+                    Value = ((int)ReportParamType.Text).ToString(),
+                    Selected = paramType == ReportParamType.Text
+                },
+                new SelectListItem
+                {
+                    Text = EnumText.ReportParamType_Year,
+                    Value = ((int)ReportParamType.Year).ToString(),
+                    Selected = paramType == ReportParamType.Year
+                },
+                new SelectListItem
+                {
+                    Text = EnumText.ReportParamType_Organization,
+                    Value = ((int)ReportParamType.Organization).ToString(),
+                    Selected = paramType == ReportParamType.Organization
+                },
+                new SelectListItem
+                {
+                    Text = EnumText.OrganizationType_County,
+                    Value = ((int)ReportParamType.County).ToString(),
+                    Selected = paramType == ReportParamType.County
+                },
+                new SelectListItem
+                {
+                    Text = EnumText.OrganizationType_City,
+                    Value = ((int)ReportParamType.City).ToString(),
+                    Selected = paramType == ReportParamType.City
+                },
+                new SelectListItem
+                {
+                    Text = EnumText.OrganizationType_Village,
+                    Value = ((int)ReportParamType.Village).ToString(),
+                    Selected = paramType == ReportParamType.Village
+                }
+            };
+
     }
 }

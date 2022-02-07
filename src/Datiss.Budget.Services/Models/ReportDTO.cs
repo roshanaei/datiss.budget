@@ -1,13 +1,10 @@
-﻿using Datiss.Budget.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Services.Models
 {
-    public class ReportDTO
+
+    public class ReportData
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -16,15 +13,16 @@ namespace Datiss.Budget.Services.Models
         public EntityStatus Status { get; set; }
         public byte[] FileData { get; set; }
         public string FilePath { get; set; }
+        public IList<ReportParamDTO> Params { get; set; }
     }
 
     public class CreateReportData
     {
         public CreateReportData() 
-            => Parameters = new List<CreateReportParamDTO>();
+            => Params = new List<CreateReportParamDTO>();
         
         public void AddParam(CreateReportParamDTO p)
-            => Parameters.Add(p);
+            => Params.Add(p);
 
         public void AddParam(string name, string title, ReportParamType paramType) 
             => AddParam(new CreateReportParamDTO
@@ -38,7 +36,7 @@ namespace Datiss.Budget.Services.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public byte[] FileData { get; set; }
-        public IList<CreateReportParamDTO> Parameters { get; set; }
+        public IList<CreateReportParamDTO> Params { get; set; }
     }
 
     public class UpdateReportData : CreateReportData
@@ -49,6 +47,7 @@ namespace Datiss.Budget.Services.Models
 
     public class ReportFilterDTO : FilterInputDTO
     {
+
     }
 
 }
