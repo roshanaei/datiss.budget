@@ -23,5 +23,10 @@ namespace Datiss.Budget.Common.WebToolkit
             return ext.ToUpper() == extension.ToUpper();
         }
 
+        public static bool IsNotNullOrEmpty(this IFormFile file) 
+            => file != null && file.Length > 0;
+
+        public static bool IsNullOrEmpty(this IFormFile file)
+            => !IsNotNullOrEmpty(file);
     }
 }
