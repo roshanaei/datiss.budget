@@ -28,7 +28,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public const string ACTION_Edit = nameof(Edit);
 
         private readonly string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
-        private const string _reportExt = "mrt";
+        private const string _reportExt = ".mrt";
 
         private readonly IReportService _reportService;
 
