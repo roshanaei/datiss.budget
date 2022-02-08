@@ -10,6 +10,7 @@ using Datiss.Budget.Reports.Contracts;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
 using Datiss.Budget.Reports;
+using Datiss.Budget.Enum;
 using Mapster;
 
 namespace Datiss.Budget.Web.Controllers
@@ -28,14 +29,22 @@ namespace Datiss.Budget.Web.Controllers
 
         private readonly IReportEngine _reportEngine;
         private readonly IReportService _reportService;
+        private readonly IOrganizationService _organizationService;
+        private readonly IFinanceYearService _yearService;
 
         public ReportController(
             IReportEngine reportEngine,
-            IReportService reportService) {
+            IReportService reportService,
+            IOrganizationService organizationService,
+            IFinanceYearService yearService) {
             _reportEngine = reportEngine 
                 ?? throw new ArgumentNullException(nameof(reportEngine));
             _reportService = reportService
                 ?? throw new ArgumentNullException(nameof(reportService));
+            _organizationService = organizationService
+                ?? throw new ArgumentNullException(nameof(organizationService));
+            _yearService = yearService
+                ?? throw new ArgumentNullException(nameof(yearService));
         }
 
         [HttpGet("{page?}")]
@@ -72,8 +81,9 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Report(int id) {
             try {
                 var report = await _reportService.GetAsync(id);
-                var model = report.Adapt<ReportViewModel>();
-
+                var model = new ReportDisplayViewModel();
+                model.Report = report.Adapt<ReportViewModel>();
+                
                 return View(model);
             }
             catch {

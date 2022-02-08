@@ -151,10 +151,10 @@ namespace Datiss.Budget.Services
             return await IsDescendentOfAsync(parentId, targetOrg.ParentId.Value);
         }
 
-        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync(bool input = false)
+        public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync(bool input = false, OrganizationType? orgType = null)
             => _userContext.OrganizationId.HasValue
 
-                ? (await getWithChildrenAsync(_userContext.OrganizationId.Value, input))
+                ? (await getWithChildrenAsync(_userContext.OrganizationId.Value, input, false, orgType))
                     .Select(x => new DropDownItem
                     {
                         Id = x.Id,
@@ -162,7 +162,7 @@ namespace Datiss.Budget.Services
                         Selected = x.Id == _userContext.OrganizationId
                     }).ToList()
 
-                : (await getByParnetIdAsync(_userContext.OrganizationId, input))
+                : (await getByParnetIdAsync(_userContext.OrganizationId, input, false, orgType))
                     .Select(x => new DropDownItem
                     {
                         Id = x.Id,
@@ -273,24 +273,25 @@ namespace Datiss.Budget.Services
             }
         }
 
-        private async Task<IEnumerable<Organization>> getByParnetIdAsync(int? parentId, bool input = false, bool queryTracked = false)
+        private async Task<IEnumerable<Organization>> getByParnetIdAsync(
+            int? parentId, 
+            bool input = false, 
+            bool queryTracked = false,
+            OrganizationType? orgType = null)
         {
             var firstLevel = new List<Organization>();
 
+            var query = Query();
             if (queryTracked)
-            {
-                firstLevel = await TrackedQuery()
-                   .Include(x => x.Childrens)
-                   .Where(x => x.ParentId == parentId)
-                   .ToListAsync();
-            }
-            else
-            {
-                firstLevel = await Query()
-                   .Include(x => x.Childrens)
-                   .Where(x => x.ParentId == parentId)
-                   .ToListAsync();
-            }
+                query = TrackedQuery();
+
+            query = query.Include(_ => _.Childrens)
+                .Where(_ => _.ParentId == parentId);
+
+            if (orgType.HasValue && !input)
+                query = query.Where(_ => _.Type == orgType);
+
+            firstLevel = await query.ToListAsync();
 
             var result = new List<Organization>();
             if (input)
@@ -317,7 +318,12 @@ namespace Datiss.Budget.Services
                     }
                     else
                     {
-                        result.Add(child);
+                        if (orgType == null)
+                            result.Add(child);
+
+                        if(orgType.HasValue && child.Type == orgType.Value)
+                            result.Add(child);
+                        
                     }
                     result.AddRange(await getByParnetIdAsync(child.Id, input));
                 }
@@ -326,7 +332,11 @@ namespace Datiss.Budget.Services
             return result;
         }
 
-        private async Task<IEnumerable<Organization>> getWithChildrenAsync(int? organizationId, bool input = false, bool queryTracked = false)
+        private async Task<IEnumerable<Organization>> getWithChildrenAsync(
+            int? organizationId, 
+            bool input = false, 
+            bool queryTracked = false,
+            OrganizationType? orgType = null)
         {
             if (!organizationId.HasValue)
                 organizationId = _userContext.OrganizationId;
@@ -343,11 +353,19 @@ namespace Datiss.Budget.Services
                 }
                 else
                 {
-                    result.Add(myself);
+                    if(orgType == null)
+                        result.Add(myself);
+
+                    if (orgType.HasValue && myself.Type == orgType.Value)
+                        result.Add(myself);
                 }
             }
 
-            var children = await getByParnetIdAsync(myself != null ? myself.Id : null, input, queryTracked);
+            var children = await getByParnetIdAsync(
+                                                myself != null ? myself.Id : null, 
+                                                input, 
+                                                queryTracked, 
+                                                orgType);
 
             if (input)
             {
@@ -359,7 +377,11 @@ namespace Datiss.Budget.Services
             }
             else
             {
-                result.AddRange(children);
+                if(orgType == null)
+                    result.AddRange(children);
+
+                if (orgType.HasValue)
+                    result.AddRange(children.Where(_ => _.Type == orgType.Value));
             }
 
             return await Task.FromResult(result);

@@ -1,13 +1,10 @@
-﻿using System;
+﻿using System.Linq;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.ViewModels
 {
-
     public class ReportViewModel
     {
         public ReportViewModel()
@@ -20,6 +17,65 @@ namespace Datiss.Budget.ViewModels
         public EntityStatus Status { get; set; }
         public byte[] FileData { get; set; }
         public IList<ReportParamViewModel> Params { get; set; }
+    }
+
+    public class ReportDisplayViewModel
+    {
+        public ReportDisplayViewModel() {
+            Report = new ReportViewModel();
+            OrganizationSource = new List<SelectListItem>();
+            CitySource = new List<SelectListItem>();
+            CountySource = new List<SelectListItem>();
+            VillageSource = new List<SelectListItem>();
+        }
+
+        public ReportViewModel Report { get; set; }
+
+        public IEnumerable<SelectListItem> YearSource { get; set; }
+
+        public IEnumerable<SelectListItem> OrganizationSource { get; set; }
+
+        public IEnumerable<SelectListItem> CitySource { get; set; }
+
+        public IEnumerable<SelectListItem> CountySource { get; set; }
+
+        public IEnumerable<SelectListItem> VillageSource { get; set; }
+
+        public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
+            => YearSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => OrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetCitySource(IEnumerable<DropDownItemViewModel> source)
+            => CitySource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetCountySource(IEnumerable<DropDownItemViewModel> source)
+            => CountySource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetVillageSource(IEnumerable<DropDownItemViewModel> source)
+           => VillageSource = source.Select(x => new SelectListItem
+           {
+               Text = x.Title,
+               Value = x.Id.ToString()
+           }).ToList();
+
     }
 
     public class ReportFilterViewModel : FilterViewModel
