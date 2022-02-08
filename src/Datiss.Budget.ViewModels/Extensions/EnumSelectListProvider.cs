@@ -47,27 +47,43 @@ namespace Datiss.Budget.Extensions
                     }
                 };
         public static IEnumerable<SelectListItem> GetOrganizationTypeItem(OrganizationType? type = null)
-            => new List<SelectListItem>
-                {
+        {
+            var result = new List<SelectListItem>
+             {
                     new SelectListItem
                     {
                         Text = EnumText.OrganizationType_County,
                         Value = ((int)OrganizationType.County).ToString(),
                         Selected = type == OrganizationType.County
-                    },                    
+                    },
                     new SelectListItem
                     {
                         Text = EnumText.OrganizationType_City,
                         Value = ((int)OrganizationType.City).ToString(),
                         Selected = type == OrganizationType.City
-                    },                    
+                    },
                     new SelectListItem
                     {
                         Text = EnumText.OrganizationType_Village,
                         Value = ((int)OrganizationType.Village).ToString(),
                         Selected = type == OrganizationType.Village
-                    }                    
-                };
+                    }
+             };
+            if (type.HasValue)
+            {
+                if (type == OrganizationType.Root)
+                {
+                    result.Clear();
+                    result.Insert(0, new SelectListItem
+                    {
+                        Value = ((int)OrganizationType.Root).ToString(),
+                        Text = EnumText.OrganizationType_Root,
+                        Selected = type == OrganizationType.Root
+                    });
+                }
+            }
+            return result;
+        }
         public static IEnumerable<SelectListItem> GetSectionNameTypeItem(SectionName? sectionName = null)
             => new List<SelectListItem>
                 {
