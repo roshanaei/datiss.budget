@@ -30,7 +30,7 @@ namespace Datiss.Budget.Services.Models
 
         public long SubscriptionIncome { get; set; }
 
-        public int ExcessIncome { get; set; }
+        public long ExcessIncome { get; set; }
 
         public long SeasonalIncome { get; set; }
 
@@ -80,7 +80,7 @@ namespace Datiss.Budget.Services.Models
 
         public long SubscriptionIncome { get; set; }
 
-        public int ExcessIncome { get; set; }
+        public long ExcessIncome { get; set; }
 
         public long SeasonalIncome { get; set; }
 

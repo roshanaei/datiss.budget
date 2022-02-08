@@ -795,8 +795,8 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<DateTime?>("ModifiedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Note2Income")
-                        .HasColumnType("int");
+                    b.Property<long>("Note2Income")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("Note3Income")
                         .HasColumnType("bigint");
@@ -890,8 +890,8 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<int>("Diff_ConsWsVolume")
                         .HasColumnType("int");
 
-                    b.Property<int>("ExcessIncome")
-                        .HasColumnType("int");
+                    b.Property<long>("ExcessIncome")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("Income")
                         .HasColumnType("bigint");
@@ -910,8 +910,8 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<DateTime?>("ModifiedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Note2Income")
-                        .HasColumnType("int");
+                    b.Property<long>("Note2Income")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("Note3Income")
                         .HasColumnType("bigint");
@@ -1097,8 +1097,8 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<DateTime?>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ExcessIncome")
-                        .HasColumnType("int");
+                    b.Property<long>("ExcessIncome")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("Income")
                         .HasColumnType("bigint");
@@ -3884,7 +3884,7 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasOne("Datiss.Budget.Entities.Report", "Report")
                         .WithMany("Params")
                         .HasForeignKey("ReportId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Report");

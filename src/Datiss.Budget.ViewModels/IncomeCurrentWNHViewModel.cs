@@ -31,7 +31,7 @@ namespace Datiss.Budget.ViewModels
 
         public long Income { get; set; }
 
-        public int ExcessIncome { get; set; }
+        public long ExcessIncome { get; set; }
 
         public long SeasonalIncome { get; set; }
 
@@ -45,7 +45,7 @@ namespace Datiss.Budget.ViewModels
 
         public int Diff_ConsWsVolume { get; set; }
 
-        public int Note2Income { get; set; }
+        public long Note2Income { get; set; }
 
         public int WasteVolume { get; set; }
 
@@ -82,7 +82,7 @@ namespace Datiss.Budget.ViewModels
         public string CostDisplay => Cost.ToString("N0");
         public long Income { get; set; }
         public string IncomeDisplay => Income.ToString("N0");
-        public int ExcessIncome { get; set; }
+        public long ExcessIncome { get; set; }
         public string ExcessIncomeDisplay => ExcessIncome.ToString("N0");
         public long SeasonalIncome { get; set; }
         public string SeasonalIncomeDisplay => SeasonalIncome.ToString("N0");
@@ -96,7 +96,7 @@ namespace Datiss.Budget.ViewModels
         public string TotalIncomeDisplay => TotalIncome.ToString("N0");
         public int Diff_ConsWsVolume { get; set; }
         public string Diff_ConsWsVolumeDisplay => Diff_ConsWsVolume.ToString("N0");
-        public int Note2Income { get; set; }
+        public long Note2Income { get; set; }
         public string Note2IncomeDisplay => Note2Income.ToString("N0");
         public int WasteVolume { get; set; }
         public string WasteVolumeDisplay => WasteVolume.ToString("N0");

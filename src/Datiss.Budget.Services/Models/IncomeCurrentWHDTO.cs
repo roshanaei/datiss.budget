@@ -26,7 +26,7 @@ namespace Datiss.Budget.Services.Models
         public long SeasonalIncome { get; set; }
         public long TIncome { get; set; }
         public int Diff_ConsWsVolume { get; set; }
-        public int Note2Income { get; set; }
+        public long Note2Income { get; set; }
         public int WasteVolume { get; set; }
         public long Note7Price { get; set; }
         public long Note7Income { get; set; }
@@ -58,7 +58,7 @@ namespace Datiss.Budget.Services.Models
         public long SeasonalIncome { get; set; }
         public long TIncome { get; set; }
         public int Diff_ConsWsVolume { get; set; }
-        public int Note2Income { get; set; }
+        public long Note2Income { get; set; }
         public int WasteVolume { get; set; }
         public long Note7Price { get; set; }
         public long Note7Income { get; set; }

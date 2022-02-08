@@ -19,7 +19,7 @@ namespace Datiss.Budget.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class ViewMessages {
@@ -309,6 +309,24 @@ namespace Datiss.Budget.Resources {
         public static string OrganizationHasChild {
             get {
                 return ResourceManager.GetString("OrganizationHasChild", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to فرمت فایل انتخابی برای گزارش اشتباه است. لطفاً فایل با پسوند mrt انتخاب نمایید..
+        /// </summary>
+        public static string Report_Ext {
+            get {
+                return ResourceManager.GetString("Report_Ext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to لطفاً فایل گزارش را انتخاب کنید..
+        /// </summary>
+        public static string Report_File_Req {
+            get {
+                return ResourceManager.GetString("Report_File_Req", resourceCulture);
             }
         }
         

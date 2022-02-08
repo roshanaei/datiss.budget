@@ -28,7 +28,7 @@ namespace Datiss.Budget.Services.Models
 
         public long Income { get; set; }
 
-        public int ExcessIncome { get; set; }
+        public long ExcessIncome { get; set; }
 
         public long SeasonalIncome { get; set; }
 
@@ -42,7 +42,7 @@ namespace Datiss.Budget.Services.Models
 
         public int Diff_ConsWsVolume { get; set; }
 
-        public int Note2Income { get; set; }
+        public long Note2Income { get; set; }
 
         public int WasteVolume { get; set; }
     }
@@ -70,14 +70,14 @@ namespace Datiss.Budget.Services.Models
         public decimal Capacity { get; set; }
         public long Cost { get; set; }
         public long Income { get; set; }
-        public int ExcessIncome { get; set; }
+        public long ExcessIncome { get; set; }
         public long SeasonalIncome { get; set; }
         public long Note3Price { get; set; }
         public long Note3Income { get; set; }
         public long SubscriptionIncome { get; set; }
         public long TotalIncome { get; set; }
         public int Diff_ConsWsVolume { get; set; }
-        public int Note2Income { get; set; }
+        public long Note2Income { get; set; }
         public int WasteVolume { get; set; }
     }
 }
