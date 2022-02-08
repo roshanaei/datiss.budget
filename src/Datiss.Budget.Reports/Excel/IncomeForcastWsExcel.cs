@@ -77,18 +77,12 @@ namespace Datiss.Budget.Reports.Excel
 
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
-            sheet.Range(1, 1, 1, 10).Merge();
+            sheet.Range(1, 1, 1, 4).Merge();
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
             sheet.Cell(2, 2).Value = "کد سازمان";
             sheet.Cell(2, 3).Value = "عنوان کاربری";
             sheet.Cell(2, 4).Value = "کد کاربری";
-            sheet.Cell(2, 5).Value = "تعداد انشعاب";
-            sheet.Cell(2, 6).Value = "آحاد انشعاب";
-            sheet.Cell(2, 7).Value = "درآمد هزینه لوله گذاری فاضلاب";
-            sheet.Cell(2, 8).Value = "درآمد حق انشعاب فاضلاب";
-            sheet.Cell(2, 9).Value = "درآمد تبصره 3 ماده واحده فاضلاب";
-            sheet.Cell(2, 10).Value = "درآمد ماده 11 فاضلاب";
 
             var totalCount = items.Count();
             int row = 3;
@@ -102,22 +96,8 @@ namespace Datiss.Budget.Reports.Excel
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(2, 1, row - 1, 10);
+            var range = sheet.Range(2, 1, row - 1, 4);
             range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-            //Other
-            range.Column(5).Style.NumberFormat.Format = "#,##0";
-            range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(6).Style.NumberFormat.Format = "#,##0";
-            range.Column(6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(7).Style.NumberFormat.Format = "#,##0";
-            range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(8).Style.NumberFormat.Format = "#,##0";
-            range.Column(8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(9).Style.NumberFormat.Format = "#,##0";
-            range.Column(9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(10).Style.NumberFormat.Format = "#,##0";
-            range.Column(10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            //
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();

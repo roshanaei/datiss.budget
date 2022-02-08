@@ -441,8 +441,8 @@ namespace Datiss.Budget.Services
                         SubscriptionIncome = item.SubscriptionIncome,
                         SeasonalIncome = item.SeasonalIncome,
                         TIncome = item.TIncome,
-                        Note7Income = item.Note7Income,
-                        Note7Price = item.Note7Price
+                        //Note7Income = item.Note7Income,
+                        //Note7Price = item.Note7Price
                     };
                     result.Add(entity);
                 }
