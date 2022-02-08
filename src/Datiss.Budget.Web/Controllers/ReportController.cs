@@ -12,6 +12,7 @@ using Datiss.Budget.ViewModels;
 using Datiss.Budget.Reports;
 using Datiss.Budget.Enum;
 using Mapster;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -81,14 +82,23 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Report(int id) {
             try {
                 var report = await _reportService.GetAsync(id);
-                var model = new ReportDisplayViewModel();
-                model.Report = report.Adapt<ReportViewModel>();
-                
+                var model = new ReportDisplayViewModel
+                {
+                    Report = report.Adapt<ReportViewModel>()
+                };
+                await addRelatedDataAsync(model);
+
                 return View(model);
             }
             catch {
                 return NotFound();
             }
+        }
+
+        [HttpPost("show/{id}"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Report(int id, ReportViewModel model) {
+            model.CheckArgumentIsNull(nameof(model));
+            return View(model);
         }
 
 
@@ -210,6 +220,33 @@ namespace Datiss.Budget.Web.Controllers
 
             return StiNetCoreViewer.GetReportResult(this, myreport);
         }
+
+        #region private helper methods
+
+        private async Task addRelatedDataAsync(ReportDisplayViewModel model) {
+            model.CheckArgumentIsNull(nameof(model));
+
+            model.SetYearSource((await _yearService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>());
+            
+            model.SetOrganizationSource((await _organizationService
+                    .GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>());
+            
+            model.SetCountySource((await _organizationService
+                    .GetDropDownDataAsync(input: false, OrganizationType.County))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>());
+
+            model.SetCitySource((await _organizationService
+                    .GetDropDownDataAsync(input: false, OrganizationType.City))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>());
+
+            model.SetVillageSource((await _organizationService
+                    .GetDropDownDataAsync(input: false, OrganizationType.Village))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>());
+        }
+
+        #endregion
 
     }
 }

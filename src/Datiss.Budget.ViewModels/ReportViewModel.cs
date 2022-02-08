@@ -19,10 +19,11 @@ namespace Datiss.Budget.ViewModels
         public IList<ReportParamViewModel> Params { get; set; }
     }
 
-    public class ReportDisplayViewModel
+    public class ReportDisplayViewModel : BaseViewModel
     {
         public ReportDisplayViewModel() {
             Report = new ReportViewModel();
+            YearSource = new List<SelectListItem>();
             OrganizationSource = new List<SelectListItem>();
             CitySource = new List<SelectListItem>();
             CountySource = new List<SelectListItem>();
@@ -31,15 +32,15 @@ namespace Datiss.Budget.ViewModels
 
         public ReportViewModel Report { get; set; }
 
-        public IEnumerable<SelectListItem> YearSource { get; set; }
+        public IEnumerable<SelectListItem> YearSource { get; private set; }
 
-        public IEnumerable<SelectListItem> OrganizationSource { get; set; }
+        public IEnumerable<SelectListItem> OrganizationSource { get; private set; }
 
-        public IEnumerable<SelectListItem> CitySource { get; set; }
+        public IEnumerable<SelectListItem> CitySource { get; private set; }
 
-        public IEnumerable<SelectListItem> CountySource { get; set; }
+        public IEnumerable<SelectListItem> CountySource { get; private set; }
 
-        public IEnumerable<SelectListItem> VillageSource { get; set; }
+        public IEnumerable<SelectListItem> VillageSource { get; private set; }
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
             => YearSource = source.Select(x => new SelectListItem
