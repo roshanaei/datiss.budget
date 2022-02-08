@@ -187,6 +187,20 @@
         }
 
         $(document).on('click', '#btnDoEdit', function () {
+            $('#spanTitle').text('');
+            $('#Title').removeClass("error-border");
+
+            $('#spanYear').text('');
+            $('#Year').removeClass("error-border");
+
+            $('#spanStartPersianDate').text('');
+            $('#StartPersianDate').removeClass("error-border");
+
+            $('#spanEndPrsianDate').text('');
+            $('#EndPrsianDate').removeClass("error-border");
+
+            $('#divError').hide();
+
             let model = {};
 
             model.id = $('#Id').val();
@@ -196,7 +210,30 @@
             model.startPersianDate = $('#StartPersianDate').val();
             model.endPrsianDate = $('#EndPrsianDate').val();
 
-            console.log(model);
+            if (model.title == '') {
+                $('#Title').addClass("error-border");
+                $('#divError').show();
+                $('#spanTitle').text('لطفا عنوان سال را وارد نمایید .');
+                return;
+            }
+            if (model.year == '0' || model.year == '') {
+                $('#Year').addClass("error-border");
+                $('#divError').show();
+                $('#spanYear').text('لطفا عدد سال را وارد نمایید .');
+                return;
+            }
+            if (model.startPersianDate == '') {
+                $('#StartPersianDate').addClass("error-border");
+                $('#divError').show();
+                $('#spanStartPersianDate').text('لطفا شروع سال را انتخاب کنید.');
+                return;
+            }
+            if (model.endPrsianDate == '') {
+                $('#EndPrsianDate').addClass("error-border");
+                $('#divError').show();
+                $('#spanEndPrsianDate').text('لطفا پایان سال را انتخاب کنید.');
+                return;
+            }
 
 
             $.ajax({
@@ -249,13 +286,41 @@
                 $('.modal-backdrop').remove();
             });
         });
+
         $(document).on('click', '#btnDoCreate', function () {
+
+            $('#spanYear').text('');
+            $('#Year').removeClass("error-border");
+            $('#spanStartPersianDate').text('');
+            $('#StartPersianDate').removeClass("error-border");
+            $('#spanEndPrsianDate').text('');
+            $('#EndPrsianDate').removeClass("error-border");
+            $('#divError').hide();
+
             let model = {};
             model.year = $('#Year').val();
             model.startPersianDate = $('#StartPersianDate').val();
             model.endPrsianDate = $('#EndPrsianDate').val();
 
-            console.log(model);
+            if (model.year == '0' || model.year == '') {
+                $('#Year').addClass("error-border");
+                $('#divError').show();
+                $('#spanYear').text('لطفا عدد سال را وارد نمایید .');
+                return;
+            }
+            if (model.startPersianDate == '') {
+                $('#StartPersianDate').addClass("error-border");
+                $('#divError').show();
+                $('#spanStartPersianDate').text('لطفا شروع سال را انتخاب کنید.');
+                return;
+            }
+            if (model.endPrsianDate == '') {
+                $('#EndPrsianDate').addClass("error-border");
+                $('#divError').show();
+                $('#spanEndPrsianDate').text('لطفا پایان سال را انتخاب کنید.');
+                return;
+            }
+
 
             $.ajax({
                 type: 'POST',
