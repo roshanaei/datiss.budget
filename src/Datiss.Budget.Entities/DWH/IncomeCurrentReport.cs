@@ -8,9 +8,9 @@ using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Entities.DWH
 {
-    public class CurrentIncomeReport : IAuditableEntity
+    public class IncomeCurrentReport : IAuditableEntity
     {
-        public CurrentIncomeReport() { }
+        public IncomeCurrentReport() { }
 
         #region Properties
         public int Id { get; set; }

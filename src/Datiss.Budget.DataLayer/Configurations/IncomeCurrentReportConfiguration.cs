@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.DataLayer.Configurations
 {
-    public class CurrentIncomeReportConfiguration : IEntityTypeConfiguration<CurrentIncomeReport>
+    public class IncomeCurrentReportConfiguration : IEntityTypeConfiguration<IncomeCurrentReport>
     {
-        public void Configure(EntityTypeBuilder<CurrentIncomeReport> builder)
+        public void Configure(EntityTypeBuilder<IncomeCurrentReport> builder)
         {
-            builder.ToTable("CurrentIncomeReports");
+            builder.ToTable("IncomeCurrentReports");
 
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id)
-                    .HasColumnName("CurrentIncomeReportId");
+                    .HasColumnName("IncomeCurrentReportId");
 
 
             builder.HasOne(x => x.FinanceYear)
