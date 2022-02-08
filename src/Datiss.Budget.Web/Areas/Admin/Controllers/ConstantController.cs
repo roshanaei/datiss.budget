@@ -13,11 +13,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Services.Identity;
 
-namespace Datiss.Budget.Web.Controllers
+namespace Datiss.Budget.Web.Admin.Controllers
 {
-    [Authorize]
-    [Route("[controller]")]
+    [Authorize(Roles = ConstantRoles.Admin)]
+    [Area(AreaConstants.AdminArea)]
+    [Route("[area]/[controller]")]
     public class ConstantController : Controller
     {
         public const string Name = "Constant";
