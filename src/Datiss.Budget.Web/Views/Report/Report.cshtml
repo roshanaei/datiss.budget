@@ -1,7 +1,6 @@
-﻿
-@model ReportViewModel
+﻿@model ReportDisplayViewModel
 @{
-    ViewData["Title"] = $"گزاش {Model.Title}";
+    ViewData["Title"] = $"گزاش {Model.Report.Title}";
 }
 <!--Title-->
 <div class="row">
@@ -12,18 +11,44 @@
         </div>
     </div>
 </div>
-
 <section>
     <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-content">
+                    <p>
+                        @Html.Raw(Model.Report.Description)
+                    </p>
                     <div class="card-body">
                         <form>
-                            @foreach(var p in Model.Params) {
-                                if(p.ParamType == ReportParamType.Year) {
-                                    
-                                }
+                            @foreach(var p in Model.Report.Params) {
+                                <div class="form-group">
+                                    <label class="control-label my-font">
+                                        @p.Title
+                                    </label>
+
+                                    @if(p.ParamType == ReportParamType.Year) {
+                                        <select name="@p.Name" class="form-control my-font" asp-items="Model.YearSource">
+                                        </select>
+                                    }
+                                    else if(p.ParamType == ReportParamType.Organization) {
+                                        <select name="@p.Name" class="form-control my-font" asp-items="Model.OrganizationSource">
+                                        </select>
+                                    }
+                                    else if(p.ParamType == ReportParamType.County) {
+                                        <select name="@p.Name" class="form-control my-font" asp-items="Model.CountySource">
+                                        </select>
+                                    }
+                                    else if(p.ParamType == ReportParamType.City) {
+                                        <select name="@p.Name" class="form-control my-font" asp-items="Model.CitySource">
+                                        </select>
+                                    }
+                                    else if(p.ParamType == ReportParamType.Village) {
+                                        <select name="@p.Name" class="form-control my-font" asp-items="Model.VillageSource">
+                                        </select>
+                                    }
+                                </div>
+                                
                             }
                         </form>
                     </div>

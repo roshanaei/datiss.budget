@@ -123,14 +123,6 @@ namespace Datiss.Budget.Services.Identity
                 throw new CreateUserException(result.Errors);
             }
 
-            //var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
-            //if (!passwordResult.Succeeded) {
-            //    return ValidationResult<UserResultDTO>.Failed(
-            //        user.Adapt<UserResultDTO>(),
-            //        ValidationMode.Update,
-            //        ServiceMessages.Err_Password_Format);
-            //}
-
             return ValidationResult<UserResultDTO>
                     .Success(user.Adapt<UserResultDTO>());
         }
@@ -168,9 +160,9 @@ namespace Datiss.Budget.Services.Identity
                 .Include(_ => _.Roles)
                 .SingleOrDefaultAsync(_ => _.Id == model.Id);
             user.CheckReferenceIsNull(nameof(user));
-            user.FirstName = model.FirstName.ApplyCorrectYeKe().Trim();
-            user.LastName = model.LastName.ApplyCorrectYeKe().Trim();
-            user.Email = model.Email.Trim();
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
             user.NationalCode = model.NationalCode;
             user.PhoneNumber = model.PhoneNumber;
             user.PositionId = model.PositionId;
@@ -190,16 +182,6 @@ namespace Datiss.Budget.Services.Identity
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
                 throw new UpdateUserException(result.Errors);
-
-            //if (!string.IsNullOrWhiteSpace(model.Password)) {
-            //    var passwordResult = await _userManager.AddPasswordAsync(user, model.Password);
-            //    if(!passwordResult.Succeeded) {
-            //        return ValidationResult<UserResultDTO>.Failed(
-            //            user.Adapt<UserResultDTO>(),
-            //            ValidationMode.Update,
-            //            ServiceMessages.Err_Password_Format);
-            //    }
-            //}
 
             return ValidationResult<UserResultDTO>
                     .Success(user.Adapt<UserResultDTO>());

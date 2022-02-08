@@ -98,6 +98,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("show/{id}"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Report(int id, ReportViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
+
             return View(model);
         }
 
