@@ -18,8 +18,8 @@
                 <th style="min-width: 180px;">درآمد تبصره 3 فاضلاب بهاء خانگی</th>
                 <th style="min-width: 210px;">درآمد فاضلاب بهاء فصلی</th>
                 <th style="min-width: 200px;">درآمد کل فاضلاب بهاء</th>
-                <th style="min-width: 280px;">قیمت تبصره 7 فاضلاب بهاء خانگی</th>
-                <th style="min-width: 280px;">درآمد تبصره 7 فاضلاب بهاء خانگی</th>
+                @*<th style="min-width: 280px;">قیمت تبصره 7 فاضلاب بهاء خانگی</th>
+                <th style="min-width: 280px;">درآمد تبصره 7 فاضلاب بهاء خانگی</th>*@
                 <th style="min-width: 190px;">مدیریت</th>
             </tr>
         </thead>
@@ -160,7 +160,7 @@
                         <span id="spanTIncome_"> </span>
                     </div>
                 </td>
-                <td>
+                @*<td>
                     <div id="divInput_Note7Price_">
                         <input class="form-control input-keyup" id="inputNote7Price_" type="number" min="0" />
                     </div>
@@ -175,7 +175,7 @@
                     <div id="divOutput_Note7Income_" style="display: none">
                         <span id="spanNote7Income_"> </span>
                     </div>
-                </td>
+                </td>*@
 
                 <td>
                     <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
@@ -349,7 +349,7 @@
                     <span id="spanTIncome_@item.Id">@item.TIncomeDisplay </span>
                 </div>
             </td>
-            <td>
+            @*<td>
                 <div id="divInput_Note7Price_@item.Id" style="display: none">
                     <input class="form-control" id="inputNote7Price_@item.Id" value="@item.Note7Price" type="number" min="0" />
                 </div>
@@ -364,7 +364,7 @@
                 <div id="divOutput_Note7Income_@item.Id">
                     <span id="spanNote7Income_@item.Id">@item.Note7IncomeDisplay </span>
                 </div>
-            </td>
+            </td>*@
 
             <td>
                 <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">

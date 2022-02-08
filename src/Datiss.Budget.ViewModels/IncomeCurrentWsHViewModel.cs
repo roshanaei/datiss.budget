@@ -55,11 +55,11 @@ namespace Datiss.Budget.ViewModels
         [Required(ErrorMessage = "*")]
         public long TIncome { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        public long Note7Price { get; set; }
+        //[Required(ErrorMessage = "*")]
+        //public long Note7Price { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        public long Note7Income { get; set; }
+        //[Required(ErrorMessage = "*")]
+        //public long Note7Income { get; set; }
     }
 
     public class UpdateIncomeCurrentWsHViewModel : CreateIncomeCurrentWsHViewModel
@@ -131,13 +131,13 @@ namespace Datiss.Budget.ViewModels
 
         public string TIncomeDisplay => TIncome.ToString("N0");
 
-        public long Note7Price { get; set; }
+        //public long Note7Price { get; set; }
 
-        public string Note7PriceDisplay => Note7Price.ToString("N0");
+        //public string Note7PriceDisplay => Note7Price.ToString("N0");
 
-        public long Note7Income { get; set; }
+        //public long Note7Income { get; set; }
 
-        public string Note7IncomeDisplay => Note7Income.ToString("N0");
+        //public string Note7IncomeDisplay => Note7Income.ToString("N0");
     }
     public class IncomeCurrentWsHFilterViewModel : FilterViewModel
     {
