@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -24,11 +23,12 @@ using Datiss.Budget.Enum;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 
-namespace Datiss.Budget.Web.Controllers
+namespace Datiss.Budget.Web.Admin.Controllers
 {
 
-    [Authorize]
-    [Route("[controller]")]
+    [Authorize(Roles = ConstantRoles.Admin)]
+    [Area(AreaConstants.AdminArea)]
+    [Route("[area]/[controller]")]
     public class OrganizationController : Controller
     {
         public const string Name = "Organization";
@@ -72,8 +72,7 @@ namespace Datiss.Budget.Web.Controllers
             filter.PageNumber = page;
 
             var result = await _organizationService.GetListAsync(filter);
-            var model = new OrganizationIndexViewModel();
-            model = result.Adapt<OrganizationIndexViewModel>();
+            var model = result.Adapt<OrganizationIndexViewModel>();
 
             model.SetParentOrganizationFilterSource(orgSource,filter.OrganizationId);
 
@@ -105,7 +104,7 @@ namespace Datiss.Budget.Web.Controllers
         [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> Create()
         {
-            var orgSource = (await _organizationService.GetDropDownDataAsync())
+            var orgSource = (await _organizationService.GetDropDownTypeOrgDataAsync(OrganizationType.Village,true))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var model = new CreateOrganizationViewModel();
@@ -135,14 +134,13 @@ namespace Datiss.Budget.Web.Controllers
         [HasPermission(claimType: Name, PermissionActionType.Edit)]
         public async Task<IActionResult> Edit(int id)
         {
-            var orgSource = (await _organizationService.GetDropDownDataAsync())
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
             var entity = await _organizationService.GetByIdAsync(id);
 
             if (entity == null)
             {
                 return RedirectToAction("Index");
             }
+
             var model = new UpdateOrganizationViewModel
             {
                 Type = entity.Type,
@@ -152,10 +150,15 @@ namespace Datiss.Budget.Web.Controllers
                 SewageStatus = entity.SewageStatus,
                 Enabled = entity.Status == EntityStatus.Enabled ? true : false
             };
+            IEnumerable<DropDownItemViewModel> parentTypeSource = Enumerable.Empty<DropDownItemViewModel>();
+            if (model.ParentId.HasValue)
+            {
+                var parent = await _organizationService.GetByIdAsync(model.ParentId.Value);
+                parentTypeSource = (await _organizationService.GetDropDownTypeOrgDataAsync(parent.Type))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>();
+            }
 
-            model.SetParentOrganizationSource(orgSource);
-
-
+            model.SetParentOrganizationSource(parentTypeSource);
             return PartialView("_editModal", model);
         }
 

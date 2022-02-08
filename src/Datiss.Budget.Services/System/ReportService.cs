@@ -125,8 +125,9 @@ namespace Datiss.Budget.Services
 
             if(checkMandatoryFieldsIsEmpty(model.Title, model.Name))
                 return ValidationResult<ReportData>
+                     .Failed(ValidationMode.Update, ServiceMessages.MandatoryFields);                  
+                return ValidationResult<ReportData>
                     .Failed(ValidationMode.Update, ServiceMessages.MandatoryFields);
-
             if (await existByNameAsync(model.Name, model.Id))
                 return ValidationResult<ReportData>.Failed(
                     ValidationMode.Create,

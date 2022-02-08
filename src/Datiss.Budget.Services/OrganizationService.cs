@@ -53,6 +53,7 @@ namespace Datiss.Budget.Services
         public async Task<ValidationResult> CreateAsync(CreateOrganizationDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
+
             var displayOrder = await getDisplayOrder(model.Type, model.ParentId);
             var entity = new Organization
             {
@@ -64,24 +65,21 @@ namespace Datiss.Budget.Services
                 Status = EntityStatus.Enabled
             };
 
-            if (await checkLogicAsync(model.Title, entity.ParentId))
+            var result = await checkLogicAsync(model.Title, entity.ParentId, entity.Type);
+            if (result.IsValid)
             {
                 await _dbSet.AddAsync(entity);
                 await _uow.SaveChangesAsync();
-                return ValidationResult.Success();
+                return result;
             }
-
-            return ValidationResult.Failed(
-                string.Format(ServiceMessages.Logic_OrganizationDuplicate, model.Title)
-                );
-
+            return result;
         }
 
         public async Task<ValidationResult> UpdateAsync(UpdateOrganizationDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
-
-            if (await checkLogicAsync(model.Title, model.ParentId, model.Id))
+            var result = await checkLogicAsync(model.Title, model.ParentId, model.Type, model.Id);
+            if (result.IsValid)
             {
                 var entity = await _dbSet.FindAsync(model.Id);
                 entity.ParentId = model.ParentId;
@@ -94,11 +92,9 @@ namespace Datiss.Budget.Services
                 await setDisplayOrderForChild(entity.Type, entity.Id, model.DisplayOrder);
                 await _uow.SaveChangesAsync();
 
-                return ValidationResult.Success();
+                return result;
             }
-            return ValidationResult.Failed(
-                string.Format(ServiceMessages.Logic_OrganizationDuplicate, model.Title)
-                );
+            return result;
         }
 
         public async Task SoftDeleteAsync(int id)
@@ -143,8 +139,6 @@ namespace Datiss.Budget.Services
 
         public async Task<bool> IsDescendentOfAsync(int parentId, int targetOrganizationId)
         {
-            var query = Query();
-
             var targetOrg = await _dbSet.FindAsync(targetOrganizationId);
             targetOrg.CheckReferenceIsNull(nameof(targetOrg));
 
@@ -175,8 +169,18 @@ namespace Datiss.Budget.Services
                         Title = x.Title,
                         Selected = x.Id == _userContext.OrganizationId
                     }).ToList();
-        public async Task<IEnumerable<DropDownItem>> GetDropDownTypeOrgDataAsync(OrganizationType type)
-            => await Query().Where(x => x.Type == type)
+        public async Task<IEnumerable<DropDownItem>> GetDropDownTypeOrgDataAsync(OrganizationType type, bool none = false)
+            => none
+            ? await Query().Where(x => x.Type != type)
+                           .OrderBy(_ => _.Type)
+                           .ThenBy(_ => _.DisplayOrder)
+            .Select(x => new DropDownItem
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToListAsync()
+            : await Query().Where(x => x.Type == type)
+                           .OrderBy(_ => _.DisplayOrder)
             .Select(x => new DropDownItem
             {
                 Id = x.Id,
@@ -343,7 +347,7 @@ namespace Datiss.Budget.Services
                 }
             }
 
-            var children = await getByParnetIdAsync(myself != null ? myself.Id : null, input , queryTracked);
+            var children = await getByParnetIdAsync(myself != null ? myself.Id : null, input, queryTracked);
 
             if (input)
             {
@@ -386,7 +390,15 @@ namespace Datiss.Budget.Services
         {
             if (type == OrganizationType.County)
             {
-                var child = await getWithChildrenAsync(orgId,queryTracked : true);
+                if (await Query().AnyAsync(_ => _.DisplayOrder == displayOrder))
+                {
+                    var Org = await _dbSet.Where(_ => _.DisplayOrder >= displayOrder).ToListAsync();
+                    foreach (var item in Org)
+                    {
+                        item.DisplayOrder += 1;
+                    }
+                }
+                var child = await getWithChildrenAsync(orgId, queryTracked: true);
                 foreach (var item in child)
                 {
                     item.DisplayOrder = displayOrder;
@@ -406,24 +418,53 @@ namespace Datiss.Budget.Services
 
         #region Logics
 
-        private async Task<bool> checkLogicAsync(
+        private async Task<ValidationResult> checkLogicAsync(
             string title,
             int? parentId,
+            OrganizationType orgType,
             int? id = null)
         {
-            var result = id == null
-                ? await Query().AnyAsync(x => x.Title.Trim() == title.Trim() &&
-                                              x.ParentId == parentId)
 
-                : await Query().AnyAsync(x => x.Title.Trim() == title.Trim() &&
-                                              x.ParentId == parentId &&
-                                              x.Id != id);
-            return !result;
+            if (parentId.HasValue)
+            {
+                var parentType = await GetByIdAsync(parentId.Value);
+                if (id == parentId && id.HasValue)
+                {
+                    return ValidationResult.Failed(
+                        string.Format(ServiceMessages.OrganizationInvalidParentId)
+                        );
+                }
+                if (orgType <= parentType.Type)
+                {
+                    return ValidationResult.Failed(
+                        string.Format(ServiceMessages.OrganizationInvalidParentId)
+                        );
+                }
+            }
+            if (id.HasValue)
+            {
+                if (await Query().AnyAsync(x => x.Title.Trim() == title.Trim() &&
+                                                x.ParentId == parentId &&
+                                                x.Id != id))
+                {
+                    return ValidationResult.Failed(
+                        string.Format(ServiceMessages.Logic_OrganizationDuplicate, title)
+                        );
+                }
+            }
+            else
+            {
+
+                if (await Query().AnyAsync(x => x.Title.Trim() == title.Trim() &&
+                                               x.ParentId == parentId))
+                {
+                    return ValidationResult.Failed(
+                        string.Format(ServiceMessages.Logic_OrganizationDuplicate, title)
+                        );
+                }
+            }
+            return ValidationResult.Success();
         }
-
         #endregion
-
-
     }
 }
-
