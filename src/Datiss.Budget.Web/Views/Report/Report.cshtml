@@ -6,7 +6,7 @@
 <div class="row">
     <div class="col-12">
         <div class="content-header">
-            @*<i class="ft-settings mr-1"></i>*@
+            <i class="ft-settings mr-1"></i>
             <span class="my-font-bold">@ViewData["Title"]</span>
         </div>
     </div>
@@ -20,36 +20,56 @@
                         @Html.Raw(Model.Report.Description)
                     </p>
                     <div class="card-body">
-                        <form>
-                            @foreach(var p in Model.Report.Params) {
-                                <div class="form-group">
-                                    <label class="control-label my-font">
-                                        @p.Title
-                                    </label>
 
-                                    @if(p.ParamType == ReportParamType.Year) {
-                                        <select name="@p.Name" class="form-control my-font" asp-items="Model.YearSource">
-                                        </select>
-                                    }
-                                    else if(p.ParamType == ReportParamType.Organization) {
-                                        <select name="@p.Name" class="form-control my-font" asp-items="Model.OrganizationSource">
-                                        </select>
-                                    }
-                                    else if(p.ParamType == ReportParamType.County) {
-                                        <select name="@p.Name" class="form-control my-font" asp-items="Model.CountySource">
-                                        </select>
-                                    }
-                                    else if(p.ParamType == ReportParamType.City) {
-                                        <select name="@p.Name" class="form-control my-font" asp-items="Model.CitySource">
-                                        </select>
-                                    }
-                                    else if(p.ParamType == ReportParamType.Village) {
-                                        <select name="@p.Name" class="form-control my-font" asp-items="Model.VillageSource">
-                                        </select>
-                                    }
-                                </div>
+                        <form id="my-form"
+                              method="post"
+                              asp-controller="@ReportController.Name"
+                              asp-action="@ReportController.ACTION_Report"
+                              asp-antiforgery="true">
+                            <input type="hidden" asp-for="Report.Id" />
+                            <div class="form-row">
+                                <div class="col-md-6 col-12">
+                                    <h5>
+                                       <i class="fa fa-bookmark"></i>
+                                        پارامترهای گزارش
+                                    </h5>
+                                    @foreach(var p in Model.Report.Params) {
+                                        <div class="form-group">
+                                            <label class="control-label my-font">
+                                                @p.Title
+                                            </label>
+
+                                            @if(p.ParamType == ReportParamType.Year) {
+                                                <select name="@p.Name" class="form-control my-font" asp-items="Model.YearSource">
+                                                </select>
+                                            }
+                                            else if(p.ParamType == ReportParamType.Organization) {
+                                                <select name="@p.Name" class="form-control my-font" asp-items="Model.OrganizationSource">
+                                                </select>
+                                            }
+                                            else if(p.ParamType == ReportParamType.County) {
+                                                <select name="@p.Name" class="form-control my-font" asp-items="Model.CountySource">
+                                                </select>
+                                            }
+                                            else if(p.ParamType == ReportParamType.City) {
+                                                <select name="@p.Name" class="form-control my-font" asp-items="Model.CitySource">
+                                                </select>
+                                            }
+                                            else if(p.ParamType == ReportParamType.Village) {
+                                                <select name="@p.Name" class="form-control my-font" asp-items="Model.VillageSource">
+                                                </select>
+                                            }
+                                    </div>
                                 
-                            }
+                                }
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <button type="submit" class="btn btn-success my-font" style="left: 40px;">
+                                        <i class="fa fa-bolt"></i> گزارش
+                                    </button>
+                                </div>
+                            </div>
+
                         </form>
                     </div>
                 </div>

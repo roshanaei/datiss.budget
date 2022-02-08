@@ -6,6 +6,7 @@ using Datiss.Budget.Enum;
 using Datiss.Budget.Common;
 using Datiss.Budget.Security;
 using Datiss.Budget.Resources;
+using Datiss.Budget.Extensions;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.Entities.Identity;
 using Datiss.Budget.DataLayer.Context;
@@ -17,12 +18,9 @@ using Datiss.Budget.Services.Contracts.Identity;
 using DNTPersianUtils.Core;
 using LinqKit;
 using Mapster;
-using Microsoft.AspNetCore.Authorization;
-using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Services.Identity
 {
-
     public class UserService : IUserService
     {
 
@@ -225,8 +223,8 @@ namespace Datiss.Budget.Services.Identity
                     OrganizationId = x.OrganizationId,
                     OrganizationTitle = x.Organization.Title,
                     Status = x.Status
-                })
-                .ToListAsync();
+                }).ToListAsync();
+
             return await Task.FromResult(result);
         }
 

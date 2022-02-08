@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
@@ -98,6 +99,32 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost("show/{id}"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Report(int id, ReportViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
+            var report = await _reportService.GetAsync(model.Id);
+
+            var data = new ReportViewData
+            {
+                Id = report.Id,
+                Name = report.Name,
+                TemplateFileData = report.FileData,
+                Title = report.Title,
+                Description = report.Description,
+                Params = report.Params.Select(_=> new ReportParamViewData
+                {
+                    Id = _.Id,
+                    Name = _.Name,
+                    ParamType = _.ParamType,
+                    ReportId = report.Id,
+                    Title = _.Title,
+                    Value = Request.Form[_.Name].ToString()
+                }).ToList()
+            };
+
+            var _rp = await _reportEngine.GenerateReportAsync(data);
+
+            await _rp.ExportDocumentAsync(
+                 Stimulsoft.Report.StiExportFormat.Pdf, 
+                 @"E:\Projects\Datiss\datiss.budget\src\Datiss.Budget.Web\wwwroot\001.pdf"
+                );
 
             return View(model);
         }
@@ -147,6 +174,14 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpGet("getreport")]
         public async Task<IActionResult> GetReport() {
+            object objId = 0;
+            if (!TempData.TryGetValue("reportId", out objId))
+                return NotFound();
+
+            var id = Convert.ToInt32(objId);
+            var report = await _reportService.GetAsync(id);
+
+
             var model = new ReportViewData {
                 Id = 1,
                 Params = new List<ReportParamViewData> {
