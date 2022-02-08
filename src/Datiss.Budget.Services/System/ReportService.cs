@@ -124,7 +124,7 @@ namespace Datiss.Budget.Services
             report.CheckReferenceIsNull(nameof(report));
 
             if(checkMandatoryFieldsIsEmpty(model.Title, model.Name))
-                return ValidationResult<ReportDTO>
+                return ValidationResult<ReportData>
                      .Failed(ValidationMode.Update, ServiceMessages.MandatoryFields);                  
                 return ValidationResult<ReportData>
                     .Failed(ValidationMode.Update, ServiceMessages.MandatoryFields);

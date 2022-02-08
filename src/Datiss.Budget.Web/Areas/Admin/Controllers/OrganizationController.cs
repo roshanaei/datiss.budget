@@ -150,17 +150,15 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 SewageStatus = entity.SewageStatus,
                 Enabled = entity.Status == EntityStatus.Enabled ? true : false
             };
-            var parent = await _organizationService.GetByIdAsync(model.ParentId.Value);
-            if (parent == null)
+            IEnumerable<DropDownItemViewModel> parentTypeSource = Enumerable.Empty<DropDownItemViewModel>();
+            if (model.ParentId.HasValue)
             {
-                return RedirectToAction("Index");
+                var parent = await _organizationService.GetByIdAsync(model.ParentId.Value);
+                parentTypeSource = (await _organizationService.GetDropDownTypeOrgDataAsync(parent.Type))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>();
             }
-            var parentTypeSource = (await _organizationService.GetDropDownTypeOrgDataAsync(parent.Type))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             model.SetParentOrganizationSource(parentTypeSource);
-
-
             return PartialView("_editModal", model);
         }
 
