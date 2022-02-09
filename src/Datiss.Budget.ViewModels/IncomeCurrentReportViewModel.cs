@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Datiss.Budget.ViewModels;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -46,7 +47,7 @@ namespace Datiss.Budget.ViewModels
         public int UnitTypeId { get; set; }
         public string UnitTypeDisplay { get; set; }
         public ActivityType? Activity { get; set; }
-        public string AvtivityName { get; set; }
+        public string ActivityName => Activity.HasValue ? Activity.Value.ToDisplay() : "-" ;
         public long FunctionalYear_1 { get; set; }
         public string FunctionalYear_1Display => FunctionalYear_1.ToString("N0");
         public long FunctionalBasicYear { get; set; }
@@ -62,6 +63,7 @@ namespace Datiss.Budget.ViewModels
     public class IncomeCurrentReportFilterViewModel : FilterViewModel
     {
         public int? YearId { get; set; }
+        public int? NumberYear { get; set; }
         public int? OrganizationId { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
@@ -111,12 +113,14 @@ namespace Datiss.Budget.ViewModels
             }).ToList();
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
-            => Filter.YearSource = source.Select(x => new SelectListItem
-            {
-                Selected = x.Id == selectedYearId,
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList();
+        {
+            Filter.YearSource = source.Select(x => new SelectListItem
+               {
+                   Selected = x.Id == selectedYearId,
+                   Text = x.Title,
+                   Value = x.Id.ToString()
+               }).ToList();
+        }
 
     }
 }

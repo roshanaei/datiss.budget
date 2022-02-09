@@ -217,6 +217,7 @@ namespace Datiss.Budget.Services.Models
     public class IncomeCurrentReportFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
+        public int? NumberYear { get; set; }
         public int? OrganizationId { get; set; }
         public int? SectionTypeId { get; set; }
         public int? UnitTypeId { get; set; }

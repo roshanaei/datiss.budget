@@ -103,7 +103,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<List<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(x => x.Id);
-
+            int numberYear = Convert.ToInt32(yearSource.Max(x => x.Title));
             //var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
             //var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
             //{
@@ -121,6 +121,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<List<DropDownItemViewModel>>();
 
             filter.YearId = maxYear;
+            filter.NumberYear = numberYear;
             filter.OrganizationId = firstOrgId;
 
             var myfilter = TempData.Get<IncomeCurrentReportFilterViewModel>(_indexFilterKey);
@@ -143,6 +144,7 @@ namespace Datiss.Budget.Web.Controllers
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
 
             model.Filter.YearId = filter.YearId;
+            model.Filter.NumberYear = filter.NumberYear;
             model.Filter.OrganizationId = filter.OrganizationId;
             model.PageNumber = filter.PageNumber;
             model.PageSize = filter.PageSize;
@@ -190,6 +192,12 @@ namespace Datiss.Budget.Web.Controllers
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetFinanceYearFilterSource(yearSource);
             model.SetOrganizationFilterSource(orgSource);
+            //
+            if (filter.YearId.HasValue)
+            {
+                var year = yearSource.SingleOrDefault(_ => _.Id == filter.YearId);
+                model.Filter.NumberYear = Convert.ToInt32(year.Title);
+            }
 
             return View(model);
         }

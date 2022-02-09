@@ -45,11 +45,11 @@ namespace Datiss.Budget.Services.Models
 
         public int SectionTypeId { get; set; }
 
-        public string SectionTypeTitle { get; set; }
+        public string SectionTypeDisplay { get; set; }
 
         public int UnitTypeId { get; set; }
 
-        public string UnitTypeTitle { get; set; }
+        public string UnitTypeDisplay { get; set; }
 
         public ActivityType? Activity { get; set; }
 
