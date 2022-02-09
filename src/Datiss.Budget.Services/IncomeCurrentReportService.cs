@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Datiss.Budget.Common;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.DataLayer.Context;
@@ -11,14 +12,18 @@ using Datiss.Budget.Entities;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Enum;
 using Datiss.Budget.Extensions;
+using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using LinqKit;
+using Mapster;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Datiss.Budget.Services
@@ -63,9 +68,60 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
 
-        public Task<ValidationResult<IncomeCurrentReportDTO>> UpdateAsync(UpdateIncomeCurrentReportDTO model)
+        public async Task<ValidationResult<IncomeCurrentReportDTO>> UpdateAsync(UpdateIncomeCurrentReportDTO model)
         {
-            throw new NotImplementedException();
+            model.CheckArgumentIsNull(nameof(model));
+
+            model.SectionTypeTitle = (await _constSet.FindAsync(model.SectionTypeId)).Title;
+            model.UnitTypeTitle = (await _constSet.FindAsync(model.UnitTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.SectionTypeId , model.UnitTypeId, model.Activity ,model.Id))
+                {
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.YearId = model.YearId;
+                    entity.SectionTypeId = model.SectionTypeId;
+                    entity.UnitTypeId = model.UnitTypeId;
+                    entity.Activity = model.Activity;
+                    entity.FunctionalBasicYear = model.FunctionalBasicYear;
+                    entity.FunctionalYear_1 = model.FunctionalYear_1;
+                    entity.ForcastY = model.ForcastY;
+                    entity.ApproveYear_1 = model.ApproveYear_1;
+
+                    await _uow.SaveChangesAsync();
+
+                    var result = new IncomeCurrentReportDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        OrganizationDisplay = organizationDisplay,
+                        SectionTypeId = model.SectionTypeId,
+                        SectionTypeDisplay = model.SectionTypeTitle,
+                        UnitTypeId = model.UnitTypeId,
+                        UnitTypeDisplay = model.UnitTypeTitle,
+                        Activity = model.Activity,
+                        FunctionalBasicYear = model.FunctionalBasicYear,
+                        FunctionalYear_1 = model.FunctionalYear_1,
+                        ApproveYear_1 = model.ApproveYear_1,
+                        ForcastY = model.ForcastY,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
+
+                    return ValidationResult<IncomeCurrentReportDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<IncomeCurrentReportDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+            return ValidationResult<IncomeCurrentReportDTO>.Failed(
+                string.Format(ServiceMessages.Logic_OrganizationDuplicate,
+                organizationDisplay)
+                );
         }
 
         public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId)
@@ -150,9 +206,25 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public Task<ValidationResult> CalculationAsync(int yearId, int organizationId)
+        public async Task<ValidationResult> CalculationAsync(int yearId, int organizationId ,int sectionId)
         {
-            throw new NotImplementedException();
+            List<SqlParameter> sqlParams = new List<SqlParameter>
+            {
+                new SqlParameter("YearId", yearId),
+                new SqlParameter("OrganizationId", organizationId),
+                new SqlParameter("SectionId", sectionId)
+            };
+
+            //result.Add(new CalculationItemData
+            //{
+            //    Key = "WasteSalesSplit_Cal1",
+            //    Value = await _uow.ExecuteScalar<int>(
+            //                        "[dbo].[WasteSalesSplit_Cal1] @YearId, @OrganizationId",
+            //                        parameters: sqlParams.ToArray())
+            //});
+
+
+            return ValidationResult.Success();
         }
 
         public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
@@ -208,14 +280,244 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<IncomeCurrentReportDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<IncomeCurrentReportDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
-            throw new NotImplementedException();
+            var filter = new IncomeCurrentReportFilterDTO
+            {
+                OrganizationId = organizationId,
+                YearId = yearId
+            };
+            filter.CheckArgumentIsNull(nameof(filter));
+            var query = Query();
+            query = await setFilter(query, filter);
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.SectionType)
+                                    .Include(x => x.UnitType)
+                                    .Select(x => new IncomeCurrentReportDTO
+                                        {
+                                            Id = x.Id,
+                                            YearId = x.YearId,
+                                            Year = x.FinanceYear.Year,
+                                            OrganizationId = x.OrganizationId,
+                                            OrganizationDisplay = x.Organization.Title,
+                                            SectionTypeId = x.SectionTypeId,
+                                            SectionTypeDisplay = x.SectionType.Title,
+                                            UnitTypeId = x.UnitTypeId,
+                                            UnitTypeDisplay = x.UnitType.Title,
+                                            Activity = x.Activity,
+                                            FunctionalBasicYear = x.FunctionalBasicYear,
+                                            FunctionalYear_1 = x.FunctionalYear_1,
+                                            ApproveYear_1 = x.ApproveYear_1,
+                                            ForcastY = x.ForcastY
+                                        }).ToListAsync();
+
+            return items;
         }
 
-        public Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            throw new NotImplementedException();
+            var data = await _excelService.ImportAsync<IncomeCurrentReportImportModel>
+               (fileInfo, sheetIndex: 0, minRowNum: 2);
+
+            var records = data.Adapt<List<IncomeCurrentReport>>();
+
+            int rowIndex = 1;
+
+            var descendents = await _organizationService
+                .GetAllDescendentsAsync(_userContext.OrganizationId);
+
+            var sectiontypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CIRSection &&
+                                                    x.Parent.ParentId == null &&
+                                                    x.Status != EntityStatus.Deleted);
+
+            var unitTypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__WaterDiameter &&
+                                                 x.Parent.ParentId == null &&
+                                                 x.Status != EntityStatus.Deleted);
+
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
+
+            foreach (var rec in records)
+            {
+                rec.YearId = yearId;
+
+                var org = await _orgDbSet.FindAsync(rec.OrganizationId);
+                if (year == null || year.Status == EntityStatus.Disbaled)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
+                        );
+                }
+                if (org == null)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
+                        );
+                }
+                if (!await sectiontypes.AnyAsync(x => x.Id == rec.SectionTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.SectionTypeId)
+                        );
+                }
+                if (!await unitTypes.AnyAsync(x => x.Id == rec.UnitTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidDiameterPipe, rowIndex + 2, rec.UnitTypeId)
+                        );
+                }
+                if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
+                        );
+                }
+
+                rowIndex++;
+            }
+
+            //
+            var missingOrgs = new List<Organization>();
+            var existOrgs = new List<Organization>();
+
+            foreach (var item in descendents)
+            {
+                var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                if (!existInExcel)
+                {
+                    if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                        missingOrgs.Add(item);
+                }
+                else
+                    existOrgs.Add(item);
+            }
+            //
+
+            //Start Missing Type
+            var missingUserType = new List<Constant>();
+            var missingWPDiameters = new List<Constant>();
+
+            string orgTitle = "";
+            string userTypeTitle = "";
+
+            foreach (var org in existOrgs)
+            {
+                if (orgTitle != "")
+                    break;
+                foreach (var usert in sectiontypes)
+                {
+                    var existUserTypeInExcel = records.Any(_ => _.SectionTypeId == usert.Id &&
+                                                                _.OrganizationId == org.Id);
+                    if (!existUserTypeInExcel)
+                    {
+                        missingUserType.Add(usert);
+                        orgTitle = org.Title;
+                    }
+                    else if (!missingUserType.Any())
+                    {
+                        foreach (var waterd in unitTypes)
+                        {
+                            var existWPDiametersInExcel = records.Any(_ => _.SectionTypeId == usert.Id &&
+                                                                           _.UnitTypeId == waterd.Id &&
+                                                                           _.OrganizationId == org.Id);
+
+                            if (!existWPDiametersInExcel)
+                            {
+                                missingWPDiameters.Add(waterd);
+                                orgTitle = org.Title;
+                                userTypeTitle = usert.Title;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (missingUserType.Any())
+            {
+                string userTypeNames = "";
+                foreach (var item in missingUserType)
+                {
+                    userTypeNames += "- " + item.Title + "<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, userTypeNames, orgTitle));
+            }
+
+            if (missingWPDiameters.Any())
+            {
+                string wPDiametersNames = "";
+                foreach (var item in missingWPDiameters)
+                {
+                    wPDiametersNames += "- [" + item.Title + "]<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelDiameterPipeUserTypeOrgNotInExcel, wPDiametersNames, userTypeTitle, orgTitle));
+            }
+            //End
+
+            rowIndex = 1;
+
+            if (!continueIfAnyOrgMissing)
+            {
+                if (missingOrgs.Any())
+                {
+                    string orgNames = "";
+                    foreach (var item in missingOrgs)
+                    {
+                        orgNames += "- " + item.Title + "<br>";
+                    }
+
+                    return new ImportResult
+                    {
+                        Message = orgNames,
+                        AskToImport = true
+                    };
+                }
+            }
+
+            foreach (var record in records)
+            {
+
+                if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
+                        );
+
+                if (!await checkLogicAsync(
+                    record.YearId,
+                    record.OrganizationId,
+                    record.SectionTypeId,
+                    record.UnitTypeId,
+                    record.Activity))
+                {
+
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
+                        );
+                }
+
+                rowIndex++;
+            }
+
+            //await _dbSet.AddRangeAsync(records);
+
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelCalculationField)
+                    );
+            }
+
+            return ImportResult.Succeed(
+                string.Format(ServiceMessages.ImportExcelSuccess)
+                );
         }
 
 

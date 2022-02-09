@@ -10,5 +10,7 @@
         public const string __Position = "Position";
         public const string __House = "UserType.House";
         public const string __Cofficients = "Cofficients";
+        public const string __CIRSection = "CIRSection";
+        public const string __CIRUnit = "CurrentIncomeReport";
     }
 }

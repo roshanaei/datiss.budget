@@ -30,8 +30,8 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Edit = nameof(Edit);
         public const string ACTION_Copy = nameof(Copy);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
-        //public const string ACTION_ImportExcel = nameof(ImportExcel);
-        //public const string ACTION_Calculation = nameof(Calculation);
+        public const string ACTION_ImportExcel = nameof(ImportExcel);
+        public const string ACTION_Calculation = nameof(Calculation);
         //public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
@@ -104,18 +104,6 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<List<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(x => x.Id);
             int numberYear = Convert.ToInt32(yearSource.Max(x => x.Title));
-            //var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
-            //var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
-            //{
-            //    Id = x.Id,
-            //    Title = x.Title
-            //}).ToList();
-            //var userTypeKeys = "";
-            //foreach (var key in userTypeData)
-            //{
-            //    userTypeKeys += $"'{key.ConstantKey}',";
-            //}
-            //ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                 .Adapt<List<DropDownItemViewModel>>();
@@ -169,19 +157,6 @@ namespace Datiss.Budget.Web.Controllers
 
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
-
-            //var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
-            //var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
-            //{
-            //    Id = x.Id,
-            //    Title = x.Title
-            //}).ToList();
-            //var userTypeKeys = "";
-            //foreach (var key in userTypeData)
-            //{
-            //    userTypeKeys += $"'{key.ConstantKey}',";
-            //}
-            //ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
 
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -254,6 +229,19 @@ namespace Datiss.Budget.Web.Controllers
             }
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Calculation(CalculationInputViewModel model,int sectionId)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var result = await _incomeCurrentReportService.CalculationAsync(
+                model.YearId,
+                model.OrganizationId,
+                sectionId);
+
+            return RedirectToAction("Index");
+        }
+
 
         [HttpGet("[action]")]
         [HasPermission(claimType: Name, PermissionActionType.Create)]
@@ -314,6 +302,69 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(model);
+        }
+
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            if (model.ExcelFile == null || model.ExcelFile.Length == 0)
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelInvalidFile
+                });
+
+            try
+            {
+                var result = await _incomeCurrentReportService.ImportExcelAsync(
+                                                                    model.ExcelFile,
+                                                                    model.YearId,
+                                                                    model.ContinueIfAnyOrgMissing);
+                if (result.AskToImport)
+                {
+                    return Json(new
+                    {
+                        ask = true,
+                        message = result.Message
+                    });
+                }
+
+                if (result.Success)
+                {
+                    return Json(new
+                    {
+                        hasError = false,
+                        message = result.Message
+                    });
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
+            }
+            catch (ImportExcelFileFormatInvalidException ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileFormatInvalid
+                });
+            }
+            catch (ImportExcelFileSizeInvalidException ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileSizeInvalid
+                });
+            }
         }
 
         //[HttpGet("import/template/{yearId}/{orgId?}")]
