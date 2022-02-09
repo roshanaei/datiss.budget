@@ -30,6 +30,8 @@ namespace Datiss.Budget.ViewModels
             VillageSource = new List<SelectListItem>();
         }
 
+        public bool DisplayReport { get; set; }
+
         public ReportViewModel Report { get; set; }
 
         public IEnumerable<SelectListItem> YearSource { get; private set; }

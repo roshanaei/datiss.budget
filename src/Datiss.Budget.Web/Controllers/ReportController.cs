@@ -13,7 +13,9 @@ using Datiss.Budget.ViewModels;
 using Datiss.Budget.Reports;
 using Datiss.Budget.Enum;
 using Mapster;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Hosting;
+using Stimulsoft.Base;
+using System.IO;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -29,16 +31,20 @@ namespace Datiss.Budget.Web.Controllers
 
         private readonly string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
+        private readonly IWebHostEnvironment _host;
         private readonly IReportEngine _reportEngine;
         private readonly IReportService _reportService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _yearService;
 
         public ReportController(
+            IWebHostEnvironment host,
             IReportEngine reportEngine,
             IReportService reportService,
             IOrganizationService organizationService,
             IFinanceYearService yearService) {
+            _host = host
+                ?? throw new ArgumentNullException(nameof(host));
             _reportEngine = reportEngine 
                 ?? throw new ArgumentNullException(nameof(reportEngine));
             _reportService = reportService
@@ -47,22 +53,31 @@ namespace Datiss.Budget.Web.Controllers
                 ?? throw new ArgumentNullException(nameof(organizationService));
             _yearService = yearService
                 ?? throw new ArgumentNullException(nameof(yearService));
+
+            var stimulLicenseKey = Path.Combine(_host.WebRootPath, "reporting\\license.key");
+            StiLicense.LoadFromFile(stimulLicenseKey);
         }
 
-        [HttpGet("{page?}")]
-        public async Task<IActionResult> Index(int page = 1) {
-            var filter = new ReportFilterDTO();
-            var myfilter = TempData.Get<ReportFilterViewModel>(_indexFilterKey);
-            if(myfilter != null) {
-                filter = myfilter.Adapt<ReportFilterDTO>();
-                TempData.Put(_indexFilterKey, filter);
-            }
-            filter.PageNumber = page;
-            var result = await _reportService.GetUserListAsync(filter);
-            var model = result.Adapt<ReportIndexViewModel>();
-            model.Filter = filter.Adapt<ReportFilterViewModel>();
+        //[HttpGet("{page?}")]
+        //public async Task<IActionResult> Index(int page = 1) {
+        //    var filter = new ReportFilterDTO();
+        //    var myfilter = TempData.Get<ReportFilterViewModel>(_indexFilterKey);
+        //    if(myfilter != null) {
+        //        filter = myfilter.Adapt<ReportFilterDTO>();
+        //        TempData.Put(_indexFilterKey, filter);
+        //    }
+        //    filter.PageNumber = page;
+        //    var result = await _reportService.GetUserListAsync(filter);
+        //    var model = result.Adapt<ReportIndexViewModel>();
+        //    model.Filter = filter.Adapt<ReportFilterViewModel>();
 
-            return View(model);
+        //    return View(model);
+        //}
+
+        [HttpGet]
+        public async Task<IActionResult> Index() {
+
+            return View("_index");
         }
 
         [HttpPost("{page?}"), ValidateAntiForgeryToken]
@@ -97,10 +112,14 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("show/{id}"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Report(int id, ReportViewModel model) {
+        public async Task<IActionResult> Report(int id, ReportDisplayViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
-            var report = await _reportService.GetAsync(model.Id);
+            var report = await _reportService.GetAsync(model.Report.Id);
+            model.Report = report.Adapt<ReportViewModel>();
+            await addRelatedDataAsync(model);
 
+            TempData["reportId"] = model.Report.Id;
+            
             var data = new ReportViewData
             {
                 Id = report.Id,
@@ -119,12 +138,23 @@ namespace Datiss.Budget.Web.Controllers
                 }).ToList()
             };
 
-            var _rp = await _reportEngine.GenerateReportAsync(data);
+            Dictionary<string, string> param_vals = new Dictionary<string, string>();
+            foreach(var p in report.Params) {
+                if (!Request.Form.Keys.Contains(p.Name))
+                    continue;
+                var fval = Request.Form[p.Name];
+                param_vals.Add(p.Name, fval.ToString());
+            }
 
-            await _rp.ExportDocumentAsync(
-                 Stimulsoft.Report.StiExportFormat.Pdf, 
-                 @"E:\Projects\Datiss\datiss.budget\src\Datiss.Budget.Web\wwwroot\001.pdf"
-                );
+            TempData.Put("report_values", param_vals);
+
+            model.DisplayReport = true;
+            //var _rp = await _reportEngine.GenerateReportAsync(data);
+
+            //await _rp.ExportDocumentAsync(
+            //     Stimulsoft.Report.StiExportFormat.Pdf, 
+            //     @"E:\Projects\Datiss\datiss.budget\src\Datiss.Budget.Web\wwwroot\001.pdf"
+            //    );
 
             return View(model);
         }
@@ -172,7 +202,7 @@ namespace Datiss.Budget.Web.Controllers
             return PartialView("_report1");
         }
 
-        [HttpGet("getreport")]
+        [Route("GetReport")]
         public async Task<IActionResult> GetReport() {
             object objId = 0;
             if (!TempData.TryGetValue("reportId", out objId))
@@ -181,31 +211,31 @@ namespace Datiss.Budget.Web.Controllers
             var id = Convert.ToInt32(objId);
             var report = await _reportService.GetAsync(id);
 
+            object values = null;
+            var paramVals = new Dictionary<string, string>();
 
-            var model = new ReportViewData {
-                Id = 1,
-                Params = new List<ReportParamViewData> {
-                    new ReportParamViewData {
-                        ParamType = Enum.ReportParamType.Year,
-                        Name = "YearId",
-                        Value = 1
-                    },
-                    new ReportParamViewData {
-                        ParamType = Enum.ReportParamType.Organization,
-                        Name = "OrganizationId",
-                        Value = 5
-                    },
-                    new ReportParamViewData {
-                        ParamType = Enum.ReportParamType.Constant,
-                        Name = "UserTypeId",
-                        Value = 3
-                    }
-                }
+            if (TempData.TryGetValue("report_values", out values)) {
+                paramVals = (Dictionary<string, string>)TempData["report_values"];
+            }
+
+            var data = new ReportViewData
+            {
+                Id = report.Id,
+                Name = report.Name,
+                TemplateFileData = report.FileData,
+                Title = report.Title,
+                Description = report.Description,
+                Params = report.Params.Select(_ => new ReportParamViewData
+                {
+                    Id = _.Id,
+                    Name = _.Name,
+                    ParamType = _.ParamType,
+                    ReportId = report.Id,
+                    Title = _.Title,
+                    Value = paramVals.FirstOrDefault(__=> __.Key == _.Name)
+                }).ToList()
             };
-
-            //var myreport = await _reportEngine.GenerateReportAsync(model);
-
-            var myreport = await _reportEngine.GenerateReportAsync(model);
+            var myreport = await _reportEngine.GenerateReportAsync(data);
 
             myreport.Render(false);
 

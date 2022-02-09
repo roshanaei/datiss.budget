@@ -77,9 +77,32 @@
         </div>
 
     </div>
-    <div class="row">
-
-    </div>
+    @if(Model.DisplayReport) {
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-content">
+                        <h5>گزارش</h5>
+                        @Html.StiNetCoreViewer(new StiNetCoreViewerOptions() {
+                            Actions =
+                            {
+                                ViewerEvent = "ViewerEvent",
+                                GetReport = "GetReport"
+                            },
+                            Server =
+                            {
+                                Controller = "Report",
+                                RequestTimeout = 360000,
+                                CacheMode = StiServerCacheMode.None
+                                //RouteTemplate = "Report/{action}"
+                            }
+                        })
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
 </section>
 
 @section footSection {
