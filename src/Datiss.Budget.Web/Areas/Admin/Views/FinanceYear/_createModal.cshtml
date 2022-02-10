@@ -31,11 +31,16 @@
                         <div class="form-group">
                             <label class="my-font">
                                 <span style="margin-left:5px">پایان سال:</span>
-                                <input asp-for="EndPrsianDate" class="form-control form-control-sm d-inline-block" autocomplete="off" datepicker="datepicker" style="width:160px"/>
+                                <input asp-for="EndPrsianDate" class="form-control form-control-sm d-inline-block" autocomplete="off" datepicker="datepicker" style="width:160px" />
                             </label>
                         </div>
                     </div>
 
+                    <div id="divError" style="display: none">
+                        <span id="spanYear" class="my-font error-text"></span>
+                        <span id="spanStartPersianDate" class="my-font error-text"></span>
+                        <span id="spanEndPrsianDate" class="my-font error-text"></span>
+                    </div>
 
                 </div>
                 <div class="modal-footer">
