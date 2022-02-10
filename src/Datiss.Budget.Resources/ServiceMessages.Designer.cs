@@ -277,7 +277,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to داده سطر {0} در اکسل مشکل دارد. لطفاً ورودی ها را بررسی نمایید..
+        ///   Looks up a localized string similar to داده سطر {0} اکسل شما ،در جدول وجود دارد ..
         /// </summary>
         public static string ImportExcelLogicError {
             get {

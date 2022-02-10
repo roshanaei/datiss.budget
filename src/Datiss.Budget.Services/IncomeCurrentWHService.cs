@@ -21,7 +21,7 @@ using LinqKit;
 using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Security;
 using Datiss.Budget.Enum;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Datiss.Budget.Common;
 using Datiss.Budget.Extensions;
 
