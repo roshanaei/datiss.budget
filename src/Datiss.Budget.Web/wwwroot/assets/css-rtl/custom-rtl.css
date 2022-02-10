@@ -191,3 +191,11 @@ th:last-child, td:last-child {
     float: none;
     margin-left: 6px;
 }
+.error-border {
+    border-color:red;
+}
+.error-text {
+    color:red;
+    font-size:x-small;
+    margin-left:2px;
+}

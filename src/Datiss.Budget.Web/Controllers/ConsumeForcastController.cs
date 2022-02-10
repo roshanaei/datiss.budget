@@ -175,8 +175,8 @@ namespace Datiss.Budget.Web.Controllers
 
             model.Filter.YearId = filter.YearId;
             model.Filter.OrganizationId = filter.OrganizationId;
-            model.PageNumber = filter.PageNumber;
-            model.PageSize = filter.PageSize;
+            model.Filter.PageNumber = filter.PageNumber;
+            model.Filter.PageSize = filter.PageSize;
 
             return View(model);
         }
@@ -382,13 +382,20 @@ namespace Datiss.Budget.Web.Controllers
                 model.YearId,
                 model.OrganizationId);
 
-            var output = new CalculationResultViewModel
+            List<CalculationResultViewModel> viewModel = new List<CalculationResultViewModel>();
+            foreach (var item in result)
             {
-                Result = result,
-                Title = "ConsumeForcast calc" //TODO : change it to proper title
-            };
+                viewModel.Add(
+                    new CalculationResultViewModel
+                    {
+                        Result = item.Value,
+                        DecimalResult = item.DecimalValue,
+                        Title = getCalcTitle(item.Key)
+                    }
+                );
+            }
 
-            return PartialView("_calculationModal", output);
+            return PartialView("_calculationModal", viewModel);
         }
 
         [HttpGet("[action]")]
@@ -526,6 +533,17 @@ namespace Datiss.Budget.Web.Controllers
             return new JsonResult(result);
         }
 
+        #region Private Helper Methods
+        private string getCalcTitle(string key)
+            => key switch
+            {
+                "ConsumeForcast_Cal1" => SPTitles.ConsumeForcast_Cal1,
+                "ConsumeForcast_Cal2" => SPTitles.ConsumeForcast_Cal2,
+                "ConsumeForcast_Cal3" => SPTitles.ConsumeForcast_Cal3,
+                "ConsumeForcast_Cal4" => SPTitles.ConsumeForcast_Cal4,
+                _ => ""
+            };
+        #endregion
     }
 
 }

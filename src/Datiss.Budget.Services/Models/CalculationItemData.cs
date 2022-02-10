@@ -10,5 +10,6 @@ namespace Datiss.Budget.Services.Models
     {
         public string Key { get; set; }
         public int Value { get; set; }
+        public decimal? DecimalValue { get; set; }
     }
 }

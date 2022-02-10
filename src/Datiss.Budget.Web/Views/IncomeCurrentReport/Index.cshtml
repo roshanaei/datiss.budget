@@ -1,5 +1,5 @@
-﻿@model IncomeCurrentWsNHIndexViewModel
-@{ ViewData["Title"] = "درآمد خدمات دفع فاضلاب مشترکین غیر مسکونی سالیانه"; }
+﻿@model IncomeCurrentReportIndexViewModel
+@{ ViewData["Title"] = "درآمد های جاری"; }
 
 <!--Title-->
 <div class="row">
@@ -14,24 +14,13 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-
-                @if (ViewData["message"] != null)
-                {
-                    <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
-                        </button>
-                        <span>@ViewData["message"]</span>
-                    </div>
-                }
-
                 <div class="card-content">
                     <div class="card-body">
                         <!--Filters-->
                         <form method="post"
                               id="filterForm"
-                              asp-controller="@IncomeCurrentWsNHController.Name"
-                              asp-action="@IncomeCurrentWsNHController.ACTION_Index"
+                              asp-controller="@IncomeCurrentReportController.Name"
+                              asp-action="@IncomeCurrentReportController.ACTION_Index"
                               asp-antiforgery="true">
                             <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
                             <div class="rowACJSB">
@@ -57,7 +46,6 @@
                                 </fieldset>
                                 <fieldset>
                                     <div class="rowACJE">
-
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
@@ -87,15 +75,15 @@
                                                     class="form-control"
                                                     onchange="changePageSize();"
                                                     id="ddlPageSize">
-                                                <option value="10">10</option>
-                                                <option value="20">20</option>
-                                                <option value="30">30</option>
+                                                <option>10</option>
+                                                <option>20</option>
+                                                <option>30</option>
                                             </select>
                                             <span style="margin-right:10px">رکورد</span>
 
                                         </label>
-
                                     </fieldset>
+                                    <!--DropDown Menu-->
                                     <div class="btn-group dropdown form-group">
                                         <button type="button"
                                                 class="btn btn-light my-font dropdown-toggle"
@@ -104,7 +92,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu" style="width:150%">
+                                        <div class="dropdown-menu" style="width:200%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -136,7 +124,7 @@
                                                                name="col-3"
                                                                id="col-3" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-3"><span>کاربری</span></label>
+                                                               for="col-3"><span>بخش</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -147,7 +135,7 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>تعداد مشترک</span></label>
+                                                               for="col-4"><span>شرح</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -158,7 +146,7 @@
                                                                name="col-5"
                                                                id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>آحاد مشترک</span></label>
+                                                               for="col-5"><span>واحد</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -169,7 +157,7 @@
                                                                name="col-6"
                                                                id="col-6" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-6"><span>متوسط حجم دفع</span></label>
+                                                               for="col-6"><span>پیش بینی سال جاری</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -180,7 +168,7 @@
                                                                name="col-7"
                                                                id="col-7" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-7"><span>ظرفیت قراردادی</span></label>
+                                                               for="col-7"><span>عملکرد سال پایه</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -191,7 +179,7 @@
                                                                name="col-8"
                                                                id="col-8" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-8"><span>حجم دفع</span></label>
+                                                               for="col-8"><span>عملکرد سال ماقبل</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -202,86 +190,9 @@
                                                                name="col-9"
                                                                id="col-9" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-9"><span>قیمت هر کاربری</span></label>
+                                                               for="col-9"><span style="">مصوب سال ما قبل</span></label>
                                                     </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-10"
-                                                               id="col-10" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-10"><span>درآمد کارمزد دفع</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-11"
-                                                               id="col-11" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-11"><span>درآمد آبونمان</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-12"
-                                                               id="col-12" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-12"><span>درآمد فاضلاب بهاء مازاد بر ظرفیت</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-13"
-                                                               id="col-13" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-13"><span>درآمد فاضلاب بهاء فصلی</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-14"
-                                                               id="col-14" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-14"><span>درآمد کل فاضلاب بهاء</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-15"
-                                                               id="col-15" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-15"><span>قیمت فاضلاب تبصره 3</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-16"
-                                                               id="col-16" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-16"><span>درآمد تبصره 3 فاضلاب بهاء</span></label>
-                                                    </div>
-                                                </div>
+                                                </div>                                              
                                             </div>
                                         </div>
                                     </div>
@@ -291,12 +202,12 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@IncomeCurrentWsNHController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel"  class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
-                                           asp-asp-controller="@IncomeCurrentWsNHController.Name"
-                                           asp-action="@IncomeCurrentWsNHController.ACTION_GetExcelTemplate"
+                                           asp-asp-controller="@IncomeCurrentReportController.Name"
+                                           @*asp-action="@IncomeCurrentReportController.ACTION_GetExcelTemplate"*@
                                            asp-route-yearId="@Model.Filter.YearId"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
@@ -336,7 +247,6 @@
     </div>
 
 
-
     <div id="divCalc">
 
     </div>
@@ -344,10 +254,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16';
+        let allColumns = '1,2,3,4,5,6,7,8,9';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,";
+        let showingColmuns = "1,2,3,4,5,6,7,8,9,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -358,6 +268,7 @@
     }
 
     <script type="text/javascript">
+
 
         $(document).ready(function () {
             console.log('ready');
@@ -377,7 +288,7 @@
                 if (checked) {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
                     showingColmuns = showingColmuns + `${index},`
-                    document.getElementById("hidColumns").value = showingColmuns ;
+                    document.getElementById("hidColumns").value = showingColmuns;
                 } else {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
                     showingColmuns = showingColmuns.replace(`${index},`, '');
@@ -403,12 +314,12 @@
             console.log('ColumnsToShow ');
             console.log(columnsToShow);
             let checkBoxes = $("#columnSelector input:checkbox");
-            for(let i = 0; i < columnIndices.length; i++) {
+            for (let i = 0; i < columnIndices.length; i++) {
                 let index = parseInt(columnIndices[i]);
                 let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
                 console.log(`Column : ${index} show = ${showColumn}`);
                 checkBoxes[i].checked = showColumn;
-                if(showColumn)
+                if (showColumn)
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
                 else
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
@@ -422,10 +333,8 @@
                 html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
                 type: 'error',
                 showCancelButton: true,
-                //confirmButtonColor: '#2F8BE6',
                 animation: false,
                 customClass: 'animated flipInX',
-                //cancelButtonColor: '#F55252',
                 cancelButtonText: 'انصراف',
                 confirmButtonText: 'حذف اطلاعات!',
                 confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
@@ -437,7 +346,7 @@
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
                     console.log(params);
-                    let deleteUrl = '@Url.Action(IncomeCurrentWsNHController.ACTION_DeleteRecords)';
+                    let deleteUrl = '@Url.Action(IncomeCurrentReportController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
 
                     $.ajax({
@@ -472,7 +381,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(IncomeCurrentWsNHController.ACTION_Index, new {  page = 1})';
+                                document.location.href = '@Url.Action(IncomeCurrentReportController.ACTION_Index)';
                             });
                         },
                         error: function(request, option, err) {
@@ -498,45 +407,14 @@
             $('#ExcellModal').modal('show');
         }
 
-        $(window).keydown(function (event) {
-            if (event.altKey && event.keyCode == 78) {
-                addNewRow();
-            }
-        });
+    $(document).on('click', '.edit-row', function () {
 
-        $(document).on('click', '#btnCreate', function () {
-            addNewRow();
-        });
-
-        $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
 
             let input1 = document.getElementById('inputNumberUser_' + id);
-            let input2 = document.getElementById('inputUnitUser_' + id);
-            let input3 = document.getElementById('inputAvgConsumeUser_' + id);
-            let input4 = document.getElementById('inputConsumptionUser_' + id);
-            let input5 = document.getElementById('inputCost_' + id);
-            let input6 = document.getElementById('inputIncome_' + id);
-            let input7 = document.getElementById('inputSubscriptionIncome_' + id);
-            let input8 = document.getElementById('inputExcessIncome_' + id);
-            let input9 = document.getElementById('inputSeasonalIncome_' + id);
-            let input10 = document.getElementById('inputTotalIncome_' + id);
-            let input11 = document.getElementById('inputCapacity_' + id);
-            let input12 = document.getElementById('inputNote3Price_' + id);
-            let input13 = document.getElementById('inputNote3Income_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
-
-            console.log($('.input-keyup'));
-
-            //$('.input-keyup input[type="text"]').keyup(function (event) {
-            //    console.log('keyup');
-            //    event.preventDefault();
-            //    if (event.keyCode === 13) {
-            //        btnSaveEdit.click();
-            //    }
-            //});
 
             input1.addEventListener("keyup", function (event) {
                 event.preventDefault();
@@ -544,146 +422,24 @@
                     btnSaveEdit.click();
                 }
             });
-            input2.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input3.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input4.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input5.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input6.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input7.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input8.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input9.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input10.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input11.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input12.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input13.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-
-            btnSaveEdit.addEventListener('click', function(event) {
+            
+            btnSaveEdit.addEventListener('click', function (evenrt) {
                 event.preventDefault();
                 $(btnSaveEdit).attr('disabled', true);
-                $(btnSaveEdit).unbind('keyup');
             });
 
             editRow(id);
         });
 
-        $(document).on('click', '.delete-row', function () {
-            let id = $(this).data('id');
-            let btn = this;
-
-            Swal.fire({
-                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
-                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
-                type: 'error',
-                showCancelButton: true,
-                animation: false,
-                customClass: 'animated flipInX',
-                cancelButtonText: 'انصراف',
-                confirmButtonText: 'حذف اطلاعات!',
-                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
-                cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
-                buttonsStyling: false,
-            }).then(function(result) {
-                if(result.value) {
-                    deleteRow(btn, id);
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            });
-        });
-
-        $(document).on('click', '.cancel-edit-row', function () {
-            let id = $(this).data('id');
-            cancelEditRow(id);
-        });
-
-        $(document).on('click', '.save-edit-row', function () {
-            let id = $(this).data('id');
-            $(this).prop('disabled', true);
-            saveEditRow(id);
-            $(this).prop('disabled', false);
-        });
-
-        $(document).on('click', '.save-new-row', function () {
-            $(this).attr('disabled', true);
-            let row = $(this).closest('tr');
-            saveNewRow(row);
-        });
-
-        $(document).on('click', '.cancel-new-row', function () {
-            cancelNewRow(this);
-        });
-
         $(document).on('click', '.openCopy', function() {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action(IncomeCurrentWsNHController.ACTION_Copy)',
+                url: '@Url.Action(IncomeCurrentReportController.ACTION_Copy)',
                 success: function (data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
                     $('#CopyModal').modal('show');
-                    $('#CopyModal').on('hidden.bs.modal', function() {
+                    $('#CopyModal').on('hidden.bs.modal', function () {
                         $('#divCopy').html('');
                         $('.modal-backdrop').remove();
                     });
@@ -698,8 +454,8 @@
             });
         });
 
-        $(document).ready(function() {
-            $('.modal').on('hidden.bs.modal', function() {
+        $(document).ready(function () {
+            $('.modal').on('hidden.bs.modal', function () {
                 $('.modal-backdrop').remove();
             });
         });
@@ -713,13 +469,14 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(IncomeCurrentWsNHController.ACTION_Calculation)',
+                //check
+                url: '@Url.Action()',
                 data: model,
                 success: function (data, status, settings) {
                     $('#divCalc').html('');
                     $('#divCalc').html(data);
                     $('#CalculationModal').modal('show');
-                    $('#CalculationModal').on('hidden.bs.modal', function() {
+                    $('#CalculationModal').on('hidden.bs.modal', function () {
                         $('#divCalc').html('');
                         $('.modal-backdrop').remove();
                     });
@@ -742,7 +499,9 @@
             $(".olvy").css("display", "block");
 
             $.ajax({
-                url: '@Url.Action(IncomeCurrentWsNHController.ACTION_ImportExcel)',
+                                //check
+
+                url: '@Url.Action()',
                 type: 'POST',
                 data: fdata,
                 processData: false,
@@ -769,7 +528,6 @@
                         $(".olvy").css("display", "none");
                         Swal.fire({
                             html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
-                            //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
                             type: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#2F8BE6',
@@ -783,21 +541,22 @@
                             buttonsStyling: false,
                         }).then(function (result) {
 
-                            if (result.value) {
+                            if(result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
                                 console.log(fdata);
 
                                 $(".olvy").css("display", "block");
 
                                 $.ajax({
-                                    url: '@Url.Action(IncomeCurrentWsNHController.ACTION_ImportExcel)',
+                                                    //check
+
+                                    url: '@Url.Action()',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
                                     contentType: false,
-                                    success: function (data, status, settings) {
-                                        if (data.hasError) {
-                                            $(".olvy").css("display", "none");
+                                    success: function(data, status, settings) {
+                                        if(data.hasError) {
                                             Swal.fire({
                                                 title: '<span class="my-font">خطا</span>',
                                                 html: `<span class="my-font">${data.message}</span>`,
@@ -814,7 +573,7 @@
 
                                         if (!data.hasError) {
                                             $(".olvy").css("display", "none");
-                                            Swal.fire({
+                                          Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
                                                 html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
                                                 type: 'success',
@@ -824,16 +583,18 @@
                                                 confirmButtonText: 'بستن',
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
-                                            }).then(function (result) {
-                                                document.location.href = '@Url.Action(IncomeCurrentWsNHController.ACTION_Index)';
+                                          }).then(function (result) {
+                                                                //check
+
+                                                document.location.href = '@Url.Action()';
                                             });
                                         }
 
-                                        if (data.ask) {
+                                        if(data.ask) {
                                             alert('dont ask again');
                                         }
                                     },
-                                    error: function (request, options, err) {
+                                    error: function(request, options, err) {
                                         console.log(err);
                                     }
                                 });
@@ -845,7 +606,6 @@
                             }
                         });
                     }
-
                     if (!data.hasError && !data.ask) {
                         $(".olvy").css("display", "none");
                         Swal.fire({
@@ -859,7 +619,7 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(IncomeCurrentWsNHController.ACTION_Index)';
+                            document.location.href = '@Url.Action(IncomeCurrentReportController.ACTION_Index)';
                         });
                     }
 
@@ -885,7 +645,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(IncomeCurrentWsNHController.ACTION_Copy)',
+                url: '@Url.Action(IncomeCurrentReportController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
                 success: function (data, status, settings) {

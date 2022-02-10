@@ -1,0 +1,217 @@
+﻿@model IncomeCurrentReportIndexViewModel
+<div class="table-responsive">
+    <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
+        <thead class="thead-light">
+            <tr>
+
+                <th style="min-width:135px">سال</th>
+                <th style="min-width:250px">سازمان</th>
+                <th style="min-width:185px">بخش</th>
+                <th style="min-width:235px">شرح</th>
+                <th style="min-width:240px">واحد</th>
+                <th style="min-width:200px">پیش بینی سال @Model.Filter.NumberYear</th>
+                <th style="min-width:200px">عملکرد @(Model.Filter.NumberYear - 2)</th>
+                <th style="min-width:200px">عملکرد سال @(Model.Filter.NumberYear - 1)</th>
+                <th style="min-width:200px">مصوب سال @(Model.Filter.NumberYear - 1)</th>
+                <th style="min-width:190px">مدیریت</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr id="row_@item.Id">
+                    <td>
+                        <div id="divInput_Year_@item.Id" style="display: none">
+                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            </select>
+                            <script>
+                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Year_@item.Id">
+                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Org_@item.Id" style="display: none">
+                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
+                            </select>
+                            <script>
+                                $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Org_@item.Id">
+                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Activity_@item.Id" style="display: none">
+                            <input class="form-control" id="inputActivity_@item.Id" value="@item.Activity" type="number" />
+                        </div>
+                        <div id="divOutput_Activity_@item.Id">
+                            <span id="spanActivity_@item.Id">@item.ActivityName </span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div id="divInput_SectionType_@item.Id" style="display: none">
+                            <input class="form-control" id="inputSectionType_@item.Id" value="@item.SectionTypeId" type="number" />
+                        </div>
+                        <div id="divOutput_SectionType_@item.Id">
+                            <span id="spanSectionType_@item.Id">@item.SectionTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_UnitType_@item.Id" style="display: none">
+                            <input class="form-control" id="inputUnitType_@item.Id" value="@item.UnitTypeId" type="number" />
+                        </div>
+                        <div id="divOutput_UnitType_@item.Id">
+                            <span id="spanUnitType_@item.Id">@item.UnitTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ForcastY_@item.Id" style="display: none">
+                            <input class="form-control" id="inputForcastY_@item.Id" value="@item.ForcastY" type="number" />
+                        </div>
+                        <div id="divOutput_ForcastY_@item.Id">
+                            <span id="spanForcastY_@item.Id">@item.ForcastYDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_FunctionalBasicYear_@item.Id" style="display: none">
+                            <input class="form-control" id="inputFunctionalBasicYear_@item.Id" value="@item.FunctionalBasicYear" type="number" />
+                        </div>
+                        <div id="divOutput_FunctionalBasicYear_@item.Id">
+                            <span id="spanFunctionalBasicYear_@item.Id">@item.FunctionalBasicYearDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_FunctionalYear_1_@item.Id" style="display: none">
+                            <input class="form-control" id="inputFunctionalYear_1_@item.Id" value="@item.FunctionalYear_1" type="number" />
+                        </div>
+                        <div id="divOutput_FunctionalYear_1_@item.Id">
+                            <span id="spanFunctionalYear_1_@item.Id">@item.FunctionalYear_1Display </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ApproveYear_1_@item.Id" style="display: none">
+                            <input class="form-control" id="inputApproveYear_1_@item.Id" value="@item.ApproveYear_1" type="number" />
+                        </div>
+                        <div id="divOutput_ApproveYear_1_@item.Id">
+                            <span id="spanApproveYear_1_@item.Id">@item.ApproveYear_1Display </span>
+                        </div>
+                    </td>
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
+
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
+
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
+
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+            @*<input asp-for="ExcelFile" type="file" />*@
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                </button>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                </button>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </button>
+            <span data-toggle="modal" data-target="#CalculationModal">
+                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                </button>
+            </span>
+        </form>
+
+    </div>
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">(صفحه <b class="font-medium-2">@Model.PageNumber</b> از <b class="font-medium-2">@Model.PagesCount</b>)</div>
+    </div>
+    @if (Model.PagesCount > 1)
+    {
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                @if (Model.PageNumber > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-controller="@IncomeCurrentReportController.Name"
+                           asp-action="@IncomeCurrentReportController.ACTION_Index"
+                           asp-route-page="@Model.PreviousPage"
+                           aria-label="Previous">«</a>
+                    </li>
+                }
+
+                @for (int i = 1; i <= Model.PagesCount; i++)
+                {
+                    if (i == Model.PageNumber)
+                    {
+                        <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-controller="@IncomeCurrentReportController.Name"
+                               asp-action="@IncomeCurrentReportController.ACTION_Index"
+                               asp-route-page="@i">@i.ToString() </a>
+                        </li>
+                    }
+                }
+
+                @if (Model.PageNumber < Model.PagesCount)
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                           asp-controller="@IncomeCurrentReportController.Name"
+                           asp-action="@IncomeCurrentReportController.ACTION_Index"
+                           asp-route-page="@Model.NextPage"
+                           aria-label="Next">»</a>
+                    </li>
+                }
+
+            </ul>
+        </nav>
+    }
+</div>

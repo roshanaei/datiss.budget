@@ -17,10 +17,11 @@ using Datiss.Budget.Enum;
 using DNTPersianUtils.Core;
 using Datiss.Budget.Security;
 
-namespace Datiss.Budget.Web.Controllers
+namespace Datiss.Budget.Web.Admin.Controllers
 {
-    [Authorize]
-    [Route("[controller]")]
+    [Authorize(Roles = ConstantRoles.Admin)]
+    [Area(AreaConstants.AdminArea)]
+    [Route("[area]/[controller]")]
     public class FinanceYearController : Controller
     {
         public const string Name = "FinanceYear";

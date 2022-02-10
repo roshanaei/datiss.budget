@@ -10,11 +10,11 @@ namespace Datiss.Budget.ViewModels
 {
     public class CreateFinanceYearViewModel : BaseViewModel
     {
+        [Required(ErrorMessage = "لطفا سال مالی را به عدد وارد کنید .")]
         public int Year { get; set; }
 
         [Required(ErrorMessage = "لطفا شروع سال مالی را انتخاب کنید .")]
         public string StartPersianDate { get; set; }
-
         public DateTime StartDate => (DateTime)StartPersianDate.ToGregorianDateTime();
 
         [Required(ErrorMessage = "لطفا پایان سال مالی را انتخاب کنید .")]
@@ -26,6 +26,7 @@ namespace Datiss.Budget.ViewModels
     public class UpdateFinanceYearViewModel : CreateFinanceYearViewModel
     {
         public int Id { get; set; }
+        [Required(ErrorMessage = "لطفا عنوان سال مالی را وارد کنید .")]
         public string Title { get; set; }
         public bool Enable { get; set; }
     }

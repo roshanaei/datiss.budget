@@ -118,7 +118,28 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ConsumeForcastWs_Cal1" xml:space="preserve">
-    <value>توزیع مصرف</value>
+    <value>توزیع تعدادی حجم دفع سالیانه مسکونی</value>
+  </data>
+  <data name="ConsumeForcastWs_Cal2" xml:space="preserve">
+    <value>توزیع تعدادی حجم دفع سالیانه غیر مسکونی</value>
+  </data>
+  <data name="ConsumeForcastWs_Cal3" xml:space="preserve">
+    <value>توزیع آحادی حجم دفع سالیانه مسکونی</value>
+  </data>
+  <data name="ConsumeForcastWs_Cal4" xml:space="preserve">
+    <value>توزیع آحادی حجم دفع سالیانه غیر مسکونی</value>
+  </data>
+  <data name="ConsumeForcast_Cal1" xml:space="preserve">
+    <value>توزیع تعدادی مصرف آب سالیانه مسکونی</value>
+  </data>
+  <data name="ConsumeForcast_Cal2" xml:space="preserve">
+    <value>توزیع تعدادی مصرف آب سالیانه غیر مسکونی</value>
+  </data>
+  <data name="ConsumeForcast_Cal3" xml:space="preserve">
+    <value>توزیع آحادی مصرف آب سالیانه مسکونی</value>
+  </data>
+  <data name="ConsumeForcast_Cal4" xml:space="preserve">
+    <value>توزیع آحادی مصرف آب سالیانه غیر مسکونی</value>
   </data>
   <data name="IncomeCurrentWH_Cal1" xml:space="preserve">
     <value>مجموع درآمد آب بها مشترکین مسکونی سالیانه</value>
@@ -268,16 +289,16 @@
     <value>آحاد انشعاب آب پایان شش ماهه اول سال ماقبل</value>
   </data>
   <data name="SalesSplitTotal_Cal3" xml:space="preserve">
-    <value>تعداد انشعاب فاضلاب پایان شش ماهه اول سال ماقبل</value>
-  </data>
-  <data name="SalesSplitTotal_Cal4" xml:space="preserve">
-    <value>آحاد انشعاب فاضلاب پایان شش ماهه اول سال ماقبل</value>
-  </data>
-  <data name="SalesSplitTotal_Cal5" xml:space="preserve">
     <value>تعداد انشعاب آب شش ماهه دوم سال ماقبل</value>
   </data>
-  <data name="SalesSplitTotal_Cal6" xml:space="preserve">
+  <data name="SalesSplitTotal_Cal4" xml:space="preserve">
     <value>آحاد انشعاب آب شش ماهه دوم سال ماقبل</value>
+  </data>
+  <data name="SalesSplitTotal_Cal5" xml:space="preserve">
+    <value>تعداد انشعاب فاضلاب پایان شش ماهه اول سال ماقبل</value>
+  </data>
+  <data name="SalesSplitTotal_Cal6" xml:space="preserve">
+    <value>آحاد انشعاب فاضلاب پایان شش ماهه اول سال ماقبل</value>
   </data>
   <data name="SalesSplitTotal_Cal7" xml:space="preserve">
     <value>تعداد انشعاب فاضلاب شش ماهه دوم سال ماقبل</value>
