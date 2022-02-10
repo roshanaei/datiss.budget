@@ -100,6 +100,9 @@ namespace Datiss.Budget.Entities
 
         public ICollection<Cofficient> Cofficients { get;set;}
 
+        public ICollection<IncomeCurrentReport> CurrentIncomeReports { get; set; }
+        public ICollection<IncomeCurrentReport> UnitTypeCurrentIncomeReports { get; set; }
+
         #endregion
     }
 }
