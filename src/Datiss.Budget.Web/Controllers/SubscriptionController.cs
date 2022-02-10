@@ -157,8 +157,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
 
             model.Filter.YearId = filter.YearId;
-            model.PageNumber = filter.PageNumber;
-            model.PageSize = filter.PageSize;
+            model.Filter.PageNumber = filter.PageNumber;
+            model.Filter.PageSize = filter.PageSize;
 
             return View(model);
         }

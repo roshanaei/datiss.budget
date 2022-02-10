@@ -87,9 +87,9 @@
                                                     class="form-control"
                                                     onchange="changePageSize();"
                                                     id="ddlPageSize">
-                                                <option>10</option>
-                                                <option>20</option>
-                                                <option>30</option>
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
                                             </select>
                                             <span style="margin-right:10px">رکورد</span>
 
@@ -527,6 +527,16 @@
             let input13 = document.getElementById('inputNote3Income_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
+
+            console.log($('.input-keyup'));
+
+            //$('.input-keyup input[type="text"]').keyup(function (event) {
+            //    console.log('keyup');
+            //    event.preventDefault();
+            //    if (event.keyCode === 13) {
+            //        btnSaveEdit.click();
+            //    }
+            //});
 
             input1.addEventListener("keyup", function (event) {
                 event.preventDefault();

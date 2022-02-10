@@ -136,8 +136,8 @@ namespace Datiss.Budget.Web.Controllers
 
             model.Filter.YearId = filter.YearId;
             model.Filter.OrganizationId = filter.OrganizationId;
-            model.PageNumber = filter.PageNumber;
-            model.PageSize = 25;
+            model.Filter.PageNumber = filter.PageNumber;
+            model.Filter.PageSize = 25;
             model.Filter.TableName = filter.TableName;
 
             int month = 0;
