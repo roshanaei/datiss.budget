@@ -229,17 +229,46 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task<int> CalculationAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId)
         {
+            var result = new List<CalculationItemData>();
             List<SqlParameter> sqlParams = new List<SqlParameter>
             {
-                new SqlParameter ("YearId",yearId),
-                new SqlParameter ("OrganizationId",organizationId)
+                new SqlParameter("YearId", yearId),
+                new SqlParameter("OrganizationId", organizationId)
             };
 
-            var result = await _uow.ExecuteScalarAsync<int>(
-                "[dbo].[ConsumeForcast_Cal1] @YearId, @OrganizationId",
-                parameters: sqlParams.ToArray());
+            result.Add(new CalculationItemData
+            {
+                Key = "ConsumeForcast_Cal1",
+                DecimalValue = await _uow.ExecuteScalar<decimal>(
+                                    "[dbo].[ConsumeForcast_Cal1] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "ConsumeForcast_Cal2",
+                DecimalValue = await _uow.ExecuteScalar<decimal>(
+                                    "[dbo].[ConsumeForcast_Cal2] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "ConsumeForcast_Cal3",
+                DecimalValue = await _uow.ExecuteScalar<decimal>(
+                         "[dbo].[ConsumeForcast_Cal3] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "ConsumeForcast_Cal4",
+                DecimalValue = await _uow.ExecuteScalar<decimal>(
+                         "[dbo].[ConsumeForcast_Cal4] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
+            });
 
             return await Task.FromResult(result);
         }

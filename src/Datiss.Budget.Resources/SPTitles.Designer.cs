@@ -61,11 +61,74 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to توزیع مصرف.
+        ///   Looks up a localized string similar to توزیع تعدادی مصرف آب سالیانه مسکونی.
+        /// </summary>
+        public static string ConsumeForcast_Cal1 {
+            get {
+                return ResourceManager.GetString("ConsumeForcast_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to توزیع تعدادی مصرف آب سالیانه غیر مسکونی.
+        /// </summary>
+        public static string ConsumeForcast_Cal2 {
+            get {
+                return ResourceManager.GetString("ConsumeForcast_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to توزیع آحادی مصرف آب سالیانه مسکونی.
+        /// </summary>
+        public static string ConsumeForcast_Cal3 {
+            get {
+                return ResourceManager.GetString("ConsumeForcast_Cal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to توزیع آحادی مصرف آب سالیانه غیر مسکونی.
+        /// </summary>
+        public static string ConsumeForcast_Cal4 {
+            get {
+                return ResourceManager.GetString("ConsumeForcast_Cal4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to توزیع تعدادی حجم دفع سالیانه مسکونی.
         /// </summary>
         public static string ConsumeForcastWs_Cal1 {
             get {
                 return ResourceManager.GetString("ConsumeForcastWs_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to توزیع تعدادی حجم دفع سالیانه غیر مسکونی.
+        /// </summary>
+        public static string ConsumeForcastWs_Cal2 {
+            get {
+                return ResourceManager.GetString("ConsumeForcastWs_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to توزیع آحادی حجم دفع سالیانه مسکونی.
+        /// </summary>
+        public static string ConsumeForcastWs_Cal3 {
+            get {
+                return ResourceManager.GetString("ConsumeForcastWs_Cal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to توزیع آحادی حجم دفع سالیانه غیر مسکونی.
+        /// </summary>
+        public static string ConsumeForcastWs_Cal4 {
+            get {
+                return ResourceManager.GetString("ConsumeForcastWs_Cal4", resourceCulture);
             }
         }
         
@@ -511,7 +574,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to تعداد انشعاب فاضلاب پایان شش ماهه اول سال ماقبل.
+        ///   Looks up a localized string similar to تعداد انشعاب آب شش ماهه دوم سال ماقبل.
         /// </summary>
         public static string SalesSplitTotal_Cal3 {
             get {
@@ -520,7 +583,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to آحاد انشعاب فاضلاب پایان شش ماهه اول سال ماقبل.
+        ///   Looks up a localized string similar to آحاد انشعاب آب شش ماهه دوم سال ماقبل.
         /// </summary>
         public static string SalesSplitTotal_Cal4 {
             get {
@@ -529,7 +592,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to تعداد انشعاب آب شش ماهه دوم سال ماقبل.
+        ///   Looks up a localized string similar to تعداد انشعاب فاضلاب پایان شش ماهه اول سال ماقبل.
         /// </summary>
         public static string SalesSplitTotal_Cal5 {
             get {
@@ -538,7 +601,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to آحاد انشعاب آب شش ماهه دوم سال ماقبل.
+        ///   Looks up a localized string similar to آحاد انشعاب فاضلاب پایان شش ماهه اول سال ماقبل.
         /// </summary>
         public static string SalesSplitTotal_Cal6 {
             get {

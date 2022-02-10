@@ -19,7 +19,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -282,8 +282,22 @@ namespace Datiss.Budget.Services
             {
                 Key = "SalesSplitTotal_Cal6",
                 Value = await _uow.ExecuteScalar<int>(
-             "[dbo].[SalesSplitTotal_Cal6] @YearId, @OrganizationId",
-             parameters: sqlParams.ToArray())
+                         "[dbo].[SalesSplitTotal_Cal6] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
+            });
+            result.Add(new CalculationItemData
+            {
+                Key = "SalesSplitTotal_Cal7",
+                Value = await _uow.ExecuteScalar<int>(
+                         "[dbo].[SalesSplitTotal_Cal7] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
+            });
+            result.Add(new CalculationItemData
+            {
+                Key = "SalesSplitTotal_Cal8",
+                Value = await _uow.ExecuteScalar<int>(
+                         "[dbo].[SalesSplitTotal_Cal8] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
             });
 
             return await Task.FromResult(result);
