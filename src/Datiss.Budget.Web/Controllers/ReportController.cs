@@ -162,7 +162,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [Route("view/[action]")]
-        public async Task<IActionResult> ExportResult() {
+        public async Task<IActionResult> ExportReport() {
             int id = Convert.ToInt32(Request.Query["id"].ToString());
             var report = await _reportService.GetAsync(id);
 

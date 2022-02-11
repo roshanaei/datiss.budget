@@ -104,22 +104,9 @@
 
 @section footSection {
 
-    @*<script type="text/javascript" 
-            src="~/reporting/stimulsoft.reports.js"></script>
-
-    <script type="text/javascript" 
-            src="~/reporting/stimulsoft.viewer.js"></script>*@
-
     <script type="text/javascript">
 
-        var licenseKeyPath = '@Url.Content("~/reporting/license.key")';
-
         $(document).ready(function() {
-            //Stimulsoft.Base.StiLicense.loadFromFile(licenseKeyPath); 
-            //$('#btnReport').click(function() {
-            //    showReport();
-            //    //displayReport();
-            //});
 
             $('#my-form').submit(function(e) {
                 e.preventDefault();
@@ -142,41 +129,6 @@
 
         });
 
-        function showReport() {
-            var form = $('#my-form');
-
-            console.log(form);
-            debugger;
-
-            var formData = objectifyForm(form);
-            console.log(`formData: ${formData}`);
-
-            var mydata = {};
-            mydata.id = $('#reportId').val();
-            mydata.form = objectifyForm(form);
-
-            console.log(mydata);
-            debugger;
-             
-            $.ajax({
-                url: '@Url.Action(ReportController.ACTION_Report)',
-                type: 'POST',
-                //dataType: 'json',   
-                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', 
-                data: mydata,
-                success: function(data, status, settings) {
-                    console.log(data);
-                    $('#divReport').html(data);
-                    $('#divReport').show(); 
-                },
-                error: function(request, options, err) {
-                    console.log(err);
-                    console.log(request);
-                }
-            });
-
-        }
-
         function objectifyForm(formArray) {
             //serialize data function
             var returnArray = {};
@@ -185,15 +137,6 @@
             }
             return returnArray;
         }
-
-        //function displayReport() {
-        //    var report = new Stimulsoft.Report.StiReport();
-        //    report.loadFile('@Url.Action("Fuck")');
-
-        //    var viewer = new Stimulsoft.Viewer.StiViewer(null, "StiViewer", false);
-        //    viewer.report = report;
-        //    viewer.renderHtml("viewer");
-        //}
 
     </script>
 
