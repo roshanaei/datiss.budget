@@ -10,7 +10,7 @@ using Datiss.Budget.Resources;
 namespace Datiss.Budget.ViewModels
 {
 
-    public class ReportViewModel
+    public class AdminReportViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -27,11 +27,11 @@ namespace Datiss.Budget.ViewModels
 
     }
 
-    public class AdminReportIndexViewModel : PagedViewModel<ReportViewModel> { 
+    public class AdminReportIndexViewModel : PagedViewModel<AdminReportViewModel> { 
     
         public AdminReportIndexViewModel() {
             Filter = new AdminReportFilterViewModel();
-            Items = new List<ReportViewModel>();
+            Items = new List<AdminReportViewModel>();
         }
 
         public AdminReportFilterViewModel Filter { get; set; }

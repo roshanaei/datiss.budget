@@ -1,0 +1,60 @@
+﻿@Html.StiNetCoreViewer(new StiNetCoreViewerOptions()
+{
+    Actions =
+    {
+        GetReport = "GetReport",
+        ExportReport = "ExportReport",
+        PrintReport = "PrintReport",
+        ViewerEvent = "ViewerEvent"
+    },
+    Server =
+    {
+        Controller = "Report1",
+        RequestTimeout = 60000,
+        CacheMode = StiServerCacheMode.None
+    },
+    Appearance =
+    {
+        ScrollbarsMode = true
+    },
+    Toolbar =
+    {
+        DisplayMode = StiToolbarDisplayMode.Separated,
+        PrintDestination = StiPrintDestination.Direct,
+        ShowParametersButton = false,
+        ShowBookmarksButton = false,
+        ShowResourcesButton = false
+    },
+    Exports =
+    {
+        ShowExportToDocument = false,
+        ShowExportToPdf = true,
+        ShowExportToXps = false,
+        ShowExportToPowerPoint = false,
+        ShowExportToHtml = false,
+        ShowExportToHtml5 = false,
+        ShowExportToMht = false,
+        ShowExportToText = false,
+        ShowExportToRtf = false,
+        ShowExportToWord2007 = true,
+        ShowExportToOpenDocumentWriter = false,
+        ShowExportToExcel = true,
+        ShowExportToExcelXml = false,
+        ShowExportToExcel2007 = true,
+        ShowExportToOpenDocumentCalc = false,
+        ShowExportToCsv = false,
+        ShowExportToDbf = false,
+        ShowExportToXml = false,
+        ShowExportToDif = false,
+        ShowExportToSylk = false,
+        ShowExportToImageBmp = false,
+        ShowExportToImageGif = false,
+        ShowExportToImageJpeg = false,
+        ShowExportToImagePcx = false,
+        ShowExportToImagePng = false,
+        ShowExportToImageTiff = false,
+        ShowExportToImageMetafile = false,
+        ShowExportToImageSvg = false,
+        ShowExportToImageSvgz = false
+    }
+})

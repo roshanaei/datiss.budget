@@ -30,26 +30,52 @@
                               asp-controller="@UsersController.Name"
                               asp-action="@UsersController.ACTION_Create"
                               method="POST">
-                            <div class="row">
 
-                                <div class="col-md-6">
-                                    <fieldset class="form-group">
+                              <div class="form-row"> 
+                                  <div class="col-md-6 col-12">
+                                      <fieldset class="form-group">
                                         <label asp-for="FirstName" class="col-md-4 col-form-label text-md-left my-font">نام</label>
                                         <div class="col-md-10">
                                             <input dir="rtl" asp-for="FirstName" class="form-control my-font" />
                                             <span asp-validation-for="FirstName" class="text-danger"></span>
                                         </div>
                                     </fieldset>
+                                  </div>
+                                  <div class="col-md-6 col-12">
+                                      <fieldset class="form-group">
+                                        <label asp-for="LastName" class="col-md-4 col-form-label text-md-left my-font">نام خانوادگی</label>
+                                        <div class="col-md-10">
+                                            <input dir="rtl" asp-for="LastName" class="form-control my-font" />
+                                            <span asp-validation-for="LastName" class="text-danger"></span>
+                                        </div>
+                                    </fieldset>
+                                  </div>
+                              </div>
 
-                                    <fieldset class="form-group">
+                              <div class="form-row"> 
+                                  <div class="col-md-6 col-12">
+                                       <fieldset class="form-group">
                                         <label asp-for="UserName" class="col-md-4 col-form-label text-md-left my-font">نام کاربری</label>
                                         <div class="col-md-10">
                                             <input dir="ltr" asp-for="UserName" class="form-control my-font" />
                                             <span asp-validation-for="UserName" class="text-danger"></span>
                                         </div>
                                     </fieldset>
+                                  </div>
+                                  <div class="col-md-6 col-12">
+                                      <fieldset class="form-group">
+                                        <label asp-for="NationalCode" class="col-md-4 col-form-label text-md-left my-font">کد ملی</label>
+                                        <div class="col-md-10">
+                                            <input dir="ltr" type="text" oninput="numberOnly(this.id);" asp-for="NationalCode" inputmode="numeric" maxlength="10" pattern="[0-9]*" class="form-control my-font" />
+                                            <span asp-validation-for="NationalCode" class="text-danger"></span>
+                                        </div>
+                                    </fieldset>
+                                  </div>
+                              </div>
 
-                                    <fieldset class="form-group">
+                              <div class="form-row"> 
+                                  <div class="col-md-6 col-12">
+                                      <fieldset class="form-group">
                                         <label asp-for="OrganizationId" class="col-md-4 col-form-label text-md-left my-font">سازمان</label>
                                         <div class="col-md-10">
                                             <select asp-for="OrganizationId" asp-items="Model.OrganizationSource" class="form-control my-font">
@@ -57,52 +83,9 @@
                                             @*<span asp-validation-for="OrganizationId" class="text-danger"></span>*@
                                         </div>
                                     </fieldset>
-
-                                    <fieldset class="form-group">
-                                        <label asp-for="PhoneNumber" class="col-md-4 col-form-label text-md-left my-font">شماره تماس</label>
-                                        <div class="col-md-10">
-                                            <input dir="ltr" type="text" oninput="numberOnly(this.id);" asp-for="PhoneNumber" inputmode="numeric" maxlength="13" pattern="[0-9]*" class="form-control my-font" />
-                                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                                        </div>
-                                    </fieldset>
-
-                                    <fieldset class="form-group">
-                                        <label asp-for="Password" class="col-md-4 col-form-label text-md-left my-font">کلمه عبور</label>
-                                        <div class="col-md-10">
-                                            <input dir="ltr" type="password" asp-for="Password" class="form-control my-font" />
-                                            <span asp-validation-for="Password" class="text-danger"></span>
-                                        </div>
-                                    </fieldset>
-
-                                    <fieldset class="form-group">
-                                        <label class="col-md-4 col-form-label text-md-left my-font">نقش های کاربری</label>
-                                        <div class="col-md-10">
-                                            <select asp-for="SelectedRoles" id="selectRoles" asp-items="@Model.RoleSource" class="form-control my-font">
-                                            </select>
-                                            <span asp-validation-for="SelectedRoles" class="text-danger"></span>
-                                        </div>
-                                    </fieldset>
-
-                                </div>
-
-                                <div class="col-md-6">
-                                    <fieldset class="form-group">
-                                        <label asp-for="LastName" class="col-md-4 col-form-label text-md-left my-font">نام خانوادگی</label>
-                                        <div class="col-md-10">
-                                            <input dir="rtl" asp-for="LastName" class="form-control my-font" />
-                                            <span asp-validation-for="LastName" class="text-danger"></span>
-                                        </div>
-                                    </fieldset>
-
-                                    <fieldset class="form-group">
-                                        <label asp-for="NationalCode" class="col-md-4 col-form-label text-md-left my-font">کد ملی</label>
-                                        <div class="col-md-10">
-                                            <input dir="ltr" type="text" oninput="numberOnly(this.id);" asp-for="NationalCode" inputmode="numeric" maxlength="10" pattern="[0-9]*" class="form-control my-font" />
-                                            <span asp-validation-for="NationalCode" class="text-danger"></span>
-                                        </div>
-                                    </fieldset>
-
-                                    <fieldset class="form-group">
+                                  </div>
+                                  <div class="col-md-6 col-12">
+                                       <fieldset class="form-group">
                                         <label asp-for="PositionId" class="col-md-4 col-form-label text-md-left my-font">سمت</label>
                                         <div class="col-md-10">
                                             <select asp-for="PositionId" asp-items="Model.PositionSource" class="form-control my-font">
@@ -110,7 +93,21 @@
                                             @*<span asp-validation-for="PositionId" class="text-danger"></span>*@
                                         </div>
                                     </fieldset>
+                                  </div>
+                              </div>
 
+                              <div class="form-row"> 
+                                  <div class="col-md-6 col-12">
+                                      <fieldset class="form-group">
+                                        <label asp-for="PhoneNumber" class="col-md-4 col-form-label text-md-left my-font">شماره تماس</label>
+                                        <div class="col-md-10">
+                                            <input dir="ltr" type="text" oninput="numberOnly(this.id);" asp-for="PhoneNumber" inputmode="numeric" maxlength="13" pattern="[0-9]*" class="form-control my-font" />
+                                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                        </div>
+                                    </fieldset>
+                                  </div>
+                                  <div class="col-md-6 col-12">
+                                      
                                     <fieldset class="form-group">
                                         <label asp-for="Email" class="col-md-4 col-form-label text-md-left my-font">آدرس ایمیل</label>
                                         <div class="col-md-10">
@@ -119,19 +116,56 @@
                                         </div>
                                     </fieldset>
 
+                                  </div>
+                              </div>
+
+                              <div class="form-row"> 
+                                  <div class="col-md-6 col-12">
+                                      
                                     <fieldset class="form-group">
+                                        <label asp-for="Password" class="col-md-4 col-form-label text-md-left my-font">کلمه عبور</label>
+                                        <div class="col-md-10">
+                                            <input dir="ltr" type="password" asp-for="Password" class="form-control my-font" />
+                                            <span asp-validation-for="Password" class="text-danger"></span>
+                                        </div>
+                                    </fieldset>
+                                  </div>
+                                  <div class="col-md-6 col-12">
+                                      <fieldset class="form-group">
                                         <label asp-for="RetypePassword" class="col-md-4 col-form-label text-md-left my-font">تایید کلمه عبور</label>
                                         <div class="col-md-10">
                                             <input dir="ltr" type="password" asp-for="RetypePassword" class="form-control my-font" />
                                             <span asp-validation-for="RetypePassword" class="text-danger"></span>
                                         </div>
                                     </fieldset>
-                                </div>
+                                  </div>
+                              </div>
 
+                              <div class="form-row"> 
+                                  <div class="col-md-6 col-12">
+                                      
+                                    <fieldset class="form-group">
+                                        <label class="col-md-4 col-form-label text-md-left my-font">نقش های کاربری</label>
+                                        <div class="col-md-10">
+                                            <select asp-for="SelectedRoles" id="selectRoles" asp-items="@Model.RoleSource" class="form-control my-font">
+                                            </select>
+                                            <span asp-validation-for="SelectedRoles" class="text-danger"></span>
+                                        </div>
+                                    </fieldset>
+                                  </div>
+                                  <div class="col-md-6 col-12">
 
+                                  </div>
+                              </div>
 
+                              <div class="form-row"> 
+                                  <div class="col-md-6 col-12">
 
-                            </div>
+                                  </div>
+                                  <div class="col-md-6 col-12">
+
+                                  </div>
+                              </div>
 
                             <div class="row" style="direction:ltr;margin-left:110px">
                                 <button type="submit" class="btn btn-warning bg-light-warning mr-1 my-font"> ثبت</button>

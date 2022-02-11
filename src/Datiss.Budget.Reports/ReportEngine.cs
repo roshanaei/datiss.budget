@@ -42,7 +42,6 @@ namespace Datiss.Budget.Reports
                 ?? throw new ArgumentNullException(nameof(constantService));
         }
 
-        
         private string getConnectionString() 
             => _config.GetConnectionString("ApplicationDbContextConnection");
 
@@ -64,45 +63,51 @@ namespace Datiss.Budget.Reports
                 }).ToList()
             };
 
-            if(report.Params.Any(_=> _.ParamType == ReportParamType.Year)) {
-                result.FinanceYearSource = await _yearService.GetDropDownDataAsync();
-            }
+            //if(report.Params.Any(_=> _.ParamType == ReportParamType.Year)) {
+            //    result.FinanceYearSource = await _yearService.GetDropDownDataAsync();
+            //}
 
-            if(report.Params.Any(_=> _.ParamType == ReportParamType.Organization)) {
-                result.OrganizationSource = await _orgService.GetDropDownDataAsync();
-            }
+            //if(report.Params.Any(_=> _.ParamType == ReportParamType.Organization)) {
+            //    result.OrganizationSource = await _orgService.GetDropDownDataAsync();
+            //}
 
-            if(result.Params.Any(_=> _.ParamType == ReportParamType.Constant)) {
-                result.ConstantSource = new Dictionary<string, IEnumerable<Services.Models.DropDownItem>>();
-                foreach(var prm in result.Params.Where(_ => _.ParamType == ReportParamType.Constant)) {
-                    result.ConstantSource.Add(
-                        prm.ConstantKey,
-                        (await _constantService.GetByConstantKeyAsync(prm.ConstantKey))
-                    );
-                }
-            }
+            //if(result.Params.Any(_=> _.ParamType == ReportParamType.Constant)) {
+            //    result.ConstantSource = new Dictionary<string, IEnumerable<Services.Models.DropDownItem>>();
+            //    foreach(var prm in result.Params.Where(_ => _.ParamType == ReportParamType.Constant)) {
+            //        result.ConstantSource.Add(
+            //            prm.ConstantKey,
+            //            (await _constantService.GetByConstantKeyAsync(prm.ConstantKey))
+            //        );
+            //    }
+            //}
 
             return result;
         }
 
-        
         public async Task<StiReport> GenerateReportAsync(ReportViewData model) {
-            if (model == null) throw new ArgumentNullException(nameof(model));
+            if (model == null) 
+                throw new ArgumentNullException(nameof(model));
 
-            var report = await _reportService.GetAsync(model.Id);
+            //if (model.TemplateFileData == null ||
+            //    model.TemplateFileData.Length <= 0)
+            //    throw new ArgumentNullException(nameof(model.TemplateFileData));
+
+            //var report = await _reportService.GetAsync(model.Id);
 
             var _report = new StiReport();
+
+            var reportPath = @"~\report-templates\sample-report.mrt";
+            var filePath = reportPath.Replace("~", _env.WebRootPath);
+            _report.Load(filePath);
+
+            //_report.Load(model.TemplateFileData);
+            _report.Dictionary.Databases.Clear();
             _report.Dictionary.Databases.Add(new StiSqlDatabase(
                 "Budget", 
                 getConnectionString())
             );
 
-            var filePath = report.FilePath.Replace("~", _env.WebRootPath);
-
-            _report.Load(filePath);
-
             foreach (var prm in model.Params) {
-                //_report.Variables[prm.Name] = prm.Value;
                 _report[prm.Name] = prm.Value;
             }
 
