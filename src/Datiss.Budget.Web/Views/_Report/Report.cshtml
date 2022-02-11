@@ -21,17 +21,12 @@
                     </p>
                     <div class="card-body">
 
-                        @*<form id="my-form"
-                                asp-controller="@Report1Controller.Name"
-                                asp-action="@Report1Controller.ACTION_Report"
-                                method="POST"
-                                data-ajax="true"
-                                data-ajax-begin="dataAjaxBegin"
-                                data-ajax-success="waiting('body', 'hide');"
-                                data-ajax-failure="dataAjaxFailure"
-                                data-ajax-update="#viewer">*@
-                            <form id="my-form">
-                            <input name="Id" type="hidden" value="@Model.Report.Id" />
+                        <form id="my-form"
+                                asp-controller="@_ReportController.Name"
+                                asp-action="@_ReportController.ACTION_Report"
+                                method="GET">
+
+                            <input id="reportId" type="hidden" asp-for="Report.Id" />
                             <div class="form-row">
                                 <div class="col-md-6 col-12">
                                     <h5>
@@ -70,11 +65,7 @@
                                 </div>
                                 <input type="hidden" name="show_report" value="@Model.DisplayReport" />
                                 <div class="col-md-6 col-12">
-                                    <button id="btnReport" 
-                                            type="submit" 
-                                            form="my-form" 
-                                            class="btn btn-success my-font" 
-                                            style="left: 40px;">
+                                    <button id="btnReport" type="submit" class="btn btn-success my-font" style="left: 40px;">
                                         <i class="fa fa-bolt"></i> گزارش
                                     </button>
                                 </div>
@@ -87,49 +78,109 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-content">
-                    <h5>گزارش</h5>
-                    <div id="viewer" class="col-md-12" style="padding: 0px; direction: ltr; height: 800px;">
-
+    @if(Model.DisplayReport) {
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-content">
+                        <h5>گزارش</h5>
+                       @Html.StiNetCoreViewer(new StiNetCoreViewerOptions() {
+				            Actions = {
+					            GetReport = "GetReport",
+					            ViewerEvent = "ViewerEvent"
+				            },
+                            Server = {
+                                CacheMode = StiServerCacheMode.None
+                            }
+			            })
                     </div>
                 </div>
             </div>
         </div>
+    }
+
+
+    <div class="row" id="divReport" style="display: none;">
     </div>
+
+    <div id="viewer" style="margin-top: 10px"></div>
+
     
 </section>
 
 @section footSection {
 
+    @*<script type="text/javascript" 
+            src="~/reporting/stimulsoft.reports.js"></script>
+
+    <script type="text/javascript" 
+            src="~/reporting/stimulsoft.viewer.js"></script>*@
+
     <script type="text/javascript">
 
+        var licenseKeyPath = '@Url.Content("~/reporting/license.key")';
+
         $(document).ready(function() {
-
-            $('#my-form').submit(function(e) {
-                e.preventDefault();
-                alert('before submit');
-                var form_data = $('#my-form').serialize();
-                console.log(form_data);
-                alert('form data logged');
-                $.ajax({
-                    url: '@Url.Action(ReportController.ACTION_Report, ReportController.Name, new { id = Model.Report.Id })' ,
-                    type: 'POST',
-                    data: form_data,
-                    success: function(data, status, settings) {
-                        $('#viewer').html(data);
-                    },
-                    error: function() {
-
-                    }
-                })
-            });
-
+            //Stimulsoft.Base.StiLicense.loadFromFile(licenseKeyPath); 
+            //$('#btnReport').click(function() {
+            //    showReport();
+            //    //displayReport();
+            //});
         });
 
-        
+        function showReport() {
+            var form = $('#my-form');
+
+            console.log(form);
+            debugger;
+
+            var formData = objectifyForm(form);
+            console.log(`formData: ${formData}`);
+
+            var mydata = {};
+            mydata.id = $('#reportId').val();
+            mydata.form = objectifyForm(form);
+
+            console.log(mydata);
+            debugger;
+             
+            $.ajax({
+                url: '@Url.Action(_ReportController.ACTION_ShowReport)',
+                type: 'POST',
+                //dataType: 'json',   
+                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', 
+                data: mydata,
+                success: function(data, status, settings) {
+                    console.log(data);
+                    $('#divReport').html(data);
+                    $('#divReport').show(); 
+                },
+                error: function(request, options, err) {
+                    console.log(err);
+                    console.log(request);
+                }
+            });
+
+        }
+
+        function objectifyForm(formArray) {
+            //serialize data function
+            var returnArray = {};
+            for (var i = 0; i < formArray.length; i++){
+                returnArray[formArray[i]['name']] = formArray[i]['value'];
+            }
+            return returnArray;
+        }
+
+        //function displayReport() {
+        //    var report = new Stimulsoft.Report.StiReport();
+        //    report.loadFile('@Url.Action("Fuck")');
+
+        //    var viewer = new Stimulsoft.Viewer.StiViewer(null, "StiViewer", false);
+        //    viewer.report = report;
+        //    viewer.renderHtml("viewer");
+        //}
+
     </script>
 
 }

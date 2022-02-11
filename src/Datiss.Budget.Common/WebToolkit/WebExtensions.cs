@@ -1,4 +1,7 @@
 ﻿using System.IO;
+using System.Linq;
+using System.Web;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 
 namespace Datiss.Budget.Common.WebToolkit
@@ -28,5 +31,14 @@ namespace Datiss.Budget.Common.WebToolkit
 
         public static bool IsNullOrEmpty(this IFormFile file)
             => !IsNotNullOrEmpty(file);
+
+        public static Dictionary<string, string> QueryStringToDictionary(this QueryString query) {
+            var str = query.ToString();
+            var parsed = HttpUtility.ParseQueryString(str);
+            var result = parsed.AllKeys.ToDictionary(_ => _, __=> parsed[__]);
+
+            return result;
+        }
+
     }
 }

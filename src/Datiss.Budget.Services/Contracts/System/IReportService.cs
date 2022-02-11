@@ -15,6 +15,8 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<PagedResult<ReportData>> GetAdminListAsync(ReportFilterDTO filter);
 
+        Task<PagedResult<ReportData>> GetUserListAsync(ReportFilterDTO filter);
+
         Task<ValidationResult<ReportData>> CreateAsync(CreateReportData model);
 
         Task<ValidationResult<ReportData>> UpdateAsync(UpdateReportData model);

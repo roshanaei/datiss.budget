@@ -19,8 +19,8 @@
                 <div class="card-content">
                     <div class="card-body">
                         <form id="my-form"
-                              asp-controller="@ReportController.Name"
-                              asp-action="@ReportController.ACTION_Index"
+                              asp-controller="@_ReportController.Name"
+                              asp-action="@_ReportController.ACTION_Index"
                               asp-antiforgery="true">
 
                             <input type="hidden" asp-for="Filter.PageNumber" />
@@ -46,8 +46,8 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a asp-controller="@ReportController.Name"
-                                           asp-action="@ReportController.ACTION_Report"
+                                            <a asp-controller="@_ReportController.Name"
+                                           asp-action="@_ReportController.ACTION_Report"
                                            asp-route-id="@item.Id"
                                            class="btn btn-success">
                                                 <i class="fa fa-mail-reply"></i> مشاهده گزارش
@@ -78,8 +78,8 @@
                                             @if (Model.PageNumber > 1) {
                                                 <li class="page-item">
                                                     <a class="page-link"
-                                               asp-controller="@ReportController.Name"
-                                               asp-action="@ReportController.ACTION_Index"
+                                               asp-controller="@_ReportController.Name"
+                                               asp-action="@_ReportController.ACTION_Index"
                                                asp-route-page="@Model.PreviousPage"
                                                aria-label="Previous">«</a>
                                                 </li>
@@ -92,8 +92,8 @@
                                                 else {
                                                     <li class="page-item">
                                                         <a class="page-link"
-                                               asp-controller="@ReportController.Name"
-                                               asp-action="@ReportController.ACTION_Index"
+                                               asp-controller="@_ReportController.Name"
+                                               asp-action="@_ReportController.ACTION_Index"
                                                asp-route-page="@i">@i.ToString() </a>
                                                     </li>
                                                 }
@@ -102,8 +102,8 @@
                                             @if (Model.PageNumber < Model.PagesCount) {
                                                 <li class="page-item">
                                                     <a class="page-link"
-                                               asp-controller="@ReportController.Name"
-                                               asp-action="@ReportController.ACTION_Index"
+                                               asp-controller="@_ReportController.Name"
+                                               asp-action="@_ReportController.ACTION_Index"
                                                asp-route-page="@Model.NextPage"
                                                aria-label="Next">»</a>
                                                 </li>

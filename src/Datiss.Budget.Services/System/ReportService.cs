@@ -82,6 +82,39 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task<PagedResult<ReportData>> GetUserListAsync(ReportFilterDTO filter) {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var result = new PagedResult<ReportData>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
+
+            var query = _dbSet.Where(_ => _.Status == EntityStatus.Enabled);
+            //TODO: check access to the reports here
+            if (filter.Search.IsNotNullOrEmpty()) {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Where(_ => _.Title.ToUpper().Contains(filter.Search) ||
+                                        _.Name.ToUpper().Contains(filter.Search));
+            }
+
+            result.TotalCount = await query.CountAsync();
+
+            //apply sorting
+            query = setOrder(query, "id", desc: true);
+            //apply paging
+            query = query
+                .Skip(filter.StartIndex)
+                .Take(filter.PageSize);
+
+            result.Items = await query.Include(_ => _.Params)
+                                      .Select(_ => _.Adapt<ReportData>())
+                                      .ToListAsync();
+
+            return await Task.FromResult(result);
+        }
+
         public async Task<ValidationResult<ReportData>> CreateAsync(CreateReportData model) 
         {
             model.CheckArgumentIsNull(nameof(model));
@@ -126,8 +159,7 @@ namespace Datiss.Budget.Services
             if(checkMandatoryFieldsIsEmpty(model.Title, model.Name))
                 return ValidationResult<ReportData>
                      .Failed(ValidationMode.Update, ServiceMessages.MandatoryFields);                  
-                return ValidationResult<ReportData>
-                    .Failed(ValidationMode.Update, ServiceMessages.MandatoryFields);
+
             if (await existByNameAsync(model.Name, model.Id))
                 return ValidationResult<ReportData>.Failed(
                     ValidationMode.Create,
