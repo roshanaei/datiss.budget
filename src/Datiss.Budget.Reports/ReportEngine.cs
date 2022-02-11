@@ -90,21 +90,22 @@ namespace Datiss.Budget.Reports
 
             //if (model.TemplateFileData == null ||
             //    model.TemplateFileData.Length <= 0)
-            //        throw new ArgumentNullException(nameof(model.TemplateFileData));
+            //    throw new ArgumentNullException(nameof(model.TemplateFileData));
 
             //var report = await _reportService.GetAsync(model.Id);
 
             var _report = new StiReport();
+
+            var reportPath = @"~\report-templates\sample-report.mrt";
+            var filePath = reportPath.Replace("~", _env.WebRootPath);
+            _report.Load(filePath);
+
+            //_report.Load(model.TemplateFileData);
+            _report.Dictionary.Databases.Clear();
             _report.Dictionary.Databases.Add(new StiSqlDatabase(
                 "Budget", 
                 getConnectionString())
             );
-
-            //_report.Load(model.TemplateFileData);
-            var reportPath = @"~\report-templates\sample-report.mrt";
-            var filePath = reportPath.Replace("~", _env.WebRootPath);
-
-            _report.Load(filePath);
 
             foreach (var prm in model.Params) {
                 _report[prm.Name] = prm.Value;

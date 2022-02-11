@@ -12,22 +12,27 @@ using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
 using Datiss.Budget.Reports;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Common.WebToolkit;
 using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Stimulsoft.Base;
 using System.IO;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.WebUtilities;
+using Stimulsoft.Report;
+using System.Web;
 
 namespace Datiss.Budget.Web.Controllers
 {
 
     [Authorize]
-    [Route("[controller]")]  
-    public class ReportController : Controller
-    {
+    [Route("[controller]")]
+    public class ReportController : Controller {
 
         public const string Name = "Report";
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Report = nameof(Report);
+        //public const string ACTION_ShowReport = nameof(ShowReport);
 
         private readonly string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
@@ -45,7 +50,7 @@ namespace Datiss.Budget.Web.Controllers
             IFinanceYearService yearService) {
             _host = host
                 ?? throw new ArgumentNullException(nameof(host));
-            _reportEngine = reportEngine 
+            _reportEngine = reportEngine
                 ?? throw new ArgumentNullException(nameof(reportEngine));
             _reportService = reportService
                 ?? throw new ArgumentNullException(nameof(reportService));
@@ -58,26 +63,20 @@ namespace Datiss.Budget.Web.Controllers
             StiLicense.LoadFromFile(stimulLicenseKey);
         }
 
-        //[HttpGet("{page?}")]
-        //public async Task<IActionResult> Index(int page = 1) {
-        //    var filter = new ReportFilterDTO();
-        //    var myfilter = TempData.Get<ReportFilterViewModel>(_indexFilterKey);
-        //    if(myfilter != null) {
-        //        filter = myfilter.Adapt<ReportFilterDTO>();
-        //        TempData.Put(_indexFilterKey, filter);
-        //    }
-        //    filter.PageNumber = page;
-        //    var result = await _reportService.GetUserListAsync(filter);
-        //    var model = result.Adapt<ReportIndexViewModel>();
-        //    model.Filter = filter.Adapt<ReportFilterViewModel>();
+        [HttpGet("{page?}")]
+        public async Task<IActionResult> Index(int page = 1) {
+            var filter = new ReportFilterDTO();
+            var myfilter = TempData.Get<ReportFilterViewModel>(_indexFilterKey);
+            if (myfilter != null) {
+                filter = myfilter.Adapt<ReportFilterDTO>();
+                TempData.Put(_indexFilterKey, filter);
+            }
+            filter.PageNumber = page;
+            var result = await _reportService.GetUserListAsync(filter);
+            var model = result.Adapt<ReportIndexViewModel>();
+            model.Filter = filter.Adapt<ReportFilterViewModel>();
 
-        //    return View(model);
-        //}
-
-        [HttpGet]
-        public async Task<IActionResult> Index() {
-
-            return View("_index");
+            return View(model);
         }
 
         [HttpPost("{page?}"), ValidateAntiForgeryToken]
@@ -94,7 +93,7 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
-        [HttpGet("show/{id}")]
+        [HttpGet("display/{id}")]
         public async Task<IActionResult> Report(int id) {
             try {
                 var report = await _reportService.GetAsync(id);
@@ -106,199 +105,128 @@ namespace Datiss.Budget.Web.Controllers
 
                 return View(model);
             }
-            catch {
+            catch (Exception ex) {
                 return NotFound();
             }
         }
 
-        [HttpPost("show/{id}"), ValidateAntiForgeryToken]
+        [HttpPost("display/{id}")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Report(int id, ReportDisplayViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
-            var report = await _reportService.GetAsync(model.Report.Id);
-            model.Report = report.Adapt<ReportViewModel>();
-            await addRelatedDataAsync(model);
 
-            TempData["reportId"] = model.Report.Id;
-            
-            var data = new ReportViewData
-            {
-                Id = report.Id,
-                Name = report.Name,
-                TemplateFileData = report.FileData,
-                Title = report.Title,
-                Description = report.Description,
-                Params = report.Params.Select(_=> new ReportParamViewData
-                {
-                    Id = _.Id,
-                    Name = _.Name,
-                    ParamType = _.ParamType,
-                    ReportId = report.Id,
-                    Title = _.Title,
-                    Value = Request.Form[_.Name].ToString()
-                }).ToList()
-            };
-
-            Dictionary<string, string> param_vals = new Dictionary<string, string>();
-            foreach(var p in report.Params) {
-                if (!Request.Form.Keys.Contains(p.Name))
-                    continue;
-                var fval = Request.Form[p.Name];
-                param_vals.Add(p.Name, fval.ToString());
+            var _params = new Dictionary<string, string>();
+            var _form = Request.Form.ToList();
+            foreach(var f in _form) {
+                _params.Add(f.Key, f.Value);
             }
+            var queryStr = QueryHelpers.AddQueryString(Url.Action("View"), _params);
 
-            TempData.Put("report_values", param_vals);
-
-            model.DisplayReport = true;
-            //var _rp = await _reportEngine.GenerateReportAsync(data);
-
-            //await _rp.ExportDocumentAsync(
-            //     Stimulsoft.Report.StiExportFormat.Pdf, 
-            //     @"E:\Projects\Datiss\datiss.budget\src\Datiss.Budget.Web\wwwroot\001.pdf"
-            //    );
-
-            return View(model);
+            return Redirect(queryStr);
         }
 
-
-        //[HttpGet("show/{id}")]
-        //public async Task<IActionResult> Report(int id) {
-
-
-
-        //    var model = new ReportViewData {
-        //        Id = id,
-        //        Params = new List<ReportParamViewData> {
-        //            new ReportParamViewData {
-        //                ParamType = Enum.ReportParamType.Year,
-        //                Name = "YearId",
-        //                Value = 1
-        //            },
-        //            new ReportParamViewData {
-        //                ParamType = Enum.ReportParamType.Organization,
-        //                Name = "OrganizationId",
-        //                Value = 5
-        //            },
-        //            new ReportParamViewData {
-        //                ParamType = Enum.ReportParamType.Constant,
-        //                Name = "UserTypeId",
-        //                Value = 3
-        //            }
-        //        }
-        //    };
-
-        //    //var myreport = await _reportEngine.GenerateReportAsync(model);
-
-        //    //myreport.Render(true);
-
-        //    //await myreport.ExportDocumentAsync(
-        //    //     Stimulsoft.Report.StiExportFormat.Pdf, @"E:\Projects\Datiss\datiss.budget\src\Datiss.Budget.Web\wwwroot\iman.pdf");
-
-        //    return View(model);
-        //}
-
-        [HttpPost("report1")]
-        public async Task<IActionResult> Report1(int id) {
-
-            return PartialView("_report1");
-        }
-
-        [Route("GetReport")]
+        [HttpGet("view")]
+        public IActionResult View() => PartialView("_view");
+        
+        [Route("view/[action]")]
         public async Task<IActionResult> GetReport() {
-            object objId = 0;
-            if (!TempData.TryGetValue("reportId", out objId))
-                return NotFound();
-
-            var id = Convert.ToInt32(objId);
+            int id = Convert.ToInt32(Request.Query["id"].ToString());
             var report = await _reportService.GetAsync(id);
 
-            object values = null;
-            var paramVals = new Dictionary<string, string>();
+            var _params = Request.QueryString.QueryStringToDictionary();
 
-            if (TempData.TryGetValue("report_values", out values)) {
-                paramVals = (Dictionary<string, string>)TempData["report_values"];
-            }
+            //var data = new ReportViewData
+            //{
+            //    Id = report.Id,
+            //    Name = report.Name,
+            //    TemplateFileData = report.FileData,
+            //    Title = report.Title,
+            //    Description = report.Description,
+            //    Params = report.Params.Select(_ => new ReportParamViewData
+            //    {
+            //        Id = _.Id,
+            //        Name = _.Name,
+            //        ParamType = _.ParamType,
+            //        ReportId = report.Id,
+            //        Title = _.Title,
+            //        Value = Request.Query[_.Name].ToString()
+            //    }).ToList()
+            //};
+            //var myreport = await _reportEngine.GenerateReportAsync(data);
+
+            //myreport.Render(false);
+
+            var myreport = await getStiReportAsync(report, _params);
+
+            return await StiNetCoreViewer.GetReportResultAsync(this, myreport);
+        }
+
+        [Route("view/[action]")]
+        public async Task<IActionResult> ExportResult() {
+            int id = Convert.ToInt32(Request.Query["id"].ToString());
+            var report = await _reportService.GetAsync(id);
+
+            var _params = Request.QueryString.QueryStringToDictionary();
+            var myreport = await getStiReportAsync(report, _params);
+
+            return await StiNetCoreViewer.ExportReportResultAsync(this, myreport);
+        }
+
+        [Route("view/[action]")]
+        public async Task<IActionResult> PrintReport() {
+            int id = Convert.ToInt32(Request.Query["id"].ToString());
+            var report = await _reportService.GetAsync(id);
+
+            var _params = Request.QueryString.QueryStringToDictionary();
+            var myreport = await getStiReportAsync(report, _params);
+
+            return await StiNetCoreViewer.PrintReportResultAsync(this, myreport);
+        }
+
+        [Route("view/[action]")]
+        public IActionResult ViewerEvent()
+            => StiNetCoreViewer.ViewerEventResult(this);
+        
+        #region private helper methods
+
+        private async Task<StiReport> getStiReportAsync(
+            ReportData model, 
+            Dictionary<string, string> parameters) {
 
             var data = new ReportViewData
             {
-                Id = report.Id,
-                Name = report.Name,
-                TemplateFileData = report.FileData,
-                Title = report.Title,
-                Description = report.Description,
-                Params = report.Params.Select(_ => new ReportParamViewData
+                Id = model.Id,
+                Name = model.Name,
+                TemplateFileData = model.FileData,
+                Title = model.Title,
+                Description = model.Description,
+                Params = model.Params.Select(_ => new ReportParamViewData
                 {
                     Id = _.Id,
                     Name = _.Name,
                     ParamType = _.ParamType,
-                    ReportId = report.Id,
+                    ReportId = model.Id,
                     Title = _.Title,
-                    Value = paramVals.FirstOrDefault(__=> __.Key == _.Name)
+                    Value = parameters[_.Name].ToString()
                 }).ToList()
             };
-            var myreport = await _reportEngine.GenerateReportAsync(data);
 
-            myreport.Render(false);
+            var report = await _reportEngine.GenerateReportAsync(data);
+            report.Render(false);
 
-            //return await StiNetCoreViewer.GetReportResultAsync(this, myreport);
-
-            return StiNetCoreViewer.GetReportResult(this, myreport);
+            return await Task.FromResult(report);
         }
-
-        [Route("ViewerEvent")]
-        public IActionResult ViewerEvent() {
-            return StiNetCoreViewer.ViewerEventResult(this);
-        }
-
-        [HttpGet("report1")]
-        public IActionResult Report1() {
-            return PartialView("_report1");
-        }
-
-        [Route("GetReport1")]
-        public IActionResult GetReport1() {
-            var model = new ReportViewData
-            {
-                Id = 1,
-                Params = new List<ReportParamViewData> {
-                    new ReportParamViewData {
-                        ParamType = Enum.ReportParamType.Year,
-                        Name = "YearId",
-                        Value = 1
-                    },
-                    new ReportParamViewData {
-                        ParamType = Enum.ReportParamType.Organization,
-                        Name = "OrganizationId",
-                        Value = 5
-                    },
-                    new ReportParamViewData {
-                        ParamType = Enum.ReportParamType.Constant,
-                        Name = "UserTypeId",
-                        Value = 3
-                    }
-                }
-            };
-
-            //var myreport = await _reportEngine.GenerateReportAsync(model);
-
-            var myreport = _reportEngine.GenerateReportAsync(model).Result;
-
-            myreport.Render(false);
-
-            return StiNetCoreViewer.GetReportResult(this, myreport);
-        }
-
-        #region private helper methods
 
         private async Task addRelatedDataAsync(ReportDisplayViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
 
             model.SetYearSource((await _yearService.GetDropDownDataAsync())
                     .Adapt<IEnumerable<DropDownItemViewModel>>());
-            
+
             model.SetOrganizationSource((await _organizationService
                     .GetDropDownDataAsync())
                     .Adapt<IEnumerable<DropDownItemViewModel>>());
-            
+
             model.SetCountySource((await _organizationService
                     .GetDropDownDataAsync(input: false, OrganizationType.County))
                     .Adapt<IEnumerable<DropDownItemViewModel>>());

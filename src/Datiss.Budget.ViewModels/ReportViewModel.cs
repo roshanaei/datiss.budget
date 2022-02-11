@@ -97,4 +97,13 @@ namespace Datiss.Budget.ViewModels
         public ReportFilterViewModel Filter { get; set; }
     }
 
+    public class ShowReportViewModel
+    {
+        public int Id { get; set; }
+
+        public Dictionary<string, string> Form { get; set; }
+
+
+    }
+
 }
