@@ -15,5 +15,10 @@ namespace Datiss.Budget.ViewModels
         public int NextPage => PageNumber + 1;
         public int TotalCount { get; set; }
         public int PagesCount { get; set; }
+        public int PageLimit { get; set; } = 3;
+        public int StartPage { get; set; } = 1;
+        public int Lastpage => PagesCount;
+        public int TotalLimit { get; set; }
+        public int LimitNumber { get; set; }
     }
 }
