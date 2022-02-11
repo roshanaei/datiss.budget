@@ -17,13 +17,10 @@ using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Stimulsoft.Base;
 using System.IO;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.WebUtilities;
 using Stimulsoft.Report;
-using System.Web;
 
-namespace Datiss.Budget.Web.Controllers
-{
+namespace Datiss.Budget.Web.Controllers {
 
     [Authorize]
     [Route("[controller]")]
@@ -134,28 +131,6 @@ namespace Datiss.Budget.Web.Controllers
             var report = await _reportService.GetAsync(id);
 
             var _params = Request.QueryString.QueryStringToDictionary();
-
-            //var data = new ReportViewData
-            //{
-            //    Id = report.Id,
-            //    Name = report.Name,
-            //    TemplateFileData = report.FileData,
-            //    Title = report.Title,
-            //    Description = report.Description,
-            //    Params = report.Params.Select(_ => new ReportParamViewData
-            //    {
-            //        Id = _.Id,
-            //        Name = _.Name,
-            //        ParamType = _.ParamType,
-            //        ReportId = report.Id,
-            //        Title = _.Title,
-            //        Value = Request.Query[_.Name].ToString()
-            //    }).ToList()
-            //};
-            //var myreport = await _reportEngine.GenerateReportAsync(data);
-
-            //myreport.Render(false);
-
             var myreport = await getStiReportAsync(report, _params);
 
             return await StiNetCoreViewer.GetReportResultAsync(this, myreport);
