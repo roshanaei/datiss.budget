@@ -1,5 +1,4 @@
-﻿using Datiss.Budget.Entities;
-using Datiss.Budget.Services.Infrastructure;
+﻿using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using System.Threading.Tasks;
 
@@ -20,6 +19,8 @@ namespace Datiss.Budget.Services.Contracts
         Task<ValidationResult<ReportData>> CreateAsync(CreateReportData model);
 
         Task<ValidationResult<ReportData>> UpdateAsync(UpdateReportData model);
+
+        Task DeleteAsync(int id);
 
     }
 

@@ -26,6 +26,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Delete = nameof(Delete);
 
         private readonly string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
         private const string _reportExt = ".mrt";
@@ -171,6 +172,26 @@ namespace Datiss.Budget.Web.Admin.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpPost("delete/{id}")]
+        public async Task<IActionResult> Delete(int id) {
+            try {
+                await _reportService.DeleteAsync(id);
+
+                return Json(new {
+                    success = true
+                });
+            }
+            catch(NullReferenceException) {
+                return NotFound();
+            }
+            catch(Exception ex) {
+                return Json(new {
+                    hasError = true,
+                    message = ViewMessages.SystemError
+                });
+            }
         }
 
     }
