@@ -540,6 +540,49 @@ namespace Datiss.Budget.Services
                 );
         }
 
+        public async Task<IEnumerable<IncomeCurrentOperationalDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        {
+            var filter = new IncomeCurrentOperationalFilterDTO
+            {
+                OrganizationId = organizationId,
+                YearId = yearId
+            };
+
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.ICOTypeId)
+                                    .Select(x => new IncomeCurrentOperationalDTO
+                                    {
+                                        Id = x.Id,
+                                        ICOTypeDisplay = x.ICOType.Title,
+                                        ICOTypeId = x.ICOTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        ActivityType = x.ActivityType,
+                                        CountH = x.CountH,
+                                        PriceH = x.PriceH,
+                                        CostH = x.CostH,
+                                        CountNH = x.CountNH,
+                                        PriceNH = x.PriceNH,
+                                        CostNH = x.CostNH,
+                                        TotalCount = x.TotalCount,
+                                        TotalCost = x.TotalCost,
+                                    }).ToListAsync();
+
+            return items;
+        }
+
         #region Private Helper Methods
 
         private async Task<IQueryable<IncomeCurrentOperational>> setFilter(
