@@ -12,13 +12,7 @@ namespace Datiss.Budget.Services.Models
                                ? TotalCount / PageSize
                                : (TotalCount / PageSize) + 1;
         public int PageLimit { get; set; } = 5;
-        public int StartPage { get; set; } = 1;
-        public int TotalLimit => PagesCount % PageLimit == 0
-                               ? PagesCount / PageLimit
-                               : (PagesCount / PageLimit) + 1;
-        public int LimitNumber => PageNumber % PageLimit == 0
-                               ? PageNumber / PageLimit
-                               : (PageNumber / PageLimit) + 1;
+
 
     }
 }
