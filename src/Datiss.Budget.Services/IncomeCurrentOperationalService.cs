@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -581,6 +582,49 @@ namespace Datiss.Budget.Services
                                     }).ToListAsync();
 
             return items;
+        }
+
+        public async Task<Stream> ExportExcelAsync(IncomeCurrentOperationalFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.ICOType)
+                                    .Select(x => new IncomeCurrentOperationalDTO
+                                    {
+                                        Id = x.Id,
+                                        ICOTypeDisplay = x.ICOType.Title,
+                                        ICOTypeId = x.ICOTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        ActivityType = x.ActivityType,
+                                        CountH = x.CountH,
+                                        PriceH = x.PriceH,
+                                        CostH = x.CostH,
+                                        CountNH = x.CountNH,
+                                        PriceNH = x.PriceNH,
+                                        CostNH = x.CostNH,
+                                        TotalCount = x.TotalCount,
+                                        TotalCost = x.TotalCost,
+                                    }).ToListAsync();
+
+            var ms = new MemoryStream();
+
+            var result = _excelService.Export(items, ms);
+
+            var mem1 = new MemoryStream(ms.ToArray());
+
+            return mem1;
         }
 
         #region Private Helper Methods
