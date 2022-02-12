@@ -85,3 +85,45 @@
     </div>
 
 </section>
+
+@section footSection {
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $('.delete-row').click(function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                
+                confirmDelete()
+                    .then(function(res) {
+                        if(res.value) {
+                            deleteReport(id);
+                        }
+                    });
+            });
+        });
+
+        function deleteReport(id) {
+            $.ajax({
+                url: '@Url.Action(ReportsController.ACTION_Delete, ReportsController.Name)' + '/' + id,
+                type: 'POST',
+                success: function(data, status, setting) {
+                    if(data.hasError) {
+                        errorMsg(data.message);
+                    }
+                        
+                    document.location.href= '@Url.Action(ReportsController.ACTION_Index)' ;
+
+                    return;
+                },
+                error: function(request, option, err) {
+                    console.log(request);
+                    ShowCommonErorr();
+                }
+            });
+        }
+
+    </script>
+
+}

@@ -189,6 +189,14 @@ namespace Datiss.Budget.Services
                 ValidationMode.Update);
         }
 
+        public async Task DeleteAsync(int id) {
+            var report = await _dbSet.FindAsync(id);
+            report.CheckReferenceIsNull(nameof(report));
+
+            _dbSet.Remove(report);
+            await _uow.SaveChangesAsync();
+        }
+
         #region private methods
 
         private bool checkMandatoryFieldsIsEmpty(string title, string name)
