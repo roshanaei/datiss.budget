@@ -52,6 +52,9 @@ namespace Datiss.Budget.Services
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
+        private IQueryable<IncomeCurrentOperational> Query()
+            => _dbSet.AsNoTracking();
+
 
         #region Private Helper Methods
 
