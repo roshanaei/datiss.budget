@@ -1,4 +1,5 @@
-﻿using Datiss.Budget.Common.Exceptions;
+﻿using Datiss.Budget.Common;
+using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Entities;
@@ -10,10 +11,12 @@ using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using LinqKit;
 using Mapster;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -357,6 +360,184 @@ namespace Datiss.Budget.Services
             _dbSet.AddRange(result);
 
             await _uow.SaveChangesAsync();
+        }
+
+
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
+        {
+            var data = await _excelService.ImportAsync<IncomeCurrentOperationalImportModel>
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
+
+            var records = data.Adapt<List<IncomeCurrentOperational>>();
+
+            int rowIndex = 1;
+
+            var ciowtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                   x.Parent.ConstantKey == ConstantKeys.__CIOWType);
+            
+            var ciowstypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                   x.Parent.ConstantKey == ConstantKeys.__CIOWsType);
+
+            var descendents = await _organizationService
+                             .GetAllDescendentsAsync(_userContext.OrganizationId);
+
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
+
+            foreach (var rec in records)
+            {
+                rec.YearId = yearId;
+                var org = await _orgDbSet.FindAsync(rec.OrganizationId);
+
+                if (year == null || year.Status == EntityStatus.Disbaled)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
+                        );
+                }
+                if (org == null)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
+                        );
+                }
+                if (!await ciowtypes.AnyAsync(x => x.Id == rec.ICOTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidICOType, rowIndex + 2, rec.ICOType)
+                        );
+                }
+                if (!await ciowstypes.AnyAsync(x => x.Id == rec.ICOTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidICOType, rowIndex + 2, rec.ICOType)
+                        );
+                }
+                if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
+                        );
+                }
+
+                rowIndex++;
+            }
+            //
+            var missingOrgs = new List<Organization>();
+            var existOrgs = new List<Organization>();
+
+            foreach (var item in descendents)
+            {
+                var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                if (!existInExcel)
+                {
+                    if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                        missingOrgs.Add(item);
+                }
+                else
+                    existOrgs.Add(item);
+            }
+            //
+            //Start DWaterType
+            var missingCIOWType = new List<Constant>();
+            var missingCIOWsType = new List<Constant>();
+            string orgTitle = "";
+            foreach (var org in existOrgs)
+            {
+                foreach (var ciow in ciowtypes)
+                {
+                    var existCIOWTypeInExcel = records.Any(_ => _.ICOTypeId == ciow.Id &&
+                                                              _.OrganizationId == org.Id);
+                    if (!existCIOWTypeInExcel)
+                    {
+                        missingCIOWType.Add(ciow);
+                        orgTitle = org.Title;
+                    }
+
+                }
+                foreach (var ciow in ciowstypes)
+                {
+                    var existCIOWsTypeInExcel = records.Any(_ => _.ICOTypeId == ciow.Id &&
+                                                              _.OrganizationId == org.Id);
+                    if (!existCIOWsTypeInExcel)
+                    {
+                        missingCIOWsType.Add(ciow);
+                        orgTitle = org.Title;
+                    }
+
+                }
+            }
+            if (missingCIOWType.Any())
+            {
+                string cIOWTypeNames = "";
+                foreach (var missCioW in missingCIOWType)
+                {
+                    cIOWTypeNames += "- [" + missCioW.Title + "]<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelICOTypeOrgNotInExcel, cIOWTypeNames, orgTitle));
+            }
+            if (missingCIOWsType.Any())
+            {
+                string cIOWsTypeNames = "";
+                foreach (var missCioWs in missingCIOWsType)
+                {
+                    cIOWsTypeNames += "- [" + missCioWs.Title + "]<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelICOTypeOrgNotInExcel, cIOWsTypeNames, orgTitle));
+            }
+            //end
+
+            rowIndex = 1;
+
+            if (!continueIfAnyOrgMissing)
+            {
+                if (missingOrgs.Any())
+                {
+                    string orgNames = "";
+                    foreach (var item in missingOrgs)
+                    {
+                        orgNames += "- " + item.Title + "<br>";
+                    }
+
+                    return new ImportResult
+                    {
+                        Message = orgNames,
+                        AskToImport = true
+                    };
+                }
+            }
+
+            foreach (var record in records)
+            {
+
+                if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
+                        );
+
+                if (!await checkLogicAsync(
+                    record.YearId,
+                    record.OrganizationId,
+                    record.ICOTypeId,
+                    record.ActivityType))
+                {
+
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
+                        );
+                }
+
+                rowIndex++;
+            }
+
+            await _dbSet.AddRangeAsync(records);
+            await _uow.SaveChangesAsync();
+
+            return ImportResult.Succeed(
+                string.Format(ServiceMessages.ImportExcelSuccess)
+                );
         }
 
         #region Private Helper Methods
