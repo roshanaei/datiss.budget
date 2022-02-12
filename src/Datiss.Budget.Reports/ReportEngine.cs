@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Datiss.Budget.Services.Contracts;
 using Stimulsoft.Report;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Stimulsoft.Report.Dictionary;
 using Datiss.Budget.Reports.Contracts;
@@ -12,30 +11,15 @@ namespace Datiss.Budget.Reports
 {
     public class ReportEngine : IReportEngine {
 
-        private readonly IWebHostEnvironment _env;
         private readonly IReportService _reportService;
-        private readonly IFinanceYearService _yearService;
-        private readonly IOrganizationService _orgService;
-        private readonly IConstantService _constantService;
         private readonly IConfiguration _config;
 
         public ReportEngine(
-            IWebHostEnvironment env,
             IConfiguration config,
-            IReportService reportService,
-            IFinanceYearService yearService,
-            IOrganizationService orgService,
-            IConstantService constantService) {
-            _env = env ?? throw new ArgumentNullException(nameof(env));
+            IReportService reportService) {
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _reportService = reportService
                 ?? throw new ArgumentNullException(nameof(reportService));
-            _yearService = yearService
-                ?? throw new ArgumentNullException(nameof(yearService));
-            _orgService = orgService
-                ?? throw new ArgumentNullException(nameof(orgService));
-            _constantService = constantService
-                ?? throw new ArgumentNullException(nameof(constantService));
         }
 
         private string getConnectionString() 
