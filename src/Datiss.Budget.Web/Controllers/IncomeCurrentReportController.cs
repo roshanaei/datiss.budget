@@ -385,12 +385,12 @@ namespace Datiss.Budget.Web.Controllers
                 //Water
                 sectionTypes.Where(sec => sec.ConstantKey.ToUpper().Contains(ConstantKeys.__CIRWater.ToUpper()))
                     .ToList()
-                    .ForEach(sec => items.AddRange(unitTypes.Where(x => x.ConstantKey.ToUpper().Contains(sec.ConstantKey.Trim('.')))
+                    .ForEach(sec => items.AddRange(unitTypes/*.Where(x => x.ConstantKey.ToUpper().Contains(sec.ConstantKey.Trim('.').ToUpper()))*/
                                         .Select(unit => new IncomeCurrentReportDTO
                                         {
                                             SectionTypeDisplay = sec.Title,
                                             SectionTypeId = sec.Id,
-                                            UnitTypeDisplay = unit.Title,
+                                            UnitTypeDisplay = sec.Title,
                                             UnitTypeId = unit.Id,
                                             OrganizationId = org.Id,
                                             OrganizationDisplay = org.Title,
