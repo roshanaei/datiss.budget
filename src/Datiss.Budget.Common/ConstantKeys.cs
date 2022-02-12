@@ -12,5 +12,7 @@
         public const string __Cofficients = "Cofficients";
         public const string __CIRSection = "CIRSection";
         public const string __CIRUnit = "CurrentIncomeReport";
+        public const string __CIOWType = "CIOWType";
+        public const string __CIOWsType = "CIOWsType";
     }
 }

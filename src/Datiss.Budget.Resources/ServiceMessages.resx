@@ -291,4 +291,13 @@
   <data name="ReportExistByName" xml:space="preserve">
     <value>گزارش با نام '{0}' قبلاً در سیستم ثبت شده است. لطفاً نام دیگری وارد نمایید.</value>
   </data>
+  <data name="Logic_ActivityICOTypeDuplicate" xml:space="preserve">
+    <value>اطلاعات بخش {0} و عنوان {1} برای "{2}" قبلا ثبت شده است.</value>
+  </data>
+  <data name="ImportExcelInvalidICOType" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد عنوان"{1}" معتبر نیست .</value>
+  </data>
+  <data name="ImportExcelICOTypeOrgNotInExcel" xml:space="preserve">
+    <value>عنوان های :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
 </root>
