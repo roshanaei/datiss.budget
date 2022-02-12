@@ -195,24 +195,33 @@ namespace Datiss.Budget.Web.Controllers {
         private async Task addRelatedDataAsync(ReportDisplayViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
 
-            model.SetYearSource((await _yearService.GetDropDownDataAsync())
+            if(model.Report.Params.Any(_=> _.ParamType == ReportParamType.Year)) {
+                model.SetYearSource((await _yearService.GetDropDownDataAsync())
                     .Adapt<IEnumerable<DropDownItemViewModel>>());
-
-            model.SetOrganizationSource((await _organizationService
-                    .GetDropDownDataAsync())
+            }
+            
+            if(model.Report.Params.Any(_=> _.ParamType == ReportParamType.Organization)) {
+                model.SetOrganizationSource((await _organizationService.GetDropDownDataAsync())
                     .Adapt<IEnumerable<DropDownItemViewModel>>());
-
-            model.SetCountySource((await _organizationService
+            }
+            
+            if(model.Report.Params.Any(_=> _.ParamType == ReportParamType.County)) {
+                model.SetCountySource((await _organizationService
                     .GetDropDownDataAsync(input: false, OrganizationType.County))
-                    .Adapt<IEnumerable<DropDownItemViewModel>>());
+                        .Adapt<IEnumerable<DropDownItemViewModel>>());
+            }
 
-            model.SetCitySource((await _organizationService
+            if(model.Report.Params.Any(_=> _.ParamType == ReportParamType.City)) {
+                model.SetCitySource((await _organizationService
                     .GetDropDownDataAsync(input: false, OrganizationType.City))
-                    .Adapt<IEnumerable<DropDownItemViewModel>>());
-
-            model.SetVillageSource((await _organizationService
+                        .Adapt<IEnumerable<DropDownItemViewModel>>());
+            }
+           
+            if(model.Report.Params.Any(_=> _.ParamType == ReportParamType.Village)) {
+                model.SetVillageSource((await _organizationService
                     .GetDropDownDataAsync(input: false, OrganizationType.Village))
-                    .Adapt<IEnumerable<DropDownItemViewModel>>());
+                        .Adapt<IEnumerable<DropDownItemViewModel>>());
+            }
         }
 
         #endregion
