@@ -88,7 +88,7 @@ namespace Datiss.Budget.Services
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ICOTypeId))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ICOTypeId,model.ActivityType))
                 {
                     await _dbSet.AddAsync(entity);
                     await _uow.SaveChangesAsync();
@@ -114,8 +114,68 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<IncomeCurrentOperationalDTO>.Failed(
-                string.Format(ServiceMessages.Logic_UserTypeUsageLayerDuplicate,
-                model.ICOTypeDisplay, organizationDisplay)
+                string.Format(ServiceMessages.Logic_ActivityICOTypeDuplicate,
+                model.ActivityType, model.ICOTypeDisplay, organizationDisplay)
+                );
+        }
+
+        public async Task<ValidationResult<IncomeCurrentOperationalDTO>> UpdateAsync(UpdateIncomeCurrentOperationalDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            model.ICOTypeDisplay = (await _constSet.FindAsync(model.ICOTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ICOTypeId,model.ActivityType, model.Id))
+                {
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.YearId = model.YearId;
+                    entity.ActivityType = model.ActivityType;
+                    entity.ICOTypeId = model.ICOTypeId;
+                    entity.PriceH = model.PriceH;
+                    entity.CountH = model.CountH;
+                    entity.CostH = model.CostH;
+                    entity.PriceNH = model.PriceNH;
+                    entity.CountNH = model.CountNH;
+                    entity.CostNH = model.CostNH;
+                    entity.TotalCount = model.TotalCount;
+                    entity.TotalCost = model.TotalCost;
+
+                    await _uow.SaveChangesAsync();
+
+                    var result = new IncomeCurrentOperationalDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        ICOTypeId = model.ICOTypeId,
+                        ActivityType = model.ActivityType,
+                        CountH = model.CountH,
+                        PriceH = model.PriceH,
+                        CostH = model.CostH,
+                        CountNH = model.CountNH,
+                        PriceNH = model.PriceNH,
+                        CostNH = model.CostNH,
+                        TotalCount = model.TotalCount,
+                        TotalCost = model.TotalCost,
+                        OrganizationDisplay = organizationDisplay,
+                        ICOTypeDisplay = model.ICOTypeDisplay,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
+
+                    return ValidationResult<IncomeCurrentOperationalDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<IncomeCurrentOperationalDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+            return ValidationResult<IncomeCurrentOperationalDTO>.Failed(
+                string.Format(ServiceMessages.Logic_ActivityICOTypeDuplicate,
+                model.ActivityType, model.ICOTypeDisplay, organizationDisplay)
                 );
         }
 
@@ -224,15 +284,24 @@ namespace Datiss.Budget.Services
 
                 foreach (var item in data)
                 {
-                    if (!await checkLogicAsync(targetYearId, org.Id, item.DWaterTypeId))
+                    if (!await checkLogicAsync(targetYearId, org.Id, item.ICOTypeId, item.ActivityType))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new IncomeCurrentOperational
                     {
-                        DWaterTypeId = item.DWaterTypeId,
+                        ICOTypeId = item.ICOTypeId,
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
-                        WInstallFee = item.WInstallFee
+                        ActivityType = item.ActivityType,
+                        CountH = item.CountH,
+                        PriceH = item.PriceH,
+                        CostH = item.CostH,
+                        CountNH = item.CountNH,
+                        PriceNH = item.PriceNH,
+                        CostNH = item.CostNH,
+                        TotalCount = item.TotalCount,
+                        TotalCost = item.TotalCost,
+
                     };
 
                     result.Add(entity);
@@ -294,6 +363,7 @@ namespace Datiss.Budget.Services
             int yearId,
             int organizationId,
             int IcoTypeId,
+            ActivityType activityType,
             int? id = null)
         {
             var year = await _yearSet.FindAsync(yearId);
@@ -305,10 +375,12 @@ namespace Datiss.Budget.Services
             var result = id == null
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&
+                                                x.ActivityType == activityType &&
                                                 x.ICOTypeId == IcoTypeId)
 
                 : await Query().AnyAsync(x => x.YearId == yearId &&
                                             x.OrganizationId == organizationId &&
+                                            x.ActivityType == activityType &&
                                             x.ICOTypeId == IcoTypeId &&
                                             x.Id != id);
             return !result;

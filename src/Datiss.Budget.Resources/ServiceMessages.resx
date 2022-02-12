@@ -291,4 +291,7 @@
   <data name="ReportExistByName" xml:space="preserve">
     <value>گزارش با نام '{0}' قبلاً در سیستم ثبت شده است. لطفاً نام دیگری وارد نمایید.</value>
   </data>
+  <data name="Logic_ActivityICOTypeDuplicate" xml:space="preserve">
+    <value>اطلاعات بخش {0} و عنوان {1} برای "{2}" قبلا ثبت شده است.</value>
+  </data>
 </root>

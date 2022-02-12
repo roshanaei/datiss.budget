@@ -385,6 +385,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات بخش {0} و عنوان {1} برای &quot;{2}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_ActivityICOTypeDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_ActivityICOTypeDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ضریب {0} برای &quot;{1}&quot; قبلا ثبت شده است..
         /// </summary>
         public static string Logic_CofficientTypeDuplicate {
