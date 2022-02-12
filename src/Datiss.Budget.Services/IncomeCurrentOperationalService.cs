@@ -297,6 +297,67 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
+        {
+
+            if (sourceYearId == destYearId)
+                throw new CopySameYearException();
+
+            if (destYearId < sourceYearId)
+                throw new CopyDestYearExxeption();
+
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
+                throw new CopyOrgNullDataException();
+
+            var result = new List<IncomeCurrentOperational>();
+
+            if (await Query()
+                .Where(_ => _.OrganizationId == sourceOrgId)
+                .Where(_ => _.YearId == destYearId).AnyAsync())
+                throw new CopyDestYearHasDataException();
+
+
+            var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
+                                        .Where(_ => _.YearId == sourceYearId)
+                                        .ToListAsync();
+
+            if (selfData.Any())
+            {
+                foreach (var item in selfData)
+                {
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.ICOTypeId, item.ActivityType))
+                        throw new CopyDestYearHasDataException();
+
+                    var entity = new IncomeCurrentOperational
+                    {
+                        ICOTypeId = item.ICOTypeId,
+                        OrganizationId = item.OrganizationId,
+                        YearId = destYearId,
+                        ActivityType = item.ActivityType,
+                        CountH = item.CountH,
+                        PriceH = item.PriceH,
+                        CostH = item.CostH,
+                        CountNH = item.CountNH,
+                        PriceNH = item.PriceNH,
+                        CostNH = item.CostNH,
+                        TotalCount = item.TotalCount,
+                        TotalCost = item.TotalCost                        
+                    };
+                    result.Add(entity);
+                }
+            }
+
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+
+            if (childrens.Any())
+            {
+                result.AddRange(childrens);
+            }
+
+            _dbSet.AddRange(result);
+
+            await _uow.SaveChangesAsync();
+        }
 
         #region Private Helper Methods
 
