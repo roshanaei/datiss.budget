@@ -17,6 +17,7 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -228,6 +229,23 @@ namespace Datiss.Budget.Services
             };
 
             await _uow.SaveChangesAsync();
+
+            return await Task.FromResult(result);
+        }
+        public async Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId)
+        {
+
+            List<SqlParameter> sqlParams = new List<SqlParameter>
+            {
+                new SqlParameter("YearId", yearId),
+                new SqlParameter("OrganizationId", organizationId)
+            };
+            var result = new List<CalculationItemData>();
+            result.Add(new CalculationItemData
+            {
+                //Key = "",
+                //Value = await _uow.ExecuteScalar<int>("[dbo].[Cal1] @YearId, @OrganizationId",parameters: sqlParams.ToArray())
+            });
 
             return await Task.FromResult(result);
         }
