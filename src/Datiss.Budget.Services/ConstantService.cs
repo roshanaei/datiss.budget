@@ -157,7 +157,8 @@ namespace Datiss.Budget.Services
         public async Task<IEnumerable<ConstantDTO>> GetDataByKeyAsync(string key)
             => await _dbSet
                         .Include(x => x.Parent)
-                        .Where(x => x.Parent.ConstantKey.ToUpper() == key.ToUpper())
+                        .Where(x => x.Parent.ConstantKey.ToUpper() == key.ToUpper() && 
+                                    x.Parent.ParentId == null)
                         .OrderBy(x => x.DisplayOrder)
                         .Select(x => x.Adapt<ConstantDTO>())
                         .ToListAsync();

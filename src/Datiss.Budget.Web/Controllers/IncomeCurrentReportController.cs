@@ -18,6 +18,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Datiss.Budget.Reports.Excel;
+using ClosedXML.Extensions;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -32,7 +34,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
-        //public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
+        public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
@@ -230,7 +232,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Calculation(CalculationInputViewModel model,int sectionId)
+        public async Task<IActionResult> Calculation(CalculationInputViewModel model, int sectionId)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -367,55 +369,73 @@ namespace Datiss.Budget.Web.Controllers
             }
         }
 
-        //[HttpGet("import/template/{yearId}/{orgId?}")]
-        //public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
-        //{
-        //    var year = await _financeYearService.GetByIdAsync(yearId);
-        //    var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-        //    var userTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var sectionTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIRSection);
+            var unitTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIRUnit);
 
-        //    var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType, true);
-        //    var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
 
-        //    var items = new List<IncomeCurrentReportDTO>();
+            var items = new List<IncomeCurrentReportDTO>();
 
-        //    foreach (var org in organizations)
-        //    {
-        //        userTypes.Where(ut => ut.ConstantKey == ConstantKeys.__House)
-        //            .ToList()
-        //            .ForEach(ut => items.AddRange(houseUsageLayer
-        //                                .Select(hul => new IncomeCurrentReportDTO
-        //                                {
-        //                                    UserTypeTitle = ut.Title,
-        //                                    UserTypeId = ut.Id,
-        //                                    UsageLayerTitle = hul.Title,
-        //                                    UsageLayerId = hul.Id,
-        //                                    OrganizationId = org.Id,
-        //                                    OrganizationDisplay = org.Title,
-        //                                    Year = year.Year,
-        //                                    YearId = year.Id
-        //                                }).ToList())
-        //            );
-        //        userTypes.Where(ut => ut.ConstantKey != ConstantKeys.__House)
-        //            .ToList()
-        //            .ForEach(ut => items.AddRange(nhouseUsagelayer
-        //                                .Select(hul => new IncomeCurrentReportDTO
-        //                                {
-        //                                    UserTypeTitle = ut.Title,
-        //                                    UserTypeId = ut.Id,
-        //                                    UsageLayerTitle = hul.Title,
-        //                                    UsageLayerId = hul.Id,
-        //                                    OrganizationId = org.Id,
-        //                                    OrganizationDisplay = org.Title,
-        //                                    Year = year.Year,
-        //                                    YearId = year.Id
-        //                                }).ToList())
-        //            );
-        //    }
+            foreach (var org in organizations)
+            {
+                //Water
+                sectionTypes.Where(sec => sec.ConstantKey.ToUpper().Contains(ConstantKeys.__CIRWater.ToUpper()))
+                    .ToList()
+                    .ForEach(sec => items.AddRange(unitTypes.Where(x => x.ConstantKey.ToUpper().Contains(sec.ConstantKey.Trim('.')))
+                                        .Select(unit => new IncomeCurrentReportDTO
+                                        {
+                                            SectionTypeDisplay = sec.Title,
+                                            SectionTypeId = sec.Id,
+                                            UnitTypeDisplay = unit.Title,
+                                            UnitTypeId = unit.Id,
+                                            OrganizationId = org.Id,
+                                            OrganizationDisplay = org.Title,
+                                            Year = year.Year,
+                                            YearId = year.Id,
+                                            Activity = ActivityType.Water,
+                                        }).ToList())
+                    );
+                ////Waste
+                //sectionTypes.Where(ut => ut.ConstantKey.ToUpper().Contains(ConstantKeys.__CIRWaste.ToUpper()))
+                //    .ToList()
+                //    .ForEach(ut => items.AddRange(nhouseUsagelayer
+                //                        .Select(hul => new IncomeCurrentReportDTO
+                //                        {
+                //                            UserTypeTitle = ut.Title,
+                //                            UserTypeId = ut.Id,
+                //                            UsageLayerTitle = hul.Title,
+                //                            UsageLayerId = hul.Id,
+                //                            OrganizationId = org.Id,
+                //                            OrganizationDisplay = org.Title,
+                //                            Year = year.Year,
+                //                            YearId = year.Id
+                //                        }).ToList())
+                //    );
+                ////Other
+                //sectionTypes.Where(ut => ut.ConstantKey.ToUpper().Contains(ConstantKeys.__CIROther.ToUpper()))
+                //    .ToList()
+                //    .ForEach(ut => items.AddRange(nhouseUsagelayer
+                //        .Select(hul => new IncomeCurrentReportDTO
+                //        {
+                //            UserTypeTitle = ut.Title,
+                //            UserTypeId = ut.Id,
+                //            UsageLayerTitle = hul.Title,
+                //            UsageLayerId = hul.Id,
+                //            OrganizationId = org.Id,
+                //            OrganizationDisplay = org.Title,
+                //            Year = year.Year,
+                //            YearId = year.Id
+                //        }).ToList())
+                //    );
+            }
 
-        //    using var workbook = items.GetImportTemplate(year.Year);
-        //    return workbook.Deliver("IncomeCurrentReport-Import-Template.xlsx");
-        //}
+            using var workbook = items.GetImportTemplate(year.Year);
+            return workbook.Deliver("IncomeCurrentReport-Import-Template.xlsx");
+        }
 
     }
 }
