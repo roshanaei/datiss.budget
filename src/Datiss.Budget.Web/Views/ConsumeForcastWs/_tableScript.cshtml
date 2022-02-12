@@ -6,10 +6,10 @@
     function editRow(id) {
 
         let usertypeid = $('#inputUserType_' + id).val();
-        let selectval = $('#inputUsageLayerType_' + id).val();
+        let usageLayerTypeId = $('#inputUsageLayerType_' + id).val();
         console.log(usertypeid);
-        console.log(selectval);
-        FillDropDown(usertypeid, selectval);
+        console.log(usageLayerTypeId);
+        FillDropDown(usertypeid, usageLayerTypeId);
 
         resetTableBackColor("my-table");
 
