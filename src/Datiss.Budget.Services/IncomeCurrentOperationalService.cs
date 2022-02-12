@@ -250,6 +250,54 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task<PagedResult<IncomeCurrentOperationalDTO>> GetListAsync(IncomeCurrentOperationalFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var result = new PagedResult<IncomeCurrentOperationalDTO>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            result.TotalCount = await query.CountAsync();
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            query = query
+                .Skip(filter.StartIndex)
+                .Take(filter.PageSize);
+
+            result.Items = await query.Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.ICOType)
+                                    .Select(x => new IncomeCurrentOperationalDTO
+                                    {
+                                        Id = x.Id,
+                                        ICOTypeDisplay = x.ICOType.Title,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        ActivityType = x.ActivityType,
+                                        PriceH = x.PriceH,
+                                        CountH = x.CountH,
+                                        CostH = x.CostH,
+                                        PriceNH = x.PriceNH,
+                                        CountNH = x.CountNH,
+                                        CostNH = x.CostNH,
+                                        TotalCount = x.TotalCount,
+                                        TotalCost = x.TotalCost
+                                    }).ToListAsync();
+
+            return await Task.FromResult(result);
+        }
+
+
         #region Private Helper Methods
 
         private async Task<IQueryable<IncomeCurrentOperational>> setFilter(
