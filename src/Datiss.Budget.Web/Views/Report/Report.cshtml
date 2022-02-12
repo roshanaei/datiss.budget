@@ -107,13 +107,9 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
-
             $('#my-form').submit(function(e) {
                 e.preventDefault();
-                alert('before submit');
                 var form_data = $('#my-form').serialize();
-                console.log(form_data);
-                alert('form data logged');
                 $.ajax({
                     url: '@Url.Action(ReportController.ACTION_Report, ReportController.Name, new { id = Model.Report.Id })' ,
                     type: 'POST',
@@ -126,10 +122,8 @@
                     }
                 })
             });
-
         });
 
-        
     </script>
 
 }
