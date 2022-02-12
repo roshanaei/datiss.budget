@@ -5,12 +5,15 @@ using Datiss.Budget.Entities;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Enum;
 using Datiss.Budget.Extensions;
+using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using LinqKit;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -61,6 +64,60 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
 
+        public async Task<ValidationResult<IncomeCurrentOperationalDTO>> CreateAsync(CreateIncomeCurrentOperationalDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var entity = new IncomeCurrentOperational
+            {
+                YearId = model.YearId,
+                OrganizationId = model.OrganizationId,
+                ActivityType = model.ActivityType,
+                ICOTypeId = model.ICOTypeId,
+                CountH = model.CountH,
+                PriceH = model.PriceH,
+                CostH = model.CostH,
+                CountNH = model.CountNH,
+                PriceNH = model.PriceNH,
+                CostNH = model.CostNH,
+                TotalCount = model.TotalCount,
+                TotalCost = model.TotalCost,
+            };
+
+            model.ICOTypeDisplay = (await _constSet.FindAsync(model.ICOTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ICOTypeId))
+                {
+                    await _dbSet.AddAsync(entity);
+                    await _uow.SaveChangesAsync();
+
+                    var result = entity.Adapt<IncomeCurrentOperationalDTO>();
+                    result.ICOTypeDisplay = model.ICOTypeDisplay;
+                    result.ActivityType = model.ActivityType;
+                    result.OrganizationDisplay = organizationDisplay;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.CountH = entity.CountH;
+                    result.CostH = entity.CostH;
+                    result.PriceH = entity.PriceH;
+                    result.CountNH = entity.CountNH;
+                    result.CostNH = entity.CostNH;
+                    result.PriceNH = entity.PriceNH;
+
+                    return ValidationResult<IncomeCurrentOperationalDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<IncomeCurrentOperationalDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+            return ValidationResult<IncomeCurrentOperationalDTO>.Failed(
+                string.Format(ServiceMessages.Logic_UserTypeUsageLayerDuplicate,
+                model.ICOTypeDisplay, organizationDisplay)
+                );
+        }
 
         #region Private Helper Methods
 
@@ -236,7 +293,7 @@ namespace Datiss.Budget.Services
         private async Task<bool> checkLogicAsync(
             int yearId,
             int organizationId,
-            int dwaterTypeId,
+            int IcoTypeId,
             int? id = null)
         {
             var year = await _yearSet.FindAsync(yearId);
@@ -248,11 +305,11 @@ namespace Datiss.Budget.Services
             var result = id == null
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&
-                                                x.DWaterTypeId == dwaterTypeId)
+                                                x.ICOTypeId == IcoTypeId)
 
                 : await Query().AnyAsync(x => x.YearId == yearId &&
                                             x.OrganizationId == organizationId &&
-                                            x.DWaterTypeId == dwaterTypeId &&
+                                            x.ICOTypeId == IcoTypeId &&
                                             x.Id != id);
             return !result;
         }
