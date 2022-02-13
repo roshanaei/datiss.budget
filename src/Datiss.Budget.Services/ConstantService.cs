@@ -158,7 +158,8 @@ namespace Datiss.Budget.Services
             => await _dbSet
                         .Include(x => x.Parent)
                         .Where(x => x.Parent.ConstantKey.ToUpper() == key.ToUpper() && 
-                                    x.Parent.ParentId == null)
+                                    x.Parent.ParentId == null &&
+                                    x.Status == EntityStatus.Enabled)
                         .OrderBy(x => x.DisplayOrder)
                         .Select(x => x.Adapt<ConstantDTO>())
                         .ToListAsync();
