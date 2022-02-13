@@ -31,7 +31,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public Organization Organization { get; set; }
 
-        public Constant ICInstalationType { get; set; }
+        public Constant CCInstalationType { get; set; }
 
         #endregion
     }
