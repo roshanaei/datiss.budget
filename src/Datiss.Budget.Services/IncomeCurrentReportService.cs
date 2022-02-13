@@ -25,6 +25,7 @@ using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Datiss.Budget.ViewModels;
 
 namespace Datiss.Budget.Services
 {
@@ -264,30 +265,23 @@ namespace Datiss.Budget.Services
 
             foreach (var record in result)
             {
-
-                if (!await checkLogicAsync(
+                var entity = await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
                     record.SectionTypeId,
-                    record.UnitTypeId,
-                    record.Activity))
+                    record.UnitTypeId);
+                if (entity == null)
                 {
-
-                    var entity = _dbSet.SingleOrDefault(x => x.YearId == record.YearId &&
-                                                             x.OrganizationId == record.OrganizationId &&
-                                                             x.Activity == record.Activity &&
-                                                             x.SectionTypeId == record.SectionTypeId &&
-                                                             x.UnitTypeId == record.UnitTypeId);
-                    entity.ApproveYear_1 = record.ApproveYear_1;
-                    _dbSet.Update(entity);
-                    await _uow.SaveChangesAsync();
+                    await _dbSet.AddAsync(record);
                 }
                 else
                 {
-                    await _dbSet.AddAsync(record);
-                    await _uow.SaveChangesAsync();
+                    entity.ApproveYear_1 = record.ApproveYear_1;
+                    _dbSet.Update(entity);
                 }
             }
+
+            await _uow.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<IncomeCurrentReportDTO>> GetExportItemsAsync(int yearId, int organizationId)
@@ -339,7 +333,7 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
-            var sectiontypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CIRSection &&
+            var sectionTypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CIRSection &&
                                                     x.Parent.ParentId == null &&
                                                     x.Status == EntityStatus.Enabled);
 
@@ -367,7 +361,7 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
-                if (!await sectiontypes.AnyAsync(x => x.Id == rec.SectionTypeId))
+                if (!await sectionTypes.AnyAsync(x => x.Id == rec.SectionTypeId))
                 {
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.SectionTypeId)
@@ -406,67 +400,97 @@ namespace Datiss.Budget.Services
             }
             //
 
-            //Start Missing Type
-            //var missingUserType = new List<Constant>();
-            //var missingWPDiameters = new List<Constant>();
+            #region CheckType
 
-            //string orgTitle = "";
-            //string userTypeTitle = "";
+            var missingSectionType = new List<Constant>();
+            var missingUnitType = new List<Constant>();
 
-            //foreach (var org in existOrgs)
-            //{
-            //    if (orgTitle != "")
-            //        break;
-            //    foreach (var usert in sectiontypes)
-            //    {
-            //        var existUserTypeInExcel = records.Any(_ => _.SectionTypeId == usert.Id &&
-            //                                                    _.OrganizationId == org.Id);
-            //        if (!existUserTypeInExcel)
-            //        {
-            //            missingUserType.Add(usert);
-            //            orgTitle = org.Title;
-            //        }
-            //        else if (!missingUserType.Any())
-            //        {
-            //            foreach (var waterd in unitTypes)
-            //            {
-            //                var existWPDiametersInExcel = records.Any(_ => _.SectionTypeId == usert.Id &&
-            //                                                               _.UnitTypeId == waterd.Id &&
-            //                                                               _.OrganizationId == org.Id);
+            string activityOrg = "";
+            string sectionOrgTitle = "";
+            string unitOrgTitle = "";
+            string missingActivity = "";
+            string sectionTitle = "";
 
-            //                if (!existWPDiametersInExcel)
-            //                {
-            //                    missingWPDiameters.Add(waterd);
-            //                    orgTitle = org.Title;
-            //                    userTypeTitle = usert.Title;
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
+            foreach (var org in existOrgs)
+            {
+                if(!records.Any(_=>_.Activity == ActivityType.Water && _.OrganizationId == org.Id))
+                {
+                    activityOrg = org.Title;
+                    missingActivity = ActivityType.Water.ToDisplay();
+                    break;
+                }
+                if(!records.Any(_ => _.Activity == ActivityType.Waste && _.OrganizationId == org.Id))
+                {
+                    activityOrg = org.Title;
+                    missingActivity = ActivityType.Waste.ToDisplay();
+                    break;
+                }
+                if (!records.Any(_ => _.Activity == null && _.OrganizationId == org.Id))
+                {
+                    activityOrg = org.Title;
+                    missingActivity = "-";
+                    break;
+                }
 
-            //if (missingUserType.Any())
-            //{
-            //    string userTypeNames = "";
-            //    foreach (var item in missingUserType)
-            //    {
-            //        userTypeNames += "- " + item.Title + "<br>";
-            //    }
-            //    return ImportResult.Failed(
-            //        string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, userTypeNames, orgTitle));
-            //}
+                foreach (var section in sectionTypes)
+                {
+                    var existSectionTypeInExcel = records.Any(_ => _.SectionTypeId == section.Id &&
+                                                                   _.OrganizationId == org.Id);
+                    if (!existSectionTypeInExcel)
+                    {
+                        missingSectionType.Add(section);
+                        sectionOrgTitle = org.Title;
+                    }
+                    else
+                    {
+                        var sectionKey = section.ConstantKey.Replace(".", "");
+                        var unitTypeInSection = unitTypes.Where(_=>_.ConstantKey.ToUpper().Contains(sectionKey.ToUpper()));
+                        foreach (var unit in unitTypeInSection)
+                        {
+                            var exist = records.Any(_ => _.SectionTypeId == section.Id &&
+                                                         _.OrganizationId == org.Id &&
+                                                         _.UnitTypeId == unit.Id);
+                            if (!exist)
+                            {
+                                missingUnitType.Add(unit);
+                                sectionTitle = section.Title;
+                                unitOrgTitle = org.Title;
+                            }
+                        }
 
-            //if (missingWPDiameters.Any())
-            //{
-            //    string wPDiametersNames = "";
-            //    foreach (var item in missingWPDiameters)
-            //    {
-            //        wPDiametersNames += "- [" + item.Title + "]<br>";
-            //    }
-            //    return ImportResult.Failed(
-            //        string.Format(ServiceMessages.ImportExcelDiameterPipeUserTypeOrgNotInExcel, wPDiametersNames, userTypeTitle, orgTitle));
-            //}
-            //End
+                    }
+                }
+            }
+
+            if(missingActivity != "")
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelActivityTypeNotInExcel, missingActivity, activityOrg));
+            }
+
+            if (missingSectionType.Any())
+            {
+                string sectionTypeNames = "";
+                foreach (var item in missingSectionType)
+                {
+                    sectionTypeNames += "- [" + item.Title + "]<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelSectionTypesNotInExcel, sectionTypeNames, sectionOrgTitle));
+            }
+
+            if (missingUnitType.Any())
+            {
+                string unitTypeNames = "";
+                foreach (var item in missingUnitType)
+                {
+                    unitTypeNames += "- [" + item.Title + "]<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelUnitTypesSectionTypeNotInExcel, unitTypeNames, sectionTitle, unitOrgTitle));
+            }
+
+            #endregion
 
             rowIndex = 1;
 
@@ -502,31 +526,25 @@ namespace Datiss.Budget.Services
             foreach (var record in records)
             {
 
-                if (!await checkLogicAsync(
+                var entity = await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
                     record.SectionTypeId,
-                    record.UnitTypeId,
-                    record.Activity))
+                    record.UnitTypeId);
+                if (entity == null)
                 {
-
-                    var entity = _dbSet.SingleOrDefault(x => x.YearId == record.YearId &&
-                                                             x.OrganizationId == record.OrganizationId &&
-                                                             x.Activity == record.Activity &&
-                                                             x.SectionTypeId == record.SectionTypeId &&
-                                                             x.UnitTypeId == record.UnitTypeId);
-                    entity.FunctionalBasicYear = record.FunctionalBasicYear;
-                    entity.FunctionalYear_1 = record.FunctionalYear_1;
-                    _dbSet.Update(entity);
-                    await _uow.SaveChangesAsync();
+                    await _dbSet.AddAsync(record);
                 }
                 else
                 {
-                    await _dbSet.AddAsync(record);
-                    await _uow.SaveChangesAsync();
+                    entity.FunctionalBasicYear = record.FunctionalBasicYear;
+                    entity.FunctionalYear_1 = record.FunctionalYear_1;
+                    _dbSet.Update(entity);
                 }
 
             }
+
+            await _uow.SaveChangesAsync();
 
             return ImportResult.Succeed(
                 string.Format(ServiceMessages.ImportExcelSuccess)
@@ -722,6 +740,22 @@ namespace Datiss.Budget.Services
                                                  x.Id != id);
 
             return !result;
+        }
+        private async Task<IncomeCurrentReport> checkLogicAsync(
+             int yearId,
+             int organizationId,
+             int sectionTypeId,
+             int unitTypeId)
+        {
+            var entity = await _dbSet.SingleOrDefaultAsync(x => x.YearId == yearId &&
+                                                             x.OrganizationId == organizationId &&
+                                                             x.SectionTypeId == sectionTypeId &&
+                                                             x.UnitTypeId == unitTypeId);
+            if (entity == null)
+            {
+                return null;
+            }
+            return entity;
         }
 
         #endregion

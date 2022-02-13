@@ -18,20 +18,20 @@ using Mapster;
 
 namespace Datiss.Budget.Services
 {
-    public class ConstantService: IConstantService
+    public class ConstantService : IConstantService
     {
         private readonly IUnitOfWork _uow;
 
         private readonly DbSet<Constant> _dbSet;
 
         public ConstantService(
-            IUnitOfWork uow) 
+            IUnitOfWork uow)
         {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<Constant>();
         }
 
-        private IQueryable<Constant> Query() 
+        private IQueryable<Constant> Query()
            => _dbSet.AsNoTracking()
                     .Where(_ => _.Status != EntityStatus.Deleted);
 
@@ -41,24 +41,27 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult> CreateAsync(CreateConstantDTO model) {
+        public async Task<ValidationResult> CreateAsync(CreateConstantDTO model)
+        {
             model.CheckArgumentIsNull(nameof(model));
 
             if (await ExistByKeyAsync(model.ConstantKey))
-                return new ValidationResult {
+                return new ValidationResult
+                {
                     IsValid = false,
                     Message = "نام کلید تکراری است." //TODO : move this to resource
                 };
 
-            var entity = new Constant {
+            var entity = new Constant
+            {
                 ConstantKey = model.ConstantKey.Trim(),
                 DisplayOrder = model.DisplayOrder,
                 ParentId = model.ParentId,
                 Title = model.Title.Trim().ApplyCorrectYeKe()
             };
 
-            entity.Status = model.Enabled 
-                ? EntityStatus.Enabled 
+            entity.Status = model.Enabled
+                ? EntityStatus.Enabled
                 : EntityStatus.Disbaled;
 
             await _dbSet.AddAsync(entity);
@@ -67,11 +70,13 @@ namespace Datiss.Budget.Services
             return ValidationResult.Success();
         }
 
-        public async Task<ValidationResult> UpdateAsync(UpdateConstantDTO model) {
+        public async Task<ValidationResult> UpdateAsync(UpdateConstantDTO model)
+        {
             model.CheckArgumentIsNull(nameof(model));
 
             if (await ExistByKeyAsync(model.ConstantKey, model.Id))
-                return new ValidationResult {
+                return new ValidationResult
+                {
                     IsValid = false,
                     Message = "نام کلید تکراری است." //TODO : move this to resource
                 };
@@ -90,7 +95,8 @@ namespace Datiss.Budget.Services
             return ValidationResult.Success();
         }
 
-        public async Task<ValidationResult> SoftDeleteAsync(int id) {
+        public async Task<ValidationResult> SoftDeleteAsync(int id)
+        {
             var entity = await _dbSet.FindAsync(id);
             entity.CheckArgumentIsNull(nameof(entity));
 
@@ -100,25 +106,27 @@ namespace Datiss.Budget.Services
             return ValidationResult.Success();
         }
 
-        public async Task<IEnumerable<DropDownItem>> GetParentsAsync() 
+        public async Task<IEnumerable<DropDownItem>> GetParentsAsync()
             => await _dbSet
                 .Where(x => x.ParentId == null)
-                .Select(x => new DropDownItem {
+                .Select(x => new DropDownItem
+                {
                     Id = x.Id,
                     Title = x.Title
                 }).ToListAsync();
 
         public async Task<IEnumerable<DropDownItem>> GetByConstantKeyAsync(string key)
             => await _dbSet
-                        .Include(x=> x.Parent)
+                        .Include(x => x.Parent)
                         .Where(x => x.Parent.ConstantKey.ToUpper() == key.ToUpper())
-                        .OrderBy(x=> x.DisplayOrder)
-                        .Select(x => new DropDownItem {
+                        .OrderBy(x => x.DisplayOrder)
+                        .Select(x => new DropDownItem
+                        {
                             Id = x.Id,
                             Title = x.Title
                         }).ToListAsync();
-        public async Task<IEnumerable<DropDownItem>> GetByKeyAsync(string key,string parentkey,bool none = false)
-            => none 
+        public async Task<IEnumerable<DropDownItem>> GetByKeyAsync(string key, string parentkey, bool none = false)
+            => none
             ? await _dbSet
                         .Include(x => x.Parent)
                         .Where(x => x.ConstantKey.ToUpper() != key.ToUpper() &&
@@ -130,7 +138,7 @@ namespace Datiss.Budget.Services
                             Title = x.Title
                         }).ToListAsync()
             : await _dbSet
-                        .Include(x=>x.Parent)
+                        .Include(x => x.Parent)
                         .Where(x => x.ConstantKey.ToUpper() == key.ToUpper() &&
                                     x.Parent.ConstantKey.ToUpper() == parentkey.ToUpper())
                         .OrderBy(x => x.DisplayOrder)
@@ -157,13 +165,13 @@ namespace Datiss.Budget.Services
         public async Task<IEnumerable<ConstantDTO>> GetDataByKeyAsync(string key)
             => await _dbSet
                         .Include(x => x.Parent)
-                        .Where(x => x.Parent.ConstantKey.ToUpper() == key.ToUpper() && 
-                                    x.Parent.ParentId == null &&
-                                    x.Status == EntityStatus.Enabled)
+                        .Where(x => x.Parent.ConstantKey.ToUpper() == key.ToUpper())
+                        .Where(x => x.Parent.ParentId == null)
+                        .Where(x => x.Status == EntityStatus.Enabled)
                         .OrderBy(x => x.DisplayOrder)
                         .Select(x => x.Adapt<ConstantDTO>())
                         .ToListAsync();
-        
+
         public async Task<PagedResult<ConstantDTO>> GetListAsync(ConstantFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
@@ -179,7 +187,7 @@ namespace Datiss.Budget.Services
 
             result.TotalCount = await query.CountAsync();
 
-            query = setOrder(query, filter.OrderBy , filter.OrderDesc);
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
 
             query = query
                 .Skip(filter.StartIndex)
@@ -227,7 +235,7 @@ namespace Datiss.Budget.Services
                                 ? query.OrderByDescending(x => x.Id)
                                 : query.OrderBy(x => x.Id);
             }
-                    
+
         }
         private async Task<bool> ExistByKeyAsync(string contantKey, int? id = null)
             => id == null
