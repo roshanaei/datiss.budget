@@ -1,0 +1,525 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    let rowData = {};
+
+    function editRow(id) {
+
+        let activityType = $('#inputActivityType_' + id).val();
+        let icoTypeId = $('#inputICOType_' + id).val();
+        console.log(userTypeId);
+        console.log(usageLayerTypeId);
+        FillDropDown(activityType, icoTypeId);
+        
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_ActivityType_' + id).hide();
+        $('#divOutput_ICOType_' + id).hide();
+        $('#divOutput_CountH_' + id).hide();
+        $('#divOutput_PriceH_' + id).hide();
+        $('#divOutput_CostH_' + id).hide();
+        $('#divOutput_CountNH_' + id).hide();
+        $('#divOutput_PriceNH_' + id).hide();
+        $('#divOutput_CostNH_' + id).hide();
+        $('#divOutput_TotalCount_' + id).hide();
+        $('#divOutput_TotalCost_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_ActivityType_' + id).show();
+        $('#divInput_ICOType_' + id).show();
+        $('#divInput_CountH_' + id).show();
+        $('#divInput_PriceH_' + id).show();
+        $('#divInput_CostH_' + id).show();
+        $('#divInput_CountNH_' + id).show();
+        $('#divInput_PriceNH_' + id).show();
+        $('#divInput_CostNH_' + id).show();
+        $('#divInput_TotalCount_' + id).show();
+        $('#divInput_TotalCost_' + id).show();
+
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.activityType = $('#inputActivityType_' + id).val();
+        rowData.icoTypeId = $('#inputICOType_' + id).val();
+        rowData.countH = $('#inputCountH_' + id).val();
+        rowData.priceH = $('#inputPriceH_' + id).val();
+        rowData.costH = $('#inputCostH_' + id).val();
+        rowData.countNH = $('#inputCountNH_' + id).val();
+        rowData.priceNH = $('#inputPriceNH_' + id).val();
+        rowData.costNH = $('#inputCostNH_' + id).val();
+        rowData.totalCount = $('#inputTotalCount_' + id).val();
+        rowData.totalCost = $('#inputTotalCost_' + id).val();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_ActivityType_' + id).hide();
+        $('#divInput_ICOType_' + id).hide();
+        $('#divInput_CountH_' + id).hide();
+        $('#divInput_PriceH_' + id).hide();
+        $('#divInput_CostH_' + id).hide();
+        $('#divInput_CountNH_' + id).hide();
+        $('#divInput_PriceNH_' + id).hide();
+        $('#divInput_CostNH_' + id).hide();
+        $('#divInput_TotalCount_' + id).hide();
+        $('#divInput_TotalCost_' + id).hide();
+
+        //Retriving to OrginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputActivityType_' + id).val(rowData.activityType);
+            $('#inputICOType_' + id).val(rowData.icoTypeId);
+            $('#inputCountH_' + id).val(rowData.countH);
+            $('#inputPriceH_' + id).val(rowData.priceH);
+            $('#inputCostH_' + id).val(rowData.costH);
+            $('#inputCountNH_' + id).val(rowData.countNH);
+            $('#inputPriceNH_' + id).val(rowData.priceNH);
+            $('#inputCostNH_' + id).val(rowData.costNH);
+            $('#inputTotalCount_' + id).val(rowData.totalCount);
+            $('#inputTotalCost_' + id).val(rowData.totalCost);
+        }
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_ActivityType_' + id).show();
+        $('#divOutput_ICOType_' + id).show();
+        $('#divOutput_CountH_' + id).show();
+        $('#divOutput_PriceH_' + id).show();
+        $('#divOutput_CostH_' + id).show();
+        $('#divOutput_CountNH_' + id).show();
+        $('#divOutput_PriceNH_' + id).show();
+        $('#divOutput_CostNH_' + id).show();
+        $('#divOutput_TotalCount_' + id).show();
+        $('#divOutput_TotalCost_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.activityType = $('#inputActivityType_' + id).val();
+        model.icoTypeId = $('#inputICOType_' + id).val();
+        model.countH = $('#inputCountH_' + id).val();
+        model.priceH = $('#inputPriceH_' + id).val();
+        model.costH = $('#inputCostH_' + id).val();
+        model.totalCount = $('#inputTotalCount_' + id).val();
+        model.totalCost = $('#inputTotalCost_' + id).val();
+
+
+        $.ajax({
+            url: '@Url.Action(IncomeCurrentOperationalController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+                console.log(data);
+
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.userTypeId = model.userTypeId;
+                rowData.usageLayerTypeId = model.usageLayerId;
+                rowData.countH = model.countH;
+                rowData.priceH = model.priceH;
+                rowData.costH = model.costH;
+                rowData.countNH = model.countNH;
+                rowData.priceNH = model.priceNH;
+                rowData.costNH = model.costNH;
+                rowData.totalCount = model.totalCount;
+                rowData.totalCost = model.totalCost;
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanActivityType_' + id).text(data.activityType);
+                $('#spanICOType_' + id).text(data.icoTypeTitle);
+                $('#spanCountH_' + id).text(data.countH);
+                $('#spanPriceH_' + id).text(data.priceH);
+                $('#spanCostH_' + id).text(data.costH);
+                $('#spanCountNH_' + id).text(data.countNH);
+                $('#spanPriceNH_' + id).text(data.priceNH);
+                $('#spanCostNH_' + id).text(data.costNH);
+                $('#spanTotalCount_' + id).text(data.totalCount);
+                $('#spanTotalCost_' + id).text(data.totalCost);
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.activityType = $(e).find('#inputActivityType_').val();
+        model.icoTypeId = $(e).find('#inputICOType_').val();
+        model.countH = $(e).find('#inputCountH_').val();
+        if (model.countH == "") {
+            model.countH = 0;
+        }
+        model.priceH = $(e).find('#inputPriceH_').val();
+        if (model.priceH == "") {
+            model.priceH = 0;
+        }
+        model.costH = $(e).find('#inputCostH_').val();
+        if (model.costH == "") {
+            model.costH = 0;
+        }
+        model.countNH = $(e).find('#inputCountNH_').val();
+        if (model.countNH == "") {
+            model.countNH = 0;
+        }
+        model.priceNH = $(e).find('#inputPriceNH_').val();
+        if (model.priceNH == "") {
+            model.priceNH = 0;
+        }
+        model.costNH = $(e).find('#inputCostNH_').val();
+        if (model.costH == "") {
+            model.costH = 0;
+        }
+        model.totalCount = $(e).find('#inputTotalCount_').val();
+        if (model.totalCount == "") {
+            model.totalCount = 0;
+        }
+        model.totalCost = $(e).find('#inputTotalCost_').val();
+        if (model.totalCost == "") {
+            model.totalCost = 0;
+        }
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(IncomeCurrentOperationalController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                console.log(data);
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //ActivityType
+                $(e).find('#divInput_ActivityType_').attr('id', 'divInput_ActivityType_' + data.id);
+                $(e).find('#hidActivityType_').attr('id', 'hidActivityType_' + data.id);
+                $(e).find('#inputActivityType_').attr('id', 'inputActivityType_' + data.id);
+                $(e).find('#divOutput_ActivityType_').attr('id', 'divOutput_ActivityType_' + data.id);
+                $(e).find('#spanActivityType_').attr('id', 'spanActivityType_' + data.id);
+
+                $('#divInput_ActivityType_' + data.id).hide();
+                $('#spanActivityType_' + data.id).text(data.activityType);
+                $('#divOutput_UserType_' + data.id).show();
+
+                //ICOType
+                $(e).find('#divInput_ICOType_').attr('id', 'divInput_ICOType_' + data.id);
+                $(e).find('#hidICOTypeId_').attr('id', 'hidICOTypeId_' + data.id);
+                $(e).find('#inputICOType_').attr('id', 'inputICOType_' + data.id);
+                $(e).find('#divOutput_ICOType_').attr('id', 'divOutput_ICOType_' + data.id);
+                $(e).find('#spanICOType_').attr('id', 'spanICOType_' + data.id);
+
+                $('#divInput_ICOType_' + data.id).hide();
+                $('#spanICOType_' + data.id).text(data.icoTypeTitle);
+                $('#divOutput_UserType_' + data.id).show();
+
+                //CountH
+                $(e).find('#divInput_CountH_').attr('id', 'divInput_CountH_' + data.id);
+                $(e).find('#inputCountH_').attr('id', 'inputCountH_' + data.id);
+                $(e).find('#divOutput_CountH_').attr('id', 'divOutput_CountH_' + data.id);
+                $(e).find('#spanCountH_').attr('id', 'spanCountH_' + data.id);
+
+                $('#divInput_CountH_' + data.id).hide();
+                $('#spanCountH_' + data.id).text(data.countH);
+                $('#divOutput_CountH_' + data.id).show();
+
+                //PriceH
+                $(e).find('#divInput_PriceH_').attr('id', 'divInput_PriceH_' + data.id);
+                $(e).find('#inputPriceH_').attr('id', 'inputPriceH_' + data.id);
+                $(e).find('#divOutput_PriceH_').attr('id', 'divOutput_PriceH_' + data.id);
+                $(e).find('#spanPriceH_').attr('id', 'spanPriceH_' + data.id);
+
+                $('#divInput_PriceH_' + data.id).hide();
+                $('#spanPriceH_' + data.id).text(data.priceH);
+                $('#divOutput_CountH_' + data.id).show();
+
+                //CostH
+                $(e).find('#divInput_CostH_').attr('id', 'divInput_CostH_' + data.id);
+                $(e).find('#inputCostH_').attr('id', 'inputCostH_' + data.id);
+                $(e).find('#divOutput_CostH_').attr('id', 'divOutput_CostH_' + data.id);
+                $(e).find('#spanCostH_').attr('id', 'spanCostH_' + data.id);
+
+                $('#divInput_CostH_' + data.id).hide();
+                $('#spanCostH_' + data.id).text(data.priceH);
+                $('#divOutput_CostH_' + data.id).show();
+
+                //CountNH
+                $(e).find('#divInput_CountNH_').attr('id', 'divInput_CountNH_' + data.id);
+                $(e).find('#inputCountNH_').attr('id', 'inputCountNH_' + data.id);
+                $(e).find('#divOutput_CountNH_').attr('id', 'divOutput_CountH_' + data.id);
+                $(e).find('#spanCountNH_').attr('id', 'spanCountNH_' + data.id);
+
+                $('#divInput_CountNH_' + data.id).hide();
+                $('#spanCountNH_' + data.id).text(data.countNH);
+                $('#divOutput_CountNH_' + data.id).show();
+
+                //PriceNH
+                $(e).find('#divInput_PriceNH_').attr('id', 'divInput_PriceNH_' + data.id);
+                $(e).find('#inputPriceNH_').attr('id', 'inputPriceNH_' + data.id);
+                $(e).find('#divOutput_PriceNH_').attr('id', 'divOutput_PriceNH_' + data.id);
+                $(e).find('#spanPriceNH_').attr('id', 'spanPriceNH_' + data.id);
+
+                $('#divInput_PriceNH_' + data.id).hide();
+                $('#spanPriceNH_' + data.id).text(data.priceH);
+                $('#divOutput_CountNH_' + data.id).show();
+
+                //CostNH
+                $(e).find('#divInput_CostNH_').attr('id', 'divInput_CostNH_' + data.id);
+                $(e).find('#inputCostNH_').attr('id', 'inputCostNH_' + data.id);
+                $(e).find('#divOutput_CostNH_').attr('id', 'divOutput_CostNH_' + data.id);
+                $(e).find('#spanCostNH_').attr('id', 'spanCostNH_' + data.id);
+
+                $('#divInput_CostNH_' + data.id).hide();
+                $('#spanCostNH_' + data.id).text(data.costNH);
+                $('#divOutput_CostNH_' + data.id).show();
+
+                //CostNH
+                $(e).find('#divInput_TotalCount_').attr('id', 'divInput_TotalCount_' + data.id);
+                $(e).find('#inputTotalCount_').attr('id', 'inputTotalCount_' + data.id);
+                $(e).find('#divOutput_TotalCount_').attr('id', 'divOutput_TotalCount_' + data.id);
+                $(e).find('#spanTotalCount_').attr('id', 'spanTotalCount_' + data.id);
+
+                $('#divInput_TotalCount_' + data.id).hide();
+                $('#spanTotalCount_' + data.id).text(data.totalCount);
+                $('#divOutput_TotalCount_' + data.id).show();
+
+                //TotalCost
+                $(e).find('#divInput_TotalCost_').attr('id', 'divInput_TotalCost_' + data.id);
+                $(e).find('#inputTotalCost_').attr('id', 'inputTotalCost_' + data.id);
+                $(e).find('#divOutput_TotalCost_').attr('id', 'divOutput_TotalCost_' + data.id);
+                $(e).find('#spanTotalCost_').attr('id', 'spanTotalCost_' + data.id);
+
+                $('#divInput_TotalCost_' + data.id).hide();
+                $('#spanTotalCost_' + data.id).text(data.totalCost);
+                $('#divOutput_TotalCost_' + data.id).show();
+
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        resetTableBackColor("my-table");
+
+        let usertypeid = $('#inputUserType_').val();
+        FillDropDown(usertypeid);
+        
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(IncomeCurrentOperationalController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    alert(data.message);
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+    function RelatedDropDown(e, event) {
+        let activityType = event.target.value;
+        FillDropDown(activityType);
+    }
+
+    function FillDropDown(at, selectval = null) {
+
+        let acType = acivtityType_source[at];
+        if (acType != 'Water') {
+            key = 'Waste';
+        }
+
+        $.ajax({
+            url: '@Url.Action("GetICOTypeAsync")',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'key': key
+                }
+        }).done(function (data) {
+            var options = $('.selectICOType');
+            options.empty();
+            $.each(data,
+                function (i, item) {
+                    options.append($('<option />')
+                        .val(item.id)
+                        .text(item.title));
+                });
+            if (selectval != null) {
+                options.val(selectval);
+            }
+        }).fail(function (error) {
+            alert(error);
+        });
+    }
+
+
+</script>
