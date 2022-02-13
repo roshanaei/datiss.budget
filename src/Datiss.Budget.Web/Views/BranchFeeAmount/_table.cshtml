@@ -182,7 +182,7 @@
                 </td>
             </tr>
             @foreach (var item in Model.Items)
-                {
+            {
                 <tr id="row_@item.Id">
                     <td>
                         <div id="divInput_Year_@item.Id" style="display: none">
@@ -333,109 +333,67 @@
                             <i class="fa ft-x-square"></i>
                         </a>
                     </td>
-                 </tr>
-                }
+                </tr>
+            }
         </tbody>
     </table>
 </div>
-        @*<tfoot style="background-color: #eee; font-size: 9px;">
-                <tr>
-                    <td>کل رکوردها: @Model.TotalCount</td>
-                    <td colspan="4">صفحه @Model.PageNumber از @if (Model.PagesCount == 0) {<span>1</span>} else {<span>@Model.PagesCount</span>}
-                    </td>
-                </tr>
-            </tfoot>*@
-   
-    <div class="rowACJSB" style="margin-top:20px">
-        <!--Tools-->
-        <div class="rowACJS">
-            <form id="toolForm"
-                  enctype="multipart/form-data"
-                  method="post"
-                  asp-antiforgery="true">
-                <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
-                <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+@*<tfoot style="background-color: #eee; font-size: 9px;">
+        <tr>
+            <td>کل رکوردها: @Model.TotalCount</td>
+            <td colspan="4">صفحه @Model.PageNumber از @if (Model.PagesCount == 0) {<span>1</span>} else {<span>@Model.PagesCount</span>}
+            </td>
+        </tr>
+    </tfoot>*@
 
-                @*<input asp-for="ExcelFile" type="file" />*@
-                <span data-toggle="modal" data-target="#backdrop">
-                    <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                        <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
-                    </button>
-                </span>
-                <span data-toggle="modal" data-target="#CopyModal">
-                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
-                        <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
-                    </button>
-                </span>
-                <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+            @*<input asp-for="ExcelFile" type="file" />*@
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
                 </button>
-                @*<span data-toggle="modal" data-target="#CalculationModal">
-                        <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
-                            <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                        </button>
-                    </span>*@
-                <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
                 </button>
-            </form>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            @*<span data-toggle="modal" data-target="#CalculationModal">
+                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                        <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                    </button>
+                </span>*@
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </button>
+        </form>
 
-        </div>
+    </div>
 
-        <div class="rowAC">
-            <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
-            <div class="my-font ml-2">
-                (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
-                <b class="font-medium-2">@if (Model.PagesCount == 0)
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">
+            (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
+            <b class="font-medium-2">
+                @if (Model.PagesCount == 0)
                 {<span>1</span>}
                 else
-                {<span>@Model.PagesCount</span>}</b>)
-            </div>
+                {<span>@Model.PagesCount</span>}
+            </b>)
         </div>
-        @if (Model.PagesCount > 1)
-        {
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    @if (Model.PageNumber > 1)
-                    {
-                        <li class="page-item">
-                            <a class="page-link"
-                               asp-controller="@BranchFeeAmountController.Name"
-                               asp-action="@BranchFeeAmountController.ACTION_Index"
-                               asp-route-page="@Model.PreviousPage"
-                               aria-label="Previous">«</a>
-                        </li>
-                    }
-
-                    @for (int i = 1; i <= Model.PagesCount; i++)
-                    {
-                        if (i == Model.PageNumber)
-                        {
-                            <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
-                        }
-                        else
-                        {
-                            <li class="page-item">
-                                <a class="page-link"
-                                   asp-controller="@BranchFeeAmountController.Name"
-                                   asp-action="@BranchFeeAmountController.ACTION_Index"
-                                   asp-route-page="@i">@i.ToString() </a>
-                            </li>
-                        }
-                    }
-
-                    @if (Model.PageNumber < Model.PagesCount)
-                    {
-                        <li class="page-item">
-                            <a class="page-link"
-                               asp-controller="@BranchFeeAmountController.Name"
-                               asp-action="@BranchFeeAmountController.ACTION_Index"
-                               asp-route-page="@Model.NextPage"
-                               aria-label="Next">»</a>
-                        </li>
-                    }
-
-                </ul>
-            </nav>
-        }
     </div>
+    <!--Pagination-->
+    <vc:pager model="Model.ToPager()" controller-name="@BranchFeeAmountController.Name" action-name="@BranchFeeAmountController.ACTION_Index"></vc:pager>
+</div>
