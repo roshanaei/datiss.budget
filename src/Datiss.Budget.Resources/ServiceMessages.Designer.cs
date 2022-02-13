@@ -259,6 +259,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد عنوان &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidNOICType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidNOICType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد &quot;{1}&quot; معتبر نیست ..
         /// </summary>
         public static string ImportExcelInvalidTitle {
@@ -300,6 +309,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelLogicError {
             get {
                 return ResourceManager.GetString("ImportExcelLogicError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelNOICOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelNOICOrgNotInExcel", resourceCulture);
             }
         }
         
@@ -435,6 +453,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_InputDisableYearData {
             get {
                 return ResourceManager.GetString("Logic_InputDisableYearData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات عنوان {0} برای &quot;{1}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_NOICOrgDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_NOICOrgDuplicate", resourceCulture);
             }
         }
         

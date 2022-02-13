@@ -1,13 +1,13 @@
 ﻿@model ReportDisplayViewModel
 @{
-    ViewData["Title"] = $"گزاش {Model.Report.Title}";
+    ViewData["Title"] = $"{Model.Report.Title}";
 }
 <!--Title-->
 <div class="row">
     <div class="col-12">
         <div class="content-header">
-            <i class="ft-settings mr-1"></i>
-            <span class="my-font-bold">@ViewData["Title"]</span>
+            <i class="fa fa-print mr-1"></i>
+            <span class="my-font">@ViewData["Title"]</span>
         </div>
     </div>
 </div>
@@ -30,53 +30,82 @@
                                 data-ajax-success="waiting('body', 'hide');"
                                 data-ajax-failure="dataAjaxFailure"
                                 data-ajax-update="#viewer">*@
-                            <form id="my-form">
+                        <form id="my-form">
                             <input name="Id" type="hidden" value="@Model.Report.Id" />
-                            <div class="form-row">
-                                <div class="col-md-6 col-12">
-                                    <h5>
-                                       <i class="fa fa-bookmark"></i>
-                                        پارامترهای گزارش
-                                    </h5>
-                                    @foreach(var p in Model.Report.Params) {
-                                        <div class="form-group">
-                                            <label class="control-label my-font">
-                                                @p.Title
-                                            </label>
-
-                                            @if(p.ParamType == ReportParamType.Year) {
-                                                <select name="@p.Name" class="form-control my-font" asp-items="Model.YearSource">
-                                                </select>
-                                            }
-                                            else if(p.ParamType == ReportParamType.Organization) {
-                                                <select name="@p.Name" class="form-control my-font" asp-items="Model.OrganizationSource">
-                                                </select>
-                                            }
-                                            else if(p.ParamType == ReportParamType.County) {
-                                                <select name="@p.Name" class="form-control my-font" asp-items="Model.CountySource">
-                                                </select>
-                                            }
-                                            else if(p.ParamType == ReportParamType.City) {
-                                                <select name="@p.Name" class="form-control my-font" asp-items="Model.CitySource">
-                                                </select>
-                                            }
-                                            else if(p.ParamType == ReportParamType.Village) {
-                                                <select name="@p.Name" class="form-control my-font" asp-items="Model.VillageSource">
-                                                </select>
-                                            }
+                            <div class="form">
+                                <div class="col-md-12 col-12">
+                                    <div class="rowACJSB">
+                                        <h5>
+                                            <i class="fa fa-bookmark tab-content"></i>
+                                            پارامترهای گزارش
+                                        </h5>
+                                        <input type="hidden" name="show_report" value="@Model.DisplayReport" />
+                                        <div class="col-md-12 col-12 rowACJE ">
+                                            <button id="btnReport"
+                                                    type="submit"
+                                                    form="my-form"
+                                                    class="btn  bg-info bg-light-info my-font mr-1"
+                                                    style="left: 40px;">
+                                                <i class="fa fa-bolt"></i> نمایش
+                                            </button>
+                                            <a data-toggle="tooltip" data-placement="top" title=" بازگشت به لیست گزارش" href="/Report" name="btnReportList" class="btn btn-warning bg-light-warning mr-1 my-font">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-th-list"></i>
+                                            </a>
+                                        </div>
                                     </div>
-                                
-                                }
+                                    <div class="col-md-6 col-12">
+
+                                        @foreach (var p in Model.Report.Params)
+                                        {
+                                            <div class="form-group">
+                                                <label class="control-label my-font">
+                                                    @p.Title
+                                                </label>
+
+                                                @if (p.ParamType == ReportParamType.Year)
+                                                {
+                                                    <select name="@p.Name" class="form-control my-font-light" asp-items="Model.YearSource">
+                                                    </select>
+                                                }
+                                                else if (p.ParamType == ReportParamType.Organization)
+                                                {
+                                                    <select name="@p.Name" class="form-control my-font" asp-items="Model.OrganizationSource">
+                                                    </select>
+                                                }
+                                                else if (p.ParamType == ReportParamType.County)
+                                                {
+                                                    <select name="@p.Name" class="form-control my-font" asp-items="Model.CountySource">
+                                                    </select>
+                                                }
+                                                else if (p.ParamType == ReportParamType.City)
+                                                {
+                                                    <select name="@p.Name" class="form-control my-font" asp-items="Model.CitySource">
+                                                    </select>
+                                                }
+                                                else if (p.ParamType == ReportParamType.Village)
+                                                {
+                                                    <select name="@p.Name" class="form-control my-font" asp-items="Model.VillageSource">
+                                                    </select>
+                                                }
+                                            </div>
+
+                                        }
+                                    </div>
+                                    </div>
+
                                 </div>
-                                <input type="hidden" name="show_report" value="@Model.DisplayReport" />
-                                <div class="col-md-6 col-12">
-                                    <button id="btnReport" 
-                                            type="submit" 
-                                            form="my-form" 
-                                            class="btn btn-success my-font" 
-                                            style="left: 40px;">
-                                        <i class="fa fa-bolt"></i> گزارش
-                                    </button>
+                            <hr />
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            @*<h5>گزارش</h5>*@
+                                            <div id="viewer" class="col-md-12" style="padding: 0px; direction: ltr; height: 800px;">
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -87,18 +116,18 @@
         </div>
     </div>
 
-    <div class="row">
+    <!--<div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-content">
-                    <h5>گزارش</h5>
-                    <div id="viewer" class="col-md-12" style="padding: 0px; direction: ltr; height: 800px;">
+                <div class="card-content">-->
+                    @*<h5>گزارش</h5>*@
+                    <!--<div id="viewer" class="col-md-12" style="padding: 0px; direction: ltr; height: 800px;">
 
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
     
 </section>
 

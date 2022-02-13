@@ -1,16 +1,14 @@
-﻿@model CofficientIndexViewModel
+﻿@model IncomeCurrentNOperationalIndexViewModel
 <div class="table-responsive">
-
-    <input id="GroupName" value="@Model.Filter.GroupName" type="hidden"/>
-
     <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
         <thead class="thead-light">
             <tr>
                 <th>سال</th>
                 <th>سازمان</th>
-                <th>عنوان ضریب</th>
-                <th>ضریب</th>
+                <th>عنوان</th>
+                <th>درآمد</th>
                 <th>مدیریت</th>
+
             </tr>
         </thead>
         <tbody>
@@ -43,21 +41,21 @@
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_CofficientType_">
-                        <input id="hidCofficientTypeId_" type="hidden" />
-                        <select class="form-control" id="inputCofficientType_" asp-items="Model.CofficientTypeSource">
+                    <div id="divInput_NOICType_">
+                        <input id="hidNOICTypeId_" type="hidden" />
+                        <select class="form-control" id="inputNOICType_" asp-items="Model.NOICTypeSource">
                         </select>
                     </div>
-                    <div id="divOutput_CofficientType_" style="display: none">
-                        <span id="spanCofficientType_"> </span>
+                    <div id="divOutput_NOICType_" style="display: none">
+                        <span id="spanNOICType_"> </span>
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_Fee_">
-                        <input class="form-control default-input" id="inputFee_" type="number" min="0" />
+                    <div id="divInput_NOICPrice_">
+                        <input class="form-control default-input" id="inputNOICPrice_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_Fee_" style="display: none">
-                        <span id="spanFee_"> </span>
+                    <div id="divOutput_NOICPrice_" style="display: none">
+                        <span id="spanNOICPrice_"> </span>
                     </div>
                 </td>
                 <td>
@@ -118,24 +116,24 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_CofficientType_@item.Id" style="display: none">
-                            <input id="hidCofficientTypeId_@item.Id" type="hidden" value="@item.CofficientTypeId" />
-                            <select class="form-control selectCofficientType" id="inputCofficientType_@item.Id" asp-items="Model.CofficientTypeSource">
+                        <div id="divInput_NOICType_@item.Id" style="display: none">
+                            <input id="hidNOICTypeId_@item.Id" type="hidden" value="@item.NOICTypeId" />
+                            <select class="form-control selectDWaterType" id="inputNOICType_@item.Id" asp-items="Model.NOICTypeSource">
                             </select>
                             <script>
-                                $('select#inputCofficientType_' + @item.Id + ' option[value=' + @item.CofficientTypeId + ']').attr('selected', true);
+                                $('select#inputNOICType_' + @item.Id + ' option[value=' + @item.NOICTypeId + ']').attr('selected', true);
                             </script>
                         </div>
-                        <div id="divOutput_CofficientType_@item.Id">
-                            <span id="spanCofficientType_@item.Id">@item.CofficientTypeTitle </span>
+                        <div id="divOutput_NOICType_@item.Id">
+                            <span id="spanNOICType_@item.Id">@item.NOICTypeDisplay </span>
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_Fee_@item.Id" style="display: none">
-                            <input class="form-control" id="inputFee_@item.Id" value="@item.Fee" type="number" />
+                        <div id="divInput_NOICPrice_@item.Id" style="display: none">
+                            <input class="form-control" id="inputNOICPrice_@item.Id" value="@item.NOICPrice" type="number" />
                         </div>
-                        <div id="divOutput_Fee_@item.Id">
-                            <span id="spanFee_@item.Id">@item.FeeDisplay </span>
+                        <div id="divOutput_NOICPrice_@item.Id">
+                            <span id="spanNOICPrice_@item.Id">@item.NOICPriceDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -202,6 +200,102 @@
             </div>
         </div>
         <!--Pagination-->
-        <vc:pager model="Model.ToPager()" controller-name="@CofficientController.Name" action-name="@CofficientController.ACTION_Index"></vc:pager>
+        @if (Model.PagesCount > 1)
+        {
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    @if (Model.PageNumber > 1)
+                    {
+                        @if (Model.LimitNumber > 1 && Model.TotalLimit > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link"
+                                   asp-controller="@IncomeCurrentNOperationalController.Name"
+                                   asp-action="@IncomeCurrentNOperationalController.ACTION_Index"
+                                   asp-route-page="@Model.StartPage">
+                                    <i _ngcontent-dpj-c129="" class="ft ft-chevrons-right"></i>
+                                </a>
+                            </li>
+                        }
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-controller="@IncomeCurrentNOperationalController.Name"
+                               asp-action="@IncomeCurrentNOperationalController.ACTION_Index"
+                               asp-route-page="@Model.PreviousPage"
+                               aria-label="Previous">
+                                <i _ngcontent-dpj-c129="" class="ft ft-arrow-right"></i>
+                            </a>
+                        </li>
+
+                    }
+                    @if (Model.LimitNumber == Model.TotalLimit && Model.TotalLimit > 1)
+                    {
+                        @for (int j = Model.PageLimit - 1; j >= 0; j--)
+                        {
+                            if (Model.PagesCount - j == Model.PageNumber)
+                            {
+                                <li class="page-item active"><a class="page-link" href="#">@((Model.PagesCount - j).ToString()) </a></li>
+                            }
+                            else
+                            {
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       asp-controller="@IncomeCurrentNOperationalController.Name"
+                                       asp-action="@IncomeCurrentNOperationalController.ACTION_Index"
+                                       asp-route-page="@(Model.PagesCount - j)">@((Model.PagesCount - j).ToString()) </a>
+                                </li>
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        @for (int i = ((Model.LimitNumber - 1) * Model.PageLimit) + 1; i <= (Model.LimitNumber * Model.PageLimit) && i <= Model.PagesCount; i++)
+                        {
+
+                            if (i == Model.PageNumber)
+                            {
+                                <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                            }
+                            else
+                            {
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       asp-controller="@IncomeCurrentNOperationalController.Name"
+                                       asp-action="@IncomeCurrentNOperationalController.ACTION_Index"
+                                       asp-route-page="@i">@i.ToString() </a>
+                                </li>
+                            }
+
+                        }
+                    }
+
+                    @if (Model.PageNumber < Model.PagesCount)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-controller="@IncomeCurrentNOperationalController.Name"
+                               asp-action="@IncomeCurrentNOperationalController.ACTION_Index"
+                               asp-route-page="@Model.NextPage"
+                               aria-label="Next">
+                                <i _ngcontent-dpj-c129="" class="ft ft-arrow-left"></i>
+                            </a>
+                        </li>
+                        @if (Model.LimitNumber < Model.TotalLimit && Model.TotalLimit > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link"
+                                   asp-controller="@IncomeCurrentNOperationalController.Name"
+                                   asp-action="@IncomeCurrentNOperationalController.ACTION_Index"
+                                   asp-route-page="@Model.PagesCount">
+                                    <i _ngcontent-dpj-c129="" class="ft ft-chevrons-left"></i>
+                                </a>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </nav>
+        }
     </div>
 </div>
