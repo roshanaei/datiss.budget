@@ -206,22 +206,17 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task<ValidationResult> CalculationAsync(int yearId, int organizationId ,int sectionId)
+        public async Task<ValidationResult> CalculationAsync(int yearId, int organizationId)
         {
             List<SqlParameter> sqlParams = new List<SqlParameter>
             {
                 new SqlParameter("YearId", yearId),
-                new SqlParameter("OrganizationId", organizationId),
-                new SqlParameter("SectionId", sectionId)
+                new SqlParameter("OrganizationId", organizationId)
             };
 
-            //result.Add(new CalculationItemData
-            //{
-            //    Key = "WasteSalesSplit_Cal1",
-            //    Value = await _uow.ExecuteScalar<int>(
-            //                        "[dbo].[WasteSalesSplit_Cal1] @YearId, @OrganizationId",
-            //                        parameters: sqlParams.ToArray())
-            //});
+            await _uow.ExecuteScalar<ValidationResult>(
+                                    "[dbo].[CurrentIncomeReport_Calculation] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray());
 
 
             return ValidationResult.Success();

@@ -381,7 +381,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(IncomeCurrentReportController.ACTION_Index)';
+                                document.location.href = '@Url.Action(IncomeCurrentReportController.ACTION_Index, new { page = 1 })';
                             });
                         },
                         error: function(request, option, err) {
@@ -407,7 +407,7 @@
             $('#ExcellModal').modal('show');
         }
 
-    $(document).on('click', '.edit-row', function () {
+        $(document).on('click', '.edit-row', function () {
 
             resetDataColumns()
             let id = $(this).data('id');
@@ -488,8 +488,7 @@
 
             $.ajax({
                 type: 'POST',
-                //check
-                url: '@Url.Action()',
+                url: '@Url.Action(IncomeCurrentReportController.ACTION_Calculation)',
                 data: model,
                 success: function (data, status, settings) {
                     $('#divCalc').html('');
@@ -518,9 +517,7 @@
             $(".olvy").css("display", "block");
 
             $.ajax({
-                                //check
-
-                url: '@Url.Action()',
+                url: '@Url.Action(IncomeCurrentReportController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
@@ -567,9 +564,7 @@
                                 $(".olvy").css("display", "block");
 
                                 $.ajax({
-                                                    //check
-
-                                    url: '@Url.Action()',
+                                    url: '@Url.Action(IncomeCurrentReportController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
@@ -603,9 +598,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                           }).then(function (result) {
-                                                                //check
-
-                                                document.location.href = '@Url.Action()';
+                                                document.location.href = '@Url.Action(IncomeCurrentReportController.ACTION_ImportExcel)';
                                             });
                                         }
 

@@ -236,10 +236,9 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var result = await _incomeCurrentReportService.CalculationAsync(
-                model.YearId,
-                model.OrganizationId,
-                sectionId);
+            await _incomeCurrentReportService.CalculationAsync(
+                        model.YearId,
+                        model.OrganizationId);
 
             return RedirectToAction("Index");
         }
@@ -383,14 +382,15 @@ namespace Datiss.Budget.Web.Controllers
             foreach (var org in organizations)
             {
                 //Water
-                sectionTypes.Where(sec => sec.ConstantKey.ToUpper().Contains(ConstantKeys.__CIRWater.ToUpper()))
+                sectionTypes.Where(sec => sec.ConstantKey.ToUpper().Contains(ConstantKeys.__CIRWater.ToUpper()) &&
+                                          sec.Status == EntityStatus.Enabled)
                     .ToList()
-                    .ForEach(sec => items.AddRange(unitTypes/*.Where(x => x.ConstantKey.ToUpper().Contains(sec.ConstantKey.Trim('.').ToUpper()))*/
+                    .ForEach(sec => items.AddRange(unitTypes.Where(x => x.ConstantKey.ToUpper().Contains(sec.ConstantKey.Replace(".", "").ToUpper()))
                                         .Select(unit => new IncomeCurrentReportDTO
                                         {
                                             SectionTypeDisplay = sec.Title,
                                             SectionTypeId = sec.Id,
-                                            UnitTypeDisplay = sec.Title,
+                                            UnitTypeDisplay = unit.Title,
                                             UnitTypeId = unit.Id,
                                             OrganizationId = org.Id,
                                             OrganizationDisplay = org.Title,
@@ -399,38 +399,41 @@ namespace Datiss.Budget.Web.Controllers
                                             Activity = ActivityType.Water,
                                         }).ToList())
                     );
-                ////Waste
-                //sectionTypes.Where(ut => ut.ConstantKey.ToUpper().Contains(ConstantKeys.__CIRWaste.ToUpper()))
-                //    .ToList()
-                //    .ForEach(ut => items.AddRange(nhouseUsagelayer
-                //                        .Select(hul => new IncomeCurrentReportDTO
-                //                        {
-                //                            UserTypeTitle = ut.Title,
-                //                            UserTypeId = ut.Id,
-                //                            UsageLayerTitle = hul.Title,
-                //                            UsageLayerId = hul.Id,
-                //                            OrganizationId = org.Id,
-                //                            OrganizationDisplay = org.Title,
-                //                            Year = year.Year,
-                //                            YearId = year.Id
-                //                        }).ToList())
-                //    );
-                ////Other
-                //sectionTypes.Where(ut => ut.ConstantKey.ToUpper().Contains(ConstantKeys.__CIROther.ToUpper()))
-                //    .ToList()
-                //    .ForEach(ut => items.AddRange(nhouseUsagelayer
-                //        .Select(hul => new IncomeCurrentReportDTO
-                //        {
-                //            UserTypeTitle = ut.Title,
-                //            UserTypeId = ut.Id,
-                //            UsageLayerTitle = hul.Title,
-                //            UsageLayerId = hul.Id,
-                //            OrganizationId = org.Id,
-                //            OrganizationDisplay = org.Title,
-                //            Year = year.Year,
-                //            YearId = year.Id
-                //        }).ToList())
-                //    );
+                //Waste
+                sectionTypes.Where(sec => sec.ConstantKey.ToUpper().Contains(ConstantKeys.__CIRWaste.ToUpper()) &&
+                                          sec.Status == EntityStatus.Enabled)
+                    .ToList()
+                    .ForEach(sec => items.AddRange(unitTypes.Where(x => x.ConstantKey.ToUpper().Contains(sec.ConstantKey.Replace(".", "").ToUpper()))
+                                        .Select(unit => new IncomeCurrentReportDTO
+                                        {
+                                            SectionTypeDisplay = sec.Title,
+                                            SectionTypeId = sec.Id,
+                                            UnitTypeDisplay = unit.Title,
+                                            UnitTypeId = unit.Id,
+                                            OrganizationId = org.Id,
+                                            OrganizationDisplay = org.Title,
+                                            Year = year.Year,
+                                            YearId = year.Id,
+                                            Activity = ActivityType.Waste,
+                                        }).ToList())
+                    );
+                //Other
+                sectionTypes.Where(sec => sec.ConstantKey.ToUpper().Contains(ConstantKeys.__CIROther.ToUpper()) &&
+                                          sec.Status == EntityStatus.Enabled)
+                    .ToList()
+                    .ForEach(sec => items.AddRange(unitTypes.Where(x => x.ConstantKey.ToUpper().Contains(sec.ConstantKey.Replace(".", "").ToUpper()))
+                                        .Select(unit => new IncomeCurrentReportDTO
+                                        {
+                                            SectionTypeDisplay = sec.Title,
+                                            SectionTypeId = sec.Id,
+                                            UnitTypeDisplay = unit.Title,
+                                            UnitTypeId = unit.Id,
+                                            OrganizationId = org.Id,
+                                            OrganizationDisplay = org.Title,
+                                            Year = year.Year,
+                                            YearId = year.Id
+                                        }).ToList())
+                    );
             }
 
             using var workbook = items.GetImportTemplate(year.Year);

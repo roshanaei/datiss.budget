@@ -18,7 +18,7 @@ namespace Datiss.Budget.Services
         Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
         Task<PagedResult<IncomeCurrentReportDTO>> GetListAsync(IncomeCurrentReportFilterDTO filter);
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
-        Task<ValidationResult> CalculationAsync(int yearId, int organizationId, int sectionId);
+        Task<ValidationResult> CalculationAsync(int yearId, int organizationId);
         Task<IEnumerable<IncomeCurrentReportDTO>> GetExportItemsAsync(int yearId, int organizationId);
         Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
     }
