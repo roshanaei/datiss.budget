@@ -1,0 +1,711 @@
+﻿@model IncomeCurrentNOperationalIndexViewModel
+@{ ViewData["Title"] = "تعرفه نصب انشعاب آب"; }
+
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+
+                @if (ViewData["message"] != null)
+                {
+                    <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                        </button>
+                        <span>@ViewData["message"]</span>
+                    </div>
+                }
+
+                <div class="card-content">
+                    <div class="card-body">
+                        <!--Filters-->
+                        <form method="post"
+                              id="filterForm"
+                              asp-controller="@IncomeCurrentNOperationalController.Name"
+                              asp-action="@IncomeCurrentNOperationalController.ACTION_Index"
+                              asp-antiforgery="true">
+                            <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
+                            <div class="rowACJSB">
+                                <fieldset class="form-group mt-3">
+                                    <label asp-for="Filter.YearId" class="my-font">
+                                        سال:
+                                        <select asp-for="Filter.YearId"
+                                                asp-items="Model.Filter.YearSource"
+                                                class="form-control d-inline-block width-100"
+                                                id="yearId">
+                                        </select>
+                                    </label>
+                                    <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
+                                        سازمان:
+                                        <select asp-for="Filter.OrganizationId"
+                                                asp-items="Model.Filter.OrganizationSource"
+                                                class="form-control d-inline-block width-300"
+                                                id="organizationId">
+                                        </select>
+                                    </label>
+                                    <input asp-for="Filter.OrderBy" type="hidden" />
+                                    <input asp-for="Filter.OrderDesc" type="hidden" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="rowACJE">
+
+                                        <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+                                        </button>
+                                        <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                        </button>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <hr />
+                            <fieldset class="form-group position-relative has-icon-left">
+                                <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
+                                <div class="form-control-position">
+                                    <i class="ft-search font-medium-4"></i>
+                                </div>
+                            </fieldset>
+                            <!--SearchBox-->
+                            <div class="rowACJSB">
+                                <div class="d-flex flex-row-reverse align-items-center">
+
+                                    <fieldset class="form-group" style="margin-right:20px">
+                                        <label class="my-font rowAC">
+                                            <span>نمایش</span>
+
+                                            <select asp-for="Filter.PageSize"
+                                                    style="margin-right:10px"
+                                                    class="form-control"
+                                                    onchange="changePageSize();"
+                                                    id="ddlPageSize">
+                                                <option>10</option>
+                                                <option>20</option>
+                                                <option>30</option>
+                                            </select>
+                                            <span style="margin-right:10px">رکورد</span>
+
+                                        </label>
+
+                                    </fieldset>
+                                    @* drop down menu *@
+
+                                    <div class="btn-group dropdown form-group">
+                                        <button type="button"
+                                                class="btn btn-light my-font dropdown-toggle"
+                                                data-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                            ستون ها
+                                        </button>
+                                        <div class="dropdown-menu" style="width:150%">
+                                            <div id="columnSelector">
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-1"
+                                                               id="col-1" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-1"><span>سال</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-2"
+                                                               id="col-2" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-2"><span>سازمان</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-3"
+                                                               id="col-3" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-3"><span>قطر انشعاب</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-4"
+                                                               id="col-4" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-4"><span>تعرفه نصب انشعاب</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <fieldset>
+                                    <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
+                                        </button>
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@IncomeCurrentNOperationalController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
+                                        </a>
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
+                                           asp-asp-controller="@IncomeCurrentNOperationalController.Name"
+                                           asp-action="@IncomeCurrentNOperationalController.ACTION_GetExcelTemplate"
+                                           asp-route-yearId="@Model.Filter.YearId"
+                                           asp-route-orgId="@Model.Filter.OrganizationId">
+                                            <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
+                                        </a>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                        </form>
+                        <!--DataTable-->
+                        <partial name="_table" model="Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section headSection {
+    <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
+}
+
+@section footSection {
+    <div id="divCopy">
+
+    </div>
+
+    <partial name="_excelModal" model="new ImportExcelViewModel()" />
+
+    <partial name="_overlay" />
+
+
+    <div id="divCreate">
+
+    </div>
+
+
+
+    <div id="divCalc">
+
+    </div>
+
+    <partial name="_tableScript" />
+
+    <script type="text/javascript">
+        let allColumns = '1,2,3,4';
+        let columnIndices = allColumns.split(',');
+        console.log(columnIndices);
+        let showingColmuns = "1,2,3,4,";
+    </script>
+
+    @if (Model.Filter.Columns.IsNotNullOrEmpty())
+    {
+        <script type="text/javascript">
+            showingColmuns = '@Model.Filter.Columns' ;
+        </script>
+    }
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            console.log('ready');
+            //fill input hidden with initial columns showing
+            document.getElementById("hidColumns").value = showingColmuns;
+
+            setDataColumns();
+
+            $(".dropdown-menu").click(function (e) {
+                e.stopPropagation();
+            });
+
+            $("#columnSelector input:checkbox:checked").change(function () {
+                let index = parseInt($(this)[0].id.split('-')[1]);
+                console.log(`showing or hiding col : ${index}`);
+                let checked = $(this)[0].checked;
+                if (checked) {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                    showingColmuns = showingColmuns + `${index},`
+                    document.getElementById("hidColumns").value = showingColmuns ;
+                } else {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+                    showingColmuns = showingColmuns.replace(`${index},`, '');
+                    document.getElementById("hidColumns").value = showingColmuns;
+                }
+            });
+
+            $('#organizationId').select2({
+                dir: 'rtl'
+            });
+        });
+
+        function resetDataColumns() {
+            $('th,tr td').show();
+            let inputs = $("#columnSelector input:checkbox");
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].checked = true
+            }
+        }
+
+        function setDataColumns() {
+            let columnsToShow = document.getElementById("hidColumns").value.split(',');
+            console.log('ColumnsToShow ');
+            console.log(columnsToShow);
+            let checkBoxes = $("#columnSelector input:checkbox");
+            for(let i = 0; i < columnIndices.length; i++) {
+                let index = parseInt(columnIndices[i]);
+                let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
+                console.log(`Column : ${index} show = ${showColumn}`);
+                checkBoxes[i].checked = showColumn;
+                if(showColumn)
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                else
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+            }
+
+        }
+
+        function hardDelete(e) {
+            Swal.fire({
+                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
+                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
+                type: 'error',
+                showCancelButton: true,
+                //confirmButtonColor: '#2F8BE6',
+                animation: false,
+                customClass: 'animated flipInX',
+                //cancelButtonColor: '#F55252',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                cancelButtonClass:  'btn btn-outline-secondary mr-1 my-font',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.value) {
+                    let params = {};
+                    params.yearId = $('#yearId option:selected').val();
+                    params.orgId = $('#organizationId option:selected').val();
+                    console.log(params);
+                    let deleteUrl = '@Url.Action(IncomeCurrentNOperationalController.ACTION_DeleteRecords)';
+                    console.log(deleteUrl);
+
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'POST',
+                        data: params,
+                        success: function(data, status, settings) {
+                            console.log(status);
+                            if(data.hasError) {
+                                Swal.fire({
+                                    title: '<span class="my-font">خطا</span>',
+                                    html: `<span class="my-font">${data.message}</span>`,
+                                    type: 'error',
+                                    confirmButtonColor: '#2F8BE6',
+                                    animation: false,
+                                    customClass: 'animated flipInX',
+                                    confirmButtonText: 'بستن',
+                                    confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                                    buttonsStyling: false,
+                                });
+                                return;
+                            }
+
+                            Swal.fire({
+                                title: '<span class="my-font">عملیات موفق</span>',
+                                html: `<span class="my-font">${data.message}</span>`,
+                                type: 'success',
+                                confirmButtonColor: '#2F8BE6',
+                                animation: true,
+                                customClass: 'animated flipInX',
+                                confirmButtonText: 'بستن',
+                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                                buttonsStyling: false,
+                            }).then(function(result) {
+                                document.location.href = '@Url.Action(IncomeCurrentNOperationalController.ACTION_Index, new {  page = 1})';
+                            });
+                        },
+                        error: function(request, option, err) {
+                            if (request.status == 401 || request.status == 403) {
+                                ShowPermissionErorr();
+                                return;
+                            }
+                            ShowCommonErorr();
+                        }
+                    });
+
+                    return true;
+                }
+                else {
+
+                    return false;
+                }
+            });
+
+        }
+
+        function openImportExcelForm() {
+            $('#ExcellModal').modal('show');
+        }
+
+        $(window).keydown(function (event) {
+            if (event.altKey && event.keyCode == 78) {
+                addNewRow();
+            }
+        });
+
+        $(document).on('click', '#btnCreate', function () {
+            addNewRow();
+        });
+
+        $(document).on('click', '.edit-row', function () {
+            resetDataColumns()
+            let id = $(this).data('id');
+            let input = document.getElementById('inputWInstallFee_' + id);
+            let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
+
+            btnSaveEdit.addEventListener('click', function(event) {
+                event.preventDefault();
+                $(btnSaveEdit).attr('disabled', true);
+                $(btnSaveEdit).unbind('keyup');
+            });
+
+            input.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                // Number 13 is the "Enter" key on the keyboard
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
+            editRow(id);
+        });
+
+        $(document).on('click', '.delete-row', function () {
+            let id = $(this).data('id');
+            let btn = this;
+
+            Swal.fire({
+                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
+                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
+                type: 'error',
+                showCancelButton: true,
+                animation: false,
+                customClass: 'animated flipInX',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
+                buttonsStyling: false,
+            }).then(function(result) {
+                if(result.value) {
+                    deleteRow(btn, id);
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+        });
+
+        $(document).on('click', '.cancel-edit-row', function () {
+            let id = $(this).data('id');
+            cancelEditRow(id);
+        });
+
+        $(document).on('click', '.save-edit-row', function () {
+            let id = $(this).data('id');
+            $(this).prop('disabled', true);
+            saveEditRow(id);
+            $(this).prop('disabled', false);
+        });
+
+        $(document).on('click', '.save-new-row', function () {
+            $(this).attr('disabled', true);
+            let row = $(this).closest('tr');
+            saveNewRow(row);
+        });
+
+        $(document).on('click', '.cancel-new-row', function () {
+            cancelNewRow(this);
+        });
+
+        $(document).on('click', '.openCopy', function() {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action(IncomeCurrentNOperationalController.ACTION_Copy)',
+                success: function (data, status, settings) {
+                    $('#divCopy').html('');
+                    $("#divCopy").html(data);
+                    $('#CopyModal').modal('show');
+                    $('#CopyModal').on('hidden.bs.modal', function() {
+                        $('#divCopy').html('');
+                        $('.modal-backdrop').remove();
+                    });
+                },
+                error: function (request, options, err) {
+                    if (request.status == 401 || request.status == 403) {
+                        ShowPermissionErorr();
+                        return;
+                    }
+                    ShowCommonErorr();
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal', function() {
+                $('.modal-backdrop').remove();
+            });
+        });
+
+        $(document).on('click', '.calculation-button', function() {
+            let model = {};
+            model.yearId = $('#yearId').val();
+            model.organizationId = $('#organizationId').val();
+
+            console.log(model);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(IncomeCurrentNOperationalController.ACTION_Calculation)',
+                data: model,
+                success: function (data, status, settings) {
+                    $('#divCalc').html('');
+                    $('#divCalc').html(data);
+                    $('#CalculationModal').modal('show');
+                    $('#CalculationModal').on('hidden.bs.modal', function() {
+                        $('#divCalc').html('');
+                        $('.modal-backdrop').remove();
+                    });
+                },
+                error: function (request, options, err) {
+                    console.log(err);
+                    $('#divCalc').html('failed to load content.');
+                }
+            });
+        });
+
+        $(document).on('click', '#btnDoImportExcel', function() {
+            var fdata = new FormData();
+            var fileInput = $('#ExcelFile')[0];
+            var file = fileInput.files[0];
+            var yearId = $('#yearId').val();
+            fdata.append('ExcelFile', file);
+            fdata.append('yearId', yearId);
+
+            $(".olvy").css("display", "block");
+
+            $.ajax({
+                url: '@Url.Action(IncomeCurrentNOperationalController.ACTION_ImportExcel)',
+                type: 'POST',
+                data: fdata,
+                processData: false,
+                contentType: false,
+                success: function (data, status, settings) {
+                    console.log(data);
+
+                    $(".olvy").css("display", "none");
+                    if (data.hasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data.message}</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
+
+                    if (data.ask) {
+                        $(".olvy").css("display", "none");
+                        Swal.fire({
+                            html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
+                            //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            cancelButtonColor: '#F55252',
+                            cancelButtonText: 'خیر',
+                            confirmButtonText: 'بله',
+                            confirmButtonClass: 'btn btn-warning my-font',
+                            cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                            buttonsStyling: false,
+                        }).then(function (result) {
+
+                            if (result.value) {
+                                fdata.append('ContinueIfAnyOrgMissing', true);
+                                console.log(fdata);
+
+                                $(".olvy").css("display", "block");
+                                $.ajax({
+                                    url: '@Url.Action(IncomeCurrentNOperationalController.ACTION_ImportExcel)',
+                                    type: 'POST',
+                                    data: fdata,
+                                    processData: false,
+                                    contentType: false,
+                                    success: function (data, status, settings) {
+                                        if (data.hasError) {
+                                            Swal.fire({
+                                                title: '<span class="my-font">خطا</span>',
+                                                html: `<span class="my-font">${data.message}</span>`,
+                                                type: 'error',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: false,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                                                buttonsStyling: false,
+                                            });
+                                            return;
+                                        }
+
+                                        if (!data.hasError) {
+                                            $(".olvy").css("display", "none");
+                                            Swal.fire({
+                                                title: '<span class="my-font">عملیات موفق</span>',
+                                                html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                                                type: 'success',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: true,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                                                buttonsStyling: false,
+                                            }).then(function (result) {
+                                                document.location.href = '@Url.Action(IncomeCurrentNOperationalController.ACTION_Index)';
+                                            });
+                                        }
+
+                                        if (data.ask) {
+                                            alert('dont ask again');
+                                        }
+                                    },
+                                    error: function (request, options, err) {
+                                        console.log(err);
+                                    }
+                                });
+
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        });
+                    }
+
+                    if (!data.hasError && !data.ask) {
+                        Swal.fire({
+                            title: '<span class="my-font">عملیات موفق</span>',
+                            html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                            type: 'success',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: true,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                            buttonsStyling: false,
+                        }).then(function (result) {
+                            document.location.href = '@Url.Action(IncomeCurrentNOperationalController.ACTION_Index)';
+                        });
+                    }
+
+                },
+                error: function(request, options, err) {
+                    if (request.status == 401 || request.status == 403) {
+                        ShowPermissionErorr();
+                        return;
+                    }
+                    ShowCommonErorr();
+                }
+            });
+
+        });
+
+        $(document).on('click', '#btnDoCopy', function () {
+            let model = {};
+            model.sourceYearId = $('#SourceYearId option:selected').val();
+            model.sourceOrgId = $('#SourceOrgId').val();
+            model.targetYearId = $('#TargetYearId option:selected').val();
+
+            console.log(model);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(IncomeCurrentNOperationalController.ACTION_Copy)',
+                data: model,
+                dataType: 'json',
+                success: function (data, status, settings) {
+                    if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
+
+                    Swal.fire({
+                        title: '<span class="my-font">عملیات موفق</span>',
+                        html: '<span class="my-font">عملیات کپی اطلاعات با موفقیت انجام شد.</span>',
+                        type: 'success',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: true,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                        buttonsStyling: false,
+                    }).then(function(result) {
+                        $('#CopyModal').modal('hide');
+                    });
+                },
+                error: function (request, options, err) {
+                    console.log(err);
+                    alert('عملیات کپی با خطا مواجه شد.');
+                }
+            });
+        });
+
+
+        function changePageSize() {
+            let pageSize = $('#ddlPageSize').attr('value');
+            console.log(pageSize);
+            $('#filterForm').submit();
+        };
+
+    </script>
+
+}
