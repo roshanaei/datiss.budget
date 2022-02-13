@@ -102,6 +102,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<IncomeCurrentReport> CurrentIncomeReports { get; set; }
 
+        public ICollection<IncomeCurrentInstalation> IncomeCurrentInstalations { get; set; }
+
 
 
         #endregion
