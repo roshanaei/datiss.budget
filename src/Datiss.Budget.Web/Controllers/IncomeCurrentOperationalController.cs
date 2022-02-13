@@ -603,17 +603,17 @@ namespace Datiss.Budget.Web.Controllers
             return workbook.Deliver("IncomeCurrentOperational.xlsx");
         }
 
-        [HttpPost, Route("GetUsageLayerAsync")]
-        public async Task<JsonResult> GetICOTypeAsync(ActivityType at)
+        [HttpPost, Route("GetICOTypeAsync")]
+        public async Task<JsonResult> GetICOTypeAsync(string key)
         {
             IEnumerable<ConstantDTO> result;
-            if (at == ActivityType.Water)
+            if (key == ActivityType.Water.ToString())
             {
                 result = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIOWType);
             }
             else
             {
-                result = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIOWType);
+                result = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIOWsType);
             }
 
             return new JsonResult(result);

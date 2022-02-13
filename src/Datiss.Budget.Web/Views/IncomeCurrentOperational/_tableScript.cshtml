@@ -7,8 +7,6 @@
 
         let activityType = $('#inputActivityType_' + id).val();
         let icoTypeId = $('#inputICOType_' + id).val();
-        console.log(userTypeId);
-        console.log(usageLayerTypeId);
         FillDropDown(activityType, icoTypeId);
         
         resetTableBackColor("my-table");
@@ -26,7 +24,6 @@
         $('#divOutput_CountNH_' + id).hide();
         $('#divOutput_PriceNH_' + id).hide();
         $('#divOutput_CostNH_' + id).hide();
-        $('#divOutput_TotalCount_' + id).hide();
         $('#divOutput_TotalCost_' + id).hide();
 
         //show input elements
@@ -40,7 +37,6 @@
         $('#divInput_CountNH_' + id).show();
         $('#divInput_PriceNH_' + id).show();
         $('#divInput_CostNH_' + id).show();
-        $('#divInput_TotalCount_' + id).show();
         $('#divInput_TotalCost_' + id).show();
 
 
@@ -60,7 +56,6 @@
         rowData.countNH = $('#inputCountNH_' + id).val();
         rowData.priceNH = $('#inputPriceNH_' + id).val();
         rowData.costNH = $('#inputCostNH_' + id).val();
-        rowData.totalCount = $('#inputTotalCount_' + id).val();
         rowData.totalCost = $('#inputTotalCost_' + id).val();
     }
 
@@ -79,7 +74,6 @@
         $('#divInput_CountNH_' + id).hide();
         $('#divInput_PriceNH_' + id).hide();
         $('#divInput_CostNH_' + id).hide();
-        $('#divInput_TotalCount_' + id).hide();
         $('#divInput_TotalCost_' + id).hide();
 
         //Retriving to OrginalData
@@ -94,7 +88,6 @@
             $('#inputCountNH_' + id).val(rowData.countNH);
             $('#inputPriceNH_' + id).val(rowData.priceNH);
             $('#inputCostNH_' + id).val(rowData.costNH);
-            $('#inputTotalCount_' + id).val(rowData.totalCount);
             $('#inputTotalCost_' + id).val(rowData.totalCost);
         }
 
@@ -109,7 +102,6 @@
         $('#divOutput_CountNH_' + id).show();
         $('#divOutput_PriceNH_' + id).show();
         $('#divOutput_CostNH_' + id).show();
-        $('#divOutput_TotalCount_' + id).show();
         $('#divOutput_TotalCost_' + id).show();
 
         $('#btnEdit_' + id).show();
@@ -129,6 +121,7 @@
     function saveEditRow(id) {
         let row = $('#row_' + id);
 
+        debugger;
         var model = {};
         model.id = id;
         model.yearId = $('#inputYear_' + id).val();
@@ -138,7 +131,9 @@
         model.countH = $('#inputCountH_' + id).val();
         model.priceH = $('#inputPriceH_' + id).val();
         model.costH = $('#inputCostH_' + id).val();
-        model.totalCount = $('#inputTotalCount_' + id).val();
+        model.countNH = $('#inputCountNH_' + id).val();
+        model.priceNH = $('#inputPriceNH_' + id).val();
+        model.costNH = $('#inputCostNH_' + id).val();
         model.totalCost = $('#inputTotalCost_' + id).val();
 
 
@@ -174,7 +169,6 @@
                 rowData.countNH = model.countNH;
                 rowData.priceNH = model.priceNH;
                 rowData.costNH = model.costNH;
-                rowData.totalCount = model.totalCount;
                 rowData.totalCost = model.totalCost;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
@@ -189,7 +183,6 @@
                 $('#spanCountNH_' + id).text(data.countNH);
                 $('#spanPriceNH_' + id).text(data.priceNH);
                 $('#spanCostNH_' + id).text(data.costNH);
-                $('#spanTotalCount_' + id).text(data.totalCount);
                 $('#spanTotalCost_' + id).text(data.totalCost);
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
@@ -300,8 +293,8 @@
                 $(e).find('#spanActivityType_').attr('id', 'spanActivityType_' + data.id);
 
                 $('#divInput_ActivityType_' + data.id).hide();
-                $('#spanActivityType_' + data.id).text(data.activityType);
-                $('#divOutput_UserType_' + data.id).show();
+                $('#spanActivityType_' + data.id).text(data.activityTypeDisplay);
+                $('#divOutput_ActivityType_' + data.id).show();
 
                 //ICOType
                 $(e).find('#divInput_ICOType_').attr('id', 'divInput_ICOType_' + data.id);
@@ -311,8 +304,8 @@
                 $(e).find('#spanICOType_').attr('id', 'spanICOType_' + data.id);
 
                 $('#divInput_ICOType_' + data.id).hide();
-                $('#spanICOType_' + data.id).text(data.icoTypeTitle);
-                $('#divOutput_UserType_' + data.id).show();
+                $('#spanICOType_' + data.id).text(data.icoTypeDisplay);
+                $('#divOutput_ICOType_' + data.id).show();
 
                 //CountH
                 $(e).find('#divInput_CountH_').attr('id', 'divInput_CountH_' + data.id);
@@ -332,7 +325,7 @@
 
                 $('#divInput_PriceH_' + data.id).hide();
                 $('#spanPriceH_' + data.id).text(data.priceH);
-                $('#divOutput_CountH_' + data.id).show();
+                $('#divOutput_PriceH_' + data.id).show();
 
                 //CostH
                 $(e).find('#divInput_CostH_').attr('id', 'divInput_CostH_' + data.id);
@@ -341,13 +334,13 @@
                 $(e).find('#spanCostH_').attr('id', 'spanCostH_' + data.id);
 
                 $('#divInput_CostH_' + data.id).hide();
-                $('#spanCostH_' + data.id).text(data.priceH);
+                $('#spanCostH_' + data.id).text(data.costH);
                 $('#divOutput_CostH_' + data.id).show();
 
                 //CountNH
                 $(e).find('#divInput_CountNH_').attr('id', 'divInput_CountNH_' + data.id);
                 $(e).find('#inputCountNH_').attr('id', 'inputCountNH_' + data.id);
-                $(e).find('#divOutput_CountNH_').attr('id', 'divOutput_CountH_' + data.id);
+                $(e).find('#divOutput_CountNH_').attr('id', 'divOutput_CountNH_' + data.id);
                 $(e).find('#spanCountNH_').attr('id', 'spanCountNH_' + data.id);
 
                 $('#divInput_CountNH_' + data.id).hide();
@@ -361,8 +354,8 @@
                 $(e).find('#spanPriceNH_').attr('id', 'spanPriceNH_' + data.id);
 
                 $('#divInput_PriceNH_' + data.id).hide();
-                $('#spanPriceNH_' + data.id).text(data.priceH);
-                $('#divOutput_CountNH_' + data.id).show();
+                $('#spanPriceNH_' + data.id).text(data.priceNH);
+                $('#divOutput_PriceNH_' + data.id).show();
 
                 //CostNH
                 $(e).find('#divInput_CostNH_').attr('id', 'divInput_CostNH_' + data.id);
@@ -374,16 +367,6 @@
                 $('#spanCostNH_' + data.id).text(data.costNH);
                 $('#divOutput_CostNH_' + data.id).show();
 
-                //CostNH
-                $(e).find('#divInput_TotalCount_').attr('id', 'divInput_TotalCount_' + data.id);
-                $(e).find('#inputTotalCount_').attr('id', 'inputTotalCount_' + data.id);
-                $(e).find('#divOutput_TotalCount_').attr('id', 'divOutput_TotalCount_' + data.id);
-                $(e).find('#spanTotalCount_').attr('id', 'spanTotalCount_' + data.id);
-
-                $('#divInput_TotalCount_' + data.id).hide();
-                $('#spanTotalCount_' + data.id).text(data.totalCount);
-                $('#divOutput_TotalCount_' + data.id).show();
-
                 //TotalCost
                 $(e).find('#divInput_TotalCost_').attr('id', 'divInput_TotalCost_' + data.id);
                 $(e).find('#inputTotalCost_').attr('id', 'inputTotalCost_' + data.id);
@@ -393,7 +376,6 @@
                 $('#divInput_TotalCost_' + data.id).hide();
                 $('#spanTotalCost_' + data.id).text(data.totalCost);
                 $('#divOutput_TotalCost_' + data.id).show();
-
 
                 $('#btnSaveCreate_' + data.id).hide();
                 $('#btnCancelCreate_' + data.id).hide();
@@ -419,8 +401,8 @@
 
         resetTableBackColor("my-table");
 
-        let usertypeid = $('#inputUserType_').val();
-        FillDropDown(usertypeid);
+        let activitytype = $('#inputActivityType_').val();
+        FillDropDown(activitytype);
         
 
         var template = $('#rowTemplate').clone()
@@ -491,10 +473,13 @@
     }
 
     function FillDropDown(at, selectval = null) {
-
-        let acType = acivtityType_source[at];
-        if (acType != 'Water') {
-            key = 'Waste';
+        
+        let key;
+        if (at == 0) {
+            key = 'Water';
+        }
+        else {
+            key = 'Waste'
         }
 
         $.ajax({

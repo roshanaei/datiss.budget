@@ -13,7 +13,6 @@
                 <th style="min-width:150px">جمع درآمد خانگی</th>
                 <th style="min-width:150px">تعداد غیر خانگی</th>
                 <th style="min-width:150px">قیمت غیر خانگی</th>
-                <th style="min-width:150px">قیمت غیر خانگی</th>
                 <th style="min-width:150px">جمع درآمد غیر خانگی</th>
                 <th style="min-width:150px">جمع کل درآمد</th>
                 <th width="10%">مدیریت</th>
@@ -55,8 +54,8 @@
                         <select class="form-control selectActivityType" id="inputActivityType_" asp-items="Model.ActivityTypeSource" onchange="RelatedDropDown(this,event)">
                         </select>
                     </div>
-                    <div id="divOutput_UserType_" style="display: none">
-                        <span id="spanUserType_"> </span>
+                    <div id="divOutput_ActivityType_" style="display: none">
+                        <span id="spanActivityType_"> </span>
                     </div>
                 </td>
                 <td>
@@ -115,14 +114,6 @@
                     </div>
                     <div id="divOutput_CostNH_" style="display: none">
                         <span id="spanCostNH_"> </span>
-                    </div>
-                </td>
-                <td>
-                    <div id="divInput_TotalCount_">
-                        <input class="form-control input-keyup" id="inputTotalCount_" type="number" />
-                    </div>
-                    <div id="divOutput_TotalCount_" style="display: none">
-                        <span id="spanTotalCount_"> </span>
                     </div>
                 </td>
                 <td>
@@ -207,11 +198,11 @@
                     <td>
                         <div id="divInput_ICOType_@item.Id" style="display: none">
                             <input id="hidICOTypeId_@item.Id" type="hidden" value="@item.ICOTypeId" />
-                            <select class="form-control selectICOLayerType" id="inputICOLayerType_@item.Id">
+                            <select class="form-control selectICOType" id="inputICOType_@item.Id">
                             </select>
                         </div>
-                        <div id="divOutput_ICOLayerType_@item.Id">
-                            <span id="spanICOLayerType_@item.Id">@item.ICOTypeDisplay </span>
+                        <div id="divOutput_ICOType_@item.Id">
+                            <span id="spanICOType_@item.Id">@item.ICOTypeDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -256,18 +247,10 @@
                     </td>
                     <td>
                         <div id="divInput_CostNH_@item.Id" style="display: none">
-                            <input class="form-control" id="inputCostNH_@item.Id" value="@item.CostH" type="number" />
+                            <input class="form-control" id="inputCostNH_@item.Id" value="@item.CostNH" type="number" />
                         </div>
                         <div id="divOutput_CostNH_@item.Id">
                             <span id="spanCostNH_@item.Id">@item.CostNHDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_TotalCount_@item.Id" style="display: none">
-                            <input class="form-control" id="inputTotalCount_@item.Id" value="@item.TotalCount" type="number" />
-                        </div>
-                        <div id="divOutput_TotalCount_@item.Id">
-                            <span id="spanTotalCount_@item.Id">@item.TotalCountDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -329,11 +312,6 @@
             <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
                 <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
             </button>
-            <span data-toggle="modal" data-target="#CalculationModal">
-                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                </button>
-            </span>
         </form>
 
     </div>

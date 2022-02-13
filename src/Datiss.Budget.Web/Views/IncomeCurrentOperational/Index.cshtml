@@ -1,5 +1,5 @@
 ﻿@model IncomeCurrentOperationalIndexViewModel
-@{ ViewData["Title"] = "درآمد جاری عملیاتی"; }
+@{ ViewData["Title"] = "درآمد جاری غیر عملیاتی"; }
 
 <!--Title-->
 <div class="row">
@@ -314,19 +314,6 @@
         @Html.Raw(ViewData["cioWsTypeKeys"].ToString())
     ];
 
-
-    var coiWType_source = {};
-    var coiWsType_source = {};
-
-    for (var i = 0; i < icoType_Ids.length; i++) {
-        icoType_source[icoType_Ids[i]] = cioWType_keys[i];
-    }
-
-    for (var i = 0; i < icoType_Ids.length; i++) {
-        icoType_source[icoType_Ids[i]] = cioWsType_keys[i];
-    }
-
-
     $(document).ready(function () {
             console.log('ready');
             //fill input hidden with initial columns showing
@@ -473,6 +460,7 @@
         });
 
         $(document).on('click', '#btnCreate', function () {
+            console.log('btnCreate clicked!')
             addNewRow();
         });
 
@@ -487,7 +475,6 @@
             let input4 = document.getElementById('inputCountNH_' + id);
             let input5 = document.getElementById('inputPriceNH_' + id);
             let input6 = document.getElementById('inputCostNH_' + id);
-            let input7 = document.getElementById('inputTotalCount_' + id);
             let input8 = document.getElementById('inputTotalCost_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
@@ -523,12 +510,6 @@
                 }
             });
             input6.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input7.addEventListener("keyup", function (event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
