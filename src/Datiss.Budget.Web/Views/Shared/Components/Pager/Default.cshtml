@@ -10,8 +10,8 @@
                 {
                     <li class="page-item">
                         <a class="page-link"
-                           asp-controller="@WaterInstallFeeController.Name"
-                           asp-action="@WaterInstallFeeController.ACTION_Index"
+                           asp-controller="@Model.ControllerName"
+                           asp-action="@Model.ActionName"
                            asp-route-page="@Model.StartPage">
                             <i _ngcontent-dpj-c129="" class="ft ft-chevrons-right"></i>
                         </a>
@@ -19,8 +19,8 @@
                 }
                 <li class="page-item">
                     <a class="page-link"
-                       asp-controller="@WaterInstallFeeController.Name"
-                       asp-action="@WaterInstallFeeController.ACTION_Index"
+                       asp-controller="@Model.ControllerName"
+                       asp-action="@Model.ActionName"
                        asp-route-page="@Model.PreviousPage"
                        aria-label="Previous">
                         <i _ngcontent-dpj-c129="" class="ft ft-arrow-right"></i>
@@ -40,8 +40,8 @@
                     {
                         <li class="page-item">
                             <a class="page-link"
-                               asp-controller="@WaterInstallFeeController.Name"
-                               asp-action="@WaterInstallFeeController.ACTION_Index"
+                               asp-controller="@Model.ControllerName"
+                               asp-action="@Model.ActionName"
                                asp-route-page="@(Model.PagesCount - j)">@((Model.PagesCount - j).ToString()) </a>
                         </li>
                     }
@@ -61,8 +61,8 @@
                     {
                         <li class="page-item">
                             <a class="page-link"
-                               asp-controller="@WaterInstallFeeController.Name"
-                               asp-action="@WaterInstallFeeController.ACTION_Index"
+                               asp-controller="@Model.ControllerName"
+                               asp-action="@Model.ActionName"
                                asp-route-page="@i">@i.ToString() </a>
                         </li>
                     }
@@ -74,8 +74,8 @@
             {
                 <li class="page-item">
                     <a class="page-link"
-                       asp-controller="@WaterInstallFeeController.Name"
-                       asp-action="@WaterInstallFeeController.ACTION_Index"
+                       asp-controller="@Model.ControllerName"
+                       asp-action="@Model.ActionName"
                        asp-route-page="@Model.NextPage"
                        aria-label="Next">
                         <i _ngcontent-dpj-c129="" class="ft ft-arrow-left"></i>
@@ -85,8 +85,8 @@
                 {
                     <li class="page-item">
                         <a class="page-link"
-                           asp-controller="@WaterInstallFeeController.Name"
-                           asp-action="@WaterInstallFeeController.ACTION_Index"
+                           asp-controller="@Model.ControllerName"
+                           asp-action="@Model.ActionName"
                            asp-route-page="@Model.PagesCount">
                             <i _ngcontent-dpj-c129="" class="ft ft-chevrons-left"></i>
                         </a>

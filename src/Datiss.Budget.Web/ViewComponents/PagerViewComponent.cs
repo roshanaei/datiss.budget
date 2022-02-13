@@ -16,10 +16,11 @@ namespace Datiss.Budget.Web
 
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(PagerViewModel model)
+        public async Task<IViewComponentResult> InvokeAsync(PagerViewModel model,string controllerName,string actionName)
         {
             model.CheckArgumentIsNull(nameof(model));
-
+            model.ControllerName = controllerName;
+            model.ActionName = actionName;
             return View(model);
         }
     }

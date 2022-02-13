@@ -289,5 +289,5 @@
         <div class="my-font ml-2">(صفحه <b class="font-medium-2">@Model.PageNumber</b> از <b class="font-medium-2">@Model.PagesCount</b>)</div>
     </div>
     <!--Pagination-->
-    <vc:pager model="Model.ToPager()"></vc:pager>
+    <vc:pager model="Model.ToPager()" controller-name="@ConsumeForcastController.Name" action-name="@ConsumeForcastController.ACTION_Index"></vc:pager>
 </div>

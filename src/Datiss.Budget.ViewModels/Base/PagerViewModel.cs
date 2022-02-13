@@ -30,5 +30,6 @@ namespace Datiss.Budget.ViewModels
                                ? PageNumber / PageLimit
                                : (PageNumber / PageLimit) + 1;
         public string ControllerName { get; set; }
+        public string ActionName { get; set; }
     }
 }
