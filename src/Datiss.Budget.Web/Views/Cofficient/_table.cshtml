@@ -198,58 +198,10 @@
                     {<span>1</span>}
                     else
                     {<span>@Model.PagesCount</span>}
-            </b>)
+                </b>)
+            </div>
         </div>
+        <!--Pagination-->
+        <vc:pager model="Model.ToPager()" controller-name="@CofficientController.Name" action-name="@CofficientController.ACTION_Index"></vc:pager>
     </div>
-    @if (Model.PagesCount > 1)
-    {
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                @if (Model.PageNumber > 1)
-                {
-                    <li class="page-item">
-                        <a class="page-link"
-                           asp-controller="@CofficientController.Name"
-                           asp-action="@CofficientController.ACTION_Index"
-                           asp-route-page="@Model.PreviousPage"
-                           asp-route-group="@Model.Filter.GroupName"
-                           aria-label="Previous">«</a>
-                    </li>
-                }
-
-                @for (int i = 1; i <= Model.PagesCount; i++)
-                {
-                    if (i == Model.PageNumber)
-                    {
-                        <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
-                    }
-                    else
-                    {
-                        <li class="page-item">
-                            <a class="page-link"
-                               asp-controller="@CofficientController.Name"
-                               asp-action="@CofficientController.ACTION_Index"
-                               asp-route-page="@i"
-                               asp-route-group="@Model.Filter.GroupName"
-                               >@i.ToString() </a>
-                        </li>
-                    }
-                }
-
-                @if (Model.PageNumber < Model.PagesCount)
-                {
-                    <li class="page-item">
-                        <a class="page-link"
-                           asp-controller="@CofficientController.Name"
-                           asp-action="@CofficientController.ACTION_Index"
-                           asp-route-page="@Model.NextPage"
-                           asp-route-group="@Model.Filter.GroupName"
-                           aria-label="Next">»</a>
-                    </li>
-                }
-
-            </ul>
-        </nav>
-    }
-</div>
 </div>
