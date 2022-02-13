@@ -164,7 +164,7 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> ICOTypeSource { get; set; }
 
-        public string UserTypeSourceIdArray
+        public string ICOTypeSourceIdArray
         {
             get
             {
