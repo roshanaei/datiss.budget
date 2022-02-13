@@ -1,0 +1,390 @@
+﻿@model IncomeCurrentOperationalIndexViewModel
+<div class="table-responsive">
+    <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font table-overflow">
+        <thead class="thead-light">
+            <tr>
+
+                <th style="min-width:140px">سال</th>
+                <th style="min-width:180px">سازمان</th>
+                <th style="min-width:180px">بخش</th>
+                <th style="min-width:160px">عنوان</th>
+                <th style="min-width:150px">تعداد خانگی</th>
+                <th style="min-width:150px">قیمت خانگی</th>
+                <th style="min-width:150px">جمع درآمد خانگی</th>
+                <th style="min-width:150px">تعداد غیر خانگی</th>
+                <th style="min-width:150px">قیمت غیر خانگی</th>
+                <th style="min-width:150px">قیمت غیر خانگی</th>
+                <th style="min-width:150px">جمع درآمد غیر خانگی</th>
+                <th style="min-width:150px">جمع کل درآمد</th>
+                <th width="10%">مدیریت</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowTemplate" style="display: none">
+                <td>
+                    <div id="divInput_Year_">
+                        <input id="hidYearId_" type="hidden" />
+                        <select class="form-control selectYear" id="inputYear_" asp-items="Model.YearSource">
+                        </select>
+                        <script>
+                            $('select#inputYear_ option[value=' + $('#yearId').val() + ']').attr('selected', true);
+                            $('#inputYear_').attr('disabled', 'disabled');
+                        </script>
+                    </div>
+                    <div id="divOutput_Year_" style="display: none">
+                        <span id="spanYear_"></span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Org_">
+                        <input id="hidOrgId_" type="hidden" />
+                        <select class="form-control selectOrganization" id="inputOrg_" asp-items="Model.InputOrganizationSource">
+                        </select>
+                        <script>
+                            $('select#inputOrg_ option[value=' + $('#organizationId').val() + ']').attr('selected', true);
+                        </script>
+                    </div>
+                    <div id="divOutput_Org_">
+                        <span id="spanOrg_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ActivityType_">
+                        <input id="hidActivityTypeId_" type="hidden" />
+                        <select class="form-control selectActivityType" id="inputActivityType_" asp-items="Model.ActivityTypeSource" onchange="RelatedDropDown(this,event)">
+                        </select>
+                    </div>
+                    <div id="divOutput_UserType_" style="display: none">
+                        <span id="spanUserType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ICOType_">
+                        <input id="hidICOTypeId_" type="hidden" />
+                        <select class="form-control selectICOType" id="inputICOType_">
+                        </select>
+                    </div>
+                    <div id="divOutput_ICOType_" style="display: none">
+                        <span id="spanICOType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_CountH_">
+                        <input class="form-control input-keyup default-input" id="inputCountH_" type="number" />
+                    </div>
+                    <div id="divOutput_CountH_" style="display: none">
+                        <span id="spanCountH_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_PriceH_">
+                        <input class="form-control input-keyup" id="inputPriceH_" type="number" />
+                    </div>
+                    <div id="divOutput_PriceH_" style="display: none">
+                        <span id="spanPriceH_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_CostH_">
+                        <input class="form-control input-keyup" id="inputCostH_" type="number" />
+                    </div>
+                    <div id="divOutput_CostH_" style="display: none">
+                        <span id="spanCostH_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_CountNH_">
+                        <input class="form-control input-keyup default-input" id="inputCountNH_" type="number" />
+                    </div>
+                    <div id="divOutput_CountNH_" style="display: none">
+                        <span id="spanCountNH_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_PriceNH_">
+                        <input class="form-control input-keyup" id="inputPriceNH_" type="number" />
+                    </div>
+                    <div id="divOutput_PriceNH_" style="display: none">
+                        <span id="spanPriceNH_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_CostNH_">
+                        <input class="form-control input-keyup" id="inputCostNH_" type="number" />
+                    </div>
+                    <div id="divOutput_CostNH_" style="display: none">
+                        <span id="spanCostNH_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_TotalCount_">
+                        <input class="form-control input-keyup" id="inputTotalCount_" type="number" />
+                    </div>
+                    <div id="divOutput_TotalCount_" style="display: none">
+                        <span id="spanTotalCount_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_TotalCost_">
+                        <input class="form-control input-keyup" id="inputTotalCost_" type="number" />
+                    </div>
+                    <div id="divOutput_TotalCost_" style="display: none">
+                        <span id="spanTotalCost_"> </span>
+                    </div>
+                </td>
+
+                <td>
+                    <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
+                        <i class="fa ft-edit fa-1x"></i>
+                    </a>
+
+                    <a id="btnDelete_" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" style="display: none">
+                        <i class="fa ft-trash-2"></i>
+                    </a>
+
+                    <a id="btnSaveEdit_" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+                    <a id="btnCancelEdit_" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                    <a id="btnSaveCreate_" class="save-new-row btn btn-success my-font mr-1">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+
+                    <a id="btnCancelCreate_" class="cancel-new-row btn btn-danger my-font">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                </td>
+            </tr>
+            @foreach (var item in Model.Items)
+            {
+                <tr id="row_@item.Id">
+                    <td>
+                        <div id="divInput_Year_@item.Id" style="display: none">
+                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            </select>
+                            <script>
+                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Year_@item.Id">
+                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Org_@item.Id" style="display: none">
+                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
+                            </select>
+                            <script>
+                                $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
+                            </script>
+                        </div>
+                        <div id="divOutput_Org_@item.Id">
+                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ActivityType_@item.Id" style="display: none">
+                            <input id="hidActivityTypeId_@item.Id" type="hidden" value="@item.ActivityType" />
+                            <select class="form-control selectActivityType" id="inputActivityType_@item.Id" asp-items="Model.ActivityTypeSource" onchange="RelatedDropDown(this, event)">
+                            </select>
+                            <script>
+                                $('select#inputActivityType_' + @item.Id + ' option[value=' + @item.ActivityType + ']').attr('selected', true);
+                            </script>
+                        </div>
+                        <div id="divOutput_ActivityType_@item.Id">
+                            <span id="spanActivityType_@item.Id">@item.ActivityTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ICOType_@item.Id" style="display: none">
+                            <input id="hidICOTypeId_@item.Id" type="hidden" value="@item.ICOTypeId" />
+                            <select class="form-control selectICOLayerType" id="inputICOLayerType_@item.Id">
+                            </select>
+                        </div>
+                        <div id="divOutput_ICOLayerType_@item.Id">
+                            <span id="spanICOLayerType_@item.Id">@item.ICOTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_CountH_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCountH_@item.Id" value="@item.CountH" type="number" />
+                        </div>
+                        <div id="divOutput_CountH_@item.Id">
+                            <span id="spanCountH_@item.Id">@item.CountHDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_PriceH_@item.Id" style="display: none">
+                            <input class="form-control" id="inputPriceH_@item.Id" value="@item.PriceH" type="number" />
+                        </div>
+                        <div id="divOutput_PriceH_@item.Id">
+                            <span id="spanPriceH_@item.Id">@item.PriceHDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_CostH_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCostH_@item.Id" value="@item.CostH" type="number" />
+                        </div>
+                        <div id="divOutput_CostH_@item.Id">
+                            <span id="spanCostH_@item.Id">@item.CostHDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_CountNH_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCountNH_@item.Id" value="@item.CountNH" type="number" />
+                        </div>
+                        <div id="divOutput_CountNH_@item.Id">
+                            <span id="spanCountNH_@item.Id">@item.CountNHDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_PriceNH_@item.Id" style="display: none">
+                            <input class="form-control" id="inputPriceNH_@item.Id" value="@item.PriceNH" type="number" />
+                        </div>
+                        <div id="divOutput_PriceNH_@item.Id">
+                            <span id="spanPriceNH_@item.Id">@item.PriceNHDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_CostNH_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCostNH_@item.Id" value="@item.CostH" type="number" />
+                        </div>
+                        <div id="divOutput_CostNH_@item.Id">
+                            <span id="spanCostNH_@item.Id">@item.CostNHDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_TotalCount_@item.Id" style="display: none">
+                            <input class="form-control" id="inputTotalCount_@item.Id" value="@item.TotalCount" type="number" />
+                        </div>
+                        <div id="divOutput_TotalCount_@item.Id">
+                            <span id="spanTotalCount_@item.Id">@item.TotalCountDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_TotalCost_@item.Id" style="display: none">
+                            <input class="form-control" id="inputTotalCost_@item.Id" value="@item.TotalCost" type="number" />
+                        </div>
+                        <div id="divOutput_TotalCost_@item.Id">
+                            <span id="spanTotalCost_@item.Id">@item.TotalCostDisplay </span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
+
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
+
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
+
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+    
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+            @*<input asp-for="ExcelFile" type="file" />*@
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                </button>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                </button>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </button>
+            <span data-toggle="modal" data-target="#CalculationModal">
+                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                </button>
+            </span>
+        </form>
+
+    </div>
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">(صفحه <b class="font-medium-2">@Model.PageNumber</b> از <b class="font-medium-2">@Model.PagesCount</b>)</div>
+    </div>
+        @if (Model.PagesCount > 1)
+        {
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    @if (Model.PageNumber > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-controller="@IncomeCurrentOperationalController.Name"
+                               asp-action="@IncomeCurrentOperationalController.ACTION_Index"
+                               asp-route-page="@Model.PreviousPage"
+                               aria-label="Previous">«</a>
+                        </li>
+                    }
+
+                    @for (int i = 1; i <= Model.PagesCount; i++)
+                    {
+                        if (i == Model.PageNumber)
+                        {
+                            <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                <a class="page-link"
+                                   asp-controller="@IncomeCurrentOperationalController.Name"
+                                   asp-action="@IncomeCurrentOperationalController.ACTION_Index"
+                                   asp-route-page="@i">@i.ToString() </a>
+                            </li>
+                        }
+                    }
+
+                    @if (Model.PageNumber < Model.PagesCount)
+                    {
+                        <li class="page-item">
+                            <a class="page-link"
+                               asp-controller="@IncomeCurrentOperationalController.Name"
+                               asp-action="@IncomeCurrentOperationalController.ACTION_Index"
+                               asp-route-page="@Model.NextPage"
+                               aria-label="Next">»</a>
+                        </li>
+                    }
+
+                </ul>
+            </nav>
+        }
+</div>
