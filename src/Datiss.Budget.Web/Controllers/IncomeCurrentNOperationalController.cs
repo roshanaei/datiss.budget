@@ -136,7 +136,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter))
+            var cionSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CINOType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -160,7 +160,7 @@ namespace Datiss.Budget.Web.Controllers
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetNOICTypeSource(dwaterSource);
+            model.SetNOICTypeSource(cionSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
@@ -191,7 +191,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter))
+            var cionSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CINOType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -202,7 +202,7 @@ namespace Datiss.Budget.Web.Controllers
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
-            model.SetNOICTypeSource(dwaterSource);
+            model.SetNOICTypeSource(cionSource);
             
             return View(model);
         }
@@ -434,16 +434,16 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId) {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var dwaterTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter);
+            var cinoTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CINOType);
 
             var items = new List<IncomeCurrentNOperationalDTO>();
 
             foreach(var org in organizations) {
-                foreach(var dwt in dwaterTypes) {
+                foreach(var cinot in cinoTypes) {
                     items.Add(new IncomeCurrentNOperationalDTO
                     {
-                        NOICTypeDisplay = dwt.Title,
-                        NOICTypeId = dwt.Id,
+                        NOICTypeDisplay = cinot.Title,
+                        NOICTypeId = cinot.Id,
                         OrganizationId = org.Id,
                         OrganizationDisplay = org.Title,
                         Year = year.Year,

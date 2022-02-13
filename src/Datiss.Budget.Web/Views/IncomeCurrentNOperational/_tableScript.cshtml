@@ -31,8 +31,8 @@
         rowData = {};
         rowData.yearId = $('#inputYear_' + id).val();
         rowData.organizationId = $('#inputOrg_' + id).val();
-        rowData.nOICTypeId = $('#inputNOICType_' + id).val();
-        rowData.nOICPrice = $('#inputNOICPrice_' + id).val();
+        rowData.noicTypeId = $('#inputNOICType_' + id).val();
+        rowData.noicPrice = $('#inputNOICPrice_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -51,8 +51,8 @@
             console.log(rowData);
             $('#inputYear_' + id).val(rowData.yearId);
             $('#inputOrg_' + id).val(rowData.organizationId);
-            $('#inputNOICType_' + id).val(rowData.nOICTypeId);
-            $('#inputNOICPrice_' + id).val(rowData.nOICPrice);
+            $('#inputNOICType_' + id).val(rowData.noicTypeId);
+            $('#inputNOICPrice_' + id).val(rowData.noicPrice);
         }
 
         //Show output elements
@@ -82,8 +82,8 @@
         model.id = id;
         model.yearId = $('#inputYear_' + id).val();
         model.organizationId = $('#inputOrg_' + id).val();
-        model.nOICTypeId = $('#inputNOICType_' + id).val();
-        model.nOICPrice = $('#inputNOICPrice_' + id).val();
+        model.noicTypeId = $('#inputNOICType_' + id).val();
+        model.noicPrice = $('#inputNOICPrice_' + id).val();
 
         $.ajax({
             url: '@Url.Action(IncomeCurrentNOperationalController.ACTION_Edit)',
@@ -107,15 +107,15 @@
                 rowData = {};
                 rowData.yearId = model.yearId;
                 rowData.organizationId = model.organizationId;
-                rowData.nOICTypeId = model.nOICTypeId;
-                rowData.nOICPrice = model.nOICPrice;
+                rowData.noicTypeId = model.noicTypeId;
+                rowData.noicPrice = model.noicPrice;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
-                $('#spanNOICType_' + id).text(data.nOICTypeDisplay);
-                $('#spanNOICPrice_' + id).text(data.nOICPrice);
+                $('#spanNOICType_' + id).text(data.noicTypeDisplay);
+                $('#spanNOICPrice_' + id).text(data.noicPrice);
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
                 cancelEditRow(id);
@@ -137,10 +137,10 @@
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
-        model.nOICTypeId = $(e).find('#inputNOICType_').val();
-        model.nOICPrice = $(e).find('#inputNOICPrice_').val();
-        if (model.NOICPrice == "") {
-            model.NOICPrice = 0;
+        model.noicTypeId = $(e).find('#inputNOICType_').val();
+        model.noicPrice = $(e).find('#inputNOICPrice_').val();
+        if (model.noicPrice == "") {
+            model.noicPrice = 0;
         }
 
         console.log(model);
@@ -194,17 +194,17 @@
                 $(e).find('#spanNOICType_').attr('id', 'spanNOICType_' + data.id);
 
                 $('#divInput_NOICType_' + data.id).hide();
-                $('#spanNOICType_' + data.id).text(data.nOICTypeDisplay);
+                $('#spanNOICType_' + data.id).text(data.noicTypeDisplay);
                 $('#divOutput_NOICType_' + data.id).show();
 
-                //WInstallFee
+                //NOICPrice
                 $(e).find('#divInput_NOICPrice_').attr('id', 'divInput_NOICPrice_' + data.id);
                 $(e).find('#inputNOICPrice_').attr('id', 'inputNOICPrice_' + data.id);
                 $(e).find('#divOutput_NOICPrice_').attr('id', 'divOutput_NOICPrice_' + data.id);
                 $(e).find('#spanNOICPrice_').attr('id', 'spanNOICPrice_' + data.id);
 
                 $('#divInput_NOICPrice_' + data.id).hide();
-                $('#spanNOICPrice_' + data.id).text(data.nOICPrice);
+                $('#spanNOICPrice_' + data.id).text(data.noicPrice);
                 $('#divOutput_NOICPrice_' + data.id).show();
 
                 //Buttons
@@ -257,7 +257,7 @@
             dir: 'rtl'
         });
 
-        $('.selectDWaterType:last').select2({
+        $('.selectNOICTypeType:last').select2({
             dir : 'rtl'
         });
 
