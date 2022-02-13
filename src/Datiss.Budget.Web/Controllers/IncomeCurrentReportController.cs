@@ -232,7 +232,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Calculation(CalculationInputViewModel model, int sectionId)
+        public async Task<IActionResult> Calculation(CalculationInputViewModel model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
