@@ -3,9 +3,9 @@ using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Entities.DWH
 {
-    public class IncomeCurrentInstalation : IAuditableEntity
+    public class CostCurrentInstalation : IAuditableEntity
     {
-        public IncomeCurrentInstalation() { }
+        public CostCurrentInstalation() { }
 
         #region Properties
         public int Id { get; set; }
@@ -16,7 +16,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public ActivityType ActivityType { get; set; }
 
-        public int ICInstalationTypeId { get; set; }
+        public int CCInstalationTypeId { get; set; }
 
         public int NumberUser { get; set; }
 

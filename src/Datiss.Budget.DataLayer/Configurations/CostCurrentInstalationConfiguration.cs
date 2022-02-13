@@ -4,36 +4,36 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Datiss.Budget.DataLayer.Mappings
 {
-   public class IncomeCurrentInstalationConfiguration :IEntityTypeConfiguration<IncomeCurrentInstalation>
+   public class CostCurrentInstalationConfiguration :IEntityTypeConfiguration<CostCurrentInstalation>
     {
-        public void Configure(EntityTypeBuilder<IncomeCurrentInstalation> builder)
+        public void Configure(EntityTypeBuilder<CostCurrentInstalation> builder)
         {
-            builder.ToTable("IncomeCurrentInstalation");
+            builder.ToTable("CostCurrentInstalation");
 
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id)
-                    .HasColumnName("ICInstalationId");
+                    .HasColumnName("CCInstalationId");
 
             builder.Property(x => x.OrganizationId).IsRequired();
 
             builder.Property(x => x.YearId).IsRequired();
 
-            builder.Property(x => x.ICInstalationTypeId).IsRequired();
+            builder.Property(x => x.CCInstalationTypeId).IsRequired();
 
             builder.HasOne(x => x.FinanceYear)
-                    .WithMany(x => x.IncomeCurrentInstalations)
+                    .WithMany(x => x.CostCurrentInstalations)
                     .HasForeignKey(x => x.YearId)
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.Organization)
-                    .WithMany(x => x.IncomeCurrentInstalations)
+                    .WithMany(x => x.CostCurrentInstalations)
                     .HasForeignKey(x => x.OrganizationId)
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.ICInstalationType)
-                    .WithMany(x => x.IncomeCurrentInstalations)
-                    .HasForeignKey(x => x.ICInstalationTypeId)
+                    .WithMany(x => x.CostCurrentInstalations)
+                    .HasForeignKey(x => x.CCInstalationTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
         }
     }
