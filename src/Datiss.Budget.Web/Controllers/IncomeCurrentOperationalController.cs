@@ -553,7 +553,7 @@ namespace Datiss.Budget.Web.Controllers
             {
                 foreach (var activityType in activityTypes)
                 {
-                    if (activityType.Value == ActivityType.Water.ToString())
+                    if (Convert.ToInt32(activityType.Value) == (int)ActivityType.Water)
                     {
                         foreach (var cioWType in cioWTypes)
                         {

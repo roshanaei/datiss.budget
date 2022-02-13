@@ -63,7 +63,7 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 10).Value = item.CostNH;
                 sheet.Cell(row, 10).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                sheet.Cell(row, 11).Value = item.TotalCount;
+                sheet.Cell(row, 11).Value = item.TotalCost;
                 sheet.Cell(row, 11).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 11).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 row++;

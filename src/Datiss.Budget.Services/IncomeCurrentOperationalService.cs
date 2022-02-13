@@ -402,17 +402,23 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
-                if (!await ciowtypes.AnyAsync(x => x.Id == rec.ICOTypeId))
+                if(rec.ActivityType == ActivityType.Water)
                 {
-                    return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidICOType, rowIndex + 2, rec.ICOType)
-                        );
+                    if (!await ciowtypes.AnyAsync(x => x.Id == rec.ICOTypeId))
+                    {
+                        return ImportResult.Failed(
+                            string.Format(ServiceMessages.ImportExcelInvalidICOType, rowIndex + 2, rec.ICOTypeId)
+                            );
+                    }
                 }
-                if (!await ciowstypes.AnyAsync(x => x.Id == rec.ICOTypeId))
+                else
                 {
-                    return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidICOType, rowIndex + 2, rec.ICOType)
-                        );
+                    if (!await ciowstypes.AnyAsync(x => x.Id == rec.ICOTypeId))
+                    {
+                        return ImportResult.Failed(
+                            string.Format(ServiceMessages.ImportExcelInvalidICOType, rowIndex + 2, rec.ICOTypeId)
+                            );
+                    }
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
@@ -456,13 +462,13 @@ namespace Datiss.Budget.Services
                     }
 
                 }
-                foreach (var ciow in ciowstypes)
+                foreach (var ciows in ciowstypes)
                 {
-                    var existCIOWsTypeInExcel = records.Any(_ => _.ICOTypeId == ciow.Id &&
+                    var existCIOWsTypeInExcel = records.Any(_ => _.ICOTypeId == ciows.Id &&
                                                               _.OrganizationId == org.Id);
                     if (!existCIOWsTypeInExcel)
                     {
-                        missingCIOWsType.Add(ciow);
+                        missingCIOWsType.Add(ciows);
                         orgTitle = org.Title;
                     }
 
@@ -560,7 +566,6 @@ namespace Datiss.Budget.Services
             var items = await query
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
-                                    .Include(x => x.ICOTypeId)
                                     .Select(x => new IncomeCurrentOperationalDTO
                                     {
                                         Id = x.Id,
@@ -577,7 +582,6 @@ namespace Datiss.Budget.Services
                                         CountNH = x.CountNH,
                                         PriceNH = x.PriceNH,
                                         CostNH = x.CostNH,
-                                        TotalCount = x.TotalCount,
                                         TotalCost = x.TotalCost,
                                     }).ToListAsync();
 
@@ -699,6 +703,7 @@ namespace Datiss.Budget.Services
                                 .OrderBy(x => x.Organization.DisplayOrder)
                                 .ThenBy(x => x.Organization.Type)
                                 .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.ActivityType)
                                 .ThenBy(x => x.ICOType.DisplayOrder);
             }
         }
