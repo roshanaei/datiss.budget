@@ -161,7 +161,24 @@ namespace Datiss.Budget.Web.Controllers {
         [Route("view/[action]")]
         public IActionResult ViewerEvent()
             => StiNetCoreViewer.ViewerEventResult(this);
-        
+
+        [HttpGet("designer")]
+        public IActionResult Designer() {
+            return View();
+        }
+
+        [Route("designer/GetReport")]
+        public async Task<IActionResult> GetDesignerReport() {
+            StiReport report = new StiReport();
+
+            return await StiNetCoreDesigner.GetReportResultAsync(this, report);
+        }
+
+        [Route("designer/ViewerEvent")]
+        public IActionResult DesignerEvent() {
+            return StiNetCoreDesigner.DesignerEventResult(this);
+        }
+
         #region private helper methods
 
         private async Task<StiReport> getStiReportAsync(
