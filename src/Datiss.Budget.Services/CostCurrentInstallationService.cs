@@ -326,6 +326,43 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<CostCurrentInstalationDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        {
+            var filter = new CostCurrentInstalationFilterDTO
+            {
+                OrganizationId = organizationId,
+                YearId = yearId
+            };
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.CCInstalationType)
+                                    .Select(x => new CostCurrentInstalationDTO
+                                    {
+                                        Id = x.Id,
+                                        CCInstalationTypeTitle = x.CCInstalationType.Title,
+                                        CCInstalationTypeId = x.CCInstalationTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        ActivityType = x.ActivityType,
+                                        NumberUser = x.NumberUser,
+                                        Cost = x.Cost,
+                                        Income = x.Income
+                                    }).ToListAsync();
+
+            return items;
+        }
+
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentInstalation>> setFilter(
             IQueryable<CostCurrentInstalation> query,
