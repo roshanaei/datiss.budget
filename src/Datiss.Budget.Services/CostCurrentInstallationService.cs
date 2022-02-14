@@ -54,6 +54,12 @@ namespace Datiss.Budget.Services
         private IQueryable<CostCurrentInstalation> Query()
             => _dbSet.AsNoTracking();
 
+        public async Task<CostCurrentInstalation> GetByIdAsync(int id)
+        {
+            var entity = await _dbSet.FindAsync(id);
+            return await Task.FromResult(entity);
+        }
+
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentInstalation>> setFilter(
             IQueryable<CostCurrentInstalation> query,
