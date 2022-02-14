@@ -214,6 +214,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} در بخش &quot;{1}&quot; برای &quot;{2}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelICOTypeActivityOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelICOTypeActivityOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد ضریب &quot;{1}&quot; معتبر نیست ..
         /// </summary>
         public static string ImportExcelInvalidCofficient {
@@ -237,6 +246,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelInvalidFinanceYear {
             get {
                 return ResourceManager.GetString("ImportExcelInvalidFinanceYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد عنوان&quot;{1}&quot; برای بخش &quot;{2}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidICOTypeActivity {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidICOTypeActivity", resourceCulture);
             }
         }
         
@@ -426,6 +444,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_ActivityDuplicate {
             get {
                 return ResourceManager.GetString("Logic_ActivityDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات بخش {0} و عنوان {1} برای &quot;{2}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_ActivityICOTypeDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_ActivityICOTypeDuplicate", resourceCulture);
             }
         }
         

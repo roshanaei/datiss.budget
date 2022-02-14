@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220214110855_IC-Oprational-IntToLong")]
+    partial class ICOprationalIntToLong
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -543,74 +545,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("ConsumeForcast");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentInstalation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("CCInstalationId")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("ActivityType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CCInstalationTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Cost")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("Income")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("NumberUser")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CCInstalationTypeId");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("CostCurrentInstalation");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.FeeCity", b =>
@@ -3356,33 +3290,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("UserType");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentInstalation", b =>
-                {
-                    b.HasOne("Datiss.Budget.Entities.Constant", "CCInstalationType")
-                        .WithMany("CostCurrentInstalations")
-                        .HasForeignKey("CCInstalationTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                        .WithMany("CostCurrentInstalations")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("CostCurrentInstalations")
-                        .HasForeignKey("YearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CCInstalationType");
-
-                    b.Navigation("FinanceYear");
-
-                    b.Navigation("Organization");
-                });
-
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.FeeCity", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
@@ -4110,8 +4017,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("ConsumeForcastWs");
 
-                    b.Navigation("CostCurrentInstalations");
-
                     b.Navigation("CurrentIncomeReports");
 
                     b.Navigation("IncomeCurrentNOperationals");
@@ -4187,8 +4092,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("ConsumeForcast");
 
                     b.Navigation("ConsumeForcastWs");
-
-                    b.Navigation("CostCurrentInstalations");
 
                     b.Navigation("CurrentIncomeReports");
 
@@ -4268,8 +4171,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("ConsumeForcast");
 
                     b.Navigation("ConsumeForcastWs");
-
-                    b.Navigation("CostCurrentInstalations");
 
                     b.Navigation("CurrentIncomeReports");
 
