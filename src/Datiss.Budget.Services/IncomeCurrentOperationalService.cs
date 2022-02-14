@@ -375,8 +375,7 @@ namespace Datiss.Budget.Services
 
             int rowIndex = 1;
 
-            var activity = new ActivityType();
-            var activitytypes = EnumSelectListProvider.GetActivityTypeItems(activity);
+            var activitytypes = EnumSelectListProvider.GetActivityTypeItems();
 
             var ciowtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                    x.Parent.ConstantKey == ConstantKeys.__CIOWType);
@@ -519,6 +518,8 @@ namespace Datiss.Budget.Services
                 {
                     IcoTypeNames += "- [" + missCioW.Title + "]<br>";
                 }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelICOTypeActivityOrgNotInExcel, IcoTypeNames, activityTitle, orgTitle));
             }
             if (missingCIOWsType.Any())
             {
@@ -526,9 +527,9 @@ namespace Datiss.Budget.Services
                 {
                     IcoTypeNames += "- [" + missCioWs.Title + "]<br>";
                 }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelICOTypeActivityOrgNotInExcel, IcoTypeNames, activityTitle, orgTitle));
             }
-            return ImportResult.Failed(
-                string.Format(ServiceMessages.ImportExcelICOTypeActivityOrgNotInExcel, IcoTypeNames, activityTitle, orgTitle));
 
             //end
 
