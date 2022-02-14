@@ -149,8 +149,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetCCInstalationTypeSource(CCIWSource)
-            model.SetCCInstalationTypeSource(CCIWsSource)
+            model.SetCCInstalationTypeSource(CCIWSource);
+            model.SetCCInstalationTypeSource(CCIWsSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
