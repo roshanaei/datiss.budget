@@ -273,6 +273,59 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
+        {
+
+            if (sourceYearId == destYearId)
+                throw new CopySameYearException();
+            if (destYearId < sourceYearId)
+                throw new CopyDestYearExxeption();
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
+                throw new CopyOrgNullDataException();
+            var result = new List<CostCurrentInstalation>();
+
+            if (await Query()
+                        .Where(_ => _.OrganizationId == sourceOrgId)
+                        .Where(_ => _.YearId == destYearId).AnyAsync())
+                throw new CopyDestYearHasDataException();
+
+            var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
+                                        .Where(_ => _.YearId == sourceYearId)
+                                        .ToListAsync();
+
+            if (selfData.Any())
+            {
+                foreach (var item in selfData)
+                {
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.CCInstalationTypeId, item.ActivityType))
+                        throw new CopyDestYearHasDataException();
+
+                    var entity = new CostCurrentInstalation
+                    {
+                        CCInstalationTypeId = item.CCInstalationTypeId,
+                        OrganizationId = item.OrganizationId,
+                        YearId = destYearId,
+                        ActivityType = item.ActivityType,
+                        NumberUser = item.NumberUser,
+                        Cost = item.Cost,
+                        Income = item.Income
+                    };
+                    result.Add(entity);
+                }
+            }
+
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+
+            if (childrens.Any())
+            {
+                result.AddRange(childrens);
+            }
+
+            _dbSet.AddRange(result);
+
+            await _uow.SaveChangesAsync();
+        }
+
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentInstalation>> setFilter(
             IQueryable<CostCurrentInstalation> query,
