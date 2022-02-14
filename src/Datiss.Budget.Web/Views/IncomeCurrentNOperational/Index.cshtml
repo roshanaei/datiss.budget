@@ -1,5 +1,5 @@
 ﻿@model IncomeCurrentNOperationalIndexViewModel
-@{ ViewData["Title"] = "درآمد های جاری غیر عملیاتی"; }
+@{ ViewData["Title"] = "درآمد غیر عملیاتی"; }
 
 <!--Title-->
 <div class="row">
@@ -199,7 +199,7 @@
 
     <partial name="_excelModal" model="new ImportExcelViewModel()" />
 
-    <partial name="_overlay" />
+    <partial name="_loadingBar" />
 
 
     <div id="divCreate">

@@ -54,6 +54,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IReportService, ReportService>();
             services.AddScoped<IPerformanceEvaluationService, PerformanceEvaluationService>();
             services.AddScoped<IIncomeCurrentReportService, IncomeCurrentReportService>();
+            services.AddScoped<IIncomeCurrentOperationalService, IncomeCurrentOperationalService>();
             services.AddScoped<IReportEngine, ReportEngine>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAppClaimTypeService, AppClaimTypeService>();

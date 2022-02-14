@@ -118,7 +118,7 @@
                     <td>
                         <div id="divInput_NOICType_@item.Id" style="display: none">
                             <input id="hidNOICTypeId_@item.Id" type="hidden" value="@item.NOICTypeId" />
-                            <select class="form-control selectDWaterType" id="inputNOICType_@item.Id" asp-items="Model.NOICTypeSource">
+                            <select class="form-control selectNOICType" id="inputNOICType_@item.Id" asp-items="Model.NOICTypeSource">
                             </select>
                             <script>
                                 $('select#inputNOICType_' + @item.Id + ' option[value=' + @item.NOICTypeId + ']').attr('selected', true);
@@ -199,11 +199,7 @@
                 </b>)
             </div>
         </div>
-        
-        <vc:pager model="Model.ToPager()" 
-                  controller-name="@IncomeCurrentNOperationalController.Name" 
-                  action-name="@IncomeCurrentNOperationalController.ACTION_Index">
-        </vc:pager>
-        
+        <!--Pagination-->
+        <vc:pager model="Model.ToPager()" controller-name="@IncomeCurrentNOperationalController.Name" action-name="@IncomeCurrentNOperationalController.ACTION_Index"></vc:pager>
     </div>
 </div>
