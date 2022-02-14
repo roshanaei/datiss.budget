@@ -31,6 +31,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_SetUserPassword = nameof(SetUserPassword);
 
         private readonly string _indexFilterKey = $"{Name}_{ACTION_Index}";
@@ -104,15 +105,6 @@ namespace Datiss.Budget.Web.Admin.Controllers
             return View(model);
         }
 
-        //[HttpGet("[action]")]
-        //public async Task<IActionResult> Create() {
-        //    var model = new CreateUserViewModel(
-        //        positions: await getPostionDropDownAsync(),
-        //        organizations: await getOrganizationDropDownAsync()
-        //    );
-
-        //    return PartialView("_Create", model);
-        //}
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Create(CreateUserViewModel model) {
@@ -151,50 +143,6 @@ namespace Datiss.Budget.Web.Admin.Controllers
             return RedirectToAction(ACTION_Index);
         }
 
-        //[HttpPost("[action]")]
-        //public async Task<IActionResult> Create(CreateUserViewModel model) {
-        //    model.CheckArgumentIsNull(nameof(model));
-
-        //    if (!ModelState.IsValid) {
-        //        model.AddError(ViewMessages.ModelState);
-        //        return PartialView("_Create", model);
-        //        //return View(model);
-        //    }
-
-        //    ValidationResult<UserResultDTO> result = null;
-        //    try {
-        //        result = await _userService.CreateAsync(model.Adapt<CreateUserDTO>());
-        //        if (result.NotValid) {
-        //            model.AddError(result.Message);
-        //            return View(model);
-        //        }
-        //    }
-        //    catch (CreateUserException) {
-        //        return Json(new {
-        //            hasError = true,
-        //            message = "خطایی در ایجاد کاربر وجود دارد!"
-        //        });
-        //    }
-        //    catch (Exception ex) {
-        //        return Json(new {
-        //            hasError = true,
-        //            message = ViewMessages.SystemError
-        //        });
-        //    }
-
-        //    if (result.NotValid) {
-        //        return Json(new {
-        //            hasError = true,
-        //            message = result.Message
-        //        });
-        //    }
-
-        //    return Json(new {
-        //        data = result.Result,
-        //        success = true
-        //    });
-        //}
-
         [HttpGet("edit/{id}")]
         public async Task<IActionResult> Edit(int id) {
             try {
@@ -211,6 +159,30 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 return NotFound();
             }
             var role = await _roleManager.GetAllCustomRolesAsync();
+        }
+
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _userService.HardDeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.InvalidUpdateData
+                });
+            }
+
+            return Json(new
+            {
+                hasError = false,
+                message = ViewMessages.DeleteRowSuccess
+            });
         }
 
         [HttpPost("edit/{id}")]

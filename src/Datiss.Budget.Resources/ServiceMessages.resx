@@ -309,4 +309,13 @@
   <data name="Logic_NOICOrgDuplicate" xml:space="preserve">
     <value>اطلاعات عنوان {0} برای "{1}" قبلا ثبت شده است.</value>
   </data>
+  <data name="ImportExcelActivityTypeNotInExcel" xml:space="preserve">
+    <value>فعالیت :&lt;br&gt;"{0}" برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="ImportExcelSectionTypesNotInExcel" xml:space="preserve">
+    <value>شرح های :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="ImportExcelUnitTypesSectionTypeNotInExcel" xml:space="preserve">
+    <value>در فایل اکسل شما اطلاعات واحد های :&lt;br&gt;{0} برای شرح "{1}" ، "{2}" وجود ندارد.</value>
+  </data>
 </root>

@@ -169,6 +169,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to فعالیت :&lt;br&gt;&quot;{0}&quot; برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelActivityTypeNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelActivityTypeNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to امکان انجام این عملیات به دلیل نبود رکورد در جدول وابسته، وجود ندارد..
         /// </summary>
         public static string ImportExcelCalculationField {
@@ -349,6 +358,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to شرح های :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelSectionTypesNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelSectionTypesNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ورود اطلاعات با موفقیت انجام گردید..
         /// </summary>
         public static string ImportExcelSuccess {
@@ -363,6 +381,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelTitleNotInExcel {
             get {
                 return ResourceManager.GetString("ImportExcelTitleNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در فایل اکسل شما اطلاعات واحد های :&lt;br&gt;{0} برای شرح &quot;{1}&quot; ، &quot;{2}&quot; وجود ندارد..
+        /// </summary>
+        public static string ImportExcelUnitTypesSectionTypeNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelUnitTypesSectionTypeNotInExcel", resourceCulture);
             }
         }
         
