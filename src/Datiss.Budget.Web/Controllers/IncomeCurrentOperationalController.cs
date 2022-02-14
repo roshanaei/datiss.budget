@@ -616,16 +616,5 @@ namespace Datiss.Budget.Web.Controllers
 
             return new JsonResult(result);
         }
-
-        #region Private Helper Methods
-        private string getCalcTitle(string key)
-            => key switch
-            {
-                //"WaterInstallFees_Cal1" => SPTitles.WaterInstallFees_Cal1,
-                //_ => ""
-            };
-        #endregion
-
-
     }
 }
