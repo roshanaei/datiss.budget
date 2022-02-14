@@ -245,22 +245,6 @@ namespace Datiss.Budget.Web.Controllers
                 Title = x.Title
             }).ToList();
 
-            var cioWTypeKeys = "";
-            var cioWsTypeKeys = "";
-
-            foreach (var Wkey in cioWTypeData)
-            {
-                cioWTypeKeys += $"'{Wkey.ConstantKey}',";
-            }
-
-            foreach (var Wskey in cioWsTypeData)
-            {
-                cioWsTypeKeys += $"'{Wskey.ConstantKey}',";
-            }
-
-            ViewData["cioWTypeKeys"] = cioWTypeKeys.TrimEnd(',');
-            ViewData["cioWsTypeKeys"] = cioWsTypeKeys.TrimEnd(',');
-
             var activityTypeSource = EnumSelectListProvider.GetActivityTypeItems();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -538,8 +522,7 @@ namespace Datiss.Budget.Web.Controllers
             var cioWTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIOWType);
             var cioWsTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIOWsType);
 
-            var activity = new ActivityType();
-            var activityTypes = EnumSelectListProvider.GetActivityTypeItems(activity);
+            var activityTypes = EnumSelectListProvider.GetActivityTypeItems();
 
             var items = new List<IncomeCurrentOperationalDTO>();
 
@@ -598,10 +581,10 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost, Route("GetICOTypeAsync")]
-        public async Task<JsonResult> GetICOTypeAsync(string key)
+        public async Task<JsonResult> GetICOTypeAsync(int key)
         {
             IEnumerable<ConstantDTO> result;
-            if (key == ActivityType.Water.ToString())
+            if (key == Convert.ToInt32(ActivityType.Water))
             {
                 result = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIOWType);
             }
