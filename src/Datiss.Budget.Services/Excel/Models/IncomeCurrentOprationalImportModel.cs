@@ -31,24 +31,24 @@ namespace Datiss.Budget.Services.Excel.Models
         public int CountH { get; set; }
 
         [Column(MappingDirections.Both, Letter = "H")]
-        public int PriceH { get; set; }
+        public long PriceH { get; set; }
 
         [Column(MappingDirections.Both, Letter = "I")]
-        public int CostH { get; set; }
+        public long CostH { get; set; }
 
         [Column(MappingDirections.Both, Letter = "J")]
         public int CountNH { get; set; }
 
         [Column(MappingDirections.Both, Letter = "K")]
-        public int PriceNH { get; set; }
+        public long PriceNH { get; set; }
 
         [Column(MappingDirections.Both, Letter = "L")]
-        public int CostNH { get; set; }
+        public long CostNH { get; set; }
 
         [Column(MappingDirections.Both, Letter = "M")]
         public int TotalCount { get; set; }
 
         [Column(MappingDirections.Both, Letter = "N")]
-        public int TotalCost { get; set; }
+        public long TotalCost { get; set; }
     }
 }
