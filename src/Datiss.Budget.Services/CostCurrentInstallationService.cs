@@ -112,6 +112,54 @@ namespace Datiss.Budget.Services
 
 
         }
+
+        public async Task<ValidationResult<CostCurrentInstalationDTO>> UpdateAsync(UpdateCostCurrentInstalationDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+            model.CCInstalationTypeTitle = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CCInstalationTypeId, model.ActivityType, model.Id))
+                {
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.YearId = model.YearId;
+                    entity.CCInstalationTypeId = model.CCInstalationTypeId;
+                    entity.ActivityType = model.ActivityType;
+                    entity.NumberUser = model.NumberUser;
+                    entity.Cost = model.Cost;
+                    entity.Income = model.Income;
+
+                    await _uow.SaveChangesAsync();
+
+                    var result = new CostCurrentInstalationDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        CCInstalationTypeId = model.CCInstalationTypeId,
+                        ActivityType = model.ActivityType,
+                        Cost = model.Cost,
+                        Income = model.Income,
+                        OrganizationDisplay = organizationDisplay,
+                        CCInstalationTypeTitle = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
+
+                    return ValidationResult<CostCurrentInstalationDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<CostCurrentInstalationDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+            return ValidationResult<CostCurrentInstalationDTO>.Failed(
+                string.Format(ServiceMessages.Logic_TitleDuplicate,
+                model.CCInstalationTypeTitle, organizationDisplay)
+                );
+        }
+
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentInstalation>> setFilter(
             IQueryable<CostCurrentInstalation> query,
