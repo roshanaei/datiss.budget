@@ -417,6 +417,10 @@ namespace Datiss.Budget.Services
             string orgTitle = "";
             foreach (var org in existOrgs)
             {
+                if (!string.IsNullOrWhiteSpace(orgTitle))
+                {
+                    break;
+                }
                 foreach (var usert in oiftypes)
                 {
                     var existTypeInExcel = records.Any(_ => _.OIFTypeId == usert.Id &&

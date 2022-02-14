@@ -429,6 +429,10 @@ namespace Datiss.Budget.Services
             string orgTitle = "";
             foreach (var org in existOrgs)
             {
+                if (!string.IsNullOrWhiteSpace(orgTitle))
+                {
+                    break;
+                }
                 foreach (var item in dwastetypes)
                 {
                     var existDWTypeInExcel = records.Any(_ => _.DWasteTypeId == item.Id &&
