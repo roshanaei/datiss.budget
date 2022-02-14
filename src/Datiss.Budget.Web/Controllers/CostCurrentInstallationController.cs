@@ -83,6 +83,31 @@ namespace Datiss.Budget.Web.Controllers
             return Json(result.Result.Adapt<CostCurrentInstallationViewModel>());
         }
 
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Edit)]
+        public async Task<IActionResult> Edit(UpdateCostCurrentInstallationViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+
+            var data = model.Adapt<UpdateCostCurrentInstalationDTO>();
+            var result = await _costCurrentInstallationService.UpdateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(
+                result.Result.Adapt<CostCurrentInstallationViewModel>()
+            );
+        }
+
         public IActionResult Index()
         {
             return View();
