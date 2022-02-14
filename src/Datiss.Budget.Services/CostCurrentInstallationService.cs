@@ -5,12 +5,15 @@ using Datiss.Budget.Entities;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Enum;
 using Datiss.Budget.Extensions;
+using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using LinqKit;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -60,6 +63,55 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
 
+        public async Task<ValidationResult<CostCurrentInstalationDTO>> CreateAsync(CreateCostCurrentInstalationDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var entity = new CostCurrentInstalation
+            {
+                YearId = model.YearId,
+                OrganizationId = model.OrganizationId,
+                CCInstalationTypeId = model.CCInstalationTypeId,
+                ActivityType = model.ActivityType,
+                NumberUser = model.NumberUser,
+                Cost = model.Cost,
+                Income = model.Income
+            };
+
+            model.CCInstalationTypeTitle = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CCInstalationTypeId, model.ActivityType))
+                {
+                    await _dbSet.AddAsync(entity);
+                    await _uow.SaveChangesAsync();
+
+                    var result = entity.Adapt<CostCurrentInstalationDTO>();
+                    result.CCInstalationTypeTitle = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title;
+                    result.OrganizationDisplay = organizationDisplay;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.ActivityType = model.ActivityType;
+                    result.NumberUser = model.NumberUser;
+                    result.Cost = model.Cost;
+                    result.Income = model.Income;
+
+                    return ValidationResult<CostCurrentInstalationDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<CostCurrentInstalationDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+            return ValidationResult<CostCurrentInstalationDTO>.Failed(
+                string.Format(ServiceMessages.Logic_TitleDuplicate,
+                model.CCInstalationTypeTitle, organizationDisplay)
+                );
+
+
+        }
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentInstalation>> setFilter(
             IQueryable<CostCurrentInstalation> query,
