@@ -28,11 +28,11 @@ namespace Datiss.Budget.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
-        public int PriceH { get; set; }
+        public long PriceH { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
-        public int CostH { get; set; }
+        public long CostH { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
@@ -40,11 +40,11 @@ namespace Datiss.Budget.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
-        public int PriceNH { get; set; }
+        public long PriceNH { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
-        public int CostNH { get; set; }
+        public long CostNH { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
@@ -52,7 +52,7 @@ namespace Datiss.Budget.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
-        public int TotalCost { get; set; }
+        public long TotalCost { get; set; }
 
         public IEnumerable<SelectListItem> ICOTypeSource { get; set; }
 
@@ -99,11 +99,11 @@ namespace Datiss.Budget.ViewModels
 
         public string CountHDisplay => CountH.ToString("N0");
 
-        public int PriceH { get; set; }
+        public long PriceH { get; set; }
 
         public string PriceHDisplay => PriceH.ToString("N0");
 
-        public int CostH { get; set; }
+        public long CostH { get; set; }
 
         public string CostHDisplay => CostH.ToString("N0");
 
@@ -111,18 +111,18 @@ namespace Datiss.Budget.ViewModels
 
         public string CountNHDisplay => CountNH.ToString("N0");
 
-        public int PriceNH { get; set; }
+        public long PriceNH { get; set; }
 
         public string PriceNHDisplay => PriceNH.ToString("N0");
 
-        public int CostNH { get; set; }
+        public long CostNH { get; set; }
         public string CostNHDisplay => CostNH.ToString("N0");
 
         public int TotalCount { get; set; }
 
         public string TotalCountDisplay => TotalCount.ToString("N0");
 
-        public int TotalCost { get; set; }
+        public long TotalCost { get; set; }
 
         public string TotalCostDisplay => TotalCost.ToString("N0");
     }
