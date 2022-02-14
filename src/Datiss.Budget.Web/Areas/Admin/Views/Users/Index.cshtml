@@ -19,10 +19,10 @@
                 <div class="card-content">
                     <div class="card-body">
                         <form id="filterForm"
-                            asp-controller="@UsersController.Name"
-                            asp-action="@UsersController.ACTION_Index"
-                            method="POST"
-                            asp-asp-antiforgery="true">
+                              asp-controller="@UsersController.Name"
+                              asp-action="@UsersController.ACTION_Index"
+                              method="POST"
+                              asp-asp-antiforgery="true">
                             <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
                             <div class="rowACJSB">
                                 <fieldset class="form-group mt-3">
@@ -55,21 +55,18 @@
                                 </fieldset>
                                 <fieldset>
                                     <div class="rowACJE">
-                                        
+
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
                                         <a asp-action="@UsersController.ACTION_Create" data-toggle="tooltip" data-placement="top" title="کاربر جدید" class="btn btn-success bg-light-success my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
                                         </a>
-                                        @*<button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
-                                        </button>*@
                                     </div>
                                 </fieldset>
                             </div>
                             <hr />
-                             <fieldset class="form-group position-relative has-icon-left">
+                            <fieldset class="form-group position-relative has-icon-left">
                                 <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
                                 <div class="form-control-position">
                                     <i class="ft-search font-medium-4"></i>
@@ -99,11 +96,6 @@
                                     </fieldset>
                                 </div>
                                 <fieldset>
-                                    @*<div class="rowACJE">
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.PositionId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
-                                        </a>
-                                    </div>*@
                                 </fieldset>
                             </div>
                         </form>
@@ -129,7 +121,7 @@
     <div id="divCreate">
 
     </div>
-    
+
     <div id="divSetUserPassword">
 
     </div>
@@ -265,7 +257,7 @@
                 }
             });
         }
-        
+
         function setUserPassword() {
             const model = {};
             model.userId = $('#SetPassword_UserId').val();
@@ -339,7 +331,7 @@
                 url: '@Url.Action(UsersController.ACTION_Create)',
                 data: model
             }).done(function(data, status, setting) {
-                const $form = $('#create-form'); 
+                const $form = $('#create-form');
                 $form.removeData('validator');
                 $form.removeData('unobtrusiveValidation');
                 if(data.hasError) {
@@ -352,6 +344,67 @@
             }).fail(function(request, options, err) {
                 console.log(err);
             });
+        }
+
+        $(document).on('click', '.delete-row', function () {
+            let id = $(this).data('id');
+            let btn = this;
+
+            Swal.fire({
+                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
+                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
+                type: 'error',
+                showCancelButton: true,
+                animation: false,
+                customClass: 'animated flipInX',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.value) {
+                    deleteRow(btn, id);
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+        });
+
+        function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(UsersController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
         }
 
         function changePageSize() {
