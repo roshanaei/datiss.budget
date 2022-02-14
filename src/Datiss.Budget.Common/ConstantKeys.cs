@@ -13,6 +13,11 @@
         public const string __Cofficients = "Cofficients";
         public const string __CIRSection = "CIRSection";
         public const string __CIRUnit = "CurrentIncomeReport";
+        public const string __CIRWater = "Water";
+        public const string __CIRWaste = "Waste";
+        public const string __CIROther = "Other";
+        public const string __CIOWType = "CIOWType";
+        public const string __CIOWsType = "CIOWsType";
         public const string __CurrentCostInstalationWater = "CurrentCostInstalationWater";
         public const string __CurrentCostInstalationWaste = "CurrentCostInstalationWaste";
     }

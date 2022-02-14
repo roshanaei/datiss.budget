@@ -74,6 +74,8 @@ namespace Datiss.Budget.Web.Admin.Controllers
             var result = await _organizationService.GetListAsync(filter);
             var model = result.Adapt<OrganizationIndexViewModel>();
 
+            model.Filter.PageSize = filter.PageSize;
+
             model.SetParentOrganizationFilterSource(orgSource,filter.OrganizationId);
 
 

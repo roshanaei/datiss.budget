@@ -1,5 +1,5 @@
-﻿@model WWsFeeIndexViewModel
-@{ ViewData["Title"] = "تعرفه آب و خدمات دفع فاضلاب"; }
+﻿@model IncomeCurrentOperationalIndexViewModel
+@{ ViewData["Title"] = "درآمد عملیاتی"; }
 
 <!--Title-->
 <div class="row">
@@ -30,8 +30,8 @@
                         <!--Filters-->
                         <form method="post"
                               id="filterForm"
-                              asp-controller="@WWsFeeController.Name"
-                              asp-action="@WWsFeeController.ACTION_Index"
+                              asp-controller="@IncomeCurrentOperationalController.Name"
+                              asp-action="@IncomeCurrentOperationalController.ACTION_Index"
                               asp-antiforgery="true">
                             <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
                             <div class="rowACJSB">
@@ -103,7 +103,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu" style="width:280px">
+                                        <div class="dropdown-menu" style="width:200%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -135,7 +135,7 @@
                                                                name="col-3"
                                                                id="col-3" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-3"><span>حوزه فعالیت</span></label>
+                                                               for="col-3"><span>بخش</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -146,7 +146,7 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>کاربری</span></label>
+                                                               for="col-4"><span>عنوان</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -157,7 +157,7 @@
                                                                name="col-5"
                                                                id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>طبقات مصرف مسکونی</span></label>
+                                                               for="col-5"><span>تعداد خانگی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -168,7 +168,7 @@
                                                                name="col-6"
                                                                id="col-6" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-6"><span>پارامتر اول تعرفه بهای خدمات</span></label>
+                                                               for="col-6"><span>قیمت خانگی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -179,7 +179,7 @@
                                                                name="col-7"
                                                                id="col-7" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-7"><span>پارامتر دوم تعرفه بهای خدمات</span></label>
+                                                               for="col-7"><span>جمع درآمد خانگی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -190,7 +190,7 @@
                                                                name="col-8"
                                                                id="col-8" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-8"><span>پارامتر اول خدمات تبصره 3</span></label>
+                                                               for="col-8"><span>تعداد غیر خانگی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -201,7 +201,7 @@
                                                                name="col-9"
                                                                id="col-9" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-9"><span>پارامتر دوم خدمات تبصره 3</span></label>
+                                                               for="col-9"><span style="">قیمت غیر خانگی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -212,7 +212,7 @@
                                                                name="col-10"
                                                                id="col-10" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-10"><span>پارامتر اول خدمات تبصره 7</span></label>
+                                                               for="col-10"><span style="">جمع درآمد غیر خانگی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -223,7 +223,7 @@
                                                                name="col-11"
                                                                id="col-11" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-11"><span>پارامتر دوم خدمات تبصره 7</span></label>
+                                                               for="col-11"><span style="">جمع کل درآمد</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -235,12 +235,12 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WWsFeeController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@IncomeCurrentOperationalController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
-                                           asp-asp-controller="@WWsFeeController.Name"
-                                           asp-action="@WWsFeeController.ACTION_GetExcelTemplate"
+                                           asp-asp-controller="@IncomeCurrentOperationalController.Name"
+                                           asp-action="@IncomeCurrentOperationalController.ACTION_GetExcelTemplate"
                                            asp-route-yearId="@Model.Filter.YearId"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
@@ -302,25 +302,7 @@
 
     <script type="text/javascript">
 
-    var userType_Ids = [
-        @Html.Raw(Model.UserTypeSourceIdArray)
-    ];
-
-    var userType_keys = [
-        @Html.Raw(ViewData["userTypeKeys"].ToString())
-    ];
-
-    var userType_source = {};
-
-    for (var i = 0; i < userType_Ids.length; i++) {
-        userType_source[userType_Ids[i]] = userType_keys[i];
-    }
-
-
     $(document).ready(function () {
-        console.log(userType_source);
-        console.log(userType_Ids);
-        console.log(userType_keys);
             console.log('ready');
             //fill input hidden with initial columns showing
             document.getElementById("hidColumns").value = showingColmuns;
@@ -398,7 +380,7 @@
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
                     console.log(params);
-                    let deleteUrl = '@Url.Action(WWsFeeController.ACTION_DeleteRecords)';
+                    let deleteUrl = '@Url.Action(IncomeCurrentOperationalController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
 
                     $.ajax({
@@ -433,7 +415,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(WWsFeeController.ACTION_Index)';
+                                document.location.href = '@Url.Action(IncomeCurrentOperationalController.ACTION_Index)';
                             });
                         },
                         error: function(request, option, err) {
@@ -466,6 +448,7 @@
         });
 
         $(document).on('click', '#btnCreate', function () {
+            console.log('btnCreate clicked!')
             addNewRow();
         });
 
@@ -474,12 +457,13 @@
             resetDataColumns()
             let id = $(this).data('id');
 
-            let input1 = document.getElementById('inputP1Fee_' + id);
-            let input2 = document.getElementById('inputP2Fee_' + id);
-            let input3 = document.getElementById('inputP1Note3_' + id);
-            let input4 = document.getElementById('inputP1Note7_' + id);
-            let input5 = document.getElementById('inputP2Note3_' + id);
-            let input6 = document.getElementById('inputP2Note7_' + id);
+            let input1 = document.getElementById('inputCountH_' + id);
+            let input2 = document.getElementById('inputPriceH_' + id);
+            let input3 = document.getElementById('inputCostH_' + id);
+            let input4 = document.getElementById('inputCountNH_' + id);
+            let input5 = document.getElementById('inputPriceNH_' + id);
+            let input6 = document.getElementById('inputCostNH_' + id);
+            let input8 = document.getElementById('inputTotalCost_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -508,6 +492,18 @@
                 }
             });
             input5.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input6.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input8.addEventListener("keyup", function (event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
@@ -574,7 +570,7 @@
         $(document).on('click', '.openCopy', function() {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action(WWsFeeController.ACTION_Copy)',
+                url: '@Url.Action(IncomeCurrentOperationalController.ACTION_Copy)',
                 success: function (data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
@@ -609,7 +605,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(WWsFeeController.ACTION_Calculation)',
+                url: '@Url.Action(IncomeCurrentOperationalController.ACTION_Calculation)',
                 data: model,
                 success: function (data, status, settings) {
                     $('#divCalc').html('');
@@ -638,16 +634,15 @@
             $(".olvy").css("display", "block");
 
             $.ajax({
-                url: '@Url.Action(WWsFeeController.ACTION_ImportExcel)',
+                url: '@Url.Action(IncomeCurrentOperationalController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
                 contentType: false,
                 success: function (data, status, settings) {
                     console.log(data);
-
-                    $(".olvy").css("display", "none");
                     if (data.hasError) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
                             html: `<span class="my-font">${data.message}</span>`,
@@ -683,16 +678,18 @@
                             if(result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
                                 console.log(fdata);
+
                                 $(".olvy").css("display", "block");
+
                                 $.ajax({
-                                    url: '@Url.Action(WWsFeeController.ACTION_ImportExcel)',
+                                    url: '@Url.Action(IncomeCurrentOperationalController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
                                     contentType: false,
                                     success: function(data, status, settings) {
                                         if (data.hasError) {
-                                            $("#overlay").css("display", "none");
+                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">خطا</span>',
                                                 html: `<span class="my-font">${data.message}</span>`,
@@ -707,9 +704,9 @@
                                             return;
                                         }
 
-                                        if (!data.hasError) {
-                                          $("#overlay").css("display", "block");
-                                          Swal.fire({
+                                        if(!data.hasError) {
+                                            $(".olvy").css("display", "none");
+                                            Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
                                                 html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
                                                 type: 'success',
@@ -720,7 +717,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                document.location.href = '@Url.Action(WWsFeeController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(IncomeCurrentOperationalController.ACTION_Index)';
                                             });
                                         }
 
@@ -729,11 +726,7 @@
                                         }
                                     },
                                     error: function(request, options, err) {
-                                        if (request.status == 401 || request.status == 403) {
-                                            ShowPermissionErorr();
-                                            return;
-                                        }
-                                        ShowCommonErorr();
+                                        console.log(err);
                                     }
                                 });
 
@@ -744,7 +737,6 @@
                             }
                         });
                     }
-
                     if (!data.hasError && !data.ask) {
                         $(".olvy").css("display", "none");
                         Swal.fire({
@@ -758,14 +750,17 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(WWsFeeController.ACTION_Index)';
+                            document.location.href = '@Url.Action(IncomeCurrentOperationalController.ACTION_Index)';
                         });
                     }
 
                 },
                 error: function(request, options, err) {
-                    console.log(err);
-                    alert('مشکلی به وجود آمده است ،لطفا مجددا عملیات را تکرار کنید . با تشکر');
+                    if (request.status == 401 || request.status == 403) {
+                        ShowPermissionErorr();
+                        return;
+                    }
+                    ShowCommonErorr();
                 }
             });
 
@@ -781,7 +776,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(WWsFeeController.ACTION_Copy)',
+                url: '@Url.Action(IncomeCurrentOperationalController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
                 success: function (data, status, settings) {

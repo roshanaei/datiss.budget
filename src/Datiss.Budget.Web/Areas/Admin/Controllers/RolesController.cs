@@ -100,8 +100,8 @@ namespace Datiss.Budget.Web.Admin.Controllers
             }
         }
 
-        [HttpPost("[action]"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, UpdateRoleViewModel model) 
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Edit(UpdateRoleViewModel model) 
         {
             model.CheckArgumentIsNull(nameof(model));
             if (!ModelState.IsValid) {

@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Services.Excel.Models
 {
-    public class IncomeCurrentReportImportModel
+    public class IncomeCurrentOperationalImportModel
     {
         [Column(MappingDirections.Both, Letter = "A")]
         public string OrganizationDisplay { get; set; }
@@ -17,27 +16,39 @@ namespace Datiss.Budget.Services.Excel.Models
         public int OrganizationId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "C")]
-        public string ActivityName { get; set; }
+        public string ActivityTypeDisplay { get; set; }
 
         [Column(MappingDirections.Both, Letter = "D")]
-        public int? Activity { get; set; }
+        public int ActivityType { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
-        public string SectionTypeDisplay { get; set; }
+        public string ICOTypeDisplay { get; set; }
 
         [Column(MappingDirections.Both, Letter = "F")]
-        public int SectionTypeId { get; set; }
+        public int ICOTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "G")]
-        public string UnitTypeDisplay { get; set; }
+        public int CountH { get; set; }
 
         [Column(MappingDirections.Both, Letter = "H")]
-        public int UnitTypeId { get; set; }
+        public long PriceH { get; set; }
 
         [Column(MappingDirections.Both, Letter = "I")]
-        public long FunctionalBasicYear { get; set; }
+        public long CostH { get; set; }
 
         [Column(MappingDirections.Both, Letter = "J")]
-        public long FunctionalYear_1 { get; set; }
+        public int CountNH { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "K")]
+        public long PriceNH { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "L")]
+        public long CostNH { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "M")]
+        public int TotalCount { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "N")]
+        public long TotalCost { get; set; }
     }
 }

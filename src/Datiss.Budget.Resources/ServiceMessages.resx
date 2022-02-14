@@ -291,6 +291,15 @@
   <data name="ReportExistByName" xml:space="preserve">
     <value>گزارش با نام '{0}' قبلاً در سیستم ثبت شده است. لطفاً نام دیگری وارد نمایید.</value>
   </data>
+  <data name="Logic_ActivityICOTypeDuplicate" xml:space="preserve">
+    <value>اطلاعات بخش {0} و عنوان {1} برای "{2}" قبلا ثبت شده است.</value>
+  </data>
+  <data name="ImportExcelInvalidICOTypeActivity" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد عنوان"{1}" برای بخش "{2}" معتبر نیست .</value>
+  </data>
+  <data name="ImportExcelICOTypeActivityOrgNotInExcel" xml:space="preserve">
+    <value>عنوان های :&lt;br&gt;{0} در بخش "{1}" برای "{2}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
   <data name="ImportExcelInvalidNOICType" xml:space="preserve">
     <value>در سطر {0} فایل اکسل، کد عنوان "{1}" معتبر نیست .</value>
   </data>
@@ -299,6 +308,15 @@
   </data>
   <data name="Logic_NOICOrgDuplicate" xml:space="preserve">
     <value>اطلاعات عنوان {0} برای "{1}" قبلا ثبت شده است.</value>
+  </data>
+  <data name="ImportExcelActivityTypeNotInExcel" xml:space="preserve">
+    <value>فعالیت :&lt;br&gt;"{0}" برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="ImportExcelSectionTypesNotInExcel" xml:space="preserve">
+    <value>شرح های :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="ImportExcelUnitTypesSectionTypeNotInExcel" xml:space="preserve">
+    <value>در فایل اکسل شما اطلاعات واحد های :&lt;br&gt;{0} برای شرح "{1}" ، "{2}" وجود ندارد.</value>
   </data>
   <data name="ImportExcelCCITypeActivityOrgNotInExcel" xml:space="preserve">
     <value>عنوان های :&lt;br&gt;{0} در بخش "{1}" برای "{2}" در فایل اکسل شما اطلاعاتی ندارند.</value>

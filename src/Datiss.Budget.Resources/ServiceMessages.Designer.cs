@@ -169,6 +169,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to فعالیت :&lt;br&gt;&quot;{0}&quot; برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelActivityTypeNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelActivityTypeNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to امکان انجام این عملیات به دلیل نبود رکورد در جدول وابسته، وجود ندارد..
         /// </summary>
         public static string ImportExcelCalculationField {
@@ -214,6 +223,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} در بخش &quot;{1}&quot; برای &quot;{2}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelICOTypeActivityOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelICOTypeActivityOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد عنوان &quot;{1}&quot; معتبر نیست ..
         /// </summary>
         public static string ImportExcelInvalidCCIActivityType {
@@ -246,6 +264,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelInvalidFinanceYear {
             get {
                 return ResourceManager.GetString("ImportExcelInvalidFinanceYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد عنوان&quot;{1}&quot; برای بخش &quot;{2}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidICOTypeActivity {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidICOTypeActivity", resourceCulture);
             }
         }
         
@@ -349,6 +376,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to شرح های :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelSectionTypesNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelSectionTypesNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ورود اطلاعات با موفقیت انجام گردید..
         /// </summary>
         public static string ImportExcelSuccess {
@@ -363,6 +399,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelTitleNotInExcel {
             get {
                 return ResourceManager.GetString("ImportExcelTitleNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در فایل اکسل شما اطلاعات واحد های :&lt;br&gt;{0} برای شرح &quot;{1}&quot; ، &quot;{2}&quot; وجود ندارد..
+        /// </summary>
+        public static string ImportExcelUnitTypesSectionTypeNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelUnitTypesSectionTypeNotInExcel", resourceCulture);
             }
         }
         
@@ -417,6 +462,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_ActivityDuplicate {
             get {
                 return ResourceManager.GetString("Logic_ActivityDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات بخش {0} و عنوان {1} برای &quot;{2}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_ActivityICOTypeDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_ActivityICOTypeDuplicate", resourceCulture);
             }
         }
         
