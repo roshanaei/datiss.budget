@@ -257,7 +257,17 @@
                 },
                 error: function (request, options, err) {
                     console.log(err);
-                    alert('عملیات ویرایش سازمان با خطا مواجه شد.');
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">عملیات ویرایش سازمان با خطا مواجه شد.</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
                 }
             });
         });
@@ -330,7 +340,17 @@
                 },
                 error: function (request, options, err) {
                     console.log(err);
-                    alert('عملیات افزودن سازمان جدید با خطا مواجه شد.');
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">عملیات افزودن سازمان جدید با خطا مواجه شد.</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
                 }
             });
         });
