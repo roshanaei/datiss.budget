@@ -171,9 +171,6 @@ namespace Datiss.Budget.Web.Controllers
                 cioWsTypeKeys += $"'{Wskey.ConstantKey}',";
             }
 
-            ViewData["cioWTypeKeys"] = cioWTypeKeys.TrimEnd(',');
-            ViewData["cioWsTypeKeys"] = cioWsTypeKeys.TrimEnd(',');
-
             var activityTypeSource = EnumSelectListProvider.GetActivityTypeItems();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
