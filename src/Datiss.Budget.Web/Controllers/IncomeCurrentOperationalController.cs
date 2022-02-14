@@ -452,7 +452,6 @@ namespace Datiss.Budget.Web.Controllers
                     new CalculationResultViewModel
                     {
                         Result = item.Value,
-                        Title = getCalcTitle(item.Key)
                     }
                 );
             }
