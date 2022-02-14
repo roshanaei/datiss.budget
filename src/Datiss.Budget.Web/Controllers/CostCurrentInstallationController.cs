@@ -1,5 +1,10 @@
-﻿using Datiss.Budget.Services.Contracts;
+﻿using Datiss.Budget.Resources;
+using Datiss.Budget.Security;
+using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +59,28 @@ namespace Datiss.Budget.Web.Controllers
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
+        }
+
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
+        public async Task<IActionResult> Create(CreateCostCurrentInstallationViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+            var data = model.Adapt<CreateCostCurrentInstalationDTO>();
+
+            var result = await _costCurrentInstallationService.CreateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(result.Result.Adapt<CostCurrentInstallationViewModel>());
         }
 
         public IActionResult Index()
