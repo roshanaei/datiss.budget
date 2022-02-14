@@ -163,6 +163,45 @@ namespace Datiss.Budget.Web.Controllers
             return View(model);
         }
 
+        [HttpPost("{page?}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(CostCurrentInstallationIndexViewModel model)
+        {
+            var filter = model.Filter.Adapt<CostCurrentInstalationFilterDTO>();
+
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _costCurrentInstallationService.GetListAsync(filter);
+            model = result.Adapt<CostCurrentInstallationIndexViewModel>();
+            model.Filter = filter.Adapt<CostCurrentInstallationFilterViewModel>();
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var CCIWSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWater))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var CCIWsSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWaste))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+            model.SetCCInstalationTypeSource(CCIWSource);
+            model.SetCCInstalationTypeSource(CCIWsSource);
+
+            return View(model);
+        }
+
+
         public IActionResult Index()
         {
             return View();
