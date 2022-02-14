@@ -158,19 +158,6 @@ namespace Datiss.Budget.Web.Controllers
                 Title = x.Title
             }).ToList();
 
-            var cioWTypeKeys = "";
-            var cioWsTypeKeys = "";
-
-            foreach (var Wkey in cioWTypeData)
-            {
-                cioWTypeKeys += $"'{Wkey.ConstantKey}',";
-            }
-
-            foreach (var Wskey in cioWsTypeData)
-            {
-                cioWsTypeKeys += $"'{Wskey.ConstantKey}',";
-            }
-
             var activityTypeSource = EnumSelectListProvider.GetActivityTypeItems();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
