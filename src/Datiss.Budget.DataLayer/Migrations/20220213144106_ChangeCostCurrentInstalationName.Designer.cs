@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220213144106_ChangeCostCurrentInstalationName")]
+    partial class ChangeCostCurrentInstalationName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3358,7 +3360,7 @@ namespace Datiss.Budget.DataLayer.Migrations
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentInstalation", b =>
                 {
-                    b.HasOne("Datiss.Budget.Entities.Constant", "CCInstalationType")
+                    b.HasOne("Datiss.Budget.Entities.Constant", "ICInstalationType")
                         .WithMany("CostCurrentInstalations")
                         .HasForeignKey("CCInstalationTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -3376,9 +3378,9 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("CCInstalationType");
-
                     b.Navigation("FinanceYear");
+
+                    b.Navigation("ICInstalationType");
 
                     b.Navigation("Organization");
                 });
