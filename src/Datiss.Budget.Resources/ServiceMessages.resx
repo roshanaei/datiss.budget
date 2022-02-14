@@ -300,4 +300,10 @@
   <data name="Logic_NOICOrgDuplicate" xml:space="preserve">
     <value>اطلاعات عنوان {0} برای "{1}" قبلا ثبت شده است.</value>
   </data>
+  <data name="ImportExcelCCITypeActivityOrgNotInExcel" xml:space="preserve">
+    <value>عنوان های :&lt;br&gt;{0} در بخش "{1}" برای "{2}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="ImportExcelInvalidCCIActivityType" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد عنوان "{1}" معتبر نیست .</value>
+  </data>
 </root>

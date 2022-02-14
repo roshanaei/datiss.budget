@@ -1,4 +1,5 @@
-﻿using Datiss.Budget.Common.Exceptions;
+﻿using Datiss.Budget.Common;
+using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Entities;
@@ -10,10 +11,13 @@ using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
 using LinqKit;
 using Mapster;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -400,6 +404,226 @@ namespace Datiss.Budget.Services
 
             return mem1;
         }
+
+                public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
+        {
+            var data = await _excelService.ImportAsync<CostCurrentInstallationImportModel>
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
+
+            var records = data.Adapt<List<CostCurrentInstalation>>();
+
+
+            int rowIndex = 1;
+
+            var activitytypes = EnumSelectListProvider.GetActivityTypeItems();
+
+            var cciwtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                   x.Parent.ConstantKey == ConstantKeys.__CurrentCostInstalationWater);
+            
+            var cciwstypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                   x.Parent.ConstantKey == ConstantKeys.__CurrentCostInstalationWaste);
+
+            var descendents = await _organizationService
+                             .GetAllDescendentsAsync(_userContext.OrganizationId);
+
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
+
+            foreach (var rec in records)
+            {
+                rec.YearId = yearId;
+                var org = await _orgDbSet.FindAsync(rec.OrganizationId);
+
+                if (year == null || year.Status == EntityStatus.Disbaled)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
+                        );
+                }
+                if (org == null)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
+                        );
+                }
+                if(rec.ActivityType == ActivityType.Water)
+                {
+                    if (!await cciwtypes.AnyAsync(x => x.Id == rec.CCInstalationTypeId))
+                    {
+                        return ImportResult.Failed(
+                            string.Format(ServiceMessages.ImportExcelInvalidCCIActivityType, rowIndex + 2,rec.ActivityType.ToDisplay(), rec.CCInstalationTypeId)
+                            );
+                    }
+                }
+                else
+                {
+                    if (!await cciwstypes.AnyAsync(x => x.Id == rec.CCInstalationTypeId))
+                    {
+                        return ImportResult.Failed(
+                            string.Format(ServiceMessages.ImportExcelInvalidCCIActivityType, rowIndex + 2, rec.ActivityType.ToDisplay(), rec.CCInstalationTypeId)
+                            );
+                    }
+                }
+                if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
+                        );
+                }
+
+                rowIndex++;
+            }
+            //
+            var missingOrgs = new List<Organization>();
+            var existOrgs = new List<Organization>();
+
+            foreach (var item in descendents)
+            {
+                var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                if (!existInExcel)
+                {
+                    if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                        missingOrgs.Add(item);
+                }
+                else
+                    existOrgs.Add(item);
+            }
+            //
+            //Start DWaterType
+            var missingCCIWType = new List<Constant>();
+            var missingCCIWsType = new List<Constant>();
+            
+            string orgTitle = "";
+
+            string activityTitle = "";
+
+            string missingCCIWTypeTtile = "";
+            string missingCCIWsTypeTtile = "";
+
+            string IcoTypeNames = "";
+
+
+            foreach (var org in existOrgs)
+            {
+                foreach (var activityt in activitytypes)
+                {
+                    var existActivityInExcel = records.Any(_ => Convert.ToInt32(_.ActivityType) == Convert.ToInt32(activityt.Value) &&
+                                                              _.OrganizationId == org.Id);
+                    if (!existActivityInExcel)
+                    {
+                        activityTitle = activityt.Text;
+                        orgTitle = org.Title;
+                    }
+                    else
+                    {
+                        if (Convert.ToInt32(activityt.Value) == Convert.ToInt32(ActivityType.Water))
+                        {
+                            foreach (var cciw in cciwtypes)
+                            {
+                                var exist = records.Any(_ => Convert.ToInt32(_.ActivityType) == Convert.ToInt32(activityt.Value) &&
+                                                             _.OrganizationId == org.Id &&
+                                                             _.CCInstalationTypeId == cciw.Id);
+                                if (!exist)
+                                {
+                                    missingCCIWType.Add(cciw);
+                                    missingCCIWTypeTtile =  cciw.Title;
+                                    activityTitle = activityt.Text;
+                                    orgTitle = org.Title;
+                                }
+                            }
+                        }
+                        if (Convert.ToInt32(activityt.Value) == Convert.ToInt32(ActivityType.Waste))
+                        {
+                            foreach (var cciws in cciwstypes)
+                            {
+                                var existWs = records.Any(_ => Convert.ToInt32(_.ActivityType) == Convert.ToInt32(activityt.Value) &&
+                                                             _.OrganizationId == org.Id &&
+                                                             _.CCInstalationTypeId == cciws.Id);
+                                if (!existWs)
+                                {
+                                    missingCCIWsType.Add(cciws);
+                                    missingCCIWsTypeTtile = cciws.Title;
+                                    activityTitle = activityt.Text;
+                                    orgTitle = org.Title;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (missingCCIWType.Any())
+            {
+                foreach (var missCCIW in missingCCIWType)
+                {
+                    IcoTypeNames += "- [" + missCCIW.Title + "]<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelCCITypeActivityOrgNotInExcel, IcoTypeNames, activityTitle, orgTitle));
+            }
+            if (missingCCIWsType.Any())
+            {
+                foreach (var missCCIWs in missingCCIWsType)
+                {
+                    IcoTypeNames += "- [" + missCCIWs.Title + "]<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelCCITypeActivityOrgNotInExcel, IcoTypeNames, activityTitle, orgTitle));
+            }
+
+            //end
+
+            rowIndex = 1;
+
+            if (!continueIfAnyOrgMissing)
+            {
+                if (missingOrgs.Any())
+                {
+                    string orgNames = "";
+                    foreach (var item in missingOrgs)
+                    {
+                        orgNames += "- " + item.Title + "<br>";
+                    }
+
+                    return new ImportResult
+                    {
+                        Message = orgNames,
+                        AskToImport = true
+                    };
+                }
+            }
+
+            foreach (var record in records)
+            {
+
+                if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
+                        );
+
+                if (!await checkLogicAsync(
+                    record.YearId,
+                    record.OrganizationId,
+                    record.CCInstalationTypeId,
+                    record.ActivityType))
+                {
+
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
+                        );
+                }
+
+                rowIndex++;
+            }
+
+            await _dbSet.AddRangeAsync(records);
+            await _uow.SaveChangesAsync();
+
+            return ImportResult.Succeed(
+                string.Format(ServiceMessages.ImportExcelSuccess)
+                );
+        }
+
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentInstalation>> setFilter(
             IQueryable<CostCurrentInstalation> query,

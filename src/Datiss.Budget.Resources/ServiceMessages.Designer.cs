@@ -178,6 +178,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} در بخش &quot;{1}&quot; برای &quot;{2}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelCCITypeActivityOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelCCITypeActivityOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ضرایب :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelCofficientNotInExcel {
@@ -201,6 +210,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelDiameterPipeUserTypeOrgNotInExcel {
             get {
                 return ResourceManager.GetString("ImportExcelDiameterPipeUserTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد عنوان &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidCCIActivityType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidCCIActivityType", resourceCulture);
             }
         }
         
