@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -363,6 +364,42 @@ namespace Datiss.Budget.Services
             return items;
         }
 
+        public async Task<Stream> ExportExcelAsync(CostCurrentInstalationFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.CCInstalationType)
+                                    .Select(x => new CostCurrentInstalationDTO
+                                    {
+                                        Id = x.Id,
+                                        CCInstalationTypeTitle = x.CCInstalationType.Title,
+                                        CCInstalationTypeId = x.CCInstalationTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        ActivityType = x.ActivityType,
+                                        NumberUser = x.NumberUser,
+                                        Income = x.Income,
+                                        Cost = x.Cost,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
+                                    }).ToListAsync();
+
+            var ms = new MemoryStream();
+            var result = _excelService.Export(items, ms);
+
+            var mem1 = new MemoryStream(ms.ToArray());
+
+            return mem1;
+        }
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentInstalation>> setFilter(
             IQueryable<CostCurrentInstalation> query,
