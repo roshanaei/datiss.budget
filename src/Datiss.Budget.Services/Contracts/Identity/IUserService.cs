@@ -21,5 +21,6 @@ namespace Datiss.Budget.Services.Contracts.Identity
         Task SetUserStatusAsync(int id, EntityStatus status);
 
         Task SetUserPasswordAsync(int userId, string newPassword);
+        Task HardDeleteAsync(int Id);
     }
 }

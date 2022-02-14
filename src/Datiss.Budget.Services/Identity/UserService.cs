@@ -262,6 +262,16 @@ namespace Datiss.Budget.Services.Identity
                 throw new UserChangePasswordException(result.Errors);
         }
 
+        public async Task HardDeleteAsync(int Id)
+        {
+            var entity = await _dbSet.FindAsync(Id);
+            entity.CheckReferenceIsNull(nameof(entity));
+
+            _dbSet.Remove(entity);
+
+            await _uow.SaveChangesAsync();
+        }
+
         #region private methods
 
         private void validateRequiredFields(
