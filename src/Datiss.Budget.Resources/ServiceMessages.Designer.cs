@@ -205,11 +205,11 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} در بخش &quot;{1}&quot; برای &quot;{2}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
-        public static string ImportExcelICOTypeOrgNotInExcel {
+        public static string ImportExcelICOTypeActivityOrgNotInExcel {
             get {
-                return ResourceManager.GetString("ImportExcelICOTypeOrgNotInExcel", resourceCulture);
+                return ResourceManager.GetString("ImportExcelICOTypeActivityOrgNotInExcel", resourceCulture);
             }
         }
         
@@ -241,11 +241,11 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد عنوان&quot;{1}&quot; معتبر نیست ..
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد عنوان&quot;{1}&quot; برای بخش &quot;{2}&quot; معتبر نیست ..
         /// </summary>
-        public static string ImportExcelInvalidICOType {
+        public static string ImportExcelInvalidICOTypeActivity {
             get {
-                return ResourceManager.GetString("ImportExcelInvalidICOType", resourceCulture);
+                return ResourceManager.GetString("ImportExcelInvalidICOTypeActivity", resourceCulture);
             }
         }
         

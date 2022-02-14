@@ -294,11 +294,11 @@
   <data name="Logic_ActivityICOTypeDuplicate" xml:space="preserve">
     <value>اطلاعات بخش {0} و عنوان {1} برای "{2}" قبلا ثبت شده است.</value>
   </data>
-  <data name="ImportExcelInvalidICOType" xml:space="preserve">
-    <value>در سطر {0} فایل اکسل، کد عنوان"{1}" معتبر نیست .</value>
+  <data name="ImportExcelInvalidICOTypeActivity" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد عنوان"{1}" برای بخش "{2}" معتبر نیست .</value>
   </data>
-  <data name="ImportExcelICOTypeOrgNotInExcel" xml:space="preserve">
-    <value>عنوان های :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  <data name="ImportExcelICOTypeActivityOrgNotInExcel" xml:space="preserve">
+    <value>عنوان های :&lt;br&gt;{0} در بخش "{1}" برای "{2}" در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
   <data name="ImportExcelInvalidNOICType" xml:space="preserve">
     <value>در سطر {0} فایل اکسل، کد عنوان "{1}" معتبر نیست .</value>

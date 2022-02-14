@@ -14,6 +14,7 @@ using Datiss.Budget.Services.Excel;
 using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
 using LinqKit;
 using Mapster;
 using Microsoft.AspNetCore.Http;
@@ -120,7 +121,7 @@ namespace Datiss.Budget.Services
 
             return ValidationResult<IncomeCurrentOperationalDTO>.Failed(
                 string.Format(ServiceMessages.Logic_ActivityICOTypeDuplicate,
-                model.ActivityType, model.ICOTypeDisplay, organizationDisplay)
+                model.ActivityType.ToDisplay(), model.ICOTypeDisplay, organizationDisplay)
                 );
         }
 
@@ -180,7 +181,7 @@ namespace Datiss.Budget.Services
 
             return ValidationResult<IncomeCurrentOperationalDTO>.Failed(
                 string.Format(ServiceMessages.Logic_ActivityICOTypeDuplicate,
-                model.ActivityType, model.ICOTypeDisplay, organizationDisplay)
+                model.ActivityType.ToDisplay(), model.ICOTypeDisplay, organizationDisplay)
                 );
         }
 
@@ -371,7 +372,11 @@ namespace Datiss.Budget.Services
 
             var records = data.Adapt<List<IncomeCurrentOperational>>();
 
+
             int rowIndex = 1;
+
+            var activity = new ActivityType();
+            var activitytypes = EnumSelectListProvider.GetActivityTypeItems(activity);
 
             var ciowtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                    x.Parent.ConstantKey == ConstantKeys.__CIOWType);
@@ -407,7 +412,7 @@ namespace Datiss.Budget.Services
                     if (!await ciowtypes.AnyAsync(x => x.Id == rec.ICOTypeId))
                     {
                         return ImportResult.Failed(
-                            string.Format(ServiceMessages.ImportExcelInvalidICOType, rowIndex + 2, rec.ICOTypeId)
+                            string.Format(ServiceMessages.ImportExcelInvalidICOTypeActivity, rowIndex + 2,rec.ActivityType.ToDisplay(), rec.ICOTypeId)
                             );
                     }
                 }
@@ -416,7 +421,7 @@ namespace Datiss.Budget.Services
                     if (!await ciowstypes.AnyAsync(x => x.Id == rec.ICOTypeId))
                     {
                         return ImportResult.Failed(
-                            string.Format(ServiceMessages.ImportExcelInvalidICOType, rowIndex + 2, rec.ICOTypeId)
+                            string.Format(ServiceMessages.ImportExcelInvalidICOTypeActivity, rowIndex + 2, rec.ActivityType.ToDisplay(), rec.ICOTypeId)
                             );
                     }
                 }
@@ -448,52 +453,83 @@ namespace Datiss.Budget.Services
             //Start DWaterType
             var missingCIOWType = new List<Constant>();
             var missingCIOWsType = new List<Constant>();
+            
             string orgTitle = "";
+
+            string activityTitle = "";
+
+            string missingCIOWTypeTtile = "";
+            string missingCIOWsTypeTtile = "";
+
+            string IcoTypeNames = "";
+
+
             foreach (var org in existOrgs)
             {
-                foreach (var ciow in ciowtypes)
+                foreach (var activityt in activitytypes)
                 {
-                    var existCIOWTypeInExcel = records.Any(_ => _.ICOTypeId == ciow.Id &&
+                    var existActivityInExcel = records.Any(_ => Convert.ToInt32(_.ActivityType) == Convert.ToInt32(activityt.Value) &&
                                                               _.OrganizationId == org.Id);
-                    if (!existCIOWTypeInExcel)
+                    if (!existActivityInExcel)
                     {
-                        missingCIOWType.Add(ciow);
+                        activityTitle = activityt.Text;
                         orgTitle = org.Title;
                     }
-
-                }
-                foreach (var ciows in ciowstypes)
-                {
-                    var existCIOWsTypeInExcel = records.Any(_ => _.ICOTypeId == ciows.Id &&
-                                                              _.OrganizationId == org.Id);
-                    if (!existCIOWsTypeInExcel)
+                    else
                     {
-                        missingCIOWsType.Add(ciows);
-                        orgTitle = org.Title;
+                        if (Convert.ToInt32(activityt.Value) == Convert.ToInt32(ActivityType.Water))
+                        {
+                            foreach (var ciow in ciowtypes)
+                            {
+                                var exist = records.Any(_ => Convert.ToInt32(_.ActivityType) == Convert.ToInt32(activityt.Value) &&
+                                                             _.OrganizationId == org.Id &&
+                                                             _.ICOTypeId == ciow.Id);
+                                if (!exist)
+                                {
+                                    missingCIOWType.Add(ciow);
+                                    missingCIOWTypeTtile =  ciow.Title;
+                                    activityTitle = activityt.Text;
+                                    orgTitle = org.Title;
+                                }
+                            }
+                        }
+                        if (Convert.ToInt32(activityt.Value) == Convert.ToInt32(ActivityType.Waste))
+                        {
+                            foreach (var ciows in ciowstypes)
+                            {
+                                var existWs = records.Any(_ => Convert.ToInt32(_.ActivityType) == Convert.ToInt32(activityt.Value) &&
+                                                             _.OrganizationId == org.Id &&
+                                                             _.ICOTypeId == ciows.Id);
+                                if (!existWs)
+                                {
+                                    missingCIOWsType.Add(ciows);
+                                    missingCIOWsTypeTtile = ciows.Title;
+                                    activityTitle = activityt.Text;
+                                    orgTitle = org.Title;
+                                }
+                            }
+                        }
                     }
-
                 }
             }
+
             if (missingCIOWType.Any())
             {
-                string cIOWTypeNames = "";
                 foreach (var missCioW in missingCIOWType)
                 {
-                    cIOWTypeNames += "- [" + missCioW.Title + "]<br>";
+                    IcoTypeNames += "- [" + missCioW.Title + "]<br>";
                 }
-                return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelICOTypeOrgNotInExcel, cIOWTypeNames, orgTitle));
             }
             if (missingCIOWsType.Any())
             {
-                string cIOWsTypeNames = "";
                 foreach (var missCioWs in missingCIOWsType)
                 {
-                    cIOWsTypeNames += "- [" + missCioWs.Title + "]<br>";
+                    IcoTypeNames += "- [" + missCioWs.Title + "]<br>";
                 }
-                return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelICOTypeOrgNotInExcel, cIOWsTypeNames, orgTitle));
             }
+            return ImportResult.Failed(
+                string.Format(ServiceMessages.ImportExcelICOTypeActivityOrgNotInExcel, IcoTypeNames, activityTitle, orgTitle));
+
             //end
 
             rowIndex = 1;
