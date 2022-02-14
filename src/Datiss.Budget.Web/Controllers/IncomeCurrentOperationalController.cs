@@ -174,8 +174,7 @@ namespace Datiss.Budget.Web.Controllers
             ViewData["cioWTypeKeys"] = cioWTypeKeys.TrimEnd(',');
             ViewData["cioWsTypeKeys"] = cioWsTypeKeys.TrimEnd(',');
 
-            var activity = new ActivityType();
-            var activityTypeSource = EnumSelectListProvider.GetActivityTypeItems(activity);
+            var activityTypeSource = EnumSelectListProvider.GetActivityTypeItems();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                 .Adapt<List<DropDownItemViewModel>>();
@@ -265,8 +264,7 @@ namespace Datiss.Budget.Web.Controllers
             ViewData["cioWTypeKeys"] = cioWTypeKeys.TrimEnd(',');
             ViewData["cioWsTypeKeys"] = cioWsTypeKeys.TrimEnd(',');
 
-            var activity = new ActivityType();
-            var activityTypeSource = EnumSelectListProvider.GetActivityTypeItems(activity);
+            var activityTypeSource = EnumSelectListProvider.GetActivityTypeItems();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
                 .Adapt<List<DropDownItemViewModel>>();
