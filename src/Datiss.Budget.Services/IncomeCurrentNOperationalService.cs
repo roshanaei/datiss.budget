@@ -385,6 +385,10 @@ namespace Datiss.Budget.Services
             string orgTitle = "";
             foreach (var org in existOrgs)
             {
+                if(orgTitle!="")
+                {
+                    break;
+                }
                 foreach (var item in cinotypes)
                 {
                     var existDWTypeInExcel = records.Any(_ => _.NOICTypeId == item.Id &&
