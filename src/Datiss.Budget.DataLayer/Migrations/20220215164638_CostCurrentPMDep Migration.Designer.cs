@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220215164638_CostCurrentPMDep Migration")]
+    partial class CostCurrentPMDepMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -821,11 +823,11 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<int>("ActivityType")
                         .HasColumnType("int");
 
-                    b.Property<long>("CostH")
-                        .HasColumnType("bigint");
+                    b.Property<int>("CostH")
+                        .HasColumnType("int");
 
-                    b.Property<long>("CostNH")
-                        .HasColumnType("bigint");
+                    b.Property<int>("CostNH")
+                        .HasColumnType("int");
 
                     b.Property<int>("CountH")
                         .HasColumnType("int");
@@ -867,14 +869,14 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<int>("OrganizationId")
                         .HasColumnType("int");
 
-                    b.Property<long>("PriceH")
-                        .HasColumnType("bigint");
+                    b.Property<int>("PriceH")
+                        .HasColumnType("int");
 
-                    b.Property<long>("PriceNH")
-                        .HasColumnType("bigint");
+                    b.Property<int>("PriceNH")
+                        .HasColumnType("int");
 
-                    b.Property<long>("TotalCost")
-                        .HasColumnType("bigint");
+                    b.Property<int>("TotalCost")
+                        .HasColumnType("int");
 
                     b.Property<int>("TotalCount")
                         .HasColumnType("int");

@@ -104,6 +104,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentInstalation> CostCurrentInstalations { get; set; }
 
+        public ICollection<CostCurrentPMDep> CostCurrentPMDeps { get; set; }
 
 
         #endregion
