@@ -29,7 +29,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public Organization Organization { get; set; }
 
-        public Constant Constant { get; set; }
+        public Constant ConsumableType { get; set; }
 
         #endregion
     }
