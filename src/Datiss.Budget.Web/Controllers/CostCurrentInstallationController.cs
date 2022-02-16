@@ -269,10 +269,55 @@ namespace Datiss.Budget.Web.Controllers
 
         }
 
-
-        public IActionResult Index()
+        [HttpPost("records/delete")]
+        [HasPermission(claimType: Name, PermissionActionType.Delete)]
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
         {
-            return View();
+            try
+            {
+                var result = await _costCurrentInstallationService.HardDeleteAsync(yearId, orgId);
+
+                return Json(new
+                {
+                    success = true,
+                    message = string.Format(
+                        ViewMessages.DeleteMultipleDataForOrg,
+                        result.OrganizationTitle,
+                        result.Year)
+                });
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
+            catch (DeleteNullRecordException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteNullRecord
+                });
+            }
+            catch (NullReferenceException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.NullRef
+                });
+            }
+            catch (Exception)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteRelatedData
+                });
+            }
         }
     }
 }
