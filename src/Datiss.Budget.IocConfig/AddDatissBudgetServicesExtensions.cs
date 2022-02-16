@@ -59,6 +59,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAppClaimTypeService, AppClaimTypeService>();
             services.AddScoped<IIncomeCurrentNOperationalService, IncomeCurrentNOperationalService>();
+            services.AddScoped<ICostCurrentInstallationService, CostCurrentInstallationService>();
 
             return services;
         }
