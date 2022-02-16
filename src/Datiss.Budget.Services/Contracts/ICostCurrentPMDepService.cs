@@ -17,8 +17,6 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<ValidationResult<CostCurrentPMDepDTO>> UpdateAsync(UpdateCostCurrentPMDepDTO model);
 
-        Task HardDeleteAsync(int Id);
-
         Task<PagedResult<CostCurrentPMDepDTO>> GetListAsync(CostCurrentPMDepFilterDTO filter);
 
         Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);

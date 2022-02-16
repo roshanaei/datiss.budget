@@ -22,6 +22,8 @@ namespace Datiss.Budget.Services.Models
 
         public int CCPMDepTypeId { get; set; }
 
+        public string CCPMDepTypeTitle { get; set; }
+
         public ActivityType ActivityType { get; set; }
 
         public RecordType RecordType { get; set; }
