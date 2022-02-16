@@ -38,20 +38,23 @@ namespace Datiss.Budget.Reports.Excel
                 var item = items.ElementAt(i);
                 sheet.Cell(row, 1).Value = item.Year.ToString();
                 sheet.Cell(row, 2).Value = item.OrganizationDisplay;
-                sheet.Cell(row, 3).Value = item.CCInstalationTypeTitle;
-                sheet.Cell(row, 4).Value = item.ActivityType;
+                sheet.Cell(row, 3).Value = item.ActivityType.ToDisplay();
+                sheet.Cell(row, 4).Value = item.CCInstalationTypeDisplay;
+
                 sheet.Cell(row, 5).Value = item.NumberUser;
                 sheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                
                 sheet.Cell(row, 6).Value = item.Cost;
                 sheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                sheet.Cell(row, 6).Value = item.Income;
-                sheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0";
-                sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                
+                sheet.Cell(row, 7).Value = item.Income;
+                sheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0";
+                sheet.Cell(row, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 row++;
             }
-            var range = sheet.Range(1, 1, row - 1, 6);
+            var range = sheet.Range(1, 1, row - 1, 7);
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
@@ -88,10 +91,10 @@ namespace Datiss.Budget.Reports.Excel
                 var item = items.ElementAt(i);
                 sheet.Cell(row, 1).Value = item.OrganizationDisplay;
                 sheet.Cell(row, 2).Value = item.OrganizationId;
-                sheet.Cell(row, 3).Value = item.CCInstalationTypeTitle;
-                sheet.Cell(row, 4).Value = item.CCInstalationTypeId;
-                sheet.Cell(row, 5).Value = item.ActivityType.ToDisplay();
-                sheet.Cell(row, 6).Value = item.ActivityType == ActivityType.Water ? 0 : 1;
+                sheet.Cell(row, 3).Value = item.ActivityTypeDisplay;
+                sheet.Cell(row, 4).Value = (int)item.ActivityType;
+                sheet.Cell(row, 5).Value = item.CCInstalationTypeDisplay;
+                sheet.Cell(row, 6).Value = item.CCInstalationTypeId;
                 row++; //for keeping index in table records
             }
 
@@ -100,8 +103,10 @@ namespace Datiss.Budget.Reports.Excel
             //Other
             range.Column(7).Style.NumberFormat.Format = "#,##0";
             range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
             range.Column(8).Style.NumberFormat.Format = "#,##0";
             range.Column(8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            
             range.Column(9).Style.NumberFormat.Format = "#,##0";
             range.Column(9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             //
@@ -113,5 +118,4 @@ namespace Datiss.Budget.Reports.Excel
         }
     }
 
-}
 }

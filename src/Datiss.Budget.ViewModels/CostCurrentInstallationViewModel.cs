@@ -66,7 +66,7 @@ namespace Datiss.Budget.ViewModels
 
         public int CCInstalationTypeId { get; set; }
 
-        public int CCInstalationTypeDisplay { get; set; }
+        public string CCInstalationTypeDisplay { get; set; }
 
         public int NumberUser { get; set; }
 
@@ -111,7 +111,7 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> InputOrganizationSource { get; set; }
 
-        public IList<SelectListItem> CCInstalationTypeSource { get; set; }
+        //public IList<SelectListItem> CCInstalationTypeSource { get; set; }
 
         public ActivityType ActivityType { get; set; }
 
@@ -138,12 +138,12 @@ namespace Datiss.Budget.ViewModels
                 Value = x.Id.ToString()
             }).ToList();
 
-        public void SetCCInstalationTypeSource(IEnumerable<DropDownItemViewModel> source)
-            => CCInstalationTypeSource = source.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList();
+        //public void SetCCInstalationTypeSource(IEnumerable<DropDownItemViewModel> source)
+        //    => CCInstalationTypeSource = source.Select(x => new SelectListItem
+        //    {
+        //        Text = x.Title,
+        //        Value = x.Id.ToString()
+        //    }).ToList();
 
         public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
             => Filter.OrganizationSource = source.Select(x => new SelectListItem

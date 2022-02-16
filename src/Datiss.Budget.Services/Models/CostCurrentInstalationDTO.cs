@@ -17,7 +17,7 @@ namespace Datiss.Budget.Services.Models
 
         public int CCInstalationTypeId { get; set; }
 
-        public string CCInstalationTypeTitle { get; set; }
+        public string CCInstalationTypeDisplay { get; set; }
 
         public int NumberUser { get; set; }
 
@@ -49,7 +49,7 @@ namespace Datiss.Budget.Services.Models
 
         public int CCInstalationTypeId { get; set; }
 
-        public string CCInstalationTypeTitle { get; set; }
+        public string CCInstalationTypeDisplay { get; set; }
 
         public int NumberUser { get; set; }
 

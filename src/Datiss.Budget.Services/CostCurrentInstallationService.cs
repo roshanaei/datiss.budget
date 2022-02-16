@@ -84,7 +84,7 @@ namespace Datiss.Budget.Services
                 Income = model.Income
             };
 
-            model.CCInstalationTypeTitle = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title;
+            model.CCInstalationTypeDisplay = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
@@ -95,7 +95,7 @@ namespace Datiss.Budget.Services
                     await _uow.SaveChangesAsync();
 
                     var result = entity.Adapt<CostCurrentInstalationDTO>();
-                    result.CCInstalationTypeTitle = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title;
+                    result.CCInstalationTypeDisplay = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.ActivityType = model.ActivityType;
@@ -113,7 +113,7 @@ namespace Datiss.Budget.Services
 
             return ValidationResult<CostCurrentInstalationDTO>.Failed(
                 string.Format(ServiceMessages.Logic_TitleDuplicate,
-                model.CCInstalationTypeTitle, organizationDisplay)
+                model.CCInstalationTypeDisplay, organizationDisplay)
                 );
 
 
@@ -122,7 +122,7 @@ namespace Datiss.Budget.Services
         public async Task<ValidationResult<CostCurrentInstalationDTO>> UpdateAsync(UpdateCostCurrentInstalationDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
-            model.CCInstalationTypeTitle = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title;
+            model.CCInstalationTypeDisplay = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
@@ -148,8 +148,10 @@ namespace Datiss.Budget.Services
                         ActivityType = model.ActivityType,
                         Cost = model.Cost,
                         Income = model.Income,
+                        NumberUser = model.NumberUser,
+                        
                         OrganizationDisplay = organizationDisplay,
-                        CCInstalationTypeTitle = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title,
+                        CCInstalationTypeDisplay = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
                     };
 
@@ -162,7 +164,7 @@ namespace Datiss.Budget.Services
             }
             return ValidationResult<CostCurrentInstalationDTO>.Failed(
                 string.Format(ServiceMessages.Logic_TitleDuplicate,
-                model.CCInstalationTypeTitle, organizationDisplay)
+                model.CCInstalationTypeDisplay, organizationDisplay)
                 );
         }
 
@@ -263,7 +265,7 @@ namespace Datiss.Budget.Services
                                     .Select(x => new CostCurrentInstalationDTO
                                     {
                                         Id = x.Id,
-                                        CCInstalationTypeTitle = x.CCInstalationType.Title,
+                                        CCInstalationTypeDisplay = x.CCInstalationType.Title,
                                         CCInstalationTypeId = x.CCInstalationTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
@@ -353,13 +355,14 @@ namespace Datiss.Budget.Services
                                     .Select(x => new CostCurrentInstalationDTO
                                     {
                                         Id = x.Id,
-                                        CCInstalationTypeTitle = x.CCInstalationType.Title,
+                                        CCInstalationTypeDisplay = x.CCInstalationType.Title,
                                         CCInstalationTypeId = x.CCInstalationTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId,
                                         ActivityType = x.ActivityType,
+                                        ActivityTypeDisplay =x.ActivityType.ToDisplay(),
                                         NumberUser = x.NumberUser,
                                         Cost = x.Cost,
                                         Income = x.Income
@@ -385,11 +388,12 @@ namespace Datiss.Budget.Services
                                     .Select(x => new CostCurrentInstalationDTO
                                     {
                                         Id = x.Id,
-                                        CCInstalationTypeTitle = x.CCInstalationType.Title,
+                                        CCInstalationTypeDisplay = x.CCInstalationType.Title,
                                         CCInstalationTypeId = x.CCInstalationTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
                                         ActivityType = x.ActivityType,
+                                        ActivityTypeDisplay = x.ActivityType.ToDisplay(),
                                         NumberUser = x.NumberUser,
                                         Income = x.Income,
                                         Cost = x.Cost,
@@ -405,13 +409,12 @@ namespace Datiss.Budget.Services
             return mem1;
         }
 
-                public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<CostCurrentInstallationImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
 
             var records = data.Adapt<List<CostCurrentInstalation>>();
-
 
             int rowIndex = 1;
 
@@ -494,13 +497,12 @@ namespace Datiss.Budget.Services
             var missingCCIWsType = new List<Constant>();
             
             string orgTitle = "";
+            string orgTitleW = "";
+            string orgTitleWs = "";
 
             string activityTitle = "";
-
-            string missingCCIWTypeTtile = "";
-            string missingCCIWsTypeTtile = "";
-
-            string IcoTypeNames = "";
+            string activityTitleW = "";
+            string activityTitleWs = "";
 
 
             foreach (var org in existOrgs)
@@ -526,13 +528,12 @@ namespace Datiss.Budget.Services
                                 if (!exist)
                                 {
                                     missingCCIWType.Add(cciw);
-                                    missingCCIWTypeTtile =  cciw.Title;
-                                    activityTitle = activityt.Text;
-                                    orgTitle = org.Title;
+                                    activityTitleW = activityt.Text;
+                                    orgTitleW = org.Title;
                                 }
                             }
                         }
-                        if (Convert.ToInt32(activityt.Value) == Convert.ToInt32(ActivityType.Waste))
+                        else
                         {
                             foreach (var cciws in cciwstypes)
                             {
@@ -542,35 +543,41 @@ namespace Datiss.Budget.Services
                                 if (!existWs)
                                 {
                                     missingCCIWsType.Add(cciws);
-                                    missingCCIWsTypeTtile = cciws.Title;
-                                    activityTitle = activityt.Text;
-                                    orgTitle = org.Title;
+                                    activityTitleWs = activityt.Text;
+                                    orgTitleWs = org.Title;
                                 }
                             }
                         }
                     }
                 }
             }
+            if (activityTitle!="")
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelActivityOrgNotInExcel, activityTitle, orgTitle));
+            }
 
             if (missingCCIWType.Any())
             {
-                foreach (var missCCIW in missingCCIWType)
+                string cciWTypeNames = "";
+                foreach (var item in missingCCIWType)
                 {
-                    IcoTypeNames += "- [" + missCCIW.Title + "]<br>";
+                    cciWTypeNames += "- " + item.Title + "<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelCCITypeActivityOrgNotInExcel, IcoTypeNames, activityTitle, orgTitle));
-            }
-            if (missingCCIWsType.Any())
-            {
-                foreach (var missCCIWs in missingCCIWsType)
-                {
-                    IcoTypeNames += "- [" + missCCIWs.Title + "]<br>";
-                }
-                return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelCCITypeActivityOrgNotInExcel, IcoTypeNames, activityTitle, orgTitle));
+                    string.Format(ServiceMessages.ImportExcelCCITypeActivityOrgNotInExcel, cciWTypeNames, activityTitleW, orgTitleW));
             }
 
+            if (missingCCIWsType.Any())
+            {
+                string cciWsTypeNames = "";
+                foreach (var item in missingCCIWsType)
+                {
+                    cciWsTypeNames += "- " + item.Title + "<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelCCITypeActivityOrgNotInExcel, cciWsTypeNames, activityTitleWs, orgTitleWs));
+            }
             //end
 
             rowIndex = 1;
@@ -659,8 +666,7 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                         _.CCInstalationType.Title.ToUpper().Contains(filter.Search));
+                query = query.Where(_ => _.CCInstalationType.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;

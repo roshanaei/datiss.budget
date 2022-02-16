@@ -6,8 +6,10 @@
     function editRow(id) {
 
         let activityType = $('#inputActivityType_' + id).val();
-        let ccInstallationTypeId = $('#inputCCInstallationType_' + id).val();
-        FillDropDown(activityType, ccInstallationTypeId);
+        let ccInstalationTypeId = $('#hidCCInstalationTypeId_' + id).val();
+        console.log(activityType);
+        console.log(ccInstalationTypeId);
+        FillDropDown(activityType, ccInstalationTypeId);
 
         resetTableBackColor("my-table");
 
@@ -17,7 +19,7 @@
         $('#divOutput_Year_' + id).hide();
         $('#divOutput_Org_' + id).hide();
         $('#divOutput_ActivityType_' + id).hide();
-        $('#divOutput_CCInstallationType_' + id).hide();
+        $('#divOutput_CCInstalationType_' + id).hide();
         $('#divOutput_NumberUser_' + id).hide();
         $('#divOutput_Cost_' + id).hide();
         $('#divOutput_Income_' + id).hide();
@@ -26,7 +28,7 @@
         $('#divInput_Year_' + id).show();
         $('#divInput_Org_' + id).show();
         $('#divInput_ActivityType_' + id).show();
-        $('#divInput_CCInstallationType_' + id).show();
+        $('#divInput_CCInstalationType_' + id).show();
         $('#divInput_NumberUser_' + id).show();
         $('#divInput_Cost_' + id).show();
         $('#divInput_Income_' + id).show();
@@ -40,7 +42,7 @@
         rowData.yearId = $('#inputYear_' + id).val();
         rowData.organizationId = $('#inputOrg_' + id).val();
         rowData.activityType = $('#inputActivityType_' + id).val();
-        rowData.ccInstallationTypeId = $('#inputCCInstallationType_' + id).val();
+        rowData.ccInstalationTypeId = $('#inputCCInstalationType_' + id).val();
         rowData.numberUser = $('#inputNumberUser_' + id).val();
         rowData.cost = $('#inputCost_' + id).val();
         rowData.income = $('#inputIncome_' + id).val();
@@ -54,7 +56,7 @@
         $('#divInput_Year_' + id).hide();
         $('#divInput_Org_' + id).hide();
         $('#divInput_ActivityType_' + id).hide();
-        $('#divInput_CCInstallationType_' + id).hide();
+        $('#divInput_CCInstalationType_' + id).hide();
         $('#divInput_NumberUser_' + id).hide();
         $('#divInput_Cost_' + id).hide();
         $('#divInput_Income_' + id).hide();
@@ -64,7 +66,7 @@
             $('#inputYear_' + id).val(rowData.yearId);
             $('#inputOrg_' + id).val(rowData.organizationId);
             $('#inputActivityType_' + id).val(rowData.activityType);
-            $('#inputCCInstallationType_' + id).val(rowData.ccInstallationTypeId);
+            $('#inputCCInstalationType_' + id).val(rowData.ccInstalationTypeId);
             $('#inputNumberUser_' + id).val(rowData.numberUser);
             $('#inputCost_' + id).val(rowData.cost);
             $('#inputIncome_' + id).val(rowData.income);
@@ -74,7 +76,7 @@
         $('#divOutput_Year_' + id).show();
         $('#divOutput_Org_' + id).show();
         $('#divOutput_ActivityType_' + id).show();
-        $('#divOutput_CCInstallationType_' + id).show();
+        $('#divOutput_CCInstalationType_' + id).show();
         $('#divOutput_NumberUser_' + id).show();
         $('#divOutput_Cost_' + id).show();
         $('#divOutput_Income_' + id).show();
@@ -95,13 +97,13 @@
 
     function saveEditRow(id) {
         let row = $('#row_' + id);
-
+        
         var model = {};
         model.id = id;
         model.yearId = $('#inputYear_' + id).val();
         model.organizationId = $('#inputOrg_' + id).val();
         model.activityType = $('#inputActivityType_' + id).val();
-        model.ccInstallationTypeId = $('#inputCCInstallationType_' + id).val();
+        model.ccInstalationTypeId = $('#inputCCInstalationType_' + id).val();
         model.numberUser = $('#inputNumberUser_' + id).val();
         model.cost = $('#inputCost_' + id).val();
         model.income = $('#inputIncome_' + id).val();
@@ -129,7 +131,7 @@
                 rowData.yearId = model.yearId;
                 rowData.organizationId = model.organizationId;
                 rowData.activityType = model.activityType;
-                rowData.ccInstallationTypeId = model.ccInstallationTypeId;
+                rowData.ccInstalationTypeId = model.ccInstalationTypeId;
                 rowData.numberUser = model.numberUser;
                 rowData.cost = model.cost;
                 rowData.income = model.income;
@@ -165,7 +167,7 @@
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
         model.activityType = $(e).find('#inputActivityType_').val();
-        model.ccInstallationTypeId = $(e).find('#inputCCInstalationType_').val();
+        model.ccInstalationTypeId = $(e).find('#inputCCInstalationType_').val();
         model.numberUser = $(e).find('#inputNumberUser_').val();
         if (model.numberUser == "") {
             model.numberUser = 0;
@@ -314,6 +316,7 @@
         resetTableBackColor("my-table");
 
         let activityType = $('#inputActivityType_').val();
+        console.log(activityType);
         FillDropDown(activityType);
 
 
@@ -355,7 +358,17 @@
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {
-                    alert(data.message);
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
                     return;
                 }
 
@@ -381,6 +394,7 @@
 
     function RelatedDropDown(e, event) {
         let activityType = event.target.value;
+        console.log(activityType);
         FillDropDown(activityType);
     }
 
@@ -393,16 +407,17 @@
         else {
             key = 1;
         }
-
+        console.log(key);
         $.ajax({
-            url: '@Url.Action("GetCCIAsync")',
+            url: '@Url.Action("GetCCITypeAsync")',
             type: 'POST',
             dataType: 'json',
             data: {
                 'key': key
                 }
         }).done(function (data) {
-            var options = $('.selectCCInstallationType');
+            console.log(data);
+            var options = $('.selectCCInstalationType');
             options.empty();
             $.each(data,
                 function (i, item) {

@@ -106,7 +106,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu" style="width:150%">
+                                        <div class="dropdown-menu" style="width:170%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -341,14 +341,12 @@
                     params.orgId = $('#organizationId option:selected').val();
                     console.log(params);
                     let deleteUrl = '@Url.Action(CostCurrentInstallationController.ACTION_DeleteRecords)';
-                    console.log(deleteUrl);
 
                     $.ajax({
                         url: deleteUrl,
                         type: 'POST',
                         data: params,
                         success: function(data, status, settings) {
-                            console.log(status);
                             if(data.hasError) {
                                 Swal.fire({
                                     title: '<span class="my-font">خطا</span>',
@@ -414,7 +412,7 @@
         $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
-            let input = document.getElementsByClassName('input-keyup');
+            let input = $('.input-keyup');
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
             btnSaveEdit.addEventListener('click', function(event) {
@@ -423,7 +421,7 @@
                 $(btnSaveEdit).unbind('keyup');
             });
 
-            input.addEventListener('keyup', function (event) {
+            $(input).keyup(function (event) {
                 event.preventDefault();
                 // Number 13 is the "Enter" key on the keyboard
                 if (event.keyCode === 13) {

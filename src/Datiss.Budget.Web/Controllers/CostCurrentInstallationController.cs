@@ -155,8 +155,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetCCInstalationTypeSource(CCIWSource);
-            model.SetCCInstalationTypeSource(CCIWsSource);
+            //model.SetCCInstalationTypeSource(CCIWSource);
+            //model.SetCCInstalationTypeSource(CCIWsSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
@@ -201,8 +201,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
-            model.SetCCInstalationTypeSource(CCIWSource);
-            model.SetCCInstalationTypeSource(CCIWsSource);
+            //model.SetCCInstalationTypeSource(CCIWSource);
+            //model.SetCCInstalationTypeSource(CCIWsSource);
 
             return View(model);
         }
@@ -464,7 +464,7 @@ namespace Datiss.Budget.Web.Controllers
                         {
                             items.Add(new CostCurrentInstalationDTO
                             {
-                                CCInstalationTypeTitle = cciW.Title,
+                                CCInstalationTypeDisplay = cciW.Title,
                                 CCInstalationTypeId = cciW.Id,
                                 OrganizationId = org.Id,
                                 OrganizationDisplay = org.Title,
@@ -481,7 +481,7 @@ namespace Datiss.Budget.Web.Controllers
                         {
                             items.Add(new CostCurrentInstalationDTO
                             {
-                                CCInstalationTypeTitle = cciWs.Title,
+                                CCInstalationTypeDisplay = cciWs.Title,
                                 CCInstalationTypeId = cciWs.Id,
                                 OrganizationId = org.Id,
                                 OrganizationDisplay = org.Title,
@@ -496,7 +496,7 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             using var workbook = items.GetImportTemplate(year.Year);
-            return workbook.Deliver("IncomeForcastOther-Import-Template.xlsx");
+            return workbook.Deliver("CostCurrentInstallation-Import-Template.xlsx");
         }
 
         [HttpGet("[action]/{orgid}/{yearid}")]

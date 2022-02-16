@@ -17,10 +17,10 @@ namespace Datiss.Budget.Services.Excel.Models
         public int OrganizationId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "C")]
-        public string ActivityDisplay { get; set; }
+        public string ActivityTypeDisplay { get; set; }
 
         [Column(MappingDirections.Both, Letter = "D")]
-        public ActivityType ActivityType { get; set; }
+        public int ActivityType { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
         public string CCInstalationTypeDisplay { get; set; }
@@ -28,7 +28,7 @@ namespace Datiss.Budget.Services.Excel.Models
         [Column(MappingDirections.Both, Letter = "F")]
         public int CCInstalationTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "F")]
+        [Column(MappingDirections.Both, Letter = "G")]
         public int NumberUser { get; set; }
 
         [Column(MappingDirections.Both, Letter = "H")]
