@@ -108,6 +108,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentPMDep> CostCurrentPMDeps { get; set; }
 
+        public ICollection<CostCurrentPMDep> CostCenterCostCurrentPMDeps { get; set; }
+
 
         #endregion
     }

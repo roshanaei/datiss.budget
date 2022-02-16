@@ -42,6 +42,11 @@ namespace Datiss.Budget.DataLayer.Configurations
                 .HasForeignKey(x => x.CCPMDepTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasOne(x => x.CostCenterType)
+                .WithMany(x => x.CostCenterCostCurrentPMDeps)
+                .HasForeignKey(x => x.CostCenterTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

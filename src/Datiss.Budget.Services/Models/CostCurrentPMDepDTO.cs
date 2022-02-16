@@ -28,7 +28,7 @@ namespace Datiss.Budget.Services.Models
 
         public RecordType RecordType { get; set; }
 
-        public long CostCenter { get; set; }
+        //public int CostCenter { get; set; }
 
         public long FinancePMCost { get; set; }
 
@@ -56,7 +56,7 @@ namespace Datiss.Budget.Services.Models
 
         public RecordType RecordType { get; set; }
 
-        public long CostCenter { get; set; }
+        //public int CostCenter { get; set; }
 
         public long FinancePMCost { get; set; }
 

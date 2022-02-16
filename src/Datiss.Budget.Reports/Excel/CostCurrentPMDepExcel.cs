@@ -50,7 +50,7 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 5).Value = item.CCPMDepTypeDisplay;
                 sheet.Cell(row, 5).DataType = XLDataType.Text;
 
-                sheet.Cell(row, 6).Value = item.CostCenter;
+                //sheet.Cell(row, 6).Value = item.CostCenter;
                 sheet.Cell(row, 6).Style.NumberFormat.Format = ConstantKeys.__NumberFormat;
                 sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 

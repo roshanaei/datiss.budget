@@ -84,7 +84,7 @@ namespace Datiss.Budget.Services
                     entity.CCPMDepTypeId = model.CCPMDepTypeId;
                     entity.ActivityType = model.ActivityType;
                     entity.RecordType = model.RecordType;
-                    entity.CostCenter = model.CostCenter;
+                    //entity.CostCenter = model.CostCenter;
                     entity.FinancePMCost = model.FinancePMCost;
                     entity.RFinancePMCost_D = model.RFinancePMCost_D;
                     entity.FinanceDepCost = model.FinanceDepCost;
@@ -101,7 +101,7 @@ namespace Datiss.Budget.Services
                         Year = (await _yearSet.FindAsync(model.YearId)).Year,
                         CCPMDepTypeId = model.CCPMDepTypeId,
                         CCPMDepTypeDisplay = model.CCPMDepTypeTitle,
-                        CostCenter = model.CostCenter,
+                        //CostCenter = model.CostCenter,
                         FinancePMCost = model.FinancePMCost,
                         RFinancePMCost_D = model.RFinancePMCost_D,
                         FinanceDepCost = model.FinanceDepCost,
@@ -202,7 +202,7 @@ namespace Datiss.Budget.Services
                                         OrganizationId = x.OrganizationId,
                                         ActivityType = x.ActivityType,
                                         RecordType = x.RecordType,
-                                        CostCenter = x.CostCenter,
+                                        //CostCenter = x.CostCenter,
                                         FinancePMCost = x.FinancePMCost,
                                         RFinancePMCost_D = x.RFinancePMCost_D,
                                         FinanceDepCost = x.FinanceDepCost,
@@ -246,7 +246,7 @@ namespace Datiss.Budget.Services
                         OrganizationId = item.OrganizationId,
                         YearId = destYearId,
                         RecordType = item.RecordType,
-                        CostCenter = item.CostCenter,
+                        //CostCenter = item.CostCenter,
                         FinancePMCost = item.FinancePMCost,
                         RFinancePMCost_D = item.RFinancePMCost_D,
                         FinanceDepCost = item.FinanceDepCost,
@@ -293,7 +293,7 @@ namespace Datiss.Budget.Services
                                         OrganizationId = x.OrganizationId,
                                         ActivityType = x.ActivityType,
                                         RecordType = x.RecordType,
-                                        CostCenter = x.CostCenter,
+                                        //CostCenter = x.CostCenter,
                                         FinancePMCost = x.FinancePMCost,
                                         RFinancePMCost_D = x.RFinancePMCost_D,
                                         FinanceDepCost = x.FinanceDepCost,
@@ -335,7 +335,7 @@ namespace Datiss.Budget.Services
                                         OrganizationId = x.OrganizationId,
                                         ActivityType = x.ActivityType,
                                         RecordType = x.RecordType,
-                                        CostCenter = x.CostCenter,
+                                        //CostCenter = x.CostCenter,
                                         FinancePMCost = x.FinancePMCost,
                                         RFinancePMCost_D = x.RFinancePMCost_D,
                                         FinanceDepCost = x.FinanceDepCost,
@@ -635,7 +635,7 @@ namespace Datiss.Budget.Services
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
                         RecordType = item.RecordType,
-                        CostCenter = item.CostCenter,
+                        //CostCenter = item.CostCenter,
                         FinancePMCost = item.FinancePMCost,
                         RFinancePMCost_D = item.RFinancePMCost_D,
                         FinanceDepCost = item.FinanceDepCost,
