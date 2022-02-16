@@ -319,5 +319,40 @@ namespace Datiss.Budget.Web.Controllers
                 });
             }
         }
+
+        [HttpPost("[action]/{id}")]
+        [HasPermission(claimType: Name, PermissionActionType.Delete)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _costCurrentInstallationService.HardDeleteAsync(id);
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.GetBaseException().Message);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.InvalidUpdateData
+                });
+            }
+
+            return Json(new
+            {
+                hasError = false,
+                message = ViewMessages.DeleteRowSuccess
+            });
+        }
+
+
     }
 }
