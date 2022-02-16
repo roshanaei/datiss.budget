@@ -36,7 +36,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
-        public const string ACTION_Calculation = nameof(Calculation);
+      //public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
@@ -508,5 +508,22 @@ namespace Datiss.Budget.Web.Controllers
             using var workbook = result.ExportExcel();
             return workbook.Deliver("CostCurrentInstallation.xlsx");
         }
+
+        [HttpPost, Route("GetCCITypeAsync")]
+        public async Task<JsonResult> GetCCITypeAsync(int key)
+        {
+            IEnumerable<ConstantDTO> result;
+            if (key == Convert.ToInt16(ActivityType.Water))
+            {
+                result = await _constantService.GetDataByKeyAsync(ConstantKeys.__CurrentCostInstalationWater);
+            }
+            else
+            {
+                result = await _constantService.GetDataByKeyAsync(ConstantKeys.__CurrentCostInstalationWaste);
+            }
+
+            return new JsonResult(result);
+        }
+
     }
 }
