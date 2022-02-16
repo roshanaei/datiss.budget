@@ -16,16 +16,16 @@ namespace Datiss.Budget.Services.Excel.Models
         public int OrganizationId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "C")]
-        public string CCPMDepTypeDisplay { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "D")]
-        public int CCPMDepTypeId { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "E")]
         public string ActivityTypeDisplay { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "F")]
+        [Column(MappingDirections.Both, Letter = "D")]
         public int ActivityType { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "E")]
+        public string CCPMDepTypeDisplay { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "F")]
+        public int CCPMDepTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "G")]
         public long CostCenter { get; set; }

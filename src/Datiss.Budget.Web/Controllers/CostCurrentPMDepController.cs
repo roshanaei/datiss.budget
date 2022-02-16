@@ -19,6 +19,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Datiss.Budget.Reports.Excel;
 using ClosedXML.Extensions;
+using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -70,11 +71,11 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Edit(UpdateCostCurrentPMDepViewModel model)
         {
 
-            if (!ModelState.IsValid)
-            {
-                model.AddError(ViewMessages.InvalidData);
-                return Json(model);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    model.AddError(ViewMessages.InvalidData);
+            //    return Json(model);
+            //}
 
             var data = model.Adapt<UpdateCostCurrentPMDepDTO>();
             var result = await _waterInstallFeeService.UpdateAsync(data);
@@ -103,7 +104,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var ccPMDepSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter))
+            var ccPMDepSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDepType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -372,23 +373,27 @@ namespace Datiss.Budget.Web.Controllers
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var ccPMDepTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter);
-
+            var ccPMDepTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDepType);
+            var Activity = EnumSelectListProvider.GetActivityTypeItems().ToList();
             var items = new List<CostCurrentPMDepDTO>();
 
             foreach (var org in organizations)
             {
-                foreach (var dwt in ccPMDepTypes)
+                foreach (var act in Activity)
                 {
-                    items.Add(new CostCurrentPMDepDTO
+                    foreach (var cc in ccPMDepTypes)
                     {
-                        CCPMDepTypeDisplay = dwt.Title,
-                        CCPMDepTypeId = dwt.Id,
-                        OrganizationId = org.Id,
-                        OrganizationDisplay = org.Title,
-                        Year = year.Year,
-                        YearId = year.Id
-                    });
+                        items.Add(new CostCurrentPMDepDTO
+                        {
+                            CCPMDepTypeDisplay = cc.Title,
+                            CCPMDepTypeId = cc.Id,
+                            OrganizationId = org.Id,
+                            OrganizationDisplay = org.Title,
+                            Year = year.Year,
+                            YearId = year.Id,
+                            ActivityType = act.Value == "0" ? ActivityType.Water : ActivityType.Waste
+                        });
+                    }
                 }
             }
 

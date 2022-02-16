@@ -1,4 +1,5 @@
 ﻿using Datiss.Budget.Enum;
+using Datiss.Budget.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -43,7 +44,9 @@ namespace Datiss.Budget.ViewModels
         public int CCPMDepTypeId { get; set; }
         public string CCPMDepTypeDisplay { get; set; }
         public ActivityType ActivityType { get; set; }
+        public string ActivityTypeDisplay => ActivityType.ToDisplay();
         public RecordType RecordType { get; set; }
+        public string RecordTypeDisplay => RecordType.ToDisplay();
         public long CostCenter { get; set; }
         public string CostCenterDisplay => CostCenter.ToString("N0");
         public long FinancePMCost { get; set; }
@@ -54,6 +57,8 @@ namespace Datiss.Budget.ViewModels
         public string FinanceDepCostDisplay => FinanceDepCost.ToString("N0");
         public decimal RFinanceDepCost_D { get; set; }
         public string RFinanceDepCost_DDisplay => RFinanceDepCost_D.ToString("N2");
+        public IEnumerable<SelectListItem> ActivityTypeSource => EnumSelectListProvider.GetActivityTypeItems(ActivityType);
+
     }
 
     public class CostCurrentPMDepFilterViewModel : FilterViewModel
@@ -61,10 +66,13 @@ namespace Datiss.Budget.ViewModels
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
         public int? CCPMDepTypeId { get; set; }
+        public ActivityType? ActivityType { get; set; }
+        public RecordType? RecordType { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
-
         public IList<SelectListItem> OrganizationSource { get; set; }
+
+        public IList<SelectListItem> RecordTypeSource => EnumSelectListProvider.GetRecordTypeItems(RecordType).ToList();
     }
 
     public class CostCurrentPMDepIndexViewModel : PagedViewModel<CostCurrentPMDepViewModel>

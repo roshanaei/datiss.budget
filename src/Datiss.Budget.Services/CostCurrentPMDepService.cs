@@ -229,13 +229,14 @@ namespace Datiss.Budget.Services
 
             var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
                                         .Where(_ => _.YearId == sourceYearId)
+                                        .Where(_=>_.RecordType == RecordType.Base)
                                         .ToListAsync();
 
             if (selfData.Any())
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.CCPMDepTypeId, item.ActivityType,item.RecordType))
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.CCPMDepTypeId, item.ActivityType, item.RecordType))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new CostCurrentPMDep
@@ -357,8 +358,11 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
-            var usertypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CCPMDepType &&
-                                                 x.Status != EntityStatus.Deleted);
+            var ccPMDepType = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CCPMDepType &&
+                                                   x.Status == EntityStatus.Enabled);
+
+            var activityType = EnumSelectListProvider.GetActivityTypeItems().ToList();
+
 
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull($"Year not found with id: {yearId}");
@@ -380,7 +384,7 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
-                if (!await usertypes.AnyAsync(x => x.Id == rec.CCPMDepTypeId))
+                if (!await ccPMDepType.AnyAsync(x => x.Id == rec.CCPMDepTypeId))
                 {
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.CCPMDepTypeId)
@@ -395,7 +399,6 @@ namespace Datiss.Budget.Services
 
                 rowIndex++;
             }
-
             //
             var missingOrgs = new List<Organization>();
             var existOrgs = new List<Organization>();
@@ -414,51 +417,61 @@ namespace Datiss.Budget.Services
             //
 
             //Start Missing Type
-            var missingUserType = new List<Constant>();
-            var missingWPDiameters = new List<Constant>();
+            var missingccPMDepType = new List<Constant>();
+            string missingActivity = "";
 
             string orgTitle = "";
-            string userTypeTitle = "";
+            string activityTitle = "";
 
             foreach (var org in existOrgs)
             {
-                if (orgTitle != "")
-                    break;
-                foreach (var usert in usertypes)
+                if (!string.IsNullOrWhiteSpace(orgTitle))
                 {
-                    var existUserTypeInExcel = records.Any(_ => _.CCPMDepTypeId == usert.Id &&
-                                                                _.OrganizationId == org.Id);
-                    if (!existUserTypeInExcel)
+                    break;
+                }
+                foreach (var act in activityType)
+                {
+                    var activity = act.Value == "0" ? ActivityType.Water : ActivityType.Waste;
+                    if (!records.Any(_ => _.ActivityType == activity &&
+                                       _.OrganizationId == org.Id))
                     {
-                        missingUserType.Add(usert);
+                        missingActivity += "- [" + act.Text + "]<br>";
                         orgTitle = org.Title;
                     }
-                    else if (!missingUserType.Any())
+                    else
                     {
+                        foreach (var cc in ccPMDepType)
+                        {
+                            var exist = records.Any(_ => _.OrganizationId == org.Id &&
+                                                         _.ActivityType == activity &&
+                                                         _.CCPMDepTypeId == cc.Id);
+                            if (!exist)
+                            {
+                                missingccPMDepType.Add(cc);
+                                activityTitle = act.Text;
+                                orgTitle = org.Title;
+                            }
+                        }
+
                     }
                 }
             }
 
-            if (missingUserType.Any())
+            if (!string.IsNullOrWhiteSpace(missingActivity))
             {
-                string userTypeNames = "";
-                foreach (var item in missingUserType)
-                {
-                    userTypeNames += "- " + item.Title + "<br>";
-                }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, userTypeNames, orgTitle));
+                    string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, missingActivity, orgTitle));
             }
 
-            if (missingWPDiameters.Any())
+            if (missingccPMDepType.Any())
             {
-                string wPDiametersNames = "";
-                foreach (var item in missingWPDiameters)
+                string ccTypeNames = "";
+                foreach (var item in missingccPMDepType)
                 {
-                    wPDiametersNames += "- [" + item.Title + "]<br>";
+                    ccTypeNames += "- [" + item.Title + "]<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelDiameterPipeUserTypeOrgNotInExcel, wPDiametersNames, userTypeTitle, orgTitle));
+                    string.Format(ServiceMessages.ImportExcelDiameterPipeUserTypeOrgNotInExcel, ccTypeNames, activityTitle, orgTitle));
             }
             //End
 
@@ -508,16 +521,9 @@ namespace Datiss.Budget.Services
 
             await _dbSet.AddRangeAsync(records);
 
-            try
-            {
-                await _uow.SaveChangesAsync();
-            }
-            catch
-            {
-                return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelCalculationField)
-                    );
-            }
+
+            await _uow.SaveChangesAsync();
+
 
             return ImportResult.Succeed(
                 string.Format(ServiceMessages.ImportExcelSuccess)
@@ -567,6 +573,10 @@ namespace Datiss.Budget.Services
 
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
+
+            if (filter.RecordType.HasValue)
+                query = query.Where(x=>x.RecordType == filter.RecordType.Value);
+
             if (filter.OrganizationId.HasValue)
             {
                 var organizations = await _organizationService
@@ -604,7 +614,8 @@ namespace Datiss.Budget.Services
             {
                 if (await Query()
                             .Where(_ => _.OrganizationId == org.Id)
-                            .Where(_ => _.YearId == targetYearId).AnyAsync())
+                            .Where(_ => _.YearId == targetYearId)
+                            .Where(_ => _.RecordType == RecordType.Base).AnyAsync())
                 {
                     throw new CopyDestYearHasDataException();
                 }
@@ -612,6 +623,7 @@ namespace Datiss.Budget.Services
                 var data = await Query()
                                 .Where(_ => _.YearId == yearId)
                                 .Where(_ => _.OrganizationId == org.Id)
+                                .Where(_ => _.RecordType == RecordType.Base)
                                 .ToListAsync();
 
                 foreach (var item in data)

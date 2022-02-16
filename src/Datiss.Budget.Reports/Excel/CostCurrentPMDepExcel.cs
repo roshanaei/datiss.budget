@@ -90,14 +90,14 @@ namespace Datiss.Budget.Reports.Excel
 
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "ورود اطلاعات پایه برای سال مالی : " + year;
-            sheet.Range(1, 1, 1, 5).Merge();
+            sheet.Range(1, 1, 1, 11).Merge();
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
             sheet.Cell(2, 2).Value = "کد سازمان";
             sheet.Cell(2, 3).Value = "حوزه فعالیت";
-            sheet.Cell(2, 4).Value = "کد";
+            sheet.Cell(2, 4).Value = "کد فعالیت";
             sheet.Cell(2, 5).Value = "عناوین استهلاک و تعمیر و نگهداری";
-            sheet.Cell(2, 6).Value = "کد";
+            sheet.Cell(2, 6).Value = "کد عناوین";
             sheet.Cell(2, 7).Value = "مرکز هزینه";
             sheet.Cell(2, 8).Value = "هزینه تعمیر و نگهداری دارائی";
             sheet.Cell(2, 9).Value = "ضریب هزینه تعمیر و نگهداری دارائی";
@@ -118,7 +118,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(2, 1, row - 1, 5);
+            var range = sheet.Range(2, 1, row - 1, 11);
             range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other
