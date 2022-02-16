@@ -72,19 +72,20 @@ namespace Datiss.Budget.Services
             model.CheckArgumentIsNull(nameof(model));
 
             model.CCPMDepTypeTitle = (await _constSet.FindAsync(model.CCPMDepTypeId)).Title;
+            model.CostCenterTypeTitle = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CCPMDepTypeId, model.ActivityType, model.RecordType, model.Id))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CCPMDepTypeId, model.CostCenterTypeId, model.ActivityType, model.RecordType, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.OrganizationId = model.OrganizationId;
                     entity.YearId = model.YearId;
                     entity.CCPMDepTypeId = model.CCPMDepTypeId;
+                    entity.CostCenterTypeId = model.CostCenterTypeId;
                     entity.ActivityType = model.ActivityType;
                     entity.RecordType = model.RecordType;
-                    //entity.CostCenter = model.CostCenter;
                     entity.FinancePMCost = model.FinancePMCost;
                     entity.RFinancePMCost_D = model.RFinancePMCost_D;
                     entity.FinanceDepCost = model.FinanceDepCost;
@@ -101,7 +102,8 @@ namespace Datiss.Budget.Services
                         Year = (await _yearSet.FindAsync(model.YearId)).Year,
                         CCPMDepTypeId = model.CCPMDepTypeId,
                         CCPMDepTypeDisplay = model.CCPMDepTypeTitle,
-                        //CostCenter = model.CostCenter,
+                        CostCenterTypeId = model.CostCenterTypeId,
+                        CostCenterTypeDisplay = model.CostCenterTypeTitle,
                         FinancePMCost = model.FinancePMCost,
                         RFinancePMCost_D = model.RFinancePMCost_D,
                         FinanceDepCost = model.FinanceDepCost,
@@ -198,11 +200,12 @@ namespace Datiss.Budget.Services
                                         YearId = x.YearId,
                                         CCPMDepTypeDisplay = x.CCPMDepType.Title,
                                         CCPMDepTypeId = x.CCPMDepTypeId,
+                                        CostCenterTypeId = x.CostCenterTypeId,
+                                        CostCenterTypeDisplay = x.CostCenterType.Title,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
                                         ActivityType = x.ActivityType,
                                         RecordType = x.RecordType,
-                                        //CostCenter = x.CostCenter,
                                         FinancePMCost = x.FinancePMCost,
                                         RFinancePMCost_D = x.RFinancePMCost_D,
                                         FinanceDepCost = x.FinanceDepCost,
@@ -229,14 +232,14 @@ namespace Datiss.Budget.Services
 
             var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
                                         .Where(_ => _.YearId == sourceYearId)
-                                        .Where(_=>_.RecordType == RecordType.Base)
+                                        .Where(_ => _.RecordType == RecordType.Base)
                                         .ToListAsync();
 
             if (selfData.Any())
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.CCPMDepTypeId, item.ActivityType, item.RecordType))
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.CCPMDepTypeId,item.CostCenterTypeId, item.ActivityType, item.RecordType))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new CostCurrentPMDep
@@ -246,7 +249,7 @@ namespace Datiss.Budget.Services
                         OrganizationId = item.OrganizationId,
                         YearId = destYearId,
                         RecordType = item.RecordType,
-                        //CostCenter = item.CostCenter,
+                        CostCenterTypeId = item.CostCenterTypeId,
                         FinancePMCost = item.FinancePMCost,
                         RFinancePMCost_D = item.RFinancePMCost_D,
                         FinanceDepCost = item.FinanceDepCost,
@@ -293,7 +296,8 @@ namespace Datiss.Budget.Services
                                         OrganizationId = x.OrganizationId,
                                         ActivityType = x.ActivityType,
                                         RecordType = x.RecordType,
-                                        //CostCenter = x.CostCenter,
+                                        CostCenterTypeId = x.CostCenterTypeId,
+                                        CostCenterTypeDisplay = x.CostCenterType.Title,
                                         FinancePMCost = x.FinancePMCost,
                                         RFinancePMCost_D = x.RFinancePMCost_D,
                                         FinanceDepCost = x.FinanceDepCost,
@@ -335,7 +339,8 @@ namespace Datiss.Budget.Services
                                         OrganizationId = x.OrganizationId,
                                         ActivityType = x.ActivityType,
                                         RecordType = x.RecordType,
-                                        //CostCenter = x.CostCenter,
+                                        CostCenterTypeId = x.CostCenterTypeId,
+                                        CostCenterTypeDisplay = x.CostCenterType.Title,
                                         FinancePMCost = x.FinancePMCost,
                                         RFinancePMCost_D = x.RFinancePMCost_D,
                                         FinanceDepCost = x.FinanceDepCost,
@@ -507,6 +512,7 @@ namespace Datiss.Budget.Services
                     record.YearId,
                     record.OrganizationId,
                     record.CCPMDepTypeId,
+                    record.CostCenterTypeId,
                     record.ActivityType,
                     record.RecordType))
                 {
@@ -575,7 +581,7 @@ namespace Datiss.Budget.Services
                 query = query.Where(x => x.YearId == filter.YearId.Value);
 
             if (filter.RecordType.HasValue)
-                query = query.Where(x=>x.RecordType == filter.RecordType.Value);
+                query = query.Where(x => x.RecordType == filter.RecordType.Value);
 
             if (filter.OrganizationId.HasValue)
             {
@@ -701,6 +707,7 @@ namespace Datiss.Budget.Services
             int yearId,
             int organizationId,
             int ccPMDepTypeId,
+            int costCenterTypeId,
             ActivityType activity,
             RecordType recordType,
             int? id = null)
@@ -715,12 +722,14 @@ namespace Datiss.Budget.Services
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&
                                                 x.CCPMDepTypeId == ccPMDepTypeId &&
+                                                x.CostCenterTypeId == costCenterTypeId &&
                                                 x.ActivityType == activity &&
                                                 x.RecordType == recordType)
 
                 : await Query().AnyAsync(x => x.YearId == yearId &&
                                             x.OrganizationId == organizationId &&
                                             x.CCPMDepTypeId == ccPMDepTypeId &&
+                                            x.CostCenterTypeId == costCenterTypeId &&
                                             x.ActivityType == activity &&
                                             x.RecordType == recordType &&
                                             x.Id != id);

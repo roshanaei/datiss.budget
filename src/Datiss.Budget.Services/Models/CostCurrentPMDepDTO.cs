@@ -24,11 +24,13 @@ namespace Datiss.Budget.Services.Models
 
         public string CCPMDepTypeTitle { get; set; }
 
+        public int CostCenterTypeId { get; set; }
+
+        public string CostCenterTypeTitle { get; set; }
+        
         public ActivityType ActivityType { get; set; }
 
         public RecordType RecordType { get; set; }
-
-        //public int CostCenter { get; set; }
 
         public long FinancePMCost { get; set; }
 
@@ -52,11 +54,12 @@ namespace Datiss.Budget.Services.Models
         public int CCPMDepTypeId { get; set; }
         public string CCPMDepTypeDisplay { get; set; }
 
+        public int CostCenterTypeId { get; set; }
+        public string CostCenterTypeDisplay { get; set; }
+
         public ActivityType ActivityType { get; set; }
 
         public RecordType RecordType { get; set; }
-
-        //public int CostCenter { get; set; }
 
         public long FinancePMCost { get; set; }
 
