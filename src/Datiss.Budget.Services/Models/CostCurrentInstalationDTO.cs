@@ -45,6 +45,8 @@ namespace Datiss.Budget.Services.Models
 
         public ActivityType ActivityType { get; set; }
 
+        public string ActivityTypeDisplay { get; set; }
+
         public int CCInstalationTypeId { get; set; }
 
         public string CCInstalationTypeTitle { get; set; }

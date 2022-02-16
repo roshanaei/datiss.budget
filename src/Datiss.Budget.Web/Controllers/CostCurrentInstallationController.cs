@@ -2,6 +2,8 @@
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Extensions;
+using Datiss.Budget.Reports.Excel;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
@@ -438,6 +440,62 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(model);
+        }
+
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var CCIWTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWater);
+            var CCIWsTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWaste);
+            var activity = EnumSelectListProvider.GetActivityTypeItems();
+
+            var items = new List<CostCurrentInstalationDTO>();
+
+            foreach (var org in organizations)
+            {
+                foreach (var act in activity)
+                {
+                    if (Convert.ToInt16(act.Value) == Convert.ToInt16(ActivityType.Water))
+                    {
+                        foreach (var cciW in CCIWTypes)
+                        {
+                            items.Add(new CostCurrentInstalationDTO
+                            {
+                                CCInstalationTypeTitle = cciW.Title,
+                                CCInstalationTypeId = cciW.Id,
+                                OrganizationId = org.Id,
+                                OrganizationDisplay = org.Title,
+                                Year = year.Year,
+                                YearId = year.Id,
+                                ActivityType = System.Enum.Parse<ActivityType>(act.Value),
+                                ActivityTypeDisplay = act.Text
+                            });
+                        }
+                    }
+                    else
+                    {
+                        foreach (var cciWs in CCIWsTypes)
+                        {
+                            items.Add(new CostCurrentInstalationDTO
+                            {
+                                CCInstalationTypeTitle = cciWs.Title,
+                                CCInstalationTypeId = cciWs.Id,
+                                OrganizationId = org.Id,
+                                OrganizationDisplay = org.Title,
+                                Year = year.Year,
+                                YearId = year.Id,
+                                ActivityType = System.Enum.Parse<ActivityType>(act.Value),
+                                ActivityTypeDisplay = act.Text
+                            });
+                        }
+                    }
+                }
+            }
+
+            using var workbook = items.GetImportTemplate(year.Year);
+            return workbook.Deliver("IncomeForcastOther-Import-Template.xlsx");
         }
 
 
