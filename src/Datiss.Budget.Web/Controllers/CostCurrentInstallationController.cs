@@ -1,4 +1,5 @@
-﻿using Datiss.Budget.Common;
+﻿using ClosedXML.Extensions;
+using Datiss.Budget.Common;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Enum;
@@ -498,6 +499,14 @@ namespace Datiss.Budget.Web.Controllers
             return workbook.Deliver("IncomeForcastOther-Import-Template.xlsx");
         }
 
-
+        [HttpGet("[action]/{orgid}/{yearid}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
+        {
+            var result = await _costCurrentInstallationService.GetExportItemsAsync(yearid, orgid);
+            if (result.Count() == 0)
+                return RedirectToAction("Index");
+            using var workbook = result.ExportExcel();
+            return workbook.Deliver("CostCurrentInstallation.xlsx");
+        }
     }
 }
