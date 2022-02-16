@@ -23,7 +23,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
-        Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId);
+        Task<ValidationResult> CalculationAsync(int yearId, int organizationId);
 
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
 
