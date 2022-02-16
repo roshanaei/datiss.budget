@@ -110,6 +110,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentBankFee> CostCurrentBankFee { get; set; }
 
+        public ICollection<CostCurrentContractual> CostCurrentContractual { get; set; }
+
 
         #endregion
     }
