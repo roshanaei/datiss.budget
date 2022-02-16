@@ -1,6 +1,7 @@
 ﻿using Datiss.Budget.Common;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
@@ -378,6 +379,66 @@ namespace Datiss.Budget.Web.Controllers
         //    return PartialView("_calculationModal", viewModel);
         //}
 
+        [HttpGet("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
+        public async Task<IActionResult> Copy()
+        {
+            var model = new CopyViewModel();
+
+            model.SetOrganizationSource(
+                (await _organizationService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            model.SetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Disbaled))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            model.SetTargetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Enabled))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            return PartialView("_copyModal", model);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Copy(CopyViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            try
+            {
+                await _costCurrentInstallationService.CopyAsync(
+                                                    model.SourceYearId,
+                                                    model.SourceOrgId,
+                                                    model.TargetYearId);
+                model.Succeed(ViewMessages.CopySuccess);
+            }
+            catch (CopySameYearException)
+            {
+                model.AddError(ViewMessages.CopySameYear);
+            }
+            catch (CopyDestYearExxeption)
+            {
+                model.AddError(ViewMessages.CopyErrorDestYear);
+            }
+            catch (CopyOrgNullDataException)
+            {
+                model.AddError(ViewMessages.CopySourceOrgNullData);
+            }
+            catch (CopyDestYearHasDataException)
+            {
+                model.AddError(ViewMessages.CopyDestYearHasData);
+            }
+            catch (Exception)
+            {
+                model.AddError(ViewMessages.SystemError);
+            }
+
+            return Json(model);
+        }
 
 
     }
