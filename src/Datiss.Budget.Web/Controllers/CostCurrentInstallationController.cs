@@ -353,6 +353,32 @@ namespace Datiss.Budget.Web.Controllers
             });
         }
 
+        //Temporarily Disabled
+        //[HttpPost("[action]")]
+        //public async Task<IActionResult> Calculation(CalculationInputViewModel model)
+        //{
+        //    model.CheckArgumentIsNull(nameof(model));
+
+        //    var result = await _costCurrentInstallationService.CalculationAsync(
+        //        model.YearId,
+        //        model.OrganizationId);
+
+        //    List<CalculationResultViewModel> viewModel = new List<CalculationResultViewModel>();
+        //    foreach (var item in result)
+        //    {
+        //        viewModel.Add(
+        //            new CalculationResultViewModel
+        //            {
+        //                Result = item.Value,
+        //                Title = getCalcTitle(item.Key)
+        //            }
+        //        );
+        //    }
+
+        //    return PartialView("_calculationModal", viewModel);
+        //}
+
+
 
     }
 }
