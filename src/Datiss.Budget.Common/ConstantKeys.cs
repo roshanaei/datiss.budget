@@ -2,6 +2,8 @@
 {
     public static class ConstantKeys
     {
+        public const string __NumberFormat = "#,##0";
+        public const string __DecimalFormat = "#,##0.00";
         public const string __UserType = "UserType";
         public const string __WaterDiameter = "WaterDiameter";
         public const string __UsageLayerType = "UsageLayer";
