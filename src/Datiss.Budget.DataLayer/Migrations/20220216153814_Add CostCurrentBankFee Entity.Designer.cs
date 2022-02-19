@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220216153814_Add CostCurrentBankFee Entity")]
+    partial class AddCostCurrentBankFeeEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -673,80 +675,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("CostCurrentConsumable");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentContractual", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("CCContractualId")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("ActivityType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ContractDescription")
-                        .IsRequired()
-                        .HasMaxLength(400)
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(400)");
-
-                    b.Property<long>("ContractForcast")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ContractLastYear")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("CostCenterTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("ExtensionId")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CostCenterTypeId");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("CostCurrentContractual");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentEPayment", b =>
@@ -3740,33 +3668,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentContractual", b =>
-                {
-                    b.HasOne("Datiss.Budget.Entities.Constant", "CostCenterType")
-                        .WithMany("CostCurrentContractual")
-                        .HasForeignKey("CostCenterTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                        .WithMany("CostCurrentContractual")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("CostCurrentContractual")
-                        .HasForeignKey("YearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CostCenterType");
-
-                    b.Navigation("FinanceYear");
-
-                    b.Navigation("Organization");
-                });
-
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentEPayment", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
@@ -4563,8 +4464,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("CostCurrentConsumable");
 
-                    b.Navigation("CostCurrentContractual");
-
                     b.Navigation("CostCurrentInstalations");
 
                     b.Navigation("CurrentIncomeReports");
@@ -4646,8 +4545,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("CostCurrentBankFee");
 
                     b.Navigation("CostCurrentConsumable");
-
-                    b.Navigation("CostCurrentContractual");
 
                     b.Navigation("CostCurrentElectricity");
 
@@ -4737,8 +4634,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("CostCurrentBankFee");
 
                     b.Navigation("CostCurrentConsumable");
-
-                    b.Navigation("CostCurrentContractual");
 
                     b.Navigation("CostCurrentElectricity");
 
