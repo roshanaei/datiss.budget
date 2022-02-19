@@ -20,5 +20,7 @@
         public const string __CostCenterType = "CostCenterType";
         public const string __CIOWType = "CIOWType";
         public const string __CIOWsType = "CIOWsType";
+        public const string __CurrentCostInstalationWater = "CurrentCostInstalationWater";
+        public const string __CurrentCostInstalationWaste = "CurrentCostInstalationWaste";
     }
 }

@@ -61,7 +61,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IAppClaimTypeService, AppClaimTypeService>();
             services.AddScoped<IIncomeCurrentNOperationalService, IncomeCurrentNOperationalService>();
             services.AddScoped<ICostCurrentPMDepService, CostCurrentPMDepService>();
+            services.AddScoped<ICostCurrentInstallationService, CostCurrentInstallationService>();
 
+          
             return services;
         }
     }
