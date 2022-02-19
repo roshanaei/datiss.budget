@@ -101,6 +101,7 @@ namespace Datiss.Budget.Services
                         OrganizationDisplay = organizationDisplay,
                         YearId = model.YearId,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year,
+                        ActivityType = model.ActivityType,
                         CCPMDepTypeId = model.CCPMDepTypeId,
                         CCPMDepTypeDisplay = model.CCPMDepTypeTitle,
                         CostCenterTypeId = model.CostCenterTypeId,
@@ -140,7 +141,7 @@ namespace Datiss.Budget.Services
                                    .Where(_ => _.OrganizationId == organizationId)
                                    .Where(_ => _.RecordType == recordType)
                                    .ToListAsync();
-            var childrens = await getChildren(organizationId, yearId , recordType);
+            var childrens = await getChildren(organizationId, yearId, recordType);
             if (self.Count() == 0 && childrens.Count() == 0)
                 throw new DeleteNullRecordException();
 
@@ -284,7 +285,7 @@ namespace Datiss.Budget.Services
             filter.CheckArgumentIsNull(nameof(filter));
             var query = Query();
             query = await setFilter(query, filter);
-            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+            query = setOrder(query, "exportExcel", filter.OrderDesc);
             var items = await query
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
@@ -552,14 +553,22 @@ namespace Datiss.Budget.Services
                         ? query.OrderByDescending(x => x.Organization.Title)
                         : query.OrderBy(x => x.Organization.Title);
 
-                case "ccPMDeptype":
-                    return desc
-                        ? query.OrderByDescending(x => x.CCPMDepType.DisplayOrder)
-                        : query.OrderBy(x => x.CCPMDepType.DisplayOrder);
+                case "exportexcel":
+                    return query.Include(x => x.Organization)
+                                .Include(x => x.CostCenterType)
+                                .Include(x => x.CCPMDepType)
+                                .OrderByDescending(x => x.RecordType)
+                                .ThenBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.Organization.Type)
+                                .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.ActivityType)
+                                .ThenBy(x => x.CostCenterType.DisplayOrder)
+                                .ThenBy(x => x.CCPMDepType.DisplayOrder);
 
                 default:
                     return query.Include(x => x.Organization)
                                 .Include(x => x.CCPMDepType)
+                                .Include(x=>x.CostCenterType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
                                 .ThenBy(x => x.Organization.Type)
                                 .ThenBy(x => x.Organization.ParentId)

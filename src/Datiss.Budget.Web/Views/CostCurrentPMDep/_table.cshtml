@@ -56,15 +56,21 @@
                                 $('#inputRecordType_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
+                        <div id="divInput_RecordTypeDisplay_@item.Id" style="display: none">
+                            <span>@item.RecordTypeDisplay </span>
+                        </div>
                         <div id="divOutput_RecordType_@item.Id">
                             <span id="spanRecordType_@item.Id">@item.RecordTypeDisplay </span>
                         </div>
                     </td>
                     <td>
                         <div id="divInput_ActivityType_@item.Id" style="display: none">
-                            <input id="hidActivityType_@item.Id" type="hidden" value="@item.ActivityType" />
+                            <input id="hidActivityTypeId_@item.Id" type="hidden" value="@item.ActivityType" />
                             <select class="form-control selectActivityType" id="inputActivityType_@item.Id" asp-items="item.ActivityTypeSource">
                             </select>
+                            <script>
+                                $('select#inputActivityType_' + @item.Id + ' option[value=' + @item.ActivityType + ']').attr('selected', true);
+                            </script>
                         </div>
                         <div id="divOutput_ActivityType_@item.Id">
                             <span id="spanActivityType_@item.Id">@item.ActivityTypeDisplay </span>
