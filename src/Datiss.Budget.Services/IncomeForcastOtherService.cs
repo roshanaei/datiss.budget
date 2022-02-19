@@ -25,6 +25,7 @@ using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Datiss.Budget.ViewModels;
 
 namespace Datiss.Budget.Services
 {
@@ -342,18 +343,9 @@ namespace Datiss.Budget.Services
 
             var records = data.Adapt<List<IncomeForcastOther>>();
 
-            var datalist = data.ToList();
-            for (int i = 0; i < datalist.Count(); i++)
-            {
-                if (datalist[i].ActivityId == 0)
-                    records[i].ActivityId = ActivityType.Water;
-                if (datalist[i].ActivityId == 1)
-                    records[i].ActivityId = ActivityType.Waste;
-            }
-
             int rowIndex = 1;
 
-            var oiftypes = _constSet.Where(x => x.Status != EntityStatus.Deleted && 
+            var oiftypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                 x.Parent.ConstantKey == ConstantKeys.__OIFType);
 
             var descendents = await _organizationService
@@ -413,25 +405,50 @@ namespace Datiss.Budget.Services
             //
 
             //Start OIFType
+            var activities = ActivityType.GetValues<ActivityType>();
+            string missingActivity = "";
+
             var missingType = new List<Constant>();
             string orgTitle = "";
+            string activityTitle = "";
+
             foreach (var org in existOrgs)
             {
                 if (!string.IsNullOrWhiteSpace(orgTitle))
                 {
                     break;
                 }
-                foreach (var usert in oiftypes)
+                foreach (var activity in activities)
                 {
-                    var existTypeInExcel = records.Any(_ => _.OIFTypeId == usert.Id &&
-                                              _.OrganizationId == org.Id);
-                    if (!existTypeInExcel)
+                    if (!records.Any(x => x.OrganizationId == org.Id &&
+                                          x.ActivityId == activity))
                     {
-                        missingType.Add(usert);
+                        missingActivity += "- [" + activity.ToDisplay() + "]<br>";
                         orgTitle = org.Title;
+                    }
+                    else
+                    {
+                        foreach (var oif in oiftypes)
+                        {
+                            if (!records.Any(_ => _.OIFTypeId == oif.Id &&
+                                                  _.OrganizationId == org.Id &&
+                                                  _.ActivityId == activity))
+                            {
+                                missingType.Add(oif);
+                                activityTitle = activity.ToDisplay();
+                                orgTitle = org.Title;
+                            }
+                        }
                     }
                 }
             }
+
+            if (!string.IsNullOrWhiteSpace(missingActivity))
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelActivityTypeNotInExcel, missingActivity, orgTitle));
+            }
+
             if (missingType.Any())
             {
                 string oIFTypeNames = "";
@@ -440,7 +457,7 @@ namespace Datiss.Budget.Services
                     oIFTypeNames += "- " + item.Title + "<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelTitleNotInExcel, oIFTypeNames, orgTitle));
+                    string.Format(ServiceMessages.ImportExcelCCITypeActivityOrgNotInExcel, oIFTypeNames, activityTitle, orgTitle));
             }
             //end
 
@@ -604,7 +621,7 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) || 
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
                                          _.OIFType.Title.ToUpper().Contains(filter.Search));
             }
 
@@ -699,7 +716,7 @@ namespace Datiss.Budget.Services
             int yearId)
         {
             var children = await _orgDbSet
-                .Where(_ => _.Status != EntityStatus.Deleted && 
+                .Where(_ => _.Status != EntityStatus.Deleted &&
                             _.ParentId == parentOrganizationId)
                 .ToListAsync();
             var result = new List<IncomeForcastOther>();

@@ -186,7 +186,7 @@ namespace Datiss.Budget.Services
 
             var self = await _dbSet.Where(_ => _.YearId == yearId)
                                     .Where(_ => _.OrganizationId == organizationId)
-                                    .Where(_=>_.GroupName==group)
+                                    .Where(_ => _.GroupName == group)
                                     .ToListAsync();
             var childrens = await getChildren(organizationId, yearId, group);
 
@@ -374,6 +374,8 @@ namespace Datiss.Budget.Services
             string orgTitle = "";
             foreach (var org in existOrgs)
             {
+                if (!string.IsNullOrWhiteSpace(orgTitle))
+                    break;
                 foreach (var Cofficient in cofficienttypes)
                 {
                     var existTypeInExcel = records.Any(_ => _.CofficientTypeId == Cofficient.Id &&
@@ -555,7 +557,7 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) || 
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
                                          _.CofficientType.Title.ToUpper().Contains(filter.Search));
             }
 

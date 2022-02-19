@@ -17,16 +17,16 @@ namespace Datiss.Budget.Services.Excel.Models
         public int OrganizationId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "C")]
-        public string OIFTypeDisplay { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "D")]
-        public int OIFTypeId { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "E")]
         public string ActivityDisplay { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "F")]
+        [Column(MappingDirections.Both, Letter = "D")]
         public int ActivityId { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "E")]
+        public string OIFTypeDisplay { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "F")]
+        public int OIFTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "G")]
         public int OIFCount { get; set; }

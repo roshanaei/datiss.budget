@@ -24,6 +24,7 @@ using Mapster;
 using Datiss.Budget.Common;
 using Datiss.Budget.Extensions;
 using Datiss.Budget.Services.Excel.Models;
+using Datiss.Budget.ViewModels;
 
 namespace Datiss.Budget.Services
 {
@@ -337,7 +338,7 @@ namespace Datiss.Budget.Services
             var costCenterType = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CostCenterType &&
                                                       x.Status != EntityStatus.Disbaled);
 
-            var activityType = EnumSelectListProvider.GetActivityTypeItems().ToList();
+            var activities = ActivityType.GetValues<ActivityType>();
 
 
             var year = await _yearSet.FindAsync(yearId);
@@ -414,13 +415,12 @@ namespace Datiss.Budget.Services
                 {
                     break;
                 }
-                foreach (var act in activityType)
+                foreach (var activity in activities)
                 {
-                    var activity = act.Value == "0" ? ActivityType.Water : ActivityType.Waste;
                     if (!records.Any(_ => _.ActivityType == activity &&
                                        _.OrganizationId == org.Id))
                     {
-                        missingActivity += "- [" + act.Text + "]<br>";
+                        missingActivity += "- [" + activity.ToDisplay() + "]<br>";
                         orgTitle = org.Title;
                     }
                     else
@@ -437,7 +437,7 @@ namespace Datiss.Budget.Services
                             if (!exist)
                             {
                                 missingCostCenterType.Add(cost);
-                                activityTitle = act.Text;
+                                activityTitle = activity.ToDisplay();
                                 orgTitle = org.Title;
                             }
                             else
@@ -451,7 +451,7 @@ namespace Datiss.Budget.Services
                                     {
                                         missingccPMDepType.Add(cc);
                                         costCenterTypeTitle = cost.Title;
-                                        activityTitle = act.Text;
+                                        activityTitle = activity.ToDisplay();
                                         orgTitle = org.Title;
                                     }
                                 }
