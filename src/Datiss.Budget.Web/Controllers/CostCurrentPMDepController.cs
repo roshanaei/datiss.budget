@@ -252,18 +252,19 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("records/delete")]
         [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
-        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId ,RecordType recordType)
         {
             try
             {
-                var result = await _costCurrentPMDepService.HardDeleteAsync(yearId, orgId);
+                var result = await _costCurrentPMDepService.HardDeleteAsync(yearId, orgId , recordType);
 
                 return Json(new
                 {
                     success = true,
                     message = string.Format(
-                        ViewMessages.DeleteMultipleDataForOrg,
+                        ViewMessages.DeleteMultipleDataForTypeOrg,
                         result.OrganizationTitle,
+                        recordType.ToDisplay(),
                         result.Year)
                 });
             }

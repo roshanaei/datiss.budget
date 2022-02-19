@@ -124,7 +124,7 @@ namespace Datiss.Budget.Services
                );
         }
 
-        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId)
+        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId, RecordType recordType)
         {
             var organization = await _orgDbSet.FindAsync(organizationId);
             organization.CheckReferenceIsNull(nameof(organization));
@@ -136,9 +136,10 @@ namespace Datiss.Budget.Services
                 throw new DisbaledYearDataInputException();
 
             var self = await _dbSet.Where(_ => _.YearId == yearId)
-                                    .Where(_ => _.OrganizationId == organizationId)
-                                    .ToListAsync();
-            var childrens = await getChildren(organizationId, yearId);
+                                   .Where(_ => _.OrganizationId == organizationId)
+                                   .Where(_ => _.RecordType == recordType)
+                                   .ToListAsync();
+            var childrens = await getChildren(organizationId, yearId , recordType);
             if (self.Count() == 0 && childrens.Count() == 0)
                 throw new DeleteNullRecordException();
 
@@ -221,7 +222,7 @@ namespace Datiss.Budget.Services
                 throw new CopySameYearException();
             if (destYearId < sourceYearId)
                 throw new CopyDestYearExxeption();
-            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId,RecordType.Base))
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId, RecordType.Base))
                 throw new CopyOrgNullDataException();
             var result = new List<CostCurrentPMDep>();
 
@@ -312,9 +313,9 @@ namespace Datiss.Budget.Services
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            int orgId = _userContext.OrganizationId.HasValue 
-                                ?_userContext.OrganizationId.Value 
-                                :1;
+            int orgId = _userContext.OrganizationId.HasValue
+                                ? _userContext.OrganizationId.Value
+                                : 1;
             if (await hasAnyDataAsync(orgId, yearId, RecordType.Base))
             {
                 return ImportResult.Failed(
@@ -562,7 +563,7 @@ namespace Datiss.Budget.Services
                                 .OrderBy(x => x.Organization.DisplayOrder)
                                 .ThenBy(x => x.Organization.Type)
                                 .ThenBy(x => x.Organization.ParentId)
-                                .ThenBy(x=>x.ActivityType)
+                                .ThenBy(x => x.ActivityType)
                                 .ThenBy(x => x.CostCenterType.DisplayOrder)
                                 .ThenBy(x => x.CCPMDepType.DisplayOrder);
             }
@@ -657,7 +658,8 @@ namespace Datiss.Budget.Services
         }
         private async Task<IEnumerable<CostCurrentPMDep>> getChildren(
             int parentOrganizationId,
-            int yearId)
+            int yearId,
+            RecordType recordType)
         {
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId &&
@@ -669,17 +671,18 @@ namespace Datiss.Budget.Services
                 var data = await Query()
                                 .Where(_ => _.YearId == yearId)
                                 .Where(_ => _.OrganizationId == org.Id)
+                                .Where(_ => _.RecordType == recordType)
                                 .ToListAsync();
 
                 foreach (var item in data)
                 {
                     result.Add(item);
                 }
-                result.AddRange(await getChildren(org.Id, yearId));
+                result.AddRange(await getChildren(org.Id, yearId, recordType));
             }
             return result;
         }
-        private async Task<bool> hasAnyDataAsync(int orgid, int yearid , RecordType recordType)
+        private async Task<bool> hasAnyDataAsync(int orgid, int yearid, RecordType recordType)
         {
             bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
                                                    x.YearId == yearid &&

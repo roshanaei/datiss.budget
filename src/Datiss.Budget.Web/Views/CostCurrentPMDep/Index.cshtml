@@ -37,7 +37,7 @@
                                         <select asp-for="Filter.RecordType"
                                                 asp-items="Model.Filter.RecordTypeSource"
                                                 class="form-control d-inline-block width-100"
-                                                id="activityType">
+                                                id="recordType">
                                         </select>
                                     </label>
                                     <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
@@ -365,8 +365,9 @@
             }).then(function (result) {
                 if (result.value) {
                     let params = {};
-                    params.yearId = $('#yearId option:selected').val();
+                    params.yearId = $('#yearId option:selected').val(); recordType
                     params.orgId = $('#organizationId option:selected').val();
+                    params.recordType = $('#recordType option:selected').val();
                     console.log(params);
                     let deleteUrl = '@Url.Action(CostCurrentPMDepController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);

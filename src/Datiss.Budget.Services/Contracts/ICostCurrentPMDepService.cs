@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Services.Contracts
 {
@@ -19,7 +20,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<PagedResult<CostCurrentPMDepDTO>> GetListAsync(CostCurrentPMDepFilterDTO filter);
 
-        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId , RecordType recordType);
 
         Task<ValidationResult> CalculationAsync(int yearId, int organizationId);
 
