@@ -409,10 +409,6 @@ namespace Datiss.Budget.Web.Controllers
             var cciWTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWater);
             var cciWsTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWaste);
             var activity = ActivityType.GetValues<ActivityType>();
-            //(ActivityType[])ActivityType.GetValues(typeof(ActivityType));
-            foreach (ActivityType suit in (ActivityType[])ActivityType.GetValues(typeof(ActivityType)))
-            {
-            }
             var items = new List<CostCurrentInstalationDTO>();
 
             foreach (var org in organizations)
