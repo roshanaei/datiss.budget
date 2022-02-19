@@ -271,47 +271,6 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
-        public async Task<Stream> ExportExcelAsync(CostCurrentPMDepFilterDTO filter)
-        {
-            //filter.CheckArgumentIsNull(nameof(filter));
-
-            //var query = Query();
-
-            //query = await setFilter(query, filter);
-
-            //query = setOrder(query, filter.OrderBy, filter.OrderDesc);
-
-            //var items = await query
-            //                        .Include(x => x.FinanceYear)
-            //                        .Include(x => x.Organization)
-            //                        .Include(x => x.CCPMDepType)
-            //                        .Select(x => new CostCurrentPMDepDTO
-            //                        {
-            //                            Id = x.Id,
-            //                            Year = x.FinanceYear.Year,
-            //                            YearId = x.YearId,
-            //                            CCPMDepTypeDisplay = x.CCPMDepType.Title,
-            //                            CCPMDepTypeId = x.CCPMDepTypeId,
-            //                            OrganizationDisplay = x.Organization.Title,
-            //                            OrganizationId = x.OrganizationId,
-            //                            ActivityType = x.ActivityType,
-            //                            RecordType = x.RecordType,
-            //                            CostCenterTypeId = x.CostCenterTypeId,
-            //                            CostCenterTypeDisplay = x.CostCenterType.Title,
-            //                            FinancePMCost = x.FinancePMCost,
-            //                            RFinancePMCost_D = x.RFinancePMCost_D,
-            //                            FinanceDepCost = x.FinanceDepCost,
-            //                            RFinanceDepCost_D = x.RFinanceDepCost_D
-
-            //                        }).ToListAsync();
-
-            var ms = new MemoryStream();
-            //var result = _excelService.Export(items, ms);
-
-            var mem1 = new MemoryStream(ms.ToArray());
-
-            return mem1;
-        }
 
         public async Task<IEnumerable<CostCurrentPMDepDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {

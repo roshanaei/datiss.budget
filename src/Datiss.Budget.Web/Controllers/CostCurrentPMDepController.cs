@@ -42,7 +42,7 @@ namespace Datiss.Budget.Web.Controllers
 
         private readonly ILogger<CostCurrentPMDepController> _logger;
         private readonly IWebHostEnvironment _env;
-        private readonly ICostCurrentPMDepService _waterInstallFeeService;
+        private readonly ICostCurrentPMDepService _costCurrentPMDepService;
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
@@ -51,7 +51,7 @@ namespace Datiss.Budget.Web.Controllers
         public CostCurrentPMDepController(
             ILogger<CostCurrentPMDepController> logger,
             IWebHostEnvironment environment,
-            ICostCurrentPMDepService waterInstallFeeService,
+            ICostCurrentPMDepService costCurrentPMDepService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             IConstantService constantService,
@@ -59,7 +59,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
-            _waterInstallFeeService = waterInstallFeeService ?? throw new ArgumentNullException(nameof(waterInstallFeeService));
+            _costCurrentPMDepService = costCurrentPMDepService ?? throw new ArgumentNullException(nameof(costCurrentPMDepService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
@@ -78,7 +78,7 @@ namespace Datiss.Budget.Web.Controllers
             //}
 
             var data = model.Adapt<UpdateCostCurrentPMDepDTO>();
-            var result = await _waterInstallFeeService.UpdateAsync(data);
+            var result = await _costCurrentPMDepService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
@@ -125,7 +125,7 @@ namespace Datiss.Budget.Web.Controllers
 
             filter.PageNumber = page;
 
-            var result = await _waterInstallFeeService.GetListAsync(filter);
+            var result = await _costCurrentPMDepService.GetListAsync(filter);
             var model = result.Adapt<CostCurrentPMDepIndexViewModel>();
 
             model.SetYearSource(yearSource);
@@ -154,7 +154,7 @@ namespace Datiss.Budget.Web.Controllers
 
             TempData.Put(_indexFilterKey, filter);
 
-            var result = await _waterInstallFeeService.GetListAsync(filter);
+            var result = await _costCurrentPMDepService.GetListAsync(filter);
             model = result.Adapt<CostCurrentPMDepIndexViewModel>();
             model.Filter = filter.Adapt<CostCurrentPMDepFilterViewModel>();
 
@@ -199,7 +199,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _waterInstallFeeService.ImportExcelAsync(
+                var result = await _costCurrentPMDepService.ImportExcelAsync(
                                                                     model.ExcelFile,
                                                                     model.YearId,
                                                                     model.ContinueIfAnyOrgMissing);
@@ -256,7 +256,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             try
             {
-                var result = await _waterInstallFeeService.HardDeleteAsync(yearId, orgId);
+                var result = await _costCurrentPMDepService.HardDeleteAsync(yearId, orgId);
 
                 return Json(new
                 {
@@ -307,7 +307,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var result = await _waterInstallFeeService.CalculationAsync(
+            var result = await _costCurrentPMDepService.CalculationAsync(
                 model.YearId,
                 model.OrganizationId);
 
@@ -346,7 +346,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                await _waterInstallFeeService.CopyAsync(
+                await _costCurrentPMDepService.CopyAsync(
                                                     model.SourceYearId,
                                                     model.SourceOrgId,
                                                     model.TargetYearId);
@@ -418,7 +418,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("[action]/{orgid}/{yearid}")]
         public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
-            var result = await _waterInstallFeeService.GetExportItemsAsync(yearid, orgid);
+            var result = await _costCurrentPMDepService.GetExportItemsAsync(yearid, orgid);
             if (result.Count() == 0)
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
