@@ -95,7 +95,7 @@ namespace Datiss.Budget.Services
                     await _uow.SaveChangesAsync();
 
                     var result = entity.Adapt<CostCurrentInstalationDTO>();
-                    result.CCInstalationTypeDisplay = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title;
+                    result.CCInstalationTypeDisplay = model.CCInstalationTypeDisplay;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.ActivityType = model.ActivityType;
@@ -151,7 +151,7 @@ namespace Datiss.Budget.Services
                         NumberUser = model.NumberUser,
                         
                         OrganizationDisplay = organizationDisplay,
-                        CCInstalationTypeDisplay = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title,
+                        CCInstalationTypeDisplay = model.CCInstalationTypeDisplay,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
                     };
 
@@ -371,44 +371,6 @@ namespace Datiss.Budget.Services
             return items;
         }
 
-        public async Task<Stream> ExportExcelAsync(CostCurrentInstalationFilterDTO filter)
-        {
-            filter.CheckArgumentIsNull(nameof(filter));
-
-            var query = Query();
-
-            query = await setFilter(query, filter);
-
-            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
-
-            var items = await query
-                                    .Include(x => x.FinanceYear)
-                                    .Include(x => x.Organization)
-                                    .Include(x => x.CCInstalationType)
-                                    .Select(x => new CostCurrentInstalationDTO
-                                    {
-                                        Id = x.Id,
-                                        CCInstalationTypeDisplay = x.CCInstalationType.Title,
-                                        CCInstalationTypeId = x.CCInstalationTypeId,
-                                        OrganizationDisplay = x.Organization.Title,
-                                        OrganizationId = x.OrganizationId,
-                                        ActivityType = x.ActivityType,
-                                        ActivityTypeDisplay = x.ActivityType.ToDisplay(),
-                                        NumberUser = x.NumberUser,
-                                        Income = x.Income,
-                                        Cost = x.Cost,
-                                        Year = x.FinanceYear.Year,
-                                        YearId = x.YearId
-                                    }).ToListAsync();
-
-            var ms = new MemoryStream();
-            var result = _excelService.Export(items, ms);
-
-            var mem1 = new MemoryStream(ms.ToArray());
-
-            return mem1;
-        }
-
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<CostCurrentInstallationImportModel>
@@ -551,7 +513,8 @@ namespace Datiss.Budget.Services
                     }
                 }
             }
-            if (activityTitle!="")
+            
+            if (!string.IsNullOrWhiteSpace(activityTitle))
             {
                 return ImportResult.Failed(
                     string.Format(ServiceMessages.ImportExcelActivityOrgNotInExcel, activityTitle, orgTitle));

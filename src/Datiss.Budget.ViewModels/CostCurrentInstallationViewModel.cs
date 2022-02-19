@@ -111,8 +111,6 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> InputOrganizationSource { get; set; }
 
-        //public IList<SelectListItem> CCInstalationTypeSource { get; set; }
-
         public ActivityType ActivityType { get; set; }
 
         public IEnumerable<SelectListItem> ActivitySource => EnumSelectListProvider.GetActivityTypeItems(ActivityType);
