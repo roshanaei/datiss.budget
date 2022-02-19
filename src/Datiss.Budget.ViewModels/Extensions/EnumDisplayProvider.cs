@@ -21,14 +21,14 @@ namespace Datiss.Budget.ViewModels
                 OrganizationType.County => EnumText.OrganizationType_County,
                 OrganizationType.City => EnumText.OrganizationType_City,
                 OrganizationType.Village => EnumText.OrganizationType_Village,
-                _=>EnumText.Unknown
+                _ => EnumText.Unknown
             };
         public static string ToDisplay(this ActivityType activity)
             => activity switch
             {
                 ActivityType.Water => EnumText.ActivityType_Water,
                 ActivityType.Waste => EnumText.ActivityType_Waste,
-                _=>EnumText.Unknown
+                _ => EnumText.Unknown
             };
         public static string ToDisplay(this TablesName tables)
             => tables switch
@@ -40,7 +40,7 @@ namespace Datiss.Budget.ViewModels
                 TablesName.ConsumptionFunction => EnumText.TablesName_ConsumptionFunction,
                 TablesName.WTotalBudget => EnumText.TablesName_WTotalBudget,
                 TablesName.WsTotalBudget => EnumText.TablesName_WsTotalBudget,
-                _=>EnumText.Unknown
+                _ => EnumText.Unknown
             };
         public static string ToDisplay(this CofficientsGroup group)
             => group switch
@@ -63,6 +63,13 @@ namespace Datiss.Budget.ViewModels
                 ReportParamType.County => EnumText.OrganizationType_County,
                 ReportParamType.City => EnumText.ReportParamType_City,
                 ReportParamType.Village => EnumText.ReportParamType_Village,
+                _ => EnumText.Unknown
+            };
+        public static string ToDisplay(this RecordType recordType)
+            => recordType switch
+            {
+                RecordType.Base => EnumText.RecordType_Base,
+                RecordType.Forcast => EnumText.RecordType_Forcast,
                 _ => EnumText.Unknown
             };
 

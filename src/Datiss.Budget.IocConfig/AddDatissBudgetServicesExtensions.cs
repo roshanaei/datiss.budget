@@ -15,9 +15,10 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class AddDatissBudgetServicesExtensions
     {
 
-        public static IServiceCollection AddDatissBudgetServices(this IServiceCollection services) {
+        public static IServiceCollection AddDatissBudgetServices(this IServiceCollection services)
+        {
             services.AddSingleton<IExcelService, ExcelService>();
-            
+
             services.AddScoped<IUserContext, UserContext>();
             services.AddScoped<IDateService, DateService>();
 
@@ -59,8 +60,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAppClaimTypeService, AppClaimTypeService>();
             services.AddScoped<IIncomeCurrentNOperationalService, IncomeCurrentNOperationalService>();
+            services.AddScoped<ICostCurrentPMDepService, CostCurrentPMDepService>();
             services.AddScoped<ICostCurrentInstallationService, CostCurrentInstallationService>();
 
+          
             return services;
         }
     }

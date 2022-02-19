@@ -224,6 +224,16 @@ namespace Datiss.Budget.Services.Models
         public ActivityType? Activity { get; set; }
     }
 
+    public class CostCurrentPMDepFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public RecordType? RecordType { get; set; }
+        public int? CCPMDepTypeId { get; set; }
+        public int? CostCenterTypeId { get; set; }
+        public ActivityType? ActivityType { get; set; }
+    }
+
     public class CostCurrentInstalationFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }

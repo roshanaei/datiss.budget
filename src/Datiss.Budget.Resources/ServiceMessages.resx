@@ -318,6 +318,21 @@
   <data name="ImportExcelUnitTypesSectionTypeNotInExcel" xml:space="preserve">
     <value>در فایل اکسل شما اطلاعات واحد های :&lt;br&gt;{0} برای شرح "{1}" ، "{2}" وجود ندارد.</value>
   </data>
+  <data name="ImportExcelActivityCCTypePMDepTypeOrgNotInExcel" xml:space="preserve">
+    <value>در فایل اکسل شما عناوین :&lt;br&gt;{0} برای مرکز "{1}" در بخش "{2}"، "{3}" وجود ندارد.</value>
+  </data>
+  <data name="ImportExcelInvalidCCPMDepType" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد عنوان استهلاک و تعمیر و نگهداری "{1}" معتبر نیست .</value>
+  </data>
+  <data name="ImportExcelInvalidCostCenterType" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد مرکز هزینه "{1}" معتبر نیست .</value>
+  </data>
+  <data name="TableHasBaseData" xml:space="preserve">
+    <value>جدول شما دارای اطلاعات پایه می باشد . لطفا ابتدا آنها را پاک کنید.</value>
+  </data>
+  <data name="ImportExcelActivityCostCenterTypeOrgNotInExcel" xml:space="preserve">
+    <value>در فایل اکسل شما مراکز هزینه :&lt;br&gt;{0} برای بخش "{1}" ، "{2}" وجود ندارد.</value>
+  </data>
   <data name="ImportExcelCCITypeActivityOrgNotInExcel" xml:space="preserve">
     <value>عنوان های :&lt;br&gt;{0} در بخش "{1}" برای "{2}" در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>

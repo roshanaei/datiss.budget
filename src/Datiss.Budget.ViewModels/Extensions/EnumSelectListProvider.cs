@@ -147,6 +147,22 @@ namespace Datiss.Budget.Extensions
                     Selected = paramType == ReportParamType.Village
                 }
             };
+        public static IEnumerable<SelectListItem> GetRecordTypeItems(RecordType? recordType = null)
+            => new List<SelectListItem>
+            {
+                 new SelectListItem
+                 {
+                    Text = EnumText.RecordType_Base,
+                    Value = ((int)RecordType.Base).ToString(),
+                    Selected = recordType == RecordType.Base
+                 },
+                 new SelectListItem
+                 {
+                    Text = EnumText.RecordType_Forcast,
+                    Value = ((int)RecordType.Forcast).ToString(),
+                    Selected = recordType == RecordType.Forcast
+                 }
+            };
 
     }
 }
