@@ -848,6 +848,7 @@
 
                 },
                 error: function(request, options, err) {
+                    $(".olvy").css("display", "none");
                     if (request.status == 401 || request.status == 403) {
                         ShowPermissionErorr();
                         return;

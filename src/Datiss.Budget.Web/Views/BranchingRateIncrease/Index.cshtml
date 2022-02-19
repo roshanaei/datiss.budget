@@ -423,7 +423,8 @@
                                 document.location.href = '@Url.Action(BranchingRateIncreaseController.ACTION_Index, new {  page = 1})';
                             });
                         },
-                        error: function(request, option, err) {
+                        error: function (request, option, err) {
+                            $("#overlay").css("display", "none");
                             if (request.status == 401 || request.status == 403) {
                                 ShowPermissionErorr();
                                 return;
@@ -755,7 +756,8 @@
                     }
 
                 },
-                error: function(request, options, err) {
+                error: function (request, options, err) {
+                    $(".olvy").css("display", "none");
                     if (request.status == 401 || request.status == 403) {
                         ShowPermissionErorr();
                         return;
