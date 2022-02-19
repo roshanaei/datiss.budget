@@ -2,8 +2,6 @@
 using Datiss.Budget.Common;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
-using Datiss.Budget.Enum;
-using Datiss.Budget.Extensions;
 using Datiss.Budget.Reports.Excel;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
@@ -17,9 +15,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Runtime;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -36,7 +36,6 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
-      //public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
@@ -341,31 +340,6 @@ namespace Datiss.Budget.Web.Controllers
             });
         }
 
-        //Temporarily Disabled
-        //[HttpPost("[action]")]
-        //public async Task<IActionResult> Calculation(CalculationInputViewModel model)
-        //{
-        //    model.CheckArgumentIsNull(nameof(model));
-
-        //    var result = await _costCurrentInstallationService.CalculationAsync(
-        //        model.YearId,
-        //        model.OrganizationId);
-
-        //    List<CalculationResultViewModel> viewModel = new List<CalculationResultViewModel>();
-        //    foreach (var item in result)
-        //    {
-        //        viewModel.Add(
-        //            new CalculationResultViewModel
-        //            {
-        //                Result = item.Value,
-        //                Title = getCalcTitle(item.Key)
-        //            }
-        //        );
-        //    }
-
-        //    return PartialView("_calculationModal", viewModel);
-        //}
-
         [HttpGet("[action]")]
         [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> Copy()
@@ -434,15 +408,18 @@ namespace Datiss.Budget.Web.Controllers
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
             var cciWTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWater);
             var cciWsTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWaste);
-            var activity = EnumSelectListProvider.GetActivityTypeItems();
-
+            var activity = ActivityType.GetValues<ActivityType>();
+            //(ActivityType[])ActivityType.GetValues(typeof(ActivityType));
+            foreach (ActivityType suit in (ActivityType[])ActivityType.GetValues(typeof(ActivityType)))
+            {
+            }
             var items = new List<CostCurrentInstalationDTO>();
 
             foreach (var org in organizations)
             {
                 foreach (var act in activity)
                 {
-                    if (Convert.ToInt16(act.Value) == Convert.ToInt16(ActivityType.Water))
+                    if (act == ActivityType.Water)
                     {
                         foreach (var cciW in cciWTypes)
                         {
@@ -454,8 +431,8 @@ namespace Datiss.Budget.Web.Controllers
                                 OrganizationDisplay = org.Title,
                                 Year = year.Year,
                                 YearId = year.Id,
-                                ActivityType = System.Enum.Parse<ActivityType>(act.Value),
-                                ActivityTypeDisplay = act.Text
+                                ActivityType = act,
+                                ActivityTypeDisplay = act.ToDisplay()
                             });
                         }
                     }
@@ -471,8 +448,8 @@ namespace Datiss.Budget.Web.Controllers
                                 OrganizationDisplay = org.Title,
                                 Year = year.Year,
                                 YearId = year.Id,
-                                ActivityType = System.Enum.Parse<ActivityType>(act.Value),
-                                ActivityTypeDisplay = act.Text
+                                ActivityType = act,
+                                ActivityTypeDisplay = act.ToDisplay()
                             });
                         }
                     }
