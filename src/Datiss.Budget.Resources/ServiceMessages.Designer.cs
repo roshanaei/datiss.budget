@@ -183,6 +183,10 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelActivityCostCenterTypeOrgNotInExcel {
             get {
                 return ResourceManager.GetString("ImportExcelActivityCostCenterTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to در فایل اکسل شما بخش &quot;{0}&quot; برای &quot;{1}&quot; اطلاعاتی ندارد..
         /// </summary>
         public static string ImportExcelActivityOrgNotInExcel {
@@ -255,16 +259,20 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد عنوان استهلاک و تعمیر و نگهداری &quot;{1}&quot; معتبر نیست ..
-        /// </summary>
-        public static string ImportExcelInvalidCCPMDepType {
-            get {
-                return ResourceManager.GetString("ImportExcelInvalidCCPMDepType", resourceCulture);
         ///   Looks up a localized string similar to در سطر {0} فایل اکسل، برای بخش &quot;{1}&quot; کد عنوان &quot;{2}&quot; معتبر نیست ..
         /// </summary>
         public static string ImportExcelInvalidCCIActivityType {
             get {
                 return ResourceManager.GetString("ImportExcelInvalidCCIActivityType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد عنوان استهلاک و تعمیر و نگهداری &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidCCPMDepType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidCCPMDepType", resourceCulture);
             }
         }
         

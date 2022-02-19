@@ -332,6 +332,7 @@
   </data>
   <data name="ImportExcelActivityCostCenterTypeOrgNotInExcel" xml:space="preserve">
     <value>در فایل اکسل شما مراکز هزینه :&lt;br&gt;{0} برای بخش "{1}" ، "{2}" وجود ندارد.</value>
+  </data>
   <data name="ImportExcelCCITypeActivityOrgNotInExcel" xml:space="preserve">
     <value>عنوان های :&lt;br&gt;{0} در بخش "{1}" برای "{2}" در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
