@@ -104,7 +104,10 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var ccPMDepSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDepType))
+            var ccPMDepTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDepType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var costCenterTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -128,7 +131,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetCCPMDepTypeSource(ccPMDepSource);
+            model.SetCCPMDepTypeSource(ccPMDepTypeSource);
+            model.SetCostCenterTypeSource(costCenterTypeSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
@@ -160,7 +164,10 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var ccPMDepSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDepType))
+            var ccPMDepTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDepType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var costCenterTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
@@ -171,7 +178,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
-            model.SetCCPMDepTypeSource(ccPMDepSource);
+            model.SetCCPMDepTypeSource(ccPMDepTypeSource);
+            model.SetCostCenterTypeSource(costCenterTypeSource);
 
             return View(model);
         }
@@ -374,6 +382,7 @@ namespace Datiss.Budget.Web.Controllers
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
             var ccPMDepTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDepType);
+            var costCurrentTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType);
             var Activity = EnumSelectListProvider.GetActivityTypeItems().ToList();
             var items = new List<CostCurrentPMDepDTO>();
 
@@ -381,18 +390,23 @@ namespace Datiss.Budget.Web.Controllers
             {
                 foreach (var act in Activity)
                 {
-                    foreach (var cc in ccPMDepTypes)
+                    foreach (var cost in costCurrentTypes)
                     {
-                        items.Add(new CostCurrentPMDepDTO
+                        foreach (var cc in ccPMDepTypes)
                         {
-                            CCPMDepTypeDisplay = cc.Title,
-                            CCPMDepTypeId = cc.Id,
-                            OrganizationId = org.Id,
-                            OrganizationDisplay = org.Title,
-                            Year = year.Year,
-                            YearId = year.Id,
-                            ActivityType = act.Value == "0" ? ActivityType.Water : ActivityType.Waste
-                        });
+                            items.Add(new CostCurrentPMDepDTO
+                            {
+                                CCPMDepTypeDisplay = cc.Title,
+                                CCPMDepTypeId = cc.Id,
+                                CostCenterTypeDisplay = cost.Title,
+                                CostCenterTypeId = cost.Id,
+                                OrganizationId = org.Id,
+                                OrganizationDisplay = org.Title,
+                                Year = year.Year,
+                                YearId = year.Id,
+                                ActivityType = act.Value == "0" ? ActivityType.Water : ActivityType.Waste
+                            });
+                        }
                     }
                 }
             }

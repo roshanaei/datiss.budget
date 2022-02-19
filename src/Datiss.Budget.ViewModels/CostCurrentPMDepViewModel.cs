@@ -22,6 +22,7 @@ namespace Datiss.Budget.ViewModels
         public string OrganizationDisplay { get; set; }
 
         public int CCPMDepTypeId { get; set; }
+        public int CostCenterTypeId { get; set; }
 
         public ActivityType ActivityType { get; set; }
         public RecordType RecordType { get; set; }
@@ -30,7 +31,7 @@ namespace Datiss.Budget.ViewModels
         public decimal RFinancePMCost_D { get; set; }
         public long FinanceDepCost { get; set; }
         public decimal RFinanceDepCost_D { get; set; }
-        public IEnumerable<SelectListItem> CCPMDepTypeSource { get; set; }
+        //public IEnumerable<SelectListItem> CCPMDepTypeSource { get; set; }
 
     }
 
@@ -43,6 +44,8 @@ namespace Datiss.Budget.ViewModels
         public string OrganizationDisplay { get; set; }
         public int CCPMDepTypeId { get; set; }
         public string CCPMDepTypeDisplay { get; set; }
+        public int CostCenterTypeId { get; set; }
+        public string CostCenterTypeDisplay { get; set; }
         public ActivityType ActivityType { get; set; }
         public string ActivityTypeDisplay => ActivityType.ToDisplay();
         public RecordType RecordType { get; set; }
@@ -93,6 +96,8 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> CCPMDepTypeSource { get; set; }
 
+        public IList<SelectListItem> CostCenterTypeSource { get; set; }
+
 
         public IFormFile ExcelFile { get; set; }
 
@@ -124,6 +129,13 @@ namespace Datiss.Budget.ViewModels
                 Value = x.Id.ToString()
             }).ToList();
 
+        public void SetCostCenterTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => CostCenterTypeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
         public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
             => Filter.OrganizationSource = source.Select(x => new SelectListItem
             {
@@ -131,7 +143,6 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-        //AddEmptySelectListItem()
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
             => Filter.YearSource = source.Select(x => new SelectListItem

@@ -22,24 +22,30 @@ namespace Datiss.Budget.Services.Excel.Models
         public int ActivityType { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
-        public string CCPMDepTypeDisplay { get; set; }
+        public string CostCenterTypeDisplay { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "F")]
-        public int CCPMDepTypeId { get; set; }
+        [Column(MappingDirections.Both, Letter = "f")]
+        public int CostCenterTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "G")]
-        public long CostCenter { get; set; }
+        public string CCPMDepTypeDisplay { get; set; }
 
         [Column(MappingDirections.Both, Letter = "H")]
-        public long FinancePMCost { get; set; }
+        public int CCPMDepTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "I")]
-        public decimal RFinancePMCost_D { get; set; }
+        public long CostCenter { get; set; }
 
         [Column(MappingDirections.Both, Letter = "J")]
-        public long FinanceDepCost { get; set; }
+        public long FinancePMCost { get; set; }
 
         [Column(MappingDirections.Both, Letter = "K")]
+        public decimal RFinancePMCost_D { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "L")]
+        public long FinanceDepCost { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "M")]
         public decimal RFinanceDepCost_D { get; set; }
     }
 }

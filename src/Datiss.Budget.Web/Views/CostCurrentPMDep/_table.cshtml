@@ -7,8 +7,8 @@
                 <th style="min-width:135px">سازمان</th>
                 <th style="min-width:135px">نوع رکورد</th>
                 <th style="min-width:135px">حوزه فعالیت</th>
+                <th style="min-width:135px">مراکز هزینه</th>
                 <th style="min-width:135px">عناوین استهلاک و تعمیر و نگهداری</th>
-                <th style="min-width:135px">مرکز هزینه</th>
                 <th style="min-width:135px">هزینه تعمیر و نگهداری دارائی</th>
                 <th style="min-width:135px">ضریب هزینه تعمیر و نگهداری دارائی</th>
                 <th style="min-width:135px">هزینه استهلاک و دارائی</th>
@@ -71,6 +71,19 @@
                         </div>
                     </td>
                     <td>
+                        <div id="divInput_CostCenterType_@item.Id" style="display: none">
+                            <input id="hidCostCenterTypeId_@item.Id" type="hidden" value="@item.CostCenterTypeId" />
+                            <select class="form-control selectCostCenterType" id="inputCostCenterType_@item.Id" asp-items="Model.CostCenterTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputCostCenterType_' + @item.Id + ' option[value=' + @item.CostCenterTypeId + ']').attr('selected', true);
+                            </script>
+                        </div>
+                        <div id="divOutput_CostCenterType_@item.Id">
+                            <span id="spanCostCenterType_@item.Id">@item.CostCenterTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
                         <div id="divInput_CCPMDepType_@item.Id" style="display: none">
                             <input id="hidCCPMDepTypeId_@item.Id" type="hidden" value="@item.CCPMDepTypeId" />
                             <select class="form-control selectCCPMDepType" id="inputCCPMDepType_@item.Id" asp-items="Model.CCPMDepTypeSource">
@@ -84,16 +97,8 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_CostCenter_@item.Id" style="display: none">
-                            <input class="form-control" id="inputCostCenter_@item.Id" value="@item.CostCenter"  />
-                        </div>
-                        <div id="divOutput_CostCenter_@item.Id">
-                            <span id="spanCostCenter_@item.Id">@item.CostCenterDisplay </span>
-                        </div>
-                    </td>
-                    <td>
                         <div id="divInput_FinancePMCost_@item.Id" style="display: none">
-                            <input class="form-control" id="inputFinancePMCost_@item.Id" value="@item.FinancePMCost"  />
+                            <input class="form-control" id="inputFinancePMCost_@item.Id" value="@item.FinancePMCost" />
                         </div>
                         <div id="divOutput_FinancePMCost_@item.Id">
                             <span id="spanFinancePMCost_@item.Id">@item.FinancePMCostDisplay </span>
@@ -144,52 +149,52 @@
             }
         </tbody>
     </table>
-    <div class="rowACJSB" style="margin-top:20px">
-        <!--Tools-->
-        <div class="rowACJS">
-            <form id="toolForm"
-                  enctype="multipart/form-data"
-                  method="post"
-                  asp-antiforgery="true">
-                <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
-                <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+</div>
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
 
-                <span data-toggle="modal" data-target="#backdrop">
-                    <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                        <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
-                    </button>
-                </span>
-                <span data-toggle="modal" data-target="#CopyModal">
-                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
-                        <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
-                    </button>
-                </span>
-                <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
                 </button>
-                <span data-toggle="modal" data-target="#CalculationModal">
-                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
-                        <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                    </button>
-                </span>
-            </form>
-
-        </div>
-
-        <div class="rowAC">
-            <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
-            <div class="my-font ml-2">
-                (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
-                <b class="font-medium-2">
-                    @if (Model.PagesCount == 0)
-                    {<span>1</span>}
-                    else
-                    {<span>@Model.PagesCount</span>}
-                </b>)
-            </div>
-        </div>
-        <!--Pagination-->
-        <vc:pager model="Model.ToPager()" controller-name="@CostCurrentPMDepController.Name" action-name="@CostCurrentPMDepController.ACTION_Index"></vc:pager>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                </button>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <span data-toggle="modal" data-target="#CalculationModal">
+                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                </button>
+            </span>
+        </form>
 
     </div>
+
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">
+            (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
+            <b class="font-medium-2">
+                @if (Model.PagesCount == 0)
+                {<span>1</span>}
+                else
+                {<span>@Model.PagesCount</span>}
+            </b>)
+        </div>
+    </div>
+    <!--Pagination-->
+    <vc:pager model="Model.ToPager()" controller-name="@CostCurrentPMDepController.Name" action-name="@CostCurrentPMDepController.ACTION_Index"></vc:pager>
+
 </div>

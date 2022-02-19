@@ -156,7 +156,7 @@
                                                                name="col-5"
                                                                id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>عناوین استهلاک و تعمیر و نگهداری</span></label>
+                                                               for="col-5"><span>مراکز هزینه</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -167,7 +167,7 @@
                                                                name="col-6"
                                                                id="col-6" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-6"><span>مرکز هزینه</span></label>
+                                                               for="col-6"><span>عناوین استهلاک و تعمیر و نگهداری</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -433,11 +433,10 @@
         $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
-            let input1 = document.getElementById('inputCostCenter_' + id);
-            let input2 = document.getElementById('inputFinancePMCost_' + id);
-            let input3 = document.getElementById('inputRFinancePMCost_D_' + id);
-            let input4 = document.getElementById('inputFinanceDepCost_' + id);
-            let input5 = document.getElementById('inputRFinanceDepCost_D_' + id);
+            let input1 = document.getElementById('inputFinancePMCost_' + id);
+            let input2 = document.getElementById('inputRFinancePMCost_D_' + id);
+            let input3 = document.getElementById('inputFinanceDepCost_' + id);
+            let input4 = document.getElementById('inputRFinanceDepCost_D_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -466,12 +465,6 @@
                 }
             });
             input4.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input5.addEventListener('keyup', function (event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();

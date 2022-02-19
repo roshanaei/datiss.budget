@@ -221,7 +221,7 @@ namespace Datiss.Budget.Services
                 throw new CopySameYearException();
             if (destYearId < sourceYearId)
                 throw new CopyDestYearExxeption();
-            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId,RecordType.Base))
                 throw new CopyOrgNullDataException();
             var result = new List<CostCurrentPMDep>();
 
@@ -239,7 +239,7 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.CCPMDepTypeId,item.CostCenterTypeId, item.ActivityType, item.RecordType))
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.CCPMDepTypeId, item.CostCenterTypeId, item.ActivityType, item.RecordType))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new CostCurrentPMDep
@@ -273,40 +273,40 @@ namespace Datiss.Budget.Services
 
         public async Task<Stream> ExportExcelAsync(CostCurrentPMDepFilterDTO filter)
         {
-            filter.CheckArgumentIsNull(nameof(filter));
+            //filter.CheckArgumentIsNull(nameof(filter));
 
-            var query = Query();
+            //var query = Query();
 
-            query = await setFilter(query, filter);
+            //query = await setFilter(query, filter);
 
-            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+            //query = setOrder(query, filter.OrderBy, filter.OrderDesc);
 
-            var items = await query
-                                    .Include(x => x.FinanceYear)
-                                    .Include(x => x.Organization)
-                                    .Include(x => x.CCPMDepType)
-                                    .Select(x => new CostCurrentPMDepDTO
-                                    {
-                                        Id = x.Id,
-                                        Year = x.FinanceYear.Year,
-                                        YearId = x.YearId,
-                                        CCPMDepTypeDisplay = x.CCPMDepType.Title,
-                                        CCPMDepTypeId = x.CCPMDepTypeId,
-                                        OrganizationDisplay = x.Organization.Title,
-                                        OrganizationId = x.OrganizationId,
-                                        ActivityType = x.ActivityType,
-                                        RecordType = x.RecordType,
-                                        CostCenterTypeId = x.CostCenterTypeId,
-                                        CostCenterTypeDisplay = x.CostCenterType.Title,
-                                        FinancePMCost = x.FinancePMCost,
-                                        RFinancePMCost_D = x.RFinancePMCost_D,
-                                        FinanceDepCost = x.FinanceDepCost,
-                                        RFinanceDepCost_D = x.RFinanceDepCost_D
+            //var items = await query
+            //                        .Include(x => x.FinanceYear)
+            //                        .Include(x => x.Organization)
+            //                        .Include(x => x.CCPMDepType)
+            //                        .Select(x => new CostCurrentPMDepDTO
+            //                        {
+            //                            Id = x.Id,
+            //                            Year = x.FinanceYear.Year,
+            //                            YearId = x.YearId,
+            //                            CCPMDepTypeDisplay = x.CCPMDepType.Title,
+            //                            CCPMDepTypeId = x.CCPMDepTypeId,
+            //                            OrganizationDisplay = x.Organization.Title,
+            //                            OrganizationId = x.OrganizationId,
+            //                            ActivityType = x.ActivityType,
+            //                            RecordType = x.RecordType,
+            //                            CostCenterTypeId = x.CostCenterTypeId,
+            //                            CostCenterTypeDisplay = x.CostCenterType.Title,
+            //                            FinancePMCost = x.FinancePMCost,
+            //                            RFinancePMCost_D = x.RFinancePMCost_D,
+            //                            FinanceDepCost = x.FinanceDepCost,
+            //                            RFinanceDepCost_D = x.RFinanceDepCost_D
 
-                                    }).ToListAsync();
+            //                        }).ToListAsync();
 
             var ms = new MemoryStream();
-            var result = _excelService.Export(items, ms);
+            //var result = _excelService.Export(items, ms);
 
             var mem1 = new MemoryStream(ms.ToArray());
 
@@ -353,6 +353,15 @@ namespace Datiss.Budget.Services
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
+            int orgId = _userContext.OrganizationId.HasValue 
+                                ?_userContext.OrganizationId.Value 
+                                :1;
+            if (await hasAnyDataAsync(orgId, yearId, RecordType.Base))
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.TableHasBaseData)
+                    );
+            }
             var data = await _excelService.ImportAsync<CostCurrentPMDepImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
 
@@ -364,7 +373,9 @@ namespace Datiss.Budget.Services
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
             var ccPMDepType = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CCPMDepType &&
-                                                   x.Status == EntityStatus.Enabled);
+                                                   x.Status != EntityStatus.Disbaled);
+            var costCenterType = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CostCenterType &&
+                                                      x.Status != EntityStatus.Disbaled);
 
             var activityType = EnumSelectListProvider.GetActivityTypeItems().ToList();
 
@@ -389,10 +400,16 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
+                if (!await costCenterType.AnyAsync(x => x.Id == rec.CostCenterTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidCostCenterType, rowIndex + 2, rec.CostCenterTypeId)
+                        );
+                }
                 if (!await ccPMDepType.AnyAsync(x => x.Id == rec.CCPMDepTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.CCPMDepTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidCCPMDepType, rowIndex + 2, rec.CCPMDepTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -421,12 +438,15 @@ namespace Datiss.Budget.Services
             }
             //
 
-            //Start Missing Type
+            #region LogicType
+
             var missingccPMDepType = new List<Constant>();
+            var missingCostCenterType = new List<Constant>();
             string missingActivity = "";
 
             string orgTitle = "";
             string activityTitle = "";
+            string costCenterTypeTitle = "";
 
             foreach (var org in existOrgs)
             {
@@ -445,18 +465,39 @@ namespace Datiss.Budget.Services
                     }
                     else
                     {
-                        foreach (var cc in ccPMDepType)
+                        foreach (var cost in costCenterType)
                         {
+                            if (!string.IsNullOrWhiteSpace(costCenterTypeTitle))
+                            {
+                                break;
+                            }
                             var exist = records.Any(_ => _.OrganizationId == org.Id &&
                                                          _.ActivityType == activity &&
-                                                         _.CCPMDepTypeId == cc.Id);
+                                                         _.CostCenterTypeId == cost.Id);
                             if (!exist)
                             {
-                                missingccPMDepType.Add(cc);
+                                missingCostCenterType.Add(cost);
                                 activityTitle = act.Text;
                                 orgTitle = org.Title;
                             }
+                            else
+                            {
+                                foreach (var cc in ccPMDepType)
+                                {
+                                    if (!records.Any(_ => _.OrganizationId == org.Id &&
+                                                         _.ActivityType == activity &&
+                                                         _.CCPMDepTypeId == cc.Id &&
+                                                         _.CostCenterTypeId == cost.Id))
+                                    {
+                                        missingccPMDepType.Add(cc);
+                                        costCenterTypeTitle = cost.Title;
+                                        activityTitle = act.Text;
+                                        orgTitle = org.Title;
+                                    }
+                                }
+                            }
                         }
+
 
                     }
                 }
@@ -465,9 +506,20 @@ namespace Datiss.Budget.Services
             if (!string.IsNullOrWhiteSpace(missingActivity))
             {
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, missingActivity, orgTitle));
+                    string.Format(ServiceMessages.ImportExcelActivityTypeNotInExcel, missingActivity, orgTitle));
             }
 
+            if (missingCostCenterType.Any())
+            {
+                string costCenterTypeNames = "";
+                foreach (var item in missingCostCenterType)
+                {
+                    costCenterTypeNames += "- [" + item.Title + "]<br>";
+                }
+
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelActivityCostCenterTypeOrgNotInExcel, costCenterTypeNames, activityTitle, orgTitle));
+            }
             if (missingccPMDepType.Any())
             {
                 string ccTypeNames = "";
@@ -475,10 +527,11 @@ namespace Datiss.Budget.Services
                 {
                     ccTypeNames += "- [" + item.Title + "]<br>";
                 }
+
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelDiameterPipeUserTypeOrgNotInExcel, ccTypeNames, activityTitle, orgTitle));
+                    string.Format(ServiceMessages.ImportExcelActivityCCTypePMDepTypeOrgNotInExcel, ccTypeNames, costCenterTypeTitle, activityTitle, orgTitle));
             }
-            //End
+            #endregion
 
             rowIndex = 1;
 
@@ -502,26 +555,11 @@ namespace Datiss.Budget.Services
 
             foreach (var record in records)
             {
-
+                record.RecordType = RecordType.Base;
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
                         );
-
-                if (!await checkLogicAsync(
-                    record.YearId,
-                    record.OrganizationId,
-                    record.CCPMDepTypeId,
-                    record.CostCenterTypeId,
-                    record.ActivityType,
-                    record.RecordType))
-                {
-
-                    return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
-                        );
-                }
-
                 rowIndex++;
             }
 
@@ -565,6 +603,8 @@ namespace Datiss.Budget.Services
                                 .OrderBy(x => x.Organization.DisplayOrder)
                                 .ThenBy(x => x.Organization.Type)
                                 .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x=>x.ActivityType)
+                                .ThenBy(x => x.CostCenterType.DisplayOrder)
                                 .ThenBy(x => x.CCPMDepType.DisplayOrder);
             }
         }
@@ -601,8 +641,8 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                         _.CCPMDepType.Title.ToUpper().Contains(filter.Search));
+                query = query.Where(_ => _.CCPMDepType.Title.ToUpper().Contains(filter.Search) ||
+                                         _.CostCenterType.Title.ToUpper().Contains(filter.Search));
             }
             return query;
         }
@@ -641,7 +681,7 @@ namespace Datiss.Budget.Services
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
                         RecordType = item.RecordType,
-                        //CostCenter = item.CostCenter,
+                        CostCenterTypeId = item.CostCenterTypeId,
                         FinancePMCost = item.FinancePMCost,
                         RFinancePMCost_D = item.RFinancePMCost_D,
                         FinanceDepCost = item.FinanceDepCost,
@@ -680,10 +720,11 @@ namespace Datiss.Budget.Services
             }
             return result;
         }
-        private async Task<bool> hasAnyDataAsync(int orgid, int yearid)
+        private async Task<bool> hasAnyDataAsync(int orgid, int yearid , RecordType recordType)
         {
             bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
-                                                x.YearId == yearid);
+                                                   x.YearId == yearid &&
+                                                   x.RecordType == recordType);
             if (any)
             {
                 return true;
@@ -692,7 +733,9 @@ namespace Datiss.Budget.Services
             {
                 var childs = await _organizationService.GetWithChildrenAsync(orgid);
                 foreach (var child in childs)
-                    if (await Query().AnyAsync(x => x.YearId == yearid && x.OrganizationId == child.Id))
+                    if (await Query().AnyAsync(x => x.YearId == yearid &&
+                                                    x.OrganizationId == child.Id &&
+                                                    x.RecordType == recordType))
                         return true;
             }
 

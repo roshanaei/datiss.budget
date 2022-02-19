@@ -229,6 +229,7 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
         public RecordType? RecordType { get; set; }
         public int? CCPMDepTypeId { get; set; }
+        public int? CostCenterTypeId { get; set; }
         public ActivityType? ActivityType { get; set; }
     }
 }

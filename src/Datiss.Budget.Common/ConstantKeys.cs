@@ -19,6 +19,7 @@
         public const string __CIRWaste = "Waste";
         public const string __CIROther = "Other";
         public const string __CCPMDepType = "CCPMDep";
+        public const string __CostCenterType = "CostCenter";
         public const string __CIOWType = "CIOWType";
         public const string __CIOWsType = "CIOWsType";
     }
