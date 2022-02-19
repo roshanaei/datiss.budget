@@ -640,6 +640,7 @@
                     }
 
                     if (!data.hasError && !data.ask) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">عملیات موفق</span>',
                             html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -661,6 +662,7 @@
                         ShowPermissionErorr();
                         return;
                     }
+                    $(".olvy").css("display", "none");
                     ShowCommonErorr();
                 }
             });
