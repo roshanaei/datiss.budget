@@ -432,8 +432,8 @@ namespace Datiss.Budget.Web.Controllers
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var CCIWTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWater);
-            var CCIWsTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWaste);
+            var cciWTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWater);
+            var cciWsTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWaste);
             var activity = EnumSelectListProvider.GetActivityTypeItems();
 
             var items = new List<CostCurrentInstalationDTO>();
@@ -444,7 +444,7 @@ namespace Datiss.Budget.Web.Controllers
                 {
                     if (Convert.ToInt16(act.Value) == Convert.ToInt16(ActivityType.Water))
                     {
-                        foreach (var cciW in CCIWTypes)
+                        foreach (var cciW in cciWTypes)
                         {
                             items.Add(new CostCurrentInstalationDTO
                             {
@@ -461,7 +461,7 @@ namespace Datiss.Budget.Web.Controllers
                     }
                     else
                     {
-                        foreach (var cciWs in CCIWsTypes)
+                        foreach (var cciWs in cciWsTypes)
                         {
                             items.Add(new CostCurrentInstalationDTO
                             {
