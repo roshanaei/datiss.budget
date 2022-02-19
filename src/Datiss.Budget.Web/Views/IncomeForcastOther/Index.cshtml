@@ -586,6 +586,7 @@
                                     contentType: false,
                                     success: function (data, status, settings) {
                                         if (data.hasError) {
+                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">خطا</span>',
                                                 html: `<span class="my-font">${data.message}</span>`,
@@ -652,7 +653,8 @@
                     }
 
                 },
-                error: function(request, options, err) {
+                error: function (request, options, err) {
+                    $(".olvy").css("display", "none");
                     if (request.status == 401 || request.status == 403) {
                         ShowPermissionErorr();
                         return;
