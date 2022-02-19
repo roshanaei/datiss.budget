@@ -318,4 +318,13 @@
   <data name="ImportExcelUnitTypesSectionTypeNotInExcel" xml:space="preserve">
     <value>در فایل اکسل شما اطلاعات واحد های :&lt;br&gt;{0} برای شرح "{1}" ، "{2}" وجود ندارد.</value>
   </data>
+  <data name="ImportExcelCCITypeActivityOrgNotInExcel" xml:space="preserve">
+    <value>عنوان های :&lt;br&gt;{0} در بخش "{1}" برای "{2}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="ImportExcelInvalidCCIActivityType" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، برای بخش "{1}" کد عنوان "{2}" معتبر نیست .</value>
+  </data>
+  <data name="ImportExcelActivityOrgNotInExcel" xml:space="preserve">
+    <value>در فایل اکسل شما بخش "{0}" برای "{1}" اطلاعاتی ندارد.</value>
+  </data>
 </root>

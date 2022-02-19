@@ -169,6 +169,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در فایل اکسل شما بخش &quot;{0}&quot; برای &quot;{1}&quot; اطلاعاتی ندارد..
+        /// </summary>
+        public static string ImportExcelActivityOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelActivityOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to فعالیت :&lt;br&gt;&quot;{0}&quot; برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelActivityTypeNotInExcel {
@@ -183,6 +192,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelCalculationField {
             get {
                 return ResourceManager.GetString("ImportExcelCalculationField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} در بخش &quot;{1}&quot; برای &quot;{2}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelCCITypeActivityOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelCCITypeActivityOrgNotInExcel", resourceCulture);
             }
         }
         
@@ -219,6 +237,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelICOTypeActivityOrgNotInExcel {
             get {
                 return ResourceManager.GetString("ImportExcelICOTypeActivityOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، برای بخش &quot;{1}&quot; کد عنوان &quot;{2}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidCCIActivityType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidCCIActivityType", resourceCulture);
             }
         }
         
