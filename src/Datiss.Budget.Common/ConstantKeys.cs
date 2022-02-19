@@ -16,6 +16,8 @@
         public const string __CIRWater = "Water";
         public const string __CIRWaste = "Waste";
         public const string __CIROther = "Other";
+        public const string __CCPMDepType = "CCPMDepType";
+        public const string __CostCenterType = "CostCenterType";
         public const string __CIOWType = "CIOWType";
         public const string __CIOWsType = "CIOWsType";
         public const string __CurrentCostInstalationWater = "CurrentCostInstalationWater";
