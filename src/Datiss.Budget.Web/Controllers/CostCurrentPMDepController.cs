@@ -71,11 +71,11 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Edit(UpdateCostCurrentPMDepViewModel model)
         {
 
-            //if (!ModelState.IsValid)
-            //{
-            //    model.AddError(ViewMessages.InvalidData);
-            //    return Json(model);
-            //}
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
 
             var data = model.Adapt<UpdateCostCurrentPMDepDTO>();
             var result = await _costCurrentPMDepService.UpdateAsync(data);

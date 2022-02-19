@@ -26,12 +26,10 @@ namespace Datiss.Budget.ViewModels
 
         public ActivityType ActivityType { get; set; }
         public RecordType RecordType { get; set; }
-        public long CostCenter { get; set; }
         public long FinancePMCost { get; set; }
         public decimal RFinancePMCost_D { get; set; }
         public long FinanceDepCost { get; set; }
         public decimal RFinanceDepCost_D { get; set; }
-        //public IEnumerable<SelectListItem> CCPMDepTypeSource { get; set; }
 
     }
 
