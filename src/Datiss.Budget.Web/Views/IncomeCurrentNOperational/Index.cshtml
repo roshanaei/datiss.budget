@@ -526,8 +526,8 @@
                 success: function (data, status, settings) {
                     console.log(data);
 
-                    $(".olvy").css("display", "none");
                     if (data.hasError) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
                             html: `<span class="my-font">${data.message}</span>`,
@@ -573,6 +573,7 @@
                                     contentType: false,
                                     success: function (data, status, settings) {
                                         if (data.hasError) {
+                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">خطا</span>',
                                                 html: `<span class="my-font">${data.message}</span>`,
@@ -622,6 +623,7 @@
                     }
 
                     if (!data.hasError && !data.ask) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">عملیات موفق</span>',
                             html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -638,7 +640,8 @@
                     }
 
                 },
-                error: function(request, options, err) {
+                error: function (request, options, err) {
+                    $(".olvy").css("display", "none");
                     if (request.status == 401 || request.status == 403) {
                         ShowPermissionErorr();
                         return;
