@@ -197,54 +197,54 @@
             }
         </tbody>
     </table>
-    <div class="rowACJSB" style="margin-top:20px">
-        <!--Tools-->
-        <div class="rowACJS">
-            <form id="toolForm"
-                  enctype="multipart/form-data"
-                  method="post"
-                  asp-antiforgery="true">
-                <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
-                <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+</div>
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
 
-                <span data-toggle="modal" data-target="#backdrop">
-                    <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                        <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
-                    </button>
-                </span>
-                <span data-toggle="modal" data-target="#CopyModal">
-                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
-                        <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
-                    </button>
-                </span>
-                <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
                 </button>
-                <span data-toggle="modal" data-target="#CalculationModal">
-                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
-                        <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                    </button>
-                </span>
-                <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
                 </button>
-            </form>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <span data-toggle="modal" data-target="#CalculationModal">
+                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                </button>
+            </span>
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </button>
+        </form>
 
-        </div>
-
-        <div class="rowAC">
-            <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
-            <div class="my-font ml-2">
-                (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
-                <b class="font-medium-2">
-                    @if (Model.PagesCount == 0)
-                    {<span>1</span>}
-                    else
-                    {<span>@Model.PagesCount</span>}
-                </b>)
-            </div>
-        </div>
-        <!--Pagination-->
-        <vc:pager model="Model.ToPager()" controller-name="@IncomeForcastOtherController.Name" action-name="@IncomeForcastOtherController.ACTION_Index"></vc:pager>
     </div>
+
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">
+            (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
+            <b class="font-medium-2">
+                @if (Model.PagesCount == 0)
+                {<span>1</span>}
+                else
+                {<span>@Model.PagesCount</span>}
+            </b>)
+        </div>
+    </div>
+    <!--Pagination-->
+    <vc:pager model="Model.ToPager()" controller-name="@IncomeForcastOtherController.Name" action-name="@IncomeForcastOtherController.ACTION_Index"></vc:pager>
 </div>

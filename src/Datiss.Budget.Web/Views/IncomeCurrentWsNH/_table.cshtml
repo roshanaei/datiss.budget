@@ -194,222 +194,222 @@
             </tr>
             @foreach (var item in Model.Items)
             {
-        <tr id="row_@item.Id">
-            <td>
-                <div id="divInput_Year_@item.Id" style="display: none">
-                    <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
-                    <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
-                    </select>
-                    <script>
+                <tr id="row_@item.Id">
+                    <td>
+                        <div id="divInput_Year_@item.Id" style="display: none">
+                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            </select>
+                            <script>
                                 $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
                                 $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
-                    </script>
-                </div>
-                <div id="divOutput_Year_@item.Id">
-                    <span id="spanYear_@item.Id">@item.Year.ToString()</span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_Org_@item.Id" style="display: none">
-                    <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
-                    <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
-                    </select>
-                    <script>
+                            </script>
+                        </div>
+                        <div id="divOutput_Year_@item.Id">
+                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Org_@item.Id" style="display: none">
+                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
+                            </select>
+                            <script>
                                 $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
                                 $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
-                    </script>
-                </div>
-                <div id="divOutput_Org_@item.Id">
-                    <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_UserType_@item.Id" style="display: none">
-                    <input id="hidUserTypeId_@item.Id" type="hidden" value="@item.UserTypeId" />
-                    <select class="form-control selectUserType" id="inputUserType_@item.Id" asp-items="Model.UserTypeSource">
-                    </select>
-                    <script>
+                            </script>
+                        </div>
+                        <div id="divOutput_Org_@item.Id">
+                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_UserType_@item.Id" style="display: none">
+                            <input id="hidUserTypeId_@item.Id" type="hidden" value="@item.UserTypeId" />
+                            <select class="form-control selectUserType" id="inputUserType_@item.Id" asp-items="Model.UserTypeSource">
+                            </select>
+                            <script>
                                 $('select#inputUserType_' + @item.Id + ' option[value=' + @item.UserTypeId + ']').attr('selected', true);
-                    </script>
-                </div>
-                <div id="divOutput_UserType_@item.Id">
-                    <span id="spanUserType_@item.Id">@item.UserTypeDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_NumberUser_@item.Id" style="display: none">
-                    <input class="form-control" id="inputNumberUser_@item.Id" value="@item.NumberUser" type="number" />
-                </div>
-                <div id="divOutput_NumberUser_@item.Id">
-                    <span id="spanNumberUser_@item.Id">@item.NumberUserDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_UnitUser_@item.Id" style="display: none">
-                    <input class="form-control" id="inputUnitUser_@item.Id" value="@item.UnitUser" type="number" />
-                </div>
-                <div id="divOutput_UnitUser_@item.Id">
-                    <span id="spanUnitUser_@item.Id">@item.UnitUserDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_AvgConsumeUser_@item.Id" style="display: none">
-                    <input class="form-control" id="inputAvgConsumeUser_@item.Id" value="@item.AvgConsumeUser" type="number" />
-                </div>
-                <div id="divOutput_AvgConsumeUser_@item.Id">
-                    <span id="spanAvgConsumeUser_@item.Id">@item.AvgConsumeUserDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_Capacity_@item.Id" style="display: none">
-                    <input class="form-control" id="inputCapacity_@item.Id" value="@item.Capacity" type="number" />
-                </div>
-                <div id="divOutput_Capacity_@item.Id">
-                    <span id="spanCapacity_@item.Id">@item.CapacityDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_ConsumptionUser_@item.Id" style="display: none">
-                    <input class="form-control" id="inputConsumptionUser_@item.Id" value="@item.ConsumptionUser" type="number" />
-                </div>
-                <div id="divOutput_ConsumptionUser_@item.Id">
-                    <span id="spanConsumptionUser_@item.Id">@item.ConsumptionUserDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_Cost_@item.Id" style="display: none">
-                    <input class="form-control" id="inputCost_@item.Id" value="@item.Cost" type="number" />
-                </div>
-                <div id="divOutput_Cost_@item.Id">
-                    <span id="spanCost_@item.Id">@item.CostDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_Income_@item.Id" style="display: none">
-                    <input class="form-control" id="inputIncome_@item.Id" value="@item.Income" type="number" />
-                </div>
-                <div id="divOutput_Income_@item.Id">
-                    <span id="spanIncome_@item.Id">@item.IncomeDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_SubscriptionIncome_@item.Id" style="display: none">
-                    <input class="form-control" id="inputSubscriptionIncome_@item.Id" value="@item.SubscriptionIncome" type="number" />
-                </div>
-                <div id="divOutput_SubscriptionIncome_@item.Id">
-                    <span id="spanSubscriptionIncome_@item.Id">@item.SubscriptionIncomeDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_ExcessIncome_@item.Id" style="display: none">
-                    <input class="form-control" id="inputExcessIncome_@item.Id" value="@item.ExcessIncome" type="number" />
-                </div>
-                <div id="divOutput_ExcessIncome_@item.Id">
-                    <span id="spanExcessIncome_@item.Id">@item.ExcessIncomeDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_SeasonalIncome_@item.Id" style="display: none">
-                    <input class="form-control" id="inputSeasonalIncome_@item.Id" value="@item.SeasonalIncome" type="number" />
-                </div>
-                <div id="divOutput_SeasonalIncome_@item.Id">
-                    <span id="spanSeasonalIncome_@item.Id">@item.SeasonalIncomeDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_Note3Price_@item.Id" style="display: none">
-                    <input class="form-control" id="inputNote3Price_@item.Id" value="@item.Note3Price" type="number" />
-                </div>
-                <div id="divOutput_Note3Price_@item.Id">
-                    <span id="spanNote3Price_@item.Id">@item.Note3PriceDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_Note3Income_@item.Id" style="display: none">
-                    <input class="form-control" id="inputNote3Income_@item.Id" value="@item.Note3Income" type="number" />
-                </div>
-                <div id="divOutput_Note3Income_@item.Id">
-                    <span id="spanNote3Income_@item.Id">@item.Note3IncomeDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_TotalIncome_@item.Id" style="display: none">
-                    <input class="form-control" id="inputTotalIncome_@item.Id" value="@item.TotalIncome" type="number" />
-                </div>
-                <div id="divOutput_TotalIncome_@item.Id">
-                    <span id="spanTotalIncome_@item.Id">@item.TotalIncomeDisplay </span>
-                </div>
-            </td>
+                            </script>
+                        </div>
+                        <div id="divOutput_UserType_@item.Id">
+                            <span id="spanUserType_@item.Id">@item.UserTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_NumberUser_@item.Id" style="display: none">
+                            <input class="form-control" id="inputNumberUser_@item.Id" value="@item.NumberUser" type="number" />
+                        </div>
+                        <div id="divOutput_NumberUser_@item.Id">
+                            <span id="spanNumberUser_@item.Id">@item.NumberUserDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_UnitUser_@item.Id" style="display: none">
+                            <input class="form-control" id="inputUnitUser_@item.Id" value="@item.UnitUser" type="number" />
+                        </div>
+                        <div id="divOutput_UnitUser_@item.Id">
+                            <span id="spanUnitUser_@item.Id">@item.UnitUserDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_AvgConsumeUser_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAvgConsumeUser_@item.Id" value="@item.AvgConsumeUser" type="number" />
+                        </div>
+                        <div id="divOutput_AvgConsumeUser_@item.Id">
+                            <span id="spanAvgConsumeUser_@item.Id">@item.AvgConsumeUserDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Capacity_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCapacity_@item.Id" value="@item.Capacity" type="number" />
+                        </div>
+                        <div id="divOutput_Capacity_@item.Id">
+                            <span id="spanCapacity_@item.Id">@item.CapacityDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ConsumptionUser_@item.Id" style="display: none">
+                            <input class="form-control" id="inputConsumptionUser_@item.Id" value="@item.ConsumptionUser" type="number" />
+                        </div>
+                        <div id="divOutput_ConsumptionUser_@item.Id">
+                            <span id="spanConsumptionUser_@item.Id">@item.ConsumptionUserDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Cost_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCost_@item.Id" value="@item.Cost" type="number" />
+                        </div>
+                        <div id="divOutput_Cost_@item.Id">
+                            <span id="spanCost_@item.Id">@item.CostDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Income_@item.Id" style="display: none">
+                            <input class="form-control" id="inputIncome_@item.Id" value="@item.Income" type="number" />
+                        </div>
+                        <div id="divOutput_Income_@item.Id">
+                            <span id="spanIncome_@item.Id">@item.IncomeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_SubscriptionIncome_@item.Id" style="display: none">
+                            <input class="form-control" id="inputSubscriptionIncome_@item.Id" value="@item.SubscriptionIncome" type="number" />
+                        </div>
+                        <div id="divOutput_SubscriptionIncome_@item.Id">
+                            <span id="spanSubscriptionIncome_@item.Id">@item.SubscriptionIncomeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ExcessIncome_@item.Id" style="display: none">
+                            <input class="form-control" id="inputExcessIncome_@item.Id" value="@item.ExcessIncome" type="number" />
+                        </div>
+                        <div id="divOutput_ExcessIncome_@item.Id">
+                            <span id="spanExcessIncome_@item.Id">@item.ExcessIncomeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_SeasonalIncome_@item.Id" style="display: none">
+                            <input class="form-control" id="inputSeasonalIncome_@item.Id" value="@item.SeasonalIncome" type="number" />
+                        </div>
+                        <div id="divOutput_SeasonalIncome_@item.Id">
+                            <span id="spanSeasonalIncome_@item.Id">@item.SeasonalIncomeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Note3Price_@item.Id" style="display: none">
+                            <input class="form-control" id="inputNote3Price_@item.Id" value="@item.Note3Price" type="number" />
+                        </div>
+                        <div id="divOutput_Note3Price_@item.Id">
+                            <span id="spanNote3Price_@item.Id">@item.Note3PriceDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Note3Income_@item.Id" style="display: none">
+                            <input class="form-control" id="inputNote3Income_@item.Id" value="@item.Note3Income" type="number" />
+                        </div>
+                        <div id="divOutput_Note3Income_@item.Id">
+                            <span id="spanNote3Income_@item.Id">@item.Note3IncomeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_TotalIncome_@item.Id" style="display: none">
+                            <input class="form-control" id="inputTotalIncome_@item.Id" value="@item.TotalIncome" type="number" />
+                        </div>
+                        <div id="divOutput_TotalIncome_@item.Id">
+                            <span id="spanTotalIncome_@item.Id">@item.TotalIncomeDisplay </span>
+                        </div>
+                    </td>
 
-            <td>
-                <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
-                    <i class="fa ft-edit fa-1x"></i>
-                </a>
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
 
-                <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                    <i class="fa ft-trash-2"></i>
-                </a>
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
 
-                <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
-                    <i class="fa ft-check-square"></i>
-                </a>
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
 
-                <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
-                    <i class="fa ft-x-square"></i>
-                </a>
-            </td>
-        </tr>
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
-    <div class="rowACJSB" style="margin-top:20px">
-        <!--Tools-->
-        <div class="rowACJS">
-            <form id="toolForm"
-                  enctype="multipart/form-data"
-                  method="post"
-                  asp-antiforgery="true">
-                <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
-                <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+</div>
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
 
-                <span data-toggle="modal" data-target="#backdrop">
-                    <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
-                        <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
-                    </button>
-                </span>
-                <span data-toggle="modal" data-target="#CopyModal">
-                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
-                        <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
-                    </button>
-                </span>
-                <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
                 </button>
-                <span data-toggle="modal" data-target="#CalculationModal">
-                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
-                        <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                    </button>
-                </span>
-                <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
                 </button>
-            </form>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <span data-toggle="modal" data-target="#CalculationModal">
+                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                </button>
+            </span>
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </button>
+        </form>
 
-        </div>
-
-        <div class="rowAC">
-            <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
-            <div class="my-font ml-2">
-                (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
-                <b class="font-medium-2">
-                    @if (Model.PagesCount == 0)
-                    {<span>1</span>}
-                    else
-                    {<span>@Model.PagesCount</span>}
-                </b>)
-            </div>
-        </div>
-        <!--Pagination-->
-        <vc:pager model="Model.ToPager()" controller-name="@IncomeCurrentWsNHController.Name" action-name="@IncomeCurrentWsNHController.ACTION_Index"></vc:pager>
     </div>
+
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">
+            (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
+            <b class="font-medium-2">
+                @if (Model.PagesCount == 0)
+                {<span>1</span>}
+                else
+                {<span>@Model.PagesCount</span>}
+            </b>)
+        </div>
+    </div>
+    <!--Pagination-->
+    <vc:pager model="Model.ToPager()" controller-name="@IncomeCurrentWsNHController.Name" action-name="@IncomeCurrentWsNHController.ACTION_Index"></vc:pager>
 </div>
