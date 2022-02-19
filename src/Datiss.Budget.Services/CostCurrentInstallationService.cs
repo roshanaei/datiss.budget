@@ -112,8 +112,8 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<CostCurrentInstalationDTO>.Failed(
-                string.Format(ServiceMessages.Logic_TitleDuplicate,
-                model.CCInstalationTypeDisplay, organizationDisplay)
+                string.Format(ServiceMessages.Logic_ActivityICOTypeDuplicate,
+                model.ActivityType.ToDisplay(), model.CCInstalationTypeDisplay, organizationDisplay)
                 );
 
 
@@ -163,8 +163,8 @@ namespace Datiss.Budget.Services
                 return ValidationResult<CostCurrentInstalationDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
             return ValidationResult<CostCurrentInstalationDTO>.Failed(
-                string.Format(ServiceMessages.Logic_TitleDuplicate,
-                model.CCInstalationTypeDisplay, organizationDisplay)
+                string.Format(ServiceMessages.Logic_ActivityICOTypeDuplicate,
+                model.ActivityType.ToDisplay(), model.CCInstalationTypeDisplay, organizationDisplay)
                 );
         }
 
