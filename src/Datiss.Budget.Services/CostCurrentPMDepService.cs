@@ -672,8 +672,7 @@ namespace Datiss.Budget.Services
             RecordType recordType)
         {
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId &&
-                            _.Status != EntityStatus.Deleted)
+                .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
             var result = new List<CostCurrentPMDep>();
             foreach (var org in children)
