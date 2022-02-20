@@ -546,7 +546,7 @@
                                         }
 
                                         if (!data.hasError) {
-                                            $("#overlay").css("display", "block");
+                                            $("#overlay").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
                                                 html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -567,6 +567,7 @@
                                         }
                                     },
                                     error: function (request, options, err) {
+                                        $(".olvy").css("display", "none");
                                         if (request.status == 401 || request.status == 403) {
                                             ShowPermissionErorr();
                                             return;
