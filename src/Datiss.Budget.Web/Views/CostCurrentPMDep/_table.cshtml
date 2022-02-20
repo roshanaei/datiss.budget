@@ -4,16 +4,16 @@
         <thead class="thead-light">
             <tr>
                 <th style="min-width:135px">سال</th>
-                <th style="min-width:135px">سازمان</th>
+                <th style="min-width:235px">سازمان</th>
                 <th style="min-width:135px">نوع رکورد</th>
                 <th style="min-width:135px">حوزه فعالیت</th>
-                <th style="min-width:135px">مراکز هزینه</th>
-                <th style="min-width:135px">عناوین استهلاک و تعمیر و نگهداری</th>
-                <th style="min-width:135px">هزینه تعمیر و نگهداری دارائی</th>
-                <th style="min-width:135px">ضریب هزینه تعمیر و نگهداری دارائی</th>
-                <th style="min-width:135px">هزینه استهلاک و دارائی</th>
-                <th style="min-width:135px">ضریب هزینه استهلاک و دارائی</th>
-                <th style="min-width:135px">مدیریت</th>
+                <th style="min-width:175px">مراکز هزینه</th>
+                <th style="min-width:175px">عناوین استهلاک و تعمیر و نگهداری</th>
+                <th style="min-width:155px">هزینه تعمیر و نگهداری دارائی</th>
+                <th style="min-width:155px">ضریب هزینه تعمیر و نگهداری دارائی</th>
+                <th style="min-width:155px">هزینه استهلاک و دارائی</th>
+                <th style="min-width:155px">ضریب هزینه استهلاک و دارائی</th>
+                <th style="min-width:195px">مدیریت</th>
 
             </tr>
         </thead>
@@ -55,9 +55,6 @@
                             <script>
                                 $('#inputRecordType_' + @item.Id).attr('disabled', 'disabled');
                             </script>
-                        </div>
-                        <div id="divInput_RecordTypeDisplay_@item.Id" style="display: none">
-                            <span>@item.RecordTypeDisplay </span>
                         </div>
                         <div id="divOutput_RecordType_@item.Id">
                             <span id="spanRecordType_@item.Id">@item.RecordTypeDisplay </span>
