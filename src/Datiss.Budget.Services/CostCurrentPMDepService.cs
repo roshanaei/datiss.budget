@@ -102,6 +102,7 @@ namespace Datiss.Budget.Services
                         YearId = model.YearId,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year,
                         ActivityType = model.ActivityType,
+                        RecordType = model.RecordType,
                         CCPMDepTypeId = model.CCPMDepTypeId,
                         CCPMDepTypeDisplay = model.CCPMDepTypeTitle,
                         CostCenterTypeId = model.CostCenterTypeId,

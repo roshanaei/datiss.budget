@@ -104,12 +104,19 @@
                         return;
                 }
 
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.dWaterTypeId = model.dWaterTypeId;
+                rowData.wInstallFee = model.wInstallFee;
+
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
                 $('#spanDWaterType_' + id).text(data.dWaterTypeDisplay);
                 $('#spanWInstallFee_' + id).text(data.wInstallFee);
+
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
                 cancelEditRow(id);

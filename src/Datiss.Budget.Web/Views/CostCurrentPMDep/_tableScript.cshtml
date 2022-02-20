@@ -70,8 +70,6 @@
 
         //Reverting to OriginalData
         if(rowData != null) {
-            console.log('reverting to original data.');
-            console.log(rowData);
             $('#inputYear_' + id).val(rowData.yearId);
             $('#inputOrg_' + id).val(rowData.organizationId);
             $('#inputCCPMDepType_' + id).val(rowData.cCPMDepTypeId);
@@ -146,7 +144,22 @@
                         });
                         return;
                 }
+
                 console.log(data);
+
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.cCPMDepTypeId = model.cCPMDepTypeId;
+                rowData.costCenterTypeId = model.costCenterTypeId;
+                rowData.recordType = data.recordType;
+                rowData.activityType = model.activityType;
+                rowData.financePMCost = model.financePMCost;
+                rowData.rFinancePMCost_D = model.rFinancePMCost_D;
+                rowData.financeDepCost = model.financeDepCost;
+                rowData.rFinanceDepCost_D = model.rFinanceDepCost_D;
+
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
