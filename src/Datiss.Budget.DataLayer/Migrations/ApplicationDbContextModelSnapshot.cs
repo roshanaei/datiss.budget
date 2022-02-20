@@ -943,89 +943,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.ToTable("CostCurrentInstalation");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentPMDep", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("CostCurrentPMDepId")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("ActivityType")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<int>("CCPMDepTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CostCenterTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("FinanceDepCost")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("FinancePMCost")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("RFinanceDepCost_D")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<decimal>("RFinancePMCost_D")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<int>("RecordType")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CCPMDepTypeId");
-
-                    b.HasIndex("CostCenterTypeId");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("CostCurrentPMDeps");
-                });
-
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.FeeCity", b =>
                 {
                     b.Property<int>("Id")
@@ -3915,41 +3832,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentPMDep", b =>
-                {
-                    b.HasOne("Datiss.Budget.Entities.Constant", "CCPMDepType")
-                        .WithMany("CostCurrentPMDeps")
-                        .HasForeignKey("CCPMDepTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.Constant", "CostCenterType")
-                        .WithMany("CostCenterCostCurrentPMDeps")
-                        .HasForeignKey("CostCenterTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                        .WithMany("CostCurrentPMDeps")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("CostCurrentPMDeps")
-                        .HasForeignKey("YearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CCPMDepType");
-
-                    b.Navigation("CostCenterType");
-
-                    b.Navigation("FinanceYear");
-
-                    b.Navigation("Organization");
-                });
-
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.FeeCity", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
@@ -4677,8 +4559,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("ConsumeForcastWs");
 
-                    b.Navigation("CostCenterCostCurrentPMDeps");
-
                     b.Navigation("CostCurrentBankFee");
 
                     b.Navigation("CostCurrentConsumable");
@@ -4686,8 +4566,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("CostCurrentContractual");
 
                     b.Navigation("CostCurrentInstalations");
-
-                    b.Navigation("CostCurrentPMDeps");
 
                     b.Navigation("CurrentIncomeReports");
 
@@ -4776,8 +4654,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("CostCurrentEPayment");
 
                     b.Navigation("CostCurrentInstalations");
-
-                    b.Navigation("CostCurrentPMDeps");
 
                     b.Navigation("CurrentIncomeReports");
 
@@ -4869,8 +4745,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("CostCurrentEPayment");
 
                     b.Navigation("CostCurrentInstalations");
-
-                    b.Navigation("CostCurrentPMDeps");
 
                     b.Navigation("CurrentIncomeReports");
 

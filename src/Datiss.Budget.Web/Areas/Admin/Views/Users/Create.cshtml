@@ -102,7 +102,7 @@
                                         <label asp-for="PhoneNumber" class="col-md-4 col-form-label text-md-left my-font">شماره تماس</label>
                                         <div class="col-md-10">
                                             <input dir="ltr" type="text" oninput="numberOnly(this.id);" asp-for="PhoneNumber" inputmode="numeric" maxlength="13" pattern="[0-9]*" class="form-control my-font" />
-                                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                            @*<span asp-validation-for="PhoneNumber" class="text-danger"></span>*@
                                         </div>
                                     </fieldset>
                                   </div>
@@ -112,7 +112,7 @@
                                         <label asp-for="Email" class="col-md-4 col-form-label text-md-left my-font">آدرس ایمیل</label>
                                         <div class="col-md-10">
                                             <input dir="ltr" type="text" asp-for="Email" class="form-control my-font" />
-                                            <span asp-validation-for="Email" class="text-danger"></span>
+                                            @*<span asp-validation-for="Email" class="text-danger"></span>*@
                                         </div>
                                     </fieldset>
 
