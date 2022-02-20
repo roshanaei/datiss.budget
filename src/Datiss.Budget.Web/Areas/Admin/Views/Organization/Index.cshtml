@@ -206,6 +206,13 @@
         }
 
         $(document).on('click', '#btnDoEdit', function () {
+
+            $('#spanTitle').text('');
+            $('#Title').removeClass("error-border");
+
+            $('#spanDisplayOrder').text('');
+            $('#DisplayOrder').removeClass("error-border");
+
             let model = {};
 
             model.id = $('#Id').val()
@@ -217,7 +224,18 @@
             model.enabled = $('input[name="Enabled"]:checked').val();
 
 
-            console.log(model);
+            if (model.title == '') {
+                $('#Title').addClass("error-border");
+                $('#divError').show();
+                $('#spanTitle').text('لطفا عنوان سازمان را وارد نمایید .');
+                return;
+            }
+            if (model.displayOrder < '0' || model.displayOrder == '') {
+                $('#DisplayOrder').addClass("error-border");
+                $('#divError').show();
+                $('#spanDisplayOrder').text('لطفا ترتیب نمایش را صحیح وارد کنید .');
+                return;
+            }
 
 
             $.ajax({
@@ -297,11 +315,21 @@
         }
 
         $(document).on('click', '#btnDoCreate', function () {
+            $('#spanTitle').text('');
+            $('#Title').removeClass("error-border");
+
             let model = {};
             model.title = $('#Title').val();
             model.parentId = $('#ParentId option:selected').val();
             model.type = $('#Type option:selected').val();
             model.sewageStatus = $('#SewageStatus option:selected').val();
+
+            if (model.title == '') {
+                $('#Title').addClass("error-border");
+                $('#divError').show();
+                $('#spanTitle').text('لطفا عنوان سازمان را وارد نمایید .');
+                return;
+            }
 
             $.ajax({
                 type: 'POST',

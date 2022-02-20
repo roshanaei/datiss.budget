@@ -119,6 +119,15 @@
                         return;
                 }
 
+                rowData = {};
+                rowData.organizationId = model.organizationId;
+                rowData.tableFieldId = model.tableFieldId;
+                rowData.target = model.target;
+                rowData.budget = model.budget;
+                rowData.operation = model.operation;
+                rowData.percentRealization = model.percentRealization;
+
+
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);

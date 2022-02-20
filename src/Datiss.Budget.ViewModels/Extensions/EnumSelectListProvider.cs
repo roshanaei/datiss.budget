@@ -152,15 +152,15 @@ namespace Datiss.Budget.Extensions
             {
                  new SelectListItem
                  {
-                    Text = EnumText.RecordType_Base,
-                    Value = ((int)RecordType.Base).ToString(),
-                    Selected = recordType == RecordType.Base
-                 },
-                 new SelectListItem
-                 {
                     Text = EnumText.RecordType_Forcast,
                     Value = ((int)RecordType.Forcast).ToString(),
                     Selected = recordType == RecordType.Forcast
+                 },
+                 new SelectListItem
+                 {
+                    Text = EnumText.RecordType_Base,
+                    Value = ((int)RecordType.Base).ToString(),
+                    Selected = recordType == RecordType.Base
                  }
             };
 

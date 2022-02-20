@@ -867,8 +867,7 @@ namespace Datiss.Budget.Services
             int yearId)
         {
             var children = await _orgDbSet
-                .Where(_ => _.Status != EntityStatus.Deleted &&
-                            _.ParentId == parentOrganizationId)
+                .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
             var result = new List<IncomeCurrentWNH>();
             foreach (var org in children)
