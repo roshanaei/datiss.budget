@@ -1,5 +1,5 @@
 ﻿@model IncomeCurrentReportIndexViewModel
-@{ ViewData["Title"] = "درآمد های جاری"; }
+@{ ViewData["Title"] = "گزارش درآمد های جاری"; }
 
 <!--Title-->
 <div class="row">
@@ -192,7 +192,7 @@
                                                         <label class="custom-control-label my-font"
                                                                for="col-9"><span style="">مصوب سال ما قبل</span></label>
                                                     </div>
-                                                </div>                                              
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -202,12 +202,12 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel"  class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
                                            asp-asp-controller="@IncomeCurrentReportController.Name"
-                                           @*asp-action="@IncomeCurrentReportController.ACTION_GetExcelTemplate"*@
+                                           asp-action="@IncomeCurrentReportController.ACTION_GetExcelTemplate"
                                            asp-route-yearId="@Model.Filter.YearId"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
@@ -234,7 +234,7 @@
 
 @section footSection {
 
-    <partial name="_overlay" />
+    <partial name="_loadingBar" />
 
     <div id="divCopy">
 
@@ -381,7 +381,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(IncomeCurrentReportController.ACTION_Index)';
+                                document.location.href = '@Url.Action(IncomeCurrentReportController.ACTION_Index, new { page = 1 })';
                             });
                         },
                         error: function(request, option, err) {
@@ -407,12 +407,13 @@
             $('#ExcellModal').modal('show');
         }
 
-    $(document).on('click', '.edit-row', function () {
+        $(document).on('click', '.edit-row', function () {
 
             resetDataColumns()
             let id = $(this).data('id');
 
-            let input1 = document.getElementById('inputNumberUser_' + id);
+            let input1 = document.getElementById('inputFunctionalYear_1_' + id);
+            let input2 = document.getElementById('inputFunctionalBasicYear_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -422,13 +423,31 @@
                     btnSaveEdit.click();
                 }
             });
-            
+            input2.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
             btnSaveEdit.addEventListener('click', function (evenrt) {
                 event.preventDefault();
                 $(btnSaveEdit).attr('disabled', true);
             });
 
             editRow(id);
+        });
+
+        $(document).on('click', '.cancel-edit-row', function () {
+            let id = $(this).data('id');
+            cancelEditRow(id);
+        });
+
+        $(document).on('click', '.save-edit-row', function () {
+            let id = $(this).data('id');
+            $(this).prop('disabled', true);
+            saveEditRow(id);
+            $(this).prop('disabled', false);
         });
 
         $(document).on('click', '.openCopy', function() {
@@ -469,8 +488,7 @@
 
             $.ajax({
                 type: 'POST',
-                //check
-                url: '@Url.Action()',
+                url: '@Url.Action(IncomeCurrentReportController.ACTION_Calculation)',
                 data: model,
                 success: function (data, status, settings) {
                     $('#divCalc').html('');
@@ -499,9 +517,7 @@
             $(".olvy").css("display", "block");
 
             $.ajax({
-                                //check
-
-                url: '@Url.Action()',
+                url: '@Url.Action(IncomeCurrentReportController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
@@ -548,9 +564,7 @@
                                 $(".olvy").css("display", "block");
 
                                 $.ajax({
-                                                    //check
-
-                                    url: '@Url.Action()',
+                                    url: '@Url.Action(IncomeCurrentReportController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
@@ -585,9 +599,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                           }).then(function (result) {
-                                                                //check
-
-                                                document.location.href = '@Url.Action()';
+                                                document.location.href = '@Url.Action(IncomeCurrentReportController.ACTION_ImportExcel)';
                                             });
                                         }
 

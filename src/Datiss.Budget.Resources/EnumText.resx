@@ -153,6 +153,12 @@
   <data name="OrganizationType_Village" xml:space="preserve">
     <value>روستا</value>
   </data>
+  <data name="RecordType_Base" xml:space="preserve">
+    <value>پایه</value>
+  </data>
+  <data name="RecordType_Forcast" xml:space="preserve">
+    <value>پیش بینی</value>
+  </data>
   <data name="ReportParamType_City" xml:space="preserve">
     <value>شهر</value>
   </data>

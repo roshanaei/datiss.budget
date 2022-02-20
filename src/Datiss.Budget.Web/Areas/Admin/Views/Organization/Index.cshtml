@@ -158,52 +158,8 @@
                                     </div>
                                 </div>
 
-                                @if (Model.PagesCount > 1)
-                                {
-                                    <nav aria-label="Page navigation">
-                                        <ul class="pagination justify-content-center">
-                                            @if (Model.PageNumber > 1)
-                                            {
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       asp-controller="@OrganizationController.Name"
-                                                       asp-action="@OrganizationController.ACTION_Index"
-                                                       asp-route-page="@Model.PreviousPage"
-                                                       aria-label="Previous">«</a>
-                                                </li>
-                                            }
-
-                                            @for (int i = 1; i <= Model.PagesCount; i++)
-                                            {
-                                                if (i == Model.PageNumber)
-                                                {
-                                                    <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
-                                                }
-                                                else
-                                                {
-                                                    <li class="page-item">
-                                                        <a class="page-link"
-                                                           asp-controller="@OrganizationController.Name"
-                                                           asp-action="@OrganizationController.ACTION_Index"
-                                                           asp-route-page="@i">@i.ToString() </a>
-                                                    </li>
-                                                }
-                                            }
-
-                                            @if (Model.PageNumber < Model.PagesCount)
-                                            {
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                       asp-controller="@OrganizationController.Name"
-                                                       asp-action="@OrganizationController.ACTION_Index"
-                                                       asp-route-page="@Model.NextPage"
-                                                       aria-label="Next">»</a>
-                                                </li>
-                                            }
-
-                                        </ul>
-                                    </nav>
-                                }
+                                <!--Pagination-->
+                                <vc:pager model="Model.ToPager()" controller-name="@OrganizationController.Name" action-name="@OrganizationController.ACTION_Index"></vc:pager>
                             </div>
                         </div>
                     </div>
@@ -287,7 +243,7 @@
 
                     Swal.fire({
                         title: '<span class="my-font">عملیات موفق</span>',
-                        html: '<span class="my-font">عملیات ویرایش سال مالی با موفقیت انجام شد.</span>',
+                        html: '<span class="my-font">عملیات ویرایش سازمان با موفقیت انجام شد.</span>',
                         type: 'success',
                         confirmButtonColor: '#2F8BE6',
                         animation: true,
@@ -301,7 +257,17 @@
                 },
                 error: function (request, options, err) {
                     console.log(err);
-                    alert('عملیات ویرایش سال مالی با خطا مواجه شد.');
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">عملیات ویرایش سازمان با خطا مواجه شد.</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
                 }
             });
         });
@@ -360,7 +326,7 @@
 
                     Swal.fire({
                         title: '<span class="my-font">عملیات موفق</span>',
-                        html: '<span class="my-font">عملیات افزودن سال مالی جدید با موفقیت انجام شد.</span>',
+                        html: '<span class="my-font">عملیات افزودن سازمان جدید با موفقیت انجام شد.</span>',
                         type: 'success',
                         confirmButtonColor: '#2F8BE6',
                         animation: true,
@@ -374,7 +340,17 @@
                 },
                 error: function (request, options, err) {
                     console.log(err);
-                    alert('عملیات افزودن سال مالی جدید با خطا مواجه شد.');
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">عملیات افزودن سازمان جدید با خطا مواجه شد.</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
                 }
             });
         });

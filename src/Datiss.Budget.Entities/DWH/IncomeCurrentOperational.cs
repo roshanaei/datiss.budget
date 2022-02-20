@@ -20,19 +20,19 @@ namespace Datiss.Budget.Entities.DWH
 
         public int CountH { get; set; }
 
-        public int PriceH { get; set; }
+        public long PriceH { get; set; }
 
-        public int CostH { get; set; }
+        public long CostH { get; set; }
 
         public int CountNH { get; set; }
 
-        public int PriceNH { get; set; }
+        public long PriceNH { get; set; }
 
-        public int CostNH { get; set; }
+        public long CostNH { get; set; }
 
         public int TotalCount { get; set; }
 
-        public int TotalCost { get; set; }
+        public long TotalCost { get; set; }
 
         #endregion
 

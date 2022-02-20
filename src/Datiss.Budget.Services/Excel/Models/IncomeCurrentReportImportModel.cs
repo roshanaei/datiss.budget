@@ -20,7 +20,7 @@ namespace Datiss.Budget.Services.Excel.Models
         public string ActivityName { get; set; }
 
         [Column(MappingDirections.Both, Letter = "D")]
-        public ActivityType? Activity { get; set; }
+        public int? Activity { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
         public string SectionTypeDisplay { get; set; }

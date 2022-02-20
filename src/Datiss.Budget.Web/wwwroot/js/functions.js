@@ -53,7 +53,7 @@ function errorMsg(message) {
 }
 
 function confirmDelete() {
-    Swal.fire({
+    return Swal.fire({
         title: 'برای حذف اطمینان دارید؟',
         text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
         type: 'warning',
@@ -68,13 +68,6 @@ function confirmDelete() {
         confirmButtonClass: 'btn btn-warning my-font',
         cancelButtonClass: 'btn btn-danger  my-font ml-1',
         buttonsStyling: false,
-    }).then(function (result) {
-        if (result.value) {
-            return true;
-        }
-        else {
-            return false;
-        }
     });
 }
 

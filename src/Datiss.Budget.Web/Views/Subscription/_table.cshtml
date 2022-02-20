@@ -190,54 +190,10 @@
                     {<span>1</span>}
                     else
                     {<span>@Model.PagesCount</span>}
-            </b>)
+                </b>)
+            </div>
         </div>
-    </div>
-    @if (Model.PagesCount > 1)
-    {
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                @if (Model.PageNumber > 1)
-                {
-                    <li class="page-item">
-                        <a class="page-link"
-                           asp-controller="@SubscriptionController.Name"
-                           asp-action="@SubscriptionController.ACTION_Index"
-                           asp-route-page="@Model.PreviousPage"
-                           aria-label="Previous">«</a>
-                    </li>
-                }
-
-                @for (int i = 1; i <= Model.PagesCount; i++)
-                {
-                    if (i == Model.PageNumber)
-                    {
-                        <li class="page-item active"><a class="page-link" href="#">@i.ToString() </a></li>
-                    }
-                    else
-                    {
-                        <li class="page-item">
-                            <a class="page-link"
-                               asp-controller="@SubscriptionController.Name"
-                               asp-action="@SubscriptionController.ACTION_Index"
-                               asp-route-page="@i">@i.ToString() </a>
-                        </li>
-                    }
-                }
-
-                @if (Model.PageNumber < Model.PagesCount)
-                {
-                    <li class="page-item">
-                        <a class="page-link"
-                           asp-controller="@SubscriptionController.Name"
-                           asp-action="@SubscriptionController.ACTION_Index"
-                           asp-route-page="@Model.NextPage"
-                           aria-label="Next">»</a>
-                    </li>
-                }
-
-            </ul>
-        </nav>
-    }
+        <!--Pagination-->
+        <vc:pager model="Model.ToPager()" controller-name="@SubscriptionController.Name" action-name="@SubscriptionController.ACTION_Index"></vc:pager>
     </div>
 </div>

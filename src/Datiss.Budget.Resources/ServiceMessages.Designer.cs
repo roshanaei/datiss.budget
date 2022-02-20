@@ -169,11 +169,56 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در فایل اکسل شما عناوین :&lt;br&gt;{0} برای مرکز &quot;{1}&quot; در بخش &quot;{2}&quot;، &quot;{3}&quot; وجود ندارد..
+        /// </summary>
+        public static string ImportExcelActivityCCTypePMDepTypeOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelActivityCCTypePMDepTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در فایل اکسل شما مراکز هزینه :&lt;br&gt;{0} برای بخش &quot;{1}&quot; ، &quot;{2}&quot; وجود ندارد..
+        /// </summary>
+        public static string ImportExcelActivityCostCenterTypeOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelActivityCostCenterTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در فایل اکسل شما بخش &quot;{0}&quot; برای &quot;{1}&quot; اطلاعاتی ندارد..
+        /// </summary>
+        public static string ImportExcelActivityOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelActivityOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to فعالیت :&lt;br&gt;&quot;{0}&quot; برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelActivityTypeNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelActivityTypeNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to امکان انجام این عملیات به دلیل نبود رکورد در جدول وابسته، وجود ندارد..
         /// </summary>
         public static string ImportExcelCalculationField {
             get {
                 return ResourceManager.GetString("ImportExcelCalculationField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} در بخش &quot;{1}&quot; برای &quot;{2}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelCCITypeActivityOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelCCITypeActivityOrgNotInExcel", resourceCulture);
             }
         }
         
@@ -205,11 +250,47 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} در بخش &quot;{1}&quot; برای &quot;{2}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelICOTypeActivityOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelICOTypeActivityOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، برای بخش &quot;{1}&quot; کد عنوان &quot;{2}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidCCIActivityType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidCCIActivityType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد عنوان استهلاک و تعمیر و نگهداری &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidCCPMDepType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidCCPMDepType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد ضریب &quot;{1}&quot; معتبر نیست ..
         /// </summary>
         public static string ImportExcelInvalidCofficient {
             get {
                 return ResourceManager.GetString("ImportExcelInvalidCofficient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد مرکز هزینه &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidCostCenterType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidCostCenterType", resourceCulture);
             }
         }
         
@@ -232,11 +313,29 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد عنوان&quot;{1}&quot; برای بخش &quot;{2}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidICOTypeActivity {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidICOTypeActivity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to مقدار وارد شده برای ماه مورد نظر نامعتبر است ..
         /// </summary>
         public static string ImportExcelInvalidMonth {
             get {
                 return ResourceManager.GetString("ImportExcelInvalidMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد عنوان &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidNOICType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidNOICType", resourceCulture);
             }
         }
         
@@ -286,6 +385,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelNOICOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelNOICOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to شما مجاز به ورود اطلاعات برای &quot; {0} &quot; نیستید.[سطر {1} فایل اکسل].
         /// </summary>
         public static string ImportExcelNotAllowedOrg {
@@ -313,6 +421,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to شرح های :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelSectionTypesNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelSectionTypesNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ورود اطلاعات با موفقیت انجام گردید..
         /// </summary>
         public static string ImportExcelSuccess {
@@ -327,6 +444,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelTitleNotInExcel {
             get {
                 return ResourceManager.GetString("ImportExcelTitleNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در فایل اکسل شما اطلاعات واحد های :&lt;br&gt;{0} برای شرح &quot;{1}&quot; ، &quot;{2}&quot; وجود ندارد..
+        /// </summary>
+        public static string ImportExcelUnitTypesSectionTypeNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelUnitTypesSectionTypeNotInExcel", resourceCulture);
             }
         }
         
@@ -385,6 +511,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات بخش {0} و عنوان {1} برای &quot;{2}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_ActivityICOTypeDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_ActivityICOTypeDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ضریب {0} برای &quot;{1}&quot; قبلا ثبت شده است..
         /// </summary>
         public static string Logic_CofficientTypeDuplicate {
@@ -408,6 +543,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_InputDisableYearData {
             get {
                 return ResourceManager.GetString("Logic_InputDisableYearData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات عنوان {0} برای &quot;{1}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_NOICOrgDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_NOICOrgDuplicate", resourceCulture);
             }
         }
         
@@ -579,6 +723,15 @@ namespace Datiss.Budget.Resources {
         public static string SystemError {
             get {
                 return ResourceManager.GetString("SystemError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to جدول شما دارای اطلاعات پایه می باشد . لطفا ابتدا آنها را پاک کنید..
+        /// </summary>
+        public static string TableHasBaseData {
+            get {
+                return ResourceManager.GetString("TableHasBaseData", resourceCulture);
             }
         }
     }

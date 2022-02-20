@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Datiss.Budget.Common.GuardToolkit;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -25,6 +26,19 @@ namespace Datiss.Budget.ViewModels
             if (result == "") return result;
 
             return result.Substring(0, result.Length -1);
+        }
+
+        public static PagerViewModel ToPager<T>(this PagedViewModel<T> model) where T: class
+        {
+            model.CheckArgumentIsNull(nameof(model));
+            
+            return new PagerViewModel
+            {
+                PageNumber = model.PageNumber,
+                PagesCount = model.PagesCount,
+                PageSize = model.PageSize,
+                TotalCount = model.TotalCount
+            };
         }
     }
 }

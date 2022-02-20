@@ -135,6 +135,9 @@
   <data name="DeleteMultipleDataForOrg" xml:space="preserve">
     <value>حذف رکورد برای سازمان "{0}" در "سال {1}" با موفقیت انجام شد.</value>
   </data>
+  <data name="DeleteMultipleDataForTypeOrg" xml:space="preserve">
+    <value>حذف رکورد برای سازمان "{0}" و نوع "{1}" در "سال {2}" با موفقیت انجام شد.</value>
+  </data>
   <data name="DeleteMultipleDataForYear" xml:space="preserve">
     <value>حذف اطلاعات برای سال {0} با موفقیت انجام شد</value>
   </data>

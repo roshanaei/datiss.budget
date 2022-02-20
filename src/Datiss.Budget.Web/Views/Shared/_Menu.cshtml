@@ -64,6 +64,16 @@
                                     <span data-i18n="مدیریت گزارشات" class="menu-title my-font"> گزارشات </span>
                                 </a>
                             </li>
+                            <li>
+                                <a asp-area="@AreaConstants.AdminArea"
+                                   asp-controller="Designer"
+                                   asp-action="Index">
+                                   <i class="ft-refresh-cw"></i>
+                                   <span data-i18n="ساخت گزارشات" class="menu-title my-font"> 
+                                       گزارش ساز    
+                                   </span>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <!-- مدیریت کاربران-->
@@ -237,9 +247,25 @@
                                             <span data-i18n="درآمد فاضلاب بها غیر مسکونی" class="menu-item my-font-light">درآمد فاضلاب بها غیر مسکونی</span>
                                         </a>
                                     </li>
+
                                     <li class="nav-item">
                                         <a asp-area="" asp-controller="" asp-action="Index">
                                             <span data-i18n="سایر درآمدهای جاری" class="menu-item my-font-light">سایر درآمدهای جاری</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="@IncomeCurrentOperationalController.Name" asp-action="@IncomeCurrentOperationalController.ACTION_Index">
+                                            <span data-i18n="درآمد عملیاتی" class="menu-item my-font-light">درآمد عملیاتی</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="@IncomeCurrentNOperationalController.Name" asp-action="@IncomeCurrentNOperationalController.ACTION_Index">
+                                            <span data-i18n="درآمد غیر عملیاتی" class="menu-item my-font-light">درآمد غیر عملیاتی</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="@IncomeCurrentReportController.Name" asp-action="@IncomeCurrentReportController.ACTION_Index">
+                                            <span data-i18n="گزارش درآمد جاری" class="menu-item my-font-light">گزارش درآمد جاری</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -318,7 +344,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                        <a asp-area="" asp-controller="@CostCurrentPMDepController.Name" asp-action="@CostCurrentPMDepController.ACTION_Index">
                                             <span data-i18n="هزینه استهلاک و تعمیر و نگهداری" class="menu-item my-font-light">هزینه استهلاک و تعمیر و نگهداری</span>
                                         </a>
                                     </li>
