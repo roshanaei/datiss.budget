@@ -10,7 +10,8 @@ namespace Datiss.Budget.DataLayer.Mappings
         {
             builder.HasOne(userRole => userRole.Role)
                    .WithMany(role => role.Users)
-                   .HasForeignKey(userRole => userRole.RoleId);
+                   .HasForeignKey(userRole => userRole.RoleId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(userRole => userRole.User)
                    .WithMany(user => user.Roles)

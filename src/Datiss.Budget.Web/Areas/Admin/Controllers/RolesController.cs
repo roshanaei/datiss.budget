@@ -24,6 +24,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Delete = nameof(Delete);
 
         private readonly IRoleService _roleService;
         private readonly IAppClaimTypeService _claimTypeService;
@@ -121,6 +122,29 @@ namespace Datiss.Budget.Web.Admin.Controllers
             }
 
             return RedirectToAction(ACTION_Index);
+        }
+
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _roleService.HardDeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.InvalidUpdateData
+                });
+            }
+
+            return Json(new
+            {
+                hasError = false,
+                message = ViewMessages.DeleteRowSuccess
+            });
         }
 
     }
