@@ -32,8 +32,8 @@
                             <fieldset class="form-group">
                                 <label class="my-font rowAC">
                                     <span style="margin-left:5px;width:90px">سازمان پدر :</span>
-                                    <select asp-for="ParentId" 
-                                            asp-items="@Model.ParentList" 
+                                    <select asp-for="ParentId"
+                                            asp-items="@Model.ParentList"
                                             class="form-control d-inline-block">
                                     </select>
                                 </label>
@@ -66,8 +66,10 @@
                                 </label>
                             </fieldset>
                         </div>
+                    </div>
 
-
+                    <div id="divError" style="display: none">
+                        <span id="spanTitle" class="my-font error-text"></span>
                     </div>
 
                 </div>

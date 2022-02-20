@@ -115,6 +115,7 @@ namespace Datiss.Budget.Web.Controllers
 
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
+            filter.RecordType = RecordType.Forcast;
 
             var myfilter = TempData.Get<CostCurrentPMDepFilterViewModel>(_indexFilterKey);
             if (myfilter != null)

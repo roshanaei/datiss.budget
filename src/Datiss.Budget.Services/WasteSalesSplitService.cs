@@ -465,11 +465,13 @@ namespace Datiss.Budget.Services
 
             foreach (var org in existOrgs)
             {
-                if (orgTitle != "")
+                if (!string.IsNullOrWhiteSpace(orgTitle))
                     break;
 
                 foreach (var usert in usertypes)
                 {
+                    if (!string.IsNullOrWhiteSpace(userTypeTitle))
+                        break;
                     var existUserTypeInExcel = records.Any(_ => _.UserTypeId == usert.Id &&
                                                                 _.OrganizationId == org.Id);
                     if (!existUserTypeInExcel)
@@ -781,8 +783,7 @@ namespace Datiss.Budget.Services
             int yearId)
         {
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId &&
-                            _.Status != EntityStatus.Deleted)
+                .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
             var result = new List<WasteSalesSplit>();
             foreach (var org in children)

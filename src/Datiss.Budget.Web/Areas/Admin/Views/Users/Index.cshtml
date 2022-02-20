@@ -278,7 +278,18 @@
             }
 
             if(model.newPassword != model.verifyNewPassword) {
-                alert('کلمات عبور با هم مطابقت ندارند. لطفاً برای تایید کلمه عبور وارد شده، آن را دوباره و به درستی وارد نمایید.');
+                //alert('کلمات عبور با هم مطابقت ندارند. لطفاً برای تایید کلمه عبور وارد شده، آن را دوباره و به درستی وارد نمایید.');
+                Swal.fire({
+                    title: '<span class="my-font">خطا</span>',
+                    html: `<span class="my-font">کلمات عبور با هم مطابقت ندارند. لطفاً برای تایید، آن را دوباره و به درستی وارد نمایید.</span>`,
+                    type: 'error',
+                    confirmButtonColor: '#2F8BE6',
+                    animation: false,
+                    customClass: 'animated flipInX',
+                    confirmButtonText: 'بستن',
+                    confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                    buttonsStyling: false,
+                });
                 $('validateVerifyNewPassword').focus();
                 return;
             }
@@ -290,7 +301,19 @@
                 data: model,
                 success: function(data, status, settings) {
                     if(data.hasError) {
-                        alert(data.message);
+                        //alert(data.message);
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data.message}</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
                     }
                     $(mymodal).modal('hide');
                 },
@@ -335,11 +358,34 @@
                 $form.removeData('validator');
                 $form.removeData('unobtrusiveValidation');
                 if(data.hasError) {
-                    alert(data.message);
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
                 }
 
                 if(data.success) {
-                    alert('success');
+                    Swal.fire({
+                        title: '<span class="my-font">عملیات موفق</span>',
+                        html: '<span class="my-font">عملیات ایجاد کاربر جدید با موفقیت انجام شد.</span>',
+                        type: 'success',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: true,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                        buttonsStyling: false,
+                    }).then(function (result) {
+                            document.location.href = '@Url.Action(UsersController.ACTION_Index)';
+                    });
                 }
             }).fail(function(request, options, err) {
                 console.log(err);

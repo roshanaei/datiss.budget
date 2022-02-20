@@ -24,6 +24,7 @@ using Mapster;
 using Datiss.Budget.Common;
 using Datiss.Budget.Extensions;
 using Datiss.Budget.Services.Excel.Models;
+using Datiss.Budget.ViewModels;
 
 namespace Datiss.Budget.Services
 {
@@ -100,6 +101,8 @@ namespace Datiss.Budget.Services
                         OrganizationDisplay = organizationDisplay,
                         YearId = model.YearId,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year,
+                        ActivityType = model.ActivityType,
+                        RecordType = model.RecordType,
                         CCPMDepTypeId = model.CCPMDepTypeId,
                         CCPMDepTypeDisplay = model.CCPMDepTypeTitle,
                         CostCenterTypeId = model.CostCenterTypeId,
@@ -139,7 +142,7 @@ namespace Datiss.Budget.Services
                                    .Where(_ => _.OrganizationId == organizationId)
                                    .Where(_ => _.RecordType == recordType)
                                    .ToListAsync();
-            var childrens = await getChildren(organizationId, yearId , recordType);
+            var childrens = await getChildren(organizationId, yearId, recordType);
             if (self.Count() == 0 && childrens.Count() == 0)
                 throw new DeleteNullRecordException();
 
@@ -283,7 +286,7 @@ namespace Datiss.Budget.Services
             filter.CheckArgumentIsNull(nameof(filter));
             var query = Query();
             query = await setFilter(query, filter);
-            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+            query = setOrder(query, "exportExcel", filter.OrderDesc);
             var items = await query
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
@@ -337,7 +340,7 @@ namespace Datiss.Budget.Services
             var costCenterType = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CostCenterType &&
                                                       x.Status != EntityStatus.Disbaled);
 
-            var activityType = EnumSelectListProvider.GetActivityTypeItems().ToList();
+            var activities = ActivityType.GetValues<ActivityType>();
 
 
             var year = await _yearSet.FindAsync(yearId);
@@ -414,13 +417,12 @@ namespace Datiss.Budget.Services
                 {
                     break;
                 }
-                foreach (var act in activityType)
+                foreach (var activity in activities)
                 {
-                    var activity = act.Value == "0" ? ActivityType.Water : ActivityType.Waste;
                     if (!records.Any(_ => _.ActivityType == activity &&
                                        _.OrganizationId == org.Id))
                     {
-                        missingActivity += "- [" + act.Text + "]<br>";
+                        missingActivity += "- [" + activity.ToDisplay() + "]<br>";
                         orgTitle = org.Title;
                     }
                     else
@@ -437,7 +439,7 @@ namespace Datiss.Budget.Services
                             if (!exist)
                             {
                                 missingCostCenterType.Add(cost);
-                                activityTitle = act.Text;
+                                activityTitle = activity.ToDisplay();
                                 orgTitle = org.Title;
                             }
                             else
@@ -451,7 +453,7 @@ namespace Datiss.Budget.Services
                                     {
                                         missingccPMDepType.Add(cc);
                                         costCenterTypeTitle = cost.Title;
-                                        activityTitle = act.Text;
+                                        activityTitle = activity.ToDisplay();
                                         orgTitle = org.Title;
                                     }
                                 }
@@ -552,14 +554,22 @@ namespace Datiss.Budget.Services
                         ? query.OrderByDescending(x => x.Organization.Title)
                         : query.OrderBy(x => x.Organization.Title);
 
-                case "ccPMDeptype":
-                    return desc
-                        ? query.OrderByDescending(x => x.CCPMDepType.DisplayOrder)
-                        : query.OrderBy(x => x.CCPMDepType.DisplayOrder);
+                case "exportexcel":
+                    return query.Include(x => x.Organization)
+                                .Include(x => x.CostCenterType)
+                                .Include(x => x.CCPMDepType)
+                                .OrderByDescending(x => x.RecordType)
+                                .ThenBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.Organization.Type)
+                                .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.ActivityType)
+                                .ThenBy(x => x.CostCenterType.DisplayOrder)
+                                .ThenBy(x => x.CCPMDepType.DisplayOrder);
 
                 default:
                     return query.Include(x => x.Organization)
                                 .Include(x => x.CCPMDepType)
+                                .Include(x=>x.CostCenterType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
                                 .ThenBy(x => x.Organization.Type)
                                 .ThenBy(x => x.Organization.ParentId)
@@ -662,8 +672,7 @@ namespace Datiss.Budget.Services
             RecordType recordType)
         {
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId &&
-                            _.Status != EntityStatus.Deleted)
+                .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
             var result = new List<CostCurrentPMDep>();
             foreach (var org in children)

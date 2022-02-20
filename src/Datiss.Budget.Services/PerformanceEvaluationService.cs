@@ -477,8 +477,7 @@ namespace Datiss.Budget.Services
             TablesName tablesName)
         {
             var children = await _orgDbSet
-                .Where(_ => _.Status != EntityStatus.Deleted &&
-                            _.ParentId == parentOrganizationId)
+                .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
             var result = new List<PerformanceEvaluation>();
             foreach (var org in children)

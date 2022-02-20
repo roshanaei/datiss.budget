@@ -25,8 +25,8 @@ namespace Datiss.Budget.Reports.Excel
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "سال";
             sheet.Cell(1, 2).Value = "سازمان";
-            sheet.Cell(1, 3).Value = "عنوان";
-            sheet.Cell(1, 4).Value = "فعالیت";
+            sheet.Cell(1, 3).Value = "فعالیت";
+            sheet.Cell(1, 4).Value = "عنوان";
             sheet.Cell(1, 5).Value = "تعداد";
             sheet.Cell(1, 6).Value = "درآمد";
 
@@ -37,8 +37,8 @@ namespace Datiss.Budget.Reports.Excel
                 var item = items.ElementAt(i);
                 sheet.Cell(row, 1).Value = item.Year.ToString();
                 sheet.Cell(row, 2).Value = item.OrganizationDisplay;
-                sheet.Cell(row, 3).Value = item.OIFTypeDisplay;
-                sheet.Cell(row, 4).Value = item.ActivityDisplay;
+                sheet.Cell(row, 3).Value = item.ActivityDisplay;
+                sheet.Cell(row, 4).Value = item.OIFTypeDisplay;
                 sheet.Cell(row, 5).Value = item.OIFCount;
                 sheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -83,15 +83,15 @@ namespace Datiss.Budget.Reports.Excel
                 var item = items.ElementAt(i);
                 sheet.Cell(row, 1).Value = item.OrganizationDisplay;
                 sheet.Cell(row, 2).Value = item.OrganizationId;
-                sheet.Cell(row, 3).Value = item.OIFTypeDisplay;
-                sheet.Cell(row, 4).Value = item.OIFTypeId;
-                sheet.Cell(row, 5).Value = item.ActivityDisplay;
-                sheet.Cell(row, 6).Value = item.ActivityId == ActivityType.Water ? 0: 1;
+                sheet.Cell(row, 3).Value = item.ActivityDisplay;
+                sheet.Cell(row, 4).Value = (int)item.ActivityId;
+                sheet.Cell(row, 5).Value = item.OIFTypeDisplay;
+                sheet.Cell(row, 6).Value = item.OIFTypeId;
                 row++; //for keeping index in table records
             }
 
             var range = sheet.Range(2, 1, row - 1, 8);
-            range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other
             range.Column(7).Style.NumberFormat.Format = "#,##0";
             range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;

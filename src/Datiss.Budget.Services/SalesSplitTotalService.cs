@@ -752,8 +752,7 @@ namespace Datiss.Budget.Services
             int yearId)
         {
             var children = await _orgDbSet
-                .Where(_ => _.ParentId == parentOrganizationId &&
-                            _.Status != EntityStatus.Deleted)
+                .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
             var result = new List<SalesSplitTotal>();
             foreach (var org in children)
