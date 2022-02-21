@@ -18,5 +18,7 @@ namespace Datiss.Budget.Services.Contracts.Identity
 
         Task<ValidationResult> UpdateAsync(UpdateRoleDTO model);
 
+        Task HardDeleteAsync(int id);
+
     }
 }
