@@ -513,8 +513,7 @@ namespace Datiss.Budget.Web.Controllers
             var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType, true);
             var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
 
-            var activity = new ActivityType();
-            var activityTypes = EnumSelectListProvider.GetActivityTypeItems(activity);
+            var activityTypes = EnumSelectListProvider.GetActivityTypeItems();
 
             var items = new List<WWsFeeDTO>();
 
