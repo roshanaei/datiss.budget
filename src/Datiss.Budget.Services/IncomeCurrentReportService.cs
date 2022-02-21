@@ -92,8 +92,16 @@ namespace Datiss.Budget.Services
                     entity.ForcastY = model.ForcastY;
                     entity.ApproveYear_1 = model.ApproveYear_1;
 
-                    await _uow.SaveChangesAsync();
-
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<IncomeCurrentReportDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
                     var result = new IncomeCurrentReportDTO
                     {
                         OrganizationId = model.OrganizationId,
@@ -281,7 +289,14 @@ namespace Datiss.Budget.Services
                 }
             }
 
-            await _uow.SaveChangesAsync();
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new CopyDataBaseException();
+            }
         }
 
         public async Task<IEnumerable<IncomeCurrentReportDTO>> GetExportItemsAsync(int yearId, int organizationId)
@@ -544,7 +559,17 @@ namespace Datiss.Budget.Services
 
             }
 
-            await _uow.SaveChangesAsync();
+
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelCalculationField)
+                    );
+            }
 
             return ImportResult.Succeed(
                 string.Format(ServiceMessages.ImportExcelSuccess)

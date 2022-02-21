@@ -78,8 +78,16 @@ namespace Datiss.Budget.Services
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.Operation = model.Operation;
 
-                    await _uow.SaveChangesAsync();
-
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<PerformanceEvaluationDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
                     var result = new PerformanceEvaluationDTO
                     {
                         OrganizationId = entity.OrganizationId,
@@ -357,8 +365,17 @@ namespace Datiss.Budget.Services
             }
 
             await _dbSet.AddRangeAsync(records);
-            await _uow.SaveChangesAsync();
 
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelCalculationField)
+                    );
+            }
             return ImportResult.Succeed(
                 string.Format(ServiceMessages.ImportExcelSuccess)
                 );

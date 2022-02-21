@@ -93,8 +93,16 @@ namespace Datiss.Budget.Services
                     entity.RFinanceDepCost_D = model.RFinanceDepCost_D;
 
 
-                    await _uow.SaveChangesAsync();
-
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<CostCurrentPMDepDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
                     var result = new CostCurrentPMDepDTO
                     {
                         OrganizationId = model.OrganizationId,
@@ -272,7 +280,14 @@ namespace Datiss.Budget.Services
 
             _dbSet.AddRange(result);
 
-            await _uow.SaveChangesAsync();
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new CopyDataBaseException();
+            }
         }
 
 
@@ -528,7 +543,17 @@ namespace Datiss.Budget.Services
             await _dbSet.AddRangeAsync(records);
 
 
-            await _uow.SaveChangesAsync();
+
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelCalculationField)
+                    );
+            }
 
 
             return ImportResult.Succeed(

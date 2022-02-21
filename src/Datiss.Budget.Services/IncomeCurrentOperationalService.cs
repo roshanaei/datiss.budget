@@ -97,8 +97,16 @@ namespace Datiss.Budget.Services
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ICOTypeId, model.ActivityType))
                 {
                     await _dbSet.AddAsync(entity);
-                    await _uow.SaveChangesAsync();
-
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<IncomeCurrentOperationalDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
                     var result = entity.Adapt<IncomeCurrentOperationalDTO>();
                     result.ICOTypeDisplay = model.ICOTypeDisplay;
                     result.ActivityType = model.ActivityType;
@@ -150,7 +158,16 @@ namespace Datiss.Budget.Services
                     entity.TotalCount = model.TotalCount;
                     entity.TotalCost = model.TotalCost;
 
-                    await _uow.SaveChangesAsync();
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<IncomeCurrentOperationalDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
 
                     var result = new IncomeCurrentOperationalDTO
                     {
@@ -361,7 +378,14 @@ namespace Datiss.Budget.Services
 
             _dbSet.AddRange(result);
 
-            await _uow.SaveChangesAsync();
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new CopyDataBaseException();
+            }
         }
 
 
@@ -375,7 +399,7 @@ namespace Datiss.Budget.Services
 
             int rowIndex = 1;
 
-            var activity = ActivityType.GetValues<ActivityType>();
+            var activitytypes = ActivityType.GetValues<ActivityType>();
 
             var ciowtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                    x.Parent.ConstantKey == ConstantKeys.__CIOWType);
@@ -452,9 +476,9 @@ namespace Datiss.Budget.Services
             //Start DWaterType
             var missingCIOWType = new List<Constant>();
             var missingCIOWsType = new List<Constant>();
+            string missingActicity = "";
 
             string orgTitle = "";
-
             string activityTitle = "";
 
             string missingCIOWTypeTtile = "";
@@ -465,43 +489,62 @@ namespace Datiss.Budget.Services
 
             foreach (var org in existOrgs)
             {
-                foreach (var act in activity)
+                if (!string.IsNullOrWhiteSpace(orgTitle))
+                    break;
+                foreach (var activity in activitytypes)
                 {
-                    if (act == ActivityType.Water)
+                    if (!string.IsNullOrWhiteSpace(activityTitle))
+                        break;
+                    var existActivityInExcel = records.Any(_ => _.ActivityType == activity &&
+                                                                _.OrganizationId == org.Id);
+                    if (!existActivityInExcel)
                     {
-                        foreach (var ciow in ciowtypes)
+                        missingActicity += "- [" + activity.ToDisplay() + "]<br>";
+                        orgTitle = org.Title;
+                    }
+                    else
+                    {
+                        if (activity == ActivityType.Water)
                         {
-                            var exist = records.Any(_ => _.ActivityType == act &&
-                                                         _.OrganizationId == org.Id &&
-                                                         _.ICOTypeId == ciow.Id);
-                            if (!exist)
+                            foreach (var ciow in ciowtypes)
                             {
-                                missingCIOWType.Add(ciow);
-                                missingCIOWTypeTtile = ciow.Title;
-                                activityTitle = act.ToDisplay();
-                                orgTitle = org.Title;
+                                var exist = records.Any(_ => _.ActivityType == activity &&
+                                                             _.OrganizationId == org.Id &&
+                                                             _.ICOTypeId == ciow.Id);
+                                if (!exist)
+                                {
+                                    missingCIOWType.Add(ciow);
+                                    missingCIOWTypeTtile =  ciow.Title;
+                                    activityTitle = activity.ToDisplay();
+                                    orgTitle = org.Title;
+                                }
                             }
                         }
-                    }
-                    if (act == ActivityType.Waste)
-                    {
-                        foreach (var ciows in ciowstypes)
+                        else if (activity == ActivityType.Waste)
                         {
-                            var existWs = records.Any(_ => _.ActivityType == act &&
-                                                         _.OrganizationId == org.Id &&
-                                                         _.ICOTypeId == ciows.Id);
-                            if (!existWs)
+                            foreach (var ciows in ciowstypes)
                             {
-                                missingCIOWsType.Add(ciows);
-                                missingCIOWsTypeTtile = ciows.Title;
-                                activityTitle = act.ToDisplay();
-                                orgTitle = org.Title;
+                                var existWs = records.Any(_ => _.ActivityType == activity &&
+                                                               _.OrganizationId == org.Id &&
+                                                               _.ICOTypeId == ciows.Id);
+                                if (!existWs)
+                                {
+                                    missingCIOWsType.Add(ciows);
+                                    missingCIOWsTypeTtile = ciows.Title;
+                                    activityTitle = activity.ToDisplay();
+                                    orgTitle = org.Title;
+                                }
                             }
                         }
                     }
                 }
             }
 
+            if(!string.IsNullOrWhiteSpace(missingActicity))
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelActivityTypeNotInExcel,missingActicity,orgTitle));
+            }
             if (missingCIOWType.Any())
             {
                 foreach (var missCioW in missingCIOWType)
@@ -567,7 +610,17 @@ namespace Datiss.Budget.Services
             }
 
             await _dbSet.AddRangeAsync(records);
-            await _uow.SaveChangesAsync();
+
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelCalculationField)
+                    );
+            }
 
             return ImportResult.Succeed(
                 string.Format(ServiceMessages.ImportExcelSuccess)

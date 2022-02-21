@@ -144,7 +144,16 @@ namespace Datiss.Budget.Services
                     entity.AverageCapacity = model.AverageCapacity;
                     entity.WsInstallationCosts = model.WsInstallationCosts;
 
-                    await _uow.SaveChangesAsync();
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<WasteSalesSplitDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
 
                     var result = new WasteSalesSplitDTO
                     {
@@ -377,7 +386,14 @@ namespace Datiss.Budget.Services
 
             _dbSet.AddRange(result);
 
-            await _uow.SaveChangesAsync();
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new CopyDataBaseException();
+            }
         }
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)

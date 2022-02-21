@@ -92,7 +92,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu" style="width:200%">
+                                        <div class="dropdown-menu" style="width:230%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -259,7 +259,7 @@
                                                                for="col-15"><span style="">درآمد کل فاضلاب بهاء</span></label>
                                                     </div>
                                                 </div>
-                                                <div class="dropdown-item">
+                                                @*<div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
                                                         <input type="checkbox"
                                                                class="custom-control-input"
@@ -280,7 +280,7 @@
                                                         <label class="custom-control-label my-font"
                                                                for="col-17"><span style="">درآمد تبصره 7 فاضلاب بهاء خانگی</span></label>
                                                     </div>
-                                                </div>
+                                                </div>*@
                                             </div>
                                         </div>
                                     </div>
@@ -322,13 +322,14 @@
 
 @section footSection {
 
-    <partial name="_overlay" />
-
     <div id="divCopy">
 
     </div>
 
     <partial name="_excelModal" model="new ImportExcelViewModel()" />
+
+    <partial name="_loadingBar" />
+
 
     <div id="divCreate">
 
@@ -342,10 +343,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17';
+        let allColumns = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,";
+        let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())

@@ -199,3 +199,6 @@ th:last-child, td:last-child {
     font-size:x-small;
     margin-left:2px;
 }
+.last-td-transparent {
+    background-color: transparent !important;
+}
