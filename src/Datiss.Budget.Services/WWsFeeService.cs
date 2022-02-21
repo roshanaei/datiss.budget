@@ -96,8 +96,16 @@ namespace Datiss.Budget.Services
                 if (await checkLogicAsync(model.YearId, model.OrganizationId,model.ActivityType, model.UserTypeId, model.UsageLayerId))
                 {
                     await _dbSet.AddAsync(entity);
-                    await _uow.SaveChangesAsync();
-
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<WWsFeeDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
                     var result = entity.Adapt<WWsFeeDTO>();
                     result.UserTypeDisplay = model.UserTypeTitle;
                     result.UsageLayerDisplay = usageLayerDisplay;
@@ -150,8 +158,16 @@ namespace Datiss.Budget.Services
                     entity.P2Note3 = model.P2Note3;
                     entity.P2Note7 = model.P2Note7;
 
-                    await _uow.SaveChangesAsync();
-
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<WWsFeeDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
                     var result = new WWsFeeDTO
                     {
                         OrganizationId = model.OrganizationId,
@@ -363,7 +379,14 @@ namespace Datiss.Budget.Services
 
             _dbSet.AddRange(result);
 
-            await _uow.SaveChangesAsync();
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new CopyDataBaseException();
+            }
         }
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
