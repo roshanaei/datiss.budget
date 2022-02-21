@@ -418,6 +418,10 @@ namespace Datiss.Budget.Web.Controllers
             {
                 model.AddError(ViewMessages.CopyDestYearHasData);
             }
+            catch (CopyDataBaseException)
+            {
+                model.AddError(ViewMessages.CalculationField);
+            }
             catch (Exception)
             {
                 model.AddError(ViewMessages.SystemError);

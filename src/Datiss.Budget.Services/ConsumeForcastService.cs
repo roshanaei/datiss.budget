@@ -91,7 +91,16 @@ namespace Datiss.Budget.Services
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.UsageLayerId))
                 {
                     await _dbSet.AddAsync(entity);
-                    await _uow.SaveChangesAsync();
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<ConsumeForcastDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
 
                     var result = entity.Adapt<ConsumeForcastDTO>();
                     result.UsageLayerTitle = model.UsageLayerTitle;
@@ -142,8 +151,16 @@ namespace Datiss.Budget.Services
                     entity.AvgConsumeUser = model.AvgConsumeUser;
                     entity.ConsumeUserForcast = model.ConsumeUserForcast;
 
-                    await _uow.SaveChangesAsync();
-
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<ConsumeForcastDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
                     var result = new ConsumeForcastDTO
                     {
                         YearId = model.YearId,
@@ -371,7 +388,14 @@ namespace Datiss.Budget.Services
 
             _dbSet.AddRange(result);
 
-            await _uow.SaveChangesAsync();
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new CopyDataBaseException();
+            }
         }
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
@@ -608,7 +632,17 @@ namespace Datiss.Budget.Services
             }
 
             await _dbSet.AddRangeAsync(records);
-            await _uow.SaveChangesAsync();
+
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelCalculationField)
+                    );
+            }
 
             return ImportResult.Succeed(
                 string.Format(ServiceMessages.ImportExcelSuccess)

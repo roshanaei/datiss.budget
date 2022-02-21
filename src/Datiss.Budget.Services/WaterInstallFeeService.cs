@@ -86,13 +86,21 @@ namespace Datiss.Budget.Services
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.DWaterTypeId))
                 {
                     await _dbSet.AddAsync(entity);
-                    await _uow.SaveChangesAsync();
-
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<WaterInstallFeeDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
                     var result = entity.Adapt<WaterInstallFeeDTO>();
+
                     result.DWaterTypeDisplay = model.DWaterTypeTitle;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-                    result.WInstallFee = entity.WInstallFee;
 
                     return ValidationResult<WaterInstallFeeDTO>.Success(result);
                 }
@@ -127,18 +135,22 @@ namespace Datiss.Budget.Services
                     entity.DWaterTypeId = model.DWaterTypeId;
                     entity.WInstallFee = model.WInstallFee;
 
-                    await _uow.SaveChangesAsync();
-
-                    var result = new WaterInstallFeeDTO
+                    try
                     {
-                        OrganizationId = model.OrganizationId,
-                        YearId = model.YearId,
-                        DWaterTypeId = model.DWaterTypeId,
-                        WInstallFee = model.WInstallFee,
-                        OrganizationDisplay = organizationDisplay,
-                        DWaterTypeDisplay = model.DWaterTypeTitle,
-                        Year = (await _yearSet.FindAsync(model.YearId)).Year
-                    };
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<WaterInstallFeeDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
+
+                    var result = entity.Adapt<WaterInstallFeeDTO>();
+
+                    result.DWaterTypeDisplay = model.DWaterTypeTitle;
+                    result.OrganizationDisplay = organizationDisplay;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
 
                     return ValidationResult<WaterInstallFeeDTO>.Success(result);
                 }
@@ -311,7 +323,14 @@ namespace Datiss.Budget.Services
 
             _dbSet.AddRange(result);
 
-            await _uow.SaveChangesAsync();
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new CopyDataBaseException();
+            }
         }
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
@@ -455,7 +474,17 @@ namespace Datiss.Budget.Services
             }
 
             await _dbSet.AddRangeAsync(records);
-            await _uow.SaveChangesAsync();
+
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelCalculationField)
+                    );
+            }
 
             return ImportResult.Succeed(
                 string.Format(ServiceMessages.ImportExcelSuccess)

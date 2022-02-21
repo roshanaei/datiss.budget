@@ -28,45 +28,47 @@
                         <div class="table-responsive" style="padding-top: 20px;">
                             <table style="width: 100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
                                 <thead class="thead-light">
-                                <tr>
-                                    <th>
-                                        عنوان
-                                    </th>
-                                    <th>نام</th>
-                                    @*<th>تاریخ ایجاد</th>
-                                    <th>وضعیت</th>*@
-                                    <th>عملیات</th>
-                                </tr>
+                                    <tr>
+                                        <th>
+                                            عنوان
+                                        </th>
+                                        <th>نام</th>
+                                        @*<th>تاریخ ایجاد</th>
+                                            <th>وضعیت</th>*@
+                                        <th>عملیات</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                @foreach (var item in Model.Items) {
-                                    <tr>
-                                        <td>
-                                            <span>@item.Title</span>
-                                        </td>
-                                        <td>
-                                            <span>@item.Name</span>
-                                        </td>
-                                        @*<td>
+                                    @foreach (var item in Model.Items)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <span>@item.Title</span>
+                                            </td>
+                                            <td>
+                                                <span>@item.Name</span>
+                                            </td>
+                                            @*<td>
 
-                                        </td>
-                                        <td>
-                                            <span>@item.Status</span>
-                                        </td>*@
-                                        <td>
-                                            <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font"
-                                               asp-controller="@RolesController.Name"
-                                               asp-action="@RolesController.ACTION_Edit"
-                                               asp-route-id="@item.Id">
-                                                <i class="fa ft-edit fa-1x"></i>
-                                            </a>
+                                                </td>
+                                                <td>
+                                                    <span>@item.Status</span>
+                                                </td>*@
+                                            <td>
+                                                <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font"
+                                                   asp-controller="@RolesController.Name"
+                                                   asp-action="@RolesController.ACTION_Edit"
+                                                   asp-route-id="@item.Id">
+                                                    <i class="fa ft-edit fa-1x"></i>
+                                                </a>
 
-                                            <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                                                <i class="fa ft-trash-2"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                }
+                                                <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                                                    <i class="fa ft-trash-2"></i>
+                                                </a>
+
+                                            </td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
 
@@ -87,4 +89,68 @@
     </div>
 
 </section>
+
+@section footSection {
+
+    <script>
+        $(document).on('click', '.delete-row', function () {
+            let id = $(this).data('id');
+            let btn = this;
+
+            Swal.fire({
+                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
+                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
+                type: 'error',
+                showCancelButton: true,
+                animation: false,
+                customClass: 'animated flipInX',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.value) {
+                    deleteRow(btn, id);
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+    });
+
+    function deleteRow(e, id) {
+        $.ajax({
+            url: '@Url.Action(RolesController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+    </script>
+}
 

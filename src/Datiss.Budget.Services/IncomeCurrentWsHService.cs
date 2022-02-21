@@ -101,8 +101,16 @@ namespace Datiss.Budget.Services
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.UserTypeId, model.UsageLayerId))
                 {
                     await _dbSet.AddAsync(entity);
-                    await _uow.SaveChangesAsync();
-
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<IncomeCurrentWsHDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
                     var result = entity.Adapt<IncomeCurrentWsHDTO>();
                     result.UsageLayerDisplay = model.UsageLayerTitle;
                     result.UserTypeDisplay = model.UserTypeTitle;
@@ -171,8 +179,16 @@ namespace Datiss.Budget.Services
                     entity.Note7Income = model.Note7Income;
                     entity.Note7Price = model.Note7Price;
 
-                    await _uow.SaveChangesAsync();
-
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<IncomeCurrentWsHDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
                     var result = new IncomeCurrentWsHDTO
                     {
                         YearId = model.YearId,
@@ -457,7 +473,14 @@ namespace Datiss.Budget.Services
 
             _dbSet.AddRange(result);
 
-            await _uow.SaveChangesAsync();
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new CopyDataBaseException();
+            }
         }
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)

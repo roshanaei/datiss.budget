@@ -145,7 +145,16 @@ namespace Datiss.Budget.Services
                     entity.AverageCapacity = model.AverageCapacity;
                     entity.WInstallationCosts = model.WInstallationCosts;
 
-                    await _uow.SaveChangesAsync();
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<WaterSalesSplitDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
 
                     var result = new WaterSalesSplitDTO
                     {
@@ -379,7 +388,14 @@ namespace Datiss.Budget.Services
 
             _dbSet.AddRange(result);
 
-            await _uow.SaveChangesAsync();
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new CopyDataBaseException();
+            }
         }
 
         public async Task<Stream> ExportExcelAsync(WaterSalesSplitFilterDTO filter)

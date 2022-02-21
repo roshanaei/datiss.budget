@@ -152,7 +152,16 @@ namespace Datiss.Budget.Services
                     entity.WaterNote3Income = model.WaterNote3Income;
                     entity.WNote11Income = model.WNote11Income;
 
-                    await _uow.SaveChangesAsync();
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<IncomeForcastDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
 
                     var result = new IncomeForcastDTO
                     {
@@ -383,7 +392,14 @@ namespace Datiss.Budget.Services
 
             _dbSet.AddRange(result);
 
-            await _uow.SaveChangesAsync();
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new CopyDataBaseException();
+            }
         }
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
