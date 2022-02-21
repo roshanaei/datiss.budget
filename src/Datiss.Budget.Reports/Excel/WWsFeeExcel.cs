@@ -120,6 +120,7 @@ namespace Datiss.Budget.Reports.Excel
             }
 
             var range = sheet.Range(2, 1, row - 1, 14);
+            range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             range.Column(9).Style.NumberFormat.Format = "#,##0";
             range.Column(9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(10).Style.NumberFormat.Format = "#,##0";
