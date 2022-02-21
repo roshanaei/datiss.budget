@@ -300,7 +300,7 @@
         </script>
     }
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
     var userType_Ids = [
         @Html.Raw(Model.UserTypeSourceIdArray)
@@ -433,7 +433,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(WWsFeeController.ACTION_Index)';
+                                document.location.href = '@Url.Action(WasteSalesSplitController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
@@ -829,6 +829,6 @@
             $('#filterForm').submit();
         };
 
-    </script>
+</script>
 
 }
