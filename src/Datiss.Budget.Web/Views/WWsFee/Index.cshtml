@@ -765,8 +765,12 @@
 
                 },
                 error: function(request, options, err) {
-                    console.log(err);
-                    alert('مشکلی به وجود آمده است ،لطفا مجددا عملیات را تکرار کنید . با تشکر');
+                    $(".olvy").css("display", "none");
+                    if (request.status == 401 || request.status == 403) {
+                        ShowPermissionErorr();
+                        return;
+                    }
+                    ShowCommonErorr();
                 }
             });
 
