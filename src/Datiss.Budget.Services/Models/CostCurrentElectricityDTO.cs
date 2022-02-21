@@ -20,6 +20,11 @@ namespace Datiss.Budget.Services.Models
         public long ElectricityCost { get; set; }
     }
 
+    public class UpdateCostCurrentElectricityDTO : CreateCostCurrentElectricityDTO
+    {
+        public int Id { get; set; }
+    }
+
     public class CostCurrentElectricityDTO
     {
         public int Id { get; set; }
