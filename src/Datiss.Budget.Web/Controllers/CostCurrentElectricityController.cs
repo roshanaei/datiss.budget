@@ -28,6 +28,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
+        public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
@@ -330,6 +331,31 @@ namespace Datiss.Budget.Web.Controllers
                 hasError = false,
                 message = ViewMessages.DeleteRowSuccess
             });
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Calculation(CalculationInputViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var result = await _costCurrentElectricityService.CalculationAsync(
+                model.YearId,
+                model.OrganizationId);
+
+            List<CalculationResultViewModel> viewModel = new List<CalculationResultViewModel>();
+            foreach (var item in result)
+            {
+                viewModel.Add(
+                    new CalculationResultViewModel
+                    {
+                        Result = item.Value,
+                        DecimalResult = item.DecimalValue,
+                        Title = getCalcTitle(item.Key)
+                    }
+                );
+            }
+
+            return PartialView("_calculationModal", viewModel);
         }
 
 
