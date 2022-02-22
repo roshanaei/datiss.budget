@@ -27,6 +27,11 @@ namespace Datiss.Budget.ViewModels
 
         public IEnumerable<SelectListItem> ActivityTypeSource => EnumSelectListProvider.GetActivityTypeItems(ActivityType);
     }
+
+    public class UpdateCostCurrentElectricityViewModel : CreateCostCurrentElectricityViewModel
+    {
+        public int Id { get; set; }
+    }
     public class CostCurrentElectricityViewModel
     {
         public int Id { get; set; }
