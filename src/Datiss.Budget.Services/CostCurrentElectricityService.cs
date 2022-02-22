@@ -59,6 +59,12 @@ namespace Datiss.Budget.Services
         private IQueryable<CostCurrentElectricity> Query()
             => _dbSet.AsNoTracking();
 
+        public async Task<CostCurrentElectricity> GetByIdAsync(int id)
+        {
+            var entity = await _dbSet.FindAsync(id);
+            return await Task.FromResult(entity);
+        }
+
         public async Task<ValidationResult<CostCurrentElectricityDTO>> CreateAsync(CreateCostCurrentElectricityDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
