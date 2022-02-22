@@ -5,12 +5,16 @@ using Datiss.Budget.Entities;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Enum;
 using Datiss.Budget.Extensions;
+using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
 using LinqKit;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -51,6 +55,58 @@ namespace Datiss.Budget.Services
 
         private IQueryable<CostCurrentElectricity> Query()
             => _dbSet.AsNoTracking();
+
+
+        public async Task<ValidationResult<CostCurrentElectricityDTO>> CreateAsync(CreateCostCurrentElectricityDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var entity = new CostCurrentElectricity
+            {
+                YearId = model.YearId,
+                OrganizationId = model.OrganizationId,
+                ActivityType = model.ActivityType,
+                ElectricityAmount = model.ElectricityAmount,
+                ElectricityCost = model.ElectricityCost
+            };
+
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ActivityType))
+                {
+                    await _dbSet.AddAsync(entity);
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<CostCurrentElectricityDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
+                    var result = entity.Adapt<CostCurrentElectricityDTO>();
+                    result.OrganizationDisplay = organizationDisplay;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.ActivityType = entity.ActivityType;
+                    result.ElectricityAmount = entity.ElectricityAmount;
+                    result.ElectricityCost = entity.ElectricityCost;
+
+                    return ValidationResult<CostCurrentElectricityDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<CostCurrentElectricityDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+            return ValidationResult<CostCurrentElectricityDTO>.Failed(
+                string.Format(ServiceMessages.Logic_ActivityDuplicate,
+                model.ActivityType.ToDisplay(), organizationDisplay)
+                );
+        }
 
 
         #region Private Helper Methods
