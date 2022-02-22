@@ -241,6 +241,44 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task<PagedResult<CostCurrentElectricityDTO>> GetListAsync(CostCurrentElectricityFilterDTO filter)
+        {
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var result = new PagedResult<CostCurrentElectricityDTO>
+            {
+                PageSize = filter.PageSize,
+                PageNumber = filter.PageNumber
+            };
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            result.TotalCount = await query.CountAsync();
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            query = query
+                .Skip(filter.StartIndex)
+                .Take(filter.PageSize);
+
+            result.Items = await query.Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Select(x => new CostCurrentElectricityDTO
+                                    {
+                                        Id = x.Id,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        ActivityType = x.ActivityType,
+                                        ElectricityAmount = x.ElectricityAmount,
+                                        ElectricityCost = x.ElectricityCost
+                                    }).ToListAsync();
+
+            return await Task.FromResult(result);
+        }
 
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentElectricity>> setFilter(
