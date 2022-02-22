@@ -56,4 +56,16 @@ namespace Datiss.Budget.ViewModels
 
         public string ElectricityCostDisplay => ElectricityCost.ToString("N0");
     }
+
+    public class CostCurrentElectricityFilterViewModel : FilterViewModel
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public ActivityType? ActivityType { get; set; }
+
+        public IList<SelectListItem> YearSource { get; set; }
+        public IList<SelectListItem> OrganizationSource { get; set; }
+        public IList<SelectListItem> ActivityTypeSource => EnumSelectListProvider.GetActivityTypeItems(ActivityType).ToList();
+    }
+
 }
