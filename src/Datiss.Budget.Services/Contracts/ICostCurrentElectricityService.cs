@@ -30,8 +30,6 @@ namespace Datiss.Budget.Services.Contracts
 
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId, ActivityType activityType);
 
-        Task<Stream> ExportExcelAsync(CostCurrentElectricityFilterDTO filter);
-
         Task<IEnumerable<CostCurrentElectricityDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
         Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, ActivityType activityType, bool continueIfAnyOrgMissing = false);

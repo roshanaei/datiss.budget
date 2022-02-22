@@ -59,7 +59,6 @@ namespace Datiss.Budget.Services
         private IQueryable<CostCurrentElectricity> Query()
             => _dbSet.AsNoTracking();
 
-
         public async Task<ValidationResult<CostCurrentElectricityDTO>> CreateAsync(CreateCostCurrentElectricityDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
@@ -453,6 +452,38 @@ namespace Datiss.Budget.Services
             return ImportResult.Succeed(
                 string.Format(ServiceMessages.ImportExcelSuccess)
                 );
+        }
+
+        public async Task<IEnumerable<CostCurrentElectricityDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        {
+            var filter = new CostCurrentElectricityFilterDTO
+            {
+                OrganizationId = organizationId,
+                YearId = yearId
+            };
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, "getexport", filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Select(x => new CostCurrentElectricityDTO
+                                    {
+                                        Id = x.Id,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        ActivityType = x.ActivityType,
+                                        ElectricityAmount = x.ElectricityAmount,
+                                        ElectricityCost = x.ElectricityCost
+                                    }).ToListAsync();
+            return items;
         }
 
         #region Private Helper Methods
