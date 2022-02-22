@@ -10,11 +10,13 @@ using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
 using LinqKit;
 using Mapster;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -339,6 +341,118 @@ namespace Datiss.Budget.Services
             {
                 throw new CopyDataBaseException();
             }
+        }
+
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, ActivityType activityType, bool continueIfAnyOrgMissing = false)
+        {
+            var data = await _excelService.ImportAsync<CostCurrentElectricityImportModel>
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
+
+            var records = data.Adapt<List<CostCurrentElectricity>>();
+
+            int rowIndex = 1;
+
+            var descendents = await _organizationService
+                 .GetAllDescendentsAsync(_userContext.OrganizationId);
+
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
+
+            foreach (var rec in records)
+            {
+                rec.YearId = yearId;
+                rec.ActivityType = activityType;
+                var org = await _orgDbSet.FindAsync(rec.OrganizationId);
+                if (year == null || year.Status == EntityStatus.Disbaled)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
+                        );
+                }
+                if (org == null)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
+                        );
+                }
+                if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
+                        );
+                }
+
+                rowIndex++;
+            }
+
+            rowIndex = 1;
+
+            if (!continueIfAnyOrgMissing)
+            {
+                var missingOrgs = new List<Organization>();
+
+                foreach (var item in descendents)
+                {
+                    var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                    if (!existInExcel)
+                        if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                            missingOrgs.Add(item);
+                }
+
+                if (missingOrgs.Any())
+                {
+                    string orgNames = "";
+                    foreach (var item in missingOrgs)
+                    {
+                        orgNames += "- " + item.Title + "<br>";
+                    }
+
+                    return new ImportResult
+                    {
+                        Message = orgNames,
+                        AskToImport = true
+                    };
+                }
+            }
+
+            foreach (var record in records)
+            {
+
+                if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
+                        );
+
+                if (!await checkLogicAsync(
+                    record.YearId,
+                    record.OrganizationId,
+                    record.ActivityType))
+                {
+
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
+                        );
+                }
+
+                rowIndex++;
+            }
+
+            await _dbSet.AddRangeAsync(records);
+
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelCalculationField)
+                    );
+            }
+
+            return ImportResult.Succeed(
+                string.Format(ServiceMessages.ImportExcelSuccess)
+                );
         }
 
         #region Private Helper Methods
