@@ -3,6 +3,7 @@ using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
 using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -54,7 +55,7 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("[action]")]
         [HasPermission(claimType: Name, PermissionActionType.Create)]
-        public async Task<IActionResult> Create(CreateCostCurrenetElectricityViewModel model)
+        public async Task<IActionResult> Create(CreateCostCurrentElectricityViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -71,9 +72,33 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            return Json(result.Result.Adapt<CreateCostCurrenetElectricityViewModel>());
+            return Json(result.Result.Adapt<CreateCostCurrentElectricityViewModel>());
         }
 
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Edit)]
+        public async Task<IActionResult> Edit(UpdateNHCoViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+
+            var data = model.Adapt<UpdateCostCurrentElectricityDTO>();
+            var result = await _costCurrentElectricityService.UpdateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(
+                result.Result.Adapt<CostCurrentElectricityViewModel>()
+            );
+        }
 
         #region Private Helper Methods
         private string getCalcTitle(string key)
