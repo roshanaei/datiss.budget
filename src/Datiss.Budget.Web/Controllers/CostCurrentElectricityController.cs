@@ -449,6 +449,15 @@ namespace Datiss.Budget.Web.Controllers
             return workbook.Deliver("CostCurrentElectricity-Import-Template.xlsx");
         }
 
+        [HttpGet("[action]/{orgid}/{yearid}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
+        {
+            var result = await _costCurrentElectricityService.GetExportItemsAsync(yearid, orgid);
+            if (result.Count() == 0)
+                return RedirectToAction("Index");
+            using var workbook = result.ExportExcel();
+            return workbook.Deliver("CostCurrentElectricity.xlsx");
+        }
 
         #region Private Helper Methods
         private string getCalcTitle(string key)
