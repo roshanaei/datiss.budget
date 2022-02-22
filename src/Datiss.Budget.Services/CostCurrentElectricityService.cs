@@ -108,6 +108,56 @@ namespace Datiss.Budget.Services
                 );
         }
 
+        public async Task<ValidationResult<CostCurrentElectricityDTO>> UpdateAsync(UpdateCostCurrentElectricityDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ActivityType, model.Id))
+                {
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.YearId = model.YearId;
+                    entity.ActivityType = model.ActivityType;
+                    entity.ElectricityAmount = model.ElectricityAmount;
+                    entity.ElectricityCost = model.ElectricityCost;
+
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<CostCurrentElectricityDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
+                    var result = new CostCurrentElectricityDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        ActivityType = model.ActivityType,
+                        ElectricityAmount = model.ElectricityAmount,
+                        ElectricityCost = model.ElectricityCost,
+                        OrganizationDisplay = organizationDisplay,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
+
+                    return ValidationResult<CostCurrentElectricityDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<CostCurrentElectricityDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+            return ValidationResult<CostCurrentElectricityDTO>.Failed(
+                string.Format(ServiceMessages.Logic_ActivityDuplicate,
+                model.ActivityType.ToDisplay(), organizationDisplay)
+                );
+        }
 
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentElectricity>> setFilter(
