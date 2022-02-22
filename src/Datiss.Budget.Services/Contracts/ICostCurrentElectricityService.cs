@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Datiss.Budget.Services.Excel
+namespace Datiss.Budget.Services.Contracts
 {
     public interface ICostCurrentElectricityService
     {
