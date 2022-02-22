@@ -1,6 +1,8 @@
-﻿using Datiss.Budget.Common.Exceptions;
+﻿using ClosedXML.Extensions;
+using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Enum;
+using Datiss.Budget.Reports.Excel;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
@@ -423,6 +425,30 @@ namespace Datiss.Budget.Web.Controllers
 
             return Json(model);
         }
+
+        [HttpGet("import/template/{yearId}/{activity}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, ActivityType activity, int? orgId)
+        {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+
+            var items = new List<CostCurrentElectricityDTO>();
+
+            foreach (var org in organizations)
+            {
+                items.Add(new CostCurrentElectricityDTO
+                {
+                    OrganizationId = org.Id,
+                    OrganizationDisplay = org.Title,
+                    ActivityType = activity,
+                    Year = year.Year,
+                    YearId = year.Id
+                });
+            }
+            using var workbook = items.GetImportTemplate(year.Year, activity);
+            return workbook.Deliver("CostCurrentElectricity-Import-Template.xlsx");
+        }
+
 
         #region Private Helper Methods
         private string getCalcTitle(string key)
