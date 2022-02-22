@@ -1,6 +1,9 @@
 ﻿using Datiss.Budget.Resources;
+using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Services.Models;
+using Mapster;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -47,6 +50,28 @@ namespace Datiss.Budget.Web.Controllers
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
+        }
+
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
+        public async Task<IActionResult> Create(CreateCostCurrenetElectricityViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+            var data = model.Adapt<CreateCostCurrentElectricityDTO>();
+
+            var result = await _costCurrentElectricityService.CreateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(result.Result.Adapt<CreateCostCurrenetElectricityViewModel>());
         }
 
 
