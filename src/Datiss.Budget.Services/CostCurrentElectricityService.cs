@@ -18,6 +18,7 @@ using Mapster;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -210,6 +211,36 @@ namespace Datiss.Budget.Services
 
             return await Task.FromResult(result);
         }
+
+
+        public async Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId)
+        {
+            List<SqlParameter> sqlParams = new List<SqlParameter>
+            {
+                new SqlParameter("YearId", yearId),
+                new SqlParameter("OrganizationId", organizationId)
+            };
+            var result = new List<CalculationItemData>();
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentElectricity_Cal1",
+                Value = await _uow.ExecuteScalar<int>(
+                        "[dbo].[CostCurrentElectricity_Cal1] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentElectricity_Cal2",
+                Value = await _uow.ExecuteScalar<int>(
+                        "[dbo].[CostCurrentElectricity_Cal2] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
+            });
+
+            return await Task.FromResult(result);
+        }
+
 
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentElectricity>> setFilter(
