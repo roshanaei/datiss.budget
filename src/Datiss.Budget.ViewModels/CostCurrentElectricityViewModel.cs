@@ -68,7 +68,7 @@ namespace Datiss.Budget.ViewModels
         public IList<SelectListItem> ActivityTypeSource => EnumSelectListProvider.GetActivityTypeItems(ActivityType).ToList();
     }
 
-    public class CostCurrentElectricityIndexViewModel : PagedViewModel<NHCoViewModel>
+    public class CostCurrentElectricityIndexViewModel : PagedViewModel<CostCurrentElectricityViewModel>
     {
         public CostCurrentElectricityIndexViewModel()
         {
