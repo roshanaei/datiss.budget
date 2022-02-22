@@ -1,4 +1,5 @@
-﻿using Datiss.Budget.Resources;
+﻿using Datiss.Budget.Enum;
+using Datiss.Budget.Resources;
 using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
@@ -77,7 +78,7 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("[action]")]
         [HasPermission(claimType: Name, PermissionActionType.Edit)]
-        public async Task<IActionResult> Edit(UpdateNHCoViewModel model)
+        public async Task<IActionResult> Edit(UpdateCostCurrentElectricityViewModel model)
         {
 
             if (!ModelState.IsValid)
@@ -98,6 +99,84 @@ namespace Datiss.Budget.Web.Controllers
             return Json(
                 result.Result.Adapt<CostCurrentElectricityViewModel>()
             );
+        }
+
+        [HttpGet("{page?}")]
+        [HasPermission(claimType: Name, PermissionActionType.List)]
+        public async Task<IActionResult> Index(int page = 1)
+        {
+            var filter = new CostCurrentElectricityFilterDTO();
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+              .Adapt<List<DropDownItemViewModel>>();
+            int firstOrgId = orgSource.FirstOrDefault().Id;
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(_ => _.Id);
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
+
+            filter.YearId = maxYear;
+            filter.OrganizationId = firstOrgId;
+            filter.ActivityType = ActivityType.Water;
+
+            var myfilter = TempData.Get<CostCurrentElectricityFilterViewModel>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<CostCurrentElectricityFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
+
+            var result = await _costCurrentElectricityService.GetListAsync(filter);
+            var model = result.Adapt<CostCurrentElectricityIndexViewModel>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+
+            model.Filter.YearId = filter.YearId;
+            model.Filter.OrganizationId = filter.OrganizationId;
+            model.Filter.PageNumber = filter.PageNumber;
+            model.Filter.PageSize = filter.PageSize;
+            model.Filter.ActivityType = filter.ActivityType;
+            return View(model);
+        }
+
+        [HttpPost("{page?}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(CostCurrentElectricityIndexViewModel model, int page = 1)
+        {
+            model.Filter.PageNumber = 1;
+            var filter = model.Filter.Adapt<CostCurrentElectricityFilterDTO>();
+
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _costCurrentElectricityService.GetListAsync(filter);
+            model = result.Adapt<CostCurrentElectricityIndexViewModel>();
+            model.Filter = filter.Adapt<CostCurrentElectricityFilterViewModel>();
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+               .Adapt<List<DropDownItemViewModel>>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+
+            return View(model);
         }
 
         #region Private Helper Methods
