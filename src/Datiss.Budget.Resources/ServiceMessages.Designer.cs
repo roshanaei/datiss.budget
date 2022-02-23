@@ -232,6 +232,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ماده مصرفی های &lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelConsumableTypeOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelConsumableTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to قطر لوله های :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelDiameterPipeOrgNotInExcel {
@@ -282,6 +291,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelInvalidCofficient {
             get {
                 return ResourceManager.GetString("ImportExcelInvalidCofficient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل کد ماده مصرفی &quot;{1}&quot; معتبر نیست..
+        /// </summary>
+        public static string ImportExcelInvalidConsumableType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidConsumableType", resourceCulture);
             }
         }
         
@@ -525,6 +543,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_CofficientTypeDuplicate {
             get {
                 return ResourceManager.GetString("Logic_CofficientTypeDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات ماده مصرفی {0} برای بخش &quot;{1}&quot; در &quot;{2}&quot; قبلا ثبت شده است.
+        /// </summary>
+        public static string Logic_ConsumableTypeActivityDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_ConsumableTypeActivityDuplicate", resourceCulture);
             }
         }
         

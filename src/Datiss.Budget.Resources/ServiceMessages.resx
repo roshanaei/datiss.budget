@@ -342,4 +342,13 @@
   <data name="ImportExcelActivityOrgNotInExcel" xml:space="preserve">
     <value>در فایل اکسل شما بخش "{0}" برای "{1}" اطلاعاتی ندارد.</value>
   </data>
+  <data name="ImportExcelInvalidConsumableType" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل کد ماده مصرفی "{1}" معتبر نیست.</value>
+  </data>
+  <data name="Logic_ConsumableTypeActivityDuplicate" xml:space="preserve">
+    <value>اطلاعات ماده مصرفی {0} برای بخش "{1}" در "{2}" قبلا ثبت شده است</value>
+  </data>
+  <data name="ImportExcelConsumableTypeOrgNotInExcel" xml:space="preserve">
+    <value>ماده مصرفی های &lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
 </root>

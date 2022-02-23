@@ -1,4 +1,5 @@
-﻿using Datiss.Budget.Common.Exceptions;
+﻿using Datiss.Budget.Common;
+using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.DataLayer.Context;
 using Datiss.Budget.Entities;
@@ -10,11 +11,13 @@ using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
 using LinqKit;
 using Mapster;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -36,6 +39,8 @@ namespace Datiss.Budget.Services
         private readonly DbSet<CostCurrentConsumable> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
         private readonly DbSet<FinanceYear> _yearSet;
+        private readonly DbSet<Constant> _constSet;
+
 
         public CostCurrentConsumableService(
             IUserContext userContext,
@@ -96,6 +101,7 @@ namespace Datiss.Budget.Services
                     var result = entity.Adapt<CostCurrentConsumableDTO>();
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.ConsumableTypeDisplay = model.ConsumableTypeTitle;
                     result.ActivityType = entity.ActivityType;
                     result.ConsumableTypeId = entity.ConsumableTypeId;
                     result.ConsumableAmount = entity.ConsumableAmount;
@@ -110,9 +116,8 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<CostCurrentConsumableDTO>.Failed(
-                string.Format(ServiceMessages.Logic_ActivityDuplicate,
-                model.ActivityType.ToDisplay(), organizationDisplay)
-                );
+                string.Format(ServiceMessages.Logic_ConsumableTypeActivityDuplicate,
+                model.ConsumableTypeId, model.ActivityType.ToDisplay(), organizationDisplay));
         }
 
         public async Task<ValidationResult<CostCurrentConsumableDTO>> UpdateAsync(UpdateCostCurrentConsumableDTO model)
@@ -152,6 +157,7 @@ namespace Datiss.Budget.Services
                         ConsumableAmount = model.ConsumableAmount,
                         ConsumableCost = model.ConsumableCost,
                         OrganizationDisplay = organizationDisplay,
+                        ConsumableTypeDisplay = model.ConsumableTypeTitle,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
                     };
 
@@ -163,8 +169,8 @@ namespace Datiss.Budget.Services
                 return ValidationResult<CostCurrentConsumableDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
             return ValidationResult<CostCurrentConsumableDTO>.Failed(
-                string.Format(ServiceMessages.Logic_ActivityDuplicate,
-                model.ActivityType.ToDisplay(), organizationDisplay)
+                string.Format(ServiceMessages.Logic_ConsumableTypeActivityDuplicate,
+                model.ConsumableTypeId,model.ActivityType.ToDisplay(), organizationDisplay)
                 );
         }
 
@@ -348,6 +354,163 @@ namespace Datiss.Budget.Services
             {
                 throw new CopyDataBaseException();
             }
+        }
+
+        public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, ActivityType activityType, bool continueIfAnyOrgMissing = false)
+        {
+            var data = await _excelService.ImportAsync<CostCurrentConsumableImportModel>
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
+
+            var records = data.Adapt<List<CostCurrentConsumable>>();
+
+            int rowIndex = 1;
+
+            var descendents = await _organizationService
+                 .GetAllDescendentsAsync(_userContext.OrganizationId);
+
+            var consumabletypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                       x.Parent.ConstantKey == ConstantKeys.__ConsumablesType);
+
+
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull($"Year not found with id: {yearId}");
+
+            foreach (var rec in records)
+            {
+                rec.YearId = yearId;
+                rec.ActivityType = activityType;
+                var org = await _orgDbSet.FindAsync(rec.OrganizationId);
+                if (year == null || year.Status == EntityStatus.Disbaled)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
+                        );
+                }
+                if (org == null)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
+                        );
+                }
+                if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
+                        );
+                }
+                if (!await consumabletypes.AnyAsync(x => x.Id == rec.ConsumableTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidConsumableType, rowIndex + 2, rec.ConsumableTypeId)
+                        );
+                }
+
+                rowIndex++;
+            }
+
+            var existOrgs = new List<Organization>();
+
+            var missingConsumableType = new List<Constant>();
+            string orgTitle = "";
+
+            foreach (var org in existOrgs)
+            {
+                if (!string.IsNullOrWhiteSpace(orgTitle))
+                {
+                    break;
+                }
+                foreach (var item in consumabletypes)
+                {
+                    var existConsumableTypeInExcel = records.Any(_ => _.ConsumableTypeId == item.Id &&
+                                              _.OrganizationId == org.Id);
+                    if (!existConsumableTypeInExcel)
+                    {
+                        missingConsumableType.Add(item);
+                        orgTitle = org.Title;
+                    }
+
+                }
+            }
+            if (missingConsumableType.Any())
+            {
+                string consumableTypeNames = "";
+                foreach (var item in missingConsumableType)
+                {
+                    consumableTypeNames += "- [" + item.Title + "]<br>";
+                }
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelConsumableTypeOrgNotInExcel, consumableTypeNames, orgTitle));
+            }
+            //end
+
+            rowIndex = 1;
+
+            if (!continueIfAnyOrgMissing)
+            {
+                var missingOrgs = new List<Organization>();
+
+                foreach (var item in descendents)
+                {
+                    var existInExcel = records.Any(_ => _.OrganizationId == item.Id);
+                    if (!existInExcel)
+                        if (item.Type == Enum.OrganizationType.City || item.Type == Enum.OrganizationType.Village)
+                            missingOrgs.Add(item);
+                }
+
+                if (missingOrgs.Any())
+                {
+                    string orgNames = "";
+                    foreach (var item in missingOrgs)
+                    {
+                        orgNames += "- " + item.Title + "<br>";
+                    }
+
+                    return new ImportResult
+                    {
+                        Message = orgNames,
+                        AskToImport = true
+                    };
+                }
+            }
+
+            foreach (var record in records)
+            {
+
+                if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
+                        );
+
+                if (!await checkLogicAsync(
+                    record.YearId,
+                    record.OrganizationId,
+                    record.ActivityType))
+                {
+
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.TableHasBaseData)
+                        );
+                }
+
+                rowIndex++;
+            }
+
+            await _dbSet.AddRangeAsync(records);
+
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.ImportExcelCalculationField)
+                    );
+            }
+
+            return ImportResult.Succeed(
+                string.Format(ServiceMessages.ImportExcelSuccess)
+                );
         }
 
         #region Private Helper Methods
