@@ -66,11 +66,11 @@ namespace Datiss.Budget.ViewModels
 
         public int ConsumableAmount { get; set; }
 
-        public string ConsumableAmountDisaplay => ConsumableAmount.ToString("N0");
+        public string ConsumableAmountDisplay => ConsumableAmount.ToString("N0");
 
         public long ConsumableCost { get; set; }
 
-        public string ConsumableCostDisaplay => ConsumableCost.ToString("N0");
+        public string ConsumableCostDisplay => ConsumableCost.ToString("N0");
 
     }
 
