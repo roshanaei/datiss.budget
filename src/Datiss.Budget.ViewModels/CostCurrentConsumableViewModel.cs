@@ -7,6 +7,25 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.ViewModels
 {
+    public class CreateCostCurrentConsumableViewModel : BaseViewModel
+    {
+        public int YearId { get; set; }
+
+        public string YearDisplay { get; set; }
+
+        public int OrganizationId { get; set; }
+
+        public string OrganizationDisplay { get; set; }
+
+        public int ConsumableTypeId { get; set; }
+
+        public string ConsumableTypeDisplay { get; set; }
+
+        public int ConsumableAmount { get; set; }
+
+        public long ConsumableCost { get; set; }
+    }
+
     public class CostCurrentConsumableViewModel
     {
         public int Id { get; set; }
