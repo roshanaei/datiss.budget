@@ -133,6 +133,24 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to مجموع ماده مصرفی.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal1 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع مبلغ.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal2 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to مجموع هزینه برق مصرفی (کیلووات ساعت).
         /// </summary>
         public static string CostCurrentElectricity_Cal1 {
