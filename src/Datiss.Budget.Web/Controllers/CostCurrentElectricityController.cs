@@ -10,6 +10,7 @@ using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,6 +21,8 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Web.Controllers
 {
+    [Authorize]
+    [Route("[controller]")]
     public class CostCurrentElectricityController : Controller
     {
         public const string Name = "CostCurrentElectricity";
@@ -78,7 +81,7 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            return Json(result.Result.Adapt<CreateCostCurrentElectricityViewModel>());
+            return Json(result.Result.Adapt<CostCurrentElectricityViewModel>());
         }
 
         [HttpPost("[action]")]

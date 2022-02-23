@@ -101,7 +101,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu" style="width:200%">
+                                        <div class="dropdown-menu" style="width:220%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -224,7 +224,7 @@
         </script>
     }
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function () {
             console.log('ready');
@@ -469,6 +469,32 @@
             });
         });
 
+        $(document).on('click', '.calculation-button', function() {
+            let model = {};
+            model.yearId = $('#yearId').val();
+            model.organizationId = $('#organizationId').val();
+
+            console.log(model);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(CostCurrentElectricityController.ACTION_Calculation)',
+                data: model,
+                success: function (data, status, settings) {
+                    $('#divCalc').html('');
+                    $('#divCalc').html(data);
+                    $('#CalculationModal').modal('show');
+                    $('#CalculationModal').on('hidden.bs.modal', function () {
+                        $('#divCalc').html('');
+                        $('.modal-backdrop').remove();
+                    });
+                },
+                error: function (request, options, err) {
+                    console.log(err);
+                    $('#divCalc').html('failed to load content.');
+                }
+            });
+        });
 
         $(document).on('click', '#btnDoImportExcel', function() {
             var fdata = new FormData();
@@ -680,6 +706,6 @@
             $('#filterForm').submit();
         };
 
-    </script>
+</script>
 
 }

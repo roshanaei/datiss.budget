@@ -48,8 +48,8 @@
         if (rowData != null) {
             $('#inputYear_' + id).val(rowData.yearId);
             $('#inputOrg_' + id).val(rowData.organizationId);
-            $('#inputP1Capacity_' + id).val(rowData.electricityAmount);
-            $('#inputFixCostCo_' + id).val(rowData.electricityCost);
+            $('#inputElectricityAmount_' + id).val(rowData.electricityAmount);
+            $('#inputElectricityCost_' + id).val(rowData.electricityCost);
         }
 
         //Show output elements
@@ -81,7 +81,7 @@
         model.activityType = $('#activityType option:selected').val();
         model.organizationId = $('#inputOrg_' + id).val();
         model.electricityAmount = $('#inputElectricityAmount_' + id).val();
-        model.electricityCost = $('#inputelEctricityCost_' + id).val();
+        model.electricityCost = $('#inputElectricityCost_' + id).val();
 
         $.ajax({
             url: '@Url.Action(CostCurrentElectricityController.ACTION_Edit)',
@@ -137,7 +137,7 @@
         if (model.electricityAmount == "") {
             model.electricityAmount = 0;
         }
-        model.electricityCost = $(e).find('#inputelectricityCost_').val();
+        model.electricityCost = $(e).find('#inputElectricityCost_').val();
         if (model.electricityCost == "") {
             model.electricityCost = 0;
         }
@@ -162,6 +162,8 @@
                     });
                     return;
                 }
+
+                console.log(data);
 
                 //Year
                 $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
