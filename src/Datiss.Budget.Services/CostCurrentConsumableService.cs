@@ -288,6 +288,67 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId, ActivityType activityType)
+        {
+
+            if (sourceYearId == destYearId)
+                throw new CopySameYearException();
+            if (destYearId < sourceYearId)
+                throw new CopyDestYearExxeption();
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId, activityType))
+                throw new CopyOrgNullDataException();
+            var result = new List<CostCurrentConsumable>();
+
+            if (await Query()
+                        .Where(_ => _.OrganizationId == sourceOrgId)
+                        .Where(_ => _.YearId == destYearId)
+                        .Where(_ => _.ActivityType == activityType)
+                        .AnyAsync())
+                throw new CopyDestYearHasDataException();
+
+            var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
+                                        .Where(_ => _.YearId == sourceYearId)
+                                        .Where(_ => _.ActivityType == activityType)
+                                        .ToListAsync();
+
+            if (selfData.Any())
+            {
+                foreach (var item in selfData)
+                {
+                    if (!await checkLogicAsync(destYearId, item.OrganizationId, item.ActivityType))
+                        throw new CopyDestYearHasDataException();
+
+                    var entity = new CostCurrentConsumable
+                    {
+                        OrganizationId = item.OrganizationId,
+                        YearId = destYearId,
+                        ActivityType = item.ActivityType,
+                        ConsumableTypeId = item.ConsumableTypeId,
+                        ConsumableAmount = item.ConsumableAmount,
+                        ConsumableCost = item.ConsumableCost
+                    };
+                    result.Add(entity);
+                }
+            }
+
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId, activityType);
+
+            if (childrens.Any())
+            {
+                result.AddRange(childrens);
+            }
+
+            _dbSet.AddRange(result);
+
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch
+            {
+                throw new CopyDataBaseException();
+            }
+        }
 
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentConsumable>> setFilter(
