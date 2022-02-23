@@ -26,6 +26,10 @@ namespace Datiss.Budget.ViewModels
         public long ConsumableCost { get; set; }
     }
 
+    public class UpdateCostCurrentConsumableViewModel : CreateCostCurrentConsumableViewModel
+    {
+        public int Id { get; set; }
+    }
     public class CostCurrentConsumableViewModel
     {
         public int Id { get; set; }
