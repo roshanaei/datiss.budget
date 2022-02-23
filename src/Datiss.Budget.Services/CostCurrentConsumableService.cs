@@ -513,6 +513,39 @@ namespace Datiss.Budget.Services
                 );
         }
 
+        public async Task<IEnumerable<CostCurrentConsumableDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        {
+            var filter = new CostCurrentConsumableFilterDTO
+            {
+                OrganizationId = organizationId,
+                YearId = yearId
+            };
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, "getexport", filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Select(x => new CostCurrentConsumableDTO
+                                    {
+                                        Id = x.Id,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        ActivityType = x.ActivityType,
+                                        ConsumableTypeId = x.ConsumableTypeId,
+                                        ConsumableAmount = x.ConsumableAmount,
+                                        ConsumableCost = x.ConsumableCost
+                                    }).ToListAsync();
+            return items;
+        }
+
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentConsumable>> setFilter(
             IQueryable<CostCurrentConsumable> query,
@@ -578,7 +611,8 @@ namespace Datiss.Budget.Services
                                 .OrderBy(x => x.ActivityType)
                                 .ThenBy(x => x.Organization.DisplayOrder)
                                 .ThenBy(x => x.Organization.Type)
-                                .ThenBy(x => x.Organization.ParentId);
+                                .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.ConsumableType.DisplayOrder);
                 default:
                     return query.Include(x => x.Organization)
                                 .OrderBy(x => x.Organization.DisplayOrder)
