@@ -114,6 +114,58 @@ namespace Datiss.Budget.Services
                 );
         }
 
+        public async Task<ValidationResult<CostCurrentConsumableDTO>> UpdateAsync(UpdateCostCurrentConsumableDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ActivityType, model.Id))
+                {
+                    var entity = await _dbSet.FindAsync(model.Id);
+                    entity.OrganizationId = model.OrganizationId;
+                    entity.YearId = model.YearId;
+                    entity.ActivityType = model.ActivityType;
+                    entity.ConsumableTypeId = model.ConsumableTypeId;
+                    entity.ConsumableAmount = model.ConsumableAmount;
+                    entity.ConsumableCost = model.ConsumableCost;
+
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<CostCurrentConsumableDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
+                    var result = new CostCurrentConsumableDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        ActivityType = model.ActivityType,
+                        ConsumableTypeId = model.ConsumableTypeId,
+                        ConsumableAmount = model.ConsumableAmount,
+                        ConsumableCost = model.ConsumableCost,
+                        OrganizationDisplay = organizationDisplay,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
+
+                    return ValidationResult<CostCurrentConsumableDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<CostCurrentConsumableDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+            return ValidationResult<CostCurrentConsumableDTO>.Failed(
+                string.Format(ServiceMessages.Logic_ActivityDuplicate,
+                model.ActivityType.ToDisplay(), organizationDisplay)
+                );
+        }
 
 
         #region Private Helper Methods
