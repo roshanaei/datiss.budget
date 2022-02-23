@@ -9,30 +9,29 @@
         resetTableBackColor("my-table");
 
         let row = $('#row_' + id);
-        //row.css('background-color', '#7598f3');
 
         //Hide output elements
         $('#divOutput_Year_' + id).hide();
-        $('#divOutput_UserType_' + id).hide();
-        $('#divOutput_SubW_' + id).hide();
-        $('#divOutput_SubWs_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_ElectricityAmount_' + id).hide();
+        $('#divOutput_ElectricityCost_' + id).hide();
 
         //show input elements
         $('#divInput_Year_' + id).show();
-        $('#divInput_UserType_' + id).show();
-        $('#divInput_SubW_' + id).show();
-        $('#divInput_SubWs_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_ElectricityAmount_' + id).show();
+        $('#divInput_ElectricityCost_' + id).show();
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
 
-        rowData = {};
+        rowData = {}
         rowData.yearId = $('#inputYear_' + id).val();
-        rowData.userTypeId = $('#inputUserType_' + id).val();
-        rowData.subW = $('#inputSubW_' + id).val();
-        rowData.subWs = $('#inputSubWs_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.electricityAmount = $('#inputElectricityAmount_' + id).val();
+        rowData.electricityCost = $('#inputElectricityCost_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -41,23 +40,23 @@
 
         //Hide input elements
         $('#divInput_Year_' + id).hide();
-        $('#divInput_UserType_' + id).hide();
-        $('#divInput_SubW_' + id).hide();
-        $('#divInput_SubWs_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_ElectricityAmount_' + id).hide();
+        $('#divInput_ElectricityCost_' + id).hide();
 
-        //Reverting to OriginalData
+        //Retriving to OriginalData 
         if (rowData != null) {
             $('#inputYear_' + id).val(rowData.yearId);
-            $('#inputUserType_' + id).val(rowData.userTypeId);
-            $('#inputSubW_' + id).val(rowData.subW);
-            $('#inputSubWs_' + id).val(rowData.subWs);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputElectricityAmount_' + id).val(rowData.electricityAmount);
+            $('#inputElectricityCost_' + id).val(rowData.electricityCost);
         }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
-        $('#divOutput_UserType_' + id).show();
-        $('#divOutput_SubW_' + id).show();
-        $('#divOutput_SubWs_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_ElectricityAmount_' + id).show();
+        $('#divOutput_ElectricityCost_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -79,12 +78,13 @@
         var model = {};
         model.id = id;
         model.yearId = $('#inputYear_' + id).val();
-        model.userTypeId = $('#inputUserType_' + id).val();
-        model.subW = $('#inputSubW_' + id).val();
-        model.subWs = $('#inputSubWs_' + id).val();
+        model.activityType = $('#activityType option:selected').val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.electricityAmount = $('#inputElectricityAmount_' + id).val();
+        model.electricityCost = $('#inputElectricityCost_' + id).val();
 
         $.ajax({
-            url: '@Url.Action(SubscriptionController.ACTION_Edit)',
+            url: '@Url.Action(CostCurrentElectricityController.ACTION_Edit)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -103,17 +103,16 @@
                 }
 
                 rowData = {};
-                rowData.yearId = model.yearId;
-                rowData.userTypeId = model.userTypeId;
-                rowData.subW = model.subW;
-                rowData.subWs = model.subWs;
+                rowData.yearId = model.yearId
+                rowData.organizationId = model.organizationId;
+                rowData.electricityAmount = model.electricityAmount;
+                rowData.electricityCost = model.electricityCost;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
-                $('#hidUserTypeId_' + id).attr('value', model.userTypeId);
-                $('#spanYear_' + id).text(data.year);
-                $('#spanUserType_' + id).text(data.userTypeDisplay);
-                $('#spanSubW_' + id).text(data.subW);
-                $('#spanSubWs_' + id).text(data.subWs);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanElectricityAmount_' + id).text(data.electricityAmount);
+                $('#spanElectricityCost_' + id).text(data.electricityCost);
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
                 cancelEditRow(id);
@@ -130,24 +129,23 @@
 
     function saveNewRow(e) {
 
-        resetTableBackColor("my-table");
-
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
-        model.userTypeId = $(e).find('#inputUserType_').val();
-        model.subW = $(e).find('#inputSubW_').val();
-        model.subWs = $(e).find('#inputSubWs_').val();
-        if (model.subW == "") {
-            model.subW = 0;
+        model.activityType = $('#activityType option:selected').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.electricityAmount = $(e).find('#inputElectricityAmount_').val();
+        if (model.electricityAmount == "") {
+            model.electricityAmount = 0;
         }
-        if (model.subWs == "") {
-            model.subWs = 0;
+        model.electricityCost = $(e).find('#inputElectricityCost_').val();
+        if (model.electricityCost == "") {
+            model.electricityCost = 0;
         }
 
-        console.log(model);
+        resetTableBackColor("my-table");
 
         $.ajax({
-            url: '@Url.Action(SubscriptionController.ACTION_Create)',
+            url: '@Url.Action(CostCurrentElectricityController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -165,6 +163,8 @@
                     return;
                 }
 
+                console.log(data);
+
                 //Year
                 $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
                 $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
@@ -176,36 +176,36 @@
                 $('#spanYear_' + data.id).text(data.year);
                 $('#divOutput_Year_' + data.id).show();
 
-                //UserType
-                $(e).find('#divInput_UserType_').attr('id', 'divInput_UserType_' + data.id);
-                $(e).find('#hidUserTypeId_').attr('id', 'hidUserTypeId_' + data.id);
-                $(e).find('#inputUserType_').attr('id', 'inputUserType_' + data.id);
-                $(e).find('#divOutput_UserType_').attr('id', 'divOutput_UserType_' + data.id);
-                $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
 
-                $('#divInput_UserType_' + data.id).hide();
-                $('#spanUserType_' + data.id).text(data.userTypeDisplay);
-                $('#divOutput_UserType_' + data.id).show();
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
 
-                //SubW
-                $(e).find('#divInput_SubW_').attr('id', 'divInput_SubW_' + data.id);
-                $(e).find('#inputSubW_').attr('id', 'inputSubW_' + data.id);
-                $(e).find('#divOutput_SubW_').attr('id', 'divOutput_SubW_' + data.id);
-                $(e).find('#spanSubW_').attr('id', 'spanSubW_' + data.id);
+                //ElectricityAmount
+                $(e).find('#divInput_ElectricityAmount_').attr('id', 'divInput_ElectricityAmount_' + data.id);
+                $(e).find('#inputElectricityAmount_').attr('id', 'inputElectricityAmount_' + data.id);
+                $(e).find('#divOutput_ElectricityAmount_').attr('id', 'divOutput_ElectricityAmount_' + data.id);
+                $(e).find('#spanElectricityAmount_').attr('id', 'spanElectricityAmount_' + data.id);
 
-                $('#divInput_SubW_' + data.id).hide();
-                $('#spanSubW_' + data.id).text(data.subW);
-                $('#divOutput_SubW_' + data.id).show();
+                $('#divInput_ElectricityAmount_' + data.id).hide();
+                $('#spanElectricityAmount_' + data.id).text(data.electricityAmount);
+                $('#divOutput_ElectricityAmount_' + data.id).show();
 
-                //SubWs
-                $(e).find('#divInput_SubWs_').attr('id', 'divInput_SubWs_' + data.id);
-                $(e).find('#inputSubWs_').attr('id', 'inputSubWs_' + data.id);
-                $(e).find('#divOutput_SubWs_').attr('id', 'divOutput_SubWs_' + data.id);
-                $(e).find('#spanSubWs_').attr('id', 'spanSubWs_' + data.id);
+                //ElectricityCost
+                $(e).find('#divInput_ElectricityCost_').attr('id', 'divInput_ElectricityCost_' + data.id);
+                $(e).find('#inputElectricityCost_').attr('id', 'inputElectricityCost_' + data.id);
+                $(e).find('#divOutput_ElectricityCost_').attr('id', 'divOutput_ElectricityCost_' + data.id);
+                $(e).find('#spanElectricityCost_').attr('id', 'spanElectricityCost_' + data.id);
 
-                $('#divInput_SubWs_' + data.id).hide();
-                $('#spanSubWs_' + data.id).text(data.subWs);
-                $('#divOutput_SubWs_' + data.id).show();
+                $('#divInput_ElectricityCost_' + data.id).hide();
+                $('#spanElectricityCost_' + data.id).text(data.electricityCost);
+                $('#divOutput_ElectricityCost_' + data.id).show();
 
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);
@@ -253,7 +253,7 @@
             .css('background-color', 'rgb(230 247 228)')
             .show();
 
-        $('.selectUserType:last').select2({
+        $('.selectOrganization:last').select2({
             dir: 'rtl'
         });
 
@@ -267,7 +267,7 @@
 
         let newRowElement = document.getElementById('newRow');
         newRowElement.scrollIntoView();
-        $('.default-input:last').focus();
+        $('.default-input').focus();
 
         isNewRow = true;
     }
@@ -281,7 +281,7 @@
         console.log(e);
 
         $.ajax({
-            url: '@Url.Action(SubscriptionController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(CostCurrentElectricityController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {

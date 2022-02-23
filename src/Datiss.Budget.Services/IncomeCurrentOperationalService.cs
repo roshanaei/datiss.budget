@@ -94,7 +94,7 @@ namespace Datiss.Budget.Services
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ICOTypeId,model.ActivityType))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ICOTypeId, model.ActivityType))
                 {
                     await _dbSet.AddAsync(entity);
                     try
@@ -142,7 +142,7 @@ namespace Datiss.Budget.Services
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ICOTypeId,model.ActivityType, model.Id))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ICOTypeId, model.ActivityType, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.OrganizationId = model.OrganizationId;
@@ -363,7 +363,7 @@ namespace Datiss.Budget.Services
                         PriceNH = item.PriceNH,
                         CostNH = item.CostNH,
                         TotalCount = item.TotalCount,
-                        TotalCost = item.TotalCost                        
+                        TotalCost = item.TotalCost
                     };
                     result.Add(entity);
                 }
@@ -403,7 +403,7 @@ namespace Datiss.Budget.Services
 
             var ciowtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                    x.Parent.ConstantKey == ConstantKeys.__CIOWType);
-            
+
             var ciowstypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                    x.Parent.ConstantKey == ConstantKeys.__CIOWsType);
 
@@ -430,12 +430,12 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
-                if(rec.ActivityType == ActivityType.Water)
+                if (rec.ActivityType == ActivityType.Water)
                 {
                     if (!await ciowtypes.AnyAsync(x => x.Id == rec.ICOTypeId))
                     {
                         return ImportResult.Failed(
-                            string.Format(ServiceMessages.ImportExcelInvalidICOTypeActivity, rowIndex + 2,rec.ActivityType.ToDisplay(), rec.ICOTypeId)
+                            string.Format(ServiceMessages.ImportExcelInvalidICOTypeActivity, rowIndex + 2, rec.ActivityType.ToDisplay(), rec.ICOTypeId)
                             );
                     }
                 }

@@ -1,38 +1,31 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using Datiss.Budget.Services.Contracts;
-using Datiss.Budget.Services.Identity;
-using Datiss.Budget.Services.Contracts.Identity;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
-using Datiss.Budget.Entities.DWH;
-using System.Threading.Tasks;
+﻿using ClosedXML.Extensions;
+using Datiss.Budget.Common.Exceptions;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Enum;
+using Datiss.Budget.Reports.Excel;
 using Datiss.Budget.Resources;
+using Datiss.Budget.Security;
+using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Datiss.Budget.Common;
-using Datiss.Budget.Enum;
-using Datiss.Budget.Extensions;
-using Datiss.Budget.Common.GuardToolkit;
-using Datiss.Budget.Common.Exceptions;
-using Datiss.Budget.Web.Helpers;
-using System.IO;
-using Datiss.Budget.Reports.Excel;
-using ClosedXML.Extensions;
-using Datiss.Budget.Security;
+using System.Threading.Tasks;
 
 namespace Datiss.Budget.Web.Controllers
 {
-
-    [Authorize(Policy = ConstantPolicies.DynamicPermission)]
+    [Authorize]
     [Route("[controller]")]
-    public class WWsFeeController : Controller
+    public class CostCurrentElectricityController : Controller
     {
-        public const string Name = "WWsFee";
+        public const string Name = "CostCurrentElectricity";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
@@ -41,58 +34,46 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
-        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
-        private readonly ILogger<WWsFee> _logger;
+        private readonly ILogger<CostCurrentElectricityController> _logger;
         private readonly IWebHostEnvironment _env;
-        private readonly IConsumeForcastService _consumeForcastService;
-        private readonly IWWsFeeService _wWsFeeService;
-        private readonly IConstantService _constantService;
+        private readonly ICostCurrentElectricityService _costCurrentElectricityService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
         private readonly ISecurityTrimmingService _securityTrimmingService;
 
-        public WWsFeeController(
-            ILogger<WWsFee> logger,
+        public CostCurrentElectricityController(
+            ILogger<CostCurrentElectricityController> logger,
             IWebHostEnvironment environment,
-            IWWsFeeService wWsFeeService,
+            ICostCurrentElectricityService costCurrentElectricityService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
-            IConstantService constantService,
             ISecurityTrimmingService securityTrimmingService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
-            _wWsFeeService = wWsFeeService ?? throw new ArgumentNullException(nameof(wWsFeeService));
+            _costCurrentElectricityService = costCurrentElectricityService ?? throw new ArgumentNullException(nameof(costCurrentElectricityService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
-            _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
 
-
-        private void showMessage(string type, string message)
-        {
-            ViewData["type"] = type;
-            ViewData["message"] = message;
-        }
-
         [HttpPost("[action]")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
-        public async Task<IActionResult> Create(CreateWWsFeeViewModel model)
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
+        public async Task<IActionResult> Create(CreateCostCurrentElectricityViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 model.AddError(ViewMessages.InvalidData);
                 return Json(model);
             }
-            var data = model.Adapt<CreateWWsFeeDTO>();
+            var data = model.Adapt<CreateCostCurrentElectricityDTO>();
 
-            var result = await _wWsFeeService.CreateAsync(data);
+            var result = await _costCurrentElectricityService.CreateAsync(data);
 
             if (!result.IsValid)
             {
@@ -100,13 +81,12 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            return Json(result.Result.Adapt<WWsFeeViewModel>());
+            return Json(result.Result.Adapt<CostCurrentElectricityViewModel>());
         }
 
-
         [HttpPost("[action]")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.Edit)]
-        public async Task<IActionResult> Edit(UpdateWWsFeeViewModel model)
+        [HasPermission(claimType: Name, PermissionActionType.Edit)]
+        public async Task<IActionResult> Edit(UpdateCostCurrentElectricityViewModel model)
         {
 
             if (!ModelState.IsValid)
@@ -115,8 +95,8 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            var data = model.Adapt<UpdateWWsFeeDTO>();
-            var result = await _wWsFeeService.UpdateAsync(data);
+            var data = model.Adapt<UpdateCostCurrentElectricityDTO>();
+            var result = await _costCurrentElectricityService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
@@ -125,69 +105,45 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(
-                result.Result.Adapt<WWsFeeViewModel>()
+                result.Result.Adapt<CostCurrentElectricityViewModel>()
             );
         }
 
         [HttpGet("{page?}")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.List)]
+        [HasPermission(claimType: Name, PermissionActionType.List)]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var filter = new WWsFeeFilterDTO();
-
+            var filter = new CostCurrentElectricityFilterDTO();
             var orgSource = (await _organizationService.GetDropDownDataAsync())
-                .Adapt<List<DropDownItemViewModel>>();
+              .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
 
-
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
-                .Adapt<List<DropDownItemViewModel>>();
-            int maxYear = yearSource.Max(x => x.Id);
-
-            var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
-
-            var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
-            {
-                Id = x.Id,
-                Title = x.Title
-            }).ToList();
-
-            var userTypeKeys = "";
-
-            foreach (var key in userTypeData)
-            {
-                userTypeKeys += $"'{key.ConstantKey}',";
-            }
-
-            ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
-
-            var activity = new ActivityType();
-            var activityTypeSource = EnumSelectListProvider.GetActivityTypeItems(activity);
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(_ => _.Id);
 
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-                .Adapt<List<DropDownItemViewModel>>();
+               .Adapt<List<DropDownItemViewModel>>();
 
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
+            filter.ActivityType = ActivityType.Water;
 
-            var myfilter = TempData.Get<WWsFeeFilterViewModel>(_indexFilterKey);
-
+            var myfilter = TempData.Get<CostCurrentElectricityFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
             {
-                filter = myfilter.Adapt<WWsFeeFilterDTO>();
+                filter = myfilter.Adapt<CostCurrentElectricityFilterDTO>();
                 TempData.Put(_indexFilterKey, myfilter);
             }
 
             filter.PageNumber = page;
 
-            var result = await _wWsFeeService.GetListAsync(filter);
-            var model = result.Adapt<WWsFeeIndexViewModel>();
+            var result = await _costCurrentElectricityService.GetListAsync(filter);
+            var model = result.Adapt<CostCurrentElectricityIndexViewModel>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetActivityTypeSource(activityTypeSource);
-            model.SetUserTypeSource(userTypeSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
@@ -196,23 +152,22 @@ namespace Datiss.Budget.Web.Controllers
             model.Filter.OrganizationId = filter.OrganizationId;
             model.Filter.PageNumber = filter.PageNumber;
             model.Filter.PageSize = filter.PageSize;
-
+            model.Filter.ActivityType = filter.ActivityType;
             return View(model);
         }
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(WWsFeeIndexViewModel model)
+        public async Task<IActionResult> Index(CostCurrentElectricityIndexViewModel model, int page = 1)
         {
-            var filter = model.Filter.Adapt<WWsFeeFilterDTO>();
+            model.Filter.PageNumber = 1;
+            var filter = model.Filter.Adapt<CostCurrentElectricityFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
 
-            var result = await _wWsFeeService.GetListAsync(filter);
-
-            model = result.Adapt<WWsFeeIndexViewModel>();
-
-            model.Filter = filter.Adapt<WWsFeeFilterViewModel>();
+            var result = await _costCurrentElectricityService.GetListAsync(filter);
+            model = result.Adapt<CostCurrentElectricityIndexViewModel>();
+            model.Filter = filter.Adapt<CostCurrentElectricityFilterViewModel>();
 
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
@@ -220,40 +175,21 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var userTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
-
-            var userTypeSource = userTypeData.Select(x => new DropDownItemViewModel
-            {
-                Id = x.Id,
-                Title = x.Title
-            }).ToList();
-            var userTypeKeys = "";
-            foreach (var key in userTypeData)
-            {
-                userTypeKeys += $"'{key.ConstantKey}',";
-            }
-            ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
-
-            var activity = new ActivityType();
-            var activityTypeSource = EnumSelectListProvider.GetActivityTypeItems(activity);
-
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-                .Adapt<List<DropDownItemViewModel>>();
+               .Adapt<List<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
-            model.SetUserTypeSource(userTypeSource);
-            model.SetActivityTypeSource(activityTypeSource);
 
             return View(model);
         }
 
         [HttpPost("[action]")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
-        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model, ActivityType activityType)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -266,9 +202,10 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _wWsFeeService.ImportExcelAsync(
+                var result = await _costCurrentElectricityService.ImportExcelAsync(
                                                                     model.ExcelFile,
                                                                     model.YearId,
+                                                                    activityType,
                                                                     model.ContinueIfAnyOrgMissing);
 
                 if (result.AskToImport)
@@ -300,8 +237,6 @@ namespace Datiss.Budget.Web.Controllers
             }
             catch (ImportExcelFileFormatInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileFormatInvalid);
                 return Json(new
                 {
                     hasError = true,
@@ -310,8 +245,6 @@ namespace Datiss.Budget.Web.Controllers
             }
             catch (ImportExcelFileSizeInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileSizeInvalid);
                 return Json(new
                 {
                     hasError = true,
@@ -322,12 +255,12 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("records/delete")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
-        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
+        [HasPermission(claimType: Name, PermissionActionType.Delete)]
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId, ActivityType activityType)
         {
             try
             {
-                var result = await _wWsFeeService.HardDeleteAsync(yearId, orgId);
+                var result = await _costCurrentElectricityService.HardDeleteAsync(yearId, orgId, activityType);
 
                 return Json(new
                 {
@@ -373,12 +306,12 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]/{id}")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
+        [HasPermission(claimType: Name, PermissionActionType.Delete)]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await _wWsFeeService.HardDeleteAsync(id);
+                await _costCurrentElectricityService.HardDeleteAsync(id);
             }
             catch (DisbaledYearDataInputException)
             {
@@ -405,13 +338,12 @@ namespace Datiss.Budget.Web.Controllers
             });
         }
 
-
         [HttpPost("[action]")]
         public async Task<IActionResult> Calculation(CalculationInputViewModel model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var result = await _wWsFeeService.CalculationAsync(
+            var result = await _costCurrentElectricityService.CalculationAsync(
                 model.YearId,
                 model.OrganizationId);
 
@@ -422,6 +354,7 @@ namespace Datiss.Budget.Web.Controllers
                     new CalculationResultViewModel
                     {
                         Result = item.Value,
+                        DecimalResult = item.DecimalValue,
                         Title = getCalcTitle(item.Key)
                     }
                 );
@@ -431,19 +364,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> DownloadExcelTemplate()
-        {
-            var filePath = $"{_env.WebRootPath}\\Excel\\WWsFeeImport.xlsx";
-
-            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return File(
-                stream,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "WWsFee.xlsx");
-        }
-
-        [HttpGet("[action]")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> Copy()
         {
             var model = new CopyViewModel();
@@ -467,16 +388,17 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Copy(CopyViewModel model)
+        public async Task<IActionResult> Copy(CopyViewModel model, ActivityType activityType)
         {
             model.CheckArgumentIsNull(nameof(model));
 
             try
             {
-                await _wWsFeeService.CopyAsync(
+                await _costCurrentElectricityService.CopyAsync(
                                                     model.SourceYearId,
                                                     model.SourceOrgId,
-                                                    model.TargetYearId);
+                                                    model.TargetYearId,
+                                                    activityType);
                 model.Succeed(ViewMessages.CopySuccess);
             }
             catch (CopySameYearException)
@@ -507,95 +429,48 @@ namespace Datiss.Budget.Web.Controllers
             return Json(model);
         }
 
-        [HttpGet("import/template/{yearId}/{orgId?}")]
-        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        [HttpGet("import/template/{yearId}/{activity}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, ActivityType activity, int? orgId)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var userTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
 
-            var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType, true);
-            var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
-
-            var activity = ActivityType.GetValues<ActivityType>();
-
-            var items = new List<WWsFeeDTO>();
+            var items = new List<CostCurrentElectricityDTO>();
 
             foreach (var org in organizations)
             {
-                foreach (var act in activity)
+                items.Add(new CostCurrentElectricityDTO
                 {
-                    userTypes.Where(ut => ut.ConstantKey == ConstantKeys.__House)
-                        .ToList()
-                        .ForEach(ut => items.AddRange(houseUsageLayer
-                                            .Select(hul => new WWsFeeDTO
-                                            {
-                                                ActivityType = act,
-                                                ActivityTypeDisplay = act.ToDisplay(),
-                                                UserTypeDisplay = ut.Title,
-                                                UserTypeId = ut.Id,
-                                                UsageLayerDisplay = hul.Title,
-                                                UsageLayerId = hul.Id,
-                                                OrganizationId = org.Id,
-                                                OrganizationDisplay = org.Title,
-                                                Year = year.Year,
-                                                YearId = year.Id
-                                            }).ToList())
-                        );
-                    userTypes.Where(ut => ut.ConstantKey != ConstantKeys.__House)
-                        .ToList()
-                        .ForEach(ut => items.AddRange(nhouseUsagelayer
-                                            .Select(hul => new WWsFeeDTO
-                                            {
-                                                ActivityType = act,
-                                                ActivityTypeDisplay = act.ToDisplay(),
-                                                UserTypeDisplay = ut.Title,
-                                                UserTypeId = ut.Id,
-                                                UsageLayerDisplay = hul.Title,
-                                                UsageLayerId = hul.Id,
-                                                OrganizationId = org.Id,
-                                                OrganizationDisplay = org.Title,
-                                                Year = year.Year,
-                                                YearId = year.Id
-                                            }).ToList())
-                        );
-                }
+                    OrganizationId = org.Id,
+                    OrganizationDisplay = org.Title,
+                    ActivityType = activity,
+                    Year = year.Year,
+                    YearId = year.Id
+                });
             }
-            using var workbook = items.GetImportTemplate(year.Year);
-            return workbook.Deliver("WWsFee-Import-Template.xlsx");
+            using var workbook = items.GetImportTemplate(year.Year, activity);
+            return workbook.Deliver("CostCurrentElectricity-Import-Template.xlsx");
         }
 
         [HttpGet("[action]/{orgid}/{yearid}")]
         public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
-            var result = await _wWsFeeService.GetExportItemsAsync(yearid, orgid);
+            var result = await _costCurrentElectricityService.GetExportItemsAsync(yearid, orgid);
             if (result.Count() == 0)
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
-            return workbook.Deliver("WWsFee.xlsx");
-        }
-
-        [HttpPost, Route("GetUsageLayerAsync")]
-        public async Task<JsonResult> GetUsageLayerAsync(string key)
-        {
-            bool isHouse = false;
-            if (key == ConstantKeys.__House)
-                isHouse = true;
-            var result = await _constantService
-                .GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType, isHouse);
-
-            return new JsonResult(result);
+            return workbook.Deliver("CostCurrentElectricity.xlsx");
         }
 
         #region Private Helper Methods
         private string getCalcTitle(string key)
             => key switch
             {
-                //"WaterInstallFees_Cal1" => SPTitles.WaterInstallFees_Cal1,
-                //_ => ""
+                "CostCurrentElectricity_Cal1" => SPTitles.CostCurrentElectricity_Cal1,
+                "CostCurrentElectricity_Cal2" => SPTitles.CostCurrentElectricity_Cal2,
+                _ => ""
             };
         #endregion
-
 
     }
 }

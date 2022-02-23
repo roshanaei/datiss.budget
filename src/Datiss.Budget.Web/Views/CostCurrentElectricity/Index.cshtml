@@ -1,5 +1,5 @@
-﻿@model WWsFeeIndexViewModel
-@{ ViewData["Title"] = "تعرفه آب و خدمات دفع فاضلاب"; }
+﻿@model CostCurrentElectricityIndexViewModel
+@{ ViewData["Title"] = "پیش بینی هزینه برق"; }
 
 <!--Title-->
 <div class="row">
@@ -14,24 +14,13 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-
-                @if (ViewData["message"] != null)
-                {
-                    <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
-                        </button>
-                        <span>@ViewData["message"]</span>
-                    </div>
-                }
-
                 <div class="card-content">
                     <div class="card-body">
                         <!--Filters-->
                         <form method="post"
                               id="filterForm"
-                              asp-controller="@WWsFeeController.Name"
-                              asp-action="@WWsFeeController.ACTION_Index"
+                              asp-controller="@CostCurrentElectricityController.Name"
+                              asp-action="@CostCurrentElectricityController.ACTION_Index"
                               asp-antiforgery="true">
                             <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
                             <div class="rowACJSB">
@@ -42,6 +31,14 @@
                                                 asp-items="Model.Filter.YearSource"
                                                 class="form-control d-inline-block width-100"
                                                 id="yearId">
+                                        </select>
+                                    </label>
+                                    <label asp-for="Filter.ActivityType" class="my-font" style="margin-right:20px">
+                                        نوع فعالیت:
+                                        <select asp-for="Filter.ActivityType"
+                                                asp-items="Model.Filter.ActivityTypeSource"
+                                                class="form-control d-inline-block width-100"
+                                                id="activityType">
                                         </select>
                                     </label>
                                     <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
@@ -57,6 +54,7 @@
                                 </fieldset>
                                 <fieldset>
                                     <div class="rowACJE">
+
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
@@ -91,10 +89,10 @@
                                                 <option>30</option>
                                             </select>
                                             <span style="margin-right:10px">رکورد</span>
-
                                         </label>
                                     </fieldset>
-                                    <!--DropDown Menu-->
+
+                                    <!--drop down menu-->
                                     <div class="btn-group dropdown form-group">
                                         <button type="button"
                                                 class="btn btn-light my-font dropdown-toggle"
@@ -103,7 +101,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu" style="width:280px">
+                                        <div class="dropdown-menu" style="width:220%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -135,7 +133,7 @@
                                                                name="col-3"
                                                                id="col-3" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-3"><span>حوزه فعالیت</span></label>
+                                                               for="col-3"><span>میزان برق مصرفی (کیلووات ساعت)</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -146,87 +144,11 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>کاربری</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-5"
-                                                               id="col-5" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-5"><span>طبقات مصرف مسکونی</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-6"
-                                                               id="col-6" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-6"><span>پارامتر اول تعرفه بهای خدمات</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-7"
-                                                               id="col-7" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-7"><span>پارامتر دوم تعرفه بهای خدمات</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-8"
-                                                               id="col-8" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-8"><span>پارامتر اول خدمات تبصره 3</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-9"
-                                                               id="col-9" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-9"><span>پارامتر دوم خدمات تبصره 3</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-10"
-                                                               id="col-10" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-10"><span>پارامتر اول خدمات تبصره 7</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-11"
-                                                               id="col-11" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-11"><span>پارامتر دوم خدمات تبصره 7</span></label>
+                                                               for="col-4"><span>قیمت (میلیون ریال)</span></label>
                                                     </div>
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -235,13 +157,14 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@WWsFeeController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostCurrentElectricityController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
-                                           asp-asp-controller="@WWsFeeController.Name"
-                                           asp-action="@WWsFeeController.ACTION_GetExcelTemplate"
+                                           asp-asp-controller="@CostCurrentElectricityController.Name"
+                                           asp-action="@CostCurrentElectricityController.ACTION_GetExcelTemplate"
                                            asp-route-yearId="@Model.Filter.YearId"
+                                           asp-route-activity="@Model.Filter.ActivityType"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
                                         </a>
@@ -280,6 +203,7 @@
     </div>
 
 
+
     <div id="divCalc">
 
     </div>
@@ -287,10 +211,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8,9,10,11';
+        let allColumns = '1,2,3,4';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,";
+        let showingColmuns = "1,2,3,4,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -302,27 +226,8 @@
 
 <script type="text/javascript">
 
-    var userType_Ids = [
-        @Html.Raw(Model.UserTypeSourceIdArray)
-    ];
-
-    var userType_keys = [
-        @Html.Raw(ViewData["userTypeKeys"].ToString())
-    ];
-
-    var userType_source = {};
-
-    for (var i = 0; i < userType_Ids.length; i++) {
-        userType_source[userType_Ids[i]] = userType_keys[i];
-    }
-
-
-    $(document).ready(function () {
-        console.log(userType_source);
-        console.log(userType_Ids);
-        console.log(userType_keys);
+        $(document).ready(function () {
             console.log('ready');
-            //fill input hidden with initial columns showing
             document.getElementById("hidColumns").value = showingColmuns;
 
             setDataColumns();
@@ -333,7 +238,6 @@
 
             $("#columnSelector input:checkbox:checked").change(function () {
                 let index = parseInt($(this)[0].id.split('-')[1]);
-                console.log(`showing or hiding col : ${index}`);
                 let checked = $(this)[0].checked;
                 if (checked) {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
@@ -361,13 +265,10 @@
 
         function setDataColumns() {
             let columnsToShow = document.getElementById("hidColumns").value.split(',');
-            console.log('ColumnsToShow ');
-            console.log(columnsToShow);
             let checkBoxes = $("#columnSelector input:checkbox");
             for(let i = 0; i < columnIndices.length; i++) {
                 let index = parseInt(columnIndices[i]);
                 let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
-                console.log(`Column : ${index} show = ${showColumn}`);
                 checkBoxes[i].checked = showColumn;
                 if(showColumn)
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
@@ -383,10 +284,8 @@
                 html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
                 type: 'error',
                 showCancelButton: true,
-                //confirmButtonColor: '#2F8BE6',
                 animation: false,
                 customClass: 'animated flipInX',
-                //cancelButtonColor: '#F55252',
                 cancelButtonText: 'انصراف',
                 confirmButtonText: 'حذف اطلاعات!',
                 confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
@@ -397,8 +296,9 @@
                     let params = {};
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
+                    params.activityType = $('#activityType option:selected').val();
                     console.log(params);
-                    let deleteUrl = '@Url.Action(WWsFeeController.ACTION_DeleteRecords)';
+                    let deleteUrl = '@Url.Action(CostCurrentElectricityController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
 
                     $.ajax({
@@ -433,7 +333,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(WWsFeeController.ACTION_Index, new {  page = 1})';
+                                document.location.href = '@Url.Action(CostCurrentElectricityController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
@@ -469,54 +369,23 @@
             addNewRow();
         });
 
-    $(document).on('click', '.edit-row', function () {
-
+        $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
-
-            let input1 = document.getElementById('inputP1Fee_' + id);
-            let input2 = document.getElementById('inputP2Fee_' + id);
-            let input3 = document.getElementById('inputP1Note3_' + id);
-            let input4 = document.getElementById('inputP1Note7_' + id);
-            let input5 = document.getElementById('inputP2Note3_' + id);
-            let input6 = document.getElementById('inputP2Note7_' + id);
-
+            let input = $('.input-keyup');
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
-            input1.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input2.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input3.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input4.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input5.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-
-            btnSaveEdit.addEventListener('click', function (evenrt) {
+            btnSaveEdit.addEventListener('click', function(event) {
                 event.preventDefault();
                 $(btnSaveEdit).attr('disabled', true);
+                $(btnSaveEdit).unbind('keyup');
+            });
+
+            $(input).keyup(function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
             });
 
             editRow(id);
@@ -574,12 +443,12 @@
         $(document).on('click', '.openCopy', function() {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action(WWsFeeController.ACTION_Copy)',
+                url: '@Url.Action(CostCurrentElectricityController.ACTION_Copy)',
                 success: function (data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
                     $('#CopyModal').modal('show');
-                    $('#CopyModal').on('hidden.bs.modal', function () {
+                    $('#CopyModal').on('hidden.bs.modal', function() {
                         $('#divCopy').html('');
                         $('.modal-backdrop').remove();
                     });
@@ -594,8 +463,8 @@
             });
         });
 
-        $(document).ready(function () {
-            $('.modal').on('hidden.bs.modal', function () {
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal', function() {
                 $('.modal-backdrop').remove();
             });
         });
@@ -609,7 +478,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(WWsFeeController.ACTION_Calculation)',
+                url: '@Url.Action(CostCurrentElectricityController.ACTION_Calculation)',
                 data: model,
                 success: function (data, status, settings) {
                     $('#divCalc').html('');
@@ -632,22 +501,22 @@
             var fileInput = $('#ExcelFile')[0];
             var file = fileInput.files[0];
             var yearId = $('#yearId').val();
+            var activityType = $('#activityType').val();
             fdata.append('ExcelFile', file);
             fdata.append('yearId', yearId);
+            fdata.append('activityType', activityType);
 
             $(".olvy").css("display", "block");
 
             $.ajax({
-                url: '@Url.Action(WWsFeeController.ACTION_ImportExcel)',
+                url: '@Url.Action(CostCurrentElectricityController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
                 contentType: false,
                 success: function (data, status, settings) {
-                    console.log(data);
-
-                    $(".olvy").css("display", "none");
                     if (data.hasError) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
                             html: `<span class="my-font">${data.message}</span>`,
@@ -666,7 +535,6 @@
                         $(".olvy").css("display", "none");
                         Swal.fire({
                             html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
-                            //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
                             type: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#2F8BE6',
@@ -680,19 +548,20 @@
                             buttonsStyling: false,
                         }).then(function (result) {
 
-                            if(result.value) {
+                            if (result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
-                                console.log(fdata);
+
                                 $(".olvy").css("display", "block");
+
                                 $.ajax({
-                                    url: '@Url.Action(WWsFeeController.ACTION_ImportExcel)',
+                                    url: '@Url.Action(CostCurrentElectricityController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
                                     contentType: false,
-                                    success: function(data, status, settings) {
+                                    success: function (data, status, settings) {
                                         if (data.hasError) {
-                                            $("#overlay").css("display", "none");
+                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">خطا</span>',
                                                 html: `<span class="my-font">${data.message}</span>`,
@@ -708,8 +577,8 @@
                                         }
 
                                         if (!data.hasError) {
-                                          $("#overlay").css("display", "none");
-                                          Swal.fire({
+                                            $(".olvy").css("display", "none");
+                                            Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
                                                 html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
                                                 type: 'success',
@@ -720,21 +589,16 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                document.location.href = '@Url.Action(WWsFeeController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(CostCurrentElectricityController.ACTION_Index)';
                                             });
                                         }
 
-                                        if(data.ask) {
+                                        if (data.ask) {
                                             alert('dont ask again');
                                         }
                                     },
                                     error: function (request, options, err) {
-                                        $(".olvy").css("display", "none");
-                                        if (request.status == 401 || request.status == 403) {
-                                            ShowPermissionErorr();
-                                            return;
-                                        }
-                                        ShowCommonErorr();
+                                        console.log(err);
                                     }
                                 });
 
@@ -759,12 +623,12 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(WWsFeeController.ACTION_Index)';
+                            document.location.href = '@Url.Action(CostCurrentElectricityController.ACTION_Index)';
                         });
                     }
 
                 },
-                error: function(request, options, err) {
+                error: function (request, options, err) {
                     $(".olvy").css("display", "none");
                     if (request.status == 401 || request.status == 403) {
                         ShowPermissionErorr();
@@ -781,12 +645,11 @@
             model.sourceYearId = $('#SourceYearId option:selected').val();
             model.sourceOrgId = $('#SourceOrgId').val();
             model.targetYearId = $('#TargetYearId option:selected').val();
-
-            console.log(model);
+            model.activityType = $('#activityType option:selected').val();
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(WWsFeeController.ACTION_Copy)',
+                url: '@Url.Action(CostCurrentElectricityController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
                 success: function (data, status, settings) {
@@ -820,8 +683,18 @@
                     });
                 },
                 error: function (request, options, err) {
-                    console.log(err);
-                    alert('عملیات کپی با خطا مواجه شد.');
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">عملیات کپی با خطا مواجه شد</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
                 }
             });
         });
