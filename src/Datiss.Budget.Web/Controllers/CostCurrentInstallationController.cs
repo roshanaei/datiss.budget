@@ -133,7 +133,7 @@ namespace Datiss.Budget.Web.Controllers
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
 
-            var myfilter = TempData.Get<IncomeForcastOtherFilterViewModel>(_indexFilterKey);
+            var myfilter = TempData.Get<CostCurrentInstallationFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
             {
                 filter = myfilter.Adapt<CostCurrentInstalationFilterDTO>();
@@ -412,7 +412,9 @@ namespace Datiss.Budget.Web.Controllers
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
             var cciWTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWater);
             var cciWsTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CurrentCostInstalationWaste);
+
             var activity = ActivityType.GetValues<ActivityType>();
+
             var items = new List<CostCurrentInstalationDTO>();
 
             foreach (var org in organizations)

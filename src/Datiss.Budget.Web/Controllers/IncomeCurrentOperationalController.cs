@@ -513,22 +513,22 @@ namespace Datiss.Budget.Web.Controllers
             var cioWTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIOWType);
             var cioWsTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIOWsType);
 
-            var activityTypes = EnumSelectListProvider.GetActivityTypeItems();
+            var activity = ActivityType.GetValues<ActivityType>();
 
             var items = new List<IncomeCurrentOperationalDTO>();
 
             foreach (var org in organizations)
             {
-                foreach (var activityType in activityTypes)
+                foreach (var act in activity)
                 {
-                    if (Convert.ToInt32(activityType.Value) == (int)ActivityType.Water)
+                    if (act == ActivityType.Water)
                     {
                         foreach (var cioWType in cioWTypes)
                         {
                             items.Add(new IncomeCurrentOperationalDTO
                             {
-                                ActivityType = System.Enum.Parse<ActivityType>(activityType.Value),
-                                ActivityTypeDisplay = activityType.Text,
+                                ActivityType = act,
+                                ActivityTypeDisplay = act.ToDisplay(),
                                 ICOTypeDisplay = cioWType.Title,
                                 ICOTypeId = cioWType.Id,
                                 OrganizationId = org.Id,
@@ -544,8 +544,8 @@ namespace Datiss.Budget.Web.Controllers
                         {
                             items.Add(new IncomeCurrentOperationalDTO
                             {
-                                ActivityType = System.Enum.Parse<ActivityType>(activityType.Value),
-                                ActivityTypeDisplay = activityType.Text,
+                                ActivityType = act,
+                                ActivityTypeDisplay = act.ToDisplay(),
                                 ICOTypeDisplay = cioWsType.Title,
                                 ICOTypeId = cioWsType.Id,
                                 OrganizationId = org.Id,

@@ -31,23 +31,21 @@
 
                     <hr>
                     <p class="my-font-bold">انتخاب اطلاعات مقصد</p>
-                    <div class="rowAC">
-                        <div style="flex:1">
+
+                    <div class="rowACJSB">
+                        <div class="my-font" style="flex:1">
                             <fieldset class="form-group">
                                 <label class="my-font rowAC">
                                     <span style="margin-left:5px">سال:</span>
                                     <select asp-for="TargetYearId"
                                             asp-items="Model.TargetYearSource"
                                             style="flex:1"
-                                            class="form-control form-control-sm d-inline-block width-100">
+                                            class="form-control form-control-sm d-inline-block">
                                     </select>
                                 </label>
                             </fieldset>
                         </div>
-                        <div style="flex:1.5" />
                     </div>
-
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>

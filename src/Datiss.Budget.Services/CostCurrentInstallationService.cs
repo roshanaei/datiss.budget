@@ -403,7 +403,7 @@ namespace Datiss.Budget.Services
 
             int rowIndex = 1;
 
-            var activitytypes = EnumSelectListProvider.GetActivityTypeItems();
+            var activity = ActivityType.GetValues<ActivityType>();
 
             var cciwtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                    x.Parent.ConstantKey == ConstantKeys.__CurrentCostInstalationWater);
@@ -492,28 +492,28 @@ namespace Datiss.Budget.Services
 
             foreach (var org in existOrgs)
             {
-                foreach (var activityt in activitytypes)
+                foreach (var act in activity)
                 {
-                    var existActivityInExcel = records.Any(_ => Convert.ToInt32(_.ActivityType) == Convert.ToInt32(activityt.Value) &&
+                    var existActivityInExcel = records.Any(_ => _.ActivityType == act &&
                                                               _.OrganizationId == org.Id);
                     if (!existActivityInExcel)
                     {
-                        activityTitle = activityt.Text;
+                        activityTitle = act.ToDisplay();
                         orgTitle = org.Title;
                     }
                     else
                     {
-                        if (Convert.ToInt32(activityt.Value) == Convert.ToInt32(ActivityType.Water))
+                        if (act == ActivityType.Water)
                         {
                             foreach (var cciw in cciwtypes)
                             {
-                                var exist = records.Any(_ => Convert.ToInt32(_.ActivityType) == Convert.ToInt32(activityt.Value) &&
+                                var exist = records.Any(_ => _.ActivityType == act &&
                                                              _.OrganizationId == org.Id &&
                                                              _.CCInstalationTypeId == cciw.Id);
                                 if (!exist)
                                 {
                                     missingCCIWType.Add(cciw);
-                                    activityTitleW = activityt.Text;
+                                    activityTitleW = act.ToDisplay();
                                     orgTitleW = org.Title;
                                 }
                             }
@@ -522,13 +522,13 @@ namespace Datiss.Budget.Services
                         {
                             foreach (var cciws in cciwstypes)
                             {
-                                var existWs = records.Any(_ => Convert.ToInt32(_.ActivityType) == Convert.ToInt32(activityt.Value) &&
+                                var existWs = records.Any(_ => _.ActivityType == act &&
                                                              _.OrganizationId == org.Id &&
                                                              _.CCInstalationTypeId == cciws.Id);
                                 if (!existWs)
                                 {
                                     missingCCIWsType.Add(cciws);
-                                    activityTitleWs = activityt.Text;
+                                    activityTitleWs = act.ToDisplay();
                                     orgTitleWs = org.Title;
                                 }
                             }
