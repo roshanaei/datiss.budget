@@ -54,6 +54,13 @@ namespace Datiss.Budget.Services
         }
         private IQueryable<CostCurrentConsumable> Query()
             => _dbSet.AsNoTracking();
+
+        public async Task<CostCurrentConsumable> GetByIdAsync(int id)
+        {
+            var entity = await _dbSet.FindAsync(id);
+            return await Task.FromResult(entity);
+        }
+
         public async Task<ValidationResult<CostCurrentConsumableDTO>> CreateAsync(CreateCostCurrentConsumableDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
@@ -106,6 +113,8 @@ namespace Datiss.Budget.Services
                 model.ActivityType.ToDisplay(), organizationDisplay)
                 );
         }
+
+
 
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentConsumable>> setFilter(
