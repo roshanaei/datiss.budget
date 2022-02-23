@@ -184,6 +184,40 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
+        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId, ActivityType activityType)
+        {
+            var organization = await _orgDbSet.FindAsync(organizationId);
+            organization.CheckReferenceIsNull(nameof(organization));
+
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
+            var self = await _dbSet.Where(_ => _.YearId == yearId)
+                                   .Where(_ => _.OrganizationId == organizationId)
+                                   .Where(_ => _.ActivityType == activityType)
+                                   .ToListAsync();
+            var childrens = await getChildren(organizationId, yearId, activityType);
+
+            if (self.Count() == 0 && childrens.Count() == 0)
+                throw new DeleteNullRecordException();
+            _dbSet.RemoveRange(self);
+
+            _dbSet.RemoveRange(childrens);
+
+            var result = new OrganizationDeleteDataResult
+            {
+                OrganizationTitle = organization.Title,
+                Year = year.Year,
+                YearTitle = year.Title
+            };
+
+            await _uow.SaveChangesAsync();
+
+            return await Task.FromResult(result);
+        }
 
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentConsumable>> setFilter(
