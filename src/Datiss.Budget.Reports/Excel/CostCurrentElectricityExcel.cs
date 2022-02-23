@@ -40,11 +40,11 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 3).Value = item.ActivityType.ToDisplay();
 
                 sheet.Cell(row, 4).Value = item.ElectricityAmount;
-                sheet.Cell(row, 4).Style.NumberFormat.Format = "#,##0";
+                sheet.Cell(row, 4).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
                 sheet.Cell(row, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
                 sheet.Cell(row, 5).Value = item.ElectricityCost;
-                sheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0";
+                sheet.Cell(row, 5).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
                 sheet.Cell(row, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
                 row++;
@@ -88,10 +88,10 @@ namespace Datiss.Budget.Reports.Excel
 
             var range = sheet.Range(2, 1, row - 1, 4);
             //
-            range.Column(3).Style.NumberFormat.Format = "#,##0";
+            range.Column(3).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
             range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             
-            range.Column(4).Style.NumberFormat.Format = "#,##0";
+            range.Column(4).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
             range.Column(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             //
             
