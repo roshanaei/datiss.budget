@@ -167,6 +167,23 @@ namespace Datiss.Budget.Services
                 );
         }
 
+        public async Task HardDeleteAsync(int Id)
+        {
+            var entity = await _dbSet.FindAsync(Id);
+            entity.CheckReferenceIsNull(nameof(entity));
+
+            var year = await _yearSet.FindAsync(entity.YearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+            entity.CheckArgumentIsNull(nameof(entity));
+
+            _dbSet.Remove(entity);
+
+            await _uow.SaveChangesAsync();
+        }
+
 
         #region Private Helper Methods
         private async Task<IQueryable<CostCurrentConsumable>> setFilter(
