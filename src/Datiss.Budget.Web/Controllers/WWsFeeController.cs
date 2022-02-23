@@ -517,22 +517,21 @@ namespace Datiss.Budget.Web.Controllers
             var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType, true);
             var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
 
-            var activity = new ActivityType();
-            var activityTypes = EnumSelectListProvider.GetActivityTypeItems(activity);
+            var activity = ActivityType.GetValues<ActivityType>();
 
             var items = new List<WWsFeeDTO>();
 
             foreach (var org in organizations)
             {
-                foreach (var activityType in activityTypes)
+                foreach (var act in activity)
                 {
                     userTypes.Where(ut => ut.ConstantKey == ConstantKeys.__House)
                         .ToList()
                         .ForEach(ut => items.AddRange(houseUsageLayer
                                             .Select(hul => new WWsFeeDTO
                                             {
-                                                ActivityType = System.Enum.Parse<ActivityType>(activityType.Value),
-                                                ActivityTypeDisplay = activityType.Text,
+                                                ActivityType = act,
+                                                ActivityTypeDisplay = act.ToDisplay(),
                                                 UserTypeDisplay = ut.Title,
                                                 UserTypeId = ut.Id,
                                                 UsageLayerDisplay = hul.Title,
@@ -548,8 +547,8 @@ namespace Datiss.Budget.Web.Controllers
                         .ForEach(ut => items.AddRange(nhouseUsagelayer
                                             .Select(hul => new WWsFeeDTO
                                             {
-                                                ActivityType = System.Enum.Parse<ActivityType>(activityType.Value),
-                                                ActivityTypeDisplay = activityType.Text,
+                                                ActivityType = act,
+                                                ActivityTypeDisplay = act.ToDisplay(),
                                                 UserTypeDisplay = ut.Title,
                                                 UserTypeId = ut.Id,
                                                 UsageLayerDisplay = hul.Title,
