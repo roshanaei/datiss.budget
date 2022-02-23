@@ -22,6 +22,11 @@ namespace Datiss.Budget.Services.Models
         public long ConsumableCost { get; set; }
     }
 
+    public class UpdateCostCurrentConsumableDTO : CreateCostCurrentConsumableDTO
+    {
+        public int Id { get; set; }
+    }
+
     public class CostCurrentConsumableDTO
     {
         public int Id { get; set; }
