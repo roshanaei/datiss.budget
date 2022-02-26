@@ -139,11 +139,11 @@ namespace Datiss.Budget.Web.Controllers
             var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-               .Adapt<List<DropDownItemViewModel>>();
-
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
+
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+               .Adapt<List<DropDownItemViewModel>>();
 
             var myfilter = TempData.Get<WaterInstallFeeFilterViewModel>(_indexFilterKey);
             if(myfilter != null) 
@@ -194,7 +194,7 @@ namespace Datiss.Budget.Web.Controllers
             var dwaterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
                .Adapt<List<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
