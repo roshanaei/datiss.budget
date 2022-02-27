@@ -141,12 +141,11 @@ namespace Datiss.Budget.Web.Controllers
             var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-               .Adapt<List<DropDownItemViewModel>>();
-
-
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
+
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+                .Adapt<List<DropDownItemViewModel>>();
 
             var myfilter = TempData.Get<WasteInstallFeeFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
@@ -197,8 +196,8 @@ namespace Datiss.Budget.Web.Controllers
             var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-               .Adapt<List<DropDownItemViewModel>>();
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+                .Adapt<List<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
