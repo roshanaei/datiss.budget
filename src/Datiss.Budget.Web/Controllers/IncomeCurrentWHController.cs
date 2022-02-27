@@ -132,9 +132,6 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<List<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(x => x.Id);
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-                .Adapt<List<DropDownItemViewModel>>();
-
             var userTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
@@ -143,6 +140,9 @@ namespace Datiss.Budget.Web.Controllers
 
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
+
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+                .Adapt<List<DropDownItemViewModel>>();
 
             var myfilter = TempData.Get<IncomeCurrentWHFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
@@ -198,7 +198,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
                 .Adapt<List<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);

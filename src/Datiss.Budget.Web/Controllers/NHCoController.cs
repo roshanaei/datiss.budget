@@ -126,12 +126,12 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-               .Adapt<List<DropDownItemViewModel>>();
-
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
             filter.ActivityType = ActivityType.Water;
+
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+                .Adapt<List<DropDownItemViewModel>>();
 
             var myfilter = TempData.Get<NHCoFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
@@ -179,8 +179,8 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-               .Adapt<List<DropDownItemViewModel>>();
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+                .Adapt<List<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
