@@ -131,12 +131,12 @@ namespace Datiss.Budget.Web.Controllers
             var cofficientSource = (await _constantService.GetCofficientByKeysAsync(group.ToString(),ConstantKeys.__Cofficients))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-               .Adapt<List<DropDownItemViewModel>>();
-
             filter.GroupName = group;
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
+
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+                .Adapt<List<DropDownItemViewModel>>();
 
             var myfilter = TempData.Get<CofficientFilterViewModel>(_indexFilterKey + $"_{group}");
             if (myfilter != null)
@@ -191,8 +191,8 @@ namespace Datiss.Budget.Web.Controllers
             var cofficientSource = (await _constantService.GetCofficientByKeysAsync(group.ToString(), ConstantKeys.__Cofficients))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
-               .Adapt<List<DropDownItemViewModel>>();
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+                .Adapt<List<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
