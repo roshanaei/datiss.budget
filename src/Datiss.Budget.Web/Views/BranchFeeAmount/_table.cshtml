@@ -60,11 +60,19 @@
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_WasteRateInWater_">
-                        <input class="form-control input-keyup" id="inputWasteRateInWater_" type="number" min="0" />
+                    <div id="divInput_TubingCost_">
+                        <input class="form-control input-keyup" id="inputTubingCost_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_WasteRateInWater_" style="display: none">
-                        <span id="spanWasteRateInWater_"> </span>
+                    <div id="divOutput_TubingCost_" style="display: none">
+                        <span id="spanTubingCost_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_WsTubingCost_">
+                        <input class="form-control input-keyup" id="inputWsTubingCost_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_WsTubingCost_" style="display: none">
+                        <span id="spanWsTubingCost_"> </span>
                     </div>
                 </td>
                 <td>
@@ -76,11 +84,11 @@
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_TubingCost_">
-                        <input class="form-control input-keyup" id="inputTubingCost_" type="number" min="0" />
+                    <div id="divInput_WasteRateInWater_">
+                        <input class="form-control input-keyup" id="inputWasteRateInWater_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_TubingCost_" style="display: none">
-                        <span id="spanTubingCost_"> </span>
+                    <div id="divOutput_WasteRateInWater_" style="display: none">
+                        <span id="spanWasteRateInWater_"> </span>
                     </div>
                 </td>
                 <td>
@@ -145,14 +153,6 @@
                     </div>
                     <div id="divOutput_FixCostNote11NHWs_" style="display: none">
                         <span id="spanFixCostNote11NHWs_"> </span>
-                    </div>
-                </td>
-                <td>
-                    <div id="divInput_WsTubingCost_">
-                        <input class="form-control input-keyup" id="inputWsTubingCost_" type="number" min="0" />
-                    </div>
-                    <div id="divOutput_WsTubingCost_" style="display: none">
-                        <span id="spanWsTubingCost_"> </span>
                     </div>
                 </td>
                 <td>
@@ -221,11 +221,19 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_WasteRateInWater_@item.Id" style="display: none">
-                            <input class="form-control" id="inputWasteRateInWater_@item.Id" value="@item.WasteRateInWater" type="number" />
+                        <div id="divInput_TubingCost_@item.Id" style="display: none">
+                            <input class="form-control" id="inputTubingCost_@item.Id" value="@item.TubingCost" type="number" />
                         </div>
-                        <div id="divOutput_WasteRateInWater_@item.Id">
-                            <span id="spanWasteRateInWater_@item.Id">@item.WasteRateInWaterDisplay </span>
+                        <div id="divOutput_TubingCost_@item.Id">
+                            <span id="spanTubingCost_@item.Id">@item.TubingCostDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_WsTubingCost_@item.Id" style="display: none">
+                            <input class="form-control" id="inputWsTubingCost_@item.Id" value="@item.WsTubingCost" type="number" />
+                        </div>
+                        <div id="divOutput_WsTubingCost_@item.Id">
+                            <span id="spanWsTubingCost_@item.Id">@item.WsTubingCostDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -237,13 +245,14 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_TubingCost_@item.Id" style="display: none">
-                            <input class="form-control" id="inputTubingCost_@item.Id" value="@item.TubingCost" type="number" />
+                        <div id="divInput_WasteRateInWater_@item.Id" style="display: none">
+                            <input class="form-control" id="inputWasteRateInWater_@item.Id" value="@item.WasteRateInWater" type="number" />
                         </div>
-                        <div id="divOutput_TubingCost_@item.Id">
-                            <span id="spanTubingCost_@item.Id">@item.TubingCostDisplay </span>
+                        <div id="divOutput_WasteRateInWater_@item.Id">
+                            <span id="spanWasteRateInWater_@item.Id">@item.WasteRateInWaterDisplay </span>
                         </div>
                     </td>
+
                     <td>
                         <div id="divInput_WaterPartnershipAmountDomestic_@item.Id" style="display: none">
                             <input class="form-control" id="inputWaterPartnershipAmountDomestic_@item.Id" value="@item.WaterPartnershipAmountDomestic" type="number" />
@@ -306,14 +315,6 @@
                         </div>
                         <div id="divOutput_FixCostNote11NHWs_@item.Id">
                             <span id="spanFixCostNote11NHWs_@item.Id">@item.FixCostNote11NHWsDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_WsTubingCost_@item.Id" style="display: none">
-                            <input class="form-control" id="inputWsTubingCost_@item.Id" value="@item.WsTubingCost" type="number" />
-                        </div>
-                        <div id="divOutput_WsTubingCost_@item.Id">
-                            <span id="spanWsTubingCost_@item.Id">@item.WsTubingCostDisplay </span>
                         </div>
                     </td>
                     <td>
