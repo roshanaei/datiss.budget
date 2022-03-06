@@ -155,6 +155,8 @@ namespace Datiss.Budget.Services
             => _userContext.OrganizationId.HasValue
 
                 ? (await getWithChildrenAsync(_userContext.OrganizationId.Value, input, false, orgType))
+                    .OrderBy(x => x.DisplayOrder)
+                    .ThenBy(x => x.Type)
                     .Select(x => new DropDownItem
                     {
                         Id = x.Id,
@@ -163,6 +165,8 @@ namespace Datiss.Budget.Services
                     }).ToList()
 
                 : (await getByParnetIdAsync(_userContext.OrganizationId, input, false, orgType))
+                    .OrderBy(x => x.DisplayOrder)
+                    .ThenBy(x => x.Type)
                     .Select(x => new DropDownItem
                     {
                         Id = x.Id,
@@ -174,6 +178,8 @@ namespace Datiss.Budget.Services
             => OrgId.HasValue
 
                 ? (await getWithChildrenAsync(OrgId.Value, true, false))
+                    .OrderBy(x => x.DisplayOrder)
+                    .ThenBy(x => x.Type)
                     .Select(x => new DropDownItem
                     {
                         Id = x.Id,
@@ -182,6 +188,8 @@ namespace Datiss.Budget.Services
                     }).ToList()
 
                 : (await getByParnetIdAsync(OrgId, true, false))
+                    .OrderBy(x => x.DisplayOrder)
+                    .ThenBy(x => x.Type)
                     .Select(x => new DropDownItem
                     {
                         Id = x.Id,
