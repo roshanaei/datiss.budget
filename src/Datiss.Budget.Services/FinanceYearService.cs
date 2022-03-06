@@ -151,11 +151,12 @@ namespace Datiss.Budget.Services
         }
 
         public async Task<IEnumerable<DropDownItem>> GetDropDownDataAsync()
-            => await Query().Select(x => new DropDownItem
-            {
-                Id = x.Id,
-                Title = x.Year.ToString()
-            }).ToListAsync();
+            => await Query().OrderByDescending(x=>x.Year)
+                            .Select(x => new DropDownItem
+                            {
+                                Id = x.Id,
+                                Title = x.Year.ToString()
+                            }).ToListAsync();
         public async Task<IEnumerable<DropDownItem>> GetDropDownDataByStatusAsync(EntityStatus entityStatus)
             => await Query().Where(x => x.Status == entityStatus).Select(x => new DropDownItem
             {

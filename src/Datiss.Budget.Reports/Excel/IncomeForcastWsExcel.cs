@@ -26,7 +26,7 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 3).Value = "نوع کاربری";
             sheet.Cell(1, 4).Value = "تعداد انشعاب";
             sheet.Cell(1, 5).Value = "آحاد انشعاب";
-            sheet.Cell(1, 6).Value = "درآمد هزینه لوله گذاری فاضلاب";
+            sheet.Cell(1, 6).Value = "درآمد نصب انشعاب فاضلاب";
             sheet.Cell(1, 7).Value = "درآمد حق انشعاب فاضلاب";
             sheet.Cell(1, 8).Value = "درآمد تبصره 3 ماده واحده فاضلاب";
             sheet.Cell(1, 9).Value = "درآمد ماده 11 فاضلاب";
