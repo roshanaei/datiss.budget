@@ -47,51 +47,51 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 3).Style.NumberFormat.Format = "#,##0.00";
                 sheet.Cell(row, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 4).Value = item.WasteRateInWater;
-                sheet.Cell(row, 4).Style.NumberFormat.Format = "#,##0.00";
+                sheet.Cell(row, 4).Value = item.TubingCost;
+                sheet.Cell(row, 4).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 5).Value = item.WaterBranchingPerHousing;
+                sheet.Cell(row, 5).Value = item.WsTubingCost;
                 sheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 6).Value = item.TubingCost;
+                sheet.Cell(row, 6).Value = item.WaterBranchingPerHousing;
                 sheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 7).Value = item.WaterPartnershipAmountDomestic;
-                sheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0";
+                sheet.Cell(row, 7).Value = item.WasteRateInWater;
+                sheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0.00";
                 sheet.Cell(row, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 8).Value = item.WaterPartnershipAmountNDomestic;
+                sheet.Cell(row, 8).Value = item.WaterPartnershipAmountDomestic;
                 sheet.Cell(row, 8).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 9).Value = item.WastePartnershipAmountDomestic;
+                sheet.Cell(row, 9).Value = item.WaterPartnershipAmountNDomestic;
                 sheet.Cell(row, 9).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 10).Value = item.WastePartnershipAmountNDomestic;
+                sheet.Cell(row, 10).Value = item.WastePartnershipAmountDomestic;
                 sheet.Cell(row, 10).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 11).Value = item.FixCostNote11H;
+                sheet.Cell(row, 11).Value = item.WastePartnershipAmountNDomestic;
                 sheet.Cell(row, 11).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 11).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 12).Value = item.FixCostNote11NH;
+                sheet.Cell(row, 12).Value = item.FixCostNote11H;
                 sheet.Cell(row, 12).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 12).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 13).Value = item.FixCostNote11HWs;
+                sheet.Cell(row, 13).Value = item.FixCostNote11NH;
                 sheet.Cell(row, 13).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 13).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 14).Value = item.FixCostNote11NHWs;
+                sheet.Cell(row, 14).Value = item.FixCostNote11HWs;
                 sheet.Cell(row, 14).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 14).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 15).Value = item.WsTubingCost;
+                sheet.Cell(row, 15).Value = item.FixCostNote11NHWs;
                 sheet.Cell(row, 15).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 15).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 

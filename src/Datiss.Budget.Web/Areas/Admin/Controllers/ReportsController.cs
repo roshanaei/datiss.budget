@@ -41,6 +41,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1) {
             var filter = new ReportFilterDTO();
+            filter.PageSize = 50;
             var myfilter = TempData.Get<AdminReportFilterViewModel>(_indexFilterKey);
             if(myfilter != null) {
                 filter = myfilter.Adapt<ReportFilterDTO>();
@@ -59,6 +60,8 @@ namespace Datiss.Budget.Web.Admin.Controllers
             model.CheckArgumentIsNull(nameof(model));
 
             var filter = model.Filter.Adapt<ReportFilterDTO>();
+            filter.PageSize = 50;
+
             TempData.Put(_indexFilterKey, filter);
 
             var result = await _reportService.GetAdminListAsync(filter);
