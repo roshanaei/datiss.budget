@@ -33,6 +33,8 @@ namespace Datiss.Budget.Entities
 
         public EntityStatus Status { get; set; }
 
+        public int RowOrder { get; set; }
+
         /// <summary>
         /// The <see cref="User"/> can only enter data for an <see cref="Organization"/> that this property return true.
         /// This property is not going to save to the database because it will caluclated based on a condition.
@@ -47,14 +49,14 @@ namespace Datiss.Budget.Entities
         public Organization Parent { get; set; }
 
         public ICollection<Organization> Childrens { get; set; }
-        
+
         public ICollection<WaterInstallFee> WaterInstallFees { get; set; }
-        
+
         public ICollection<User> Users { get; set; }
 
         public ICollection<WasteInstallFee> WasteInstallFees { get; set; }
 
-        public ICollection<WaterSalesSplit> WaterSalesSplits {get; set; }
+        public ICollection<WaterSalesSplit> WaterSalesSplits { get; set; }
 
         public ICollection<WasteSalesSplit> WasteSalesSplits { get; set; }
 

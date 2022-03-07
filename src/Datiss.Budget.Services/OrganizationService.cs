@@ -156,7 +156,7 @@ namespace Datiss.Budget.Services
 
                 ? (await getWithChildrenAsync(_userContext.OrganizationId.Value, input, false, orgType))
                     .OrderBy(x => x.DisplayOrder)
-                    .ThenBy(x => x.Type)
+                    .ThenBy(x => x.RowOrder)
                     .Select(x => new DropDownItem
                     {
                         Id = x.Id,
@@ -166,7 +166,7 @@ namespace Datiss.Budget.Services
 
                 : (await getByParnetIdAsync(_userContext.OrganizationId, input, false, orgType))
                     .OrderBy(x => x.DisplayOrder)
-                    .ThenBy(x => x.Type)
+                    .ThenBy(x => x.RowOrder)
                     .Select(x => new DropDownItem
                     {
                         Id = x.Id,
@@ -179,7 +179,7 @@ namespace Datiss.Budget.Services
 
                 ? (await getWithChildrenAsync(OrgId.Value, true, false))
                     .OrderBy(x => x.DisplayOrder)
-                    .ThenBy(x => x.Type)
+                    .ThenBy(x => x.RowOrder)
                     .Select(x => new DropDownItem
                     {
                         Id = x.Id,
@@ -189,7 +189,7 @@ namespace Datiss.Budget.Services
 
                 : (await getByParnetIdAsync(OrgId, true, false))
                     .OrderBy(x => x.DisplayOrder)
-                    .ThenBy(x => x.Type)
+                    .ThenBy(x => x.RowOrder)
                     .Select(x => new DropDownItem
                     {
                         Id = x.Id,
@@ -203,18 +203,19 @@ namespace Datiss.Budget.Services
             ? await Query().Where(x => x.Type != type)
                            .OrderBy(_ => _.Type)
                            .ThenBy(_ => _.DisplayOrder)
-            .Select(x => new DropDownItem
-            {
-                Id = x.Id,
-                Title = x.Title
-            }).ToListAsync()
+                            .Select(x => new DropDownItem
+                            {
+                                Id = x.Id,
+                                Title = x.Title
+                            }).ToListAsync()
+
             : await Query().Where(x => x.Type == type)
                            .OrderBy(_ => _.DisplayOrder)
-            .Select(x => new DropDownItem
-            {
-                Id = x.Id,
-                Title = x.Title
-            }).ToListAsync();
+                            .Select(x => new DropDownItem
+                            {
+                                Id = x.Id,
+                                Title = x.Title
+                            }).ToListAsync();
 
         public async Task<PagedResult<OrganizationDTO>> GetListAsync(OrganizationFilterDTO filter)
         {
@@ -297,8 +298,7 @@ namespace Datiss.Budget.Services
 
                 default:
                     return query.OrderBy(x => x.DisplayOrder)
-                                .ThenBy(x => x.Type)
-                                .ThenBy(x => x.ParentId);
+                                .ThenBy(x => x.RowOrder);
             }
         }
 
