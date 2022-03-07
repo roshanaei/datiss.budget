@@ -604,7 +604,7 @@ namespace Datiss.Budget.Services
             orderBy = orderBy.ToLower();
             switch (orderBy)
             {
-                case "organization":
+                case "org":
                     return desc
                         ? query.OrderByDescending(x => x.Organization.Title)
                         : query.OrderBy(x => x.Organization.Title);
@@ -614,6 +614,7 @@ namespace Datiss.Budget.Services
                                 .OrderBy(x => x.Organization.DisplayOrder)
                                 .ThenBy(x => x.Organization.Type)
                                 .ThenBy(x => x.Organization.ParentId);
+
             }
         }
 
