@@ -609,7 +609,7 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) || 
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
                                          _.DWaterType.Title.ToUpper().Contains(filter.Search));
             }
 
@@ -642,8 +642,7 @@ namespace Datiss.Budget.Services
                     return query.Include(x => x.Organization)
                                 .Include(x => x.DWaterType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
-                                .ThenBy(x => x.Organization.Type)
-                                .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.Organization.RowOrder)
                                 .ThenBy(x => x.DWaterType.DisplayOrder);
             }
         }

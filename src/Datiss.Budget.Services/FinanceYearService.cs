@@ -157,7 +157,10 @@ namespace Datiss.Budget.Services
                 Title = x.Year.ToString()
             }).ToListAsync();
         public async Task<IEnumerable<DropDownItem>> GetDropDownDataByStatusAsync(EntityStatus entityStatus)
-            => await Query().Where(x => x.Status == entityStatus).Select(x => new DropDownItem
+            => await Query()
+            .Where(x => x.Status == entityStatus)
+            .OrderByDescending(x => x.Year)
+            .Select(x => new DropDownItem
             {
                 Id = x.Id,
                 Title = x.Year.ToString()
@@ -198,7 +201,7 @@ namespace Datiss.Budget.Services
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
             };
-            result.Items = await _dbSet.Where(x=>x.Status==EntityStatus.Deleted)
+            result.Items = await _dbSet.Where(x => x.Status == EntityStatus.Deleted)
                                     .Select(x => new FinanceYearDTO
                                     {
                                         Id = x.Id,
@@ -252,7 +255,7 @@ namespace Datiss.Budget.Services
         }
         private async Task setEnabledForlastYear(int id)
         {
-            var entity =await _dbSet.Where(x => x.Id != id && x.Status!=EntityStatus.Deleted).OrderBy(x=>x.Year).LastOrDefaultAsync();
+            var entity = await _dbSet.Where(x => x.Id != id && x.Status != EntityStatus.Deleted).OrderBy(x => x.Year).LastOrDefaultAsync();
             entity.CheckReferenceIsNull(nameof(entity));
             entity.Status = EntityStatus.Enabled;
             await _uow.SaveChangesAsync();
