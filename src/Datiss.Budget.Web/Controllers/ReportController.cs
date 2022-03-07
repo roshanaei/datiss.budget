@@ -187,8 +187,7 @@ namespace Datiss.Budget.Web.Controllers {
             };
 
             var report = await _reportEngine.GenerateReportAsync(data);
-            report.Render(false);
-
+            
             return await Task.FromResult(report);
         }
 

@@ -63,10 +63,12 @@ namespace Datiss.Budget.Reports
 
             var report = new StiReport();
             report.Load(model.TemplateFileData);
+
             setConnection(report);
 
-            foreach (var prm in model.Params) {
-                report[prm.Name] = prm.Value;
+            foreach(var prm in model.Params)
+            {
+                report.Dictionary.Variables.Add(prm.Name, prm.Value);
             }
 
             return report;
