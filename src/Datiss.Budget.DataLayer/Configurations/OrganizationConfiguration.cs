@@ -16,6 +16,8 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.Type).HasColumnName("OrgType");
 
+            builder.Property(x=>x.RowOrder).IsRequired();
+
             builder.Property(x => x.Title)
                 .HasMaxLength(400)
                 .IsUnicode()
