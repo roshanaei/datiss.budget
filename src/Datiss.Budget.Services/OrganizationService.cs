@@ -174,28 +174,41 @@ namespace Datiss.Budget.Services
                         Selected = x.Id == _userContext.OrganizationId
                     }).ToList();
 
-        public async Task<IEnumerable<DropDownItem>> GetDropDownInputDataAsync(int? OrgId)
-            => OrgId.HasValue
+        public async Task<IEnumerable<DropDownItem>> GetDropDownInputDataAsync(int? organizationId, bool? sewageStatus = null)
+        {
+            var orgid = organizationId.HasValue ? organizationId : _userContext.OrganizationId;
 
-                ? (await getWithChildrenAsync(OrgId.Value, true, false))
+            IEnumerable<DropDownItem> result = Enumerable.Empty<DropDownItem>();
+            if (sewageStatus.HasValue)
+            {
+                result = (await getWithChildrenAsync(orgid, true, false))
+                    .Where(x => x.SewageStatus == sewageStatus)
                     .OrderBy(x => x.DisplayOrder)
                     .ThenBy(x => x.RowOrder)
                     .Select(x => new DropDownItem
                     {
                         Id = x.Id,
                         Title = x.Title,
-                        Selected = x.Id == OrgId
-                    }).ToList()
-
-                : (await getByParnetIdAsync(OrgId, true, false))
-                    .OrderBy(x => x.DisplayOrder)
-                    .ThenBy(x => x.RowOrder)
-                    .Select(x => new DropDownItem
-                    {
-                        Id = x.Id,
-                        Title = x.Title,
-                        Selected = x.Id == OrgId
+                        Selected = x.Id == orgid
                     }).ToList();
+            }
+            else
+            {
+                result = (await getWithChildrenAsync(orgid, true, false))
+                    .OrderBy(x => x.DisplayOrder)
+                    .ThenBy(x => x.RowOrder)
+                    .Select(x => new DropDownItem
+                    {
+                        Id = x.Id,
+                        Title = x.Title,
+                        Selected = x.Id == orgid
+                    }).ToList();
+            }
+
+
+            return result;
+        }
+
 
 
         public async Task<IEnumerable<DropDownItem>> GetDropDownTypeOrgDataAsync(OrganizationType type, bool none = false)
@@ -260,7 +273,8 @@ namespace Datiss.Budget.Services
         private IQueryable<Organization> setFilter(IQueryable<Organization> query, OrganizationFilterDTO filter)
         {
             if (filter.OrganizationId.HasValue)
-                query = query.Where(x => x.ParentId == filter.OrganizationId.Value);
+                query = query.Where(x => x.ParentId == filter.OrganizationId.Value ||
+                                         x.Parent.ParentId == filter.OrganizationId.Value);
 
             if (filter.Type.HasValue)
                 query = query.Where(x => x.Type == filter.Type.Value);
