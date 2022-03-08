@@ -585,8 +585,7 @@ namespace Datiss.Budget.Services
                                 .Include(x => x.CCPMDepType)
                                 .OrderByDescending(x => x.RecordType)
                                 .ThenBy(x => x.Organization.DisplayOrder)
-                                .ThenBy(x => x.Organization.Type)
-                                .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.Organization.RowOrder)
                                 .ThenBy(x => x.ActivityType)
                                 .ThenBy(x => x.CostCenterType.DisplayOrder)
                                 .ThenBy(x => x.CCPMDepType.DisplayOrder);
@@ -596,8 +595,7 @@ namespace Datiss.Budget.Services
                                 .Include(x => x.CCPMDepType)
                                 .Include(x=>x.CostCenterType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
-                                .ThenBy(x => x.Organization.Type)
-                                .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.Organization.RowOrder)
                                 .ThenBy(x => x.ActivityType)
                                 .ThenBy(x => x.CostCenterType.DisplayOrder)
                                 .ThenBy(x => x.CCPMDepType.DisplayOrder);
