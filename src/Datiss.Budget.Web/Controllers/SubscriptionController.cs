@@ -417,7 +417,7 @@ namespace Datiss.Budget.Web.Controllers
             return Json(model);
         }
 
-        [HttpGet("import/template/{yearId}/{orgId?}")]
+        [HttpGet("import/template/{yearId}")]
         public async Task<IActionResult> GetExcelTemplate(int yearId)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);

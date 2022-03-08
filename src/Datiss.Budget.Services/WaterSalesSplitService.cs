@@ -709,8 +709,7 @@ namespace Datiss.Budget.Services
                                 .Include(x => x.UserType)
                                 .Include(x => x.WPipeDiameter)
                                 .OrderBy(x => x.Organization.DisplayOrder)
-                                .ThenBy(x => x.Organization.Type)
-                                .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.Organization.RowOrder)
                                 .ThenBy(x => x.UserType.DisplayOrder)
                                 .ThenBy(x => x.WPipeDiameter.DisplayOrder);
             }

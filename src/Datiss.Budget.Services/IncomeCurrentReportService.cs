@@ -641,8 +641,7 @@ namespace Datiss.Budget.Services
                                 .Include(x => x.SectionType)
                                 .Include(x => x.UnitType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
-                                .ThenBy(x => x.Organization.Type)
-                                .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.Organization.RowOrder)
                                 .ThenBy(x => x.SectionType.DisplayOrder)
                                 .ThenBy(x => x.UnitType.DisplayOrder);
             }

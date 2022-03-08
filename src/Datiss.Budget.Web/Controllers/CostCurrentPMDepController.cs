@@ -387,7 +387,9 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
-            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var organizations = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
+                                .OrderBy(x => x.DisplayOrder)
+                                .ThenBy(x => x.RowOrder);
             var ccPMDepTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDepType);
             var costCurrentTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType);
             var Activity = EnumSelectListProvider.GetActivityTypeItems().ToList();
