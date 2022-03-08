@@ -66,7 +66,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
             if (myfilter != null)
             {
                 filter = myfilter.Adapt<OrganizationFilterDTO>();
-                TempData.Put(_indexFilterKey, myfilter);
+                TempData.Put(_indexFilterKey, filter);
             }
 
             filter.PageNumber = page;

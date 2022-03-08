@@ -125,7 +125,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("{page?}")]
-        [HasPermission(claimType: Name , PermissionActionType.List)]
+        [HasPermission(claimType: Name, PermissionActionType.List)]
         public async Task<IActionResult> Index(int page = 1)
         {
             var filter = new WasteInstallFeeFilterDTO();
@@ -144,7 +144,7 @@ namespace Datiss.Budget.Web.Controllers
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
 
-            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId, true))
                 .Adapt<List<DropDownItemViewModel>>();
 
             var myfilter = TempData.Get<WasteInstallFeeFilterViewModel>(_indexFilterKey);
@@ -196,7 +196,7 @@ namespace Datiss.Budget.Web.Controllers
             var dwasteSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId, true))
                 .Adapt<List<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
@@ -433,8 +433,11 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
-            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var organizations = await _organizationService.GetDropDownInputDataAsync(orgId, true);
             var dwasteTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteDiameter);
+
+            if (year == null || organizations.Count() == 0 || dwasteTypes.Count() == 0)
+                return RedirectToAction("Index");
 
             var items = new List<WasteInstallFeeDTO>();
 
