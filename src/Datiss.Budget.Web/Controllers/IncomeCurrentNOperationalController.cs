@@ -437,7 +437,9 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("import/template/{yearId}/{orgId?}")]
         public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId) {
             var year = await _financeYearService.GetByIdAsync(yearId);
-            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var organizations = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
+                                .OrderBy(x => x.DisplayOrder)
+                                .ThenBy(x => x.RowOrder);
             var cinoTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CINOType);
 
             var items = new List<IncomeCurrentNOperationalDTO>();

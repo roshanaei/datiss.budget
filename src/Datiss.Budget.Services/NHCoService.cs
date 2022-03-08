@@ -592,14 +592,12 @@ namespace Datiss.Budget.Services
                 case "getexport":
                     return query.Include(x => x.Organization)
                                 .OrderBy(x => x.ActivityType)
-                                .ThenBy(x => x.Organization.DisplayOrder)
-                                .ThenBy(x => x.Organization.Type)
-                                .ThenBy(x => x.Organization.ParentId);
+                                .OrderBy(x => x.Organization.DisplayOrder)
+                                .ThenBy(x => x.Organization.RowOrder);
                 default:
                     return query.Include(x => x.Organization)
                                 .OrderBy(x => x.Organization.DisplayOrder)
-                                .ThenBy(x => x.Organization.Type)
-                                .ThenBy(x => x.Organization.ParentId);
+                                .ThenBy(x => x.Organization.RowOrder);
             }
         }
 

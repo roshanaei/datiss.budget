@@ -427,7 +427,9 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId , CofficientsGroup group)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
-            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            var organizations = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
+                                .OrderBy(x => x.DisplayOrder)
+                                .ThenBy(x => x.RowOrder);
             var cofficientTypes = await _constantService.GetCofficientByKeysAsync(group.ToString(), ConstantKeys.__Cofficients);
 
             var items = new List<CofficientDTO>();

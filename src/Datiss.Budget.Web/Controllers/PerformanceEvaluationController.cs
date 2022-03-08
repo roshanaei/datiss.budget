@@ -161,9 +161,14 @@ namespace Datiss.Budget.Web.Controllers
             model = result.Adapt<PerformanceEvaluationIndexViewModel>();
             model.Filter = filter.Adapt<PerformanceEvaluationFilterViewModel>();
 
-            var orgSource = (await _organizationService.GetDropDownDataAsync());
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true));
-            var dropDownList = orgSource.Except(inputOrgSource)
+            var orgSource = (await _organizationService.GetDropDownDataAsync()).ToList();
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true)).ToList();
+            var exceptOrgList = new List<DropDownItem>();
+            foreach (var Torg in orgSource)
+                if (!inputOrgSource.Any(x => x.Id == Torg.Id))
+                    exceptOrgList.Add(Torg);
+
+            var dropDownList = exceptOrgList
                 .Adapt<List<DropDownItemViewModel>>();
 
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
@@ -301,20 +306,31 @@ namespace Datiss.Budget.Web.Controllers
             var year = await _financeYearService.GetByIdAsync(yearId);
 
             var orgSource = (await _organizationService.GetWithChildrenAsync(orgId)).ToList();
-            var inputOrgSource = (await _organizationService.GetWithChildrenAsync(orgId, true)).ToList();
+            var inputOrgSource = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
+                                .OrderBy(x => x.DisplayOrder)
+                                .ThenBy(x => x.RowOrder).ToList();
+            var tableName = await _tablesFieldTitleService.GetByTableSectionNameAsync(tablesName);
+
+            if(orgSource.Count()==0 || year == null || inputOrgSource.Count() == 0 || tableName.Count() == 0)
+                return RedirectToAction(
+                    PerformanceEvaluationController.ACTION_Index,
+                    PerformanceEvaluationController.Name,
+                    new
+                    {
+                        tableName = tablesName
+                    });
             var exceptOrgList = new List<Organization>();
             foreach (var Torg in orgSource)
                 if (!inputOrgSource.Any(x => x.Id == Torg.Id))
                     exceptOrgList.Add(Torg);
 
-            var dropDownList = exceptOrgList
-                .Adapt<List<DropDownItemViewModel>>();
+            //var dropDownList = exceptOrgList
+            //    .Adapt<List<DropDownItemViewModel>>();
 
-            var tableName = await _tablesFieldTitleService.GetByTableSectionNameAsync(tablesName);
 
             var items = new List<PerformanceEvaluationDTO>();
 
-            foreach (var org in dropDownList)
+            foreach (var org in exceptOrgList)
             {
                 foreach (var tname in tableName)
                 {

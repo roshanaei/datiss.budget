@@ -632,8 +632,7 @@ namespace Datiss.Budget.Services
                     return query.Include(x => x.Organization)
                                 .Include(x => x.NOICType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
-                                .ThenBy(x => x.Organization.Type)
-                                .ThenBy(x => x.Organization.ParentId)
+                                .ThenBy(x => x.Organization.RowOrder)
                                 .ThenBy(x => x.NOICType.DisplayOrder);
             }
         }
