@@ -115,103 +115,103 @@
             </tr>
             @foreach (var item in Model.Items)
             {
-        <tr id="row_@item.Id">
-            <td>
-                <div id="divInput_Year_@item.Id" style="display: none">
-                    <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
-                    <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
-                    </select>
-                    <script>
+                <tr id="row_@item.Id">
+                    <td>
+                        <div id="divInput_Year_@item.Id" style="display: none">
+                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            </select>
+                            <script>
                                 $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
                                 $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
-                    </script>
-                </div>
-                <div id="divOutput_Year_@item.Id">
-                    <span id="spanYear_@item.Id">@item.Year.ToString()</span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_Org_@item.Id" style="display: none">
-                    <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
-                    <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
-                    </select>
-                    <script>
+                            </script>
+                        </div>
+                        <div id="divOutput_Year_@item.Id">
+                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Org_@item.Id" style="display: none">
+                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
+                            </select>
+                            <script>
                                 $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
-                                $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
-                    </script>
-                </div>
-                <div id="divOutput_Org_@item.Id">
-                    <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_ActivityType_@item.Id" style="display: none">
-                    <select class="form-control selectActivityType" id="inputActivityType_@item.Id" asp-items="Model.ActivitySource" onchange="RelatedDropDown(this,event)">
-                    </select>
-                    <script>
-                        $('select#inputActivityType_' + @item.Id + ' option[value=' + @Convert.ToInt16(item.ActivityType) + ']').attr('selected', true);
-                    </script>
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Org_@item.Id">
+                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ActivityType_@item.Id" style="display: none">
+                            <select class="form-control selectActivityType" id="inputActivityType_@item.Id" asp-items="Model.ActivitySource" onchange="RelatedDropDown(this,event)">
+                            </select>
+                            <script>
+                                $('#inputActivityType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_ActivityType_@item.Id">
+                            <span id="spanActivityType_@item.Id">@item.ActivityTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_CCInstalationType_@item.Id" style="display: none">
+                            <input id="hidCCInstalationTypeId_@item.Id" type="hidden" value="@item.CCInstalationTypeId" />
+                            <select class="form-control selectCCInstalationType" id="inputCCInstalationType_@item.Id">
+                            </select>
+                            <script>
+                                $('select#inputCCInstalationType_' + @item.Id + ' option[value=' + @item.CCInstalationTypeId + ']').attr('selected', true);
+                                $('#inputCCInstalationType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_CCInstalationType_@item.Id">
+                            <span id="spanCCInstalationType_@item.Id">@item.CCInstalationTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_NumberUser_@item.Id" style="display: none">
+                            <input class="form-control input-keyup default-input" id="inputNumberUser_@item.Id" value="@item.NumberUser" type="number" min="0" />
+                        </div>
+                        <div id="divOutput_NumberUser_@item.Id">
+                            <span id="spanNumberUser_@item.Id">@item.NumberUserDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Cost_@item.Id" style="display: none">
+                            <input class="form-control input-keyup" id="inputCost_@item.Id" value="@item.Cost" type="number" min="0" />
+                        </div>
+                        <div id="divOutput_Cost_@item.Id">
+                            <span id="spanCost_@item.Id">@item.CostDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Income_@item.Id" style="display: none">
+                            <input class="form-control input-keyup" id="inputIncome_@item.Id" value="@item.Income" type="number" min="0" />
+                        </div>
+                        <div id="divOutput_Income_@item.Id">
+                            <span id="spanIncome_@item.Id">@item.IncomeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
 
-                </div>
-                <div id="divOutput_ActivityType_@item.Id">
-                    <span id="spanActivityType_@item.Id">@item.ActivityTypeDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_CCInstalationType_@item.Id" style="display: none">
-                    <input id="hidCCInstalationTypeId_@item.Id" type="hidden" value="@item.CCInstalationTypeId" />
-                    <select class="form-control selectCCInstalationType" id="inputCCInstalationType_@item.Id">
-                    </select>
-                    <script>
-                        $('select#inputCCInstalationType_' + @item.Id + ' option[value=' + @item.CCInstalationTypeId + ']').attr('selected', true);
-                    </script>
-                </div>
-                <div id="divOutput_CCInstalationType_@item.Id">
-                    <span id="spanCCInstalationType_@item.Id">@item.CCInstalationTypeDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_NumberUser_@item.Id" style="display: none">
-                    <input class="form-control input-keyup default-input" id="inputNumberUser_@item.Id" value="@item.NumberUser" type="number" min="0"/>
-                </div>
-                <div id="divOutput_NumberUser_@item.Id">
-                    <span id="spanNumberUser_@item.Id">@item.NumberUserDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_Cost_@item.Id" style="display: none">
-                    <input class="form-control input-keyup" id="inputCost_@item.Id" value="@item.Cost" type="number" min="0"/>
-                </div>
-                <div id="divOutput_Cost_@item.Id">
-                    <span id="spanCost_@item.Id">@item.CostDisplay </span>
-                </div>
-            </td>
-            <td>
-                <div id="divInput_Income_@item.Id" style="display: none">
-                    <input class="form-control input-keyup" id="inputIncome_@item.Id" value="@item.Income" type="number" min="0"/>
-                </div>
-                <div id="divOutput_Income_@item.Id">
-                    <span id="spanIncome_@item.Id">@item.IncomeDisplay </span>
-                </div>
-            </td>
-            <td>
-                <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
-                    <i class="fa ft-edit fa-1x"></i>
-                </a>
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
 
-                <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                    <i class="fa ft-trash-2"></i>
-                </a>
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
 
-                <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
-                    <i class="fa ft-check-square"></i>
-                </a>
-
-                <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
-                    <i class="fa ft-x-square"></i>
-                </a>
-            </td>
-        </tr>
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
