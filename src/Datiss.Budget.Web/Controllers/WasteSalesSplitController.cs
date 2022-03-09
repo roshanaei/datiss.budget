@@ -141,7 +141,7 @@ namespace Datiss.Budget.Web.Controllers
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
 
-            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId, true))
                 .Adapt<List<DropDownItemViewModel>>();
 
             var myfilter = TempData.Get<WasteSalesSplitFilterViewModel>(_indexFilterKey);
@@ -197,7 +197,7 @@ namespace Datiss.Budget.Web.Controllers
             var wsPipeDiameterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteDiameter))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId, true))
                 .Adapt<List<DropDownItemViewModel>>();
 
 
@@ -453,11 +453,12 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
-            var organizations = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
-                    .OrderBy(x => x.DisplayOrder)
-                    .ThenBy(x => x.RowOrder);
+            var organizations = await _organizationService.GetDropDownInputDataAsync(orgId, true);
             var userTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
             var wasteDiameter = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteDiameter);
+
+            if (year == null || organizations.Count() == 0 || userTypes.Count() == 0 || wasteDiameter.Count() == 0)
+                return RedirectToAction("Index");
 
             var items = new List<WasteSalesSplitDTO>();
 
