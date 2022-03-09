@@ -158,7 +158,7 @@ namespace Datiss.Budget.Web.Controllers
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
 
-            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId, true))
                  .Adapt<List<DropDownItemViewModel>>();
 
             var myfilter = TempData.Get<ConsumeForcastWsFilterViewModel>(_indexFilterKey);
@@ -221,7 +221,7 @@ namespace Datiss.Budget.Web.Controllers
             ViewData["userTypeKeys"] = userTypeKeys.TrimEnd(',');
 
 
-            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId, true))
                 .Adapt<List<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
@@ -495,13 +495,21 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
-            var organizations = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
-                                .OrderBy(x => x.DisplayOrder)
-                                .ThenBy(x => x.RowOrder);
+
+            var organizations = await _organizationService.GetDropDownInputDataAsync(orgId, true);
+
             var userTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
 
             var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType,true);
             var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
+
+            if (year == null ||
+                organizations.Count() == 0 ||
+                userTypes.Count() == 0 ||
+                houseUsageLayer.Count() == 0 ||
+                nhouseUsagelayer.Count() == 0
+                )
+                return RedirectToAction("Index");
 
             var items = new List<ConsumeForcastWsDTO>();
 
