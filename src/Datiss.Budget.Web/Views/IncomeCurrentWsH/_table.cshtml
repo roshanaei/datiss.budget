@@ -18,8 +18,6 @@
                 <th style="min-width: 180px;">درآمد تبصره 3 فاضلاب بهاء خانگی</th>
                 <th style="min-width: 210px;">درآمد فاضلاب بهاء فصلی</th>
                 <th style="min-width: 200px;">درآمد کل فاضلاب بهاء</th>
-                @*<th style="min-width: 280px;">قیمت تبصره 7 فاضلاب بهاء خانگی</th>
-                    <th style="min-width: 280px;">درآمد تبصره 7 فاضلاب بهاء خانگی</th>*@
                 <th style="min-width: 190px;">مدیریت</th>
             </tr>
         </thead>
@@ -160,22 +158,6 @@
                         <span id="spanTIncome_"> </span>
                     </div>
                 </td>
-                @*<td>
-                        <div id="divInput_Note7Price_">
-                            <input class="form-control input-keyup" id="inputNote7Price_" type="number" min="0" />
-                        </div>
-                        <div id="divOutput_Note7Price_" style="display: none">
-                            <span id="spanNote7Price_"> </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_Note7Income_">
-                            <input class="form-control input-keyup" id="inputNote7Income_" type="number" min="0" />
-                        </div>
-                        <div id="divOutput_Note7Income_" style="display: none">
-                            <span id="spanNote7Income_"> </span>
-                        </div>
-                    </td>*@
 
                 <td>
                     <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
@@ -227,7 +209,7 @@
                             </select>
                             <script>
                                 $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
-                                $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_Org_@item.Id">
@@ -241,6 +223,7 @@
                             </select>
                             <script>
                                 $('select#inputUserType_' + @item.Id + ' option[value=' + @item.UserTypeId + ']').attr('selected', true);
+                                $('#inputUserType_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_UserType_@item.Id">
@@ -254,6 +237,7 @@
                             </select>
                             <script>
                                 $('select#inputUsageLayerType_' + @item.Id + ' option[value=' + @item.UsageLayerId + ']').attr('selected', true);
+                                $('#inputUsageLayerType_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_UsageLayerType_@item.Id">
@@ -349,22 +333,6 @@
                             <span id="spanTIncome_@item.Id">@item.TIncomeDisplay </span>
                         </div>
                     </td>
-                    @*<td>
-                            <div id="divInput_Note7Price_@item.Id" style="display: none">
-                                <input class="form-control" id="inputNote7Price_@item.Id" value="@item.Note7Price" type="number" min="0" />
-                            </div>
-                            <div id="divOutput_Note7Price_@item.Id">
-                                <span id="spanNote7Price_@item.Id">@item.Note7PriceDisplay </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div id="divInput_Note7Income_@item.Id" style="display: none">
-                                <input class="form-control" id="inputNote7Income_@item.Id" value="@item.Note7Income" type="number" min="0" />
-                            </div>
-                            <div id="divOutput_Note7Income_@item.Id">
-                                <span id="spanNote7Income_@item.Id">@item.Note7IncomeDisplay </span>
-                            </div>
-                        </td>*@
 
                     <td>
                         <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">

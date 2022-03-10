@@ -127,7 +127,7 @@
                             </select>
                             <script>
                                 $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
-                                $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_Org_@item.Id">
@@ -140,7 +140,7 @@
                             <select class="form-control selectActivityId" id="inputActivityId_@item.Id" asp-items="item.ActivitySource">
                             </select>
                             <script>
-                                $('select#inputActivityId_' + @item.Id + ' option[value=' + @item.ActivityId + ']').attr('selected', true);
+                                $('#inputActivityId_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_ActivityId_@item.Id">
@@ -154,6 +154,7 @@
                             </select>
                             <script>
                                 $('select#inputOIFType_' + @item.Id + ' option[value=' + @item.OIFTypeId + ']').attr('selected', true);
+                                $('#inputOIFType_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_OIFType_@item.Id">

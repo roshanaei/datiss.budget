@@ -14,6 +14,7 @@
                 <th style="min-width:150px">تعداد غیر خانگی</th>
                 <th style="min-width:150px">قیمت غیر خانگی</th>
                 <th style="min-width:150px">جمع درآمد غیر خانگی</th>
+                <th style="min-width:150px">جمع کل تعداد</th>
                 <th style="min-width:150px">جمع کل درآمد</th>
                 <th width="10%">مدیریت</th>
 
@@ -94,7 +95,7 @@
                 </td>
                 <td>
                     <div id="divInput_CountNH_">
-                        <input class="form-control input-keyup default-input" id="inputCountNH_" type="number" />
+                        <input class="form-control input-keyup" id="inputCountNH_" type="number" />
                     </div>
                     <div id="divOutput_CountNH_" style="display: none">
                         <span id="spanCountNH_"> </span>
@@ -114,6 +115,14 @@
                     </div>
                     <div id="divOutput_CostNH_" style="display: none">
                         <span id="spanCostNH_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_TotalCount_">
+                        <input class="form-control input-keyup" id="inputTotalCount_" type="number" />
+                    </div>
+                    <div id="divOutput_TotalCount_" style="display: none">
+                        <span id="spanTotalCount_"> </span>
                     </div>
                 </td>
                 <td>
@@ -175,7 +184,7 @@
                             </select>
                             <script>
                                 $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
-                                $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_Org_@item.Id">
@@ -188,7 +197,7 @@
                             <select class="form-control selectActivityType" id="inputActivityType_@item.Id" asp-items="Model.ActivityTypeSource" onchange="RelatedDropDown(this, event)">
                             </select>
                             <script>
-                                $('select#inputActivityType_' + @item.Id + ' option[value=' + @item.ActivityType + ']').attr('selected', true);
+                                $('#inputActivityType_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_ActivityType_@item.Id">
@@ -199,6 +208,9 @@
                         <div id="divInput_ICOType_@item.Id" style="display: none">
                             <input id="hidICOTypeId_@item.Id" type="hidden" value="@item.ICOTypeId" />
                             <select class="form-control selectICOType" id="inputICOType_@item.Id">
+                                <script>
+                                    $('#inputICOType_' + @item.Id).attr('disabled', 'disabled');
+                                </script>
                             </select>
                         </div>
                         <div id="divOutput_ICOType_@item.Id">
@@ -254,6 +266,14 @@
                         </div>
                     </td>
                     <td>
+                        <div id="divInput_TotalCount_@item.Id" style="display: none">
+                            <input class="form-control" id="inputTotalCount_@item.Id" value="@item.TotalCount" type="number" />
+                        </div>
+                        <div id="divOutput_TotalCount_@item.Id">
+                            <span id="spanTotalCount_@item.Id">@item.TotalCountDisplay </span>
+                        </div>
+                    </td>
+                    <td>
                         <div id="divInput_TotalCost_@item.Id" style="display: none">
                             <input class="form-control" id="inputTotalCost_@item.Id" value="@item.TotalCost" type="number" />
                         </div>
@@ -283,8 +303,8 @@
             }
         </tbody>
     </table>
-    </div>
-    
+</div>
+
 <div class="rowACJSB" style="margin-top:20px">
     <!--Tools-->
     <div class="rowACJS">
