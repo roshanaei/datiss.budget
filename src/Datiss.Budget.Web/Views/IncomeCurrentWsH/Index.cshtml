@@ -259,28 +259,6 @@
                                                                for="col-15"><span style="">درآمد کل فاضلاب بهاء</span></label>
                                                     </div>
                                                 </div>
-                                                @*<div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-16"
-                                                               id="col-16" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-16"><span style="">قیمت تبصره 7 فاضلاب بهاء خانگی</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-17"
-                                                               id="col-17" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-17"><span style="">درآمد تبصره 7 فاضلاب بهاء خانگی</span></label>
-                                                    </div>
-                                                </div>*@
                                             </div>
                                         </div>
                                     </div>
@@ -524,8 +502,6 @@
             let input9 = document.getElementById('inputNote3Income_' + id);
             let input10 = document.getElementById('inputSeasonalIncome_' + id);
             let input11 = document.getElementById('inputTIncome_' + id);
-            let input12 = document.getElementById('inputNote7Income_' + id);
-            let input13 = document.getElementById('inputNote7Price_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -595,18 +571,7 @@
                     btnSaveEdit.click();
                 }
             });
-            input12.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input13.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
+
 
 
             btnSaveEdit.addEventListener('click', function (evenrt) {

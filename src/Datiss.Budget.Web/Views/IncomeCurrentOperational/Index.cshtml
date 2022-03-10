@@ -1,5 +1,7 @@
 ﻿@model IncomeCurrentOperationalIndexViewModel
-@{ ViewData["Title"] = "درآمد عملیاتی"; }
+@{
+    ViewData["Title"] = "درآمد عملیاتی";
+}
 
 <!--Title-->
 <div class="row">
@@ -14,17 +16,6 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-
-                @if (ViewData["message"] != null)
-                {
-                    <div class="alert bg-light-@(ViewData["type"] ?? CssClassNames.Default) alert-dismissible m-2" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
-                        </button>
-                        <span>@ViewData["message"]</span>
-                    </div>
-                }
-
                 <div class="card-content">
                     <div class="card-body">
                         <!--Filters-->
@@ -223,7 +214,18 @@
                                                                name="col-11"
                                                                id="col-11" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-11"><span style="">جمع کل درآمد</span></label>
+                                                               for="col-11"><span style="">جمع کل تعداد</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-12"
+                                                               id="col-12" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-12"><span style="">جمع کل درآمد</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -260,47 +262,44 @@
 </section>
 
 @section headSection {
-    <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
-    <link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
-    <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
+<link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+<link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
+<script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
 }
 
 @section footSection {
 
-    <partial name="_loadingBar" />
+<partial name="_loadingBar" />
 
-    <div id="divCopy">
+<div id="divCopy">
+</div>
 
-    </div>
+<partial name="_excelModal" model="new ImportExcelViewModel()" />
 
-    <partial name="_excelModal" model="new ImportExcelViewModel()" />
-
-    <div id="divCreate">
-
-    </div>
+<div id="divCreate">
+</div>
 
 
-    <div id="divCalc">
+<div id="divCalc">
+</div>
 
-    </div>
+<partial name="_tableScript" />
 
-    <partial name="_tableScript" />
-
-    <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8,9,10,11';
-        let columnIndices = allColumns.split(',');
-        console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,";
-    </script>
+<script type="text/javascript">
+    let allColumns = '1,2,3,4,5,6,7,8,9,10,11,12';
+    let columnIndices = allColumns.split(',');
+    console.log(columnIndices);
+    let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,12,";
+</script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
     {
-        <script type="text/javascript">
-            showingColmuns = '@Model.Filter.Columns' ;
-        </script>
+<script type="text/javascript">
+    showingColmuns = '@Model.Filter.Columns' ;
+</script>
     }
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
     $(document).ready(function () {
             console.log('ready');
@@ -463,7 +462,8 @@
             let input4 = document.getElementById('inputCountNH_' + id);
             let input5 = document.getElementById('inputPriceNH_' + id);
             let input6 = document.getElementById('inputCostNH_' + id);
-            let input8 = document.getElementById('inputTotalCost_' + id);
+            let input8 = document.getElementById('inputTotalCount_' + id);
+            let input9 = document.getElementById('inputTotalCost_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -504,6 +504,12 @@
                 }
             });
             input8.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input9.addEventListener("keyup", function (event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
@@ -824,6 +830,6 @@
             $('#filterForm').submit();
         };
 
-    </script>
+</script>
 
 }

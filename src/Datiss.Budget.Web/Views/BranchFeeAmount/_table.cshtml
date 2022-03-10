@@ -190,8 +190,8 @@
                             <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
                             </select>
                             <script>
-                                        $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
-                                        $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
+                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_Year_@item.Id">
@@ -204,8 +204,8 @@
                             <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
                             </select>
                             <script>
-                                        $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
-                                        $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
+                                $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_Org_@item.Id">
@@ -340,11 +340,11 @@
     </table>
 </div>
 @*<tfoot style="background-color: #eee; font-size: 9px;">
-        <tr>
-            <td>کل رکوردها: @Model.TotalCount</td>
-            <td colspan="4">صفحه @Model.PageNumber از @if (Model.PagesCount == 0) {<span>1</span>} else {<span>@Model.PagesCount</span>}
-            </td>
-        </tr>
+    <tr>
+    <td>کل رکوردها: @Model.TotalCount</td>
+    <td colspan="4">صفحه @Model.PageNumber از @if (Model.PagesCount == 0) {<span>1</span>} else {<span>@Model.PagesCount</span>}
+    </td>
+    </tr>
     </tfoot>*@
 
 <div class="rowACJSB" style="margin-top:20px">
@@ -372,9 +372,9 @@
                 <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
             </button>
             @*<span data-toggle="modal" data-target="#CalculationModal">
-                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
-                        <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                    </button>
+                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                </button>
                 </span>*@
             <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
                 <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
@@ -389,9 +389,13 @@
             (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
             <b class="font-medium-2">
                 @if (Model.PagesCount == 0)
-                {<span>1</span>}
+                {
+                    <span>1</span>
+                }
                 else
-                {<span>@Model.PagesCount</span>}
+                {
+                    <span>@Model.PagesCount</span>
+                }
             </b>)
         </div>
     </div>

@@ -24,6 +24,7 @@
         $('#divOutput_CountNH_' + id).hide();
         $('#divOutput_PriceNH_' + id).hide();
         $('#divOutput_CostNH_' + id).hide();
+        $('#divOutput_TotalCount_' + id).hide();
         $('#divOutput_TotalCost_' + id).hide();
 
         //show input elements
@@ -37,6 +38,7 @@
         $('#divInput_CountNH_' + id).show();
         $('#divInput_PriceNH_' + id).show();
         $('#divInput_CostNH_' + id).show();
+        $('#divInput_TotalCount_' + id).show();
         $('#divInput_TotalCost_' + id).show();
 
 
@@ -56,6 +58,7 @@
         rowData.countNH = $('#inputCountNH_' + id).val();
         rowData.priceNH = $('#inputPriceNH_' + id).val();
         rowData.costNH = $('#inputCostNH_' + id).val();
+        rowData.totalCount = $('#inputTotalCount_' + id).val();
         rowData.totalCost = $('#inputTotalCost_' + id).val();
     }
 
@@ -74,6 +77,7 @@
         $('#divInput_CountNH_' + id).hide();
         $('#divInput_PriceNH_' + id).hide();
         $('#divInput_CostNH_' + id).hide();
+        $('#divInput_TotalCount_' + id).hide();
         $('#divInput_TotalCost_' + id).hide();
 
         //Retriving to OrginalData
@@ -88,6 +92,7 @@
             $('#inputCountNH_' + id).val(rowData.countNH);
             $('#inputPriceNH_' + id).val(rowData.priceNH);
             $('#inputCostNH_' + id).val(rowData.costNH);
+            $('#inputTotalCount_' + id).val(rowData.totalCount);
             $('#inputTotalCost_' + id).val(rowData.totalCost);
         }
 
@@ -102,6 +107,7 @@
         $('#divOutput_CountNH_' + id).show();
         $('#divOutput_PriceNH_' + id).show();
         $('#divOutput_CostNH_' + id).show();
+        $('#divOutput_TotalCount_' + id).show();
         $('#divOutput_TotalCost_' + id).show();
 
         $('#btnEdit_' + id).show();
@@ -134,6 +140,7 @@
         model.countNH = $('#inputCountNH_' + id).val();
         model.priceNH = $('#inputPriceNH_' + id).val();
         model.costNH = $('#inputCostNH_' + id).val();
+        model.totalCount = $('#inputTotalCount_' + id).val();
         model.totalCost = $('#inputTotalCost_' + id).val();
 
 
@@ -169,6 +176,7 @@
                 rowData.countNH = model.countNH;
                 rowData.priceNH = model.priceNH;
                 rowData.costNH = model.costNH;
+                rowData.totalCount = model.totalCount;
                 rowData.totalCost = model.totalCost;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
@@ -183,6 +191,7 @@
                 $('#spanCountNH_' + id).text(data.countNH);
                 $('#spanPriceNH_' + id).text(data.priceNH);
                 $('#spanCostNH_' + id).text(data.costNH);
+                $('#spanTotalCount_' + id).text(data.totalCount);
                 $('#spanTotalCost_' + id).text(data.totalCost);
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
@@ -207,6 +216,7 @@
         model.organizationId = $(e).find('#inputOrg_').val();
         model.activityType = $(e).find('#inputActivityType_').val();
         model.icoTypeId = $(e).find('#inputICOType_').val();
+
         model.countH = $(e).find('#inputCountH_').val();
         if (model.countH == "") {
             model.countH = 0;
@@ -228,8 +238,8 @@
             model.priceNH = 0;
         }
         model.costNH = $(e).find('#inputCostNH_').val();
-        if (model.costH == "") {
-            model.costH = 0;
+        if (model.costNH == "") {
+            model.costNH = 0;
         }
         model.totalCount = $(e).find('#inputTotalCount_').val();
         if (model.totalCount == "") {
@@ -367,6 +377,17 @@
                 $('#spanCostNH_' + data.id).text(data.costNH);
                 $('#divOutput_CostNH_' + data.id).show();
 
+
+                //TotalCount
+                $(e).find('#divInput_TotalCount_').attr('id', 'divInput_TotalCount_' + data.id);
+                $(e).find('#inputTotalCount_').attr('id', 'inputTotalCount_' + data.id);
+                $(e).find('#divOutput_TotalCount_').attr('id', 'divOutput_TotalCount_' + data.id);
+                $(e).find('#spanTotalCount_').attr('id', 'spanTotalCount_' + data.id);
+
+                $('#divInput_TotalCount_' + data.id).hide();
+                $('#spanTotalCount_' + data.id).text(data.totalCount);
+                $('#divOutput_TotalCount_' + data.id).show();
+
                 //TotalCost
                 $(e).find('#divInput_TotalCost_').attr('id', 'divInput_TotalCost_' + data.id);
                 $(e).find('#inputTotalCost_').attr('id', 'inputTotalCost_' + data.id);
@@ -376,6 +397,7 @@
                 $('#divInput_TotalCost_' + data.id).hide();
                 $('#spanTotalCost_' + data.id).text(data.totalCost);
                 $('#divOutput_TotalCost_' + data.id).show();
+
 
                 $('#btnSaveCreate_' + data.id).hide();
                 $('#btnCancelCreate_' + data.id).hide();

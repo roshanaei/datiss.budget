@@ -176,7 +176,7 @@
                             </select>
                             <script>
                                 $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
-                                $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_Org_@item.Id">
@@ -186,10 +186,10 @@
                     <td>
                         <div id="divInput_ActivityType_@item.Id" style="display: none">
                             <input id="hidActivityType_@item.Id" type="hidden" value="@item.ActivityType" />
-                            <select class="form-control selectActivityType" id="inputActivityType_@item.Id" asp-items="Model.ActivityTypeSource">
+                            <select class="form-control" id="inputActivityType_@item.Id" asp-items="Model.ActivityTypeSource">
                             </select>
                             <script>
-                                $('select#inputActivityType_' + @item.Id + ' option[value=' + @item.ActivityType + ']').attr('selected', true);
+                                $('#inputActivityType_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_ActivityType_@item.Id">
@@ -203,6 +203,7 @@
                             </select>
                             <script>
                                 $('select#inputUserType_' + @item.Id + ' option[value=' + @item.UserTypeId + ']').attr('selected', true);
+                                $('#inputUserType_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_UserType_@item.Id">
@@ -216,6 +217,7 @@
                             </select>
                             <script>
                                 $('select#inputUsageLayerType_' + @item.Id + ' option[value=' + @item.UsageLayerId + ']').attr('selected', true);
+                                $('#inputUsageLayerType_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_UsageLayerType_@item.Id">

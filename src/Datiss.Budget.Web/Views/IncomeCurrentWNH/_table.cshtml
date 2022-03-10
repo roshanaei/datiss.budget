@@ -243,7 +243,7 @@
                             </select>
                             <script>
                                 $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
-                                $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_Org_@item.Id">
@@ -257,6 +257,7 @@
                             </select>
                             <script>
                                 $('select#inputUserType_' + @item.Id + ' option[value=' + @item.UserTypeId + ']').attr('selected', true);
+                                $('#inputUserType_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_UserType_@item.Id">

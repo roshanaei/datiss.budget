@@ -45,8 +45,7 @@
         $('#divInput_Note3Income_' + id).show();
         $('#divInput_SeasonalIncome_' + id).show();
         $('#divInput_TIncome_' + id).show();
-        //$('#divInput_Note7Price_' + id).show();
-        //$('#divInput_Note7Income_' + id).show();
+
 
 
         $('#btnEdit_' + id).hide();
@@ -70,8 +69,7 @@
         rowData.note3Income = $('#inputNote3Income_' + id).val();
         rowData.seasonalIncome = $('#inputSeasonalIncome_' + id).val();
         rowData.tIncome = $('#inputTIncome_' + id).val();
-        //rowData.note7Price = $('#inputNote7Price_' + id).val();
-        //rowData.note7Income = $('#inputNote7Income_' + id).val();
+
     }
 
     function cancelEditRow(id) {
@@ -94,8 +92,7 @@
         $('#divInput_Note3Income_' + id).hide();
         $('#divInput_SeasonalIncome_' + id).hide();
         $('#divInput_TIncome_' + id).hide();
-        //$('#divInput_Note7Price_' + id).hide();
-        //$('#divInput_Note7Income_' + id).hide();
+
 
         //Reverting to OriginalData
         if (rowData != null) {
@@ -114,8 +111,7 @@
             $('#inputNote3Income_' + id).val(rowData.note3Income);
             $('#inputSeasonalIncome_' + id).val(rowData.seasonalIncome);
             $('#inputTIncome_' + id).val(rowData.tIncome);
-            //$('#inputNote7Price_' + id).val(rowData.note7Price);
-            //$('#inputNote7Income_' + id).val(rowData.note7Income);
+
         }
 
         //Show output elements
@@ -134,8 +130,7 @@
         $('#divOutput_Note3Income_' + id).show();
         $('#divOutput_SeasonalIncome_' + id).show();
         $('#divOutput_TIncome_' + id).show();
-       //$('#divOutput_Note7Price_' + id).show();
-       //$('#divOutput_Note7Income_' + id).show();
+
 
 
         $('#btnEdit_' + id).show();
@@ -172,8 +167,7 @@
         model.note3Income = $('#inputNote3Income_' + id).val();
         model.seasonalIncome = $('#inputSeasonalIncome_' + id).val();
         model.tIncome = $('#inputTIncome_' + id).val();
-        //model.note7Price = $('#inputNote7Price_' + id).val();
-        //model.note7Income = $('#inputNote7Income_' + id).val();
+
 
 
         $.ajax({
@@ -211,8 +205,7 @@
                 rowData.note3Income = model.note3Income;
                 rowData.seasonalIncome = model.seasonalIncome;
                 rowData.tIncome = model.tIncome;
-                //rowData.note7Price = model.note7Price;
-                //rowData.note7Income = model.note7Income;
+
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
@@ -231,8 +224,7 @@
                 $('#spanNote3Income_' + id).text(data.note3Income);
                 $('#spanSeasonalIncome_' + id).text(data.seasonalIncome);
                 $('#spanTIncome_' + id).text(data.tIncome);
-                //$('#spanNote7Price_' + id).text(data.note7Price);
-                //$('#spanNote7Income_' + id).text(data.note7Income);
+
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
@@ -301,14 +293,7 @@
         if (model.tIncome == "") {
             model.tIncome = 0;
         }
-        //model.note7Price = $(e).find('#inputNote7Price_').val();
-        //if (model.note7Price == "") {
-        //    model.note7Price = 0;
-        //}
-        //model.note7Income = $(e).find('#inputNote7Income_').val();
-        //if (model.note7Income == "") {
-        //    model.note7Income = 0;
-        //}
+
 
 
 
@@ -489,26 +474,6 @@
                 $('#divInput_TIncome_' + data.id).hide();
                 $('#spanTIncome_' + data.id).text(data.tIncome);
                 $('#divOutput_TIncome_' + data.id).show();
-
-                //Note7Price
-                //$(e).find('#divInput_Note7Price_').attr('id', 'divInput_Note7Price_' + data.id);
-                //$(e).find('#inputNote7Price_').attr('id', 'inputNote7Price_' + data.id);
-                //$(e).find('#divOutput_Note7Price_').attr('id', 'divOutput_Note7Price_' + data.id);
-                //$(e).find('#spanNote7Price_').attr('id', 'spanNote7Price_' + data.id);
-
-                //$('#divInput_Note7Price_' + data.id).hide();
-                //$('#spanNote7Price_' + data.id).text(data.note7Price);
-                //$('#divOutput_Note7Price_' + data.id).show();
-
-                ////Note7Income
-                //$(e).find('#divInput_Note7Income_').attr('id', 'divInput_Note7Income_' + data.id);
-                //$(e).find('#inputNote7Income_').attr('id', 'inputNote7Income_' + data.id);
-                //$(e).find('#divOutput_Note7Income_').attr('id', 'divOutput_Note7Income_' + data.id);
-                //$(e).find('#spanNote7Income_').attr('id', 'spanNote7Income_' + data.id);
-
-                //$('#divInput_Note7Income_' + data.id).hide();
-                //$('#spanNote7Income_' + data.id).text(data.note7Income);
-                //$('#divOutput_Note7Income_' + data.id).show();
 
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);

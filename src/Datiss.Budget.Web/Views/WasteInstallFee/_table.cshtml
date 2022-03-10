@@ -108,7 +108,7 @@
                             </select>
                             <script>
                                 $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
-                                $('#inputOrg_' + @item.Id).select2({ dir : 'rtl' });
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_Org_@item.Id">
@@ -122,6 +122,7 @@
                             </select>
                             <script>
                                 $('select#inputDWasteType_' + @item.Id + ' option[value=' + @item.DWasteTypeId + ']').attr('selected', true);
+                                $('#inputDWasteType_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
                         <div id="divOutput_DWasteType_@item.Id">
