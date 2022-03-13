@@ -1,18 +1,15 @@
-﻿@model WaterSalesSplitIndexViewModel
-
+﻿@model UserTypeAverageCapacityCostIndexViewModel
 <div class="table-responsive">
     <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
         <thead class="thead-light">
             <tr>
                 <th style="min-width:135px">سال</th>
                 <th style="min-width:250px">سازمان</th>
-                <th style="min-width:240px">کاربری</th>
-                <th style="min-width:124px">قطر لوله</th>
-                <th style="min-width:145px">تعداد انشعاب</th>
-                <th style="min-width:135px">آحاد انشعاب</th>
-@*                <th style="min-width:199px">متوسط ظرفیت قراردادی</th>
-*@                <th style="min-width:180px">هزینه نصب انشعاب</th>
+                <th style="min-width:250px">کاربری</th>
+                <th style="min-width:220px">متوسط ظرفیت قراردادی آب</th>
+                <th style="min-width:220px">متوسط ظرفیت قراردادی فاضلاب </th>
                 <th style="min-width:190px">مدیریت</th>
+
             </tr>
         </thead>
         <tbody>
@@ -55,45 +52,19 @@
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_WaterDiameter_">
-                        <input id="hidWaterDiameterId_" type="hidden" />
-                        <select class="form-control selectWaterDiameter" id="inputWaterDiameter_" asp-items="Model.WaterDiameterSource">
-                        </select>
+                    <div id="divInput_AverageCapacityWIncome_">
+                        <input class="form-control input-keyup default-input" id="inputAverageCapacityWIncome_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_WaterDiameter_" style="display: none">
-                        <span id="spanWaterDiameter_"> </span>
+                    <div id="divOutput_AverageCapacityWIncome_" style="display: none">
+                        <span id="spanAverageCapacityWIncome_"> </span>
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_NumberSales_">
-                        <input class="form-control input-keyup default-input" id="inputNumberSales_" type="number" />
+                    <div id="divInput_AverageCapacityWsIncome_">
+                        <input class="form-control input-keyup" id="inputAverageCapacityWsIncome_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_NumberSales_" style="display: none">
-                        <span id="spanNumberSales_"> </span>
-                    </div>
-                </td>
-                <td>
-                    <div id="divInput_UnitSales_">
-                        <input class="form-control input-keyup" id="inputUnitSales_" type="number" />
-                    </div>
-                    <div id="divOutput_UnitSales_" style="display: none">
-                        <span id="spanUnitSales_"> </span>
-                    </div>
-                </td>
-@*                <td>
-                    <div id="divInput_AverageCapacity_">
-                        <input class="form-control input-keyup" id="inputAverageCapacity_" type="number" />
-                    </div>
-                    <div id="divOutput_AverageCapacity_" style="display: none">
-                        <span id="spanAverageCapacity_"> </span>
-                    </div>
-                </td>*@
-                <td>
-                    <div id="divInput_WInstallationCosts_">
-                        <input class="form-control input-keyup" id="inputWInstallationCosts_" type="number" />
-                    </div>
-                    <div id="divOutput_WInstallationCosts_" style="display: none">
-                        <span id="spanWInstallationCosts_"> </span>
+                    <div id="divOutput_AverageCapacityWsIncome_" style="display: none">
+                        <span id="spanAverageCapacityWsIncome_"> </span>
                     </div>
                 </td>
                 <td>
@@ -168,49 +139,19 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_WaterDiameter_@item.Id" style="display: none">
-                            <input id="hidWaterDiameterId_@item.Id" type="hidden" value="@item.WPipeDiameterId" />
-                            <select class="form-control" id="inputWaterDiameter_@item.Id" asp-items="Model.WaterDiameterSource">
-                            </select>
-                            <script>
-                                $('select#inputWaterDiameter_' + @item.Id + ' option[value=' + @item.WPipeDiameterId + ']').attr('selected', true);
-                                $('#inputWaterDiameter_' + @item.Id).attr('disabled', 'disabled');
-                            </script>
+                        <div id="divInput_AverageCapacityWIncome_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAverageCapacityWIncome_@item.Id" value="@item.AverageCapacityWIncome" type="number" />
                         </div>
-                        <div id="divOutput_WaterDiameter_@item.Id">
-                            <span id="spanWaterDiameter_@item.Id">@item.WPipeDiameterDisplay </span>
+                        <div id="divOutput_AverageCapacityWIncome_@item.Id">
+                            <span id="spanAverageCapacityWIncome_@item.Id">@item.AverageCapacityWIncomeDisplay </span>
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_NumberSales_@item.Id" style="display: none">
-                            <input class="form-control" id="inputNumberSales_@item.Id" value="@item.NumberSales" type="number" />
+                        <div id="divInput_AverageCapacityWsIncome_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAverageCapacityWsIncome_@item.Id" value="@item.AverageCapacityWsIncome" type="number" />
                         </div>
-                        <div id="divOutput_NumberSales_@item.Id">
-                            <span id="spanNumberSales_@item.Id">@item.NumberSalesDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_UnitSales_@item.Id" style="display: none">
-                            <input class="form-control" id="inputUnitSales_@item.Id" value="@item.UnitSales" type="number" />
-                        </div>
-                        <div id="divOutput_UnitSales_@item.Id">
-                            <span id="spanUnitSales_@item.Id">@item.UnitSalesDisplay </span>
-                        </div>
-                    </td>
-@*                    <td>
-                        <div id="divInput_AverageCapacity_@item.Id" style="display: none">
-                            <input class="form-control" id="inputAverageCapacity_@item.Id" value="@item.AverageCapacity" type="number" />
-                        </div>
-                        <div id="divOutput_AverageCapacity_@item.Id">
-                            <span id="spanAverageCapacity_@item.Id">@item.AverageCapacityDisplay </span>
-                        </div>
-                    </td>*@
-                    <td>
-                        <div id="divInput_WInstallationCosts_@item.Id" style="display: none">
-                            <input class="form-control" id="inputWInstallationCosts_@item.Id" value="@item.WInstallationCosts" type="number" />
-                        </div>
-                        <div id="divOutput_WInstallationCosts_@item.Id">
-                            <span id="spanWInstallationCosts_@item.Id">@item.WInstallationCostsDisplay </span>
+                        <div id="divOutput_AverageCapacityWsIncome_@item.Id">
+                            <span id="spanAverageCapacityWsIncome_@item.Id">@item.AverageCapacityWsIncomeDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -234,8 +175,8 @@
             }
         </tbody>
     </table>
-</div>
 
+</div>
 <div class="rowACJSB" style="margin-top:20px">
     <!--Tools-->
     <div class="rowACJS">
@@ -246,6 +187,7 @@
             <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
             <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
 
+            @*<input asp-for="ExcelFile" type="file" />*@
             <span data-toggle="modal" data-target="#backdrop">
                 <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                     <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
@@ -259,18 +201,13 @@
             <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
                 <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
             </button>
-            <span data-toggle="modal" data-target="#CalculationModal">
-                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                </button>
-            </span>
             <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
                 <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
             </button>
         </form>
 
     </div>
-    <!--Pagination-->
+
     <div class="rowAC">
         <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
         <div class="my-font ml-2">
@@ -284,5 +221,5 @@
         </div>
     </div>
     <!--Pagination-->
-    <vc:pager model="Model.ToPager()" controller-name="@WaterSalesSplitController.Name" action-name="@WaterSalesSplitController.ACTION_Index"></vc:pager>
+    <vc:pager model="Model.ToPager()" controller-name="@UserTypeAverageCapacityCostController.Name" action-name="@UserTypeAverageCapacityCostController.ACTION_Index"></vc:pager>
 </div>

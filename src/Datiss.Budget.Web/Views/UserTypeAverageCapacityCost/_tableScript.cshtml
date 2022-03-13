@@ -14,15 +14,15 @@
         $('#divOutput_Year_' + id).hide();
         $('#divOutput_Org_' + id).hide();
         $('#divOutput_UserType_' + id).hide();
-        $('#divOutput_AverageCapacityW_' + id).hide();
-        $('#divOutput_AverageCapacityWs_' + id).hide();
+        $('#divOutput_AverageCapacityWIncome_' + id).hide();
+        $('#divOutput_AverageCapacityWsIncome_' + id).hide();
 
         //show input elements
         $('#divInput_Year_' + id).show();
         $('#divInput_Org_' + id).show();
         $('#divInput_UserType_' + id).show();
-        $('#divInput_AverageCapacityW_' + id).show();
-        $('#divInput_AverageCapacityWs_' + id).show();
+        $('#divInput_AverageCapacityWIncome_' + id).show();
+        $('#divInput_AverageCapacityWsIncome_' + id).show();
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -33,9 +33,8 @@
         rowData.yearId = $('#inputYear_' + id).val();
         rowData.organizationId = $('#inputOrg_' + id).val();
         rowData.userTypeId = $('#inputUserType_' + id).val();
-        rowData.averageCapacityW = $('#inputAverageCapacityW_' + id).val();
-        rowData.averageCapacityWs = $('#inputAverageCapacityWs_' + id).val();
-
+        rowData.averageCapacityWIncome = $('#inputAverageCapacityWIncome_' + id).val();
+        rowData.averageCapacityWsIncome = $('#inputAverageCapacityWsIncome_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -46,27 +45,24 @@
         $('#divInput_Year_' + id).hide();
         $('#divInput_Org_' + id).hide();
         $('#divInput_UserType_' + id).hide();
-        $('#divInput_AverageCapacityW_' + id).hide();
-        $('#divInput_AverageCapacityWs_' + id).hide();
-
+        $('#divInput_AverageCapacityWIncome_' + id).hide();
+        $('#divInput_AverageCapacityWsIncome_' + id).hide();
 
         //Reverting to OriginalData
         if (rowData != null) {
             $('#inputYear_' + id).val(rowData.yearId);
             $('#inputOrg_' + id).val(rowData.organizationId);
             $('#inputUserType_' + id).val(rowData.userTypeId);
-            $('#inputAverageCapacityW_' + id).val(rowData.averageCapacityW);
-            $('#inputAverageCapacityWs_' + id).val(rowData.averageCapacityWs);
-
+            $('#inputAverageCapacityWIncome_' + id).val(rowData.averageCapacityWIncome);
+            $('#inputAverageCapacityWsIncome_' + id).val(rowData.averageCapacityWsIncome);
         }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
         $('#divOutput_Org_' + id).show();
         $('#divOutput_UserType_' + id).show();
-        $('#divOutput_AverageCapacityW_' + id).show();
-        $('#divOutput_AverageCapacityWs_' + id).show();
-
+        $('#divOutput_AverageCapacityWIncome_' + id).show();
+        $('#divOutput_AverageCapacityWsIncome_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -90,11 +86,11 @@
         model.yearId = $('#inputYear_' + id).val();
         model.organizationId = $('#inputOrg_' + id).val();
         model.userTypeId = $('#inputUserType_' + id).val();
-        model.averageCapacityW = $('#inputAverageCapacityW_' + id).val();
-        model.averageCapacityWs = $('#inputAverageCapacityWs_' + id).val();
+        model.averageCapacityWIncome = $('#inputAverageCapacityWIncome_' + id).val();
+        model.averageCapacityWsIncome = $('#inputAverageCapacityWsIncome_' + id).val();
 
         $.ajax({
-            url: '@Url.Action(UserTypeAverageCapacityController.ACTION_Edit)',
+            url: '@Url.Action(UserTypeAverageCapacityCostController.ACTION_Edit)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -116,17 +112,16 @@
                 rowData.yearId = model.yearId;
                 rowData.organizationId = model.organizationId;
                 rowData.userTypeId = model.userTypeId;
-                rowData.averageCapacityW = model.averageCapacityW;
-                rowData.averageCapacityWs = model.averageCapacityWs;
-
+                rowData.averageCapacityWIncome = model.averageCapacityWIncome;
+                rowData.averageCapacityWsIncome = model.averageCapacityWsIncome;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
                 $('#spanUserType_' + id).text(data.userTypeDisplay);
-                $('#spanAverageCapacityW_' + id).text(data.averageCapacityW);
-                $('#spanAverageCapacityWs_' + id).text(data.averageCapacityWs);
+                $('#spanAverageCapacityWIncome_' + id).text(data.averageCapacityWIncome);
+                $('#spanAverageCapacityWsIncome_' + id).text(data.averageCapacityWsIncome);
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
@@ -150,14 +145,7 @@
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
         model.userTypeId = $(e).find('#inputUserType_').val();
-        model.averageCapacityW = $(e).find('#inputAverageCapacityW_').val();
-        if (model.averageCapacityW == "") {
-            model.averageCapacityW = 0;
-        }
-        model.averageCapacityWs = $(e).find('#inputAverageCapacityWs_').val();
-        if (model.averageCapacityWs == "") {
-            model.averageCapacityWs = 0;
-        }
+
         model.averageCapacityWIncome = $(e).find('#inputAverageCapacityWIncome_').val();
         if (model.averageCapacityWIncome == "") {
             model.averageCapacityWIncome = 0;
@@ -170,7 +158,7 @@
         console.log(model);
 
         $.ajax({
-            url: '@Url.Action(UserTypeAverageCapacityController.ACTION_Create)',
+            url: '@Url.Action(UserTypeAverageCapacityCostController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -221,26 +209,26 @@
                 $('#spanUserType_' + data.id).text(data.userTypeDisplay);
                 $('#divOutput_UserType_' + data.id).show();
 
-                //AverageCapacityW
-                $(e).find('#divInput_AverageCapacityW_').attr('id', 'divInput_AverageCapacityW_' + data.id);
-                $(e).find('#inputAverageCapacityW_').attr('id', 'inputAverageCapacityW_' + data.id);
-                $(e).find('#divOutput_AverageCapacityW_').attr('id', 'divOutput_AverageCapacityW_' + data.id);
-                $(e).find('#spanAverageCapacityW_').attr('id', 'spanAverageCapacityW_' + data.id);
 
-                $('#divInput_AverageCapacityW_' + data.id).hide();
-                $('#spanAverageCapacityW_' + data.id).text(data.averageCapacityW);
-                $('#divOutput_AverageCapacityW_' + data.id).show();
+                //AverageCapacityWIncome
+                $(e).find('#divInput_AverageCapacityWIncome_').attr('id', 'divInput_AverageCapacityWIncome_' + data.id);
+                $(e).find('#inputAverageCapacityWIncome_').attr('id', 'inputAverageCapacityWIncome_' + data.id);
+                $(e).find('#divOutput_AverageCapacityWIncome_').attr('id', 'divOutput_AverageCapacityWIncome_' + data.id);
+                $(e).find('#spanAverageCapacityWIncome_').attr('id', 'spanAverageCapacityWIncome_' + data.id);
 
-                //AverageCapacityWs
-                $(e).find('#divInput_AverageCapacityWs_').attr('id', 'divInput_AverageCapacityWs_' + data.id);
-                $(e).find('#inputAverageCapacityWs_').attr('id', 'inputAverageCapacityWs_' + data.id);
-                $(e).find('#divOutput_AverageCapacityWs_').attr('id', 'divOutput_AverageCapacityWs_' + data.id);
-                $(e).find('#spanAverageCapacityWs_').attr('id', 'spanAverageCapacityWs_' + data.id);
+                $('#divInput_AverageCapacityWIncome_' + data.id).hide();
+                $('#spanAverageCapacityWIncome_' + data.id).text(data.averageCapacityWIncome);
+                $('#divOutput_AverageCapacityWIncome_' + data.id).show();
 
-                $('#divInput_AverageCapacityWs_' + data.id).hide();
-                $('#spanAverageCapacityWs_' + data.id).text(data.averageCapacityWs);
-                $('#divOutput_AverageCapacityWs_' + data.id).show();
+                //AverageCapacityWsIncome
+                $(e).find('#divInput_AverageCapacityWsIncome_').attr('id', 'divInput_AverageCapacityWsIncome_' + data.id);
+                $(e).find('#inputAverageCapacityWsIncome_').attr('id', 'inputAverageCapacityWsIncome_' + data.id);
+                $(e).find('#divOutput_AverageCapacityWsIncome_').attr('id', 'divOutput_AverageCapacityWsIncome_' + data.id);
+                $(e).find('#spanAverageCapacityWsIncome_').attr('id', 'spanAverageCapacityWsIncome_' + data.id);
 
+                $('#divInput_AverageCapacityWsIncome_' + data.id).hide();
+                $('#spanAverageCapacityWsIncome_' + data.id).text(data.averageCapacityWsIncome);
+                $('#divOutput_AverageCapacityWsIncome_' + data.id).show();
 
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);
@@ -320,7 +308,7 @@
         console.log(e);
 
         $.ajax({
-            url: '@Url.Action(UserTypeAverageCapacityController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(UserTypeAverageCapacityCostController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {

@@ -47,6 +47,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<UserTypeAverageCapacity> UserTypeAverageCapacities { get; set; }
 
+        public ICollection<UserTypeAverageCapacityCost> UserTypeAverageCapacityCosts { get; set; }
+
         public ICollection<IncomeForcast> IncomeForcasts { get; set; }
 
         public ICollection<IncomeForcastWs> IncomeForcastWs { get; set; }
