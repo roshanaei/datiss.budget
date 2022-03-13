@@ -27,10 +27,5 @@ namespace Datiss.Budget.Services.Excel.Models
         [Column(MappingDirections.Both, Letter = "F")]
         public decimal AverageCapacityWs { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "G")]
-        public decimal AverageCapacityWIncome { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "H")]
-        public decimal AverageCapacityWsIncome { get; set; }
     }
 }

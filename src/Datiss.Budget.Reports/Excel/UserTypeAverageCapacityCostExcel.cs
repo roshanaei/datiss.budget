@@ -21,8 +21,8 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 1).Value = "سال";
             sheet.Cell(1, 2).Value = "سازمان";
             sheet.Cell(1, 3).Value = "کاربری";
-            sheet.Cell(1, 4).Value = "متوسط ظرفیت قراردادی آب - درآمد سرمایه ای";
-            sheet.Cell(1, 5).Value = "متوسط ظرفیت قراردادی فاضلاب - درآمد سرمایه ای";
+            sheet.Cell(1, 4).Value = "متوسط ظرفیت قراردادی آب - درآمد جاری";
+            sheet.Cell(1, 5).Value = "متوسط ظرفیت قراردادی فاضلاب - درآمد جاری";
 
             var totalCount = items.Count();
             int row = 2;
@@ -64,8 +64,8 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(2, 2).Value = "کد سازمان";
             sheet.Cell(2, 3).Value = "عنوان کاربری";
             sheet.Cell(2, 4).Value = "کد کاربری";
-            sheet.Cell(2, 5).Value = "متوسط ظرفیت قراردادی آب - درآمد سرمایه ای";
-            sheet.Cell(2, 6).Value = "متوسط ظرفیت قراردادی فاضلاب - درآمد سرمایه ای";
+            sheet.Cell(2, 5).Value = "متوسط ظرفیت قراردادی آب - درآمد جاری";
+            sheet.Cell(2, 6).Value = "متوسط ظرفیت قراردادی فاضلاب - درآمد جاری";
 
             var totalCount = items.Count();
             int row = 3;
