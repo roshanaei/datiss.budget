@@ -161,7 +161,7 @@
                                                                for="col-6"><span>آحاد انشعاب</span></label>
                                                     </div>
                                                 </div>
-                                                <div class="dropdown-item">
+@*                                                <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
                                                         <input type="checkbox"
                                                                class="custom-control-input"
@@ -171,16 +171,16 @@
                                                         <label class="custom-control-label my-font"
                                                                for="col-7"><span>متوسط ظرفیت قراردادی</span></label>
                                                     </div>
-                                                </div>
+                                                </div>*@
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
                                                         <input type="checkbox"
                                                                class="custom-control-input"
                                                                checked
-                                                               name="col-8"
-                                                               id="col-8" />
+                                                               name="col-7"
+                                                               id="col-7" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-8"><span>هزینه نصب انشعاب</span></label>
+                                                               for="col-7"><span>هزینه نصب انشعاب</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -242,10 +242,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8';
+        let allColumns = '1,2,3,4,5,6,7';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,";
+        let showingColmuns = "1,2,3,4,5,6,7,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -407,8 +407,8 @@
             let id = $(this).data('id');
             let input1 = document.getElementById('inputNumberSales_' + id);
             let input2 = document.getElementById('inputUnitSales_' + id);
-            let input3 = document.getElementById('inputAverageCapacity_' + id);
-            let input4 = document.getElementById('inputWInstallationCosts_' + id);
+            //let input3 = document.getElementById('inputAverageCapacity_' + id);
+            let input3 = document.getElementById('inputWInstallationCosts_' + id);
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
             input1.addEventListener("keyup", function (event) {
@@ -429,12 +429,12 @@
                     btnSaveEdit.click();
                 }
             });
-            input4.addEventListener("keyup", function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
+            //input4.addEventListener("keyup", function (event) {
+            //    event.preventDefault();
+            //    if (event.keyCode === 13) {
+            //        btnSaveEdit.click();
+            //    }
+            //});
 
             btnSaveEdit.addEventListener('click', function (evenrt) {
                 $(btnSaveEdit).attr('disabled', true);

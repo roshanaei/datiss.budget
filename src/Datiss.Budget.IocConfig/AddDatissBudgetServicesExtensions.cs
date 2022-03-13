@@ -40,6 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<INHCoService, NHCoService>();
             services.AddScoped<IBranchingRateIncreaseService, BranchingRateIncreaseService>();
             services.AddScoped<IUserTypeAverageCapacityService, UserTypeAverageCapacityService>();
+            services.AddScoped<IUserTypeAverageCapacityCostService, UserTypeAverageCapacityCostService>();
             services.AddScoped<IIncomeForcastOtherService, IncomeForcastOtherService>();
             services.AddScoped<ISalesSplitTotalService, SalesSplitTotalService>();
             services.AddScoped<IFeeCityService, FeeCityService>();

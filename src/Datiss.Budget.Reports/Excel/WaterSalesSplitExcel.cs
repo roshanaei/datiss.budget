@@ -27,8 +27,8 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 4).Value = "قطر لوله آب";
             sheet.Cell(1, 5).Value = "تعداد انشعاب";
             sheet.Cell(1, 6).Value = "آحاد انشعاب";
-            sheet.Cell(1, 7).Value = "متوسط ظرفیت قراردادی";
-            sheet.Cell(1, 8).Value = "هزینه نصب انشعاب";
+            //sheet.Cell(1, 7).Value = "متوسط ظرفیت قراردادی";
+            sheet.Cell(1, 7).Value = "هزینه نصب انشعاب";
 
             var totalCount = items.Count();
             int row = 2;
@@ -46,16 +46,16 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 6).Value = item.UnitSales;
                 sheet.Cell(row, 6).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                sheet.Cell(row, 7).Value = item.AverageCapacity;
-                sheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0.00";
+                //sheet.Cell(row, 7).Value = item.AverageCapacity;
+                //sheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0.00";
+                //sheet.Cell(row, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                sheet.Cell(row, 7).Value = item.WInstallationCosts;
+                sheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                sheet.Cell(row, 8).Value = item.WInstallationCosts;
-                sheet.Cell(row, 8).Style.NumberFormat.Format = "#,##0";
-                sheet.Cell(row, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 row++;
             }
 
-            var range = sheet.Range(1, 1, row - 1, 8);
+            var range = sheet.Range(1, 1, row - 1, 7);
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
@@ -72,7 +72,7 @@ namespace Datiss.Budget.Reports.Excel
 
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
-            sheet.Range(1, 1, 1, 9).Merge();
+            sheet.Range(1, 1, 1, 8).Merge();
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
             sheet.Cell(2, 2).Value = "کد سازمان";
@@ -82,7 +82,7 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(2, 6).Value = "کد قطر لوله";
             sheet.Cell(2, 7).Value = "تعداد انشعاب";
             sheet.Cell(2, 8).Value = "آحاد انشعاب";
-            sheet.Cell(2, 9).Value = "متوسط ظرفیت قراردادی";
+            //sheet.Cell(2, 9).Value = "متوسط ظرفیت قراردادی";
 
             var totalCount = items.Count();
             int row = 3;
@@ -98,7 +98,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(2, 1, row - 1, 9);
+            var range = sheet.Range(2, 1, row - 1, 8);
             range.Column(6).Style.NumberFormat.Format = "#,##0";
             range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other
@@ -106,8 +106,8 @@ namespace Datiss.Budget.Reports.Excel
             range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(8).Style.NumberFormat.Format = "#,##0";
             range.Column(8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(9).Style.NumberFormat.Format = "#,##0.00";
-            range.Column(9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            //range.Column(9).Style.NumberFormat.Format = "#,##0.00";
+            //range.Column(9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             //
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
