@@ -28,7 +28,7 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 5).Value = "تعداد انشعاب";
             sheet.Cell(1, 6).Value = "آحاد انشعاب";
             //sheet.Cell(1, 7).Value = "متوسط ظرفیت قراردادی";
-            sheet.Cell(1, 8).Value = "هزینه نصب انشعاب";
+            sheet.Cell(1, 7).Value = "هزینه نصب انشعاب";
 
             var totalCount = items.Count();
             int row = 2;
