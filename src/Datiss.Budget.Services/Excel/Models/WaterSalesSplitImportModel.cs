@@ -33,8 +33,8 @@ namespace Datiss.Budget.Services.Excel
         [Column(MappingDirections.Both, Letter = "H")]
         public int UnitSales { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "I")]
-        public decimal AverageCapacity { get; set; }
+        //[Column(MappingDirections.Both, Letter = "I")]
+        //public decimal AverageCapacity { get; set; }
 
     }
 }
