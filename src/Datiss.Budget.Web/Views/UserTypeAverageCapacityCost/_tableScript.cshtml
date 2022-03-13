@@ -1,0 +1,349 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    let rowData = {};
+
+    function editRow(id) {
+
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_UserType_' + id).hide();
+        $('#divOutput_AverageCapacityWIncome_' + id).hide();
+        $('#divOutput_AverageCapacityWsIncome_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_UserType_' + id).show();
+        $('#divInput_AverageCapacityWIncome_' + id).show();
+        $('#divInput_AverageCapacityWsIncome_' + id).show();
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.userTypeId = $('#inputUserType_' + id).val();
+        rowData.averageCapacityWIncome = $('#inputAverageCapacityWIncome_' + id).val();
+        rowData.averageCapacityWsIncome = $('#inputAverageCapacityWsIncome_' + id).val();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_UserType_' + id).hide();
+        $('#divInput_AverageCapacityWIncome_' + id).hide();
+        $('#divInput_AverageCapacityWsIncome_' + id).hide();
+
+        //Reverting to OriginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputUserType_' + id).val(rowData.userTypeId);
+            $('#inputAverageCapacityWIncome_' + id).val(rowData.averageCapacityWIncome);
+            $('#inputAverageCapacityWsIncome_' + id).val(rowData.averageCapacityWsIncome);
+        }
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_UserType_' + id).show();
+        $('#divOutput_AverageCapacityWIncome_' + id).show();
+        $('#divOutput_AverageCapacityWsIncome_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.userTypeId = $('#inputUserType_' + id).val();
+        model.averageCapacityWIncome = $('#inputAverageCapacityWIncome_' + id).val();
+        model.averageCapacityWsIncome = $('#inputAverageCapacityWsIncome_' + id).val();
+
+        $.ajax({
+            url: '@Url.Action(UserTypeAverageCapacityCostController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.userTypeId = model.userTypeId;
+                rowData.averageCapacityWIncome = model.averageCapacityWIncome;
+                rowData.averageCapacityWsIncome = model.averageCapacityWsIncome;
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanUserType_' + id).text(data.userTypeDisplay);
+                $('#spanAverageCapacityWIncome_' + id).text(data.averageCapacityWIncome);
+                $('#spanAverageCapacityWsIncome_' + id).text(data.averageCapacityWsIncome);
+
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.userTypeId = $(e).find('#inputUserType_').val();
+
+        model.averageCapacityWIncome = $(e).find('#inputAverageCapacityWIncome_').val();
+        if (model.averageCapacityWIncome == "") {
+            model.averageCapacityWIncome = 0;
+        }
+        model.averageCapacityWsIncome = $(e).find('#inputAverageCapacityWsIncome_').val();
+        if (model.averageCapacityWsIncome == "") {
+            model.averageCapacityWsIncome = 0;
+        }
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(UserTypeAverageCapacityCostController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //UserType
+                $(e).find('#divInput_UserType_').attr('id', 'divInput_UserType_' + data.id);
+                $(e).find('#hidUserTypeId_').attr('id', 'hidUserTypeId_' + data.id);
+                $(e).find('#inputUserType_').attr('id', 'inputUserType_' + data.id);
+                $(e).find('#divOutput_UserType_').attr('id', 'divOutput_UserType_' + data.id);
+                $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
+
+                $('#divInput_UserType_' + data.id).hide();
+                $('#spanUserType_' + data.id).text(data.userTypeDisplay);
+                $('#divOutput_UserType_' + data.id).show();
+
+
+                //AverageCapacityWIncome
+                $(e).find('#divInput_AverageCapacityWIncome_').attr('id', 'divInput_AverageCapacityWIncome_' + data.id);
+                $(e).find('#inputAverageCapacityWIncome_').attr('id', 'inputAverageCapacityWIncome_' + data.id);
+                $(e).find('#divOutput_AverageCapacityWIncome_').attr('id', 'divOutput_AverageCapacityWIncome_' + data.id);
+                $(e).find('#spanAverageCapacityWIncome_').attr('id', 'spanAverageCapacityWIncome_' + data.id);
+
+                $('#divInput_AverageCapacityWIncome_' + data.id).hide();
+                $('#spanAverageCapacityWIncome_' + data.id).text(data.averageCapacityWIncome);
+                $('#divOutput_AverageCapacityWIncome_' + data.id).show();
+
+                //AverageCapacityWsIncome
+                $(e).find('#divInput_AverageCapacityWsIncome_').attr('id', 'divInput_AverageCapacityWsIncome_' + data.id);
+                $(e).find('#inputAverageCapacityWsIncome_').attr('id', 'inputAverageCapacityWsIncome_' + data.id);
+                $(e).find('#divOutput_AverageCapacityWsIncome_').attr('id', 'divOutput_AverageCapacityWsIncome_' + data.id);
+                $(e).find('#spanAverageCapacityWsIncome_').attr('id', 'spanAverageCapacityWsIncome_' + data.id);
+
+                $('#divInput_AverageCapacityWsIncome_' + data.id).hide();
+                $('#spanAverageCapacityWsIncome_' + data.id).text(data.averageCapacityWsIncome);
+                $('#divOutput_AverageCapacityWsIncome_' + data.id).show();
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        resetTableBackColor("my-table");
+
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.selectUserType:last').select2({
+            dir : 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(UserTypeAverageCapacityCostController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+</script>
