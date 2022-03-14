@@ -1,18 +1,15 @@
 ﻿using ClosedXML.Excel;
 using Datiss.Budget.Services.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Datiss.Budget.Reports.Excel
 {
-    public static class UserTypeAverageCapacityExcel
+    public static class UserTypeAverageCapacityCostExcel
     {
-        private const string _sheetName = "UserTypeAverageCapacity";
+        private const string _sheetName = "UserTypeAverageCapacityCost";
 
-        public static XLWorkbook ExportExcel(this IEnumerable<UserTypeAverageCapacityDTO> items)
+        public static XLWorkbook ExportExcel(this IEnumerable<UserTypeAverageCapacityCostDTO> items)
         {
             if (items == null || !items.Any())
                 return null;
@@ -24,8 +21,8 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 1).Value = "سال";
             sheet.Cell(1, 2).Value = "سازمان";
             sheet.Cell(1, 3).Value = "کاربری";
-            sheet.Cell(1, 4).Value = "متوسط ظرفیت قراردادی آب";
-            sheet.Cell(1, 5).Value = "متوسط ظرفیت قراردادی فاضلاب";
+            sheet.Cell(1, 4).Value = "متوسط ظرفیت قراردادی آب - درآمد جاری";
+            sheet.Cell(1, 5).Value = "متوسط ظرفیت قراردادی فاضلاب - درآمد جاری";
 
             var totalCount = items.Count();
             int row = 2;
@@ -35,15 +32,15 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 1).Value = item.Year.ToString();
                 sheet.Cell(row, 2).Value = item.OrganizationDisplay;
                 sheet.Cell(row, 3).Value = item.UserTypeDisplay;
-                sheet.Cell(row, 4).Value = item.AverageCapacityW;
-                sheet.Cell(row, 4).Style.NumberFormat.Format = "#,##0.00";
+                sheet.Cell(row, 4).Value = item.AverageCapacityWIncome;
+                sheet.Cell(row, 4).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
                 sheet.Cell(row, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                sheet.Cell(row, 5).Value = item.AverageCapacityWs;
-                sheet.Cell(row, 5).Style.NumberFormat.Format = "#,##0.00";
+                sheet.Cell(row, 5).Value = item.AverageCapacityWsIncome;
+                sheet.Cell(row, 5).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
                 sheet.Cell(row, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 row++;
             }
-            var range = sheet.Range(1, 1, row - 1,5);
+            var range = sheet.Range(1, 1, row - 1, 5);
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
@@ -51,7 +48,7 @@ namespace Datiss.Budget.Reports.Excel
             return workbook;
         }
 
-        public static XLWorkbook GetImportTemplate(this IEnumerable<UserTypeAverageCapacityDTO> items, int year)
+        public static XLWorkbook GetImportTemplate(this IEnumerable<UserTypeAverageCapacityCostDTO> items, int year)
         {
             if (items == null || !items.Any())
                 return null;
@@ -67,8 +64,8 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(2, 2).Value = "کد سازمان";
             sheet.Cell(2, 3).Value = "عنوان کاربری";
             sheet.Cell(2, 4).Value = "کد کاربری";
-            sheet.Cell(2, 5).Value = "متوسط ظرفیت قراردادی آب";
-            sheet.Cell(2, 6).Value = "متوسط ظرفیت قراردادی فاضلاب";
+            sheet.Cell(2, 5).Value = "متوسط ظرفیت قراردادی آب - درآمد جاری";
+            sheet.Cell(2, 6).Value = "متوسط ظرفیت قراردادی فاضلاب - درآمد جاری";
 
             var totalCount = items.Count();
             int row = 3;
@@ -83,12 +80,12 @@ namespace Datiss.Budget.Reports.Excel
             }
 
             var range = sheet.Range(2, 1, row - 1, 6);
-            range.Column(4).Style.NumberFormat.Format = "#,##0";
+            range.Column(4).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
             range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other
-            range.Column(5).Style.NumberFormat.Format = "#,##0.00";
+            range.Column(5).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
             range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(6).Style.NumberFormat.Format = "#,##0.00";
+            range.Column(6).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
             range.Column(6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             //
             var table = range.CreateTable($"{_sheetName}_Table");
