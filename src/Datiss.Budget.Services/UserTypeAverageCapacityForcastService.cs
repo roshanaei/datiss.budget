@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services
 {
-    public class UserTypeAverageCapacityCostService : IUserTypeAverageCapacityCostService
+    public class UserTypeAverageCapacityForcastService : IUserTypeAverageCapacityForcastService
     {
         private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
@@ -35,12 +35,12 @@ namespace Datiss.Budget.Services
         private readonly IUserService _userService;
         private readonly IOrganizationService _organizationService;
 
-        private readonly DbSet<UserTypeAverageCapacityCurrent> _dbSet;
+        private readonly DbSet<UserTypeAverageCapacityForcast> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
         private readonly DbSet<FinanceYear> _yearSet;
         private readonly DbSet<Constant> _constSet;
 
-        public UserTypeAverageCapacityCostService(
+        public UserTypeAverageCapacityForcastService(
             IUserContext userContext,
             IUnitOfWork uow,
             IExcelService excelService,
@@ -49,7 +49,7 @@ namespace Datiss.Budget.Services
         {
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _dbSet = _uow.Set<UserTypeAverageCapacityCurrent>();
+            _dbSet = _uow.Set<UserTypeAverageCapacityForcast>();
             _orgDbSet = _uow.Set<Organization>();
             _yearSet = _uow.Set<FinanceYear>();
             _constSet = _uow.Set<Constant>();
@@ -58,25 +58,27 @@ namespace Datiss.Budget.Services
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
-        private IQueryable<UserTypeAverageCapacityCurrent> Query()
+        private IQueryable<UserTypeAverageCapacityForcast> Query()
             => _dbSet.AsNoTracking();
 
-        public async Task<UserTypeAverageCapacityCurrent> GetByIdAsync(int id)
+        public async Task<UserTypeAverageCapacityForcast> GetByIdAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult<UserTypeAverageCapacityCostDTO>> CreateAsync(CreateUserTypeAverageCapacityCostDTO model)
+        public async Task<ValidationResult<UserTypeAverageCapacityForcastDTO>> CreateAsync(CreateUserTypeAverageCapacityForcastDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var entity = new UserTypeAverageCapacityCurrent
+            var entity = new UserTypeAverageCapacityForcast
             {
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
                 UserTypeId = model.UserTypeId,
+                AverageCapacityW = model.AverageCapacityW,
                 AverageCapacityWIncome = model.AverageCapacityWIncome,
+                AverageCapacityWs = model.AverageCapacityWs,
                 AverageCapacityWsIncome = model.AverageCapacityWsIncome
             };
             model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
@@ -93,26 +95,28 @@ namespace Datiss.Budget.Services
                     }
                     catch
                     {
-                        return ValidationResult<UserTypeAverageCapacityCostDTO>.Failed(
+                        return ValidationResult<UserTypeAverageCapacityForcastDTO>.Failed(
                             string.Format(ServiceMessages.ImportExcelCalculationField)
                             );
                     }
-                    var result = entity.Adapt<UserTypeAverageCapacityCostDTO>();
+                    var result = entity.Adapt<UserTypeAverageCapacityForcastDTO>();
                     result.UserTypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.AverageCapacityW = entity.AverageCapacityW;
                     result.AverageCapacityWIncome = entity.AverageCapacityWIncome;
+                    result.AverageCapacityWs = entity.AverageCapacityWs;
                     result.AverageCapacityWsIncome = entity.AverageCapacityWsIncome;
 
-                    return ValidationResult<UserTypeAverageCapacityCostDTO>.Success(result);
+                    return ValidationResult<UserTypeAverageCapacityForcastDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<UserTypeAverageCapacityCostDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<UserTypeAverageCapacityForcastDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
-            return ValidationResult<UserTypeAverageCapacityCostDTO>.Failed(
+            return ValidationResult<UserTypeAverageCapacityForcastDTO>.Failed(
                 string.Format(ServiceMessages.Logic_UserTypeDuplicate,
                 model.UserTypeTitle, organizationDisplay)
                 );
@@ -120,7 +124,7 @@ namespace Datiss.Budget.Services
 
         }
 
-        public async Task<ValidationResult<UserTypeAverageCapacityCostDTO>> UpdateAsync(UpdateUserTypeAverageCapacityCostDTO model)
+        public async Task<ValidationResult<UserTypeAverageCapacityForcastDTO>> UpdateAsync(UpdateUserTypeAverageCapacityForcastDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
             model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
@@ -134,7 +138,9 @@ namespace Datiss.Budget.Services
                     entity.OrganizationId = model.OrganizationId;
                     entity.YearId = model.YearId;
                     entity.UserTypeId = model.UserTypeId;
+                    entity.AverageCapacityW = model.AverageCapacityW;
                     entity.AverageCapacityWIncome = model.AverageCapacityWIncome;
+                    entity.AverageCapacityWs = model.AverageCapacityWs;
                     entity.AverageCapacityWsIncome = model.AverageCapacityWsIncome;
 
                     try
@@ -143,30 +149,32 @@ namespace Datiss.Budget.Services
                     }
                     catch
                     {
-                        return ValidationResult<UserTypeAverageCapacityCostDTO>.Failed(
+                        return ValidationResult<UserTypeAverageCapacityForcastDTO>.Failed(
                             string.Format(ServiceMessages.ImportExcelCalculationField)
                             );
                     }
-                    var result = new UserTypeAverageCapacityCostDTO
+                    var result = new UserTypeAverageCapacityForcastDTO
                     {
                         OrganizationId = model.OrganizationId,
                         YearId = model.YearId,
                         UserTypeId = model.UserTypeId,
+                        AverageCapacityW = model.AverageCapacityW,
                         AverageCapacityWIncome = model.AverageCapacityWIncome,
+                        AverageCapacityWs = model.AverageCapacityWs,
                         AverageCapacityWsIncome = model.AverageCapacityWsIncome,
                         OrganizationDisplay = organizationDisplay,
                         UserTypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
                     };
 
-                    return ValidationResult<UserTypeAverageCapacityCostDTO>.Success(result);
+                    return ValidationResult<UserTypeAverageCapacityForcastDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<UserTypeAverageCapacityCostDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<UserTypeAverageCapacityForcastDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
-            return ValidationResult<UserTypeAverageCapacityCostDTO>.Failed(
+            return ValidationResult<UserTypeAverageCapacityForcastDTO>.Failed(
                 string.Format(ServiceMessages.Logic_UserTypeDuplicate,
                 model.UserTypeTitle, organizationDisplay)
                 );
@@ -223,11 +231,11 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task<PagedResult<UserTypeAverageCapacityCostDTO>> GetListAsync(UserTypeAverageCapacityCostFilterDTO filter)
+        public async Task<PagedResult<UserTypeAverageCapacityForcastDTO>> GetListAsync(UserTypeAverageCapacityForcastFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var result = new PagedResult<UserTypeAverageCapacityCostDTO>
+            var result = new PagedResult<UserTypeAverageCapacityForcastDTO>
             {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -248,14 +256,16 @@ namespace Datiss.Budget.Services
             result.Items = await query.Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
                                     .Include(x => x.UserType)
-                                    .Select(x => new UserTypeAverageCapacityCostDTO
+                                    .Select(x => new UserTypeAverageCapacityForcastDTO
                                     {
                                         Id = x.Id,
                                         UserTypeDisplay = x.UserType.Title,
                                         UserTypeId = x.UserTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
+                                        AverageCapacityW = x.AverageCapacityW,
                                         AverageCapacityWIncome = x.AverageCapacityWIncome,
+                                        AverageCapacityWs = x.AverageCapacityWs,
                                         AverageCapacityWsIncome = x.AverageCapacityWsIncome,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
@@ -273,7 +283,7 @@ namespace Datiss.Budget.Services
                 throw new CopyDestYearExxeption();
             if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
                 throw new CopyOrgNullDataException();
-            var result = new List<UserTypeAverageCapacityCurrent>();
+            var result = new List<UserTypeAverageCapacityForcast>();
 
             if (await Query()
                         .Where(_ => _.OrganizationId == sourceOrgId)
@@ -291,12 +301,14 @@ namespace Datiss.Budget.Services
                     if (!await checkLogicAsync(destYearId, sourceOrgId, item.UserTypeId))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new UserTypeAverageCapacityCurrent
+                    var entity = new UserTypeAverageCapacityForcast
                     {
                         UserTypeId = item.UserTypeId,
                         OrganizationId = item.OrganizationId,
                         YearId = destYearId,
+                        AverageCapacityW = item.AverageCapacityW,
                         AverageCapacityWIncome = item.AverageCapacityWIncome,
+                        AverageCapacityWs = item.AverageCapacityWs,
                         AverageCapacityWsIncome = item.AverageCapacityWsIncome
                     };
                     result.Add(entity);
@@ -324,10 +336,10 @@ namespace Datiss.Budget.Services
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<UserTypeAverageCapacityCostImportModel>
+            var data = await _excelService.ImportAsync<UserTypeAverageCapacityForcastImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
 
-            var records = data.Adapt<List<UserTypeAverageCapacityCurrent>>();
+            var records = data.Adapt<List<UserTypeAverageCapacityForcast>>();
 
             int rowIndex = 1;
 
@@ -482,9 +494,9 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<IEnumerable<UserTypeAverageCapacityCostDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<UserTypeAverageCapacityForcastDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
-            var filter = new UserTypeAverageCapacityCostFilterDTO
+            var filter = new UserTypeAverageCapacityForcastFilterDTO
             {
                 OrganizationId = organizationId,
                 YearId = yearId
@@ -501,14 +513,16 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
                                     .Include(x => x.UserType)
-                                    .Select(x => new UserTypeAverageCapacityCostDTO
+                                    .Select(x => new UserTypeAverageCapacityForcastDTO
                                     {
                                         Id = x.Id,
                                         UserTypeDisplay = x.UserType.Title,
                                         UserTypeId = x.UserTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
+                                        AverageCapacityW = x.AverageCapacityW,
                                         AverageCapacityWIncome = x.AverageCapacityWIncome,
+                                        AverageCapacityWs = x.AverageCapacityWs,
                                         AverageCapacityWsIncome = x.AverageCapacityWsIncome,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
@@ -517,7 +531,7 @@ namespace Datiss.Budget.Services
             return items;
         }
 
-        public async Task<Stream> ExportExcelAsync(UserTypeAverageCapacityCostFilterDTO filter)
+        public async Task<Stream> ExportExcelAsync(UserTypeAverageCapacityForcastFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 
@@ -531,14 +545,16 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
                                     .Include(x => x.UserType)
-                                    .Select(x => new UserTypeAverageCapacityCostDTO
+                                    .Select(x => new UserTypeAverageCapacityForcastDTO
                                     {
                                         Id = x.Id,
                                         UserTypeDisplay = x.UserType.Title,
                                         UserTypeId = x.UserTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
+                                        AverageCapacityW = x.AverageCapacityW,
                                         AverageCapacityWIncome = x.AverageCapacityWIncome,
+                                        AverageCapacityWs = x.AverageCapacityWs,
                                         AverageCapacityWsIncome = x.AverageCapacityWsIncome,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
@@ -555,14 +571,14 @@ namespace Datiss.Budget.Services
 
         #region Private Helper Methods
 
-        private async Task<IQueryable<UserTypeAverageCapacityCurrent>> setFilter(
-            IQueryable<UserTypeAverageCapacityCurrent> query,
-            UserTypeAverageCapacityCostFilterDTO filter)
+        private async Task<IQueryable<UserTypeAverageCapacityForcast>> setFilter(
+            IQueryable<UserTypeAverageCapacityForcast> query,
+            UserTypeAverageCapacityForcastFilterDTO filter)
         {
             query.CheckArgumentIsNull(nameof(query));
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var predicate = PredicateBuilder.New<UserTypeAverageCapacityCurrent>();
+            var predicate = PredicateBuilder.New<UserTypeAverageCapacityForcast>();
 
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
@@ -593,8 +609,8 @@ namespace Datiss.Budget.Services
             return query;
         }
 
-        private IQueryable<UserTypeAverageCapacityCurrent> setOrder(
-           IQueryable<UserTypeAverageCapacityCurrent> query,
+        private IQueryable<UserTypeAverageCapacityForcast> setOrder(
+           IQueryable<UserTypeAverageCapacityForcast> query,
            string orderBy = "id",
            bool desc = false)
         {
@@ -624,7 +640,7 @@ namespace Datiss.Budget.Services
             }
         }
 
-        private async Task<IEnumerable<UserTypeAverageCapacityCurrent>> getChildrenData(
+        private async Task<IEnumerable<UserTypeAverageCapacityForcast>> getChildrenData(
             int parentOrganizationId,
             int yearId,
             int targetYearId)
@@ -635,7 +651,7 @@ namespace Datiss.Budget.Services
                             _.ParentId == parentOrganizationId)
                 .ToListAsync();
 
-            var result = new List<UserTypeAverageCapacityCurrent>();
+            var result = new List<UserTypeAverageCapacityForcast>();
 
             foreach (var org in children)
             {
@@ -656,12 +672,14 @@ namespace Datiss.Budget.Services
                     if (!await checkLogicAsync(targetYearId, org.Id, item.UserTypeId))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new UserTypeAverageCapacityCurrent
+                    var entity = new UserTypeAverageCapacityForcast
                     {
                         UserTypeId = item.UserTypeId,
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
+                        AverageCapacityW = item.AverageCapacityW,
                         AverageCapacityWIncome = item.AverageCapacityWIncome,
+                        AverageCapacityWs = item.AverageCapacityWs,
                         AverageCapacityWsIncome = item.AverageCapacityWsIncome,
                     };
 
@@ -673,14 +691,14 @@ namespace Datiss.Budget.Services
 
             return result;
         }
-        private async Task<IEnumerable<UserTypeAverageCapacityCurrent>> getChildren(
+        private async Task<IEnumerable<UserTypeAverageCapacityForcast>> getChildren(
             int parentOrganizationId,
             int yearId)
         {
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
-            var result = new List<UserTypeAverageCapacityCurrent>();
+            var result = new List<UserTypeAverageCapacityForcast>();
             foreach (var org in children)
             {
                 var data = await Query()

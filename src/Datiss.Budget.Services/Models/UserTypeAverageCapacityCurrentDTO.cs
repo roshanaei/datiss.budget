@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Datiss.Budget.Services.Models
+﻿namespace Datiss.Budget.Services.Models
 {
-    public class CreateUserTypeAverageCapacityDTO
+    public class CreateUserTypeAverageCapacityCurrentDTO
     {
         public int YearId { get; set; }
 
@@ -16,21 +10,17 @@ namespace Datiss.Budget.Services.Models
 
         public string UserTypeTitle { get; set; }
 
-        public decimal AverageCapacityW { get; set; }
-
-        public decimal AverageCapacityWs { get; set; }
-
         public decimal AverageCapacityWIncome { get; set; }
 
         public decimal AverageCapacityWsIncome { get; set; }
     }
 
-    public class UpdateUserTypeAverageCapacityDTO : CreateUserTypeAverageCapacityDTO
+    public class UpdateUserTypeAverageCapacityCurrentDTO : CreateUserTypeAverageCapacityCurrentDTO
     {
         public int Id { get; set; }
     }
 
-    public class UserTypeAverageCapacityDTO
+    public class UserTypeAverageCapacityCurrentDTO
     {
         public int Id { get; set; }
         public int YearId { get; set; }
@@ -39,8 +29,6 @@ namespace Datiss.Budget.Services.Models
         public string OrganizationDisplay { get; set; }
         public int UserTypeId { get; set; }
         public string UserTypeDisplay { get; set; }
-        public decimal AverageCapacityW { get; set; }
-        public decimal AverageCapacityWs { get; set; }
         public decimal AverageCapacityWIncome { get; set; }
         public decimal AverageCapacityWsIncome { get; set; }
     }

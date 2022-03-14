@@ -11,25 +11,25 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Contracts
 {
-    public interface IUserTypeAverageCapacityService
+    public interface IUserTypeAverageCapacityForcastService
     {
         Task<UserTypeAverageCapacityForcast> GetByIdAsync(int id);
 
-        Task<ValidationResult<UserTypeAverageCapacityDTO>> CreateAsync(CreateUserTypeAverageCapacityDTO model);
+        Task<ValidationResult<UserTypeAverageCapacityForcastDTO>> CreateAsync(CreateUserTypeAverageCapacityForcastDTO model);
 
-        Task<ValidationResult<UserTypeAverageCapacityDTO>> UpdateAsync(UpdateUserTypeAverageCapacityDTO model);
+        Task<ValidationResult<UserTypeAverageCapacityForcastDTO>> UpdateAsync(UpdateUserTypeAverageCapacityForcastDTO model);
 
         Task HardDeleteAsync(int Id);
 
         Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
-        Task<PagedResult<UserTypeAverageCapacityDTO>> GetListAsync(UserTypeAverageCapacityFilterDTO filter);
+        Task<PagedResult<UserTypeAverageCapacityForcastDTO>> GetListAsync(UserTypeAverageCapacityForcastFilterDTO filter);
 
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
 
-        Task<Stream> ExportExcelAsync(UserTypeAverageCapacityFilterDTO filter);
+        Task<Stream> ExportExcelAsync(UserTypeAverageCapacityForcastFilterDTO filter);
 
-        Task<IEnumerable<UserTypeAverageCapacityDTO>> GetExportItemsAsync(int yearId, int organizationId);
+        Task<IEnumerable<UserTypeAverageCapacityForcastDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
         Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
     }
