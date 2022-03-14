@@ -16,7 +16,7 @@
         $('#divOutput_WsPipeDiameter_' + id).hide();
         $('#divOutput_NumberSales_' + id).hide();
         $('#divOutput_UnitSales_' + id).hide();
-        $('#divOutput_AverageCapacity_' + id).hide();
+        //$('#divOutput_AverageCapacity_' + id).hide();
         $('#divOutput_WsInstallationCosts_' + id).hide();
 
         //show input elements
@@ -26,7 +26,7 @@
         $('#divInput_WsPipeDiameter_' + id).show();
         $('#divInput_NumberSales_' + id).show();
         $('#divInput_UnitSales_' + id).show();
-        $('#divInput_AverageCapacity_' + id).show();
+        //$('#divInput_AverageCapacity_' + id).show();
         $('#divInput_WsInstallationCosts_' + id).show();
 
         $('#btnEdit_' + id).hide();
@@ -41,7 +41,7 @@
         rowData.wsPipeDiameterId = $('#inputWsPipeDiameter_' + id).val();
         rowData.numberSales = $('#inputNumberSales_' + id).val();
         rowData.unitSales = $('#inputUnitSales_' + id).val();
-        rowData.averageCapacity = $('#inputAverageCapacity_' + id).val();
+        //rowData.averageCapacity = $('#inputAverageCapacity_' + id).val();
         rowData.wsInstallationCosts = $('#inputWsInstallationCosts_' + id).val();
     }
 
@@ -56,7 +56,7 @@
         $('#divInput_WsPipeDiameter_' + id).hide();
         $('#divInput_NumberSales_' + id).hide();
         $('#divInput_UnitSales_' + id).hide();
-        $('#divInput_AverageCapacity_' + id).hide();
+        //$('#divInput_AverageCapacity_' + id).hide();
         $('#divInput_WsInstallationCosts_' + id).hide();
 
         //Reverting to OriginalData
@@ -67,7 +67,7 @@
             $('#inputWsPipeDiameter_' + id).val(rowData.wsPipeDiameterId);
             $('#inputNumberSales_' + id).val(rowData.numberSales);
             $('#inputUnitSales_' + id).val(rowData.unitSales);
-            $('#inputAverageCapacity_' + id).val(rowData.averageCapacity);
+            //$('#inputAverageCapacity_' + id).val(rowData.averageCapacity);
             $('#inputWsInstallationCosts_' + id).val(rowData.wsInstallationCosts);
         }
 
@@ -78,7 +78,7 @@
         $('#divOutput_WsPipeDiameter_' + id).show();
         $('#divOutput_NumberSales_' + id).show();
         $('#divOutput_UnitSales_' + id).show();
-        $('#divOutput_AverageCapacity_' + id).show();
+        //$('#divOutput_AverageCapacity_' + id).show();
         $('#divOutput_WsInstallationCosts_' + id).show();
 
         $('#btnEdit_' + id).show();
@@ -105,7 +105,7 @@
         model.wsPipeDiameterId = $('#inputWsPipeDiameter_' + id).val();
         model.numberSales = $('#inputNumberSales_' + id).val();
         model.unitSales = $('#inputUnitSales_' + id).val();
-        model.averageCapacity = $('#inputAverageCapacity_' + id).val();
+        //model.averageCapacity = $('#inputAverageCapacity_' + id).val();
         model.wsInstallationCosts = $('#inputWsInstallationCosts_' + id).val();
 
         $.ajax({
@@ -134,7 +134,7 @@
                 rowData.wsPipeDiameterId = model.wsPipeDiameterId;
                 rowData.numberSales = model.numberSales;
                 rowData.unitSales = model.unitSales;
-                rowData.averageCapacity = model.averageCapacity;
+                //rowData.averageCapacity = model.averageCapacity;
                 rowData.wsInstallationCosts = model.wsInstallationCosts;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
@@ -147,7 +147,7 @@
                 $('#spanWsPipeDiameter_' + id).text(data.wsPipeDiameterDisplay);
                 $('#spanNumberSales_' + id).text(data.numberSales);
                 $('#spanUnitSales_' + id).text(data.unitSales);
-                $('#spanAverageCapacity_' + id).text(data.averageCapacity);
+                //$('#spanAverageCapacity_' + id).text(data.averageCapacity);
                 $('#spanWsInstallationCosts_' + id).text(data.wsInstallationCosts);
 
 
@@ -263,14 +263,14 @@
                 $('#spanUnitSales_' + data.id).text(data.unitSales);
                 $('#divOutput_UnitSales_' + data.id).show();
 
-                //AverageCapacity
-                $(e).find('#divInput_AverageCapacity_').attr('id', 'divInput_AverageCapacity_' + data.id);
-                $(e).find('#inputAverageCapacity_').attr('id', 'inputAverageCapacity_' + data.id);
-                $(e).find('#divOutput_AverageCapacity_').attr('id', 'divOutput_AverageCapacity_' + data.id);
-                $(e).find('#spanAverageCapacity_').attr('id', 'spanAverageCapacity_' + data.id);
-                $('#divInput_AverageCapacity_' + data.id).hide();
-                $('#spanAverageCapacity_' + data.id).text(data.averageCapacity);
-                $('#divOutput_AverageCapacity_' + data.id).show();
+                ////AverageCapacity
+                //$(e).find('#divInput_AverageCapacity_').attr('id', 'divInput_AverageCapacity_' + data.id);
+                //$(e).find('#inputAverageCapacity_').attr('id', 'inputAverageCapacity_' + data.id);
+                //$(e).find('#divOutput_AverageCapacity_').attr('id', 'divOutput_AverageCapacity_' + data.id);
+                //$(e).find('#spanAverageCapacity_').attr('id', 'spanAverageCapacity_' + data.id);
+                //$('#divInput_AverageCapacity_' + data.id).hide();
+                //$('#spanAverageCapacity_' + data.id).text(data.averageCapacity);
+                //$('#divOutput_AverageCapacity_' + data.id).show();
 
                 //WsInstallationCosts
                 $(e).find('#divInput_WsInstallationCosts_').attr('id', 'divInput_WsInstallationCosts_' + data.id);

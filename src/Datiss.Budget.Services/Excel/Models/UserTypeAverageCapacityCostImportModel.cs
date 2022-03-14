@@ -1,13 +1,8 @@
 ﻿using Ganss.Excel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Excel.Models
 {
-    public class UserTypeAverageCapacityImportModel
+    public class UserTypeAverageCapacityCostImportModel
     {
         [Column(MappingDirections.Both, Letter = "A")]
         public string OrganizationDisplay { get; set; }
@@ -22,10 +17,9 @@ namespace Datiss.Budget.Services.Excel.Models
         public int UserTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
-        public decimal AverageCapacityW { get; set; }
+        public decimal AverageCapacityWIncome { get; set; }
 
         [Column(MappingDirections.Both, Letter = "F")]
-        public decimal AverageCapacityWs { get; set; }
-
+        public decimal AverageCapacityWsIncome { get; set; }
     }
 }
