@@ -10,7 +10,7 @@ namespace Datiss.Budget.Services.Contracts
 {
     public interface IUserTypeAverageCapacityCostService
     {
-        Task<UserTypeAverageCapacityCost> GetByIdAsync(int id);
+        Task<UserTypeAverageCapacityCurrent> GetByIdAsync(int id);
 
         Task<ValidationResult<UserTypeAverageCapacityCostDTO>> CreateAsync(CreateUserTypeAverageCapacityCostDTO model);
 

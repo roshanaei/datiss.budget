@@ -35,7 +35,7 @@ namespace Datiss.Budget.Services
         private readonly IUserService _userService;
         private readonly IOrganizationService _organizationService;
 
-        private readonly DbSet<UserTypeAverageCapacity> _dbSet;
+        private readonly DbSet<UserTypeAverageCapacityForcast> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
         private readonly DbSet<FinanceYear> _yearSet;
         private readonly DbSet<Constant> _constSet;
@@ -49,7 +49,7 @@ namespace Datiss.Budget.Services
         {
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _dbSet = _uow.Set<UserTypeAverageCapacity>();
+            _dbSet = _uow.Set<UserTypeAverageCapacityForcast>();
             _orgDbSet = _uow.Set<Organization>();
             _yearSet = _uow.Set<FinanceYear>();
             _constSet = _uow.Set<Constant>();
@@ -58,10 +58,10 @@ namespace Datiss.Budget.Services
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
-        private IQueryable<UserTypeAverageCapacity> Query()
+        private IQueryable<UserTypeAverageCapacityForcast> Query()
             => _dbSet.AsNoTracking();
 
-        public async Task<UserTypeAverageCapacity> GetByIdAsync(int id)
+        public async Task<UserTypeAverageCapacityForcast> GetByIdAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
@@ -71,7 +71,7 @@ namespace Datiss.Budget.Services
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var entity = new UserTypeAverageCapacity
+            var entity = new UserTypeAverageCapacityForcast
             {
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
@@ -283,7 +283,7 @@ namespace Datiss.Budget.Services
                 throw new CopyDestYearExxeption();
             if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
                 throw new CopyOrgNullDataException();
-            var result = new List<UserTypeAverageCapacity>();
+            var result = new List<UserTypeAverageCapacityForcast>();
 
             if (await Query()
                         .Where(_ => _.OrganizationId == sourceOrgId)
@@ -301,7 +301,7 @@ namespace Datiss.Budget.Services
                     if (!await checkLogicAsync(destYearId, sourceOrgId, item.UserTypeId))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new UserTypeAverageCapacity
+                    var entity = new UserTypeAverageCapacityForcast
                     {
                         UserTypeId = item.UserTypeId,
                         OrganizationId = item.OrganizationId,
@@ -339,7 +339,7 @@ namespace Datiss.Budget.Services
             var data = await _excelService.ImportAsync<UserTypeAverageCapacityImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
 
-            var records = data.Adapt<List<UserTypeAverageCapacity>>();
+            var records = data.Adapt<List<UserTypeAverageCapacityForcast>>();
 
             int rowIndex = 1;
 
@@ -571,14 +571,14 @@ namespace Datiss.Budget.Services
 
         #region Private Helper Methods
 
-        private async Task<IQueryable<UserTypeAverageCapacity>> setFilter(
-            IQueryable<UserTypeAverageCapacity> query,
+        private async Task<IQueryable<UserTypeAverageCapacityForcast>> setFilter(
+            IQueryable<UserTypeAverageCapacityForcast> query,
             UserTypeAverageCapacityFilterDTO filter)
         {
             query.CheckArgumentIsNull(nameof(query));
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var predicate = PredicateBuilder.New<UserTypeAverageCapacity>();
+            var predicate = PredicateBuilder.New<UserTypeAverageCapacityForcast>();
 
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
@@ -609,8 +609,8 @@ namespace Datiss.Budget.Services
             return query;
         }
 
-        private IQueryable<UserTypeAverageCapacity> setOrder(
-           IQueryable<UserTypeAverageCapacity> query,
+        private IQueryable<UserTypeAverageCapacityForcast> setOrder(
+           IQueryable<UserTypeAverageCapacityForcast> query,
            string orderBy = "id",
            bool desc = false)
         {
@@ -640,7 +640,7 @@ namespace Datiss.Budget.Services
             }
         }
 
-        private async Task<IEnumerable<UserTypeAverageCapacity>> getChildrenData(
+        private async Task<IEnumerable<UserTypeAverageCapacityForcast>> getChildrenData(
             int parentOrganizationId,
             int yearId,
             int targetYearId)
@@ -651,7 +651,7 @@ namespace Datiss.Budget.Services
                             _.ParentId == parentOrganizationId)
                 .ToListAsync();
 
-            var result = new List<UserTypeAverageCapacity>();
+            var result = new List<UserTypeAverageCapacityForcast>();
 
             foreach (var org in children)
             {
@@ -672,7 +672,7 @@ namespace Datiss.Budget.Services
                     if (!await checkLogicAsync(targetYearId, org.Id, item.UserTypeId))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new UserTypeAverageCapacity
+                    var entity = new UserTypeAverageCapacityForcast
                     {
                         UserTypeId = item.UserTypeId,
                         OrganizationId = item.OrganizationId,
@@ -691,14 +691,14 @@ namespace Datiss.Budget.Services
 
             return result;
         }
-        private async Task<IEnumerable<UserTypeAverageCapacity>> getChildren(
+        private async Task<IEnumerable<UserTypeAverageCapacityForcast>> getChildren(
             int parentOrganizationId,
             int yearId)
         {
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
-            var result = new List<UserTypeAverageCapacity>();
+            var result = new List<UserTypeAverageCapacityForcast>();
             foreach (var org in children)
             {
                 var data = await Query()
