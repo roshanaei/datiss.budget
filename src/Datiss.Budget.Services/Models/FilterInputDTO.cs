@@ -221,6 +221,13 @@ namespace Datiss.Budget.Services.Models
         public int? CofficientTypeId { get; set; }
         public CofficientsGroup? GroupName { get; set; }
     }
+    public class IncomeCurrentCofficientFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
+        public int? UsageLayerId { get; set; }
+    }
     public class IncomeCurrentReportFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
