@@ -32,7 +32,8 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 8).Value = "تعداد غیر خانگی";
             sheet.Cell(1, 9).Value = "قیمت غیر خانگی";
             sheet.Cell(1, 10).Value = "جمع درآمد غیر خانگی";
-            sheet.Cell(1, 11).Value = "جمع کل درآمد";
+            sheet.Cell(1, 11).Value = "جمع کل تعداد";
+            sheet.Cell(1, 12).Value = "جمع کل درآمد";
 
             var totalCount = items.Count();
             int row = 2;
@@ -63,13 +64,16 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 10).Value = item.CostNH;
                 sheet.Cell(row, 10).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                sheet.Cell(row, 11).Value = item.TotalCost;
+                sheet.Cell(row, 11).Value = item.TotalCount;
                 sheet.Cell(row, 11).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 11).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                sheet.Cell(row, 12).Value = item.TotalCost;
+                sheet.Cell(row, 12).Style.NumberFormat.Format = "#,##0";
+                sheet.Cell(row, 12).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 row++;
             }
 
-            var range = sheet.Range(1, 1, row - 1, 11);
+            var range = sheet.Range(1, 1, row - 1, 12);
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
@@ -87,7 +91,7 @@ namespace Datiss.Budget.Reports.Excel
 
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
-            sheet.Range(1, 1, 1, 13).Merge();
+            sheet.Range(1, 1, 1, 12).Merge();
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
             sheet.Cell(2, 2).Value = "کد سازمان";
@@ -101,7 +105,6 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(2, 10).Value = "تعداد غیر خانگی";
             sheet.Cell(2, 11).Value = "قیمت غیر خانگی";
             sheet.Cell(2, 12).Value = "جمع درآمد غیر خانگی";
-            sheet.Cell(2, 13).Value = "جمع کل درآمد";
 
             var totalCount = items.Count();
             int row = 3;
@@ -117,7 +120,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++;
             }
 
-            var range = sheet.Range(2, 1, row - 1, 13);
+            var range = sheet.Range(2, 1, row - 1, 12);
             range.Column(7).Style.NumberFormat.Format = "#,##0";
             range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(8).Style.NumberFormat.Format = "#,##0";
@@ -130,8 +133,6 @@ namespace Datiss.Budget.Reports.Excel
             range.Column(11).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(12).Style.NumberFormat.Format = "#,##0";
             range.Column(12).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(13).Style.NumberFormat.Format = "#,##0";
-            range.Column(13).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
