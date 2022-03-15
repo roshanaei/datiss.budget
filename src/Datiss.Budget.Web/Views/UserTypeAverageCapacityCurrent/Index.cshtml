@@ -1,5 +1,5 @@
-﻿@model UserTypeAverageCapacityIndexViewModel
-@{ ViewData["Title"] = "متوسط ظرفیت قراردادی سرمایه ای کاربری های غیرخانگی به تفکیک شهر سال"; }
+﻿@model UserTypeAverageCapacityCurrentIndexViewModel
+@{ ViewData["Title"] = "متوسط ظرفیت قراردادی درآمد جاری کاربری های غیرخانگی به تفکیک شهر سال"; }
 
 <!--Title-->
 <div class="row">
@@ -19,8 +19,8 @@
                         <!--Filters-->
                         <form method="post"
                               id="filterForm"
-                              asp-controller="@UserTypeAverageCapacityController.Name"
-                              asp-action="@UserTypeAverageCapacityController.ACTION_Index"
+                              asp-controller="@UserTypeAverageCapacityCurrentController.Name"
+                              asp-action="@UserTypeAverageCapacityCurrentController.ACTION_Index"
                               asp-antiforgery="true">
                             <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
                             <div class="rowACJSB">
@@ -95,7 +95,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu" style="width:250px">
+                                        <div class="dropdown-menu" style="width:270px">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -138,7 +138,7 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>متوسط ظرفیت قراردادی آب</span></label>
+                                                               for="col-4"><span>متوسط ظرفیت قراردادی آب </span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -149,7 +149,7 @@
                                                                name="col-5"
                                                                id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>متوسط ظرفیت قراردادی فاضلاب</span></label>
+                                                               for="col-5"><span>متوسط ظرفیت قراردادی فاضلاب </span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -162,12 +162,12 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@UserTypeAverageCapacityController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@UserTypeAverageCapacityCurrentController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
-                                           asp-asp-controller="@UserTypeAverageCapacityController.Name"
-                                           asp-action="@UserTypeAverageCapacityController.ACTION_GetExcelTemplate"
+                                           asp-asp-controller="@UserTypeAverageCapacityCurrentController.Name"
+                                           asp-action="@UserTypeAverageCapacityCurrentController.ACTION_GetExcelTemplate"
                                            asp-route-yearId="@Model.Filter.YearId"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
@@ -306,7 +306,7 @@
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
                     console.log(params);
-                    let deleteUrl = '@Url.Action(UserTypeAverageCapacityController.ACTION_DeleteRecords)';
+                    let deleteUrl = '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
 
                     $.ajax({
@@ -341,7 +341,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(UserTypeAverageCapacityController.ACTION_Index, new {  page = 1})';
+                                document.location.href = '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
@@ -381,8 +381,8 @@
             resetDataColumns()
             let id = $(this).data('id');
 
-            let input1 = document.getElementById('inputAverageCapacityW_' + id);
-            let input2 = document.getElementById('inputAverageCapacityWs_' + id);
+            let input1 = document.getElementById('inputAverageCapacityWIncome_' + id);
+            let input2 = document.getElementById('inputAverageCapacityWsIncome_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -460,7 +460,7 @@
         $(document).on('click', '.openCopy', function() {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action(UserTypeAverageCapacityController.ACTION_Copy)',
+                url: '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_Copy)',
                 success: function (data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
@@ -497,7 +497,7 @@
             $(".olvy").css("display", "block");
 
             $.ajax({
-                url: '@Url.Action(UserTypeAverageCapacityController.ACTION_ImportExcel)',
+                url: '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
@@ -545,7 +545,7 @@
                                 $(".olvy").css("display", "block");
 
                                 $.ajax({
-                                    url: '@Url.Action(UserTypeAverageCapacityController.ACTION_ImportExcel)',
+                                    url: '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
@@ -582,7 +582,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                document.location.href = '@Url.Action(UserTypeAverageCapacityController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_Index)';
                                             });
                                         }
 
@@ -617,7 +617,7 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(UserTypeAverageCapacityController.ACTION_Index)';
+                            document.location.href = '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_Index)';
                         });
                     }
 
@@ -644,7 +644,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(UserTypeAverageCapacityController.ACTION_Copy)',
+                url: '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
                 success: function (data, status, settings) {

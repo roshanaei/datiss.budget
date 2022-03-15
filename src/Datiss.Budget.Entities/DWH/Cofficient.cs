@@ -1,10 +1,5 @@
 ﻿using Datiss.Budget.Entities.AuditableEntity;
 using Datiss.Budget.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Datiss.Budget.Entities.DWH
 {

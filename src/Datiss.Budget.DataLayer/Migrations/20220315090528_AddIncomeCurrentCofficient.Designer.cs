@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220315090528_AddIncomeCurrentCofficient")]
+    partial class AddIncomeCurrentCofficient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2338,74 +2340,12 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.ToTable("TablesFiledTitle");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.UserTypeAverageCapacityCurrent", b =>
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.UserTypeAverageCapacity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("UTACCId")
-                        .UseIdentityColumn();
-
-                    b.Property<decimal>("AverageCapacityWIncome")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<decimal>("AverageCapacityWsIncome")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("UserTypeId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("UserTypeAverageCapacityCurrent");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.UserTypeAverageCapacityForcast", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("UTACFId")
+                        .HasColumnName("UTACID")
                         .UseIdentityColumn();
 
                     b.Property<decimal>("AverageCapacityW")
@@ -2465,7 +2405,69 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.HasIndex("YearId");
 
-                    b.ToTable("UserTypeAverageCapacityForcast");
+                    b.ToTable("UserTypeAverageCapacity");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.UserTypeAverageCapacityCost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("UTACCID")
+                        .UseIdentityColumn();
+
+                    b.Property<decimal>("AverageCapacityWIncome")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<decimal>("AverageCapacityWsIncome")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<string>("CreatedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ModifiedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("ModifiedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("YearId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("UserTypeId");
+
+                    b.HasIndex("YearId");
+
+                    b.ToTable("UserTypeAverageCapacityCost");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.WWsFee", b =>
@@ -4529,22 +4531,22 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.UserTypeAverageCapacityCurrent", b =>
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.UserTypeAverageCapacity", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                        .WithMany("UserTypeAverageCapacityCurrents")
+                        .WithMany("UserTypeAverageCapacities")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Datiss.Budget.Entities.Constant", "UserType")
-                        .WithMany("UserTypeAverageCapacityCurrents")
+                        .WithMany("UserTypeAverageCapacities")
                         .HasForeignKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("UserTypeAverageCapacityCurrents")
+                        .WithMany("UserTypeAverageCapacities")
                         .HasForeignKey("YearId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4556,22 +4558,22 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("UserType");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.UserTypeAverageCapacityForcast", b =>
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.UserTypeAverageCapacityCost", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                        .WithMany("UserTypeAverageCapacityForcasts")
+                        .WithMany("UserTypeAverageCapacityCosts")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Datiss.Budget.Entities.Constant", "UserType")
-                        .WithMany("UserTypeAverageCapacityForcasts")
+                        .WithMany("UserTypeAverageCapacityCosts")
                         .HasForeignKey("UserTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("UserTypeAverageCapacityForcasts")
+                        .WithMany("UserTypeAverageCapacityCosts")
                         .HasForeignKey("YearId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -4920,9 +4922,9 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("UserPositions");
 
-                    b.Navigation("UserTypeAverageCapacityCurrents");
+                    b.Navigation("UserTypeAverageCapacities");
 
-                    b.Navigation("UserTypeAverageCapacityForcasts");
+                    b.Navigation("UserTypeAverageCapacityCosts");
 
                     b.Navigation("UserTypeIncomeCurrentCofficients");
 
@@ -5008,9 +5010,9 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("Subscription");
 
-                    b.Navigation("UserTypeAverageCapacityCurrents");
+                    b.Navigation("UserTypeAverageCapacities");
 
-                    b.Navigation("UserTypeAverageCapacityForcasts");
+                    b.Navigation("UserTypeAverageCapacityCosts");
 
                     b.Navigation("WasteInstallFees");
 
@@ -5105,9 +5107,9 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("Users");
 
-                    b.Navigation("UserTypeAverageCapacityCurrents");
+                    b.Navigation("UserTypeAverageCapacities");
 
-                    b.Navigation("UserTypeAverageCapacityForcasts");
+                    b.Navigation("UserTypeAverageCapacityCosts");
 
                     b.Navigation("WasteInstallFees");
 

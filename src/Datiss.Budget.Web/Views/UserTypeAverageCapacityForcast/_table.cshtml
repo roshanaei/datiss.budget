@@ -1,4 +1,4 @@
-﻿@model UserTypeAverageCapacityCostIndexViewModel
+﻿@model UserTypeAverageCapacityForcastIndexViewModel
 <div class="table-responsive">
     <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
         <thead class="thead-light">
@@ -7,7 +7,7 @@
                 <th style="min-width:250px">سازمان</th>
                 <th style="min-width:250px">کاربری</th>
                 <th style="min-width:220px">متوسط ظرفیت قراردادی آب</th>
-                <th style="min-width:220px">متوسط ظرفیت قراردادی فاضلاب </th>
+                <th style="min-width:220px">متوسط ظرفیت قراردادی فاضلاب</th>
                 <th style="min-width:190px">مدیریت</th>
 
             </tr>
@@ -52,19 +52,19 @@
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_AverageCapacityWIncome_">
-                        <input class="form-control input-keyup default-input" id="inputAverageCapacityWIncome_" type="number" min="0" />
+                    <div id="divInput_AverageCapacityW_">
+                        <input class="form-control input-keyup default-input" id="inputAverageCapacityW_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_AverageCapacityWIncome_" style="display: none">
-                        <span id="spanAverageCapacityWIncome_"> </span>
+                    <div id="divOutput_AverageCapacityW_" style="display: none">
+                        <span id="spanAverageCapacityW_"> </span>
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_AverageCapacityWsIncome_">
-                        <input class="form-control input-keyup" id="inputAverageCapacityWsIncome_" type="number" min="0" />
+                    <div id="divInput_AverageCapacityWs_">
+                        <input class="form-control input-keyup" id="inputAverageCapacityWs_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_AverageCapacityWsIncome_" style="display: none">
-                        <span id="spanAverageCapacityWsIncome_"> </span>
+                    <div id="divOutput_AverageCapacityWs_" style="display: none">
+                        <span id="spanAverageCapacityWs_"> </span>
                     </div>
                 </td>
                 <td>
@@ -139,19 +139,19 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_AverageCapacityWIncome_@item.Id" style="display: none">
-                            <input class="form-control" id="inputAverageCapacityWIncome_@item.Id" value="@item.AverageCapacityWIncome" type="number" />
+                        <div id="divInput_AverageCapacityW_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAverageCapacityW_@item.Id" value="@item.AverageCapacityW" type="number" />
                         </div>
-                        <div id="divOutput_AverageCapacityWIncome_@item.Id">
-                            <span id="spanAverageCapacityWIncome_@item.Id">@item.AverageCapacityWIncomeDisplay </span>
+                        <div id="divOutput_AverageCapacityW_@item.Id">
+                            <span id="spanAverageCapacityW_@item.Id">@item.AverageCapacityWDisplay </span>
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_AverageCapacityWsIncome_@item.Id" style="display: none">
-                            <input class="form-control" id="inputAverageCapacityWsIncome_@item.Id" value="@item.AverageCapacityWsIncome" type="number" />
+                        <div id="divInput_AverageCapacityWs_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAverageCapacityWs_@item.Id" value="@item.AverageCapacityWs" type="number" />
                         </div>
-                        <div id="divOutput_AverageCapacityWsIncome_@item.Id">
-                            <span id="spanAverageCapacityWsIncome_@item.Id">@item.AverageCapacityWsIncomeDisplay </span>
+                        <div id="divOutput_AverageCapacityWs_@item.Id">
+                            <span id="spanAverageCapacityWs_@item.Id">@item.AverageCapacityWsDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -221,5 +221,5 @@
         </div>
     </div>
     <!--Pagination-->
-    <vc:pager model="Model.ToPager()" controller-name="@UserTypeAverageCapacityCostController.Name" action-name="@UserTypeAverageCapacityCostController.ACTION_Index"></vc:pager>
+    <vc:pager model="Model.ToPager()" controller-name="@UserTypeAverageCapacityForcastController.Name" action-name="@UserTypeAverageCapacityForcastController.ACTION_Index"></vc:pager>
 </div>

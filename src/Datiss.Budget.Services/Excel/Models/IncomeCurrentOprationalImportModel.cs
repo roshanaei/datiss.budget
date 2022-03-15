@@ -44,11 +44,5 @@ namespace Datiss.Budget.Services.Excel.Models
 
         [Column(MappingDirections.Both, Letter = "L")]
         public long CostNH { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "M")]
-        public int TotalCount { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "N")]
-        public long TotalCost { get; set; }
     }
 }

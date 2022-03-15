@@ -82,13 +82,13 @@ namespace Datiss.Budget.Services.Models
         public InstallFeeFilterMode NumberMode { get; set; }
         public InstallFeeFilterMode UnitMode { get; set; }
     }
-    public class UserTypeAverageCapacityFilterDTO : FilterInputDTO
+    public class UserTypeAverageCapacityForcastFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
         public int? UserTypeId { get; set; }
     }
-    public class UserTypeAverageCapacityCostFilterDTO : FilterInputDTO
+    public class UserTypeAverageCapacityCurrentFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
@@ -220,6 +220,13 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
         public int? CofficientTypeId { get; set; }
         public CofficientsGroup? GroupName { get; set; }
+    }
+    public class IncomeCurrentCofficientFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? UserTypeId { get; set; }
+        public int? UsageLayerId { get; set; }
     }
     public class IncomeCurrentReportFilterDTO : FilterInputDTO
     {
