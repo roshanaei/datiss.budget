@@ -2,9 +2,9 @@
 
 namespace Datiss.Budget.Entities.DWH
 {
-    public class CurrentIncomeCofficient : IAuditableEntity
+    public class IncomeCurrentCofficient : IAuditableEntity
     {
-        public CurrentIncomeCofficient() {}
+        public IncomeCurrentCofficient() {}
 
         #region Properties
 

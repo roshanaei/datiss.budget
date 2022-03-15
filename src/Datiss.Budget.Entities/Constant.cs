@@ -18,8 +18,8 @@ namespace Datiss.Budget.Entities
             UserPositions = new HashSet<User>();
             WasteInstallFees = new HashSet<WasteInstallFee>();
             WaterPipeDiameterSalessplit = new HashSet<WaterSalesSplit>();
-            UserTypeCurrentIncomeCofficients = new HashSet<CurrentIncomeCofficient>();
-            UsageLayerCurrentIncomeCofficients = new HashSet<CurrentIncomeCofficient>();
+            UserTypeIncomeCurrentCofficients = new HashSet<IncomeCurrentCofficient>();
+            UsageLayerIncomeCurrentCofficients = new HashSet<IncomeCurrentCofficient>();
         }
 
         #region Properties
@@ -87,9 +87,9 @@ namespace Datiss.Budget.Entities
 
         public ICollection<ConsumeForcast> UsageLayerConsumeForcast { get; set; }
 
-        public ICollection<CurrentIncomeCofficient> UserTypeCurrentIncomeCofficients { get; set; }
+        public ICollection<IncomeCurrentCofficient> UserTypeIncomeCurrentCofficients { get; set; }
 
-        public ICollection<CurrentIncomeCofficient> UsageLayerCurrentIncomeCofficients { get; set; }
+        public ICollection<IncomeCurrentCofficient> UsageLayerIncomeCurrentCofficients { get; set; }
 
         public ICollection<ConsumeForcastWs> ConsumeForcastWs { get; set; }
 

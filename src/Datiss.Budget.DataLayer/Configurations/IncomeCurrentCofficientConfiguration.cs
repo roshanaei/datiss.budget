@@ -4,35 +4,35 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Datiss.Budget.DataLayer.Mappings
 {
-    public class CurrentIncomeCofficientConfiguration : IEntityTypeConfiguration<CurrentIncomeCofficient>
+    public class IncomeCurrentCofficientConfiguration : IEntityTypeConfiguration<IncomeCurrentCofficient>
     {
-        public void Configure(EntityTypeBuilder<CurrentIncomeCofficient> builder)
+        public void Configure(EntityTypeBuilder<IncomeCurrentCofficient> builder)
         {
-            builder.ToTable("CurrentIncomeCofficient").HasKey(x => x.Id);
+            builder.ToTable("IncomeCurrentCofficient").HasKey(x => x.Id);
 
             builder.Property(x => x.Id)
-                    .HasColumnName("CurrentIncomeCofficientId");
+                    .HasColumnName("IncomeCurrentCofficientId");
 
             builder.Property(x => x.Fee).HasColumnType("decimal(18,6)");
 
 
             builder.HasOne(x => x.FinanceYear)
-                    .WithMany(x => x.CurrentIncomeCofficients)
+                    .WithMany(x => x.IncomeCurrentCofficients)
                     .HasForeignKey(x => x.YearId)
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.Organization)
-                    .WithMany(x => x.CurrentIncomeCofficients)
+                    .WithMany(x => x.IncomeCurrentCofficients)
                     .HasForeignKey(x => x.OrganizationId)
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.UserType)
-                    .WithMany(x => x.UserTypeCurrentIncomeCofficients)
+                    .WithMany(x => x.UserTypeIncomeCurrentCofficients)
                     .HasForeignKey(x => x.UserTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.UsageLayer)
-                    .WithMany(x => x.UsageLayerCurrentIncomeCofficients)
+                    .WithMany(x => x.UsageLayerIncomeCurrentCofficients)
                     .HasForeignKey(x => x.UsageLayerId)
                     .OnDelete(DeleteBehavior.Restrict);
 

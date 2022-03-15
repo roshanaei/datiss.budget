@@ -241,7 +241,7 @@ namespace Datiss.Budget.DataLayer.Context
         public virtual DbSet<WasteSalesSplit> WasteSalesSplits { get; set; }
         public virtual DbSet<TablesFiledTitle> TablesFiledTitles { get; set; }
         public virtual DbSet<AverageContractedCapacityNHUses> AverageContractedCapacityNHUses { get; set; }
-        public virtual DbSet<CurrentIncomeCofficient> CurrentIncomeCofficients { get; set; }
+        public virtual DbSet<IncomeCurrentCofficient> IncomeCurrentCofficients { get; set; }
 
 
 
@@ -272,7 +272,7 @@ namespace Datiss.Budget.DataLayer.Context
                 .ApplyConfiguration(new ReportParamConfiguration())
                 .ApplyConfiguration(new RoleConfiguration())
                 .ApplyConfiguration(new AppClaimTypeConfiguration())
-                .ApplyConfiguration(new CurrentIncomeCofficientConfiguration());
+                .ApplyConfiguration(new IncomeCurrentCofficientConfiguration());
 
         }
     }
