@@ -5,8 +5,10 @@ using Datiss.Budget.Enum;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Services.Identity;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
+using Datiss.Budget.Web.Helpers;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -25,10 +27,10 @@ namespace Datiss.Budget.Web.Controllers
 {
     [Authorize]
     [Route("[controller]")]
-    public class UserTypeAverageCapacityCostController : Controller
+    public class UserTypeAverageCapacityForcastController : Controller
     {
 
-        public const string Name = "UserTypeAverageCapacityCost";
+        public const string Name = "UserTypeAverageCapacityForcast";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
@@ -41,18 +43,18 @@ namespace Datiss.Budget.Web.Controllers
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
-        private readonly ILogger<UserTypeAverageCapacityCostController> _logger;
+        private readonly ILogger<UserTypeAverageCapacityForcastController> _logger;
         private readonly IWebHostEnvironment _env;
-        private readonly IUserTypeAverageCapacityCostService _userTypeAverageCapacityCostService;
+        private readonly IUserTypeAverageCapacityForcastService _userTypeAverageCapacityForcastService;
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
         private readonly ISecurityTrimmingService _securityTrimmingService;
 
-        public UserTypeAverageCapacityCostController(
-            ILogger<UserTypeAverageCapacityCostController> logger,
+        public UserTypeAverageCapacityForcastController(
+            ILogger<UserTypeAverageCapacityForcastController> logger,
             IWebHostEnvironment environment,
-            IUserTypeAverageCapacityCostService userTypeAverageCapacityCostService,
+            IUserTypeAverageCapacityForcastService userTypeAverageCapacityForcastService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             IConstantService constantService,
@@ -60,7 +62,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
-            _userTypeAverageCapacityCostService = userTypeAverageCapacityCostService ?? throw new ArgumentNullException(nameof(userTypeAverageCapacityCostService));
+            _userTypeAverageCapacityForcastService = userTypeAverageCapacityForcastService ?? throw new ArgumentNullException(nameof(userTypeAverageCapacityForcastService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
@@ -69,16 +71,16 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("[action]")]
         [HasPermission(claimType: Name, PermissionActionType.Create)]
-        public async Task<IActionResult> Create(CreateUserTypeAverageCapacityCostViewModel model)
+        public async Task<IActionResult> Create(CreateUserTypeAverageCapacityForcastViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 model.AddError(ViewMessages.InvalidData);
                 return Json(model);
             }
-            var data = model.Adapt<CreateUserTypeAverageCapacityCostDTO>();
+            var data = model.Adapt<CreateUserTypeAverageCapacityForcastDTO>();
 
-            var result = await _userTypeAverageCapacityCostService.CreateAsync(data);
+            var result = await _userTypeAverageCapacityForcastService.CreateAsync(data);
 
             if (!result.IsValid)
             {
@@ -86,13 +88,13 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            return Json(result.Result.Adapt<UserTypeAverageCapacityCostViewModel>());
+            return Json(result.Result.Adapt<UserTypeAverageCapacityForcastForcastViewModel>());
         }
 
 
         [HttpPost("[action]")]
         [HasPermission(claimType: Name, PermissionActionType.Edit)]
-        public async Task<IActionResult> Edit(UpdateUserTypeAverageCapacityCostViewModel model)
+        public async Task<IActionResult> Edit(UpdateUserTypeAverageCapacityForcastViewModel model)
         {
 
             if (!ModelState.IsValid)
@@ -101,8 +103,8 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            var data = model.Adapt<UpdateUserTypeAverageCapacityCostDTO>();
-            var result = await _userTypeAverageCapacityCostService.UpdateAsync(data);
+            var data = model.Adapt<UpdateUserTypeAverageCapacityForcastDTO>();
+            var result = await _userTypeAverageCapacityForcastService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
@@ -111,7 +113,7 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(
-                result.Result.Adapt<UserTypeAverageCapacityCostViewModel>()
+                result.Result.Adapt<UserTypeAverageCapacityForcastForcastViewModel>()
             );
         }
 
@@ -119,7 +121,7 @@ namespace Datiss.Budget.Web.Controllers
         [HasPermission(claimType: Name, PermissionActionType.List)]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var filter = new UserTypeAverageCapacityCostFilterDTO();
+            var filter = new UserTypeAverageCapacityForcastFilterDTO();
             var orgSource = (await _organizationService.GetDropDownDataAsync())
               .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
@@ -137,17 +139,17 @@ namespace Datiss.Budget.Web.Controllers
             var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
                  .Adapt<List<DropDownItemViewModel>>();
 
-            var myfilter = TempData.Get<UserTypeAverageCapacityCostFilterViewModel>(_indexFilterKey);
+            var myfilter = TempData.Get<UserTypeAverageCapacityForcastFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
             {
-                filter = myfilter.Adapt<UserTypeAverageCapacityCostFilterDTO>();
+                filter = myfilter.Adapt<UserTypeAverageCapacityForcastFilterDTO>();
                 TempData.Put(_indexFilterKey, myfilter);
             }
 
             filter.PageNumber = page;
 
-            var result = await _userTypeAverageCapacityCostService.GetListAsync(filter);
-            var model = result.Adapt<UserTypeAverageCapacityCostIndexViewModel>();
+            var result = await _userTypeAverageCapacityForcastService.GetListAsync(filter);
+            var model = result.Adapt<UserTypeAverageCapacityForcastIndexViewModel>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
@@ -167,15 +169,15 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(UserTypeAverageCapacityCostIndexViewModel model)
+        public async Task<IActionResult> Index(UserTypeAverageCapacityForcastIndexViewModel model)
         {
-            var filter = model.Filter.Adapt<UserTypeAverageCapacityCostFilterDTO>();
+            var filter = model.Filter.Adapt<UserTypeAverageCapacityForcastFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
 
-            var result = await _userTypeAverageCapacityCostService.GetListAsync(filter);
-            model = result.Adapt<UserTypeAverageCapacityCostIndexViewModel>();
-            model.Filter = filter.Adapt<UserTypeAverageCapacityCostFilterViewModel>();
+            var result = await _userTypeAverageCapacityForcastService.GetListAsync(filter);
+            model = result.Adapt<UserTypeAverageCapacityForcastIndexViewModel>();
+            model.Filter = filter.Adapt<UserTypeAverageCapacityForcastFilterViewModel>();
 
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
@@ -214,7 +216,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _userTypeAverageCapacityCostService.ImportExcelAsync(
+                var result = await _userTypeAverageCapacityForcastService.ImportExcelAsync(
                                                                     model.ExcelFile,
                                                                     model.YearId,
                                                                     model.ContinueIfAnyOrgMissing);
@@ -271,7 +273,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             try
             {
-                var result = await _userTypeAverageCapacityCostService.HardDeleteAsync(yearId, orgId);
+                var result = await _userTypeAverageCapacityForcastService.HardDeleteAsync(yearId, orgId);
 
                 return Json(new
                 {
@@ -322,7 +324,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             try
             {
-                await _userTypeAverageCapacityCostService.HardDeleteAsync(id);
+                await _userTypeAverageCapacityForcastService.HardDeleteAsync(id);
             }
             catch (DisbaledYearDataInputException)
             {
@@ -381,7 +383,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                await _userTypeAverageCapacityCostService.CopyAsync(
+                await _userTypeAverageCapacityForcastService.CopyAsync(
                                                     model.SourceYearId,
                                                     model.SourceOrgId,
                                                     model.TargetYearId);
@@ -424,13 +426,13 @@ namespace Datiss.Budget.Web.Controllers
                     .ThenBy(x => x.RowOrder);
             var dwaterTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UserType);
 
-            var items = new List<UserTypeAverageCapacityCostDTO>();
+            var items = new List<UserTypeAverageCapacityForcastDTO>();
 
             foreach (var org in organizations)
             {
                 foreach (var dwt in dwaterTypes)
                 {
-                    items.Add(new UserTypeAverageCapacityCostDTO
+                    items.Add(new UserTypeAverageCapacityForcastDTO
                     {
                         UserTypeDisplay = dwt.Title,
                         UserTypeId = dwt.Id,
@@ -443,17 +445,17 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             using var workbook = items.GetImportTemplate(year.Year);
-            return workbook.Deliver("UserTypeAverageCapacityCost-Import-Template.xlsx");
+            return workbook.Deliver("UserTypeAverageCapacityForcast-Import-Template.xlsx");
         }
 
         [HttpGet("[action]/{orgid}/{yearid}")]
         public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
-            var result = await _userTypeAverageCapacityCostService.GetExportItemsAsync(yearid, orgid);
+            var result = await _userTypeAverageCapacityForcastService.GetExportItemsAsync(yearid, orgid);
             if (result.Count() == 0)
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
-            return workbook.Deliver("UserTypeAverageCapacityCost.xlsx");
+            return workbook.Deliver("UserTypeAverageCapacityForcast.xlsx");
         }
 
     }
