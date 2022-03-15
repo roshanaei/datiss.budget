@@ -384,6 +384,8 @@ namespace Datiss.Budget.Services
             if (!organizationId.HasValue)
                 organizationId = _userContext.OrganizationId;
 
+            var org = await GetByIdAsync(organizationId.Value);
+
             var result = new List<Organization>();
             var myself = await _dbSet.FirstOrDefaultAsync(_ => _.Id == organizationId);
 
@@ -404,27 +406,30 @@ namespace Datiss.Budget.Services
                 }
             }
 
-            var children = await getByParnetIdAsync(
-                                                myself != null ? myself.Id : null,
-                                                input,
-                                                queryTracked,
-                                                orgType);
-
-            if (input)
+            if (org.Type == OrganizationType.Root || org.Type == OrganizationType.County)
             {
-                foreach (var item in children)
+                var children = await getByParnetIdAsync(
+                                                    myself != null ? myself.Id : null,
+                                                    input,
+                                                    queryTracked,
+                                                    orgType);
+
+                if (input)
                 {
-                    if (item.UserCanInput)
-                        result.Add(item);
+                    foreach (var item in children)
+                    {
+                        if (item.UserCanInput)
+                            result.Add(item);
+                    }
                 }
-            }
-            else
-            {
-                if (orgType == null)
-                    result.AddRange(children);
+                else
+                {
+                    if (orgType == null)
+                        result.AddRange(children);
 
-                if (orgType.HasValue)
-                    result.AddRange(children.Where(_ => _.Type == orgType.Value));
+                    if (orgType.HasValue)
+                        result.AddRange(children.Where(_ => _.Type == orgType.Value));
+                }
             }
 
             return await Task.FromResult(result);
