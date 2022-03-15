@@ -50,6 +50,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IIncomeCurrentWsNHService, IncomeCurrentWsNHService>();
             services.AddScoped<IPerformanceEvaluationService, PerformanceEvaluationService>();
             services.AddScoped<ICofficientService, CofficientService>();
+            services.AddScoped<IIncomeCurrentCofficientService, IncomeCurrentCofficientService>();
             services.AddScoped<ITablesFieldTitleService, TablesFieldTitleService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<IWWsFeeService, WWsFeeService>();
