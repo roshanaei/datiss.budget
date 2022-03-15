@@ -2,9 +2,9 @@
 
 namespace Datiss.Budget.Entities.DWH
 {
-    public class UserTypeAverageCapacity : IAuditableEntity
+    public class IncomeCurrentCofficient : IAuditableEntity
     {
-        public UserTypeAverageCapacity() { }
+        public IncomeCurrentCofficient() {}
 
         #region Properties
 
@@ -13,27 +13,25 @@ namespace Datiss.Budget.Entities.DWH
         public int YearId { get; set; }
 
         public int OrganizationId { get; set; }
-
+        
         public int UserTypeId { get; set; }
 
-        public decimal AverageCapacityW { get; set; }
+        public int UsageLayerId { get; set; }
 
-        public decimal AverageCapacityWs { get; set; }
+        public decimal Fee { get; set; }
 
-        public decimal AverageCapacityWIncome { get; set; }
-
-        public decimal AverageCapacityWsIncome { get; set; }
 
         #endregion
 
-        #region Navigations
-
+        #region Navigation
         public FinanceYear FinanceYear { get; set; }
 
         public Organization Organization { get; set; }
 
         public Constant UserType { get; set; }
 
+        public Constant UsageLayer { get; set; }
         #endregion
+
     }
 }

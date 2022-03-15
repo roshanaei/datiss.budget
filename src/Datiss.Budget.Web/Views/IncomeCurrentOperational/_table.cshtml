@@ -120,6 +120,9 @@
                 <td>
                     <div id="divInput_TotalCount_">
                         <input class="form-control input-keyup" id="inputTotalCount_" type="number" />
+                        <script>
+                            $('#inputTotalCount_').attr('disabled', 'disabled');
+                        </script>
                     </div>
                     <div id="divOutput_TotalCount_" style="display: none">
                         <span id="spanTotalCount_"> </span>
@@ -128,6 +131,9 @@
                 <td>
                     <div id="divInput_TotalCost_">
                         <input class="form-control input-keyup" id="inputTotalCost_" type="number" />
+                        <script>
+                            $('#inputTotalCost_').attr('disabled', 'disabled');
+                        </script>
                     </div>
                     <div id="divOutput_TotalCost_" style="display: none">
                         <span id="spanTotalCost_"> </span>
@@ -268,6 +274,9 @@
                     <td>
                         <div id="divInput_TotalCount_@item.Id" style="display: none">
                             <input class="form-control" id="inputTotalCount_@item.Id" value="@item.TotalCount" type="number" />
+                            <script>
+                                $('#inputTotalCount_' + @item.Id).attr('disabled', 'disabled');
+                            </script> 
                         </div>
                         <div id="divOutput_TotalCount_@item.Id">
                             <span id="spanTotalCount_@item.Id">@item.TotalCountDisplay </span>
@@ -276,6 +285,9 @@
                     <td>
                         <div id="divInput_TotalCost_@item.Id" style="display: none">
                             <input class="form-control" id="inputTotalCost_@item.Id" value="@item.TotalCost" type="number" />
+                            <script>
+                                $('#inputTotalCost_' + @item.Id).attr('disabled', 'disabled');
+                            </script>                        
                         </div>
                         <div id="divOutput_TotalCost_@item.Id">
                             <span id="spanTotalCost_@item.Id">@item.TotalCostDisplay </span>

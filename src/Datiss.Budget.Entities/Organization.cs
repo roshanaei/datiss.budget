@@ -15,6 +15,7 @@ namespace Datiss.Budget.Entities
         {
             Childrens = new HashSet<Organization>();
             WaterInstallFees = new HashSet<WaterInstallFee>();
+            IncomeCurrentCofficients = new HashSet<IncomeCurrentCofficient>();
         }
 
         #region Properties
@@ -64,9 +65,9 @@ namespace Datiss.Budget.Entities
 
         public ICollection<AverageContractedCapacityNHUses> AverageContractedCapacityNHUses { get; set; }
 
-        public ICollection<UserTypeAverageCapacity> UserTypeAverageCapacities { get; set; }
+        public ICollection<UserTypeAverageCapacityForcast> UserTypeAverageCapacityForcasts { get; set; }
 
-        public ICollection<UserTypeAverageCapacityCost> UserTypeAverageCapacityCosts { get; set; }
+        public ICollection<UserTypeAverageCapacityCurrent> UserTypeAverageCapacityCurrents { get; set; }
 
         public ICollection<IncomeForcast> IncomeForcasts { get; set; }
 
@@ -103,6 +104,8 @@ namespace Datiss.Budget.Entities
         public ICollection<NHCo> NHCo { get; set; }
 
         public ICollection<Cofficient> Cofficients { get; set; }
+
+        public ICollection<IncomeCurrentCofficient> IncomeCurrentCofficients { get; set; }
 
         public ICollection<IncomeCurrentReport> CurrentIncomeReports { get; set; }
 

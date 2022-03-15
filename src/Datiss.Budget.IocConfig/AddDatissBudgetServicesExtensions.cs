@@ -39,8 +39,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IIncomeForcastWsService, IncomeForcastWsService>();
             services.AddScoped<INHCoService, NHCoService>();
             services.AddScoped<IBranchingRateIncreaseService, BranchingRateIncreaseService>();
-            services.AddScoped<IUserTypeAverageCapacityService, UserTypeAverageCapacityService>();
-            services.AddScoped<IUserTypeAverageCapacityCostService, UserTypeAverageCapacityCostService>();
+            services.AddScoped<IUserTypeAverageCapacityForcastService, UserTypeAverageCapacityForcastService>();
+            services.AddScoped<IUserTypeAverageCapacityCurrentService, UserTypeAverageCapacityCurrentService>();
             services.AddScoped<IIncomeForcastOtherService, IncomeForcastOtherService>();
             services.AddScoped<ISalesSplitTotalService, SalesSplitTotalService>();
             services.AddScoped<IFeeCityService, FeeCityService>();
@@ -50,6 +50,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IIncomeCurrentWsNHService, IncomeCurrentWsNHService>();
             services.AddScoped<IPerformanceEvaluationService, PerformanceEvaluationService>();
             services.AddScoped<ICofficientService, CofficientService>();
+            services.AddScoped<IIncomeCurrentCofficientService, IncomeCurrentCofficientService>();
             services.AddScoped<ITablesFieldTitleService, TablesFieldTitleService>();
             services.AddScoped<ISubscriptionService, SubscriptionService>();
             services.AddScoped<IWWsFeeService, WWsFeeService>();
