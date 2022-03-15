@@ -9,7 +9,7 @@ namespace Datiss.Budget.Reports.Excel
     {
         private const string _sheetName = "UserTypeAverageCapacityCost";
 
-        public static XLWorkbook ExportExcel(this IEnumerable<UserTypeAverageCapacityCostDTO> items)
+        public static XLWorkbook ExportExcel(this IEnumerable<UserTypeAverageCapacityCurrentDTO> items)
         {
             if (items == null || !items.Any())
                 return null;
@@ -48,7 +48,7 @@ namespace Datiss.Budget.Reports.Excel
             return workbook;
         }
 
-        public static XLWorkbook GetImportTemplate(this IEnumerable<UserTypeAverageCapacityCostDTO> items, int year)
+        public static XLWorkbook GetImportTemplate(this IEnumerable<UserTypeAverageCapacityCurrentDTO> items, int year)
         {
             if (items == null || !items.Any())
                 return null;

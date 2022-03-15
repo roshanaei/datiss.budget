@@ -2,9 +2,9 @@
 
 namespace Datiss.Budget.Entities.DWH
 {
-    public class UserTypeAverageCapacityCost : IAuditableEntity
+    public class UserTypeAverageCapacityForcast : IAuditableEntity
     {
-        public UserTypeAverageCapacityCost() { }
+        public UserTypeAverageCapacityForcast() { }
 
         #region Properties
 
@@ -15,6 +15,10 @@ namespace Datiss.Budget.Entities.DWH
         public int OrganizationId { get; set; }
 
         public int UserTypeId { get; set; }
+
+        public decimal AverageCapacityW { get; set; }
+
+        public decimal AverageCapacityWs { get; set; }
 
         public decimal AverageCapacityWIncome { get; set; }
 

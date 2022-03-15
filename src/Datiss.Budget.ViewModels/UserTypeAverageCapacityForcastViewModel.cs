@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class CreateUserTypeAverageCapacityCostViewModel : BaseViewModel
+    public class CreateUserTypeAverageCapacityForcastViewModel : BaseViewModel
     {
         public int YearId { get; set; }
 
@@ -30,6 +30,12 @@ namespace Datiss.Budget.ViewModels
         }
 
         [Required(ErrorMessage = "*")]
+        public decimal AverageCapacityW { get; set; }
+
+        [Required(ErrorMessage = "*")]
+        public decimal AverageCapacityWs { get; set; }
+
+        [Required(ErrorMessage = "*")]
         public decimal AverageCapacityWIncome { get; set; }
 
         [Required(ErrorMessage = "*")]
@@ -37,13 +43,13 @@ namespace Datiss.Budget.ViewModels
 
     }
 
-    public class UpdateUserTypeAverageCapacityCostViewModel : CreateUserTypeAverageCapacityCostViewModel
+    public class UpdateUserTypeAverageCapacityForcastViewModel : CreateUserTypeAverageCapacityForcastViewModel
     {
         public int Id { get; set; }
 
     }
 
-    public class UserTypeAverageCapacityCostViewModel
+    public class UserTypeAverageCapacityForcastForcastViewModel
     {
         public int Id { get; set; }
         public int YearId { get; set; }
@@ -52,6 +58,13 @@ namespace Datiss.Budget.ViewModels
         public string OrganizationDisplay { get; set; }
         public int UserTypeId { get; set; }
         public string UserTypeDisplay { get; set; }
+
+        public decimal AverageCapacityW { get; set; }
+        public string AverageCapacityWDisplay => AverageCapacityW.ToString("N2");
+
+        public decimal AverageCapacityWs { get; set; }
+        public string AverageCapacityWsDisplay => AverageCapacityWs.ToString("N2");
+
         public decimal AverageCapacityWIncome { get; set; }
         public string AverageCapacityWIncomeDisplay => AverageCapacityWIncome.ToString("N2");
 
@@ -59,7 +72,7 @@ namespace Datiss.Budget.ViewModels
         public string AverageCapacityWsIncomeDisplay => AverageCapacityWsIncome.ToString("N2");
     }
 
-    public class UserTypeAverageCapacityCostFilterViewModel : FilterViewModel
+    public class UserTypeAverageCapacityForcastFilterViewModel : FilterViewModel
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
@@ -70,15 +83,15 @@ namespace Datiss.Budget.ViewModels
         public IList<SelectListItem> OrganizationSource { get; set; }
     }
 
-    public class UserTypeAverageCapacityCostIndexViewModel : PagedViewModel<UserTypeAverageCapacityCostViewModel>
+    public class UserTypeAverageCapacityForcastIndexViewModel : PagedViewModel<UserTypeAverageCapacityForcastForcastViewModel>
     {
 
-        public UserTypeAverageCapacityCostIndexViewModel()
+        public UserTypeAverageCapacityForcastIndexViewModel()
         {
-            Filter = new UserTypeAverageCapacityCostFilterViewModel();
+            Filter = new UserTypeAverageCapacityForcastFilterViewModel();
         }
 
-        public UserTypeAverageCapacityCostFilterViewModel Filter { get; set; }
+        public UserTypeAverageCapacityForcastFilterViewModel Filter { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
 
@@ -126,6 +139,7 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
+        //AddEmptySelectListItem()
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
             => Filter.YearSource = source.Select(x => new SelectListItem
