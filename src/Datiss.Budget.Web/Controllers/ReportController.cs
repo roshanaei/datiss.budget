@@ -56,6 +56,7 @@ namespace Datiss.Budget.Web.Controllers {
             _yearService = yearService
                 ?? throw new ArgumentNullException(nameof(yearService));
 
+            StiFontCollection.AddFontFile("wwwroot/fonts/B Nazanin.ttf");
             var stimulLicenseKey = Path.Combine(_host.WebRootPath, "reporting\\license.key");
             StiLicense.LoadFromFile(stimulLicenseKey);
         }
