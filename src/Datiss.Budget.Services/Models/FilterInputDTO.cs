@@ -264,4 +264,13 @@ namespace Datiss.Budget.Services.Models
 
     }
 
+    public class CostCurrentConsumableFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public ActivityType? ActivityType { get; set; }
+        public int? ConsumableTypeId { get; set; }
+
+    }
+
 }
