@@ -107,8 +107,6 @@ namespace Datiss.Budget.Services
                         OrganizationDisplay = organizationDisplay,
                         YearId = model.YearId,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year,
-                        ActivityType = model.ActivityType,
-                        RecordType = model.RecordType,
                         CCPMDepTypeId = model.CCPMDepTypeId,
                         CCPMDepTypeDisplay = model.CCPMDepTypeTitle,
                         CostCenterTypeId = model.CostCenterTypeId,
@@ -133,7 +131,7 @@ namespace Datiss.Budget.Services
                );
         }
 
-        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId, RecordType recordType)
+        public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId)
         {
             var organization = await _orgDbSet.FindAsync(organizationId);
             organization.CheckReferenceIsNull(nameof(organization));
@@ -147,12 +145,21 @@ namespace Datiss.Budget.Services
             var self = await _dbSet.Where(_ => _.YearId == yearId)
                                    .Where(_ => _.OrganizationId == organizationId)
                                    .ToListAsync();
-            var childrens = await getChildren(organizationId, yearId, recordType);
+
+            IEnumerable<CostCurrentPMDep> childrens = new CostCurrentPMDep[] { };
+
+            if (organization.Type == OrganizationType.County || organization.Type == OrganizationType.Root)
+            {
+                childrens = await getChildren(organizationId, yearId);
+            }
+
             if (self.Count() == 0 && childrens.Count() == 0)
                 throw new DeleteNullRecordException();
 
             _dbSet.RemoveRange(self);
-            _dbSet.RemoveRange(childrens);
+
+            if (childrens.Any())
+                _dbSet.RemoveRange(childrens);
 
             var result = new OrganizationDeleteDataResult
             {
@@ -228,7 +235,7 @@ namespace Datiss.Budget.Services
                 throw new CopySameYearException();
             if (destYearId < sourceYearId)
                 throw new CopyDestYearExxeption();
-            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId, RecordType.Base))
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
                 throw new CopyOrgNullDataException();
             var result = new List<CostCurrentPMDep>();
 
@@ -324,7 +331,7 @@ namespace Datiss.Budget.Services
             int orgId = _userContext.OrganizationId.HasValue
                                 ? _userContext.OrganizationId.Value
                                 : 1;
-            if (await hasAnyDataAsync(orgId, yearId, RecordType.Base))
+            if (await hasAnyDataAsync(orgId, yearId))
             {
                 return ImportResult.Failed(
                     string.Format(ServiceMessages.TableHasBaseData)
@@ -340,12 +347,10 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
-            var ccPMDepType = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CCPMDepType &&
-                                                   x.Status != EntityStatus.Disbaled);
+            var ccPMDepType = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CCPMDep &&
+                                                   x.Status != EntityStatus.Deleted);
             var costCenterType = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CostCenterType &&
-                                                      x.Status != EntityStatus.Disbaled);
-
-            var activities = ActivityType.GetValues<ActivityType>();
+                                                      x.Status != EntityStatus.Deleted);
 
 
             var year = await _yearSet.FindAsync(yearId);
@@ -410,91 +415,66 @@ namespace Datiss.Budget.Services
 
             var missingccPMDepType = new List<Constant>();
             var missingCostCenterType = new List<Constant>();
-            string missingActivity = "";
 
             string orgTitle = "";
-            string activityTitle = "";
             string costCenterTypeTitle = "";
 
             foreach (var org in existOrgs)
             {
                 if (!string.IsNullOrWhiteSpace(orgTitle))
-                {
                     break;
-                }
-                foreach (var activity in activities)
+                foreach (var costcenter in costCenterType)
                 {
-                    if (!records.Any(_ => _.OrganizationId == org.Id))
+                    if (!string.IsNullOrWhiteSpace(costCenterTypeTitle))
+                        break;
+                    var existUserTypeInExcel = records.Any(_ => _.CostCenterTypeId == costcenter.Id &&
+                                                                _.OrganizationId == org.Id);
+                    if (!existUserTypeInExcel)
                     {
-                        missingActivity += "- [" + activity.ToDisplay() + "]<br>";
+                        missingCostCenterType.Add(costcenter);
                         orgTitle = org.Title;
                     }
-                    else
+                    else if (!missingCostCenterType.Any())
                     {
-                        foreach (var cost in costCenterType)
+                        foreach (var ccpmdep in ccPMDepType)
                         {
-                            if (!string.IsNullOrWhiteSpace(costCenterTypeTitle))
+                            var existWPDiametersInExcel = records.Any(_ => _.CostCenterTypeId == costcenter.Id &&
+                                                                           _.CCPMDepTypeId == ccpmdep.Id &&
+                                                                           _.OrganizationId == org.Id);
+
+                            if (!existWPDiametersInExcel)
                             {
-                                break;
-                            }
-                            var exist = records.Any(_ => _.OrganizationId == org.Id &&
-                                                         _.CostCenterTypeId == cost.Id);
-                            if (!exist)
-                            {
-                                missingCostCenterType.Add(cost);
-                                activityTitle = activity.ToDisplay();
+                                missingccPMDepType.Add(ccpmdep);
                                 orgTitle = org.Title;
-                            }
-                            else
-                            {
-                                foreach (var cc in ccPMDepType)
-                                {
-                                    if (!records.Any(_ => _.OrganizationId == org.Id &&
-                                                         _.CCPMDepTypeId == cc.Id &&
-                                                         _.CostCenterTypeId == cost.Id))
-                                    {
-                                        missingccPMDepType.Add(cc);
-                                        costCenterTypeTitle = cost.Title;
-                                        activityTitle = activity.ToDisplay();
-                                        orgTitle = org.Title;
-                                    }
-                                }
+                                costCenterTypeTitle = costcenter.Title;
                             }
                         }
-
-
                     }
                 }
-            }
-
-            if (!string.IsNullOrWhiteSpace(missingActivity))
-            {
-                return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelActivityTypeNotInExcel, missingActivity, orgTitle));
             }
 
             if (missingCostCenterType.Any())
             {
-                string costCenterTypeNames = "";
+                string CostCenterTypeNames = "";
                 foreach (var item in missingCostCenterType)
                 {
-                    costCenterTypeNames += "- [" + item.Title + "]<br>";
+                    CostCenterTypeNames += "- " + item.Title + "<br>";
                 }
-
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelActivityCostCenterTypeOrgNotInExcel, costCenterTypeNames, activityTitle, orgTitle));
+                    string.Format(ServiceMessages.ImportExcelUserTypeOrgNotInExcel, CostCenterTypeNames, orgTitle));
             }
+
             if (missingccPMDepType.Any())
             {
-                string ccTypeNames = "";
+                string ccPMDepTypeNames = "";
                 foreach (var item in missingccPMDepType)
                 {
-                    ccTypeNames += "- [" + item.Title + "]<br>";
+                        ccPMDepTypeNames += "- [" + item.Title + "]<br>";
                 }
-
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelActivityCCTypePMDepTypeOrgNotInExcel, ccTypeNames, costCenterTypeTitle, activityTitle, orgTitle));
+                    string.Format(ServiceMessages.ImportExcelDiameterPipeUserTypeOrgNotInExcel, ccPMDepTypeNames, costCenterTypeTitle, orgTitle));
             }
+
             #endregion
 
             rowIndex = 1;
@@ -667,8 +647,7 @@ namespace Datiss.Budget.Services
         }
         private async Task<IEnumerable<CostCurrentPMDep>> getChildren(
             int parentOrganizationId,
-            int yearId,
-            RecordType recordType)
+            int yearId)
         {
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
@@ -685,11 +664,11 @@ namespace Datiss.Budget.Services
                 {
                     result.Add(item);
                 }
-                result.AddRange(await getChildren(org.Id, yearId, recordType));
+                result.AddRange(await getChildren(org.Id, yearId));
             }
             return result;
         }
-        private async Task<bool> hasAnyDataAsync(int orgid, int yearid, RecordType recordType)
+        private async Task<bool> hasAnyDataAsync(int orgid, int yearid)
         {
             bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
                                                    x.YearId == yearid);

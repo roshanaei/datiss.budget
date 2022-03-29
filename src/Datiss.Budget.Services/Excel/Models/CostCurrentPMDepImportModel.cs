@@ -16,36 +16,27 @@ namespace Datiss.Budget.Services.Excel.Models
         public int OrganizationId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "C")]
-        public string ActivityTypeDisplay { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "D")]
-        public int ActivityType { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "E")]
         public string CostCenterTypeDisplay { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "f")]
+        [Column(MappingDirections.Both, Letter = "D")]
         public int CostCenterTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "G")]
+        [Column(MappingDirections.Both, Letter = "E")]
         public string CCPMDepTypeDisplay { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "H")]
+        [Column(MappingDirections.Both, Letter = "F")]
         public int CCPMDepTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "I")]
-        public long CostCenter { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "J")]
+        [Column(MappingDirections.Both, Letter = "G")]
         public long FinancePMCost { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "K")]
+        [Column(MappingDirections.Both, Letter = "H")]
         public decimal RFinancePMCost_D { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "L")]
+        [Column(MappingDirections.Both, Letter = "I")]
         public long FinanceDepCost { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "M")]
+        [Column(MappingDirections.Both, Letter = "J")]
         public decimal RFinanceDepCost_D { get; set; }
     }
 }

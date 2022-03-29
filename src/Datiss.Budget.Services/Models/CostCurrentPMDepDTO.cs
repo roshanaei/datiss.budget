@@ -28,10 +28,6 @@ namespace Datiss.Budget.Services.Models
 
         public string CostCenterTypeTitle { get; set; }
         
-        public ActivityType ActivityType { get; set; }
-
-        public RecordType RecordType { get; set; }
-
         public long FinancePMCost { get; set; }
 
         public decimal RFinancePMCost_D { get; set; }
@@ -56,10 +52,6 @@ namespace Datiss.Budget.Services.Models
 
         public int CostCenterTypeId { get; set; }
         public string CostCenterTypeDisplay { get; set; }
-
-        public ActivityType ActivityType { get; set; }
-
-        public RecordType RecordType { get; set; }
 
         public long FinancePMCost { get; set; }
 
