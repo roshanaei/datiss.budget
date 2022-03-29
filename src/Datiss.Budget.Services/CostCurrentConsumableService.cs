@@ -38,6 +38,8 @@ namespace Datiss.Budget.Services
         private readonly DbSet<CostCurrentConsumable> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
         private readonly DbSet<FinanceYear> _yearSet;
+        private readonly DbSet<Constant> _constSet;
+
 
         public CostCurrentConsumableService(
             IUserContext userContext,
@@ -51,6 +53,7 @@ namespace Datiss.Budget.Services
             _dbSet = _uow.Set<CostCurrentConsumable>();
             _orgDbSet = _uow.Set<Organization>();
             _yearSet = _uow.Set<FinanceYear>();
+            _constSet = _uow.Set<Constant>();
             _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
@@ -79,11 +82,12 @@ namespace Datiss.Budget.Services
                 ConsumableCost = model.ConsumableCost
             };
 
+            model.ConsumableTypeDisplay = (await _constSet.FindAsync(model.ConsumableTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ActivityType))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ActivityType , model.ConsumableTypeId))
                 {
                     await _dbSet.AddAsync(entity);
                     try
@@ -101,6 +105,7 @@ namespace Datiss.Budget.Services
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.ActivityType = entity.ActivityType;
                     result.ConsumableTypeId = entity.ConsumableTypeId;
+                    result.ConsumableTypeDisplay = model.ConsumableTypeDisplay;
                     result.ConsumableAmount = entity.ConsumableAmount;
                     result.ConsumableCost = entity.ConsumableCost;
 
@@ -113,8 +118,8 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<CostCurrentConsumableDTO>.Failed(
-                string.Format(ServiceMessages.Logic_ActivityDuplicate,
-                model.ActivityType.ToDisplay(), organizationDisplay)
+                string.Format(ServiceMessages.Logic_ConsumableTypeOrgDuplicates,
+                model.ConsumableTypeDisplay, organizationDisplay)
                 );
 
 
@@ -124,11 +129,12 @@ namespace Datiss.Budget.Services
         {
             model.CheckArgumentIsNull(nameof(model));
 
+            model.ConsumableTypeDisplay = (await _constSet.FindAsync(model.ConsumableTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ActivityType, model.Id))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ActivityType,model.ConsumableTypeId ,model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.OrganizationId = model.OrganizationId;
@@ -154,6 +160,7 @@ namespace Datiss.Budget.Services
                         YearId = model.YearId,
                         ActivityType = model.ActivityType,
                         ConsumableTypeId = model.ConsumableTypeId,
+                        ConsumableTypeDisplay = model.ConsumableTypeDisplay,
                         ConsumableAmount = model.ConsumableAmount,
                         ConsumableCost = model.ConsumableCost,
                         OrganizationDisplay = organizationDisplay,
@@ -167,9 +174,10 @@ namespace Datiss.Budget.Services
             {
                 return ValidationResult<CostCurrentConsumableDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
+
             return ValidationResult<CostCurrentConsumableDTO>.Failed(
-                string.Format(ServiceMessages.Logic_ActivityDuplicate,
-                model.ActivityType.ToDisplay(), organizationDisplay)
+                string.Format(ServiceMessages.Logic_ConsumableTypeOrgDuplicates,
+                model.ConsumableTypeDisplay, organizationDisplay)
                 );
         }
 
@@ -277,6 +285,7 @@ namespace Datiss.Budget.Services
                                         YearId = x.YearId,
                                         ActivityType = x.ActivityType,
                                         ConsumableTypeId = x.ConsumableTypeId,
+                                        ConsumableTypeDisplay = x.ConsumableType.Title,
                                         ConsumableAmount = x.ConsumableAmount,
                                         ConsumableCost = x.ConsumableCost
                                     }).ToListAsync();
@@ -311,7 +320,7 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, item.OrganizationId, item.ActivityType))
+                    if (!await checkLogicAsync(destYearId, item.OrganizationId, item.ActivityType , item.ConsumableTypeId))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new CostCurrentConsumable
@@ -429,7 +438,8 @@ namespace Datiss.Budget.Services
                 if (!await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
-                    record.ActivityType))
+                    record.ActivityType,
+                    record.ConsumableTypeId))
                 {
 
                     return ImportResult.Failed(
@@ -485,6 +495,7 @@ namespace Datiss.Budget.Services
                                         YearId = x.YearId,
                                         ActivityType = x.ActivityType,
                                         ConsumableTypeId = x.ConsumableTypeId,
+                                        ConsumableTypeDisplay = x.ConsumableType.Title,
                                         ConsumableAmount = x.ConsumableAmount,
                                         ConsumableCost = x.ConsumableCost
                                     }).ToListAsync();
@@ -513,6 +524,7 @@ namespace Datiss.Budget.Services
                                         YearId = x.YearId,
                                         ActivityType = x.ActivityType,
                                         ConsumableTypeId = x.ConsumableTypeId,
+                                        ConsumableTypeDisplay = x.ConsumableType.Title,
                                         ConsumableAmount = x.ConsumableAmount,
                                         ConsumableCost = x.ConsumableCost
                                     }).ToListAsync();
@@ -582,13 +594,17 @@ namespace Datiss.Budget.Services
                         : query.OrderBy(x => x.Organization.Title);
                 case "getexport":
                     return query.Include(x => x.Organization)
+                                .Include(x => x.ConsumableType)
                                 .OrderBy(x => x.ActivityType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
-                                .ThenBy(x => x.Organization.RowOrder);
+                                .ThenBy(x => x.Organization.RowOrder)
+                                .ThenBy(x => x.ConsumableType.DisplayOrder);
                 default:
                     return query.Include(x => x.Organization)
+                                .Include(x => x.ConsumableType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
-                                .ThenBy(x => x.Organization.RowOrder);
+                                .ThenBy(x => x.Organization.RowOrder)
+                                .ThenBy(x=>x.ConsumableType.DisplayOrder);
             }
         }
 
@@ -624,7 +640,7 @@ namespace Datiss.Budget.Services
 
                 foreach (var item in data)
                 {
-                    if (!await checkLogicAsync(targetYearId, item.OrganizationId, item.ActivityType))
+                    if (!await checkLogicAsync(targetYearId, item.OrganizationId, item.ActivityType , item.ConsumableTypeId))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new CostCurrentConsumable
@@ -700,6 +716,7 @@ namespace Datiss.Budget.Services
             int yearId,
             int organizationId,
             ActivityType activityType,
+            int consumableTypeId,
             int? id = null)
         {
             var year = await _yearSet.FindAsync(yearId);
@@ -711,11 +728,13 @@ namespace Datiss.Budget.Services
             var result = id == null
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&
-                                                x.ActivityType == activityType)
+                                                x.ActivityType == activityType &&
+                                                x.ConsumableTypeId == consumableTypeId)
 
                 : await Query().AnyAsync(x => x.YearId == yearId &&
                                             x.OrganizationId == organizationId &&
                                             x.ActivityType == activityType &&
+                                            x.ConsumableTypeId == consumableTypeId &&
                                             x.Id != id);
             return !result;
         }

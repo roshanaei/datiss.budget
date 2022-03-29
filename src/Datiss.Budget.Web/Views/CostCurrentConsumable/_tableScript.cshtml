@@ -28,7 +28,7 @@
 
         rowData = {}
         rowData.organizationId = $('#inputOrg_' + id).val();
-        rowData.consumableType = $('#inputConsumableType_' + id).val();
+        rowData.consumableTypeId = $('#inputConsumableType_' + id).val();
         rowData.consumableAmount = $('#inputConsumableAmount_' + id).val();
         rowData.consumableCost = $('#inputConsumableCost_' + id).val();
     }
@@ -46,7 +46,7 @@
         //Retriving to OriginalData
         if (rowData != null) {
             $('#inputOrg_' + id).val(rowData.organizationId);
-            $('#inputConsumableType_' + id).val(rowData.consumableType);
+            $('#inputConsumableType_' + id).val(rowData.consumableTypeId);
             $('#inputConsumableAmount_' + id).val(rowData.consumableAmount);
             $('#inputConsumableCost_' + id).val(rowData.consumableCost);
         }
@@ -79,7 +79,7 @@
         model.yearId = $('#yearId option:selected').val();
         model.activityType = $('#activityType option:selected').val();
         model.organizationId = $('#inputOrg_' + id).val();
-        model.consumableType = $('#inputConsumableType_' + id).val();
+        model.consumableTypeId = $('#inputConsumableType_' + id).val();
         model.consumableAmount = $('#inputConsumableAmount_' + id).val();
         model.consumableCost = $('#inputConsumableCost_' + id).val();
 
@@ -104,13 +104,13 @@
 
                 rowData = {};
                 rowData.organizationId = model.organizationId;
-                rowData.consumableType = model.consumableType;
+                rowData.consumableTypeId = model.consumableTypeId;
                 rowData.consumableAmount = model.consumableAmount;
                 rowData.consumableCost = model.consumableCost;
 
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
-                $('#spanConsumableType_' + id).text(data.consumableType);
+                $('#spanConsumableType_' + id).text(data.consumableTypeDisplay);
                 $('#spanConsumableAmount_' + id).text(data.consumableAmount);
                 $('#spanConsumableCost_' + id).text(data.consumableCost);
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
@@ -133,7 +133,7 @@
         model.yearId = $('#yearId option:selected').val();
         model.activityType = $('#activityType option:selected').val();
         model.organizationId = $(e).find('#inputOrg_').val();
-        model.consumableType = $(e).find('#inputConsumableType_').val();
+        model.consumableTypeId = $(e).find('#inputConsumableType_').val();
 
 
 
@@ -182,12 +182,13 @@
 
                 //ConsumableType
                 $(e).find('#divInput_ConsumableType_').attr('id', 'divInput_ConsumableType_' + data.id);
+                $(e).find('#hidConsumableTypeId_').attr('id', 'hidConsumableTypeId_' + data.id);
                 $(e).find('#inputConsumableType_').attr('id', 'inputConsumableType_' + data.id);
                 $(e).find('#divOutput_ConsumableType_').attr('id', 'divOutput_ConsumableType_' + data.id);
                 $(e).find('#spanConsumableType_').attr('id', 'spanConsumableType_' + data.id);
 
                 $('#divInput_ConsumableType_' + data.id).hide();
-                $('#spanConsumableType_' + data.id).text(data.consumableType);
+                $('#spanConsumableType_' + data.id).text(data.consumableTypeDisplay);
                 $('#divOutput_ConsumableType_' + data.id).show();
 
                 //ConsumableAmount
