@@ -18,8 +18,6 @@ namespace Datiss.Budget.Entities.DWH
         public int OrganizationId { get; set; }
         public int CCPMDepTypeId { get; set; }
         public int CostCenterTypeId { get; set; }
-        public ActivityType ActivityType { get; set; }
-        public RecordType RecordType { get; set; }
         public long FinancePMCost { get; set; }
         public decimal RFinancePMCost_D { get; set; }
         public long FinanceDepCost { get; set; }
