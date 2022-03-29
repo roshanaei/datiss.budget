@@ -22,5 +22,6 @@
         public const string __CIOWsType = "CIOWsType";
         public const string __CurrentCostInstalationWater = "CurrentCostInstalationWater";
         public const string __CurrentCostInstalationWaste = "CurrentCostInstalationWaste";
+        public const string __ConsumablesType = "ConsumablesType";
     }
 }
