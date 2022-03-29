@@ -20,8 +20,6 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.OrganizationId).IsRequired();
 
-            builder.Property(x => x.ActivityType).IsRequired();
-
             builder.Property(x => x.CostCenterTypeId).IsRequired();
 
             builder.HasOne(x => x.FinanceYear)
