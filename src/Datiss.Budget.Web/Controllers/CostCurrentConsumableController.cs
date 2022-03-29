@@ -128,6 +128,9 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
+            var consumableTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ConsumablesType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
             filter.ActivityType = ActivityType.Water;
@@ -150,6 +153,7 @@ namespace Datiss.Budget.Web.Controllers
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
+            model.SetConsumableTypeSource(consumableTypeSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
@@ -181,12 +185,17 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
+            var consumableTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ConsumablesType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
             var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
                 .Adapt<List<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
+            model.SetConsumableTypeSource(consumableTypeSource);
+
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
 

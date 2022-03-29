@@ -71,6 +71,9 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> InputOrganizationSource { get; set; }
 
+        public IList<SelectListItem> ConsumableTypeSource { get; set; }
+
+
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
             => YearSource = source.Select(x => new SelectListItem
             {
@@ -87,6 +90,13 @@ namespace Datiss.Budget.ViewModels
 
         public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
             => InputOrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetConsumableTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => ConsumableTypeSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
