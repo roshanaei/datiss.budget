@@ -27,7 +27,7 @@ namespace Datiss.Budget.DataLayer.Mappings
                     .HasForeignKey(x => x.OrganizationId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.Constant)
+            builder.HasOne(x => x.CostCurrentNoType)
                     .WithMany(x => x.CostCurrentNO)
                     .HasForeignKey(x => x.CostCurrentNoTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
