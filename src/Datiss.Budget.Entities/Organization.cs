@@ -125,6 +125,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentOther> CostCurrentOther { get; set; }
 
+        public ICollection<CostCurrentSharingSetad> CostCurrentSharingSetad { get; set; }
+
 
         #endregion
     }
