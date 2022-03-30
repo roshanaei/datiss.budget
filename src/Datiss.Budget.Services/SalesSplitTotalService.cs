@@ -226,12 +226,21 @@ namespace Datiss.Budget.Services
             var self = await _dbSet.Where(_ => _.YearId == yearId)
                                     .Where(_ => _.OrganizationId == organizationId)
                                     .ToListAsync();
-            var childrens = await getChildren(organizationId, yearId);
+
+            IEnumerable<SalesSplitTotal> childrens = new SalesSplitTotal[] { };
+
+            if (organization.Type == OrganizationType.County || organization.Type == OrganizationType.Root)
+            {
+                childrens = await getChildren(organizationId, yearId);
+            }
+
             if (self.Count() == 0 && childrens.Count() == 0)
                 throw new DeleteNullRecordException();
 
             _dbSet.RemoveRange(self);
-            _dbSet.RemoveRange(childrens);
+
+            if (childrens.Any())
+                _dbSet.RemoveRange(childrens);
 
             var result = new OrganizationDeleteDataResult
             {

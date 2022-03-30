@@ -130,7 +130,14 @@ namespace Datiss.Budget.Services
                                     .Where(_ => _.OrganizationId == organizationId)
                                     .Where(_=>_.TablesFiled.TableName == tablesName)
                                     .ToListAsync();
-            var childrens = await getChildren(organizationId, yearId , tablesName);
+
+            IEnumerable<PerformanceEvaluation> childrens = new PerformanceEvaluation[] { };
+
+            if (organization.Type == OrganizationType.County || organization.Type == OrganizationType.Root)
+            {
+                childrens = await getChildren(organizationId, yearId, tablesName);
+            }
+
 
             if (self.Count() == 0 && childrens.Count() == 0)
                 throw new DeleteNullRecordException();
