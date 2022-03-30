@@ -13,7 +13,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public int OrganizationId { get; set; }
 
-        public int CostCurrentNoType { get; set; }
+        public int CostCurrentNoTypeId { get; set; }
 
         public long BaseFee { get; set; }
 
