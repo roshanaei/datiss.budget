@@ -14,8 +14,6 @@ namespace Datiss.Budget.Entities.DWH
 
         public int OrganizationId { get; set; }
 
-        public ActivityType ActivityType { get; set; }
-
         public int CostCenterTypeId { get; set; }
 
         public long BankFeeLastYear { get; set; }
