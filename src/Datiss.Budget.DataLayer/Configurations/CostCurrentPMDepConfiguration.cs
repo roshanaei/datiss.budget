@@ -23,10 +23,6 @@ namespace Datiss.Budget.DataLayer.Configurations
                 .IsRequired()
                 .HasColumnType("decimal(18,6)");
 
-            builder.Property(x => x.ActivityType).HasDefaultValue(ActivityType.Water);
-
-            builder.Property(x => x.RecordType).HasDefaultValue(RecordType.Base);
-
             builder.HasOne(x => x.FinanceYear)
                 .WithMany(x => x.CostCurrentPMDeps)
                 .HasForeignKey(x => x.YearId)

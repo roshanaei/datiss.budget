@@ -5,8 +5,6 @@
             <tr>
                 <th style="min-width:135px">سال</th>
                 <th style="min-width:235px">سازمان</th>
-                <th style="min-width:135px">نوع رکورد</th>
-                <th style="min-width:135px">حوزه فعالیت</th>
                 <th style="min-width:175px">مراکز هزینه</th>
                 <th style="min-width:175px">عناوین استهلاک و تعمیر و نگهداری</th>
                 <th style="min-width:155px">هزینه تعمیر و نگهداری دارائی</th>
@@ -47,30 +45,6 @@
                         </div>
                         <div id="divOutput_Org_@item.Id">
                             <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_RecordType_@item.Id" style="display: none">
-                            <input class="form-control" id="inputRecordType_@item.Id" value="@item.RecordType" />
-                            <script>
-                                $('#inputRecordType_' + @item.Id).attr('disabled', 'disabled');
-                            </script>
-                        </div>
-                        <div id="divOutput_RecordType_@item.Id">
-                            <span id="spanRecordType_@item.Id">@item.RecordTypeDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_ActivityType_@item.Id" style="display: none">
-                            <input id="hidActivityTypeId_@item.Id" type="hidden" value="@item.ActivityType" />
-                            <select class="form-control selectActivityType" id="inputActivityType_@item.Id" asp-items="item.ActivityTypeSource">
-                            </select>
-                            <script>
-                                $('select#inputActivityType_' + @item.Id + ' option[value=' + @item.ActivityType + ']').attr('selected', true);
-                            </script>
-                        </div>
-                        <div id="divOutput_ActivityType_@item.Id">
-                            <span id="spanActivityType_@item.Id">@item.ActivityTypeDisplay </span>
                         </div>
                     </td>
                     <td>
