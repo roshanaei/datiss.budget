@@ -104,7 +104,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var ccPMDepTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDepType))
+            var ccPMDepTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDep))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var costCenterTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
@@ -113,7 +113,6 @@ namespace Datiss.Budget.Web.Controllers
 
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
-            filter.RecordType = RecordType.Forcast;
 
             var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
                 .Adapt<List<DropDownItemViewModel>>();
@@ -166,7 +165,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var ccPMDepTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDepType))
+            var ccPMDepTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDep))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var costCenterTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
@@ -254,19 +253,18 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("records/delete")]
         [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
-        public async Task<IActionResult> DeleteRecords(int yearId, int orgId ,RecordType recordType)
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
         {
             try
             {
-                var result = await _costCurrentPMDepService.HardDeleteAsync(yearId, orgId , recordType);
+                var result = await _costCurrentPMDepService.HardDeleteAsync(yearId, orgId);
 
                 return Json(new
                 {
                     success = true,
                     message = string.Format(
-                        ViewMessages.DeleteMultipleDataForTypeOrg,
+                        ViewMessages.DeleteMultipleDataForOrg,
                         result.OrganizationTitle,
-                        recordType.ToDisplay(),
                         result.Year)
                 });
             }
@@ -390,34 +388,34 @@ namespace Datiss.Budget.Web.Controllers
             var organizations = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
                                 .OrderBy(x => x.DisplayOrder)
                                 .ThenBy(x => x.RowOrder);
-            var ccPMDepTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDepType);
+            var ccPMDepTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDep);
             var costCurrentTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType);
-            var Activity = EnumSelectListProvider.GetActivityTypeItems().ToList();
+
+            if(!ccPMDepTypes.Any() || !costCurrentTypes.Any())
+                return RedirectToAction("Index");
+
             var items = new List<CostCurrentPMDepDTO>();
 
             foreach (var org in organizations)
             {
-                foreach (var act in Activity)
+                foreach (var cost in costCurrentTypes)
                 {
-                    foreach (var cost in costCurrentTypes)
+                    foreach (var cc in ccPMDepTypes)
                     {
-                        foreach (var cc in ccPMDepTypes)
+                        items.Add(new CostCurrentPMDepDTO
                         {
-                            items.Add(new CostCurrentPMDepDTO
-                            {
-                                CCPMDepTypeDisplay = cc.Title,
-                                CCPMDepTypeId = cc.Id,
-                                CostCenterTypeDisplay = cost.Title,
-                                CostCenterTypeId = cost.Id,
-                                OrganizationId = org.Id,
-                                OrganizationDisplay = org.Title,
-                                Year = year.Year,
-                                YearId = year.Id,
-                                ActivityType = act.Value == "0" ? ActivityType.Water : ActivityType.Waste
-                            });
-                        }
+                            CCPMDepTypeDisplay = cc.Title,
+                            CCPMDepTypeId = cc.Id,
+                            CostCenterTypeDisplay = cost.Title,
+                            CostCenterTypeId = cost.Id,
+                            OrganizationId = org.Id,
+                            OrganizationDisplay = org.Title,
+                            Year = year.Year,
+                            YearId = year.Id,
+                        });
                     }
                 }
+
             }
 
             using var workbook = items.GetImportTemplate(year.Year);

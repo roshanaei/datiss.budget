@@ -15,7 +15,7 @@
         $('#divOutput_Org_' + id).hide();
         $('#divOutput_CCPMDepType_' + id).hide();
         $('#divOutput_CostCenterType_' + id).hide();
-        $('#divOutput_ActivityType_' + id).hide();
+        //$('#divOutput_ActivityType_' + id).hide();
         //$('#divOutput_RecordType_' + id).hide();
         $('#divOutput_FinancePMCost_' + id).hide();
         $('#divOutput_RFinancePMCost_D_' + id).hide();
@@ -27,7 +27,7 @@
         $('#divInput_Org_' + id).show();
         $('#divInput_CCPMDepType_' + id).show();
         $('#divInput_CostCenterType_' + id).show();
-        $('#divInput_ActivityType_' + id).show();
+        //$('#divInput_ActivityType_' + id).show();
         //$('#divInput_RecordType_' + id).show();
         $('#divInput_FinancePMCost_' + id).show();
         $('#divInput_RFinancePMCost_D_' + id).show();
@@ -44,8 +44,8 @@
         rowData.organizationId = $('#inputOrg_' + id).val();
         rowData.cCPMDepTypeId = $('#inputCCPMDepType_' + id).val();
         rowData.costCenterTypeId = $('#inputCostCenterType_' + id).val();
-        rowData.activityType = $('#inputActivityType_' + id).val();
-        rowData.recordType = $('#inputRecordType_' + id).val();
+        //rowData.activityType = $('#inputActivityType_' + id).val();
+        //rowData.recordType = $('#inputRecordType_' + id).val();
         rowData.financePMCost = $('#inputFinancePMCost_' + id).val();
         rowData.rFinancePMCost_D = $('#inputRFinancePMCost_D_' + id).val();
         rowData.financeDepCost = $('#inputFinanceDepCost_' + id).val();
@@ -61,8 +61,8 @@
         $('#divInput_Org_' + id).hide();
         $('#divInput_CCPMDepType_' + id).hide();
         $('#divInput_CostCenterType_' + id).hide();
-        $('#divInput_ActivityType_' + id).hide();
-        $('#divInput_RecordType_' + id).hide();
+        //$('#divInput_ActivityType_' + id).hide();
+        //$('#divInput_RecordType_' + id).hide();
         $('#divInput_FinancePMCost_' + id).hide();
         $('#divInput_RFinancePMCost_D_' + id).hide();
         $('#divInput_FinanceDepCost_' + id).hide();
@@ -74,8 +74,8 @@
             $('#inputOrg_' + id).val(rowData.organizationId);
             $('#inputCCPMDepType_' + id).val(rowData.cCPMDepTypeId);
             $('#inputCostCenterType_' + id).val(rowData.costCenterTypeId);
-            $('#inputActivityType_' + id).val(rowData.activityType);
-            $('#inputRecordType_' + id).val(rowData.recordType);
+            //$('#inputActivityType_' + id).val(rowData.activityType);
+            //$('#inputRecordType_' + id).val(rowData.recordType);
             $('#inputFinancePMCost_' + id).val(rowData.financePMCost);
             $('#inputRFinancePMCost_D_' + id).val(rowData.rFinancePMCost_D);
             $('#inputFinanceDepCost_' + id).val(rowData.financeDepCost);
@@ -87,8 +87,8 @@
         $('#divOutput_Org_' + id).show();
         $('#divOutput_CCPMDepType_' + id).show();
         $('#divOutput_CostCenterType_' + id).show();
-        $('#divOutput_ActivityType_' + id).show();
-        $('#divOutput_RecordType_' + id).show();
+        //$('#divOutput_ActivityType_' + id).show();
+        //$('#divOutput_RecordType_' + id).show();
         $('#divOutput_FinancePMCost_' + id).show();
         $('#divOutput_RFinancePMCost_D_' + id).show();
         $('#divOutput_FinanceDepCost_' + id).show();
@@ -117,8 +117,8 @@
         model.organizationId = $('#inputOrg_' + id).val();
         model.cCPMDepTypeId = $('#inputCCPMDepType_' + id).val();
         model.costCenterTypeId = $('#inputCostCenterType_' + id).val();
-        model.activityType = $('#inputActivityType_' + id).val();
-        model.recordType = $('#inputRecordType_' + id).val();
+        //model.activityType = $('#inputActivityType_' + id).val();
+        //model.recordType = $('#inputRecordType_' + id).val();
         model.financePMCost = $('#inputFinancePMCost_' + id).val();
         model.rFinancePMCost_D = $('#inputRFinancePMCost_D_' + id).val();
         model.financeDepCost = $('#inputFinanceDepCost_' + id).val();
@@ -153,8 +153,8 @@
                 rowData.organizationId = model.organizationId;
                 rowData.cCPMDepTypeId = model.cCPMDepTypeId;
                 rowData.costCenterTypeId = model.costCenterTypeId;
-                rowData.recordType = data.recordType;
-                rowData.activityType = model.activityType;
+                //rowData.recordType = data.recordType;
+                //rowData.activityType = model.activityType;
                 rowData.financePMCost = model.financePMCost;
                 rowData.rFinancePMCost_D = model.rFinancePMCost_D;
                 rowData.financeDepCost = model.financeDepCost;
@@ -167,8 +167,8 @@
                 $('#spanYear_' + id).text(data.year);
                 $('#spanCCPMDepType_' + id).text(data.cCPMDepTypeDisplay);
                 $('#spanCostCenterType_' + id).text(data.costCenterTypeDisplay);
-                $('#spanActivityType_' + id).text(data.activityTypeDisplay);
-                $('#spanRecordType_' + id).text(data.recordTypeDisplay);
+                //$('#spanActivityType_' + id).text(data.activityTypeDisplay);
+                //$('#spanRecordType_' + id).text(data.recordTypeDisplay);
                 $('#spanFinancePMCost_' + id).text(data.financePMCost);
                 $('#spanRFinancePMCost_D_' + id).text(data.rFinancePMCost_D);
                 $('#spanFinanceDepCost_' + id).text(data.financeDepCost);
