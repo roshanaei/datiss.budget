@@ -123,6 +123,14 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentContractual> CostCurrentContractual { get; set; }
 
+        public ICollection<CostCurrentOther> CostCenterCostCurrentOther { get; set; }
+
+        public ICollection<CostCurrentOther> CCOtherCostsCostCurrentOther { get; set; }
+
+        public ICollection<CostCurrentNO> CostCurrentNO { get; set; }
+
+        public ICollection<CostCurrentFinancing> CostCurrentFinancing { get; set; }
+
 
         #endregion
     }
