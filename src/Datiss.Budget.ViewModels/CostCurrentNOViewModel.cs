@@ -89,4 +89,66 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> OrganizationSource { get; set; }
     }
+
+    public class CostCurrentNOIndexViewModel : PagedViewModel<CostCurrentNOViewModel>
+    {
+        public CostCurrentNOIndexViewModel()
+        {
+            Filter = new CostCurrentNOFilterViewModel();
+        }
+
+        public CostCurrentNOFilterViewModel Filter { get; set; }
+
+        public IList<SelectListItem> YearSource { get; set; }
+
+        public IList<SelectListItem> OrganizationSource { get; set; }
+
+        public IList<SelectListItem> InputOrganizationSource { get; set; }
+
+        public IList<SelectListItem> CostCurrentTypeSource { get; set; }
+
+        public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
+            => YearSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => OrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => InputOrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetCostCurrentTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => CostCurrentTypeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
+            => Filter.OrganizationSource = source.Select(x => new SelectListItem
+            {
+                Selected = x.Id == selectedOrgId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
+            => Filter.YearSource = source.Select(x => new SelectListItem
+            {
+                Selected = x.Id == selectedYearId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+    }
 }
