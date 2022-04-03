@@ -76,4 +76,17 @@ namespace Datiss.Budget.ViewModels
         public string ForcastFeeDisplay => ForcastFee.ToString("N0");
 
     }
+
+    public class CostCurrentNOFilterViewModel : FilterViewModel
+    {
+        public int? YearId { get; set; }
+
+        public int? OrganizationId { get; set;}
+
+        public int? CostCurrentNOTypeId { get; set; }
+
+        public IList<SelectListItem> YearSource { get; set; }
+
+        public IList<SelectListItem> OrganizationSource { get; set; }
+    }
 }
