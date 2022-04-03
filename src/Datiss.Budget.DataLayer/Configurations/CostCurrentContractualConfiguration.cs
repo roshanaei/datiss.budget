@@ -23,8 +23,6 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.CostCenterTypeId).IsRequired();
 
-            builder.Property(x => x.ActivityType).IsRequired();
-
             builder.Property(x => x.ExtensionId).IsRequired();
 
             builder.Property(x => x.ContractDescription)
