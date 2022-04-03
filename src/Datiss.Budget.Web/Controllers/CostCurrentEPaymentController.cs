@@ -43,7 +43,7 @@ namespace Datiss.Budget.Web.Controllers
 
         private readonly ILogger<CostCurrentEPaymentController> _logger;
         private readonly IWebHostEnvironment _env;
-        private readonly ICostCurrentEPaymentService _feeCityService;
+        private readonly ICostCurrentEPaymentService _costCurrentEPaymentService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
         private readonly ISecurityTrimmingService _securityTrimmingService;
@@ -51,14 +51,14 @@ namespace Datiss.Budget.Web.Controllers
         public CostCurrentEPaymentController(
             ILogger<CostCurrentEPaymentController> logger,
             IWebHostEnvironment environment,
-            ICostCurrentEPaymentService feeCityService,
+            ICostCurrentEPaymentService costCurrentEPaymentService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             ISecurityTrimmingService securityTrimmingService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
-            _feeCityService = feeCityService ?? throw new ArgumentNullException(nameof(feeCityService));
+            _costCurrentEPaymentService = costCurrentEPaymentService ?? throw new ArgumentNullException(nameof(costCurrentEPaymentService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
@@ -75,7 +75,7 @@ namespace Datiss.Budget.Web.Controllers
             }
             var data = model.Adapt<CreateCostCurrentEPaymentDTO>();
 
-            var result = await _feeCityService.CreateAsync(data);
+            var result = await _costCurrentEPaymentService.CreateAsync(data);
 
             if (!result.IsValid)
             {
@@ -99,7 +99,7 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             var data = model.Adapt<UpdateCostCurrentEPaymentDTO>();
-            var result = await _feeCityService.UpdateAsync(data);
+            var result = await _costCurrentEPaymentService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
@@ -141,7 +141,7 @@ namespace Datiss.Budget.Web.Controllers
 
             filter.PageNumber = page;
 
-            var result = await _feeCityService.GetListAsync(filter);
+            var result = await _costCurrentEPaymentService.GetListAsync(filter);
             var model = result.Adapt<CostCurrentEPaymentIndexViewModel>();
 
             model.SetYearSource(yearSource);
@@ -168,7 +168,7 @@ namespace Datiss.Budget.Web.Controllers
 
             TempData.Put(_indexFilterKey, filter);
 
-            var result = await _feeCityService.GetListAsync(filter);
+            var result = await _costCurrentEPaymentService.GetListAsync(filter);
             model = result.Adapt<CostCurrentEPaymentIndexViewModel>();
             model.Filter = filter.Adapt<CostCurrentEPaymentFilterViewModel>();
 
@@ -205,7 +205,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _feeCityService.ImportExcelAsync(
+                var result = await _costCurrentEPaymentService.ImportExcelAsync(
                                                                     model.ExcelFile,
                                                                     model.YearId,
                                                                     model.ContinueIfAnyOrgMissing);
@@ -262,7 +262,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             try
             {
-                var result = await _feeCityService.HardDeleteAsync(yearId, orgId);
+                var result = await _costCurrentEPaymentService.HardDeleteAsync(yearId, orgId);
 
                 return Json(new
                 {
@@ -313,7 +313,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             try
             {
-                await _feeCityService.HardDeleteAsync(id);
+                await _costCurrentEPaymentService.HardDeleteAsync(id);
             }
             catch (DisbaledYearDataInputException)
             {
@@ -345,7 +345,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var result = await _feeCityService.CalculationAsync(
+            var result = await _costCurrentEPaymentService.CalculationAsync(
                 model.YearId,
                 model.OrganizationId);
 
@@ -408,7 +408,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                await _feeCityService.CopyAsync(
+                await _costCurrentEPaymentService.CopyAsync(
                                                     model.SourceYearId,
                                                     model.SourceOrgId,
                                                     model.TargetYearId);
@@ -469,7 +469,7 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("[action]/{orgid}/{yearid}")]
         public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
-            var result = await _feeCityService.GetExportItemsAsync(yearid, orgid);
+            var result = await _costCurrentEPaymentService.GetExportItemsAsync(yearid, orgid);
             if (result.Count() == 0)
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
