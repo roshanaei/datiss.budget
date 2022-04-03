@@ -80,6 +80,7 @@ namespace Datiss.Budget.Services
             };
 
             model.CostCenterTypeTitle = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
+            model.CCOtherCostsTypeTitle = (await _constSet.FindAsync(model.CCOtherCostsTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
@@ -100,8 +101,8 @@ namespace Datiss.Budget.Services
                     }
 
                     var result = entity.Adapt<CostCurrentOtherDTO>();
-                    result.CostCenterTypeDisplay = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
-                    result.CCOtherCostsTypeDisplay = (await _constSet.FindAsync(model.CCOtherCostsTypeId)).Title;
+                    result.CostCenterTypeDisplay = model.CostCenterTypeTitle;
+                    result.CCOtherCostsTypeDisplay = model.CCOtherCostsTypeTitle;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.BaseFee = entity.BaseFee;
@@ -127,6 +128,7 @@ namespace Datiss.Budget.Services
             model.CheckArgumentIsNull(nameof(model));
 
             model.CostCenterTypeTitle = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
+            model.CCOtherCostsTypeTitle = (await _constSet.FindAsync(model.CCOtherCostsTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
@@ -160,8 +162,8 @@ namespace Datiss.Budget.Services
                         CostCenterTypeId = model.CostCenterTypeId,
                         CCOtherCostsTypeId = model.CCOtherCostsTypeId,
                         OrganizationDisplay = organizationDisplay,
-                        CostCenterTypeDisplay = (await _constSet.FindAsync(model.CostCenterTypeId)).Title,
-                        CCOtherCostsTypeDisplay = (await _constSet.FindAsync(model.CCOtherCostsTypeId)).Title,
+                        CostCenterTypeDisplay = model.CostCenterTypeTitle,
+                        CCOtherCostsTypeDisplay = model.CCOtherCostsTypeTitle,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year,
                         BaseFee = model.BaseFee,
                         LastYearFee = model.LastYearFee,

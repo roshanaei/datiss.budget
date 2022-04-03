@@ -1,0 +1,387 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    let rowData = {};
+
+    function editRow(id) {
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_CostCenterType_' + id).hide();
+        $('#divOutput_CCOtherCostsType_' + id).hide();
+        $('#divOutput_BaseFee_' + id).hide();
+        $('#divOutput_LastYearFee_' + id).hide();
+        $('#divOutput_ForcastFee_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_CostCenterType_' + id).show();
+        $('#divInput_CCOtherCostsType_' + id).show();
+        $('#divInput_BaseFee_' + id).show();
+        $('#divInput_LastYearFee_' + id).show();
+        $('#divInput_ForcastFee_' + id).show();
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.costCenterTypeId = $('#inputCostCenterType_' + id).val();
+        rowData.ccOtherCostsTypeId = $('#inputCCOtherCostsType_' + id).val();
+        rowData.baseFee = $('#inputBaseFee_' + id).val();
+        rowData.lastYearFee = $('#inputLastYearFee_' + id).val();
+        rowData.forcastFee = $('#inputForcastFee_' + id).val();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_CostCenterType_' + id).hide();
+        $('#divInput_CCOtherCostsType_' + id).hide();
+        $('#divInput_BaseFee_' + id).hide();
+        $('#divInput_LastYearFee_' + id).hide();
+        $('#divInput_ForcastFee_' + id).hide();
+
+        //Reverting to OriginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputCostCenterType_' + id).val(rowData.costCenterTypeId);
+            $('#inputCCOtherCostsType_' + id).val(rowData.ccOtherCostsTypeId);
+            $('#inputBaseFee_' + id).val(rowData.baseFee);
+            $('#inputLastYearFee_' + id).val(rowData.lastYearFee);
+            $('#inputForcastFee_' + id).val(rowData.forcastFee);
+        }
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_CostCenterType_' + id).show();
+        $('#divOutput_CCOtherCostsType_' + id).show();
+        $('#divOutput_BaseFee_' + id).show();
+        $('#divOutput_LastYearFee_' + id).show();
+        $('#divOutput_ForcastFee_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+
+
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.costCenterTypeId = $('#inputCostCenterType_' + id).val();
+        model.ccOtherCostsTypeId = $('#inputCCOtherCostsType_' + id).val();
+        model.baseFee = $('#inputBaseFee_' + id).val();
+        model.lastYearFee = $('#inputLastYearFee_' + id).val();
+        model.forcastFee = $('#inputForcastFee_' + id).val();
+
+        $.ajax({
+            url: '@Url.Action(CostCurrentOtherController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.costCenterTypeId = model.costCenterTypeId;
+                rowData.ccOtherCostsTypeId = model.ccOtherCostsTypeId;
+                rowData.baseFee = model.baseFee;
+                rowData.lastYearFee = model.lastYearFee;
+                rowData.forcastFee = model.forcastFee;
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanCostCenterType_' + id).text(data.costCenterTypeDisplay);
+                $('#spanCCOtherCostsType_' + id).text(data.ccOtherCostsTypeDisplay);
+                $('#spanBaseFee_' + id).text(data.baseFee);
+                $('#spanLastYearFee_' + id).text(data.lastYearFee);
+                $('#spanForcastFee_' + id).text(data.forcastFee);
+
+
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.costCenterTypeId = $(e).find('#inputCostCenterType_').val();
+        model.ccOtherCostsTypeId = $(e).find('#inputCCOtherCostsType_').val();
+        model.baseFee = $(e).find('#inputBaseFee_').val();
+        if(model.baseFee == "")
+            model.baseFee = 0;
+        model.lastYearFee = $(e).find('#inputLastYearFee_').val();
+        if (model.lastYearFee == "")
+            model.lastYearFee = 0;
+        model.averageCapacity = $(e).find('#inputAverageCapacity_').val();
+        if (model.averageCapacity == "")
+            model.averageCapacity = 0;
+        model.forcastFee = $(e).find('#inputForcastFee_').val();
+        if (model.forcastFee == "")
+            model.forcastFee = 0;
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(CostCurrentOtherController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //CostCenterType
+                $(e).find('#divInput_CostCenterType_').attr('id', 'divInput_CostCenterType_' + data.id);
+                $(e).find('#hidCostCenterTypeId_').attr('id', 'hidCostCenterTypeId_' + data.id);
+                $(e).find('#inputCostCenterType_').attr('id', 'inputCostCenterType_' + data.id);
+                $(e).find('#divOutput_CostCenterType_').attr('id', 'divOutput_CostCenterType_' + data.id);
+                $(e).find('#spanCostCenterType_').attr('id', 'spanCostCenterType_' + data.id);
+
+                $('#divInput_CostCenterType_' + data.id).hide();
+                $('#spanCostCenterType_' + data.id).text(data.costCenterTypeDisplay);
+                $('#divOutput_CostCenterType_' + data.id).show();
+
+                //CCOtherCostsTypeType
+                $(e).find('#divInput_CCOtherCostsType_').attr('id', 'divInput_CCOtherCostsType_' + data.id);
+                $(e).find('#hidCCOtherCostsTypeId_').attr('id', 'hidCCOtherCostsTypeId_' + data.id);
+                $(e).find('#inputCCOtherCostsType_').attr('id', 'inputCCOtherCostsType_' + data.id);
+                $(e).find('#divOutput_CCOtherCostsType_').attr('id', 'divOutput_CCOtherCostsType_' + data.id);
+                $(e).find('#spanCCOtherCostsType_').attr('id', 'spanCCOtherCostsType_' + data.id);
+
+                $('#divInput_CCOtherCostsType_' + data.id).hide();
+                $('#spanCCOtherCostsType_' + data.id).text(data.ccOtherCostsTypeDisplay);
+                $('#divOutput_CCOtherCostsType_' + data.id).show();
+
+                //BaseFee
+                $(e).find('#divInput_BaseFee_').attr('id', 'divInput_BaseFee_' + data.id);
+                $(e).find('#inputBaseFee_').attr('id', 'inputBaseFee_' + data.id);
+                $(e).find('#divOutput_BaseFee_').attr('id', 'divOutput_BaseFee_' + data.id);
+                $(e).find('#spanBaseFee_').attr('id', 'spanBaseFee_' + data.id);
+
+                $('#divInput_BaseFee_' + data.id).hide();
+                $('#spanBaseFee_' + data.id).text(data.baseFee);
+                $('#divOutput_BaseFee_' + data.id).show();
+
+                //LastYearFee
+                $(e).find('#divInput_LastYearFee_').attr('id', 'divInput_LastYearFee_' + data.id);
+                $(e).find('#inputLastYearFee_').attr('id', 'inputLastYearFee_' + data.id);
+                $(e).find('#divOutput_LastYearFee_').attr('id', 'divOutput_LastYearFee_' + data.id);
+                $(e).find('#spanLastYearFee_').attr('id', 'spanLastYearFee_' + data.id);
+
+                $('#divInput_LastYearFee_' + data.id).hide();
+                $('#spanLastYearFee_' + data.id).text(data.lastYearFee);
+                $('#divOutput_LastYearFee_' + data.id).show();
+
+
+                //ForcastFee
+                $(e).find('#divInput_ForcastFee_').attr('id', 'divInput_ForcastFee_' + data.id);
+                $(e).find('#inputForcastFee_').attr('id', 'inputForcastFee_' + data.id);
+                $(e).find('#divOutput_ForcastFee_').attr('id', 'divOutput_ForcastFee_' + data.id);
+                $(e).find('#spanForcastFee_').attr('id', 'spanForcastFee_' + data.id);
+
+                $('#divInput_ForcastFee_' + data.id).hide();
+                $('#spanForcastFee_' + data.id).text(0);
+                $('#divOutput_ForcastFee_' + data.id).show();
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(CostCurrentOtherController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+</script>

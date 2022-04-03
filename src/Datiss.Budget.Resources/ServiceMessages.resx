@@ -355,6 +355,6 @@
     <value>در فایل اکسل شما اطلاعات سایر هزینه :&lt;br&gt;{0} برای مرکز هزینه "{1}" ، "{2}" وجود ندارد.</value>
   </data>
   <data name="Logic_CostCenterTypeCCOtherCostsTypeDuplicate" xml:space="preserve">
-    <value>اطلاعات مرکز هزینه {0} و عنوان {1} برای "{2}" قبلا ثبت شده است.</value>
+    <value>اطلاعات مرکز هزینه "{0}" و عنوان "{1}" برای "{2}" قبلا ثبت شده است.</value>
   </data>
 </root>
