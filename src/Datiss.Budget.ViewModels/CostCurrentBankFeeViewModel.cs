@@ -1,79 +1,83 @@
-﻿using Datiss.Budget.Enum;
-using Datiss.Budget.Extensions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 
 namespace Datiss.Budget.ViewModels
 {
-    public class UpdateCostCurrentPMDepViewModel : BaseViewModel
+    public class CreateCostCurrentBankFeeViewModel : BaseViewModel
     {
-        public int Id { get; set; }
-
         public int YearId { get; set; }
         public string YearDisplay { get; set; }
 
         public int OrganizationId { get; set; }
         public string OrganizationDisplay { get; set; }
 
-        public int CCPMDepTypeId { get; set; }
         public int CostCenterTypeId { get; set; }
 
-        public long FinancePMCost { get; set; }
-        public decimal RFinancePMCost_D { get; set; }
-        public long FinanceDepCost { get; set; }
-        public decimal RFinanceDepCost_D { get; set; }
+        [Required(ErrorMessage = "*")]
+        public int BankFeeLastYear { get; set; }
+
+        [Required(ErrorMessage = "*")]
+        public int BankFeeForcast { get; set; }
+
+        public IEnumerable<SelectListItem> CostCenterTypeSource { get; set; }
+
+        public string CostCenterTypeTitle
+        {
+            get
+            {
+                if (CostCenterTypeSource == null || !CostCenterTypeSource.Any())
+                    return string.Empty;
+
+                return CostCenterTypeSource.FirstOrDefault(x => x.Value.ToString() == CostCenterTypeId.ToString()).Text;
+            }
+        }
 
     }
 
-    public class CostCurrentPMDepViewModel
+    public class UpdateCostCurrentBankFeeViewModel : CreateCostCurrentBankFeeViewModel
+    {
+        public int Id { get; set; }
+
+    }
+
+    public class CostCurrentBankFeeViewModel
     {
         public int Id { get; set; }
         public int YearId { get; set; }
         public int Year { get; set; }
         public int OrganizationId { get; set; }
         public string OrganizationDisplay { get; set; }
-        public int CCPMDepTypeId { get; set; }
-        public string CCPMDepTypeDisplay { get; set; }
         public int CostCenterTypeId { get; set; }
         public string CostCenterTypeDisplay { get; set; }
-        public long CostCenter { get; set; }
-        public string CostCenterDisplay => CostCenter.ToString("N0");
-        public long FinancePMCost { get; set; }
-        public string FinancePMCostDisplay => FinancePMCost.ToString("N0");
-        public decimal RFinancePMCost_D { get; set; }
-        public string RFinancePMCost_DDisplay => RFinancePMCost_D.ToString("N2");
-        public long FinanceDepCost { get; set; }
-        public string FinanceDepCostDisplay => FinanceDepCost.ToString("N0");
-        public decimal RFinanceDepCost_D { get; set; }
-        public string RFinanceDepCost_DDisplay => RFinanceDepCost_D.ToString("N2");
+        public int BankFeeLastYear { get; set; }
+        public string BankFeeLastYearDisplay => BankFeeLastYear.ToString("N0");
+        public int BankFeeForcast { get; set; }
+        public string BankFeeForcastDisplay => BankFeeForcast.ToString("N0");
     }
 
-    public class CostCurrentPMDepFilterViewModel : FilterViewModel
+    public class CostCurrentBankFeeFilterViewModel : FilterViewModel
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
-        public int? CCPMDepTypeId { get; set; }
+        public int? CostCenterTypeId { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
-        public IList<SelectListItem> OrganizationSource { get; set; }
 
+        public IList<SelectListItem> OrganizationSource { get; set; }
     }
 
-    public class CostCurrentPMDepIndexViewModel : PagedViewModel<CostCurrentPMDepViewModel>
+    public class CostCurrentBankFeeIndexViewModel : PagedViewModel<CostCurrentBankFeeViewModel>
     {
 
-        public CostCurrentPMDepIndexViewModel()
+        public CostCurrentBankFeeIndexViewModel()
         {
-            Filter = new CostCurrentPMDepFilterViewModel();
+            Filter = new CostCurrentBankFeeFilterViewModel();
         }
 
-        public CostCurrentPMDepFilterViewModel Filter { get; set; }
+        public CostCurrentBankFeeFilterViewModel Filter { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
 
@@ -81,12 +85,8 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> InputOrganizationSource { get; set; }
 
-        public IList<SelectListItem> CCPMDepTypeSource { get; set; }
-
         public IList<SelectListItem> CostCenterTypeSource { get; set; }
 
-
-        public IFormFile ExcelFile { get; set; }
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
             => YearSource = source.Select(x => new SelectListItem
@@ -104,13 +104,6 @@ namespace Datiss.Budget.ViewModels
 
         public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
             => InputOrganizationSource = source.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList();
-
-        public void SetCCPMDepTypeSource(IEnumerable<DropDownItemViewModel> source)
-            => CCPMDepTypeSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
@@ -140,4 +133,5 @@ namespace Datiss.Budget.ViewModels
             }).ToList();
 
     }
+
 }

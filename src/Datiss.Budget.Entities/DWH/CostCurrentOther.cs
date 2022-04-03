@@ -1,12 +1,12 @@
 ﻿using Datiss.Budget.Entities.AuditableEntity;
 using Datiss.Budget.Enum;
 
-
 namespace Datiss.Budget.Entities.DWH
 {
-    public class CostCurrentBankFee : IAuditableEntity
+    public class CostCurrentOther : IAuditableEntity
     {
-        public CostCurrentBankFee() { }
+        public CostCurrentOther() { }
+
         #region Properties
         public int Id { get; set; }
 
@@ -16,17 +16,24 @@ namespace Datiss.Budget.Entities.DWH
 
         public int CostCenterTypeId { get; set; }
 
-        public long BankFeeLastYear { get; set; }
+        public int CCOtherCostsTypeId { get; set; }
 
-        public long BankFeeForcast { get; set; }
+        public long BaseFee { get; set; }
+
+        public long LastYearFee { get; set; }
+
+        public long ForcastFee { get; set; }
+
         #endregion
 
-        #region navigations
+        #region Navigations
         public FinanceYear FinanceYear { get; set; }
 
         public Organization Organization { get; set; }
 
-        public Constant CostCenterType { get; set; }
+        public Constant CostCenter { get; set; }
+
+        public Constant CCOtherCosts { get; set; }
         #endregion
     }
 }

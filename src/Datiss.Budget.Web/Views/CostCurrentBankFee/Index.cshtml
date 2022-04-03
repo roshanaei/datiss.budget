@@ -1,5 +1,6 @@
-﻿@model CostCurrentPMDepIndexViewModel
-@{ViewData["Title"] = "پیش بینی هزینه تعمیر، نگهداری و استهلاک";}
+﻿@model CostCurrentBankFeeIndexViewModel
+@{ ViewData["Title"] = "پیش بینی هزینه کارمزد بانکی"; }
+
 <!--Title-->
 <div class="row">
     <div class="col-12">
@@ -18,8 +19,8 @@
                         <!--Filters-->
                         <form method="post"
                               id="filterForm"
-                              asp-controller="@CostCurrentPMDepController.Name"
-                              asp-action="@CostCurrentPMDepController.ACTION_Index"
+                              asp-controller="@CostCurrentBankFeeController.Name"
+                              asp-action="@CostCurrentBankFeeController.ACTION_Index"
                               asp-antiforgery="true">
                             <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
                             <div class="rowACJSB">
@@ -94,7 +95,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu" style="width:230%">
+                                        <div class="dropdown-menu" style="width:150%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -126,7 +127,7 @@
                                                                name="col-3"
                                                                id="col-3" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-3"><span>مراکز هزینه</span></label>
+                                                               for="col-3"><span>مرکز هزینه</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -137,7 +138,7 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>عناوین استهلاک و تعمیر و نگهداری</span></label>
+                                                               for="col-4"><span>کارمزد بانکی سال گذشته</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -148,40 +149,7 @@
                                                                name="col-5"
                                                                id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>هزینه تعمیر و نگهداری دارائی</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-6"
-                                                               id="col-6" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-6"><span>ضریب هزینه تعمیر و نگهداری دارائی</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-7"
-                                                               id="col-7" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-7"><span>هزینه استهلاک و دارائی</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-8"
-                                                               id="col-8" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-8"><span>ضریب هزینه استهلاک و دارائی</span></label>
+                                                               for="col-5"><span>کارمزد بانکی</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -194,12 +162,12 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostCurrentPMDepController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostCurrentBankFeeController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
-                                           asp-asp-controller="@CostCurrentPMDepController.Name"
-                                           asp-action="@CostCurrentPMDepController.ACTION_GetExcelTemplate"
+                                           asp-asp-controller="@CostCurrentBankFeeController.Name"
+                                           asp-action="@CostCurrentBankFeeController.ACTION_GetExcelTemplate"
                                            asp-route-yearId="@Model.Filter.YearId"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
@@ -247,10 +215,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8';
+        let allColumns = '1,2,3,4,5';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,";
+        let showingColmuns = "1,2,3,4,5,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -325,8 +293,10 @@
                 html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
                 type: 'error',
                 showCancelButton: true,
+                //confirmButtonColor: '#2F8BE6',
                 animation: false,
                 customClass: 'animated flipInX',
+                //cancelButtonColor: '#F55252',
                 cancelButtonText: 'انصراف',
                 confirmButtonText: 'حذف اطلاعات!',
                 confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
@@ -338,7 +308,7 @@
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
                     console.log(params);
-                    let deleteUrl = '@Url.Action(CostCurrentPMDepController.ACTION_DeleteRecords)';
+                    let deleteUrl = '@Url.Action(CostCurrentBankFeeController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
 
                     $.ajax({
@@ -373,7 +343,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(CostCurrentPMDepController.ACTION_Index, new {  page = 1})';
+                                document.location.href = '@Url.Action(CostCurrentBankFeeController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
@@ -399,14 +369,22 @@
             $('#ExcellModal').modal('show');
         }
 
+        $(window).keydown(function (event) {
+            if (event.altKey && event.keyCode == 78) {
+                addNewRow();
+            }
+        });
+
+        $(document).on('click', '#btnCreate', function () {
+            addNewRow();
+        });
 
         $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
-            let input1 = document.getElementById('inputFinancePMCost_' + id);
-            let input2 = document.getElementById('inputRFinancePMCost_D_' + id);
-            let input3 = document.getElementById('inputFinanceDepCost_' + id);
-            let input4 = document.getElementById('inputRFinanceDepCost_D_' + id);
+
+            let input1 = document.getElementById('inputBankFeeLastYear_' + id);
+            let input2 = document.getElementById('inputBankFeeForcast_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -422,19 +400,8 @@
                     btnSaveEdit.click();
                 }
             });
+
             input2.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input3.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input4.addEventListener('keyup', function (event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
@@ -444,6 +411,32 @@
             editRow(id);
         });
 
+        $(document).on('click', '.delete-row', function () {
+            let id = $(this).data('id');
+            let btn = this;
+
+            Swal.fire({
+                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
+                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
+                type: 'error',
+                showCancelButton: true,
+                animation: false,
+                customClass: 'animated flipInX',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
+                buttonsStyling: false,
+            }).then(function(result) {
+                if(result.value) {
+                    deleteRow(btn, id);
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+        });
 
         $(document).on('click', '.cancel-edit-row', function () {
             let id = $(this).data('id');
@@ -457,11 +450,20 @@
             $(this).prop('disabled', false);
         });
 
+        $(document).on('click', '.save-new-row', function () {
+            $(this).attr('disabled', true);
+            let row = $(this).closest('tr');
+            saveNewRow(row);
+        });
+
+        $(document).on('click', '.cancel-new-row', function () {
+            cancelNewRow(this);
+        });
 
         $(document).on('click', '.openCopy', function() {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action(CostCurrentPMDepController.ACTION_Copy)',
+                url: '@Url.Action(CostCurrentBankFeeController.ACTION_Copy)',
                 success: function (data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
@@ -487,33 +489,6 @@
             });
         });
 
-        $(document).on('click', '.calculation-button', function() {
-            let model = {};
-            model.yearId = $('#yearId').val();
-            model.organizationId = $('#organizationId').val();
-
-            console.log(model);
-
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action(CostCurrentPMDepController.ACTION_Calculation)',
-                data: model,
-                success: function (data, status, settings) {
-                    $('#divCalc').html('');
-                    $('#divCalc').html(data);
-                    $('#CalculationModal').modal('show');
-                    $('#CalculationModal').on('hidden.bs.modal', function() {
-                        $('#divCalc').html('');
-                        $('.modal-backdrop').remove();
-                    });
-                },
-                error: function (request, options, err) {
-                    console.log(err);
-                    $('#divCalc').html('failed to load content.');
-                }
-            });
-        });
-
         $(document).on('click', '#btnDoImportExcel', function() {
             var fdata = new FormData();
             var fileInput = $('#ExcelFile')[0];
@@ -525,7 +500,7 @@
             $(".olvy").css("display", "block");
 
             $.ajax({
-                url: '@Url.Action(CostCurrentPMDepController.ACTION_ImportExcel)',
+                url: '@Url.Action(CostCurrentBankFeeController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
@@ -573,13 +548,14 @@
 
                                 $(".olvy").css("display", "block");
                                 $.ajax({
-                                    url: '@Url.Action(CostCurrentPMDepController.ACTION_ImportExcel)',
+                                    url: '@Url.Action(CostCurrentBankFeeController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
                                     contentType: false,
                                     success: function (data, status, settings) {
                                         if (data.hasError) {
+                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">خطا</span>',
                                                 html: `<span class="my-font">${data.message}</span>`,
@@ -607,7 +583,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                document.location.href = '@Url.Action(CostCurrentPMDepController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(CostCurrentBankFeeController.ACTION_Index)';
                                             });
                                         }
 
@@ -629,6 +605,7 @@
                     }
 
                     if (!data.hasError && !data.ask) {
+                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">عملیات موفق</span>',
                             html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -640,12 +617,13 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(CostCurrentPMDepController.ACTION_Index)';
+                            document.location.href = '@Url.Action(CostCurrentBankFeeController.ACTION_Index)';
                         });
                     }
 
                 },
-                error: function(request, options, err) {
+                error: function (request, options, err) {
+                    $(".olvy").css("display", "none");
                     if (request.status == 401 || request.status == 403) {
                         ShowPermissionErorr();
                         return;
@@ -666,7 +644,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(CostCurrentPMDepController.ACTION_Copy)',
+                url: '@Url.Action(CostCurrentBankFeeController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
                 success: function (data, status, settings) {
