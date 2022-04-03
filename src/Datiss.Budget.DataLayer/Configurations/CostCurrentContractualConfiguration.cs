@@ -1,5 +1,4 @@
 ﻿using Datiss.Budget.Entities.DWH;
-using Datiss.Budget.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -45,6 +44,11 @@ namespace Datiss.Budget.DataLayer.Mappings
             builder.HasOne(x => x.CostCenterType)
                     .WithMany(x => x.CostCurrentContractual)
                     .HasForeignKey(x => x.CostCenterTypeId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.ExtensionType)
+                    .WithMany(x => x.ExtensionCostCurrentContractual)
+                    .HasForeignKey(x => x.ExtensionId)
                     .OnDelete(DeleteBehavior.Restrict);
         }
     }
