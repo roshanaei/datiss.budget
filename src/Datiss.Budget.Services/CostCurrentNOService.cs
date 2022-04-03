@@ -441,7 +441,8 @@ namespace Datiss.Budget.Services
                 if (!ccnotypeTotal.Any(x => x.Id == rec.CostCurrentNoTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelCCNONotExist, rowIndex+2 , rec.CostCurrentNoTypeId);
+                        string.Format(ServiceMessages.ImportExcelCCNONotExist, rowIndex + 2, rec.CostCurrentNoTypeId)
+                        );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
