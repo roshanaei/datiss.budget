@@ -345,4 +345,10 @@
   <data name="Logic_ConsumableTypeOrgDuplicates" xml:space="preserve">
     <value>ماده مصرفی "{0}" برای "{1}" قبلا ثبت شده است.</value>
   </data>
+  <data name="Logic_CostCenterTypeOrgDuplicates" xml:space="preserve">
+    <value>مرکز هزینه "{0}" برای "{1}" قبلا ثبت شده است.</value>
+  </data>
+  <data name="ImportExcelCostCenterTypeOrgNotInExcels" xml:space="preserve">
+    <value>مراکز هزینه :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
 </root>

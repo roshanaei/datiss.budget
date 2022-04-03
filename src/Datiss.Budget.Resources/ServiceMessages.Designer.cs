@@ -232,6 +232,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to مراکز هزینه :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelCostCenterTypeOrgNotInExcels {
+            get {
+                return ResourceManager.GetString("ImportExcelCostCenterTypeOrgNotInExcels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to قطر لوله های :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelDiameterPipeOrgNotInExcel {
@@ -534,6 +543,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_ConsumableTypeOrgDuplicates {
             get {
                 return ResourceManager.GetString("Logic_ConsumableTypeOrgDuplicates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مرکز هزینه &quot;{0}&quot; برای &quot;{1}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_CostCenterTypeOrgDuplicates {
+            get {
+                return ResourceManager.GetString("Logic_CostCenterTypeOrgDuplicates", resourceCulture);
             }
         }
         

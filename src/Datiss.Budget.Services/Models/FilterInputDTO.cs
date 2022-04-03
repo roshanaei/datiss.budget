@@ -273,4 +273,11 @@ namespace Datiss.Budget.Services.Models
 
     }
 
+    public class CostCurrentBankFeeFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? CostCenterTypeId { get; set; }
+    }
+
 }

@@ -66,6 +66,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ICostCurrentInstallationService, CostCurrentInstallationService>();
             services.AddScoped<ICostCurrentElectricityService, CostCurrentElectricityService>();
             services.AddScoped<ICostCurrentConsumableService, CostCurrentConsumableService>();
+            services.AddScoped<ICostCurrentBankFeeService, CostCurrentBankFeeService>();
 
 
           

@@ -20,7 +20,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<PagedResult<CostCurrentPMDepDTO>> GetListAsync(CostCurrentPMDepFilterDTO filter);
 
-        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId , RecordType recordType);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
         Task<ValidationResult> CalculationAsync(int yearId, int organizationId);
 
