@@ -223,6 +223,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در فایل اکسل شما اطلاعات سایر هزینه :&lt;br&gt;{0} برای مرکز هزینه &quot;{1}&quot; ، &quot;{2}&quot; وجود ندارد..
+        /// </summary>
+        public static string ImportExcelCCOtherCostsTypeCostCenterTypeOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelCCOtherCostsTypeCostCenterTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ضرایب :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelCofficientNotInExcel {
@@ -234,9 +243,9 @@ namespace Datiss.Budget.Resources {
         /// <summary>
         ///   Looks up a localized string similar to مراکز هزینه :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
-        public static string ImportExcelCostCenterTypeOrgNotInExcels {
+        public static string ImportExcelCostCenterTypeOrgNotInExcel {
             get {
-                return ResourceManager.GetString("ImportExcelCostCenterTypeOrgNotInExcels", resourceCulture);
+                return ResourceManager.GetString("ImportExcelCostCenterTypeOrgNotInExcel", resourceCulture);
             }
         }
         
@@ -543,6 +552,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_ConsumableTypeOrgDuplicates {
             get {
                 return ResourceManager.GetString("Logic_ConsumableTypeOrgDuplicates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات مرکز هزینه {0} و عنوان {1} برای &quot;{2}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_CostCenterTypeCCOtherCostsTypeDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_CostCenterTypeCCOtherCostsTypeDuplicate", resourceCulture);
             }
         }
         

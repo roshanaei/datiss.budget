@@ -348,7 +348,13 @@
   <data name="Logic_CostCenterTypeOrgDuplicates" xml:space="preserve">
     <value>مرکز هزینه "{0}" برای "{1}" قبلا ثبت شده است.</value>
   </data>
-  <data name="ImportExcelCostCenterTypeOrgNotInExcels" xml:space="preserve">
+  <data name="ImportExcelCostCenterTypeOrgNotInExcel" xml:space="preserve">
     <value>مراکز هزینه :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="ImportExcelCCOtherCostsTypeCostCenterTypeOrgNotInExcel" xml:space="preserve">
+    <value>در فایل اکسل شما اطلاعات سایر هزینه :&lt;br&gt;{0} برای مرکز هزینه "{1}" ، "{2}" وجود ندارد.</value>
+  </data>
+  <data name="Logic_CostCenterTypeCCOtherCostsTypeDuplicate" xml:space="preserve">
+    <value>اطلاعات مرکز هزینه {0} و عنوان {1} برای "{2}" قبلا ثبت شده است.</value>
   </data>
 </root>
