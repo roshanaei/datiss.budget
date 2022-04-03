@@ -1,4 +1,4 @@
-﻿@model CostCurrentBankFeeIndexViewModel
+﻿@model CostCurrentContractualIndexViewModel
 <div class="table-responsive">
     <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
         <thead class="thead-light">
@@ -6,8 +6,9 @@
                 <th>سال</th>
                 <th>سازمان</th>
                 <th>مرکز هزینه</th>
-                <th>کارمزد بانکی سال گذشته</th>
-                <th>کارمزد بانکی</th>
+                <th>شرح قرارداد سال قبل</th>
+                <th>مبلغ کل قرارداد سال ماقبل بودجه_هزار ریال</th>
+                <th>پیش بینی مبلغ_هزار ریال</th>
                 <th>مدیریت</th>
 
             </tr>
@@ -52,19 +53,27 @@
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_BankFeeLastYear_">
-                        <input class="form-control default-input" id="inputBankFeeLastYear_" type="number" min="0" />
+                    <div id="divInput_ContractDescription_">
+                        <input class="form-control default-input" id="inputContractDescription_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_BankFeeLastYear_" style="display: none">
-                        <span id="spanBankFeeLastYear_"> </span>
+                    <div id="divOutput_ContractDescription_" style="display: none">
+                        <span id="spanContractDescription_"> </span>
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_BankFeeForcast_">
-                        <input class="form-control" id="inputBankFeeForcast_" type="number" min="0" />
+                    <div id="divInput_ContractLastYear_">
+                        <input class="form-control default-input" id="inputContractLastYear_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_BankFeeForcast_" style="display: none">
-                        <span id="spanBankFeeForcast_"> </span>
+                    <div id="divOutput_ContractLastYear_" style="display: none">
+                        <span id="spanContractLastYear_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ContractForcast_">
+                        <input class="form-control" id="inputContractForcast_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_ContractForcast_" style="display: none">
+                        <span id="spanContractForcast_"> </span>
                     </div>
                 </td>
                 <td>
@@ -139,19 +148,27 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_BankFeeLastYear_@item.Id" style="display: none">
-                            <input class="form-control" id="inputBankFeeLastYear_@item.Id" value="@item.BankFeeLastYear" type="number" />
+                        <div id="divInput_ContractDescription_@item.Id" style="display: none">
+                            <input class="form-control" id="inputContractDescription_@item.Id" value="@item.ContractDescription" type="number" />
                         </div>
-                        <div id="divOutput_BankFeeLastYear_@item.Id">
-                            <span id="spanBankFeeLastYear_@item.Id">@item.BankFeeLastYearDisplay </span>
+                        <div id="divOutput_ContractDescription_@item.Id">
+                            <span id="spanContractDescription_@item.Id">@item.ContractDescription </span>
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_BankFeeForcast_@item.Id" style="display: none">
-                            <input class="form-control" id="inputBankFeeForcast_@item.Id" value="@item.BankFeeForcast" type="number" />
+                        <div id="divInput_ContractLastYear_@item.Id" style="display: none">
+                            <input class="form-control" id="inputContractLastYear_@item.Id" value="@item.ContractLastYear" type="number" />
                         </div>
-                        <div id="divOutput_BankFeeForcast_@item.Id">
-                            <span id="spanBankFeeForcast_@item.Id">@item.BankFeeForcastDisplay </span>
+                        <div id="divOutput_ContractLastYear_@item.Id">
+                            <span id="spanContractLastYear_@item.Id">@item.ContractLastYearDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ContractForcast_@item.Id" style="display: none">
+                            <input class="form-control" id="inputContractForcast_@item.Id" value="@item.ContractForcast" type="number" />
+                        </div>
+                        <div id="divOutput_ContractForcast_@item.Id">
+                            <span id="spanContractForcast_@item.Id">@item.ContractForcastDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -201,6 +218,11 @@
                 <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
                     <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
                 </button>
+                <span data-toggle="modal" data-target="#CalculationModal">
+                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                        <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                    </button>
+                </span>
             </form>
 
         </div>
@@ -218,7 +240,7 @@
             </div>
         </div>
         <!--Pagination-->
-        <vc:pager model="Model.ToPager()" controller-name="@CostCurrentBankFeeController.Name" action-name="@CostCurrentBankFeeController.ACTION_Index"></vc:pager>
+        <vc:pager model="Model.ToPager()" controller-name="@CostCurrentContractualController.Name" action-name="@CostCurrentContractualController.ACTION_Index"></vc:pager>
         
     </div>
 </div>

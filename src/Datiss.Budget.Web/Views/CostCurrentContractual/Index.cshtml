@@ -1,5 +1,5 @@
-﻿@model CostCurrentBankFeeIndexViewModel
-@{ ViewData["Title"] = "پیش بینی هزینه کارمزد بانکی"; }
+﻿@model CostCurrentContractualIndexViewModel
+@{ ViewData["Title"] = "پیش بینی هزینه خدمات قراردادی"; }
 
 <!--Title-->
 <div class="row">
@@ -19,8 +19,8 @@
                         <!--Filters-->
                         <form method="post"
                               id="filterForm"
-                              asp-controller="@CostCurrentBankFeeController.Name"
-                              asp-action="@CostCurrentBankFeeController.ACTION_Index"
+                              asp-controller="@CostCurrentContractualController.Name"
+                              asp-action="@CostCurrentContractualController.ACTION_Index"
                               asp-antiforgery="true">
                             <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
                             <div class="rowACJSB">
@@ -39,6 +39,14 @@
                                                 asp-items="Model.Filter.OrganizationSource"
                                                 class="form-control d-inline-block width-300"
                                                 id="organizationId">
+                                        </select>
+                                    </label>
+                                    <label class="my-font" style="margin-right:20px">
+                                        نیاز به تمدید :
+                                        <select asp-for="Filter.ExtensionId" class="form-control d-inline-block width-100" id="Extension">
+                                            <option value="">[انتخاب کنید]</option>
+                                            <option value="true">دارد</option>
+                                            <option value="false">ندارد</option>
                                         </select>
                                     </label>
                                     <input asp-for="Filter.OrderBy" type="hidden" />
@@ -138,7 +146,7 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>کارمزد بانکی سال گذشته</span></label>
+                                                               for="col-4"><span>شرح قرارداد سال قبل</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -149,7 +157,18 @@
                                                                name="col-5"
                                                                id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>کارمزد بانکی</span></label>
+                                                               for="col-5"><span>مبلغ کل قرارداد سال ماقبل بودجه_هزار ریال</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-6"
+                                                               id="col-6" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-6"><span>پیش بینی مبلغ_هزار ریال</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -162,12 +181,12 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostCurrentBankFeeController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostCurrentContractualController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
-                                           asp-asp-controller="@CostCurrentBankFeeController.Name"
-                                           asp-action="@CostCurrentBankFeeController.ACTION_GetExcelTemplate"
+                                           asp-asp-controller="@CostCurrentContractualController.Name"
+                                           asp-action="@CostCurrentContractualController.ACTION_GetExcelTemplate"
                                            asp-route-yearId="@Model.Filter.YearId"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
@@ -215,10 +234,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5';
+        let allColumns = '1,2,3,4,5,6';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,";
+        let showingColmuns = "1,2,3,4,5,6,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -308,7 +327,7 @@
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
                     console.log(params);
-                    let deleteUrl = '@Url.Action(CostCurrentBankFeeController.ACTION_DeleteRecords)';
+                    let deleteUrl = '@Url.Action(CostCurrentContractualController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
 
                     $.ajax({
@@ -343,7 +362,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(CostCurrentBankFeeController.ACTION_Index, new {  page = 1})';
+                                document.location.href = '@Url.Action(CostCurrentContractualController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
@@ -383,8 +402,8 @@
             resetDataColumns()
             let id = $(this).data('id');
 
-            let input1 = document.getElementById('inputBankFeeLastYear_' + id);
-            let input2 = document.getElementById('inputBankFeeForcast_' + id);
+            let input1 = document.getElementById('inputContractLastYear_' + id);
+            let input2 = document.getElementById('inputContractForcast_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -463,7 +482,7 @@
         $(document).on('click', '.openCopy', function() {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action(CostCurrentBankFeeController.ACTION_Copy)',
+                url: '@Url.Action(CostCurrentContractualController.ACTION_Copy)',
                 success: function (data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
@@ -500,7 +519,7 @@
             $(".olvy").css("display", "block");
 
             $.ajax({
-                url: '@Url.Action(CostCurrentBankFeeController.ACTION_ImportExcel)',
+                url: '@Url.Action(CostCurrentContractualController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
@@ -548,7 +567,7 @@
 
                                 $(".olvy").css("display", "block");
                                 $.ajax({
-                                    url: '@Url.Action(CostCurrentBankFeeController.ACTION_ImportExcel)',
+                                    url: '@Url.Action(CostCurrentContractualController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
@@ -583,7 +602,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                document.location.href = '@Url.Action(CostCurrentBankFeeController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(CostCurrentContractualController.ACTION_Index)';
                                             });
                                         }
 
@@ -617,7 +636,7 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(CostCurrentBankFeeController.ACTION_Index)';
+                            document.location.href = '@Url.Action(CostCurrentContractualController.ACTION_Index)';
                         });
                     }
 
@@ -644,7 +663,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(CostCurrentBankFeeController.ACTION_Copy)',
+                url: '@Url.Action(CostCurrentContractualController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
                 success: function (data, status, settings) {

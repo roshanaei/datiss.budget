@@ -15,15 +15,17 @@
         $('#divOutput_Year_' + id).hide();
         $('#divOutput_Org_' + id).hide();
         $('#divOutput_CostCenterType_' + id).hide();
-        $('#divOutput_BankFeeLastYear_' + id).hide();
-        $('#divOutput_BankFeeForcast_' + id).hide();
+        $('#divOutput_ContractDescription_' + id).hide();
+        $('#divOutput_ContractLastYear_' + id).hide();
+        $('#divOutput_ContractForcast_' + id).hide();
 
         //show input elements
         $('#divInput_Year_' + id).show();
         $('#divInput_Org_' + id).show();
         $('#divInput_CostCenterType_' + id).show();
-        $('#divInput_BankFeeLastYear_' + id).show();
-        $('#divInput_BankFeeForcast_' + id).show();
+        $('#divInput_ContractDescription_' + id).show();
+        $('#divInput_ContractLastYear_' + id).show();
+        $('#divInput_ContractForcast_' + id).show();
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -34,8 +36,9 @@
         rowData.yearId = $('#inputYear_' + id).val();
         rowData.organizationId = $('#inputOrg_' + id).val();
         rowData.costCenterTypeId = $('#inputCostCenterType_' + id).val();
-        rowData.bankFeeLastYear = $('#inputBankFeeLastYear_' + id).val();
-        rowData.bankFeeForcast = $('#inputBankFeeForcast_' + id).val();
+        rowData.contractDescription = $('#inputContractDescription_' + id).val();
+        rowData.contractLastYear = $('#inputContractLastYear_' + id).val();
+        rowData.contractForcast = $('#inputContractForcast_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -46,8 +49,9 @@
         $('#divInput_Year_' + id).hide();
         $('#divInput_Org_' + id).hide();
         $('#divInput_CostCenterType_' + id).hide();
-        $('#divInput_BankFeeLastYear_' + id).hide();
-        $('#divInput_BankFeeForcast_' + id).hide();
+        $('#divInput_ContractDescription_' + id).hide();
+        $('#divInput_ContractLastYear_' + id).hide();
+        $('#divInput_ContractForcast_' + id).hide();
 
         //Reverting to OriginalData
         if(rowData != null) {
@@ -56,16 +60,18 @@
             $('#inputYear_' + id).val(rowData.yearId);
             $('#inputOrg_' + id).val(rowData.organizationId);
             $('#inputCostCenterType_' + id).val(rowData.costCenterTypeId);
-            $('#inputBankFeeLastYear_' + id).val(rowData.bankFeeLastYear);
-            $('#inputBankFeeForcast_' + id).val(rowData.bankFeeForcast);
+            $('#inputContractDescription_' + id).val(rowData.contractDescription);
+            $('#inputContractLastYear_' + id).val(rowData.contractLastYear);
+            $('#inputContractForcast_' + id).val(rowData.contractForcast);
         }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
         $('#divOutput_Org_' + id).show();
         $('#divOutput_CostCenterType_' + id).show();
-        $('#divOutput_BankFeeLastYear_' + id).show();
-        $('#divOutput_BankFeeForcast_' + id).show();
+        $('#divOutput_ContractDescription_' + id).show();
+        $('#divOutput_ContractLastYear_' + id).show();
+        $('#divOutput_ContractForcast_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -89,11 +95,12 @@
         model.yearId = $('#inputYear_' + id).val();
         model.organizationId = $('#inputOrg_' + id).val();
         model.costCenterTypeId = $('#inputCostCenterType_' + id).val();
-        model.bankFeeLastYear = $('#inputBankFeeLastYear_' + id).val();
-        model.bankFeeForcast = $('#inputBankFeeForcast_' + id).val();
+        model.contractDescription = $('#inputContractDescription_' + id).val();
+        model.contractLastYear = $('#inputContractLastYear_' + id).val();
+        model.contractForcast = $('#inputContractForcast_' + id).val();
 
         $.ajax({
-            url: '@Url.Action(CostCurrentBankFeeController.ACTION_Edit)',
+            url: '@Url.Action(CostCurrentContractualController.ACTION_Edit)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -115,16 +122,18 @@
                 rowData.yearId = model.yearId;
                 rowData.organizationId = model.organizationId;
                 rowData.costCenterTypeId = model.costCenterTypeId;
-                rowData.bankFeeLastYear = model.bankFeeLastYear;
-                rowData.bankFeeForcast = model.bankFeeForcast;
+                rowData.contractDescription = model.contractDescription;
+                rowData.contractLastYear = model.contractLastYear;
+                rowData.contractForcast = model.contractForcast;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
                 $('#spanCostCenterType_' + id).text(data.costCenterTypeDisplay);
-                $('#spanBankFeeLastYear_' + id).text(data.bankFeeLastYear);
-                $('#spanBankFeeForcast_' + id).text(data.bankFeeForcast);
+                $('#spanContractDescription_' + id).text(data.contractDescription);
+                $('#spanContractLastYear_' + id).text(data.contractLastYear);
+                $('#spanContractForcast_' + id).text(data.contractForcast);
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
@@ -148,19 +157,20 @@
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
         model.costCenterTypeId = $(e).find('#inputCostCenterType_').val();
-        model.bankFeeLastYear = $(e).find('#inputBankFeeLastYear_').val();
-        if (model.bankFeeLastYear == "") {
-            model.bankFeeLastYear = 0;
+        model.contractDescription = $(e).find('#inputContractDescription_').val();
+        model.contractLastYear = $(e).find('#inputContractLastYear_').val();
+        if (model.contractLastYear == "") {
+            model.contractLastYear = 0;
         }
-        model.bankFeeForcast = $(e).find('#inputBankFeeForcast_').val();
-        if (model.bankFeeForcast == "") {
-            model.bankFeeForcast = 0;
+        model.contractForcast = $(e).find('#inputContractForcast_').val();
+        if (model.contractForcast == "") {
+            model.contractForcast = 0;
         }
 
         console.log(model);
 
         $.ajax({
-            url: '@Url.Action(CostCurrentBankFeeController.ACTION_Create)',
+            url: '@Url.Action(CostCurrentContractualController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -211,25 +221,35 @@
                 $('#spanCostCenterType_' + data.id).text(data.costCenterTypeDisplay);
                 $('#divOutput_CostCenterType_' + data.id).show();
 
-                //BankFeeLastYear
-                $(e).find('#divInput_BankFeeLastYear_').attr('id', 'divInput_BankFeeLastYear_' + data.id);
-                $(e).find('#inputBankFeeLastYear_').attr('id', 'inputBankFeeLastYear_' + data.id);
-                $(e).find('#divOutput_BankFeeLastYear_').attr('id', 'divOutput_BankFeeLastYear_' + data.id);
-                $(e).find('#spanBankFeeLastYear_').attr('id', 'spanBankFeeLastYear_' + data.id);
+                //ContractDescription
+                $(e).find('#divInput_ContractDescription_').attr('id', 'divInput_ContractDescription_' + data.id);
+                $(e).find('#inputContractDescription_').attr('id', 'inputContractDescription_' + data.id);
+                $(e).find('#divOutput_ContractDescription_').attr('id', 'divOutput_ContractDescription_' + data.id);
+                $(e).find('#spanContractDescription_').attr('id', 'spanContractDescription_' + data.id);
 
-                $('#divInput_BankFeeLastYear_' + data.id).hide();
-                $('#spanBankFeeLastYear_' + data.id).text(data.bankFeeLastYear);
-                $('#divOutput_BankFeeLastYear_' + data.id).show();
+                $('#divInput_ContractDescription_' + data.id).hide();
+                $('#spanContractDescription_' + data.id).text(data.contractDescription);
+                $('#divOutput_ContractDescription_' + data.id).show();
 
-                //BankFeeForcast
-                $(e).find('#divInput_BankFeeForcast_').attr('id', 'divInput_BankFeeForcast_' + data.id);
-                $(e).find('#inputBankFeeForcast_').attr('id', 'inputBankFeeForcast_' + data.id);
-                $(e).find('#divOutput_BankFeeForcast_').attr('id', 'divOutput_BankFeeForcast_' + data.id);
-                $(e).find('#spanBankFeeForcast_').attr('id', 'spanBankFeeForcast_' + data.id);
+                //ContractLastYear
+                $(e).find('#divInput_ContractLastYear_').attr('id', 'divInput_ContractLastYear_' + data.id);
+                $(e).find('#inputContractLastYear_').attr('id', 'inputContractLastYear_' + data.id);
+                $(e).find('#divOutput_ContractLastYear_').attr('id', 'divOutput_ContractLastYear_' + data.id);
+                $(e).find('#spanContractLastYear_').attr('id', 'spanContractLastYear_' + data.id);
 
-                $('#divInput_BankFeeForcast_' + data.id).hide();
-                $('#spanBankFeeForcast_' + data.id).text(data.bankFeeForcast);
-                $('#divOutput_BankFeeForcast_' + data.id).show();
+                $('#divInput_ContractLastYear_' + data.id).hide();
+                $('#spanContractLastYear_' + data.id).text(data.contractLastYear);
+                $('#divOutput_ContractLastYear_' + data.id).show();
+
+                //ContractForcast
+                $(e).find('#divInput_ContractForcast_').attr('id', 'divInput_ContractForcast_' + data.id);
+                $(e).find('#inputContractForcast_').attr('id', 'inputContractForcast_' + data.id);
+                $(e).find('#divOutput_ContractForcast_').attr('id', 'divOutput_ContractForcast_' + data.id);
+                $(e).find('#spanContractForcast_').attr('id', 'spanContractForcast_' + data.id);
+
+                $('#divInput_ContractForcast_' + data.id).hide();
+                $('#spanContractForcast_' + data.id).text(data.contractForcast);
+                $('#divOutput_ContractForcast_' + data.id).show();
 
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);
@@ -309,7 +329,7 @@
         console.log(e);
 
         $.ajax({
-            url: '@Url.Action(CostCurrentBankFeeController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(CostCurrentContractualController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {
