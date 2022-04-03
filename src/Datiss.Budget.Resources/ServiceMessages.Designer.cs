@@ -223,6 +223,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelCCNONotExist {
+            get {
+                return ResourceManager.GetString("ImportExcelCCNONotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ضرایب :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelCofficientNotInExcel {
@@ -237,6 +246,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelCostCenterTypeOrgNotInExcels {
             get {
                 return ResourceManager.GetString("ImportExcelCostCenterTypeOrgNotInExcels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to عناوین :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelCurrentCostNOOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelCurrentCostNOOrgNotInExcel", resourceCulture);
             }
         }
         
@@ -552,6 +570,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_CostCenterTypeOrgDuplicates {
             get {
                 return ResourceManager.GetString("Logic_CostCenterTypeOrgDuplicates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات {0} برای {1} قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_CostCurrentNODuplicate {
+            get {
+                return ResourceManager.GetString("Logic_CostCurrentNODuplicate", resourceCulture);
             }
         }
         

@@ -14,6 +14,8 @@ namespace Datiss.Budget.Services.Models
 
         public int CosCostCurrentNoTypeId { get; set; }
 
+        public string CosCostCurrentNoTypeTitle { get; set; }
+
         public long BaseFee { get; set; }
 
         public long LastYearFee { get; set; }
@@ -41,7 +43,7 @@ namespace Datiss.Budget.Services.Models
 
         public int CostCurrentNoTypeId { get; set; }
 
-        public string CostCurrentNoTitle { get; set; }
+        public string CostCurrentNoTypeTitle { get; set; }
 
         public long BaseFee { get; set; }
 
