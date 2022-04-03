@@ -18,6 +18,8 @@
         $('#divOutput_ContractDescription_' + id).hide();
         $('#divOutput_ContractLastYear_' + id).hide();
         $('#divOutput_ContractForcast_' + id).hide();
+        $('#divOutput_ExtensionId_' + id).hide();
+
 
         //show input elements
         $('#divInput_Year_' + id).show();
@@ -26,6 +28,8 @@
         $('#divInput_ContractDescription_' + id).show();
         $('#divInput_ContractLastYear_' + id).show();
         $('#divInput_ContractForcast_' + id).show();
+        $('#divInput_ExtensionId_' + id).show();
+
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -39,6 +43,8 @@
         rowData.contractDescription = $('#inputContractDescription_' + id).val();
         rowData.contractLastYear = $('#inputContractLastYear_' + id).val();
         rowData.contractForcast = $('#inputContractForcast_' + id).val();
+        rowData.extensionId = $('#inputExtensionId_' + id).val();
+
     }
 
     function cancelEditRow(id) {
@@ -52,6 +58,8 @@
         $('#divInput_ContractDescription_' + id).hide();
         $('#divInput_ContractLastYear_' + id).hide();
         $('#divInput_ContractForcast_' + id).hide();
+        $('#divInput_ExtensionId_' + id).hide();
+
 
         //Reverting to OriginalData
         if(rowData != null) {
@@ -63,6 +71,8 @@
             $('#inputContractDescription_' + id).val(rowData.contractDescription);
             $('#inputContractLastYear_' + id).val(rowData.contractLastYear);
             $('#inputContractForcast_' + id).val(rowData.contractForcast);
+            $('#inputExtensionId_' + id).val(rowData.extensionId);
+
         }
 
         //Show output elements
@@ -72,6 +82,8 @@
         $('#divOutput_ContractDescription_' + id).show();
         $('#divOutput_ContractLastYear_' + id).show();
         $('#divOutput_ContractForcast_' + id).show();
+        $('#divOutput_ExtensionId_' + id).show();
+
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -92,12 +104,14 @@
 
         var model = {};
         model.id = id;
-        model.yearId = $('#inputYear_' + id).val();
+        model.yearId = $('#yearId option:selected').val();
         model.organizationId = $('#inputOrg_' + id).val();
         model.costCenterTypeId = $('#inputCostCenterType_' + id).val();
         model.contractDescription = $('#inputContractDescription_' + id).val();
         model.contractLastYear = $('#inputContractLastYear_' + id).val();
         model.contractForcast = $('#inputContractForcast_' + id).val();
+        model.extensionId = $('#inputExtensionId_' + id).val();
+
 
         $.ajax({
             url: '@Url.Action(CostCurrentContractualController.ACTION_Edit)',
@@ -125,6 +139,8 @@
                 rowData.contractDescription = model.contractDescription;
                 rowData.contractLastYear = model.contractLastYear;
                 rowData.contractForcast = model.contractForcast;
+                rowData.extensionId = model.extensionId;
+
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
@@ -134,6 +150,8 @@
                 $('#spanContractDescription_' + id).text(data.contractDescription);
                 $('#spanContractLastYear_' + id).text(data.contractLastYear);
                 $('#spanContractForcast_' + id).text(data.contractForcast);
+                $('#spanExtensionId_' + id).text(data.extensionIdDisplay);
+
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
@@ -154,7 +172,8 @@
         resetTableBackColor("my-table");
 
         var model = {};
-        model.yearId = $(e).find('#inputYear_').val();
+        model.yearId = $('#yearId option:selected').val();
+        model.extensionId = $(e).find('#ExtensionId_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
         model.costCenterTypeId = $(e).find('#inputCostCenterType_').val();
         model.contractDescription = $(e).find('#inputContractDescription_').val();
@@ -250,6 +269,17 @@
                 $('#divInput_ContractForcast_' + data.id).hide();
                 $('#spanContractForcast_' + data.id).text(data.contractForcast);
                 $('#divOutput_ContractForcast_' + data.id).show();
+
+                //ExtensionId
+                $(e).find('#divInput_ExtensionId_').attr('id', 'divInput_ExtensionId_' + data.id);
+                $(e).find('#hidExtensionId_').attr('id', 'hidExtensionId_' + data.id);
+                $(e).find('#inputExtensionId_').attr('id', 'inputExtensionId_' + data.id);
+                $(e).find('#divOutput_ExtensionId_').attr('id', 'divOutput_ExtensionId_' + data.id);
+                $(e).find('#spanExtensionId_').attr('id', 'spanExtensionId_' + data.id);
+
+                $('#divInput_ExtensionId_' + data.id).hide();
+                $('#spanExtensionId_' + data.id).text(data.extensionIdDisplay);
+                $('#divOutput_ExtensionId_' + data.id).show();
 
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);

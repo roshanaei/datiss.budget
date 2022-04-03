@@ -3,32 +3,18 @@
     <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
         <thead class="thead-light">
             <tr>
-                <th>سال</th>
                 <th>سازمان</th>
                 <th>مرکز هزینه</th>
                 <th>شرح قرارداد سال قبل</th>
-                <th>مبلغ کل قرارداد سال ماقبل بودجه_هزار ریال</th>
-                <th>پیش بینی مبلغ_هزار ریال</th>
+                <th style="font-size:smaller">مبلغ کل قرارداد سال ماقبل بودجه_هزار ریال</th>
+                <th style="font-size:smaller">پیش بینی مبلغ_هزار ریال</th>
+                <th>نیاز به تمدید</th>
                 <th>مدیریت</th>
 
             </tr>
         </thead>
         <tbody>
             <tr id="rowTemplate" style="display: none">
-                <td>
-                    <div id="divInput_Year_">
-                        <input id="hidYearId_" type="hidden" />
-                        <select class="form-control selectYear" id="inputYear_" asp-items="Model.YearSource">
-                        </select>
-                        <script>
-                            $('select#inputYear_ option[value=' + $('#yearId').val() + ']').attr('selected', true);
-                            $('#inputYear_').attr('disabled', 'disabled');
-                        </script>
-                    </div>
-                    <div id="divOutput_Year_" style="display: none">
-                        <span id="spanYear_"></span>
-                    </div>
-                </td>
                 <td>
                     <div id="divInput_Org_">
                         <input id="hidOrgId_" type="hidden" />
@@ -54,7 +40,7 @@
                 </td>
                 <td>
                     <div id="divInput_ContractDescription_">
-                        <input class="form-control default-input" id="inputContractDescription_" type="number" min="0" />
+                        <input class="form-control input-keyup default-input" id="inputContractDescription_" type="text" />
                     </div>
                     <div id="divOutput_ContractDescription_" style="display: none">
                         <span id="spanContractDescription_"> </span>
@@ -62,7 +48,7 @@
                 </td>
                 <td>
                     <div id="divInput_ContractLastYear_">
-                        <input class="form-control default-input" id="inputContractLastYear_" type="number" min="0" />
+                        <input class="form-control input-keyup" id="inputContractLastYear_" type="number" min="0" />
                     </div>
                     <div id="divOutput_ContractLastYear_" style="display: none">
                         <span id="spanContractLastYear_"> </span>
@@ -70,10 +56,22 @@
                 </td>
                 <td>
                     <div id="divInput_ContractForcast_">
-                        <input class="form-control" id="inputContractForcast_" type="number" min="0" />
+                        <input class="form-control input-keyup" id="inputContractForcast_" type="number" min="0" />
                     </div>
                     <div id="divOutput_ContractForcast_" style="display: none">
                         <span id="spanContractForcast_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ExtensionId_">
+                        <input id="hidExtensionId_" type="hidden" />
+                        <select asp-for="Filter.ExtensionId" class="form-control" id="ExtensionId_">
+                            <option value="true">دارد</option>
+                            <option value="false">ندارد</option>
+                        </select>
+                    </div>
+                    <div id="divOutput_ExtensionId_" style="display: none">
+                        <span id="spanExtensionId_"> </span>
                     </div>
                 </td>
                 <td>
@@ -106,20 +104,6 @@
             {
                 <tr id="row_@item.Id">
                     <td>
-                        <div id="divInput_Year_@item.Id" style="display: none">
-                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
-                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
-                            </select>
-                            <script>
-                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
-                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
-                            </script>
-                        </div>
-                        <div id="divOutput_Year_@item.Id">
-                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
-                        </div>
-                    </td>
-                    <td>
                         <div id="divInput_Org_@item.Id" style="display: none">
                             <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
                             <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
@@ -149,7 +133,7 @@
                     </td>
                     <td>
                         <div id="divInput_ContractDescription_@item.Id" style="display: none">
-                            <input class="form-control" id="inputContractDescription_@item.Id" value="@item.ContractDescription" type="number" />
+                            <input class="form-control input-keyup default-input" id="inputContractDescription_@item.Id" value="@item.ContractDescription" type="text" />
                         </div>
                         <div id="divOutput_ContractDescription_@item.Id">
                             <span id="spanContractDescription_@item.Id">@item.ContractDescription </span>
@@ -157,7 +141,7 @@
                     </td>
                     <td>
                         <div id="divInput_ContractLastYear_@item.Id" style="display: none">
-                            <input class="form-control" id="inputContractLastYear_@item.Id" value="@item.ContractLastYear" type="number" />
+                            <input class="form-control input-keyup" id="inputContractLastYear_@item.Id" value="@item.ContractLastYear" type="number" />
                         </div>
                         <div id="divOutput_ContractLastYear_@item.Id">
                             <span id="spanContractLastYear_@item.Id">@item.ContractLastYearDisplay </span>
@@ -165,10 +149,25 @@
                     </td>
                     <td>
                         <div id="divInput_ContractForcast_@item.Id" style="display: none">
-                            <input class="form-control" id="inputContractForcast_@item.Id" value="@item.ContractForcast" type="number" />
+                            <input class="form-control input-keyup" id="inputContractForcast_@item.Id" value="@item.ContractForcast" type="number" />
                         </div>
                         <div id="divOutput_ContractForcast_@item.Id">
                             <span id="spanContractForcast_@item.Id">@item.ContractForcastDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ExtensionId_@item.Id" style="display: none">
+                            <input id="hidExtensionId_@item.Id" type="hidden" value="@item.ExtensionId" />
+                            <select asp-for="@item.ExtensionId" class="form-control selectExtensionId" id="inputExtensionId_@item.Id">
+                                <option value="true">دارد</option>
+                                <option value="false">ندارد</option>
+                            </select>
+                            <script>
+                                $('select#inputExtensionId_' + @item.Id + ' option[value=' + @item.ExtensionId + ']').attr('selected', true);
+                            </script>
+                        </div>
+                        <div id="divOutput_ExtensionId_@item.Id">
+                            <span id="spanExtensionId_@item.Id">@item.ExtensionIdDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -233,14 +232,18 @@
                 (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
                 <b class="font-medium-2">
                     @if (Model.PagesCount == 0)
-                    {<span>1</span>}
+                    {
+                        <span>1</span>
+                    }
                     else
-                    {<span>@Model.PagesCount</span>}
+                    {
+                        <span>@Model.PagesCount</span>
+                    }
                 </b>)
             </div>
         </div>
         <!--Pagination-->
         <vc:pager model="Model.ToPager()" controller-name="@CostCurrentContractualController.Name" action-name="@CostCurrentContractualController.ACTION_Index"></vc:pager>
-        
+
     </div>
 </div>

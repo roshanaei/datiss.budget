@@ -86,7 +86,7 @@ namespace Datiss.Budget.Services
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
             try
             {
-                if (await checkLogicAsync(model.YearId , model.ContractDescription))
+                if (await checkLogicAsync(model.YearId, model.ContractDescription))
                 {
                     await _dbSet.AddAsync(entity);
                     try
@@ -607,12 +607,15 @@ namespace Datiss.Budget.Services
             if (filter.CostCenterTypeId.HasValue)
                 query = query.Where(x => x.CostCenterTypeId == filter.CostCenterTypeId.Value);
 
+            if (filter.ExtensionId.HasValue)
+                query = query.Where(x => x.ExtensionId == filter.ExtensionId.Value);
 
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
                 query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                         _.CostCenterType.Title.ToUpper().Contains(filter.Search));
+                                         _.CostCenterType.Title.ToUpper().Contains(filter.Search) ||
+                                         _.ContractDescription.ToUpper().Contains(filter.Search));
             }
 
             return query;
@@ -758,9 +761,9 @@ namespace Datiss.Budget.Services
                 throw new DisbaledYearDataInputException();
 
             var result = id == null
-                ? await Query().AnyAsync(x => x.ContractDescription.Trim().Contains(contractDescription.Trim()))
+                ? await Query().AnyAsync(x => x.ContractDescription.Trim() == contractDescription.Trim())
 
-                : await Query().AnyAsync(x => x.ContractDescription.Trim().Contains(contractDescription.Trim()) &&
+                : await Query().AnyAsync(x => x.ContractDescription.Trim() == contractDescription.Trim() &&
                                               x.Id != id);
             return !result;
         }

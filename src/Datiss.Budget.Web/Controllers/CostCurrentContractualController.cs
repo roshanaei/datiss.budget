@@ -82,6 +82,11 @@ namespace Datiss.Budget.Web.Controllers
                 model.AddError(ViewMessages.InvalidData);
                 return Json(model);
             }
+            if(string.IsNullOrWhiteSpace(model.ContractDescription))
+            {
+                model.AddError(ViewMessages.ContractDescription);
+                return Json(model);
+            }
             var data = model.Adapt<CreateCostCurrentContractualDTO>();
 
             var result = await _costCurrentBankFeeService.CreateAsync(data);
