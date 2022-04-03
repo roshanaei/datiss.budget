@@ -46,4 +46,34 @@ namespace Datiss.Budget.ViewModels
 
         public long ForcastFee { get; set; }
     }
+
+    public class CostCurrentNOViewModel
+    {
+        public int Id { get; set; }
+
+        public int YearId { get; set; }
+
+        public int Year { get; set; }
+
+        public int OrganizationId { get; set; }
+
+        public string OrganizationDisplay { get; set; }
+
+        public int CostCurrentNOTypeId { get; set; }
+
+        public string CostCurrentNOTypeTitle { get; set; }
+        
+        public long BaseFee { get; set; }
+
+        public string BaseFeeDisplay => BaseFee.ToString("N0");
+
+        public long LastYearFee { get; set; }
+
+        public string LastYearFeeDisplay => LastYearFee.ToString("N0");
+
+        public long ForcastFee { get; set; }
+
+        public string ForcastFeeDisplay => ForcastFee.ToString("N0");
+
+    }
 }
