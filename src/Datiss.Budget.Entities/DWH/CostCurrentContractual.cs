@@ -18,7 +18,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public string ContractDescription { get; set; }
 
-        public int ExtensionId { get; set; }
+        public bool ExtensionId { get; set; }
 
         public long ContractLastYear { get; set; }
 
@@ -27,14 +27,11 @@ namespace Datiss.Budget.Entities.DWH
         #endregion
 
         #region Navigations
-
         public FinanceYear FinanceYear { get; set; }
 
         public Organization Organization { get; set; }
 
         public Constant CostCenterType { get; set; }
-
-        public Constant ExtensionType { get; set; }
 
         #endregion
     }

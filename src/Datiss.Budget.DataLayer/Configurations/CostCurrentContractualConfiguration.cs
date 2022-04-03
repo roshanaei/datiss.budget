@@ -46,10 +46,6 @@ namespace Datiss.Budget.DataLayer.Mappings
                     .HasForeignKey(x => x.CostCenterTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(x => x.ExtensionType)
-                    .WithMany(x => x.ExtensionCostCurrentContractual)
-                    .HasForeignKey(x => x.ExtensionId)
-                    .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

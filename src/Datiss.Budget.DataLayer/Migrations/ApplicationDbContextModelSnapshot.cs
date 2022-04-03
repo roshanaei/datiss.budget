@@ -709,8 +709,8 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<DateTime?>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ExtensionId")
-                        .HasColumnType("int");
+                    b.Property<bool>("ExtensionId")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ModifiedByBrowserName")
                         .HasMaxLength(1000)
@@ -735,8 +735,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CostCenterTypeId");
-
-                    b.HasIndex("ExtensionId");
 
                     b.HasIndex("OrganizationId");
 
@@ -4224,12 +4222,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Datiss.Budget.Entities.Constant", "ExtensionType")
-                        .WithMany("ExtensionCostCurrentContractual")
-                        .HasForeignKey("ExtensionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
                         .WithMany("CostCurrentContractual")
                         .HasForeignKey("OrganizationId")
@@ -4243,8 +4235,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("CostCenterType");
-
-                    b.Navigation("ExtensionType");
 
                     b.Navigation("FinanceYear");
 
@@ -5269,8 +5259,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("CostCurrentPMDeps");
 
                     b.Navigation("CurrentIncomeReports");
-
-                    b.Navigation("ExtensionCostCurrentContractual");
 
                     b.Navigation("IncomeCurrentNOperationals");
 

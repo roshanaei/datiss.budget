@@ -83,7 +83,6 @@ namespace Datiss.Budget.Services
             };
 
             model.CostCenterTypeTitle = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
-            model.ExtensionTitle = (await _constSet.FindAsync(model.ExtensionId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
             try
             {
@@ -103,7 +102,6 @@ namespace Datiss.Budget.Services
                     var result = entity.Adapt<CostCurrentContractualDTO>();
 
                     result.CostCenterTypeDisplay = model.CostCenterTypeTitle;
-                    result.ExtensionDisplay = model.ExtensionTitle;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
 
@@ -157,7 +155,6 @@ namespace Datiss.Budget.Services
                     var result = entity.Adapt<CostCurrentContractualDTO>();
 
                     result.CostCenterTypeDisplay = model.CostCenterTypeTitle;
-                    result.ExtensionDisplay = model.ExtensionTitle;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
 
