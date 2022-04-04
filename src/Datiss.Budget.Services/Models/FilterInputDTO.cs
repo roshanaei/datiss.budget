@@ -292,6 +292,7 @@ namespace Datiss.Budget.Services.Models
     public class CostCurrentSharingSetadFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
 
     }
 

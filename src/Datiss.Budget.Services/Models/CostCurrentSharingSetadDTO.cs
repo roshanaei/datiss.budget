@@ -4,6 +4,8 @@
     {
         public int YearId { get; set; }
 
+        public int OrganizationId { get; set; }
+
         public int WUnit { get; set; }
 
         public long IncomeCurrentW { get; set; }
@@ -35,6 +37,10 @@
         public int YearId { get; set; }
 
         public int Year { get; set; }
+
+        public int OrganizationId { get; set; }
+
+        public string OrganizationDisplay { get; set; }
 
         public int WUnit { get; set; }
 

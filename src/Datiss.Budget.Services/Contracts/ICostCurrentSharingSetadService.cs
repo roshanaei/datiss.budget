@@ -16,20 +16,20 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<ValidationResult<CostCurrentSharingSetadDTO>> UpdateAsync(UpdateCostCurrentSharingSetadDTO model);
 
-        Task HardDeleteAsync(int yearId);
+        Task HardDeleteAsync(int Id);
 
-        Task<SubscriptionDeleteDataResult> HardDeleteAllAsync(int yearId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
 
-        Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId);
+        Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId);
 
         Task<PagedResult<CostCurrentSharingSetadDTO>> GetListAsync(CostCurrentSharingSetadFilterDTO filter);
 
-        Task CopyAsync(int sourceYearId, int destYearId);
+        Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
 
         Task<Stream> ExportExcelAsync(CostCurrentSharingSetadFilterDTO filter);
 
-        Task<IEnumerable<CostCurrentSharingSetadDTO>> GetExportItemsAsync(int yearId);
+        Task<IEnumerable<CostCurrentSharingSetadDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
-        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId);
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
     }
 }
