@@ -1,33 +1,33 @@
-﻿using System;
+﻿using Datiss.Budget.Common.Exceptions;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.DataLayer.Context;
+using Datiss.Budget.Entities;
+using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Enum;
+using Datiss.Budget.Extensions;
+using Datiss.Budget.Resources;
+using Datiss.Budget.Security;
+using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Services.Excel;
+using Datiss.Budget.Services.Excel.Models;
+using Datiss.Budget.Services.Infrastructure;
+using Datiss.Budget.Services.Models;
+using LinqKit;
+using Mapster;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Datiss.Budget.Services.Contracts;
-using Datiss.Budget.Common.GuardToolkit;
-using Datiss.Budget.Services.Infrastructure;
-using Datiss.Budget.Services.Models;
-using Datiss.Budget.Resources;
-using Datiss.Budget.Entities.DWH;
-using Datiss.Budget.Services.Excel;
-using Datiss.Budget.Entities;
-using Datiss.Budget.Common.Exceptions;
-using Datiss.Budget.DataLayer.Context;
-using Datiss.Budget.Services.Contracts.Identity;
-using Mapster;
-using LinqKit;
-using Datiss.Budget.Security;
-using Microsoft.Data.SqlClient;
-using Datiss.Budget.Extensions;
-using Datiss.Budget.Enum;
-using Datiss.Budget.Common;
+
 
 namespace Datiss.Budget.Services
 {
-
-    public class CostCurrentContractualService : ICostCurrentContractualService
+    public class CostCurrentEPaymentService : ICostCurrentEPaymentService
     {
         private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
@@ -35,12 +35,11 @@ namespace Datiss.Budget.Services
         private readonly IUserService _userService;
         private readonly IOrganizationService _organizationService;
 
-        private readonly DbSet<CostCurrentContractual> _dbSet;
+        private readonly DbSet<CostCurrentEPayment> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
         private readonly DbSet<FinanceYear> _yearSet;
-        private readonly DbSet<Constant> _constSet;
 
-        public CostCurrentContractualService(
+        public CostCurrentEPaymentService(
             IUserContext userContext,
             IUnitOfWork uow,
             IExcelService excelService,
@@ -49,44 +48,43 @@ namespace Datiss.Budget.Services
         {
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _dbSet = _uow.Set<CostCurrentContractual>();
+            _dbSet = _uow.Set<CostCurrentEPayment>();
             _orgDbSet = _uow.Set<Organization>();
             _yearSet = _uow.Set<FinanceYear>();
-            _constSet = _uow.Set<Constant>();
             _excelService = excelService ?? throw new ArgumentNullException(nameof(excelService));
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
-        private IQueryable<CostCurrentContractual> Query()
+        private IQueryable<CostCurrentEPayment> Query()
             => _dbSet.AsNoTracking();
 
-        public async Task<CostCurrentContractual> GetByIdAsync(int id)
+        public async Task<CostCurrentEPayment> GetByIdAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult<CostCurrentContractualDTO>> CreateAsync(CreateCostCurrentContractualDTO model)
+        public async Task<ValidationResult<CostCurrentEPaymentDTO>> CreateAsync(CreateCostCurrentEPaymentDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var entity = new CostCurrentContractual
+            var entity = new CostCurrentEPayment
             {
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
-                CostCenterTypeId = model.CostCenterTypeId,
-                ContractDescription = model.ContractDescription,
-                ExtensionId = model.ExtensionId,
-                ContractLastYear = model.ContractLastYear,
-                ContractForcast = model.ContractForcast
+                BillingCycle = model.BillingCycle,
+                EPayForcast = model.EPayForcast,
+                EPayBFee = model.EPayBFee,
+                PPayForcast = model.PPayForcast,
+                PPayBFee = model.PPayBFee
             };
 
-            model.CostCenterTypeTitle = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
             try
             {
-                if (await checkLogicAsync(model.YearId, model.ContractDescription))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId))
                 {
                     await _dbSet.AddAsync(entity);
                     try
@@ -95,51 +93,50 @@ namespace Datiss.Budget.Services
                     }
                     catch
                     {
-                        return ValidationResult<CostCurrentContractualDTO>.Failed(
+                        return ValidationResult<CostCurrentEPaymentDTO>.Failed(
                             string.Format(ServiceMessages.ImportExcelCalculationField)
                             );
                     }
-                    var result = entity.Adapt<CostCurrentContractualDTO>();
-
-                    result.CostCenterTypeDisplay = model.CostCenterTypeTitle;
+                    var result = entity.Adapt<CostCurrentEPaymentDTO>();
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.BillingCycle = entity.BillingCycle;
+                    result.EPayForcast = entity.EPayForcast;
+                    result.EPayBFee = entity.EPayBFee;
+                    result.PPayForcast = entity.PPayForcast;
+                    result.PPayBFee = entity.PPayBFee;
 
-                    return ValidationResult<CostCurrentContractualDTO>.Success(result);
+                    return ValidationResult<CostCurrentEPaymentDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<CostCurrentContractualDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<CostCurrentEPaymentDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
-            return ValidationResult<CostCurrentContractualDTO>.Failed(
-                string.Format(ServiceMessages.Logic_TitleDuplicate,
-                model.ContractDescription, organizationDisplay)
+            return ValidationResult<CostCurrentEPaymentDTO>.Failed(
+                string.Format(ServiceMessages.Logic_OrganizationDuplicate, organizationDisplay)
                 );
-
-
         }
 
-        public async Task<ValidationResult<CostCurrentContractualDTO>> UpdateAsync(UpdateCostCurrentContractualDTO model)
+        public async Task<ValidationResult<CostCurrentEPaymentDTO>> UpdateAsync(UpdateCostCurrentEPaymentDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            model.CostCenterTypeTitle = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.ContractDescription, model.Id))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.OrganizationId = model.OrganizationId;
                     entity.YearId = model.YearId;
-                    entity.CostCenterTypeId = model.CostCenterTypeId;
-                    entity.ContractDescription = model.ContractDescription;
-                    entity.ExtensionId = model.ExtensionId;
-                    entity.ContractLastYear = model.ContractLastYear;
-                    entity.ContractForcast = model.ContractForcast;
+                    entity.BillingCycle = model.BillingCycle;
+                    entity.EPayForcast = model.EPayForcast;
+                    entity.EPayBFee = model.EPayBFee;
+                    entity.PPayForcast = model.PPayForcast;
+                    entity.PPayBFee = model.PPayBFee;
 
                     try
                     {
@@ -147,30 +144,34 @@ namespace Datiss.Budget.Services
                     }
                     catch
                     {
-                        return ValidationResult<CostCurrentContractualDTO>.Failed(
+                        return ValidationResult<CostCurrentEPaymentDTO>.Failed(
                             string.Format(ServiceMessages.ImportExcelCalculationField)
                             );
                     }
+                    var result = new CostCurrentEPaymentDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        BillingCycle = model.BillingCycle,
+                        EPayForcast = model.EPayForcast,
+                        EPayBFee = model.EPayBFee,
+                        PPayForcast = model.PPayForcast,
+                        PPayBFee = model.PPayBFee,
+                        OrganizationDisplay = organizationDisplay,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
 
-                    var result = entity.Adapt<CostCurrentContractualDTO>();
-
-                    result.CostCenterTypeDisplay = model.CostCenterTypeTitle;
-                    result.OrganizationDisplay = organizationDisplay;
-                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-
-                    return ValidationResult<CostCurrentContractualDTO>.Success(result);
+                    return ValidationResult<CostCurrentEPaymentDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<CostCurrentContractualDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<CostCurrentEPaymentDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
-            return ValidationResult<CostCurrentContractualDTO>.Failed(
-                string.Format(ServiceMessages.Logic_TitleDuplicate,
-                model.ContractDescription, organizationDisplay)
+            return ValidationResult<CostCurrentEPaymentDTO>.Failed(
+                string.Format(ServiceMessages.Logic_OrganizationDuplicate, organizationDisplay)
                 );
-
         }
 
         public async Task HardDeleteAsync(int Id)
@@ -205,7 +206,7 @@ namespace Datiss.Budget.Services
                                     .Where(_ => _.OrganizationId == organizationId)
                                     .ToListAsync();
 
-            IEnumerable<CostCurrentContractual> childrens = new CostCurrentContractual[] { };
+            IEnumerable<CostCurrentEPayment> childrens = new CostCurrentEPayment[] { };
 
             if (organization.Type == OrganizationType.County || organization.Type == OrganizationType.Root)
             {
@@ -242,20 +243,20 @@ namespace Datiss.Budget.Services
             var result = new List<CalculationItemData>();
             result.Add(new CalculationItemData
             {
-                Key = "CostCurrentContractuals_Cal1",
+                Key = "CostCurrentEPayments_Cal1",
                 Value = await _uow.ExecuteScalar<int>(
-                        "[dbo].[CostCurrentContractuals_Cal1] @YearId, @OrganizationId",
+                        "[dbo].[CostCurrentEPayments_Cal1] @YearId, @OrganizationId",
                         parameters: sqlParams.ToArray())
             });
 
             return await Task.FromResult(result);
         }
 
-        public async Task<PagedResult<CostCurrentContractualDTO>> GetListAsync(CostCurrentContractualFilterDTO filter)
+        public async Task<PagedResult<CostCurrentEPaymentDTO>> GetListAsync(CostCurrentEPaymentFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var result = new PagedResult<CostCurrentContractualDTO>
+            var result = new PagedResult<CostCurrentEPaymentDTO>
             {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -275,18 +276,16 @@ namespace Datiss.Budget.Services
 
             result.Items = await query.Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
-                                    .Include(x => x.CostCenterType)
-                                    .Select(x => new CostCurrentContractualDTO
+                                    .Select(x => new CostCurrentEPaymentDTO
                                     {
                                         Id = x.Id,
-                                        CostCenterTypeDisplay = x.CostCenterType.Title,
-                                        CostCenterTypeId = x.CostCenterTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        ContractLastYear = x.ContractLastYear,
-                                        ContractForcast = x.ContractForcast,
-                                        ContractDescription = x.ContractDescription,
-                                        ExtensionId = x.ExtensionId,
+                                        BillingCycle = x.BillingCycle,
+                                        EPayForcast = x.EPayForcast,
+                                        EPayBFee = x.EPayBFee,
+                                        PPayForcast = x.PPayForcast,
+                                        PPayBFee = x.PPayBFee,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -303,7 +302,7 @@ namespace Datiss.Budget.Services
                 throw new CopyDestYearExxeption();
             if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
                 throw new CopyOrgNullDataException();
-            var result = new List<CostCurrentContractual>();
+            var result = new List<CostCurrentEPayment>();
 
             if (await Query()
                         .Where(_ => _.OrganizationId == sourceOrgId)
@@ -318,18 +317,18 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, item.ContractDescription))
+                    if (!await checkLogicAsync(destYearId, sourceOrgId))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new CostCurrentContractual
+                    var entity = new CostCurrentEPayment
                     {
-                        CostCenterTypeId = item.CostCenterTypeId,
+                        BillingCycle = item.BillingCycle,
                         OrganizationId = item.OrganizationId,
                         YearId = destYearId,
-                        ContractDescription = item.ContractDescription,
-                        ExtensionId = item.ExtensionId,
-                        ContractLastYear = item.ContractLastYear,
-                        ContractForcast = item.ContractForcast
+                        EPayForcast = item.EPayForcast,
+                        EPayBFee = item.EPayBFee,
+                        PPayForcast = item.PPayForcast,
+                        PPayBFee = item.PPayBFee
                     };
                     result.Add(entity);
                 }
@@ -356,15 +355,13 @@ namespace Datiss.Budget.Services
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<CostCurrentContractualImportModel>
+            var data = await _excelService.ImportAsync<CostCurrentEPaymentImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
 
-            var records = data.Adapt<List<CostCurrentContractual>>();
+            var records = data.Adapt<List<CostCurrentEPayment>>();
 
             int rowIndex = 1;
 
-            var costCenterTypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                                       x.Parent.ConstantKey == ConstantKeys.__CostCenterType);
             var descendents = await _organizationService
                              .GetAllDescendentsAsync(_userContext.OrganizationId);
 
@@ -386,12 +383,6 @@ namespace Datiss.Budget.Services
                 {
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
-                        );
-                }
-                if (!await costCenterTypes.AnyAsync(x => x.Id == rec.CostCenterTypeId))
-                {
-                    return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidCostCenterType, rowIndex + 2, rec.CostCenterTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -419,29 +410,6 @@ namespace Datiss.Budget.Services
                     existOrgs.Add(item);
             }
             //
-            //Start CostCenterType
-            var missingCostCenterType = new List<Constant>();
-            string orgTitle = "";
-
-            foreach (var org in existOrgs)
-            {
-                if (!string.IsNullOrWhiteSpace(orgTitle))
-                {
-                    break;
-                }
-                foreach (var item in costCenterTypes)
-                {
-                    var existCostCenterTypeInExcel = records.Any(_ => _.CostCenterTypeId == item.Id &&
-                                                                      _.OrganizationId == org.Id);
-                    if (!existCostCenterTypeInExcel)
-                    {
-                        missingCostCenterType.Add(item);
-                        orgTitle = org.Title;
-                    }
-
-                }
-            }
-            //end
 
             rowIndex = 1;
 
@@ -473,7 +441,7 @@ namespace Datiss.Budget.Services
 
                 if (!await checkLogicAsync(
                     record.YearId,
-                    record.ContractDescription))
+                    record.OrganizationId))
                 {
 
                     return ImportResult.Failed(
@@ -502,9 +470,9 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<IEnumerable<CostCurrentContractualDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<CostCurrentEPaymentDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
-            var filter = new CostCurrentContractualFilterDTO
+            var filter = new CostCurrentEPaymentFilterDTO
             {
                 OrganizationId = organizationId,
                 YearId = yearId
@@ -520,18 +488,16 @@ namespace Datiss.Budget.Services
             var items = await query
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
-                                    .Include(x => x.CostCenterType)
-                                    .Select(x => new CostCurrentContractualDTO
+                                    .Select(x => new CostCurrentEPaymentDTO
                                     {
                                         Id = x.Id,
-                                        CostCenterTypeDisplay = x.CostCenterType.Title,
-                                        CostCenterTypeId = x.CostCenterTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        ContractLastYear = x.ContractLastYear,
-                                        ContractForcast = x.ContractForcast,
-                                        ContractDescription = x.ContractDescription,
-                                        ExtensionId = x.ExtensionId,
+                                        BillingCycle = x.BillingCycle,
+                                        EPayForcast = x.EPayForcast,
+                                        EPayBFee = x.EPayBFee,
+                                        PPayForcast = x.PPayForcast,
+                                        PPayBFee = x.PPayBFee,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -539,7 +505,7 @@ namespace Datiss.Budget.Services
             return items;
         }
 
-        public async Task<Stream> ExportExcelAsync(CostCurrentContractualFilterDTO filter)
+        public async Task<Stream> ExportExcelAsync(CostCurrentEPaymentFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 
@@ -552,18 +518,16 @@ namespace Datiss.Budget.Services
             var items = await query
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
-                                    .Include(x => x.CostCenterType)
-                                    .Select(x => new CostCurrentContractualDTO
+                                    .Select(x => new CostCurrentEPaymentDTO
                                     {
                                         Id = x.Id,
-                                        CostCenterTypeDisplay = x.CostCenterType.Title,
-                                        CostCenterTypeId = x.CostCenterTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        ContractLastYear = x.ContractLastYear,
-                                        ContractForcast = x.ContractForcast,
-                                        ContractDescription = x.ContractDescription,
-                                        ExtensionId = x.ExtensionId,
+                                        BillingCycle = x.BillingCycle,
+                                        EPayForcast = x.EPayForcast,
+                                        EPayBFee = x.EPayBFee,
+                                        PPayForcast = x.PPayForcast,
+                                        PPayBFee = x.PPayBFee,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -579,14 +543,14 @@ namespace Datiss.Budget.Services
 
         #region Private Helper Methods
 
-        private async Task<IQueryable<CostCurrentContractual>> setFilter(
-            IQueryable<CostCurrentContractual> query,
-            CostCurrentContractualFilterDTO filter)
+        private async Task<IQueryable<CostCurrentEPayment>> setFilter(
+            IQueryable<CostCurrentEPayment> query,
+            CostCurrentEPaymentFilterDTO filter)
         {
             query.CheckArgumentIsNull(nameof(query));
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var predicate = PredicateBuilder.New<CostCurrentContractual>();
+            var predicate = PredicateBuilder.New<CostCurrentEPayment>();
 
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
@@ -604,25 +568,17 @@ namespace Datiss.Budget.Services
                 query = query.Where(predicate);
             }
 
-            if (filter.CostCenterTypeId.HasValue)
-                query = query.Where(x => x.CostCenterTypeId == filter.CostCenterTypeId.Value);
-
-            if (filter.ExtensionId.HasValue)
-                query = query.Where(x => x.ExtensionId == filter.ExtensionId.Value);
-
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                         _.CostCenterType.Title.ToUpper().Contains(filter.Search) ||
-                                         _.ContractDescription.ToUpper().Contains(filter.Search));
+                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;
         }
 
-        private IQueryable<CostCurrentContractual> setOrder(
-           IQueryable<CostCurrentContractual> query,
+        private IQueryable<CostCurrentEPayment> setOrder(
+           IQueryable<CostCurrentEPayment> query,
            string orderBy = "id",
            bool desc = false)
         {
@@ -638,21 +594,14 @@ namespace Datiss.Budget.Services
                         ? query.OrderByDescending(x => x.Organization.Title)
                         : query.OrderBy(x => x.Organization.Title);
 
-                case "costCenterType":
-                    return desc
-                        ? query.OrderByDescending(x => x.CostCenterType.DisplayOrder)
-                        : query.OrderBy(x => x.CostCenterType.DisplayOrder);
-
                 default:
                     return query.Include(x => x.Organization)
-                                .Include(x => x.CostCenterType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
-                                .ThenBy(x => x.Organization.RowOrder)
-                                .ThenBy(x => x.CostCenterType.DisplayOrder);
+                                .ThenBy(x => x.Organization.RowOrder);
             }
         }
 
-        private async Task<IEnumerable<CostCurrentContractual>> getChildrenData(
+        private async Task<IEnumerable<CostCurrentEPayment>> getChildrenData(
             int parentOrganizationId,
             int yearId,
             int targetYearId)
@@ -663,7 +612,7 @@ namespace Datiss.Budget.Services
                             _.ParentId == parentOrganizationId)
                 .ToListAsync();
 
-            var result = new List<CostCurrentContractual>();
+            var result = new List<CostCurrentEPayment>();
 
             foreach (var org in children)
             {
@@ -681,18 +630,15 @@ namespace Datiss.Budget.Services
 
                 foreach (var item in data)
                 {
-                    if (!await checkLogicAsync(targetYearId, item.ContractDescription))
+                    if (!await checkLogicAsync(targetYearId, org.Id))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new CostCurrentContractual
+                    var entity = new CostCurrentEPayment
                     {
-                        CostCenterTypeId = item.CostCenterTypeId,
+                        BillingCycle = item.BillingCycle,
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
-                        ContractDescription = item.ContractDescription,
-                        ExtensionId = item.ExtensionId,
-                        ContractLastYear = item.ContractLastYear,
-                        ContractForcast = item.ContractForcast
+                        EPayForcast = item.EPayForcast
                     };
 
                     result.Add(entity);
@@ -703,14 +649,14 @@ namespace Datiss.Budget.Services
 
             return result;
         }
-        private async Task<IEnumerable<CostCurrentContractual>> getChildren(
+        private async Task<IEnumerable<CostCurrentEPayment>> getChildren(
             int parentOrganizationId,
             int yearId)
         {
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
-            var result = new List<CostCurrentContractual>();
+            var result = new List<CostCurrentEPayment>();
             foreach (var org in children)
             {
                 var data = await Query()
@@ -751,7 +697,7 @@ namespace Datiss.Budget.Services
 
         private async Task<bool> checkLogicAsync(
             int yearId,
-            string contractDescription,
+            int organizationId,
             int? id = null)
         {
             var year = await _yearSet.FindAsync(yearId);
@@ -761,10 +707,12 @@ namespace Datiss.Budget.Services
                 throw new DisbaledYearDataInputException();
 
             var result = id == null
-                ? await Query().AnyAsync(x => x.ContractDescription.Trim() == contractDescription.Trim())
+                ? await Query().AnyAsync(x => x.YearId == yearId &&
+                                                x.OrganizationId == organizationId)
 
-                : await Query().AnyAsync(x => x.ContractDescription.Trim() == contractDescription.Trim() &&
-                                              x.Id != id);
+                : await Query().AnyAsync(x => x.YearId == yearId &&
+                                            x.OrganizationId == organizationId &&
+                                            x.Id != id);
             return !result;
         }
 

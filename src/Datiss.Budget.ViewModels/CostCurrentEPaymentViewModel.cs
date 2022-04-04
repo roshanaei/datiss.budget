@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 using System.Linq;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
-
 
 namespace Datiss.Budget.ViewModels
 {
-    public class CreateCostCurrentContractualViewModel : BaseViewModel
+    public class CreateCostCurrentEPaymentViewModel : BaseViewModel
     {
         public int YearId { get; set; }
         public string YearDisplay { get; set; }
@@ -14,87 +12,73 @@ namespace Datiss.Budget.ViewModels
         public int OrganizationId { get; set; }
         public string OrganizationDisplay { get; set; }
 
-        public int CostCenterTypeId { get; set; }
+        public int BillingCycle { get; set; }
 
-        public string ContractDescription { get; set; }
+        public decimal EPayForcast { get; set; }
 
-        public bool ExtensionId { get; set; }
+        public long EPayBFee { get; set; }
 
+        public decimal PPayForcast { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        public long ContractLastYear { get; set; }
-
-        [Required(ErrorMessage = "*")]
-        public long ContractForcast { get; set; }
-
-        public IEnumerable<SelectListItem> CostCenterTypeSource { get; set; }
-
-        public string CostCenterTypeTitle
-        {
-            get
-            {
-                if (CostCenterTypeSource == null || !CostCenterTypeSource.Any())
-                    return string.Empty;
-
-                return CostCenterTypeSource.FirstOrDefault(x => x.Value.ToString() == CostCenterTypeId.ToString()).Text;
-            }
-        }
+        public long PPayBFee { get; set; }
 
     }
 
-    public class UpdateCostCurrentContractualViewModel : CreateCostCurrentContractualViewModel
+    public class UpdateCostCurrentEPaymentViewModel : CreateCostCurrentEPaymentViewModel
     {
         public int Id { get; set; }
 
     }
 
-    public class CostCurrentContractualViewModel
+    public class CostCurrentEPaymentViewModel
     {
         public int Id { get; set; }
         public int YearId { get; set; }
         public int Year { get; set; }
         public int OrganizationId { get; set; }
         public string OrganizationDisplay { get; set; }
-        public int CostCenterTypeId { get; set; }
-        public string CostCenterTypeDisplay { get; set; }
-        public string ContractDescription { get; set; }
-        public bool ExtensionId { get; set; }
-        public string ExtensionIdDisplay => ExtensionId == true ? "دارد" : "ندارد";  
-        public long ContractLastYear { get; set; }
-        public string ContractLastYearDisplay => ContractLastYear.ToString("N0");
-        public long ContractForcast { get; set; }
-        public string ContractForcastDisplay => ContractForcast.ToString("N0");
+
+        public int BillingCycle { get; set; }
+        public string BillingCycleDisplay => BillingCycle.ToString("N0");
+
+        public decimal EPayForcast { get; set; }
+        public string EPayForcastDisplay => EPayForcast.ToString("N2");
+
+        public long EPayBFee { get; set; }
+        public string EPayBFeeDisplay => EPayBFee.ToString("N0");
+
+        public decimal PPayForcast { get; set; }
+        public string PPayForcastDisplay => PPayForcast.ToString("N2");
+
+        public long PPayBFee { get; set; }
+        public string PPayBFeeDisplay => PPayBFee.ToString("N0");
     }
 
-    public class CostCurrentContractualFilterViewModel : FilterViewModel
+    public class CostCurrentEPaymentFilterViewModel : FilterViewModel
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
-        public int? CostCenterTypeId { get; set; }
-        public bool? ExtensionId { get; set; }
-        
+
         public IList<SelectListItem> YearSource { get; set; }
 
         public IList<SelectListItem> OrganizationSource { get; set; }
     }
 
-    public class CostCurrentContractualIndexViewModel : PagedViewModel<CostCurrentContractualViewModel>
+    public class CostCurrentEPaymentIndexViewModel : PagedViewModel<CostCurrentEPaymentViewModel>
     {
 
-        public CostCurrentContractualIndexViewModel()
+        public CostCurrentEPaymentIndexViewModel()
         {
-            Filter = new CostCurrentContractualFilterViewModel();
+            Filter = new CostCurrentEPaymentFilterViewModel();
         }
 
-        public CostCurrentContractualFilterViewModel Filter { get; set; }
+        public CostCurrentEPaymentFilterViewModel Filter { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
 
         public IList<SelectListItem> OrganizationSource { get; set; }
 
         public IList<SelectListItem> InputOrganizationSource { get; set; }
-
-        public IList<SelectListItem> CostCenterTypeSource { get; set; }
 
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
@@ -118,13 +102,6 @@ namespace Datiss.Budget.ViewModels
                 Value = x.Id.ToString()
             }).ToList();
 
-        public void SetCostCenterTypeSource(IEnumerable<DropDownItemViewModel> source)
-            => CostCenterTypeSource = source.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList();
-
         public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
             => Filter.OrganizationSource = source.Select(x => new SelectListItem
             {
@@ -142,5 +119,4 @@ namespace Datiss.Budget.ViewModels
             }).ToList();
 
     }
-
 }
