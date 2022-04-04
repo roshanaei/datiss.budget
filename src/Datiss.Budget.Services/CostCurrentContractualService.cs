@@ -170,7 +170,6 @@ namespace Datiss.Budget.Services
                 string.Format(ServiceMessages.Logic_TitleDuplicate,
                 model.ContractDescription, organizationDisplay)
                 );
-
         }
 
         public async Task HardDeleteAsync(int Id)
@@ -610,12 +609,14 @@ namespace Datiss.Budget.Services
             if (filter.ExtensionId.HasValue)
                 query = query.Where(x => x.ExtensionId == filter.ExtensionId.Value);
 
+
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
                 query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
                                          _.CostCenterType.Title.ToUpper().Contains(filter.Search) ||
                                          _.ContractDescription.ToUpper().Contains(filter.Search));
+
             }
 
             return query;

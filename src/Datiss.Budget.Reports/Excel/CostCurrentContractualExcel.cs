@@ -47,6 +47,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++;
             }
             var range = sheet.Range(1, 1, row - 1, 6);
+          
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();

@@ -59,7 +59,6 @@ namespace Datiss.Budget.ViewModels
         public string CostCenterTypeDisplay { get; set; }
         public string ContractDescription { get; set; }
         public bool ExtensionId { get; set; }
-        public string ExtensionIdDisplay => ExtensionId == true ? "دارد" : "ندارد";  
         public long ContractLastYear { get; set; }
         public string ContractLastYearDisplay => ContractLastYear.ToString("N0");
         public long ContractForcast { get; set; }

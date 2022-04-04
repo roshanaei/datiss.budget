@@ -44,7 +44,6 @@
         rowData.contractLastYear = $('#inputContractLastYear_' + id).val();
         rowData.contractForcast = $('#inputContractForcast_' + id).val();
         rowData.extensionId = $('#inputExtensionId_' + id).val();
-
     }
 
     function cancelEditRow(id) {
@@ -141,7 +140,6 @@
                 rowData.contractForcast = model.contractForcast;
                 rowData.extensionId = model.extensionId;
 
-
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
@@ -151,7 +149,6 @@
                 $('#spanContractLastYear_' + id).text(data.contractLastYear);
                 $('#spanContractForcast_' + id).text(data.contractForcast);
                 $('#spanExtensionId_' + id).text(data.extensionIdDisplay);
-
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
