@@ -121,7 +121,7 @@
     <value>امکان انجام این عملیات به دلیل نبود رکورد در جدول وابسته، وجود ندارد.</value>
   </data>
   <data name="CopyDestYearHasData" xml:space="preserve">
-    <value>سال هدف نباید دیتا داشته باشد.</value>
+    <value>سال مقصد نباید دیتا داشته باشد.</value>
   </data>
   <data name="CopyErrorDestYear" xml:space="preserve">
     <value>نمی توانید کپی اطلاعات را برای سال های قبلی انجام دهید.</value>

@@ -1,0 +1,320 @@
+﻿@model CostCurrentSharingSetadIndexViewModel
+<div class="table-responsive">
+    <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
+        <thead class="thead-light">
+            <tr>
+                <th>سال</th>
+                <th>سازمان</th>
+                <th>آحاد مشترکین آب</th>
+                <th>درآمد جاری</th>
+                <th>ضریب تسهیم درآمد جاری</th>
+                <th>درصد سهام شهرداری</th>
+                <th>درآمد سرمایه ای</th>
+                <th>ضریب تسهیم درآمد سرمایه ای</th>
+                <th>آحاد مشترک فاضلاب</th>
+                <th>درآمد جاری فاضلاب</th>
+                <th>ضریب تسهیم درآمد جاری فاضلاب</th>
+                <th style="min-width:195px">مدیریت</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowTemplate" style="display: none">
+                <td>
+                    <div id="divInput_Year_">
+                        <input id="hidYearId_" type="hidden" />
+                        <select class="form-control selectYear" id="inputYear_" asp-items="Model.YearSource">
+                        </select>
+                        <script>
+                            $('select#inputYear_ option[value=' + $('#yearId').val() + ']').attr('selected', true);
+                            $('#inputYear_').attr('disabled', 'disabled');
+                        </script>
+                    </div>
+                    <div id="divOutput_Year_" style="display: none">
+                        <span id="spanYear_"></span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Org_">
+                        <input id="hidOrgId_" type="hidden" />
+                        <select class="form-control selectOrganization" id="inputOrg_" asp-items="Model.InputOrganizationSource">
+                        </select>
+                        <script>
+                            $('select#inputOrg_ option[value=' + $('#organizationId').val() + ']').attr('selected', true);
+                        </script>
+                    </div>
+                    <div id="divOutput_Org_">
+                        <span id="spanOrg_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_WUnit_">
+                        <input class="form-control  input-keyup default-input" id="inputWUnit_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_WUnit_" style="display: none">
+                        <span id="spanWUnit_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_IncomeCurrentW_">
+                        <input class="form-control input-keyup" id="inputIncomeCurrentW_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_IncomeCurrentW_" style="display: none">
+                        <span id="spanIncomeCurrentW_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_IncomeCurrentWSharingCoff_">
+                        <input class="form-control input-keyup" id="inputIncomeCurrentWSharingCoff_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_IncomeCurrentWSharingCoff_" style="display: none">
+                        <span id="spanIncomeCurrentWSharingCoff_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_SPSHahrdari_">
+                        <input class="form-control input-keyup" id="inputSPSHahrdari_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_SPSHahrdari_" style="display: none">
+                        <span id="spanSPSHahrdari_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_IncomeForcast_">
+                        <input class="form-control input-keyup" id="inputIncomeForcast_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_IncomeForcast_" style="display: none">
+                        <span id="spanIncomeForcast_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_IncomeForcastsharing_">
+                        <input class="form-control input-keyup" id="inputIncomeForcastsharing_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_IncomeForcastsharing_" style="display: none">
+                        <span id="spanIncomeForcastsharing_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_WsUnit_">
+                        <input class="form-control input-keyup" id="inputWsUnit_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_WsUnit_" style="display: none">
+                        <span id="spanWsUnit_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_IncomeCurrentWs_">
+                        <input class="form-control input-keyup" id="inputIncomeCurrentWs_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_IncomeCurrentWs_" style="display: none">
+                        <span id="spanIncomeCurrentWs_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_IncomeCurrentWsSharingCoff_">
+                        <input class="form-control input-keyup" id="inputIncomeCurrentWsSharingCoff_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_IncomeCurrentWsSharingCoff_" style="display: none">
+                        <span id="spanIncomeCurrentWsSharingCoff_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
+                        <i class="fa ft-edit fa-1x"></i>
+                    </a>
+
+                    <a id="btnDelete_" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" style="display: none">
+                        <i class="fa ft-trash-2"></i>
+                    </a>
+
+                    <a id="btnSaveEdit_" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+                    <a id="btnCancelEdit_" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                    <a id="btnSaveCreate_" class="save-new-row btn btn-success my-font mr-1">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+
+                    <a id="btnCancelCreate_" class="cancel-new-row btn btn-danger my-font">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                </td>
+            </tr>
+            @foreach (var item in Model.Items)
+            {
+                <tr id="row_@item.Id">
+                    <td>
+                        <div id="divInput_Year_@item.Id" style="display: none">
+                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            </select>
+                            <script>
+                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Year_@item.Id">
+                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Org_@item.Id" style="display: none">
+                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
+                            </select>
+                            <script>
+                                $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Org_@item.Id">
+                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_WUnit_@item.Id" style="display: none">
+                            <input class="form-control" id="inputWUnit_@item.Id" value="@item.WUnit" type="number" />
+                        </div>
+                        <div id="divOutput_WUnit_@item.Id">
+                            <span id="spanWUnit_@item.Id">@item.WUnitDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_IncomeCurrentW_@item.Id" style="display: none">
+                            <input class="form-control" id="inputIncomeCurrentW_@item.Id" value="@item.IncomeCurrentW" type="number" />
+                        </div>
+                        <div id="divOutput_IncomeCurrentW_@item.Id">
+                            <span id="spanIncomeCurrentW_@item.Id">@item.IncomeCurrentWDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_IncomeCurrentWSharingCoff_@item.Id" style="display: none">
+                            <input class="form-control" id="inputIncomeCurrentWSharingCoff_@item.Id" value="@item.IncomeCurrentWSharingCoff" type="number" />
+                        </div>
+                        <div id="divOutput_IncomeCurrentWSharingCoff_@item.Id">
+                            <span id="spanIncomeCurrentWSharingCoff_@item.Id">@item.IncomeCurrentWSharingCoffDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_SPSHahrdari_@item.Id" style="display: none">
+                            <input class="form-control" id="inputSPSHahrdari_@item.Id" value="@item.SPSHahrdari" type="number" />
+                        </div>
+                        <div id="divOutput_SPSHahrdari_@item.Id">
+                            <span id="spanSPSHahrdari_@item.Id">@item.SPSHahrdariDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_IncomeForcast_@item.Id" style="display: none">
+                            <input class="form-control" id="inputIncomeForcast_@item.Id" value="@item.IncomeForcast" type="number" />
+                        </div>
+                        <div id="divOutput_IncomeForcast_@item.Id">
+                            <span id="spanIncomeForcast_@item.Id">@item.IncomeForcastDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_IncomeForcastsharing_@item.Id" style="display: none">
+                            <input class="form-control" id="inputIncomeForcastsharing_@item.Id" value="@item.IncomeForcastsharing" type="number" />
+                        </div>
+                        <div id="divOutput_IncomeForcastsharing_@item.Id">
+                            <span id="spanIncomeForcastsharing_@item.Id">@item.IncomeForcastsharingDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_WsUnit_@item.Id" style="display: none">
+                            <input class="form-control" id="inputWsUnit_@item.Id" value="@item.WsUnit" type="number" />
+                        </div>
+                        <div id="divOutput_WsUnit_@item.Id">
+                            <span id="spanWsUnit_@item.Id">@item.WsUnitDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_IncomeCurrentWs_@item.Id" style="display: none">
+                            <input class="form-control" id="inputIncomeCurrentWs_@item.Id" value="@item.IncomeCurrentWs" type="number" />
+                        </div>
+                        <div id="divOutput_IncomeCurrentWs_@item.Id">
+                            <span id="spanIncomeCurrentWs_@item.Id">@item.IncomeCurrentWsDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_IncomeCurrentWsSharingCoff_@item.Id" style="display: none">
+                            <input class="form-control" id="inputIncomeCurrentWsSharingCoff_@item.Id" value="@item.IncomeCurrentWsSharingCoff" type="number" />
+                        </div>
+                        <div id="divOutput_IncomeCurrentWsSharingCoff_@item.Id">
+                            <span id="spanIncomeCurrentWsSharingCoff_@item.Id">@item.IncomeCurrentWsSharingCoffDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
+
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
+
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
+
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                </button>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                </button>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </button>
+        </form>
+
+    </div>
+
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">
+            (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
+            <b class="font-medium-2">
+                @if (Model.PagesCount == 0)
+                {
+                    <span>1</span>
+                }
+                else
+                {
+                    <span>@Model.PagesCount</span>
+                }
+            </b>)
+        </div>
+    </div>
+    <!--Pagination-->
+    <vc:pager model="Model.ToPager()" controller-name="@CostCurrentSharingSetadController.Name" action-name="@CostCurrentSharingSetadController.ACTION_Index"></vc:pager>
+</div>
