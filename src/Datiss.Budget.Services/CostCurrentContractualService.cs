@@ -83,11 +83,10 @@ namespace Datiss.Budget.Services
             };
 
             model.CostCenterTypeTitle = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
-            model.ExtensionTitle = (await _constSet.FindAsync(model.ExtensionId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CostCenterTypeId))
+                if (await checkLogicAsync(model.YearId, model.ContractDescription))
                 {
                     await _dbSet.AddAsync(entity);
                     try
@@ -103,7 +102,6 @@ namespace Datiss.Budget.Services
                     var result = entity.Adapt<CostCurrentContractualDTO>();
 
                     result.CostCenterTypeDisplay = model.CostCenterTypeTitle;
-                    result.ExtensionDisplay = model.ExtensionTitle;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
 
@@ -116,8 +114,8 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<CostCurrentContractualDTO>.Failed(
-                string.Format(ServiceMessages.Logic_CostCenterTypeOrgDuplicates,
-                model.CostCenterTypeTitle, organizationDisplay)
+                string.Format(ServiceMessages.Logic_TitleDuplicate,
+                model.ContractDescription, organizationDisplay)
                 );
 
 
@@ -132,7 +130,7 @@ namespace Datiss.Budget.Services
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CostCenterTypeId, model.Id))
+                if (await checkLogicAsync(model.YearId, model.ContractDescription, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.OrganizationId = model.OrganizationId;
@@ -157,7 +155,6 @@ namespace Datiss.Budget.Services
                     var result = entity.Adapt<CostCurrentContractualDTO>();
 
                     result.CostCenterTypeDisplay = model.CostCenterTypeTitle;
-                    result.ExtensionDisplay = model.ExtensionTitle;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
 
@@ -170,9 +167,10 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<CostCurrentContractualDTO>.Failed(
-                string.Format(ServiceMessages.Logic_CostCenterTypeOrgDuplicates,
-                model.CostCenterTypeTitle, organizationDisplay)
+                string.Format(ServiceMessages.Logic_TitleDuplicate,
+                model.ContractDescription, organizationDisplay)
                 );
+
         }
 
         public async Task HardDeleteAsync(int Id)
@@ -320,7 +318,7 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.CostCenterTypeId))
+                    if (!await checkLogicAsync(destYearId, item.ContractDescription))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new CostCurrentContractual
@@ -443,16 +441,6 @@ namespace Datiss.Budget.Services
 
                 }
             }
-            if (missingCostCenterType.Any())
-            {
-                string costCenterTypeNames = "";
-                foreach (var item in missingCostCenterType)
-                {
-                    costCenterTypeNames += "- [" + item.Title + "]<br>";
-                }
-                return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelCostCenterTypeOrgNotInExcels, costCenterTypeNames, orgTitle));
-            }
             //end
 
             rowIndex = 1;
@@ -485,8 +473,7 @@ namespace Datiss.Budget.Services
 
                 if (!await checkLogicAsync(
                     record.YearId,
-                    record.OrganizationId,
-                    record.CostCenterTypeId))
+                    record.ContractDescription))
                 {
 
                     return ImportResult.Failed(
@@ -620,12 +607,15 @@ namespace Datiss.Budget.Services
             if (filter.CostCenterTypeId.HasValue)
                 query = query.Where(x => x.CostCenterTypeId == filter.CostCenterTypeId.Value);
 
+            if (filter.ExtensionId.HasValue)
+                query = query.Where(x => x.ExtensionId == filter.ExtensionId.Value);
 
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
                 query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                         _.CostCenterType.Title.ToUpper().Contains(filter.Search));
+                                         _.CostCenterType.Title.ToUpper().Contains(filter.Search) ||
+                                         _.ContractDescription.ToUpper().Contains(filter.Search));
             }
 
             return query;
@@ -691,7 +681,7 @@ namespace Datiss.Budget.Services
 
                 foreach (var item in data)
                 {
-                    if (!await checkLogicAsync(targetYearId, org.Id, item.CostCenterTypeId))
+                    if (!await checkLogicAsync(targetYearId, item.ContractDescription))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new CostCurrentContractual
@@ -761,8 +751,7 @@ namespace Datiss.Budget.Services
 
         private async Task<bool> checkLogicAsync(
             int yearId,
-            int organizationId,
-            int costCenterTypeId,
+            string contractDescription,
             int? id = null)
         {
             var year = await _yearSet.FindAsync(yearId);
@@ -772,14 +761,10 @@ namespace Datiss.Budget.Services
                 throw new DisbaledYearDataInputException();
 
             var result = id == null
-                ? await Query().AnyAsync(x => x.YearId == yearId &&
-                                                x.OrganizationId == organizationId &&
-                                                x.CostCenterTypeId == costCenterTypeId)
+                ? await Query().AnyAsync(x => x.ContractDescription.Trim() == contractDescription.Trim())
 
-                : await Query().AnyAsync(x => x.YearId == yearId &&
-                                            x.OrganizationId == organizationId &&
-                                            x.CostCenterTypeId == costCenterTypeId &&
-                                            x.Id != id);
+                : await Query().AnyAsync(x => x.ContractDescription.Trim() == contractDescription.Trim() &&
+                                              x.Id != id);
             return !result;
         }
 
