@@ -69,10 +69,10 @@ namespace Datiss.Budget.Reports.Excel
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
             sheet.Cell(2, 2).Value = "کد سازمان";
-            sheet.Cell(1, 3).Value = "عنوان هزینه";
-            sheet.Cell(1, 4).Value = "کد عنوان";
-            sheet.Cell(1, 5).Value = "مبلغ پایه";
-            sheet.Cell(1, 6).Value = "مبلغ سال ماقبل بودجه";
+            sheet.Cell(2, 3).Value = "عنوان هزینه";
+            sheet.Cell(2, 4).Value = "کد عنوان";
+            sheet.Cell(2, 5).Value = "مبلغ پایه";
+            sheet.Cell(2, 6).Value = "مبلغ سال ماقبل بودجه";
 
             var totalCount = items.Count();
             int row = 3;
