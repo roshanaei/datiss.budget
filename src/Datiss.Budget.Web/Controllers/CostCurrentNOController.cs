@@ -35,6 +35,10 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Create = nameof(Create);
 
 
+
+        private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
+
+
         private readonly ILogger<CostCurrentNOController> _logger;
         private readonly IWebHostEnvironment _env;
         private readonly ICostCurrentNOService _costCurrentNOService;
@@ -110,6 +114,63 @@ namespace Datiss.Budget.Web.Controllers
         }
 
 
+        [HttpGet("{page?}")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.List)]
+        public async Task<IActionResult> Index(int page = 1)
+        {
+            var filter = new CostCurrentNOFilterDTO();
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+              .Adapt<List<DropDownItemViewModel>>();
+            int firstOrgId = orgSource.FirstOrDefault().Id;
 
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(_ => _.Id);
+
+            var ccnoSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCurrentNOType)).ToList();
+
+            var ccnoSource1 = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CINOType)).ToList();
+
+            foreach (var item in ccnoSource1)
+            {
+                ccnoSource.Add(item);
+            }
+
+            var ccnoSourceTotal = ccnoSource.Adapt<IEnumerable<DropDownItemViewModel>>();
+
+
+            filter.YearId = maxYear;
+            filter.OrganizationId = firstOrgId;
+
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+               .Adapt<List<DropDownItemViewModel>>();
+
+            var myfilter = TempData.Get<CostCurrentNOFilterDTO>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<CostCurrentNOFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
+
+            var result = await _costCurrentNOService.GetListAsync(filter);
+            var model = result.Adapt<CostCurrentNOIndexViewModel>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetCostCurrentTypeSource(ccnoSourceTotal);
+
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+
+            model.Filter.YearId = filter.YearId;
+            model.Filter.OrganizationId = filter.OrganizationId;
+            model.Filter.PageNumber = filter.PageNumber;
+            model.Filter.PageSize = filter.PageSize;
+
+            return View(model);
+        }
     }
 }
