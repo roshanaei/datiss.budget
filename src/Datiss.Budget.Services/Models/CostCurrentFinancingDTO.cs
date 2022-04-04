@@ -12,14 +12,13 @@
 
         public long LastYearFee { get; set; }
 
-        public long ForcastFee { get; set; }
-
         public string FinancialCostTypeTitle { get; set; }
     }
 
     public class UpdateCostCurrentFinancingDTO : CreateCostCurrentFinancingDTO
     {
         public int Id { get; set; }
+        public long ForcastFee { get; set; }
 
     }
 

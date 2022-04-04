@@ -23,8 +23,6 @@ namespace Datiss.Budget.Services.Excel
         [Column(MappingDirections.Both, Letter = "F")]
         public long LastYearFee { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "G")]
-        public long ForcastFee { get; set; }
 
     }
 }
