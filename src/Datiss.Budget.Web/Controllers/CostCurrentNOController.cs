@@ -61,27 +61,55 @@ namespace Datiss.Budget.Web.Controllers
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
         }
 
-        //[HttpPost("[action]")]
-        //[HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
-        //public async Task<IActionResult> Create(CreateCostCurrentBankFeeViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        model.AddError(ViewMessages.InvalidData);
-        //        return Json(model);
-        //    }
-        //    var data = model.Adapt<CreateCostCurrentBankFeeDTO>();
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        public async Task<IActionResult> Create(CreateCostCurrentBankFeeViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+            var data = model.Adapt<CreateCostCurrentNODTO>();
 
-        //    var result = await _costCurrentBankFeeService.CreateAsync(data);
+            var result = await _costCurrentNOService.CreateAsync(data);
 
-        //    if (!result.IsValid)
-        //    {
-        //        model.AddError(result.Message);
-        //        return Json(model);
-        //    }
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
 
-        //    return Json(result.Result.Adapt<CostCurrentBankFeeViewModel>());
-        //}
+            return Json(result.Result.Adapt<CostCurrentNOViewModel>());
+        }
+
+
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Edit)]
+        public async Task<IActionResult> Edit(UpdateCostCurrentNOViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+
+            var data = model.Adapt<UpdateCostCurrentNODTO>();
+            var result = await _costCurrentNOService.UpdateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(
+                result.Result.Adapt<CostCurrentNOViewModel>()
+            );
+        }
+
+
 
     }
 }
