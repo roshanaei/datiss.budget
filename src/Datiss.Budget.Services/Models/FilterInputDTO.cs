@@ -280,13 +280,17 @@ namespace Datiss.Budget.Services.Models
         public int? CostCenterTypeId { get; set; }
     }
 
+    public class CostCurrentEPaymentFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+    }
     public class CostCurrentContractualFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
         public int? CostCenterTypeId { get; set; }
         public bool? ExtensionId { get; set; }
-
     }
 
     public class CostCurrentSharingSetadFilterDTO : FilterInputDTO
