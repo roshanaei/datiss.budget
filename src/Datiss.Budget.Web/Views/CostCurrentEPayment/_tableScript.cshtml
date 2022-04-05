@@ -9,27 +9,24 @@
         resetTableBackColor("my-table");
 
         let row = $('#row_' + id);
-        //row.css('background-color', '#7598f3');
 
         //Hide output elements
         $('#divOutput_Year_' + id).hide();
         $('#divOutput_Org_' + id).hide();
-        $('#divOutput_CostCenterType_' + id).hide();
-        $('#divOutput_ContractDescription_' + id).hide();
-        $('#divOutput_ContractLastYear_' + id).hide();
-        $('#divOutput_ContractForcast_' + id).hide();
-        $('#divOutput_ExtensionId_' + id).hide();
-
+        $('#divOutput_BillingCycle_' + id).hide();
+        $('#divOutput_EPayForcast_' + id).hide();
+        $('#divOutput_EPayBFee_' + id).hide();
+        $('#divOutput_PPayForcast_' + id).hide();
+        $('#divOutput_PPayBFee_' + id).hide();
 
         //show input elements
         $('#divInput_Year_' + id).show();
         $('#divInput_Org_' + id).show();
-        $('#divInput_CostCenterType_' + id).show();
-        $('#divInput_ContractDescription_' + id).show();
-        $('#divInput_ContractLastYear_' + id).show();
-        $('#divInput_ContractForcast_' + id).show();
-        $('#divInput_ExtensionId_' + id).show();
-
+        $('#divInput_BillingCycle_' + id).show();
+        $('#divInput_EPayForcast_' + id).show();
+        $('#divInput_EPayBFee_' + id).show();
+        $('#divInput_PPayForcast_' + id).show();
+        $('#divInput_PPayBFee_' + id).show();
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -39,12 +36,11 @@
         rowData = {};
         rowData.yearId = $('#inputYear_' + id).val();
         rowData.organizationId = $('#inputOrg_' + id).val();
-        rowData.costCenterTypeId = $('#inputCostCenterType_' + id).val();
-        rowData.contractDescription = $('#inputContractDescription_' + id).val();
-        rowData.contractLastYear = $('#inputContractLastYear_' + id).val();
-        rowData.contractForcast = $('#inputContractForcast_' + id).val();
-        rowData.extensionId = $('#inputExtensionId_' + id).val();
-
+        rowData.domesticPrice = $('#inputBillingCycle_' + id).val();
+        rowData.ePayForcast = $('#inputEPayForcast_' + id).val();
+        rowData.ePayBFee = $('#inputEPayBFee_' + id).val();
+        rowData.pPayForcast = $('#inputPPayForcast_' + id).val();
+        rowData.pPayBFee = $('#inputPPayBFee_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -54,36 +50,31 @@
         //Hide input elements
         $('#divInput_Year_' + id).hide();
         $('#divInput_Org_' + id).hide();
-        $('#divInput_CostCenterType_' + id).hide();
-        $('#divInput_ContractDescription_' + id).hide();
-        $('#divInput_ContractLastYear_' + id).hide();
-        $('#divInput_ContractForcast_' + id).hide();
-        $('#divInput_ExtensionId_' + id).hide();
+        $('#divInput_BillingCycle_' + id).hide();
+        $('#divInput_EPayForcast_' + id).hide();
+        $('#divInput_EPayBFee_' + id).hide();
+        $('#divInput_PPayForcast_' + id).hide();
+        $('#divInput_PPayBFee_' + id).hide();
 
-
-        //Reverting to OriginalData
-        if(rowData != null) {
-            console.log('reverting to original data.');
-            console.log(rowData);
+        //Retriving to OrginalData
+        if (rowData != null) {
             $('#inputYear_' + id).val(rowData.yearId);
             $('#inputOrg_' + id).val(rowData.organizationId);
-            $('#inputCostCenterType_' + id).val(rowData.costCenterTypeId);
-            $('#inputContractDescription_' + id).val(rowData.contractDescription);
-            $('#inputContractLastYear_' + id).val(rowData.contractLastYear);
-            $('#inputContractForcast_' + id).val(rowData.contractForcast);
-            $('#inputExtensionId_' + id).val(rowData.extensionId);
-
+            $('#inputBillingCycle_' + id).val(rowData.billingCycle);
+            $('#inputEPayForcast_' + id).val(rowData.ePayForcast);
+            $('#inputEPayBFee_' + id).val(rowData.ePayBFee);
+            $('#inputPPayForcast_' + id).val(rowData.pPayForcast);
+            $('#inputPPayBFee_' + id).val(rowData.pPayBFee);
         }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
         $('#divOutput_Org_' + id).show();
-        $('#divOutput_CostCenterType_' + id).show();
-        $('#divOutput_ContractDescription_' + id).show();
-        $('#divOutput_ContractLastYear_' + id).show();
-        $('#divOutput_ContractForcast_' + id).show();
-        $('#divOutput_ExtensionId_' + id).show();
-
+        $('#divOutput_BillingCycle_' + id).show();
+        $('#divOutput_EPayForcast_' + id).show();
+        $('#divOutput_EPayBFee_' + id).show();
+        $('#divOutput_PPayForcast_' + id).show();
+        $('#divOutput_PPayBFee_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -104,17 +95,16 @@
 
         var model = {};
         model.id = id;
-        model.yearId = $('#yearId option:selected').val();
+        model.yearId = $('#inputYear_' + id).val();
         model.organizationId = $('#inputOrg_' + id).val();
-        model.costCenterTypeId = $('#inputCostCenterType_' + id).val();
-        model.contractDescription = $('#inputContractDescription_' + id).val();
-        model.contractLastYear = $('#inputContractLastYear_' + id).val();
-        model.contractForcast = $('#inputContractForcast_' + id).val();
-        model.extensionId = $('#inputExtensionId_' + id).val();
-
+        model.billingCycle = $('#inputBillingCycle_' + id).val();
+        model.ePayForcast = $('#inputEPayForcast_' + id).val();
+        model.ePayBFee = $('#inputEPayBFee_' + id).val();
+        model.pPayForcast = $('#inputPPayForcast_' + id).val();
+        model.pPayBFee = $('#inputPPayBFee_' + id).val();
 
         $.ajax({
-            url: '@Url.Action(CostCurrentContractualController.ACTION_Edit)',
+            url: '@Url.Action(FeeCityController.ACTION_Edit)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -135,23 +125,21 @@
                 rowData = {};
                 rowData.yearId = model.yearId;
                 rowData.organizationId = model.organizationId;
-                rowData.costCenterTypeId = model.costCenterTypeId;
-                rowData.contractDescription = model.contractDescription;
-                rowData.contractLastYear = model.contractLastYear;
-                rowData.contractForcast = model.contractForcast;
-                rowData.extensionId = model.extensionId;
-
+                rowData.billingCycle = model.billingCycle;
+                rowData.ePayForcast = model.ePayForcast;
+                rowData.ePayBFee = model.ePayBFee;
+                rowData.pPayForcast = model.pPayForcast;
+                rowData.pPayBFee = model.pPayBFee;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
-                $('#spanCostCenterType_' + id).text(data.costCenterTypeDisplay);
-                $('#spanContractDescription_' + id).text(data.contractDescription);
-                $('#spanContractLastYear_' + id).text(data.contractLastYear);
-                $('#spanContractForcast_' + id).text(data.contractForcast);
-                $('#spanExtensionId_' + id).text(data.extensionIdDisplay);
-
+                $('#spanBillingCycle_' + id).text(data.billingCycle);
+                $('#spanEPayForcast_' + id).text(data.ePayForcast);
+                $('#spanEPayBFee_' + id).text(data.ePayBFee);
+                $('#spanPPayForcast_' + id).text(data.pPayForcast);
+                $('#spanPPayBFee_' + id).text(data.pPayBFee);
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
@@ -172,24 +160,33 @@
         resetTableBackColor("my-table");
 
         var model = {};
-        model.yearId = $('#yearId option:selected').val();
-        model.extensionId = $(e).find('#ExtensionId_').val();
+        model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
-        model.costCenterTypeId = $(e).find('#inputCostCenterType_').val();
-        model.contractDescription = $(e).find('#inputContractDescription_').val();
-        model.contractLastYear = $(e).find('#inputContractLastYear_').val();
-        if (model.contractLastYear == "") {
-            model.contractLastYear = 0;
+        model.billingCycle = $(e).find('#inputBillingCycle_').val();
+        if (model.billingCycle == "") {
+            model.billingCycle = 0;
         }
-        model.contractForcast = $(e).find('#inputContractForcast_').val();
-        if (model.contractForcast == "") {
-            model.contractForcast = 0;
+        model.ePayForcast = $(e).find('#inputEPayForcast_').val();
+        if (model.ePayForcast == "") {
+            model.ePayForcast = 0;
+        }
+        model.ePayBFee = $(e).find('#inputEPayBFee_').val();
+        if (model.ePayBFee == "") {
+            model.ePayBFee = 0;
+        }
+        model.pPayForcast = $(e).find('#inputPPayForcast_').val();
+        if (model.pPayForcast == "") {
+            model.pPayForcast = 0;
+        }
+        model.pPayBFee = $(e).find('#inputPPayBFee_').val();
+        if (model.pPayBFee == "") {
+            model.pPayBFee = 0;
         }
 
         console.log(model);
 
         $.ajax({
-            url: '@Url.Action(CostCurrentContractualController.ACTION_Create)',
+            url: '@Url.Action(FeeCityController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -229,57 +226,55 @@
                 $('#spanOrg_' + data.id).text(data.organizationDisplay);
                 $('#divOutput_Org_' + data.id).show();
 
-                //CostCenterType
-                $(e).find('#divInput_CostCenterType_').attr('id', 'divInput_CostCenterType_' + data.id);
-                $(e).find('#hidCostCenterTypeId_').attr('id', 'hidCostCenterTypeId_' + data.id);
-                $(e).find('#inputCostCenterType_').attr('id', 'inputCostCenterType_' + data.id);
-                $(e).find('#divOutput_CostCenterType_').attr('id', 'divOutput_CostCenterType_' + data.id);
-                $(e).find('#spanCostCenterType_').attr('id', 'spanCostCenterType_' + data.id);
+                //BillingCycle
+                $(e).find('#divInput_BillingCycle_').attr('id', 'divInput_BillingCycle_' + data.id);
+                $(e).find('#inputBillingCycle_').attr('id', 'inputBillingCycle_' + data.id);
+                $(e).find('#divOutput_BillingCycle_').attr('id', 'divOutput_BillingCycle_' + data.id);
+                $(e).find('#spanBillingCycle_').attr('id', 'spanBillingCycle_' + data.id);
 
-                $('#divInput_CostCenterType_' + data.id).hide();
-                $('#spanCostCenterType_' + data.id).text(data.costCenterTypeDisplay);
-                $('#divOutput_CostCenterType_' + data.id).show();
+                $('#divInput_BillingCycle_' + data.id).hide();
+                $('#spanBillingCycle_' + data.id).text(data.billingCycle);
+                $('#divOutput_BillingCycle_' + data.id).show();
 
-                //ContractDescription
-                $(e).find('#divInput_ContractDescription_').attr('id', 'divInput_ContractDescription_' + data.id);
-                $(e).find('#inputContractDescription_').attr('id', 'inputContractDescription_' + data.id);
-                $(e).find('#divOutput_ContractDescription_').attr('id', 'divOutput_ContractDescription_' + data.id);
-                $(e).find('#spanContractDescription_').attr('id', 'spanContractDescription_' + data.id);
+                //EPayForcast
+                $(e).find('#divInput_EPayForcast_').attr('id', 'divInput_EPayForcast_' + data.id);
+                $(e).find('#inputEPayForcast_').attr('id', 'inputEPayForcast_' + data.id);
+                $(e).find('#divOutput_EPayForcast_').attr('id', 'divOutput_EPayForcast_' + data.id);
+                $(e).find('#spanEPayForcast_').attr('id', 'spanEPayForcast_' + data.id);
 
-                $('#divInput_ContractDescription_' + data.id).hide();
-                $('#spanContractDescription_' + data.id).text(data.contractDescription);
-                $('#divOutput_ContractDescription_' + data.id).show();
+                $('#divInput_EPayForcast_' + data.id).hide();
+                $('#spanEPayForcast_' + data.id).text(data.ePayForcast);
+                $('#divOutput_EPayForcast_' + data.id).show();
 
-                //ContractLastYear
-                $(e).find('#divInput_ContractLastYear_').attr('id', 'divInput_ContractLastYear_' + data.id);
-                $(e).find('#inputContractLastYear_').attr('id', 'inputContractLastYear_' + data.id);
-                $(e).find('#divOutput_ContractLastYear_').attr('id', 'divOutput_ContractLastYear_' + data.id);
-                $(e).find('#spanContractLastYear_').attr('id', 'spanContractLastYear_' + data.id);
+                //EPayBFee
+                $(e).find('#divInput_EPayBFee_').attr('id', 'divInput_EPayBFee_' + data.id);
+                $(e).find('#inputEPayBFee_').attr('id', 'inputEPayBFee_' + data.id);
+                $(e).find('#divOutput_EPayBFee_').attr('id', 'divOutput_EPayBFee_' + data.id);
+                $(e).find('#spanEPayBFee_').attr('id', 'spanEPayBFee_' + data.id);
 
-                $('#divInput_ContractLastYear_' + data.id).hide();
-                $('#spanContractLastYear_' + data.id).text(data.contractLastYear);
-                $('#divOutput_ContractLastYear_' + data.id).show();
+                $('#divInput_EPayBFee_' + data.id).hide();
+                $('#spanEPayBFee_' + data.id).text(data.ePayBFee);
+                $('#divOutput_EPayBFee_' + data.id).show();
 
-                //ContractForcast
-                $(e).find('#divInput_ContractForcast_').attr('id', 'divInput_ContractForcast_' + data.id);
-                $(e).find('#inputContractForcast_').attr('id', 'inputContractForcast_' + data.id);
-                $(e).find('#divOutput_ContractForcast_').attr('id', 'divOutput_ContractForcast_' + data.id);
-                $(e).find('#spanContractForcast_').attr('id', 'spanContractForcast_' + data.id);
+                //PPayForcast
+                $(e).find('#divInput_PPayForcast_').attr('id', 'divInput_PPayForcast_' + data.id);
+                $(e).find('#inputPPayForcast_').attr('id', 'inputPPayForcast_' + data.id);
+                $(e).find('#divOutput_PPayForcast_').attr('id', 'divOutput_PPayForcast_' + data.id);
+                $(e).find('#spanPPayForcast_').attr('id', 'spanPPayForcast_' + data.id);
 
-                $('#divInput_ContractForcast_' + data.id).hide();
-                $('#spanContractForcast_' + data.id).text(data.contractForcast);
-                $('#divOutput_ContractForcast_' + data.id).show();
+                $('#divInput_PPayForcast_' + data.id).hide();
+                $('#spanPPayForcast_' + data.id).text(data.pPayForcast);
+                $('#divOutput_PPayForcast_' + data.id).show();
 
-                //ExtensionId
-                $(e).find('#divInput_ExtensionId_').attr('id', 'divInput_ExtensionId_' + data.id);
-                $(e).find('#hidExtensionId_').attr('id', 'hidExtensionId_' + data.id);
-                $(e).find('#inputExtensionId_').attr('id', 'inputExtensionId_' + data.id);
-                $(e).find('#divOutput_ExtensionId_').attr('id', 'divOutput_ExtensionId_' + data.id);
-                $(e).find('#spanExtensionId_').attr('id', 'spanExtensionId_' + data.id);
+                //PPayBFee
+                $(e).find('#divInput_PPayBFee_').attr('id', 'divInput_PPayBFee_' + data.id);
+                $(e).find('#inputPPayBFee_').attr('id', 'inputPPayBFee_' + data.id);
+                $(e).find('#divOutput_PPayBFee_').attr('id', 'divOutput_PPayBFee_' + data.id);
+                $(e).find('#spanPPayBFee_').attr('id', 'spanPPayBFee_' + data.id);
 
-                $('#divInput_ExtensionId_' + data.id).hide();
-                $('#spanExtensionId_' + data.id).text(data.extensionIdDisplay);
-                $('#divOutput_ExtensionId_' + data.id).show();
+                $('#divInput_PPayBFee_' + data.id).hide();
+                $('#spanPPayBFee_' + data.id).text(data.pPayBFee);
+                $('#divOutput_PPayBFee_' + data.id).show();
 
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);
@@ -326,16 +321,12 @@
             .attr('id', 'newRow')
             .css('background-color', 'rgb(230 247 228)')
             .show();
-        
+
         $('.selectOrganization:last').select2({
             dir: 'rtl'
         });
 
-        $('.selectcostCenterType:last').select2({
-            dir : 'rtl'
-        });
-
-        $('.default-input:last').keyup(function (event) {
+        $('.input-keyup').keyup(function (event) {
             event.preventDefault();
             if (event.keyCode === 13) {
                 let row = $(this).closest('tr');
@@ -359,7 +350,7 @@
         console.log(e);
 
         $.ajax({
-            url: '@Url.Action(CostCurrentContractualController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(FeeCityController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {

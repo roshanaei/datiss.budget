@@ -120,6 +120,9 @@
   <data name="CalculationField" xml:space="preserve">
     <value>امکان انجام این عملیات به دلیل نبود رکورد در جدول وابسته، وجود ندارد.</value>
   </data>
+  <data name="ContractDescription" xml:space="preserve">
+    <value>شرح قرار داد را وارد نمایید.</value>
+  </data>
   <data name="CopyDestYearHasData" xml:space="preserve">
     <value>سال هدف نباید دیتا داشته باشد.</value>
   </data>

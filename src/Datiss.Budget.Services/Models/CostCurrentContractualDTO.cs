@@ -14,8 +14,6 @@
 
         public bool ExtensionId { get; set; }
 
-        public string ExtensionTitle { get; set; }
-
         public long ContractLastYear { get; set; }
 
         public long ContractForcast { get; set; }
@@ -39,7 +37,6 @@
         public string CostCenterTypeDisplay { get; set; }
         public string ContractDescription { get; set; }
         public bool ExtensionId { get; set; }
-        public string ExtensionDisplay { get; set; }
         public long ContractLastYear { get; set; }
         public long ContractForcast { get; set; }
     }
