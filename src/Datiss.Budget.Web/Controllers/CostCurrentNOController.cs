@@ -172,5 +172,72 @@ namespace Datiss.Budget.Web.Controllers
 
             return View(model);
         }
+
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            if (model.ExcelFile == null || model.ExcelFile.Length == 0)
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelInvalidFile
+                });
+
+            try
+            {
+                var result = await _costCurrentBankFeeService.ImportExcelAsync(
+                                                                    model.ExcelFile,
+                                                                    model.YearId,
+                                                                    model.ContinueIfAnyOrgMissing);
+
+                if (result.AskToImport)
+                {
+                    return Json(new
+                    {
+                        ask = true,
+                        message = result.Message
+                    });
+                }
+
+                if (result.Success)
+                {
+                    return Json(new
+                    {
+                        hasError = false,
+                        message = result.Message
+                    });
+
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
+            }
+            catch (ImportExcelFileFormatInvalidException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileFormatInvalid
+                });
+            }
+            catch (ImportExcelFileSizeInvalidException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileSizeInvalid
+                });
+            }
+
+        }
+
     }
 }
