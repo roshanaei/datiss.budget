@@ -12,9 +12,9 @@ namespace Datiss.Budget.Services.Models
 
         public int OrganizationId { get; set; }
 
-        public int CosCostCurrentNoTypeId { get; set; }
+        public int CostCurrentNoTypeId { get; set; }
 
-        public string CosCostCurrentNoTypeTitle { get; set; }
+        public string CostCurrentNoTypeTitle { get; set; }
 
         public long BaseFee { get; set; }
 

@@ -25,16 +25,16 @@ namespace Datiss.Budget.ViewModels
         public long LastYearFee { get; set; }
 
 
-        public IEnumerable<SelectListItem> CostCurrentNOTypeSource { get; set; }
+        public IEnumerable<SelectListItem> CostCurrentNoTypeSource { get; set; }
 
-        public string CostCurrentNOTypeTitle
+        public string CostCurrentNoTypeDisplay
         {
             get
             {
-                if(CostCurrentNOTypeSource == null || !CostCurrentNOTypeSource.Any())
+                if(CostCurrentNoTypeSource == null || !CostCurrentNoTypeSource.Any())
                     return string.Empty;
 
-                return CostCurrentNOTypeSource.FirstOrDefault(x => x.Value.ToString() == CostCurrentNoTypeId.ToString()).Text;
+                return CostCurrentNoTypeSource.FirstOrDefault(x => x.Value.ToString() == CostCurrentNoTypeId.ToString()).Text;
             }
         }
 
@@ -59,9 +59,9 @@ namespace Datiss.Budget.ViewModels
 
         public string OrganizationDisplay { get; set; }
 
-        public int CostCurrentNOTypeId { get; set; }
+        public int CostCurrentNoTypeId { get; set; }
 
-        public string CostCurrentNOTypeTitle { get; set; }
+        public string CostCurrentNoTypeDisplay { get; set; }
         
         public long BaseFee { get; set; }
 
@@ -83,7 +83,7 @@ namespace Datiss.Budget.ViewModels
 
         public int? OrganizationId { get; set;}
 
-        public int? CostCurrentNOTypeId { get; set; }
+        public int? CostCurrentNoTypeId { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
 

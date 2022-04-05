@@ -65,7 +65,7 @@ namespace Datiss.Budget.Reports.Excel
 
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
-            sheet.Range(1, 1, 1, 7).Merge();
+            sheet.Range(1, 1, 1, 6).Merge();
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
             sheet.Cell(2, 2).Value = "کد سازمان";
@@ -73,7 +73,6 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(2, 4).Value = "کد";
             sheet.Cell(2, 5).Value = "مبلغ پایه";
             sheet.Cell(2, 6).Value = "مبلغ سال ماقبل بودجه";
-            sheet.Cell(2, 7).Value = "پیش بینی مبلغ";
 
             var totalCount = items.Count();
             int row = 3;
@@ -87,15 +86,13 @@ namespace Datiss.Budget.Reports.Excel
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(2, 1, row - 1, 7);
+            var range = sheet.Range(2, 1, row - 1, 6);
             range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other
             range.Column(5).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
             range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(6).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
             range.Column(6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(7).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
-            range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             //
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;

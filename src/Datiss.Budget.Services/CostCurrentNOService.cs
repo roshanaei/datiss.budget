@@ -11,20 +11,16 @@ using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Services.Excel;
-using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
-using Datiss.Budget.ViewModels;
 using LinqKit;
 using Mapster;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services
@@ -80,17 +76,17 @@ namespace Datiss.Budget.Services
 
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
-                CostCurrentNoTypeId = model.CosCostCurrentNoTypeId,
+                CostCurrentNoTypeId = model.CostCurrentNoTypeId,
                 BaseFee = model.BaseFee,
                 LastYearFee = model.LastYearFee
             };
 
-            model.CosCostCurrentNoTypeTitle = (await _constSet.FindAsync(model.CosCostCurrentNoTypeId)).Title;
+            model.CostCurrentNoTypeTitle = (await _constSet.FindAsync(model.CostCurrentNoTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CosCostCurrentNoTypeId))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CostCurrentNoTypeId))
                 {
                     await _dbSet.AddAsync(entity);
                     try
@@ -104,7 +100,7 @@ namespace Datiss.Budget.Services
                             );
                     }
                     var result = entity.Adapt<CostCurrentNODTO>();
-                    result.CostCurrentNoTypeDisplay = model.CosCostCurrentNoTypeTitle;
+                    result.CostCurrentNoTypeDisplay = model.CostCurrentNoTypeTitle;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.BaseFee = model.BaseFee;
@@ -120,24 +116,24 @@ namespace Datiss.Budget.Services
 
             return ValidationResult<CostCurrentNODTO>.Failed(
                 string.Format(ServiceMessages.Logic_CostCurrentNODuplicate,
-                model.CosCostCurrentNoTypeTitle, organizationDisplay)
+                model.CostCurrentNoTypeTitle, organizationDisplay)
                 );
         }
 
         public async Task<ValidationResult<CostCurrentNODTO>> UpdateAsync(UpdateCostCurrentNODTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
-            model.CosCostCurrentNoTypeTitle = (await _constSet.FindAsync(model.CosCostCurrentNoTypeId)).Title;
+            model.CostCurrentNoTypeTitle = (await _constSet.FindAsync(model.CostCurrentNoTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CosCostCurrentNoTypeId, model.Id))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CostCurrentNoTypeId, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.OrganizationId = model.OrganizationId;
                     entity.YearId = model.YearId;
-                    entity.CostCurrentNoTypeId = model.CosCostCurrentNoTypeId;
+                    entity.CostCurrentNoTypeId = model.CostCurrentNoTypeId;
                     entity.BaseFee = model.BaseFee;
                     entity.LastYearFee = model.LastYearFee;
                     entity.ForcastFee = model.ForcastFee;
@@ -156,13 +152,13 @@ namespace Datiss.Budget.Services
                     {
                         OrganizationId = model.OrganizationId,
                         YearId = model.YearId,
-                        CostCurrentNoTypeId = model.CosCostCurrentNoTypeId,
+                        CostCurrentNoTypeId = model.CostCurrentNoTypeId,
                         BaseFee = model.BaseFee,
                         LastYearFee = model.LastYearFee,
                         ForcastFee = model.ForcastFee,
 
                         OrganizationDisplay = organizationDisplay,
-                        CostCurrentNoTypeDisplay = model.CosCostCurrentNoTypeTitle,
+                        CostCurrentNoTypeDisplay = model.CostCurrentNoTypeTitle,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
                     };
 
@@ -175,7 +171,7 @@ namespace Datiss.Budget.Services
             }
             return ValidationResult<CostCurrentNODTO>.Failed(
                 string.Format(ServiceMessages.Logic_CostCurrentNODuplicate,
-                 model.CosCostCurrentNoTypeTitle, organizationDisplay)
+                 model.CostCurrentNoTypeTitle, organizationDisplay)
                 );
         }
 
@@ -237,21 +233,22 @@ namespace Datiss.Budget.Services
                 new SqlParameter("YearId", yearId),
                 new SqlParameter("OrganizationId", organizationId)
             };
+
             var result = new List<CalculationItemData>();
+
 
             result.Add(new CalculationItemData
             {
                 Key = "CostCurrentNO_Cal1",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                         "[dbo].[CostCurrentNO_Cal1] @YearId, @OrganizationId",
                         parameters: sqlParams.ToArray())
             });
 
-
             result.Add(new CalculationItemData
             {
                 Key = "CostCurrentNO_Cal2",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                         "[dbo].[CostCurrentNO_Cal2] @YearId, @OrganizationId",
                         parameters: sqlParams.ToArray())
             });

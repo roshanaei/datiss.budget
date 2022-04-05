@@ -503,14 +503,14 @@ namespace Datiss.Budget.Web.Controllers
         {
             var ccnoSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCurrentNOType)).ToList();
 
-            var ccnoSource1 = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CINOType)).ToList();
+            var ccnoSourceCINO = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CINOType)).ToList();
 
-            foreach (var item in ccnoSource1)
+            foreach (var item in ccnoSource)
             {
-                ccnoSource.Add(item);
+                ccnoSourceCINO.Add(item);
             }
 
-            return ccnoSource.Adapt<IEnumerable<DropDownItemViewModel>>();
+            return ccnoSourceCINO.Adapt<IEnumerable<DropDownItemViewModel>>();
         }
 
     #endregion

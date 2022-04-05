@@ -12,10 +12,10 @@ namespace Datiss.Budget.Services.Excel
         public int OrganizationId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "C")]
-        public string CostCurrentNOTitle { get; set; }
+        public string CostCurrentNoDisplay { get; set; }
 
         [Column(MappingDirections.Both, Letter = "D")]
-        public int CostCurrentNOTypeId { get; set; }
+        public int CostCurrentNoTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
         public long BaseFee { get; set; }

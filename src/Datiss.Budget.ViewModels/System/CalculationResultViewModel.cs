@@ -17,7 +17,7 @@ namespace Datiss.Budget.ViewModels
     public  class CalculationResultViewModel
     {
         public string Title { get; set; }
-        public int Result { get; set; }
+        public long Result { get; set; }
         public decimal? DecimalResult { get; set; }
         public string ResultDisplay => Result.ToString("N0");
         public string DecimalResultDisplay => DecimalResult?.ToString("N2");
