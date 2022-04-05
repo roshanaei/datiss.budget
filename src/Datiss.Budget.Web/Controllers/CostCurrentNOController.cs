@@ -33,6 +33,7 @@ namespace Datiss.Budget.Web.Controllers
     {
         public const string Name = "CostCurrentNO";
         public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Index = nameof(Index);
 
 
 
@@ -188,7 +189,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _costCurrentBankFeeService.ImportExcelAsync(
+                var result = await _costCurrentNOService.ImportExcelAsync(
                                                                     model.ExcelFile,
                                                                     model.YearId,
                                                                     model.ContinueIfAnyOrgMissing);
