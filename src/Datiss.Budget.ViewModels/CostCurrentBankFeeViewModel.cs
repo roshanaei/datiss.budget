@@ -17,10 +17,10 @@ namespace Datiss.Budget.ViewModels
         public int CostCenterTypeId { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public int BankFeeLastYear { get; set; }
+        public long BankFeeLastYear { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public int BankFeeForcast { get; set; }
+        public long BankFeeForcast { get; set; }
 
         public IEnumerable<SelectListItem> CostCenterTypeSource { get; set; }
 
@@ -52,9 +52,9 @@ namespace Datiss.Budget.ViewModels
         public string OrganizationDisplay { get; set; }
         public int CostCenterTypeId { get; set; }
         public string CostCenterTypeDisplay { get; set; }
-        public int BankFeeLastYear { get; set; }
+        public long BankFeeLastYear { get; set; }
         public string BankFeeLastYearDisplay => BankFeeLastYear.ToString("N0");
-        public int BankFeeForcast { get; set; }
+        public long BankFeeForcast { get; set; }
         public string BankFeeForcastDisplay => BankFeeForcast.ToString("N0");
     }
 
