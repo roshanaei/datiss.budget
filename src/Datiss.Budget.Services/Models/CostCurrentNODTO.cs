@@ -43,7 +43,7 @@ namespace Datiss.Budget.Services.Models
 
         public int CostCurrentNoTypeId { get; set; }
 
-        public string CostCurrentNoTypeTitle { get; set; }
+        public string CostCurrentNoTypeDisplay { get; set; }
 
         public long BaseFee { get; set; }
 

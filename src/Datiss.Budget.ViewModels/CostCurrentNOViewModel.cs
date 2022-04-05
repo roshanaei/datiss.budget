@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class CreateCostCurrentNOViewModelViewModel : BaseViewModel
+    public class CreateCostCurrentNOViewModel : BaseViewModel
     {
         public int YearId { get; set; }
 
@@ -40,7 +40,7 @@ namespace Datiss.Budget.ViewModels
 
     }
 
-    public class UpdateCostCurrentNOViewModel : CreateCostCurrentNOViewModelViewModel
+    public class UpdateCostCurrentNOViewModel : CreateCostCurrentNOViewModel
     {
         public int Id { get; set; }
 

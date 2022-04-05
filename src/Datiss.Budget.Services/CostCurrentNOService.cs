@@ -104,7 +104,7 @@ namespace Datiss.Budget.Services
                             );
                     }
                     var result = entity.Adapt<CostCurrentNODTO>();
-                    result.CostCurrentNoTypeTitle = model.CosCostCurrentNoTypeTitle;
+                    result.CostCurrentNoTypeDisplay = model.CosCostCurrentNoTypeTitle;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.BaseFee = model.BaseFee;
@@ -162,7 +162,7 @@ namespace Datiss.Budget.Services
                         ForcastFee = model.ForcastFee,
 
                         OrganizationDisplay = organizationDisplay,
-                        CostCurrentNoTypeTitle = model.CosCostCurrentNoTypeTitle,
+                        CostCurrentNoTypeDisplay = model.CosCostCurrentNoTypeTitle,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
                     };
 
@@ -287,7 +287,7 @@ namespace Datiss.Budget.Services
                                     .Select(x => new CostCurrentNODTO
                                     {
                                         Id = x.Id,
-                                        CostCurrentNoTypeTitle = x.CostCurrentNoType.Title,
+                                        CostCurrentNoTypeDisplay = x.CostCurrentNoType.Title,
                                         CostCurrentNoTypeId = x.CostCurrentNoTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
@@ -382,7 +382,7 @@ namespace Datiss.Budget.Services
                                     .Select(x => new CostCurrentNODTO
                                     {
                                         Id = x.Id,
-                                        CostCurrentNoTypeTitle = x.CostCurrentNoType.Title,
+                                        CostCurrentNoTypeDisplay = x.CostCurrentNoType.Title,
                                         CostCurrentNoTypeId = x.CostCurrentNoTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,

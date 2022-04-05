@@ -147,6 +147,12 @@
   <data name="CostCurrentElectricity_Cal2" xml:space="preserve">
     <value>مجموع قیمت برق مصرفی (میلیون ریال)</value>
   </data>
+  <data name="CostCurrentNO_Cal1" xml:space="preserve">
+    <value>جمع سایر درآمد های غیر عملیاتی</value>
+  </data>
+  <data name="CostCurrentNO_Cal2" xml:space="preserve">
+    <value>جمع سایر هزینه های غیر عملیاتی</value>
+  </data>
   <data name="IncomeCurrentWH_Cal1" xml:space="preserve">
     <value>مجموع درآمد آب بها مشترکین مسکونی سالیانه</value>
   </data>
