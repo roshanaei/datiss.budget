@@ -169,6 +169,60 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to مجموع تولید آب چاه ها.
+        /// </summary>
+        public static string CostCurrentWaterSource_Cal1 {
+            get {
+                return ResourceManager.GetString("CostCurrentWaterSource_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع تولید آب چشمه.
+        /// </summary>
+        public static string CostCurrentWaterSource_Cal2 {
+            get {
+                return ResourceManager.GetString("CostCurrentWaterSource_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع تولید آب قنات.
+        /// </summary>
+        public static string CostCurrentWaterSource_Cal3 {
+            get {
+                return ResourceManager.GetString("CostCurrentWaterSource_Cal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع تولید آب سد.
+        /// </summary>
+        public static string CostCurrentWaterSource_Cal4 {
+            get {
+                return ResourceManager.GetString("CostCurrentWaterSource_Cal4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع تولید آب سایر.
+        /// </summary>
+        public static string CostCurrentWaterSource_Cal5 {
+            get {
+                return ResourceManager.GetString("CostCurrentWaterSource_Cal5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع تولید آب کل منابع.
+        /// </summary>
+        public static string CostCurrentWaterSource_Cal6 {
+            get {
+                return ResourceManager.GetString("CostCurrentWaterSource_Cal6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to مجموع درآمد آب بها مشترکین مسکونی سالیانه.
         /// </summary>
         public static string IncomeCurrentWH_Cal1 {
