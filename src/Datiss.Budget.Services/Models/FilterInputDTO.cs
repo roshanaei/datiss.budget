@@ -302,4 +302,18 @@ namespace Datiss.Budget.Services.Models
         public bool? ExtensionId { get; set; }
     }
 
+    public class CostCurrentSharingSetadFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+
+    }
+
+    public class CostCurrentFinancingFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? FinancialCostTypeId { get; set; }
+    }
+
 }

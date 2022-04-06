@@ -360,4 +360,7 @@
   <data name="ImportExcelCurrentCostNOOrgNotInExcel" xml:space="preserve">
     <value>عناوین :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
+  <data name="Logic_FinancialCostTypeOrgDuplicate" xml:space="preserve">
+    <value>اطلاعات عنوان هزینه" {0}" برای "{1}" قبلا ثبت شده است.</value>
+  </data>
 </root>
