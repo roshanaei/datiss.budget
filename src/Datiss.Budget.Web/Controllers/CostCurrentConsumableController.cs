@@ -34,6 +34,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
+        public const string ACTION_Calculation = nameof(Calculation);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
@@ -353,6 +354,31 @@ namespace Datiss.Budget.Web.Controllers
             });
         }
 
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Calculation(CalculationInputViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var result = await _costCurrentConsumableService.CalculationAsync(
+                model.YearId,
+                model.OrganizationId);
+
+            List<CalculationResultViewModel> viewModel = new List<CalculationResultViewModel>();
+            foreach (var item in result)
+            {
+                viewModel.Add(
+                    new CalculationResultViewModel
+                    {
+                        Result = item.Value,
+                        Title = getCalcTitle(item.Key)
+                    }
+                );
+            }
+
+            return PartialView("_calculationModal", viewModel);
+        }
+
+
         [HttpGet("[action]")]
         [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> Copy()
@@ -460,5 +486,19 @@ namespace Datiss.Budget.Web.Controllers
             using var workbook = result.ExportExcel();
             return workbook.Deliver("CostCurrentConsumable.xlsx");
         }
+
+        #region Private Helper Methods
+        private string getCalcTitle(string key)
+            => key switch
+            {
+                "CostCurrentConsumable_Cal1" => SPTitles.CostCurrentConsumable_Cal1,
+                "CostCurrentConsumable_Cal2" => SPTitles.CostCurrentConsumable_Cal2,
+                "CostCurrentConsumable_Cal3" => SPTitles.CostCurrentConsumable_Cal3,
+                "CostCurrentConsumable_Cal4" => SPTitles.CostCurrentConsumable_Cal4,
+                "CostCurrentConsumable_Cal5" => SPTitles.CostCurrentConsumable_Cal5,
+                "CostCurrentConsumable_Cal6" => SPTitles.CostCurrentConsumable_Cal6,
+                _ => ""
+            };
+        #endregion
     }
 }
