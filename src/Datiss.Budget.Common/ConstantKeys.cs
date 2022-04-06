@@ -23,7 +23,8 @@
         public const string __CurrentCostInstalationWater = "CurrentCostInstalationWater";
         public const string __CurrentCostInstalationWaste = "CurrentCostInstalationWaste";
         public const string __ConsumablesType = "ConsumablesType";
+        public const string __CCOtherCostsType = "CCOtherCosts";
+        public const string __FinancialCostType = "FinancialCostType";    
         public const string __CostCurrentNOType = "CCNOType";
-        public const string __FinancialCostType = "FinancialCostType";
     }
 }
