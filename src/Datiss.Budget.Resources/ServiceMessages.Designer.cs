@@ -565,6 +565,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات عنوان هزینه&quot; {0}&quot; برای &quot;{1}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_FinancialCostTypeOrgDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_FinancialCostTypeOrgDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to  این عملیات را برای سال غیر فعال نمی توانید انجام دهید..
         /// </summary>
         public static string Logic_InputDisableYearData {
