@@ -171,6 +171,24 @@
   <data name="CostCurrentNO_Cal2" xml:space="preserve">
     <value>جمع سایر هزینه های غیر عملیاتی</value>
   </data>
+  <data name="CostCurrentWaterSource_Cal1" xml:space="preserve">
+    <value>مجموع تولید آب چاه ها</value>
+  </data>
+  <data name="CostCurrentWaterSource_Cal2" xml:space="preserve">
+    <value>مجموع تولید آب چشمه</value>
+  </data>
+  <data name="CostCurrentWaterSource_Cal3" xml:space="preserve">
+    <value>مجموع تولید آب قنات</value>
+  </data>
+  <data name="CostCurrentWaterSource_Cal4" xml:space="preserve">
+    <value>مجموع تولید آب سد</value>
+  </data>
+  <data name="CostCurrentWaterSource_Cal5" xml:space="preserve">
+    <value>مجموع تولید آب سایر</value>
+  </data>
+  <data name="CostCurrentWaterSource_Cal6" xml:space="preserve">
+    <value>مجموع تولید آب کل منابع</value>
+  </data>
   <data name="IncomeCurrentWH_Cal1" xml:space="preserve">
     <value>مجموع درآمد آب بها مشترکین مسکونی سالیانه</value>
   </data>

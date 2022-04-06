@@ -223,19 +223,20 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to در فایل اکسل شما اطلاعات سایر هزینه :&lt;br&gt;{0} برای مرکز هزینه &quot;{1}&quot; ، &quot;{2}&quot; وجود ندارد..
-        /// </summary>
-        public static string ImportExcelCCOtherCostsTypeCostCenterTypeOrgNotInExcel {
-            get {
-                return ResourceManager.GetString("ImportExcelCCOtherCostsTypeCostCenterTypeOrgNotInExcel", resourceCulture);
-                }
-        }
-        /// <summary>        
         ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد &quot;{1}&quot; معتبر نیست ..
         /// </summary>
         public static string ImportExcelCCNONotExist {
             get {
                 return ResourceManager.GetString("ImportExcelCCNONotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to در فایل اکسل شما اطلاعات سایر هزینه :&lt;br&gt;{0} برای مرکز هزینه &quot;{1}&quot; ، &quot;{2}&quot; وجود ندارد..
+        /// </summary>
+        public static string ImportExcelCCOtherCostsTypeCostCenterTypeOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelCCOtherCostsTypeCostCenterTypeOrgNotInExcel", resourceCulture);
             }
         }
         
@@ -411,6 +412,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد منبع &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidWaterSourceType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidWaterSourceType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to داده سطر {0} اکسل شما ،در جدول وجود دارد ..
         /// </summary>
         public static string ImportExcelLogicError {
@@ -515,6 +525,15 @@ namespace Datiss.Budget.Resources {
         public static string ImportExcelUserTypeOrgNotInExcel {
             get {
                 return ResourceManager.GetString("ImportExcelUserTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to منابع  :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelWaterSourceTypeOrgNotInExcels {
+            get {
+                return ResourceManager.GetString("ImportExcelWaterSourceTypeOrgNotInExcels", resourceCulture);
             }
         }
         
@@ -686,6 +705,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_UserTypeYearDuplicate {
             get {
                 return ResourceManager.GetString("Logic_UserTypeYearDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to منبع &quot;{0}&quot; برای &quot;{1}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_WaterSourceTypeDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_WaterSourceTypeDuplicate", resourceCulture);
             }
         }
         
