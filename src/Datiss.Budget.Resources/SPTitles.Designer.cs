@@ -205,6 +205,24 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to جمع سایر درآمد های غیر عملیاتی.
+        /// </summary>
+        public static string CostCurrentNO_Cal1 {
+            get {
+                return ResourceManager.GetString("CostCurrentNO_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to جمع سایر هزینه های غیر عملیاتی.
+        /// </summary>
+        public static string CostCurrentNO_Cal2 {
+            get {
+                return ResourceManager.GetString("CostCurrentNO_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to مجموع درآمد آب بها مشترکین مسکونی سالیانه.
         /// </summary>
         public static string IncomeCurrentWH_Cal1 {
