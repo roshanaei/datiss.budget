@@ -281,6 +281,14 @@ namespace Datiss.Budget.Services
                         parameters: sqlParams.ToArray())
             });
 
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentWaterSource_Cal6",
+                Value = await _uow.ExecuteScalar<long>(
+                        "[dbo].[CostCurrentWaterSource_Cal6] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
+            });
+
             return await Task.FromResult(result);
         }
 
