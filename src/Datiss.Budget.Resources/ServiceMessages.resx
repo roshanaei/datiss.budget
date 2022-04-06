@@ -351,4 +351,16 @@
   <data name="ImportExcelCostCenterTypeOrgNotInExcels" xml:space="preserve">
     <value>مراکز هزینه :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
   </data>
+  <data name="Logic_CostCurrentNODuplicate" xml:space="preserve">
+    <value>اطلاعات {0} برای {1} قبلا ثبت شده است.</value>
+  </data>
+  <data name="ImportExcelCCNONotExist" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد "{1}" معتبر نیست .</value>
+  </data>
+  <data name="ImportExcelCurrentCostNOOrgNotInExcel" xml:space="preserve">
+    <value>عناوین :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="Logic_FinancialCostTypeOrgDuplicate" xml:space="preserve">
+    <value>اطلاعات عنوان هزینه" {0}" برای "{1}" قبلا ثبت شده است.</value>
+  </data>
 </root>

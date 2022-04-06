@@ -1,0 +1,391 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    let rowData = {};
+
+    function editRow(id) {
+
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_BillingCycle_' + id).hide();
+        $('#divOutput_EPayForcast_' + id).hide();
+        $('#divOutput_EPayBFee_' + id).hide();
+        $('#divOutput_PPayForcast_' + id).hide();
+        $('#divOutput_PPayBFee_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_BillingCycle_' + id).show();
+        $('#divInput_EPayForcast_' + id).show();
+        $('#divInput_EPayBFee_' + id).show();
+        $('#divInput_PPayForcast_' + id).show();
+        $('#divInput_PPayBFee_' + id).show();
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.domesticPrice = $('#inputBillingCycle_' + id).val();
+        rowData.ePayForcast = $('#inputEPayForcast_' + id).val();
+        rowData.ePayBFee = $('#inputEPayBFee_' + id).val();
+        rowData.pPayForcast = $('#inputPPayForcast_' + id).val();
+        rowData.pPayBFee = $('#inputPPayBFee_' + id).val();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_BillingCycle_' + id).hide();
+        $('#divInput_EPayForcast_' + id).hide();
+        $('#divInput_EPayBFee_' + id).hide();
+        $('#divInput_PPayForcast_' + id).hide();
+        $('#divInput_PPayBFee_' + id).hide();
+
+        //Retriving to OrginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputBillingCycle_' + id).val(rowData.billingCycle);
+            $('#inputEPayForcast_' + id).val(rowData.ePayForcast);
+            $('#inputEPayBFee_' + id).val(rowData.ePayBFee);
+            $('#inputPPayForcast_' + id).val(rowData.pPayForcast);
+            $('#inputPPayBFee_' + id).val(rowData.pPayBFee);
+        }
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_BillingCycle_' + id).show();
+        $('#divOutput_EPayForcast_' + id).show();
+        $('#divOutput_EPayBFee_' + id).show();
+        $('#divOutput_PPayForcast_' + id).show();
+        $('#divOutput_PPayBFee_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.billingCycle = $('#inputBillingCycle_' + id).val();
+        model.ePayForcast = $('#inputEPayForcast_' + id).val();
+        model.ePayBFee = $('#inputEPayBFee_' + id).val();
+        model.pPayForcast = $('#inputPPayForcast_' + id).val();
+        model.pPayBFee = $('#inputPPayBFee_' + id).val();
+
+        $.ajax({
+            url: '@Url.Action(FeeCityController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.billingCycle = model.billingCycle;
+                rowData.ePayForcast = model.ePayForcast;
+                rowData.ePayBFee = model.ePayBFee;
+                rowData.pPayForcast = model.pPayForcast;
+                rowData.pPayBFee = model.pPayBFee;
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanBillingCycle_' + id).text(data.billingCycle);
+                $('#spanEPayForcast_' + id).text(data.ePayForcast);
+                $('#spanEPayBFee_' + id).text(data.ePayBFee);
+                $('#spanPPayForcast_' + id).text(data.pPayForcast);
+                $('#spanPPayBFee_' + id).text(data.pPayBFee);
+
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.billingCycle = $(e).find('#inputBillingCycle_').val();
+        if (model.billingCycle == "") {
+            model.billingCycle = 0;
+        }
+        model.ePayForcast = $(e).find('#inputEPayForcast_').val();
+        if (model.ePayForcast == "") {
+            model.ePayForcast = 0;
+        }
+        model.ePayBFee = $(e).find('#inputEPayBFee_').val();
+        if (model.ePayBFee == "") {
+            model.ePayBFee = 0;
+        }
+        model.pPayForcast = $(e).find('#inputPPayForcast_').val();
+        if (model.pPayForcast == "") {
+            model.pPayForcast = 0;
+        }
+        model.pPayBFee = $(e).find('#inputPPayBFee_').val();
+        if (model.pPayBFee == "") {
+            model.pPayBFee = 0;
+        }
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(FeeCityController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //BillingCycle
+                $(e).find('#divInput_BillingCycle_').attr('id', 'divInput_BillingCycle_' + data.id);
+                $(e).find('#inputBillingCycle_').attr('id', 'inputBillingCycle_' + data.id);
+                $(e).find('#divOutput_BillingCycle_').attr('id', 'divOutput_BillingCycle_' + data.id);
+                $(e).find('#spanBillingCycle_').attr('id', 'spanBillingCycle_' + data.id);
+
+                $('#divInput_BillingCycle_' + data.id).hide();
+                $('#spanBillingCycle_' + data.id).text(data.billingCycle);
+                $('#divOutput_BillingCycle_' + data.id).show();
+
+                //EPayForcast
+                $(e).find('#divInput_EPayForcast_').attr('id', 'divInput_EPayForcast_' + data.id);
+                $(e).find('#inputEPayForcast_').attr('id', 'inputEPayForcast_' + data.id);
+                $(e).find('#divOutput_EPayForcast_').attr('id', 'divOutput_EPayForcast_' + data.id);
+                $(e).find('#spanEPayForcast_').attr('id', 'spanEPayForcast_' + data.id);
+
+                $('#divInput_EPayForcast_' + data.id).hide();
+                $('#spanEPayForcast_' + data.id).text(data.ePayForcast);
+                $('#divOutput_EPayForcast_' + data.id).show();
+
+                //EPayBFee
+                $(e).find('#divInput_EPayBFee_').attr('id', 'divInput_EPayBFee_' + data.id);
+                $(e).find('#inputEPayBFee_').attr('id', 'inputEPayBFee_' + data.id);
+                $(e).find('#divOutput_EPayBFee_').attr('id', 'divOutput_EPayBFee_' + data.id);
+                $(e).find('#spanEPayBFee_').attr('id', 'spanEPayBFee_' + data.id);
+
+                $('#divInput_EPayBFee_' + data.id).hide();
+                $('#spanEPayBFee_' + data.id).text(data.ePayBFee);
+                $('#divOutput_EPayBFee_' + data.id).show();
+
+                //PPayForcast
+                $(e).find('#divInput_PPayForcast_').attr('id', 'divInput_PPayForcast_' + data.id);
+                $(e).find('#inputPPayForcast_').attr('id', 'inputPPayForcast_' + data.id);
+                $(e).find('#divOutput_PPayForcast_').attr('id', 'divOutput_PPayForcast_' + data.id);
+                $(e).find('#spanPPayForcast_').attr('id', 'spanPPayForcast_' + data.id);
+
+                $('#divInput_PPayForcast_' + data.id).hide();
+                $('#spanPPayForcast_' + data.id).text(data.pPayForcast);
+                $('#divOutput_PPayForcast_' + data.id).show();
+
+                //PPayBFee
+                $(e).find('#divInput_PPayBFee_').attr('id', 'divInput_PPayBFee_' + data.id);
+                $(e).find('#inputPPayBFee_').attr('id', 'inputPPayBFee_' + data.id);
+                $(e).find('#divOutput_PPayBFee_').attr('id', 'divOutput_PPayBFee_' + data.id);
+                $(e).find('#spanPPayBFee_').attr('id', 'spanPPayBFee_' + data.id);
+
+                $('#divInput_PPayBFee_' + data.id).hide();
+                $('#spanPPayBFee_' + data.id).text(data.pPayBFee);
+                $('#divOutput_PPayBFee_' + data.id).show();
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        resetTableBackColor("my-table");
+
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(FeeCityController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+</script>
