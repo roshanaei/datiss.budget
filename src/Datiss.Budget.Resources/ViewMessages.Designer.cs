@@ -70,7 +70,16 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to سال هدف نباید دیتا داشته باشد..
+        ///   Looks up a localized string similar to شرح قرار داد را وارد نمایید..
+        /// </summary>
+        public static string ContractDescription {
+            get {
+                return ResourceManager.GetString("ContractDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سال مقصد نباید دیتا داشته باشد..
         /// </summary>
         public static string CopyDestYearHasData {
             get {
