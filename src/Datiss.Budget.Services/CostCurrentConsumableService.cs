@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -235,19 +235,61 @@ namespace Datiss.Budget.Services
 
         public async Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId)
         {
+            var result = new List<CalculationItemData>();
             List<SqlParameter> sqlParams = new List<SqlParameter>
             {
                 new SqlParameter("YearId", yearId),
                 new SqlParameter("OrganizationId", organizationId)
             };
-            var result = new List<CalculationItemData>();
+
             result.Add(new CalculationItemData
             {
-                Key = "CostCurrentConsumables_Cal1",
-                Value = await _uow.ExecuteScalar<int>(
-                        "[dbo].[CostCurrentConsumables_Cal1] @YearId, @OrganizationId",
-                        parameters: sqlParams.ToArray())
+                Key = "CostCurrentConsumable_Cal1",
+                Value = await _uow.ExecuteScalar<long>(
+                                    "[dbo].[CostCurrentConsumable_Cal1] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
             });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentConsumable_Cal2",
+                Value = await _uow.ExecuteScalar<long>(
+                                    "[dbo].[CostCurrentConsumable_Cal2] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentConsumable_Cal3",
+                Value = await _uow.ExecuteScalar<long>(
+                         "[dbo].[CostCurrentConsumable_Cal3] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentConsumable_Cal4",
+                Value = await _uow.ExecuteScalar<long>(
+                         "[dbo].[CostCurrentConsumable_Cal4] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentConsumable_Cal5",
+                Value = await _uow.ExecuteScalar<long>(
+                         "[dbo].[CostCurrentConsumable_Cal5] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentConsumable_Cal6",
+                Value = await _uow.ExecuteScalar<long>(
+             "[dbo].[CostCurrentConsumable_Cal6] @YearId, @OrganizationId",
+             parameters: sqlParams.ToArray())
+            });
+
 
             return await Task.FromResult(result);
         }

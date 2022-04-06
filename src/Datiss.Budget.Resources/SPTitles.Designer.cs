@@ -133,6 +133,60 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to مجموع ماده مصرفی فعالیت آب.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal1 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع مبلغ فعالیت آب.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal2 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع ماده مصرفی فعالیت فاضلاب.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal3 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع مبلغ فعالیت فاضلاب.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal4 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع ماده مصرفی کل.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal5 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع مبلغ کل.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal6 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to مجموع هزینه برق مصرفی (کیلووات ساعت).
         /// </summary>
         public static string CostCurrentElectricity_Cal1 {
