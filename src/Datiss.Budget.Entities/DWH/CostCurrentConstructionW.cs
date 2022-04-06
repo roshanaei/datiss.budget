@@ -46,19 +46,19 @@ namespace Datiss.Budget.Entities.DWH
 
         public Organization Organization { get; set; }
 
-        public Constant CCCWWaterInvestors { get; set; }
+        public Constant WaterInvestors { get; set; }
 
-        public Constant CCCWCostCenter { get; set; }
+        public Constant CostCenter { get; set; }
 
-        public Constant CCCWExploitationArea { get; set; }
+        public Constant ExploitationArea { get; set; }
 
-        public Constant CCCWMeasurement { get; set; }
+        public Constant Measurement { get; set; }
 
-        public Constant CCCWCredit { get; set; }
+        public Constant Credit { get; set; }
 
-        public Constant CCCWExtension { get; set; }
+        public Constant Extension { get; set; }
 
-        public Constant CCCWSuggestedBudgetTopic { get; set; }
+        public Constant SuggestedBudgetTopic { get; set; }
 
         #endregion
     }
