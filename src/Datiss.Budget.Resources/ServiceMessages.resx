@@ -369,4 +369,13 @@
   <data name="Logic_FinancialCostTypeOrgDuplicate" xml:space="preserve">
     <value>اطلاعات عنوان هزینه" {0}" برای "{1}" قبلا ثبت شده است.</value>
   </data>
+  <data name="ImportExcelInvalidWaterSourceType" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد منبع "{1}" معتبر نیست .</value>
+  </data>
+  <data name="ImportExcelWaterSourceTypeOrgNotInExcels" xml:space="preserve">
+    <value>منابع  :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="Logic_WaterSourceTypeDuplicate" xml:space="preserve">
+    <value>منبع "{0}" برای "{1}" قبلا ثبت شده است.</value>
+  </data>
 </root>

@@ -325,4 +325,11 @@ namespace Datiss.Budget.Services.Models
         public int? FinancialCostTypeId { get; set; }
     }
 
+    public class CostCurrentWaterSourceFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? WaterSourceTypeId { get; set; }
+    }
+
 }
