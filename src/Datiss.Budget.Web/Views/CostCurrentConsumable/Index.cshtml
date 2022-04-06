@@ -492,6 +492,32 @@
             });
         });
 
+        $(document).on('click', '.calculation-button', function() {
+            let model = {};
+            model.yearId = $('#yearId').val();
+            model.organizationId = $('#organizationId').val();
+
+            console.log(model);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(CostCurrentConsumableController.ACTION_Calculation)',
+                data: model,
+                success: function (data, status, settings) {
+                    $('#divCalc').html('');
+                    $('#divCalc').html(data);
+                    $('#CalculationModal').modal('show');
+                    $('#CalculationModal').on('hidden.bs.modal', function () {
+                        $('#divCalc').html('');
+                        $('.modal-backdrop').remove();
+                    });
+                },
+                error: function (request, options, err) {
+                    console.log(err);
+                    $('#divCalc').html('failed to load content.');
+                }
+            });
+        });
 
         $(document).on('click', '#btnDoImportExcel', function() {
             var fdata = new FormData();

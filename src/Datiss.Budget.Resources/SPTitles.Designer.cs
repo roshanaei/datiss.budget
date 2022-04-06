@@ -19,7 +19,7 @@ namespace Datiss.Budget.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class SPTitles {
@@ -129,6 +129,60 @@ namespace Datiss.Budget.Resources {
         public static string ConsumeForcastWs_Cal4 {
             get {
                 return ResourceManager.GetString("ConsumeForcastWs_Cal4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع ماده مصرفی فعالیت آب.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal1 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع مبلغ فعالیت آب.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal2 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع ماده مصرفی فعالیت فاضلاب.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal3 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع مبلغ فعالیت فاضلاب.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal4 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع ماده مصرفی کل.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal5 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to مجموع مبلغ کل.
+        /// </summary>
+        public static string CostCurrentConsumable_Cal6 {
+            get {
+                return ResourceManager.GetString("CostCurrentConsumable_Cal6", resourceCulture);
             }
         }
         

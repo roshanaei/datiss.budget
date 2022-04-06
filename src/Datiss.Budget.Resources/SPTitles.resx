@@ -141,6 +141,24 @@
   <data name="ConsumeForcast_Cal4" xml:space="preserve">
     <value>توزیع آحادی مصرف آب سالیانه غیر مسکونی</value>
   </data>
+  <data name="CostCurrentConsumable_Cal1" xml:space="preserve">
+    <value>مجموع ماده مصرفی فعالیت آب</value>
+  </data>
+  <data name="CostCurrentConsumable_Cal2" xml:space="preserve">
+    <value>مجموع مبلغ فعالیت آب</value>
+  </data>
+  <data name="CostCurrentConsumable_Cal3" xml:space="preserve">
+    <value>مجموع ماده مصرفی فعالیت فاضلاب</value>
+  </data>
+  <data name="CostCurrentConsumable_Cal4" xml:space="preserve">
+    <value>مجموع مبلغ فعالیت فاضلاب</value>
+  </data>
+  <data name="CostCurrentConsumable_Cal5" xml:space="preserve">
+    <value>مجموع ماده مصرفی کل</value>
+  </data>
+  <data name="CostCurrentConsumable_Cal6" xml:space="preserve">
+    <value>مجموع مبلغ کل</value>
+  </data>
   <data name="CostCurrentElectricity_Cal1" xml:space="preserve">
     <value>مجموع هزینه برق مصرفی (کیلووات ساعت)</value>
   </data>
