@@ -24,8 +24,6 @@ namespace Datiss.Budget.Services.Contracts
 
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
 
-        Task<Stream> ExportExcelAsync(CostCurrentConstructionWFilterDTO filter);
-
         Task<IEnumerable<CostCurrentConstructionWDTO>> GetExportItemsAsync(int yearId, int organizationId);
 
         Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
