@@ -27,5 +27,11 @@
         public const string __FinancialCostType = "FinancialCostType";    
         public const string __CostCurrentNOType = "CCNOType";
         public const string __WaterSourceType = "WaterSourceType";
+        public const string __WaterInvestorsType = "WaterInvestorsType";
+        public const string __ExploitationAreaType = "ExploitationAreaType";
+        public const string __MeasurementType = "MeasurementType";
+        public const string __CreditType = "CreditType";
+        public const string __ExtensionType = "ExtensionType";
+        public const string __SuggestedBudgetTopicType = "SuggestedBudgetTopicType";
     }
 }
