@@ -153,8 +153,18 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
-            var extensionSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ExtensionType))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            var extensionTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__ExtensionType);
+            var extensionTypeSource = extensionTypeData.Select(x => new DropDownItemViewModel
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToList();
+            var extensionTypeKeys = "";
+            foreach (var key in extensionTypeData)
+            {
+                extensionTypeKeys += $"'{key.ConstantKey}',";
+            }
+            ViewData["extensionTypeKeys"] = extensionTypeKeys.TrimEnd(',');
 
 
             var suggestedBudgetTopicSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__SuggestedBudgetTopicType))
@@ -186,10 +196,10 @@ namespace Datiss.Budget.Web.Controllers
 
             model.SetCostCenterTypeSource(costCenterSource);
             model.SetWaterInvestorsTypeSource(waterInvestorSource);
-            model.SetMeasurementTypeSource(expltionAreaSource);
-            model.SetExtensionTypeSource(measurementSource);
-            model.SetExploitationAreaTypeSource(creditSource);
-            model.SetCreditTypeSource(extensionSource);
+            model.SetMeasurementTypeSource(measurementSource);
+            model.SetExtensionTypeSource(extensionTypeSource);
+            model.SetExploitationAreaTypeSource(expltionAreaSource);
+            model.SetCreditTypeSource(creditSource);
             model.SetSuggestedBudgetTopicTypeSource(suggestedBudgetTopicSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
@@ -243,8 +253,18 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
-            var extensionSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ExtensionType))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            var extensionTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__ExtensionType);
+            var extensionTypeSource = extensionTypeData.Select(x => new DropDownItemViewModel
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToList();
+            var extensionTypeKeys = "";
+            foreach (var key in extensionTypeData)
+            {
+                extensionTypeKeys += $"'{key.ConstantKey}',";
+            }
+            ViewData["extensionTypeKeys"] = extensionTypeKeys.TrimEnd(',');
 
 
             var suggestedBudgetTopicSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__SuggestedBudgetTopicType))
@@ -263,10 +283,10 @@ namespace Datiss.Budget.Web.Controllers
 
             model.SetCostCenterTypeSource(costCenterSource);
             model.SetWaterInvestorsTypeSource(waterInvestorSource);
-            model.SetMeasurementTypeSource(expltionAreaSource);
-            model.SetExtensionTypeSource(measurementSource);
-            model.SetExploitationAreaTypeSource(creditSource);
-            model.SetCreditTypeSource(extensionSource);
+            model.SetMeasurementTypeSource(measurementSource);
+            model.SetExtensionTypeSource(extensionTypeSource);
+            model.SetExploitationAreaTypeSource(expltionAreaSource);
+            model.SetCreditTypeSource(creditSource);
             model.SetSuggestedBudgetTopicTypeSource(suggestedBudgetTopicSource);
 
             return View(model);
@@ -518,22 +538,52 @@ namespace Datiss.Budget.Web.Controllers
             var organizations = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
                                 .OrderBy(x => x.DisplayOrder)
                                 .ThenBy(x => x.RowOrder);
-            //To Do Type 
 
-            var items = new List<CostCurrentConstructionWDTO>();
+            var model = new CostCurrentConstructionWImportViewModel();
+            var items = new List<CostCurrentConstructionWViewModel>();
 
             foreach (var org in organizations)
             {
-                    items.Add(new CostCurrentConstructionWDTO
-                    {
-                        OrganizationId = org.Id,
-                        OrganizationDisplay = org.Title,
-                        Year = year.Year,
-                        YearId = year.Id
-                    });
+                items.Add(new CostCurrentConstructionWViewModel
+                {
+                    OrganizationId = org.Id,
+                    OrganizationDisplay = org.Title
+                });
             }
 
-            using var workbook = items.GetImportTemplate(year.Year);
+            var costCenterSource = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType);
+
+            var waterInvestorSource = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterInvestorsType);
+
+
+            var expltionAreaSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ExploitationAreaType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var measurementSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__MeasurementType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var creditSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CreditType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var extensionSource = (await _constantService.GetDataByKeyAsync(ConstantKeys.__ExtensionType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+            var suggestedBudgetTopicSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__SuggestedBudgetTopicType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+            //model.CostCenterTypeSource = costCenterSource;
+            //model.WaterInvestorsTypeSource = waterInvestorSource;
+            model.ExploitationAreaTypeSource = expltionAreaSource;
+            model.MeasurementTypeSource = measurementSource;
+            model.CreditTypeSource = creditSource;
+            model.ExtensionTypeSource = extensionSource;
+            model.SuggestedBudgetTopicTypeSource = suggestedBudgetTopicSource;
+
+            model.Items = items;
+            using var workbook = model.GetImportTemplate(year.Year);
             return workbook.Deliver("CostCurrentConstructionW-Import-Template.xlsx");
         }
 
@@ -545,6 +595,24 @@ namespace Datiss.Budget.Web.Controllers
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
             return workbook.Deliver("CostCurrentConstructionW.xlsx");
+        }
+
+        [HttpPost, Route("GetSuggestedBudgetTopicAsync")]
+        public async Task<JsonResult> GetSuggestedBudgetTopicAsync(string key)
+        {
+            IEnumerable<DropDownItem> result = new DropDownItem[] { };
+
+            if (key.ToUpper().Trim() == ConstantKeys.__ExtensionYes.Trim().ToUpper())
+            {
+                key = key.Replace(".", "");
+                result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__SuggestedBudgetTopicType, key);
+            }
+            else
+            {
+                key = ConstantKeys.__ExtensionNo;
+                result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectType, key);
+            }
+            return new JsonResult(result);
         }
 
         #region Private Helper Methods

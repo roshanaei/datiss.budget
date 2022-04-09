@@ -145,8 +145,20 @@ namespace Datiss.Budget.ViewModels
         public IList<SelectListItem> ExtensionTypeSource { get; set; }
         public IList<SelectListItem> SuggestedBudgetTopicTypeSource { get; set; }
 
-
-        public IFormFile ExcelFile { get; set; }
+        public string ExtensionTypeSourceIdArray
+        {
+            get
+            {
+                if (ExtensionTypeSource == null || !ExtensionTypeSource.Any())
+                    return string.Empty;
+                string result = "";
+                foreach (var item in ExtensionTypeSource)
+                {
+                    result += $"{item.Value},";
+                }
+                return result.TrimEnd(',');
+            }
+        }
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
             => YearSource = source.Select(x => new SelectListItem
@@ -234,5 +246,18 @@ namespace Datiss.Budget.ViewModels
             }).ToList();
 
     }
+
+    public class CostCurrentConstructionWImportViewModel : PagedViewModel<CostCurrentConstructionWViewModel>
+    {
+        public IList<DropDownItemViewModel> WaterInvestorsTypeSource { get; set; }
+        public IList<DropDownItemViewModel> CostCenterTypeSource { get; set; }
+        public IList<DropDownItemViewModel> ExploitationAreaTypeSource { get; set; }
+        public IList<DropDownItemViewModel> MeasurementTypeSource { get; set; }
+        public IList<DropDownItemViewModel> CreditTypeSource { get; set; }
+        public IList<DropDownItemViewModel> ExtensionTypeSource { get; set; }
+        public IList<DropDownItemViewModel> SuggestedBudgetTopicTypeSource { get; set; }
+
+    }
+
 
 }

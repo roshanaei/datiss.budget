@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ClosedXML.Excel;
 using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
 
 namespace Datiss.Budget.Reports.Excel
 {
@@ -34,7 +35,7 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 12).Value = "(هزار ریال)کل هزینه اجرایی پروژه";
             sheet.Cell(1, 13).Value = "محل تامین اعتبار";
             sheet.Cell(1, 14).Value = "این پروژه در سال بودجه به بهره برداری رسیده؟";
-            sheet.Cell(1, 15).Value = "سر فصل کلی در بودجه پیشنهادی";
+            sheet.Cell(1, 15).Value = "سرفصل کلی در بودجه پیشنهادی";
 
             var totalCount = items.Count();
             int row = 2;
@@ -77,50 +78,72 @@ namespace Datiss.Budget.Reports.Excel
             return workbook;
         }
 
-        public static XLWorkbook GetImportTemplate(this IEnumerable<CostCurrentConstructionWDTO> items, int year)
+        public static XLWorkbook GetImportTemplate(this CostCurrentConstructionWImportViewModel model, int year)
         {
-            if (items == null || !items.Any())
+            if (!model.Items.Any())
                 return null;
 
             var workbook = new XLWorkbook();
             var sheet = workbook.Worksheets.Add(_sheetName);
-
             sheet.RightToLeft = true;
-            sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
-            sheet.Range(1, 1, 1, 5).Merge();
-
-            sheet.Cell(2, 1).Value = "عنوان سازمان";
-            sheet.Cell(2, 2).Value = "کد سازمان";
-            sheet.Cell(1, 3).Value = "شرح پروژه های عمرانی";
-            sheet.Cell(1, 4).Value = "عنوان هزینه سرمایه ای";
-            sheet.Cell(1, 5).Value = "مرکز هزینه";
-            sheet.Cell(1, 6).Value = "حوزه بهره بردار در ستاد";
-            sheet.Cell(1, 7).Value = "درصد پیشرفت فیزیکی";
-            sheet.Cell(1, 8).Value = "هزینه انجام شده (هزار ریال)";
-            sheet.Cell(1, 9).Value = "واحد";
-            sheet.Cell(1, 10).Value = "قیمت واحد(هزار ریال)";
-            sheet.Cell(1, 11).Value = "مقدار";
-            sheet.Cell(1, 12).Value = "(هزار ریال)کل هزینه اجرایی پروژه";
-            sheet.Cell(1, 13).Value = "محل تامین اعتبار";
-            sheet.Cell(1, 14).Value = "این پروژه در سال بودجه به بهره برداری رسیده؟";
-            sheet.Cell(1, 15).Value = "سر فصل کلی در بودجه پیشنهادی";
-
-            var totalCount = items.Count();
-            int row = 3;
-            for (int i = 0; i < totalCount; i++)
+            //
+            sheet.Cell(1, 1).Value = "عنوان هزینه سرمایه ای";
+            sheet.Cell(1, 2).Value = "کد هزینه سرمایه ای";
+            sheet.Cell(1, 3).Value = "مرکز هزینه";
+            sheet.Cell(1, 4).Value = "کد مرکز هزینه";
+            sheet.Cell(1, 5).Value = "حوزه بهره بردار در ستاد";
+            sheet.Cell(1, 6).Value = "کد حوزه بهره بردار در ستاد";
+            sheet.Cell(1, 7).Value = "کد واحد";
+            sheet.Cell(1, 8).Value = "محل تامین اعتبار";
+            sheet.Cell(1, 9).Value = "کد محل تامین اعتبار";
+            sheet.Cell(1, 10).Value = "این پروژه در سال بودجه به بهره برداری رسیده؟";
+            sheet.Cell(1, 11).Value = "کد بهره برداری";
+            sheet.Cell(1, 12).Value = "سر فصل کلی در بودجه ";
+            sheet.Cell(1, 13).Value = "کد سر فصل کلی در بودجه ";
+            int row = 2;
+            foreach (var item in model.WaterInvestorsTypeSource)
             {
-                var item = items.ElementAt(i);
-                sheet.Cell(row, 1).Value = item.OrganizationDisplay;
-                sheet.Cell(row, 2).Value = item.OrganizationId;
-                row++; //for keeping index in table records
+                sheet.Cell(row,1).Value = item.Title;
+                sheet.Cell(row,2).Value = item.Id;
+                row++;
             }
+            //sheet.Range(1, 1, 22, 13);
+            //
+            //sheet.Cell(23, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
+            //sheet.Range(23, 1, 24, 15).Merge();
 
-            var range = sheet.Range(2, 1, row - 1, 5);
-            range.Column(4).Style.NumberFormat.Format = "#,##0";
-            range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            //sheet.Cell(24, 1).Value = "عنوان سازمان";
+            //sheet.Cell(24, 2).Value = "کد سازمان";
+            //sheet.Cell(24, 3).Value = "شرح پروژه های عمرانی";
+            //sheet.Cell(24, 4).Value = "عنوان هزینه سرمایه ای";
+            //sheet.Cell(24, 5).Value = "مرکز هزینه";
+            //sheet.Cell(24, 6).Value = "حوزه بهره بردار در ستاد";
+            //sheet.Cell(24, 7).Value = "درصد پیشرفت فیزیکی";
+            //sheet.Cell(24, 8).Value = "هزینه انجام شده (هزار ریال)";
+            //sheet.Cell(24, 9).Value = "واحد";
+            //sheet.Cell(24, 10).Value = "قیمت واحد(هزار ریال)";
+            //sheet.Cell(24, 11).Value = "مقدار";
+            //sheet.Cell(24, 12).Value = "(هزار ریال)کل هزینه اجرایی پروژه";
+            //sheet.Cell(24, 13).Value = "محل تامین اعتبار";
+            //sheet.Cell(24, 14).Value = "این پروژه در سال بودجه به بهره برداری رسیده؟";
+            //sheet.Cell(24, 15).Value = "سر فصل کلی در بودجه پیشنهادی";
+
+            //var totalCount = model.Items.Count();
+            //row = 25;
+            //for (int i = 0; i < totalCount; i++)
+            //{
+            //    var item = model.Items.ElementAt(i);
+            //    sheet.Cell(row, 1).Value = item.OrganizationDisplay;
+            //    sheet.Cell(row, 2).Value = item.OrganizationId;
+            //    row++; //for keeping index in table records
+            //}
+
+            var range = sheet.Range(1, 1, row-1 , 13);
+            //range.Column(4).Style.NumberFormat.Format = "#,##0";
+            //range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other
-            range.Column(5).Style.NumberFormat.Format = "#,##0";
-            range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            //range.Column(5).Style.NumberFormat.Format = "#,##0";
+            //range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             //
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;

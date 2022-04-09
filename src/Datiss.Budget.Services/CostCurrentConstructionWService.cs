@@ -109,18 +109,18 @@ namespace Datiss.Budget.Services
                     var result = entity.Adapt<CostCurrentConstructionWDTO>();
 
                     result.ProjectDescription = model.ProjectDescription;
-                    result.WaterInvestorsDisplay = (await _orgDbSet.FindAsync(model.WaterInvestorsTypeId)).Title; 
-                    result.CostCenterDisplay = (await _orgDbSet.FindAsync(model.CostCenterTypeId)).Title;
-                    result.ExploitationAreaDisplay = (await _orgDbSet.FindAsync(model.ExploitationAreaTypeId)).Title;
+                    result.WaterInvestorsDisplay = (await _constSet.FindAsync(model.WaterInvestorsTypeId)).Title; 
+                    result.CostCenterDisplay = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
+                    result.ExploitationAreaDisplay = (await _constSet.FindAsync(model.ExploitationAreaTypeId)).Title;
                     result.ProgressPercent = model.ProgressPercent;
                     result.CostDone = model.CostDone;
                     result.Amount = model.Amount;
-                    result.MeasurementDisplay = (await _orgDbSet.FindAsync(model.MeasurementTypeId)).Title;
+                    result.MeasurementDisplay = (await _constSet.FindAsync(model.MeasurementTypeId)).Title;
                     result.UnitPrice = model.UnitPrice;
                     result.TotalCost = model.TotalCost;
-                    result.CreditDisplay = (await _orgDbSet.FindAsync(model.CreditTypeId)).Title;
-                    result.ExtensionDisplay = (await _orgDbSet.FindAsync(model.ExtensionTypeId)).Title;
-                    result.SuggestedBudgetTopicDisplay = (await _orgDbSet.FindAsync(model.SuggestedBudgetTopicTypeId)).Title;
+                    result.CreditDisplay = (await _constSet.FindAsync(model.CreditTypeId)).Title;
+                    result.ExtensionDisplay = (await _constSet.FindAsync(model.ExtensionTypeId)).Title;
+                    result.SuggestedBudgetTopicDisplay = (await _constSet.FindAsync(model.SuggestedBudgetTopicTypeId)).Title;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
 
@@ -180,18 +180,18 @@ namespace Datiss.Budget.Services
 
                     var result = entity.Adapt<CostCurrentConstructionWDTO>();
                     result.ProjectDescription = model.ProjectDescription;
-                    result.WaterInvestorsDisplay = (await _orgDbSet.FindAsync(model.WaterInvestorsTypeId)).Title;
-                    result.CostCenterDisplay = (await _orgDbSet.FindAsync(model.CostCenterTypeId)).Title;
-                    result.ExploitationAreaDisplay = (await _orgDbSet.FindAsync(model.ExploitationAreaTypeId)).Title;
+                    result.WaterInvestorsDisplay = (await _constSet.FindAsync(model.WaterInvestorsTypeId)).Title;
+                    result.CostCenterDisplay = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
+                    result.ExploitationAreaDisplay = (await _constSet.FindAsync(model.ExploitationAreaTypeId)).Title;
                     result.ProgressPercent = model.ProgressPercent;
                     result.CostDone = model.CostDone;
                     result.Amount = model.Amount;
-                    result.MeasurementDisplay = (await _orgDbSet.FindAsync(model.MeasurementTypeId)).Title;
+                    result.MeasurementDisplay = (await _constSet.FindAsync(model.MeasurementTypeId)).Title;
                     result.UnitPrice = model.UnitPrice;
                     result.TotalCost = model.TotalCost;
-                    result.CreditDisplay = (await _orgDbSet.FindAsync(model.CreditTypeId)).Title;
-                    result.ExtensionDisplay = (await _orgDbSet.FindAsync(model.ExtensionTypeId)).Title;
-                    result.SuggestedBudgetTopicDisplay = (await _orgDbSet.FindAsync(model.SuggestedBudgetTopicTypeId)).Title;
+                    result.CreditDisplay = (await _constSet.FindAsync(model.CreditTypeId)).Title;
+                    result.ExtensionDisplay = (await _constSet.FindAsync(model.ExtensionTypeId)).Title;
+                    result.SuggestedBudgetTopicDisplay = (await _constSet.FindAsync(model.SuggestedBudgetTopicTypeId)).Title;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
 
