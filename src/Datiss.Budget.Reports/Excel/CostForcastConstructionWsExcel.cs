@@ -164,9 +164,9 @@ namespace Datiss.Budget.Reports.Excel
             foreach (var item in model.ExtensionTypeSource)
             {
                 sheet.Cell(row, 11).Value = item.Title;
-                sheet.Cell(row, 11).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                sheet.Cell(row, 11).Style.Fill.SetBackgroundColor(XLColor.White);
                 sheet.Cell(row, 12).Value = item.Id;
-                sheet.Cell(row, 12).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                sheet.Cell(row, 12).Style.Fill.SetBackgroundColor(XLColor.White);
                 row++;
             }
             row = 2;
