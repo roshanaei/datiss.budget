@@ -131,6 +131,22 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentFinancing> CostCurrentFinancing { get; set; }
 
+        public ICollection<CostCurrentWaterSource> CostCurrentWaterSource { get; set; }
+
+        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWInvestors { get; set; }
+
+        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWCostCenters { get; set; }
+
+        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWExploitationArea { get; set; }
+
+        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWMeasurement { get; set; }
+
+        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWCredit { get; set; }
+
+        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWExtension { get; set; }
+
+        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWSuggestedBudgetTopic { get; set; }
+
 
         #endregion
     }

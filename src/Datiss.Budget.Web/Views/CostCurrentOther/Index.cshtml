@@ -1,5 +1,5 @@
-﻿@model CostCurrentConsumableIndexViewModel
-@{ ViewData["Title"] = "پیش بینی مواد مصرفی آب و فاضلاب"; }
+﻿@model CostCurrentOtherIndexViewModel
+@{ ViewData["Title"] = "فروش انشعاب آب"; }
 
 <!--Title-->
 <div class="row">
@@ -19,9 +19,10 @@
                         <!--Filters-->
                         <form method="post"
                               id="filterForm"
-                              asp-controller="@CostCurrentConsumableController.Name"
-                              asp-action="@CostCurrentConsumableController.ACTION_Index"
+                              asp-controller="@CostCurrentOtherController.Name"
+                              asp-action="@CostCurrentOtherController.ACTION_Index"
                               asp-antiforgery="true">
+
                             <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
                             <div class="rowACJSB">
                                 <fieldset class="form-group mt-3">
@@ -31,14 +32,6 @@
                                                 asp-items="Model.Filter.YearSource"
                                                 class="form-control d-inline-block width-100"
                                                 id="yearId">
-                                        </select>
-                                    </label>
-                                    <label asp-for="Filter.ActivityType" class="my-font" style="margin-right:20px">
-                                        نوع فعالیت:
-                                        <select asp-for="Filter.ActivityType"
-                                                asp-items="Model.Filter.ActivityTypeSource"
-                                                class="form-control d-inline-block width-100"
-                                                id="activityType">
                                         </select>
                                     </label>
                                     <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
@@ -54,7 +47,6 @@
                                 </fieldset>
                                 <fieldset>
                                     <div class="rowACJE">
-
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
@@ -89,9 +81,9 @@
                                                 <option>30</option>
                                             </select>
                                             <span style="margin-right:10px">رکورد</span>
+
                                         </label>
                                     </fieldset>
-
                                     <!--drop down menu-->
                                     <div class="btn-group dropdown form-group">
                                         <button type="button"
@@ -101,7 +93,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu" style="width:160%">
+                                        <div class="dropdown-menu" style="width:170%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -133,7 +125,7 @@
                                                                name="col-3"
                                                                id="col-3" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-3"><span>مواد مصرفی</span></label>
+                                                               for="col-3"><span>مرکز هزینه</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -144,7 +136,7 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>مقدار</span></label>
+                                                               for="col-4"><span>عنوان سایر هزینه</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -155,11 +147,32 @@
                                                                name="col-5"
                                                                id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>مبلغ</span></label>
+                                                               for="col-5"><span>مبلغ پایه</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-6"
+                                                               id="col-6" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-6"><span>مبلغ سال ما قبل بودجه</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-7"
+                                                               id="col-7" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-7"><span>پیش بینی مبلغ</span></label>
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -168,21 +181,19 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostCurrentConsumableController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostCurrentOtherController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
-                                           asp-asp-controller="@CostCurrentConsumableController.Name"
-                                           asp-action="@CostCurrentConsumableController.ACTION_GetExcelTemplate"
+                                           asp-asp-controller="@CostCurrentOtherController.Name"
+                                           asp-action="@CostCurrentOtherController.ACTION_GetExcelTemplate"
                                            asp-route-yearId="@Model.Filter.YearId"
-                                           asp-route-activity="@Model.Filter.ActivityType"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
                                         </a>
                                     </div>
                                 </fieldset>
                             </div>
-
                         </form>
                         <!--DataTable-->
                         <partial name="_table" model="Model" />
@@ -200,20 +211,18 @@
 }
 
 @section footSection {
+    <partial name="_excelModal" model="new ImportExcelViewModel()" />
 
     <partial name="_loadingBar" />
 
-    <div id="divCopy">
-
-    </div>
-
-    <partial name="_excelModal" model="new ImportExcelViewModel()" />
 
     <div id="divCreate">
 
     </div>
 
+    <div id="divCopy">
 
+    </div>
 
     <div id="divCalc">
 
@@ -222,10 +231,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5';
+        let allColumns = '1,2,3,4,5,6,7';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,";
+        let showingColmuns = "1,2,3,4,5,6,7,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -239,6 +248,7 @@
 
         $(document).ready(function () {
             console.log('ready');
+            //fill input hidden with initial columns showing
             document.getElementById("hidColumns").value = showingColmuns;
 
             setDataColumns();
@@ -254,7 +264,7 @@
                 if (checked) {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
                     showingColmuns = showingColmuns + `${index},`
-                    document.getElementById("hidColumns").value = showingColmuns ;
+                    document.getElementById("hidColumns").value = showingColmuns;
                 } else {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
                     showingColmuns = showingColmuns.replace(`${index},`, '');
@@ -280,19 +290,18 @@
             console.log('ColumnsToShow ');
             console.log(columnsToShow);
             let checkBoxes = $("#columnSelector input:checkbox");
-            for(let i = 0; i < columnIndices.length; i++) {
+            for (let i = 0; i < columnIndices.length; i++) {
                 let index = parseInt(columnIndices[i]);
                 let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
                 console.log(`Column : ${index} show = ${showColumn}`);
                 checkBoxes[i].checked = showColumn;
-                if(showColumn)
+                if (showColumn)
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
                 else
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
             }
 
         }
-
         function hardDelete(e) {
             Swal.fire({
                 title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
@@ -306,14 +315,13 @@
                 confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
                 cancelButtonClass:  'btn btn-outline-secondary mr-1 my-font',
                 buttonsStyling: false,
-            }).then(function (result) {
+                }).then(function (result) {
                 if (result.value) {
                     let params = {};
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
-                    params.activityType = $('#activityType option:selected').val();
                     console.log(params);
-                    let deleteUrl = '@Url.Action(CostCurrentConsumableController.ACTION_DeleteRecords)';
+                    let deleteUrl = '@Url.Action(CostCurrentOtherController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
 
                     $.ajax({
@@ -348,7 +356,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(CostCurrentConsumableController.ACTION_Index, new {  page = 1})';
+                                document.location.href ='@Url.Action(CostCurrentOtherController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
@@ -370,16 +378,15 @@
 
         }
 
-        function openImportExcelForm() {
-            $('#ExcellModal').modal('show');
-        }
-
         $(window).keydown(function (event) {
             if (event.altKey && event.keyCode == 78) {
                 addNewRow();
             }
         });
 
+        function openImportExcelForm() {
+            $('#ExcellModal').modal('show');
+        }
         $(document).on('click', '#btnCreate', function () {
             addNewRow();
         });
@@ -387,28 +394,34 @@
         $(document).on('click', '.edit-row', function () {
             resetDataColumns()
             let id = $(this).data('id');
-            let input1 = document.getElementById('inputConsumableAmount_' + id);
-            let input2 = document.getElementById('inputConsumableCost_' + id);
+            let input1 = document.getElementById('inputBaseFee_' + id);
+            let input2 = document.getElementById('inputLastYearFee_' + id);
+            let input3 = document.getElementById('inputForcastFee_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
-            btnSaveEdit.addEventListener('click', function(event) {
+            input1.addEventListener("keyup", function (event) {
                 event.preventDefault();
-                $(btnSaveEdit).attr('disabled', true);
-                $(btnSaveEdit).unbind('keyup');
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input2.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input3.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
             });
 
-            input1.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input2.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
+
+            btnSaveEdit.addEventListener('click', function (evenrt) {
+                $(btnSaveEdit).attr('disabled', true);
             });
 
             editRow(id);
@@ -430,8 +443,8 @@
                 confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
                 cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
                 buttonsStyling: false,
-            }).then(function(result) {
-                if(result.value) {
+            }).then(function (result) {
+                if (result.value) {
                     deleteRow(btn, id);
                     return true;
                 }
@@ -440,6 +453,7 @@
                 }
             });
         });
+
 
         $(document).on('click', '.cancel-edit-row', function () {
             let id = $(this).data('id');
@@ -463,15 +477,16 @@
             cancelNewRow(this);
         });
 
+
         $(document).on('click', '.openCopy', function() {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action(CostCurrentConsumableController.ACTION_Copy)',
+                url: '@Url.Action(CostCurrentOtherController.ACTION_Copy)',
                 success: function (data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
                     $('#CopyModal').modal('show');
-                    $('#CopyModal').on('hidden.bs.modal', function() {
+                    $('#CopyModal').on('hidden.bs.modal', function () {
                         $('#divCopy').html('');
                         $('.modal-backdrop').remove();
                     });
@@ -486,36 +501,9 @@
             });
         });
 
-        $(document).ready(function() {
-            $('.modal').on('hidden.bs.modal', function() {
+        $(document).ready(function () {
+            $('.modal').on('hidden.bs.modal', function () {
                 $('.modal-backdrop').remove();
-            });
-        });
-
-        $(document).on('click', '.calculation-button', function() {
-            let model = {};
-            model.yearId = $('#yearId').val();
-            model.organizationId = $('#organizationId').val();
-
-            console.log(model);
-
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action(CostCurrentConsumableController.ACTION_Calculation)',
-                data: model,
-                success: function (data, status, settings) {
-                    $('#divCalc').html('');
-                    $('#divCalc').html(data);
-                    $('#CalculationModal').modal('show');
-                    $('#CalculationModal').on('hidden.bs.modal', function () {
-                        $('#divCalc').html('');
-                        $('.modal-backdrop').remove();
-                    });
-                },
-                error: function (request, options, err) {
-                    console.log(err);
-                    $('#divCalc').html('failed to load content.');
-                }
             });
         });
 
@@ -524,23 +512,22 @@
             var fileInput = $('#ExcelFile')[0];
             var file = fileInput.files[0];
             var yearId = $('#yearId').val();
-            var activityType = $('#activityType').val();
             fdata.append('ExcelFile', file);
             fdata.append('yearId', yearId);
-            fdata.append('activityType', activityType);
 
             $(".olvy").css("display", "block");
 
             $.ajax({
-                url: '@Url.Action(CostCurrentConsumableController.ACTION_ImportExcel)',
+                url: '@Url.Action(CostCurrentOtherController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
                 contentType: false,
                 success: function (data, status, settings) {
                     console.log(data);
+
+                    $(".olvy").css("display", "none");
                     if (data.hasError) {
-                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
                             html: `<span class="my-font">${data.message}</span>`,
@@ -557,7 +544,6 @@
 
                     if (data.ask) {
                         $(".olvy").css("display", "none");
-
                         Swal.fire({
                             html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
                             type: 'warning',
@@ -577,9 +563,8 @@
                                 fdata.append('ContinueIfAnyOrgMissing', true);
                                 console.log(fdata);
                                 $(".olvy").css("display", "block");
-
                                 $.ajax({
-                                    url: '@Url.Action(CostCurrentConsumableController.ACTION_ImportExcel)',
+                                    url: '@Url.Action(CostCurrentOtherController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
@@ -602,7 +587,7 @@
                                         }
 
                                         if (!data.hasError) {
-                                            $(".olvy").css("display", "none");
+                                            $("#overlay").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
                                                 html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -614,7 +599,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                document.location.href = '@Url.Action(CostCurrentConsumableController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(CostCurrentOtherController.ACTION_Index)';
                                             });
                                         }
 
@@ -648,10 +633,9 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(CostCurrentConsumableController.ACTION_Index)';
+                            document.location.href = '@Url.Action(CostCurrentOtherController.ACTION_Index)';
                         });
                     }
-
                 },
                 error: function (request, options, err) {
                     $(".olvy").css("display", "none");
@@ -662,7 +646,6 @@
                     ShowCommonErorr();
                 }
             });
-
         });
 
         $(document).on('click', '#btnDoCopy', function () {
@@ -670,12 +653,12 @@
             model.sourceYearId = $('#SourceYearId option:selected').val();
             model.sourceOrgId = $('#SourceOrgId').val();
             model.targetYearId = $('#TargetYearId option:selected').val();
-            model.activityType = $('#activityType option:selected').val();
+
             console.log(model);
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(CostCurrentConsumableController.ACTION_Copy)',
+                url: '@Url.Action(CostCurrentOtherController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
                 success: function (data, status, settings) {
@@ -706,6 +689,7 @@
                         buttonsStyling: false,
                     }).then(function(result) {
                         $('#CopyModal').modal('hide');
+                        document.location.href ='@Url.Action(CostCurrentOtherController.ACTION_Index, new {  page = 1})';
                     });
                 },
                 error: function (request, options, err) {
@@ -716,11 +700,11 @@
         });
 
 
-        function changePageSize() {
-            let pageSize = $('#ddlPageSize').attr('value');
-            console.log(pageSize);
-            $('#filterForm').submit();
-        };
+    function changePageSize() {
+        let pageSize = $('#ddlPageSize').attr('value');
+        console.log(pageSize);
+        $('#filterForm').submit();
+    };
 
     </script>
 

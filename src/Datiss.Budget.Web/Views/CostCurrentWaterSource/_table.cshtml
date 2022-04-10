@@ -1,0 +1,262 @@
+﻿@model CostCurrentWaterSourceIndexViewModel
+<div class="table-responsive">
+    <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
+        <thead class="thead-light">
+            <tr>
+                <th>سال</th>
+                <th>سازمان</th>
+                <th style="min-width:140px">منبع آب</th>
+                <th style="font-size:small;max-width:110px">تعداد منابع در مدار</th>
+                <th style="font-size:small">تولید سال پایه</th>
+                <th style="font-size:small">تولید سال ماقبل</th>
+                <th style="font-size:small">پیش بینی تولید</th>
+                <th style="min-width:190px">مدیریت</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowTemplate" style="display: none">
+                <td>
+                    <div id="divInput_Year_">
+                        <input id="hidYearId_" type="hidden" />
+                        <select class="form-control selectYear" id="inputYear_" asp-items="Model.YearSource">
+                        </select>
+                        <script>
+                            $('select#inputYear_ option[value=' + $('#yearId').val() + ']').attr('selected', true);
+                            $('#inputYear_').attr('disabled', 'disabled');
+                        </script>
+                    </div>
+                    <div id="divOutput_Year_" style="display: none">
+                        <span id="spanYear_"></span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Org_">
+                        <input id="hidOrgId_" type="hidden" />
+                        <select class="form-control selectOrganization" id="inputOrg_" asp-items="Model.InputOrganizationSource">
+                        </select>
+                        <script>
+                            $('select#inputOrg_ option[value=' + $('#organizationId').val() + ']').attr('selected', true);
+                        </script>
+                    </div>
+                    <div id="divOutput_Org_">
+                        <span id="spanOrg_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_WaterSourceType_">
+                        <input id="hidWaterSourceTypeId_" type="hidden" />
+                        <select class="form-control" id="inputWaterSourceType_" asp-items="Model.WaterSourceTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_WaterSourceType_" style="display: none">
+                        <span id="spanWaterSourceType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ActiveSource_">
+                        <input class="form-control input-keyup default-input" id="inputActiveSource_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_ActiveSource_" style="display: none">
+                        <span id="spanActiveSource_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_BaseProduction_">
+                        <input class="form-control input-keyup" id="inputBaseProduction_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_BaseProduction_" style="display: none">
+                        <span id="spanBaseProduction_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_LastYearProduction_">
+                        <input class="form-control input-keyup" id="inputLastYearProduction_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_LastYearProduction_" style="display: none">
+                        <span id="spanLastYearProduction_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ForcastProduction_">
+                        <input class="form-control input-keyup" id="inputForcastProduction_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_ForcastProduction_" style="display: none">
+                        <span id="spanForcastProduction_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
+                        <i class="fa ft-edit fa-1x"></i>
+                    </a>
+
+                    <a id="btnDelete_" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" style="display: none">
+                        <i class="fa ft-trash-2"></i>
+                    </a>
+
+                    <a id="btnSaveEdit_" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+                    <a id="btnCancelEdit_" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                    <a id="btnSaveCreate_" class="save-new-row btn btn-success my-font mr-1">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+
+                    <a id="btnCancelCreate_" class="cancel-new-row btn btn-danger my-font">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                </td>
+            </tr>
+            @foreach (var item in Model.Items)
+            {
+                <tr id="row_@item.Id">
+                    <td>
+                        <div id="divInput_Year_@item.Id" style="display: none">
+                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            </select>
+                            <script>
+                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Year_@item.Id">
+                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Org_@item.Id" style="display: none">
+                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
+                            </select>
+                            <script>
+                                $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Org_@item.Id">
+                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_WaterSourceType_@item.Id" style="display: none">
+                            <input id="hidWaterSourceTypeId_@item.Id" type="hidden" value="@item.WaterSourceTypeId" />
+                            <select class="form-control selectWaterSourceType" id="inputWaterSourceType_@item.Id" asp-items="Model.WaterSourceTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputWaterSourceType_' + @item.Id + ' option[value=' + @item.WaterSourceTypeId + ']').attr('selected', true);
+                                $('#inputWaterSourceType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_WaterSourceType_@item.Id">
+                            <span id="spanWaterSourceType_@item.Id">@item.WaterSourceTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ActiveSource_@item.Id" style="display: none">
+                            <input class="form-control" id="inputActiveSource_@item.Id" value="@item.ActiveSource" type="number" />
+                        </div>
+                        <div id="divOutput_ActiveSource_@item.Id">
+                            <span id="spanActiveSource_@item.Id">@item.ActiveSourceDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_BaseProduction_@item.Id" style="display: none">
+                            <input class="form-control" id="inputBaseProduction_@item.Id" value="@item.BaseProduction" type="number" />
+                        </div>
+                        <div id="divOutput_BaseProduction_@item.Id">
+                            <span id="spanBaseProduction_@item.Id">@item.BaseProductionDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_LastYearProduction_@item.Id" style="display: none">
+                            <input class="form-control" id="inputLastYearProduction_@item.Id" value="@item.LastYearProduction" type="number" />
+                        </div>
+                        <div id="divOutput_LastYearProduction_@item.Id">
+                            <span id="spanLastYearProduction_@item.Id">@item.LastYearProductionDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ForcastProduction_@item.Id" style="display: none">
+                            <input class="form-control" id="inputForcastProduction_@item.Id" value="@item.ForcastProduction" type="number" />
+                        </div>
+                        <div id="divOutput_ForcastProduction_@item.Id">
+                            <span id="spanForcastProduction_@item.Id">@item.ForcastProductionDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
+
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
+
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
+
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="rowACJSB" style="margin-top:20px">
+        <!--Tools-->
+        <div class="rowACJS">
+            <form id="toolForm"
+                  enctype="multipart/form-data"
+                  method="post"
+                  asp-antiforgery="true">
+                <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+                <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+                <span data-toggle="modal" data-target="#backdrop">
+                    <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                        <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                    </button>
+                </span>
+                <span data-toggle="modal" data-target="#CopyModal">
+                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                        <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                    </button>
+                </span>
+                <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+                </button>
+                <span data-toggle="modal" data-target="#CalculationModal">
+                    <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                        <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                    </button>
+                </span>
+                <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                </button>
+            </form>
+
+        </div>
+
+        <div class="rowAC">
+            <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+            <div class="my-font ml-2">
+                (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
+                <b class="font-medium-2">
+                    @if (Model.PagesCount == 0)
+                    {<span>1</span>}
+                    else
+                    {<span>@Model.PagesCount</span>}
+                </b>)
+            </div>
+        </div>
+        <!--Pagination-->
+        <vc:pager model="Model.ToPager()" controller-name="@CostCurrentWaterSourceController.Name" action-name="@CostCurrentWaterSourceController.ACTION_Index"></vc:pager>
+        
+    </div>
+</div>

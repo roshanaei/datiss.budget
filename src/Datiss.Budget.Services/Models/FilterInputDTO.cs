@@ -302,6 +302,15 @@ namespace Datiss.Budget.Services.Models
         public bool? ExtensionId { get; set; }
     }
 
+    public class CostCurrentOtherFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? CostCenterTypeId { get; set; }
+        public int? CCOtherCostsTypeId { get; set; }
+    }
+    
+
     public class CostCurrentSharingSetadFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
@@ -314,6 +323,13 @@ namespace Datiss.Budget.Services.Models
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
         public int? FinancialCostTypeId { get; set; }
+    }
+
+    public class CostCurrentWaterSourceFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? WaterSourceTypeId { get; set; }
     }
 
 }

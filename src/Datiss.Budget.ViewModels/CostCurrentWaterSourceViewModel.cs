@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class CreateCostCurrentBankFeeViewModel : BaseViewModel
+    public class CreateCostCurrentWaterSourceViewModel : BaseViewModel
     {
         public int YearId { get; set; }
         public string YearDisplay { get; set; }
@@ -14,70 +14,80 @@ namespace Datiss.Budget.ViewModels
         public int OrganizationId { get; set; }
         public string OrganizationDisplay { get; set; }
 
-        public int CostCenterTypeId { get; set; }
+        public int WaterSourceTypeId { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public long BankFeeLastYear { get; set; }
+        public int ActiveSource { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public long BankFeeForcast { get; set; }
+        public long BaseProduction { get; set; }
 
-        public IEnumerable<SelectListItem> CostCenterTypeSource { get; set; }
+        [Required(ErrorMessage = "*")]
+        public long LastYearProduction { get; set; }
 
-        public string CostCenterTypeTitle
+        [Required(ErrorMessage = "*")]
+        public long ForcastProduction { get; set; }
+
+        public IEnumerable<SelectListItem> WaterSourceTypeSource { get; set; }
+
+        public string WaterSourceTypeTitle
         {
             get
             {
-                if (CostCenterTypeSource == null || !CostCenterTypeSource.Any())
+                if (WaterSourceTypeSource == null || !WaterSourceTypeSource.Any())
                     return string.Empty;
 
-                return CostCenterTypeSource.FirstOrDefault(x => x.Value.ToString() == CostCenterTypeId.ToString()).Text;
+                return WaterSourceTypeSource.FirstOrDefault(x => x.Value.ToString() == WaterSourceTypeId.ToString()).Text;
             }
         }
 
     }
 
-    public class UpdateCostCurrentBankFeeViewModel : CreateCostCurrentBankFeeViewModel
+    public class UpdateCostCurrentWaterSourceViewModel : CreateCostCurrentWaterSourceViewModel
     {
         public int Id { get; set; }
 
     }
 
-    public class CostCurrentBankFeeViewModel
+    public class CostCurrentWaterSourceViewModel
     {
         public int Id { get; set; }
         public int YearId { get; set; }
         public int Year { get; set; }
         public int OrganizationId { get; set; }
         public string OrganizationDisplay { get; set; }
-        public int CostCenterTypeId { get; set; }
-        public string CostCenterTypeDisplay { get; set; }
-        public long BankFeeLastYear { get; set; }
-        public string BankFeeLastYearDisplay => BankFeeLastYear.ToString("N0");
-        public long BankFeeForcast { get; set; }
-        public string BankFeeForcastDisplay => BankFeeForcast.ToString("N0");
+        public int WaterSourceTypeId { get; set; }
+        public string WaterSourceTypeDisplay { get; set; }
+        public int ActiveSource { get; set; }
+        public string ActiveSourceDisplay => ActiveSource.ToString("N0");
+        public long BaseProduction { get; set; }
+        public string BaseProductionDisplay => BaseProduction.ToString("N0");
+        public long LastYearProduction { get; set; }
+        public string LastYearProductionDisplay => LastYearProduction.ToString("N0");
+        public long ForcastProduction { get; set; }
+        public string ForcastProductionDisplay => ForcastProduction.ToString("N0");
     }
 
-    public class CostCurrentBankFeeFilterViewModel : FilterViewModel
+    public class CostCurrentWaterSourceFilterViewModel : FilterViewModel
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
-        public int? CostCenterTypeId { get; set; }
+        public int? WaterSourceTypeId { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
 
         public IList<SelectListItem> OrganizationSource { get; set; }
     }
 
-    public class CostCurrentBankFeeIndexViewModel : PagedViewModel<CostCurrentBankFeeViewModel>
+    public class CostCurrentWaterSourceIndexViewModel : PagedViewModel<CostCurrentWaterSourceViewModel>
     {
 
-        public CostCurrentBankFeeIndexViewModel()
+        public CostCurrentWaterSourceIndexViewModel()
         {
-            Filter = new CostCurrentBankFeeFilterViewModel();
+            Filter = new CostCurrentWaterSourceFilterViewModel();
         }
 
-        public CostCurrentBankFeeFilterViewModel Filter { get; set; }
+        public CostCurrentWaterSourceFilterViewModel Filter { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
 
@@ -85,7 +95,7 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> InputOrganizationSource { get; set; }
 
-        public IList<SelectListItem> CostCenterTypeSource { get; set; }
+        public IList<SelectListItem> WaterSourceTypeSource { get; set; }
 
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
@@ -109,8 +119,8 @@ namespace Datiss.Budget.ViewModels
                 Value = x.Id.ToString()
             }).ToList();
 
-        public void SetCostCenterTypeSource(IEnumerable<DropDownItemViewModel> source)
-            => CostCenterTypeSource = source.Select(x => new SelectListItem
+        public void SetWaterSourceTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => WaterSourceTypeSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()

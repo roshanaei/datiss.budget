@@ -1,26 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
+using Microsoft.AspNetCore.Http;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class CreateCostCurrentBankFeeViewModel : BaseViewModel
+    public class CreateCostCurrentOtherViewModel : BaseViewModel
     {
         public int YearId { get; set; }
-        public string YearDisplay { get; set; }
 
         public int OrganizationId { get; set; }
-        public string OrganizationDisplay { get; set; }
 
         public int CostCenterTypeId { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        public long BankFeeLastYear { get; set; }
+        public int CCOtherCostsTypeId { get; set; }
 
         [Required(ErrorMessage = "*")]
-        public long BankFeeForcast { get; set; }
+        public long BaseFee { get; set; }
+
+        [Required(ErrorMessage = "*")]
+        public long LastYearFee { get; set; }
 
         public IEnumerable<SelectListItem> CostCenterTypeSource { get; set; }
 
@@ -30,20 +31,19 @@ namespace Datiss.Budget.ViewModels
             {
                 if (CostCenterTypeSource == null || !CostCenterTypeSource.Any())
                     return string.Empty;
-
                 return CostCenterTypeSource.FirstOrDefault(x => x.Value.ToString() == CostCenterTypeId.ToString()).Text;
             }
         }
-
     }
 
-    public class UpdateCostCurrentBankFeeViewModel : CreateCostCurrentBankFeeViewModel
+    public class UpdateCostCurrentOtherViewModel : CreateCostCurrentOtherViewModel
     {
         public int Id { get; set; }
-
+        public long ForcastFee { get; set; }
     }
 
-    public class CostCurrentBankFeeViewModel
+
+    public class CostCurrentOtherViewModel
     {
         public int Id { get; set; }
         public int YearId { get; set; }
@@ -52,70 +52,75 @@ namespace Datiss.Budget.ViewModels
         public string OrganizationDisplay { get; set; }
         public int CostCenterTypeId { get; set; }
         public string CostCenterTypeDisplay { get; set; }
-        public long BankFeeLastYear { get; set; }
-        public string BankFeeLastYearDisplay => BankFeeLastYear.ToString("N0");
-        public long BankFeeForcast { get; set; }
-        public string BankFeeForcastDisplay => BankFeeForcast.ToString("N0");
+        public int CCOtherCostsTypeId { get; set; }
+        public string CCOtherCostsTypeDisplay { get; set; }
+        public long BaseFee { get; set; }
+        public string BaseFeeDisplay => BaseFee.ToString("N0");
+        public long LastYearFee { get; set; }
+        public string LastYearFeeDisplay => LastYearFee.ToString("N0");
+        public long ForcastFee { get; set; }
+        public string ForcastFeeDisplay => ForcastFee.ToString("N0");
     }
 
-    public class CostCurrentBankFeeFilterViewModel : FilterViewModel
+    public class CostCurrentOtherFilterViewModel : FilterViewModel
     {
         public int? YearId { get; set; }
+
         public int? OrganizationId { get; set; }
+
         public int? CostCenterTypeId { get; set; }
 
+        public int? CCOtherCostsTypeId { get; set; }
+
         public IList<SelectListItem> YearSource { get; set; }
 
         public IList<SelectListItem> OrganizationSource { get; set; }
+
     }
 
-    public class CostCurrentBankFeeIndexViewModel : PagedViewModel<CostCurrentBankFeeViewModel>
+    public class CostCurrentOtherIndexViewModel : PagedViewModel<CostCurrentOtherViewModel>
     {
-
-        public CostCurrentBankFeeIndexViewModel()
+        public CostCurrentOtherIndexViewModel()
         {
-            Filter = new CostCurrentBankFeeFilterViewModel();
+            Filter = new CostCurrentOtherFilterViewModel();
         }
-
-        public CostCurrentBankFeeFilterViewModel Filter { get; set; }
-
+        public CostCurrentOtherFilterViewModel Filter { get; set; }
         public IList<SelectListItem> YearSource { get; set; }
-
         public IList<SelectListItem> OrganizationSource { get; set; }
-
         public IList<SelectListItem> InputOrganizationSource { get; set; }
-
         public IList<SelectListItem> CostCenterTypeSource { get; set; }
-
-
+        public IList<SelectListItem> CCOtherCostsTypeSource { get; set; }
+        public IFormFile ExcelFile { get; set; }
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
             => YearSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-
         public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
             => OrganizationSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-
         public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
             => InputOrganizationSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-
         public void SetCostCenterTypeSource(IEnumerable<DropDownItemViewModel> source)
             => CostCenterTypeSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-
+        public void SetCCOtherCostsTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => CCOtherCostsTypeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
         public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
             => Filter.OrganizationSource = source.Select(x => new SelectListItem
             {
@@ -123,7 +128,6 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
-
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
             => Filter.YearSource = source.Select(x => new SelectListItem
             {
@@ -133,5 +137,6 @@ namespace Datiss.Budget.ViewModels
             }).ToList();
 
     }
+
 
 }

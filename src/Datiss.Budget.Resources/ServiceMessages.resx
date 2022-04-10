@@ -348,8 +348,14 @@
   <data name="Logic_CostCenterTypeOrgDuplicates" xml:space="preserve">
     <value>مرکز هزینه "{0}" برای "{1}" قبلا ثبت شده است.</value>
   </data>
-  <data name="ImportExcelCostCenterTypeOrgNotInExcels" xml:space="preserve">
+  <data name="ImportExcelCostCenterTypeOrgNotInExcel" xml:space="preserve">
     <value>مراکز هزینه :&lt;br&gt;{0} برای "{1}" در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="ImportExcelCCOtherCostsTypeCostCenterTypeOrgNotInExcel" xml:space="preserve">
+    <value>در فایل اکسل شما اطلاعات سایر هزینه :&lt;br&gt;{0} برای مرکز هزینه "{1}" ، "{2}" وجود ندارد.</value>
+  </data>
+  <data name="Logic_CostCenterTypeCCOtherCostsTypeDuplicate" xml:space="preserve">
+    <value>اطلاعات مرکز هزینه "{0}" و عنوان "{1}" برای "{2}" قبلا ثبت شده است.</value>
   </data>
   <data name="Logic_CostCurrentNODuplicate" xml:space="preserve">
     <value>اطلاعات {0} برای {1} قبلا ثبت شده است.</value>
@@ -362,5 +368,14 @@
   </data>
   <data name="Logic_FinancialCostTypeOrgDuplicate" xml:space="preserve">
     <value>اطلاعات عنوان هزینه" {0}" برای "{1}" قبلا ثبت شده است.</value>
+  </data>
+  <data name="ImportExcelInvalidWaterSourceType" xml:space="preserve">
+    <value>در سطر {0} فایل اکسل، کد منبع "{1}" معتبر نیست .</value>
+  </data>
+  <data name="ImportExcelWaterSourceTypeOrgNotInExcels" xml:space="preserve">
+    <value>منابع  :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند.</value>
+  </data>
+  <data name="Logic_WaterSourceTypeDuplicate" xml:space="preserve">
+    <value>منبع "{0}" برای "{1}" قبلا ثبت شده است.</value>
   </data>
 </root>
