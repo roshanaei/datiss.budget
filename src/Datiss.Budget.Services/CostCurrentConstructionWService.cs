@@ -90,7 +90,7 @@ namespace Datiss.Budget.Services
                 SuggestedBudgetTopicTypeId = model.SuggestedBudgetTopicTypeId
             };
 
-            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId))?.Title;
             try
             {
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ProjectDescription))
@@ -108,19 +108,13 @@ namespace Datiss.Budget.Services
                     }
                     var result = entity.Adapt<CostCurrentConstructionWDTO>();
 
-                    result.ProjectDescription = model.ProjectDescription;
-                    result.WaterInvestorsDisplay = (await _constSet.FindAsync(model.WaterInvestorsTypeId)).Title; 
-                    result.CostCenterDisplay = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
-                    result.ExploitationAreaDisplay = (await _constSet.FindAsync(model.ExploitationAreaTypeId)).Title;
-                    result.ProgressPercent = model.ProgressPercent;
-                    result.CostDone = model.CostDone;
-                    result.Amount = model.Amount;
-                    result.MeasurementDisplay = (await _constSet.FindAsync(model.MeasurementTypeId)).Title;
-                    result.UnitPrice = model.UnitPrice;
-                    result.TotalCost = model.TotalCost;
-                    result.CreditDisplay = (await _constSet.FindAsync(model.CreditTypeId)).Title;
-                    result.ExtensionDisplay = (await _constSet.FindAsync(model.ExtensionTypeId)).Title;
-                    result.SuggestedBudgetTopicDisplay = (await _constSet.FindAsync(model.SuggestedBudgetTopicTypeId)).Title;
+                    result.WaterInvestorsDisplay = (await _constSet.FindAsync(model.WaterInvestorsTypeId))?.Title; 
+                    result.CostCenterDisplay = (await _constSet.FindAsync(model.CostCenterTypeId))?.Title;
+                    result.ExploitationAreaDisplay = (await _constSet.FindAsync(model.ExploitationAreaTypeId))?.Title;
+                    result.MeasurementDisplay = (await _constSet.FindAsync(model.MeasurementTypeId))?.Title;
+                    result.CreditDisplay = (await _constSet.FindAsync(model.CreditTypeId))?.Title;
+                    result.ExtensionDisplay = (await _constSet.FindAsync(model.ExtensionTypeId))?.Title;
+                    result.SuggestedBudgetTopicDisplay = (await _constSet.FindAsync(model.SuggestedBudgetTopicTypeId))?.Title;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
 
@@ -144,7 +138,7 @@ namespace Datiss.Budget.Services
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId))?.Title;
 
             try
             {
@@ -179,19 +173,13 @@ namespace Datiss.Budget.Services
                     }
 
                     var result = entity.Adapt<CostCurrentConstructionWDTO>();
-                    result.ProjectDescription = model.ProjectDescription;
-                    result.WaterInvestorsDisplay = (await _constSet.FindAsync(model.WaterInvestorsTypeId)).Title;
-                    result.CostCenterDisplay = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
-                    result.ExploitationAreaDisplay = (await _constSet.FindAsync(model.ExploitationAreaTypeId)).Title;
-                    result.ProgressPercent = model.ProgressPercent;
-                    result.CostDone = model.CostDone;
-                    result.Amount = model.Amount;
-                    result.MeasurementDisplay = (await _constSet.FindAsync(model.MeasurementTypeId)).Title;
-                    result.UnitPrice = model.UnitPrice;
-                    result.TotalCost = model.TotalCost;
-                    result.CreditDisplay = (await _constSet.FindAsync(model.CreditTypeId)).Title;
-                    result.ExtensionDisplay = (await _constSet.FindAsync(model.ExtensionTypeId)).Title;
-                    result.SuggestedBudgetTopicDisplay = (await _constSet.FindAsync(model.SuggestedBudgetTopicTypeId)).Title;
+                    result.WaterInvestorsDisplay = (await _constSet.FindAsync(model.WaterInvestorsTypeId))?.Title;
+                    result.CostCenterDisplay = (await _constSet.FindAsync(model.CostCenterTypeId))?.Title;
+                    result.ExploitationAreaDisplay = (await _constSet.FindAsync(model.ExploitationAreaTypeId))?.Title;
+                    result.MeasurementDisplay = (await _constSet.FindAsync(model.MeasurementTypeId))?.Title;
+                    result.CreditDisplay = (await _constSet.FindAsync(model.CreditTypeId))?.Title;
+                    result.ExtensionDisplay = (await _constSet.FindAsync(model.ExtensionTypeId))?.Title;
+                    result.SuggestedBudgetTopicDisplay = (await _constSet.FindAsync(model.SuggestedBudgetTopicTypeId))?.Title;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
 
@@ -377,34 +365,8 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.Credit)
                                     .Include(x => x.Extension)
                                     .Include(x => x.SuggestedBudgetTopic)
-                                    .Select(x => new CostCurrentConstructionWDTO
-                                    {
-                                        Id = x.Id,
-                                        ProjectDescription = x.ProjectDescription,
-                                        WaterInvestorsTypeId = x.WaterInvestorsTypeId,
-                                        WaterInvestorsDisplay = x.WaterInvestors.Title,
-                                        CostCenterTypeId = x.CostCenterTypeId,
-                                        CostCenterDisplay = x.CostCenter.Title,
-                                        ExploitationAreaTypeId = x.ExploitationAreaTypeId,
-                                        ExploitationAreaDisplay = x.ExploitationArea.Title,
-                                        ProgressPercent = x.ProgressPercent,
-                                        CostDone = x.CostDone,
-                                        Amount = x.Amount,
-                                        MeasurementTypeId = x.MeasurementTypeId,
-                                        MeasurementDisplay = x.Measurement.Title,
-                                        UnitPrice = x.UnitPrice,
-                                        TotalCost = x.TotalCost,
-                                        CreditTypeId = x.CreditTypeId,
-                                        CreditDisplay = x.Credit.Title,
-                                        ExtensionTypeId = x.ExtensionTypeId,
-                                        ExtensionDisplay = x.Extension.Title,
-                                        SuggestedBudgetTopicTypeId = x.SuggestedBudgetTopicTypeId,
-                                        SuggestedBudgetTopicDisplay = x.SuggestedBudgetTopic.Title,
-                                        OrganizationDisplay = x.Organization.Title,
-                                        OrganizationId = x.OrganizationId,
-                                        Year = x.FinanceYear.Year,
-                                        YearId = x.YearId
-                                    }).ToListAsync();
+                                    .Select(x => x.Adapt<CostCurrentConstructionWDTO>())
+                                    .ToListAsync();
 
             return await Task.FromResult(result);
         }
@@ -686,35 +648,8 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.Credit)
                                     .Include(x => x.Extension)
                                     .Include(x => x.SuggestedBudgetTopic)
-                                    .Select(x => new CostCurrentConstructionWDTO
-                                    {
-                                        Id = x.Id,
-                                        ProjectDescription = x.ProjectDescription,
-                                        WaterInvestorsTypeId = x.WaterInvestorsTypeId,
-                                        WaterInvestorsDisplay = x.WaterInvestors.Title,
-                                        CostCenterTypeId = x.CostCenterTypeId,
-                                        CostCenterDisplay = x.CostCenter.Title,
-                                        ExploitationAreaTypeId = x.ExploitationAreaTypeId,
-                                        ExploitationAreaDisplay = x.ExploitationArea.Title,
-                                        ProgressPercent = x.ProgressPercent,
-                                        CostDone = x.CostDone,
-                                        Amount = x.Amount,
-                                        MeasurementTypeId = x.MeasurementTypeId,
-                                        MeasurementDisplay = x.Measurement.Title,
-                                        UnitPrice = x.UnitPrice,
-                                        TotalCost = x.TotalCost,
-                                        CreditTypeId = x.CreditTypeId,
-                                        CreditDisplay = x.Credit.Title,
-                                        ExtensionTypeId = x.ExtensionTypeId,
-                                        ExtensionDisplay = x.Extension.Title,
-                                        SuggestedBudgetTopicTypeId = x.SuggestedBudgetTopicTypeId,
-                                        SuggestedBudgetTopicDisplay = x.SuggestedBudgetTopic.Title,
-                                        OrganizationDisplay = x.Organization.Title,
-                                        OrganizationId = x.OrganizationId,
-                                        Year = x.FinanceYear.Year,
-                                        YearId = x.YearId
-                                    }).ToListAsync();
-
+                                    .Select(x => x.Adapt<CostCurrentConstructionWDTO>())
+                                    .ToListAsync();
             return items;
         }
 
