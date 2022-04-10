@@ -10,6 +10,7 @@
 
         console.log(extensionTypeId);
         console.log(suggestedBudgetTopicTypeId);
+
         FillDropDown(extensionTypeId, suggestedBudgetTopicTypeId);
         
         resetTableBackColor("my-table");
@@ -22,7 +23,7 @@
         $('#divOutput_ExtensionType_' + id).hide();
         $('#divOutput_SuggestedBudgetTopicType_' + id).hide();
         $('#divOutput_ProjectDescription_' + id).hide();
-        $('#divOutput_WaterInvestorsType_' + id).hide();
+        $('#divOutput_WasteInvestorsType_' + id).hide();
         $('#divOutput_CostCenterType_' + id).hide();
         $('#divOutput_ExploitationAreaType_' + id).hide();
         $('#divOutput_ProgressPercent_' + id).hide();
@@ -39,7 +40,7 @@
         $('#divInput_ExtensionType_' + id).show();
         $('#divInput_SuggestedBudgetTopicType_' + id).show();
         $('#divInput_ProjectDescription_' + id).show();
-        $('#divInput_WaterInvestorsType_' + id).show();
+        $('#divInput_WasteInvestorsType_' + id).show();
         $('#divInput_CostCenterType_' + id).show();
         $('#divInput_ExploitationAreaType_' + id).show();
         $('#divInput_ProgressPercent_' + id).show();
@@ -62,7 +63,7 @@
         rowData.extensionTypeId = $('#inputExtensionType_' + id).val();
         rowData.suggestedBudgetTopicTypeId = $('#inputSuggestedBudgetTopicType_' + id).val();
         rowData.projectDescription = $('#inputProjectDescription_' + id).val();
-        rowData.waterInvestorsTypeId = $('#inputWaterInvestorsType_' + id).val();
+        rowData.wasteInvestorsTypeId = $('#inputWasteInvestorsType_' + id).val();
         rowData.costCenterTypeId = $('#inputCostCenterType_' + id).val();
         rowData.exploitationAreaTypeId = $('#inputExploitationAreaType_' + id).val();
         rowData.progressPercent = $('#inputProgressPercent_' + id).val();
@@ -84,7 +85,7 @@
         $('#divInput_ExtensionType_' + id).hide();
         $('#divInput_SuggestedBudgetTopicType_' + id).hide();
         $('#divInput_ProjectDescription_' + id).hide();
-        $('#divInput_WaterInvestorsType_' + id).hide();
+        $('#divInput_WasteInvestorsType_' + id).hide();
         $('#divInput_CostCenterType_' + id).hide();
         $('#divInput_ExploitationAreaType_' + id).hide();
         $('#divInput_ProgressPercent_' + id).hide();
@@ -102,7 +103,7 @@
             $('#inputExtensionType_' + id).val(rowData.extensionTypeId);
             $('#inputSuggestedBudgetTopicType_' + id).val(rowData.suggestedBudgetTopicTypeId);
             $('#inputProjectDescription_' + id).val(rowData.projectDescription);
-            $('#inputWaterInvestorsType_' + id).val(rowData.waterInvestorsTypeId);
+            $('#inputWasteInvestorsType_' + id).val(rowData.wasteInvestorsTypeId);
             $('#inputCostCenterType_' + id).val(rowData.costCenterTypeId);
             $('#inputExploitationAreaType_' + id).val(rowData.exploitationAreaTypeId);
             $('#inputProgressPercent_' + id).val(rowData.progressPercent);
@@ -120,7 +121,7 @@
         $('#divOutput_ExtensionType_' + id).show();
         $('#divOutput_SuggestedBudgetTopicType_' + id).show();
         $('#divOutput_ProjectDescription_' + id).show();
-        $('#divOutput_WaterInvestorsType_' + id).show();
+        $('#divOutput_WasteInvestorsType_' + id).show();
         $('#divOutput_CostCenterType_' + id).show();
         $('#divOutput_ExploitationAreaType_' + id).show();
         $('#divOutput_ProgressPercent_' + id).show();
@@ -155,7 +156,7 @@
         model.extensionTypeId = $('#inputExtensionType_' + id).val();
         model.suggestedBudgetTopicTypeId = $('#inputSuggestedBudgetTopicType_' + id).val();
         model.projectDescription = $('#inputProjectDescription_' + id).val();
-        model.waterInvestorsTypeId = $('#inputWaterInvestorsType_' + id).val();
+        model.wasteInvestorsTypeId = $('#inputWasteInvestorsType_' + id).val();
         model.costCenterTypeId = $('#inputCostCenterType_' + id).val();
         model.exploitationAreaTypeId = $('#inputExploitationAreaType_' + id).val();
         model.progressPercent = $('#inputProgressPercent_' + id).val();
@@ -170,7 +171,7 @@
 
 
         $.ajax({
-            url: '@Url.Action(CostCurrentConstructionWController.ACTION_Edit)',
+            url: '@Url.Action(CostForcastConstructionWsController.ACTION_Edit)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -196,7 +197,7 @@
                 rowData.extensionTypeId = model.extensionTypeId;
                 rowData.suggestedBudgetTopicTypeId = model.suggestedBudgetTopicId;
                 rowData.projectDescription = model.projectDescription;
-                rowData.waterInvestorsType = model.waterInvestorsTypeId;
+                rowData.wasteInvestorsType = model.wasteInvestorsTypeId;
                 rowData.costCenterType = model.costCenterTypeId;
                 rowData.exploitationAreaType = model.exploitationAreaTypeId;
                 rowData.progressPercent = model.progressPercent;
@@ -214,7 +215,7 @@
                 $('#spanExtensionType_' + id).text(data.extensionTypeDisplay);
                 $('#spanSuggestedBudgetTopicType_' + id).text(data.suggestedBudgetTopicDisplay);
                 $('#spanProjectDescription_' + id).text(data.projectDescription);
-                $('#spanWaterInvestorsType_' + id).text(data.waterInvestorsTypeDisplay);
+                $('#spanWasteInvestorsType_' + id).text(data.wasteInvestorsTypeDisplay);
                 $('#spanCostCenterType_' + id).text(data.costCenterTypeDisplay);
                 $('#spanExploitationAreaType_' + id).text(data.exploitationAreaTypeDisplay);
                 $('#spanProgressPercent_' + id).text(data.progressPercent);
@@ -245,8 +246,7 @@
         var model = {};
         model.yearId = $('#yearId option:selected').val();
         model.organizationId = $(e).find('#inputOrg_').val();
-        model.waterInvestorsTypeId = $(e).find('#inputWaterInvestorsType_').val();
-        model.waterInvestorsTypeId = $(e).find('#inputWaterInvestorsType_').val();
+        model.wasteInvestorsTypeId = $(e).find('#inputWasteInvestorsType_').val();
         model.costCenterTypeId = $(e).find('#inputCostCenterType_').val();
         model.exploitationAreaTypeId = $(e).find('#inputExploitationAreaType_').val();
         model.measurementTypeId = $(e).find('#inputMeasurementType_').val();
@@ -280,7 +280,7 @@
         console.log(model);
 
         $.ajax({
-            url: '@Url.Action(CostCurrentConstructionWController.ACTION_Create)',
+            url: '@Url.Action(CostForcastConstructionWsController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -355,15 +355,15 @@
                 $('#spanProjectDescription_' + data.id).text(data.projectDescription);
                 $('#divOutput_ProjectDescription_' + data.id).show();
 
-                //WaterInvestorsType
-                $(e).find('#divInput_WaterInvestorsType_').attr('id', 'divInput_WaterInvestorsType_' + data.id);
-                $(e).find('#inputWaterInvestorsTypeId_').attr('id', 'inputWaterInvestorsTypeId_' + data.id);
-                $(e).find('#divOutput_WaterInvestorsType_').attr('id', 'divOutput_WaterInvestorsType_' + data.id);
-                $(e).find('#spanWaterInvestorsType_').attr('id', 'spanWaterInvestorsType_' + data.id);
+                //WasteInvestorsType
+                $(e).find('#divInput_WasteInvestorsType_').attr('id', 'divInput_WasteInvestorsType_' + data.id);
+                $(e).find('#inputWasteInvestorsTypeId_').attr('id', 'inputWasteInvestorsTypeId_' + data.id);
+                $(e).find('#divOutput_WasteInvestorsType_').attr('id', 'divOutput_WasteInvestorsType_' + data.id);
+                $(e).find('#spanWasteInvestorsType_').attr('id', 'spanWasteInvestorsType_' + data.id);
 
-                $('#divInput_WaterInvestorsType_' + data.id).hide();
-                $('#spanWaterInvestorsType_' + data.id).text(data.waterInvestorsDisplay);
-                $('#divOutput_WaterInvestorsType_' + data.id).show();
+                $('#divInput_WasteInvestorsType_' + data.id).hide();
+                $('#spanWasteInvestorsType_' + data.id).text(data.wasteInvestorsDisplay);
+                $('#divOutput_WasteInvestorsType_' + data.id).show();
 
                 //CostCenterType
                 $(e).find('#divInput_CostCenterType_').attr('id', 'divInput_CostCenterType_' + data.id);
@@ -532,7 +532,7 @@
         console.log(e);
 
         $.ajax({
-            url: '@Url.Action(CostCurrentConstructionWController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(CostForcastConstructionWsController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {

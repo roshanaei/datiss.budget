@@ -6,7 +6,7 @@
     function editRow(id) {
 
         let userTypeId = $('#inputUserType_' + id).val();
-        let usageLayerTypeId = $('#inputUsageLayerType_' + id).val();
+        let usageLayerTypeId = $('#hidUsageLayerTypeId_' + id).val();
 
         FillDropDown(userTypeId, usageLayerTypeId);
         resetTableBackColor("my-table");
