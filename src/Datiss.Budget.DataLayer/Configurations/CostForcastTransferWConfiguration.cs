@@ -63,7 +63,7 @@ namespace Datiss.Budget.DataLayer.Mappings
 
 
             builder.HasOne(x => x.SuggestedBudgetTopic)
-                    .WithMany(x => x.CostForcastTransferWTransfer)
+                    .WithMany(x => x.CostForcastTransferWSuggestedBudgetTopic)
                     .HasForeignKey(x => x.SuggestedBudgetTopicTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
 
