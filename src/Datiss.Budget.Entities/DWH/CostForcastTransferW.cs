@@ -50,6 +50,8 @@ namespace Datiss.Budget.Entities.DWH
 
         public Constant TubeType { get; set; }
 
+        public Constant DiameterType { get; set; }
+
         public Constant Extension { get; set; }
 
         public Constant SuggestedBudgetTopic { get; set; }
