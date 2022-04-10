@@ -625,7 +625,14 @@ namespace Datiss.Budget.Web.Controllers
         private string getCalcTitle(string key)
             => key switch
             {
-                "CostCurrentConstructionWs_Cal1" => "TODO",
+                "CostCurrentConstructionW_Cal1" => SPTitles.CostCurrentConstructionW_Cal1,
+                "CostCurrentConstructionW_Cal2" => SPTitles.CostCurrentConstructionW_Cal2,
+                "CostCurrentConstructionW_Cal3" => SPTitles.CostCurrentConstructionW_Cal3,
+                "CostCurrentConstructionW_Cal4" => SPTitles.CostCurrentConstructionW_Cal4,
+                "CostCurrentConstructionW_Cal5" => SPTitles.CostCurrentConstructionW_Cal5,
+                "CostCurrentConstructionW_Cal6" => SPTitles.CostCurrentConstructionW_Cal6,
+                "CostCurrentConstructionW_Cal7" => SPTitles.CostCurrentConstructionW_Cal7,
+                "CostCurrentConstructionW_Cal8" => SPTitles.CostCurrentConstructionW_Cal8,
                 _ => ""
             };
         #endregion

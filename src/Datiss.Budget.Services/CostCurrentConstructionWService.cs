@@ -271,19 +271,77 @@ namespace Datiss.Budget.Services
 
         public async Task<IEnumerable<CalculationItemData>> CalculationAsync(int yearId, int organizationId)
         {
+            var result = new List<CalculationItemData>();
             List<SqlParameter> sqlParams = new List<SqlParameter>
             {
                 new SqlParameter("YearId", yearId),
                 new SqlParameter("OrganizationId", organizationId)
             };
-            var result = new List<CalculationItemData>();
+
             result.Add(new CalculationItemData
             {
-                Key = "CostCurrentConstructionWs_Cal1",
-                Value = await _uow.ExecuteScalar<int>(
-                        "[dbo].[CostCurrentConstructionWs_Cal1] @YearId, @OrganizationId",
-                        parameters: sqlParams.ToArray())
+                Key = "CostCurrentConstructionW_Cal1",
+                Value = await _uow.ExecuteScalar<long>(
+                                    "[dbo].[CostCurrentConstructionW_Cal1] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
             });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentConstructionW_Cal2",
+                Value = await _uow.ExecuteScalar<long>(
+                                    "[dbo].[CostCurrentConstructionW_Cal2] @YearId, @OrganizationId",
+                                    parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentConstructionW_Cal3",
+                Value = await _uow.ExecuteScalar<long>(
+                         "[dbo].[CostCurrentConstructionW_Cal3] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentConstructionW_Cal4",
+                Value = await _uow.ExecuteScalar<long>(
+                         "[dbo].[CostCurrentConstructionW_Cal4] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentConstructionW_Cal5",
+                Value = await _uow.ExecuteScalar<long>(
+                         "[dbo].[CostCurrentConstructionW_Cal5] @YearId, @OrganizationId",
+                         parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentConstructionW_Cal6",
+                Value = await _uow.ExecuteScalar<long>(
+             "[dbo].[CostCurrentConstructionW_Cal6] @YearId, @OrganizationId",
+             parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentConstructionW_Cal7",
+                Value = await _uow.ExecuteScalar<long>(
+             "[dbo].[CostCurrentConstructionW_Cal7] @YearId, @OrganizationId",
+             parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentConstructionW_Cal8",
+                Value = await _uow.ExecuteScalar<long>(
+             "[dbo].[CostCurrentConstructionW_Cal8] @YearId, @OrganizationId",
+             parameters: sqlParams.ToArray())
+            });
+
 
             return await Task.FromResult(result);
         }
