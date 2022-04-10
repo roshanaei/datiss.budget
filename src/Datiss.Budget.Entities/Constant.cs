@@ -147,7 +147,19 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentConstructionW> CostCurrentConstructionWSuggestedBudgetTopic { get; set; }
 
+         public ICollection<CostForcastConstructionWs> CostForcastConstructionWsInvestors { get; set; }
 
+        public ICollection<CostForcastConstructionWs> CostForcastConstructionWsCostCenters { get; set; }
+
+        public ICollection<CostForcastConstructionWs> CostForcastConstructionWsExploitationArea { get; set; }
+
+        public ICollection<CostForcastConstructionWs> CostForcastConstructionWsMeasurement { get; set; }
+
+        public ICollection<CostForcastConstructionWs> CostForcastConstructionWsCredit { get; set; }
+
+        public ICollection<CostForcastConstructionWs> CostForcastConstructionWsExtension { get; set; }
+
+        public ICollection<CostForcastConstructionWs> CostForcastConstructionWsSuggestedBudgetTopic { get; set; }
         #endregion
     }
 }
