@@ -114,6 +114,11 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentFinancing> CostCurrentFinancing { get; set; }
 
+        public ICollection<CostCurrentWaterSource> CostCurrentWaterSource { get; set; }
+
+        public ICollection<CostCurrentConstructionW> CostCurrentConstructionW { get; set; }
+
+
         #endregion
     }
 }

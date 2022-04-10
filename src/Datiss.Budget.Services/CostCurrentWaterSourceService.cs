@@ -1,33 +1,31 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Datiss.Budget.Services.Contracts;
+﻿using Datiss.Budget.Common;
+using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.DataLayer.Context;
+using Datiss.Budget.Entities;
+using Datiss.Budget.Entities.DWH;
+using Datiss.Budget.Enum;
+using Datiss.Budget.Extensions;
+using Datiss.Budget.Resources;
+using Datiss.Budget.Security;
+using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Services.Excel;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
-using Datiss.Budget.Resources;
-using Datiss.Budget.Entities.DWH;
-using Datiss.Budget.Services.Excel;
-using Datiss.Budget.Entities;
-using Datiss.Budget.Common.Exceptions;
-using Datiss.Budget.DataLayer.Context;
-using Datiss.Budget.Services.Contracts.Identity;
-using Mapster;
 using LinqKit;
-using Datiss.Budget.Security;
+using Mapster;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Data.SqlClient;
-using Datiss.Budget.Extensions;
-using Datiss.Budget.Enum;
-using Datiss.Budget.Common;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services
 {
-
-    public class CostCurrentBankFeeService : ICostCurrentBankFeeService
+    public class CostCurrentWaterSourceService : ICostCurrentWaterSourceService
     {
         private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
@@ -35,12 +33,14 @@ namespace Datiss.Budget.Services
         private readonly IUserService _userService;
         private readonly IOrganizationService _organizationService;
 
-        private readonly DbSet<CostCurrentBankFee> _dbSet;
+
+        private readonly DbSet<CostCurrentWaterSource> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
         private readonly DbSet<FinanceYear> _yearSet;
         private readonly DbSet<Constant> _constSet;
 
-        public CostCurrentBankFeeService(
+
+        public CostCurrentWaterSourceService(
             IUserContext userContext,
             IUnitOfWork uow,
             IExcelService excelService,
@@ -49,7 +49,7 @@ namespace Datiss.Budget.Services
         {
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _dbSet = _uow.Set<CostCurrentBankFee>();
+            _dbSet = _uow.Set<CostCurrentWaterSource>();
             _orgDbSet = _uow.Set<Organization>();
             _yearSet = _uow.Set<FinanceYear>();
             _constSet = _uow.Set<Constant>();
@@ -58,33 +58,36 @@ namespace Datiss.Budget.Services
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
-        private IQueryable<CostCurrentBankFee> Query()
+        private IQueryable<CostCurrentWaterSource> Query()
             => _dbSet.AsNoTracking();
 
-        public async Task<CostCurrentBankFee> GetByIdAsync(int id)
+        public async Task<CostCurrentWaterSource> GetByIdAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult<CostCurrentBankFeeDTO>> CreateAsync(CreateCostCurrentBankFeeDTO model)
+        public async Task<ValidationResult<CostCurrentWaterSourceDTO>> CreateAsync(CreateCostCurrentWaterSourceDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var entity = new CostCurrentBankFee
+            var entity = new CostCurrentWaterSource
             {
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
-                CostCenterTypeId = model.CostCenterTypeId,
-                BankFeeLastYear = model.BankFeeLastYear,
-                BankFeeForcast = model.BankFeeForcast
+                WaterSourceTypeId = model.WaterSourceTypeId,
+                ActiveSource = model.ActiveSource,
+                BaseProduction = model.BaseProduction,
+                LastYearProduction = model.LastYearProduction,
+                ForcastProduction = model.ForcastProduction
             };
 
-            model.CostCenterTypeTitle = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
+            model.WaterSourceTypeTitle = (await _constSet.FindAsync(model.WaterSourceTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CostCenterTypeId))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.WaterSourceTypeId))
                 {
                     await _dbSet.AddAsync(entity);
                     try
@@ -93,49 +96,51 @@ namespace Datiss.Budget.Services
                     }
                     catch
                     {
-                        return ValidationResult<CostCurrentBankFeeDTO>.Failed(
+                        return ValidationResult<CostCurrentWaterSourceDTO>.Failed(
                             string.Format(ServiceMessages.ImportExcelCalculationField)
                             );
                     }
-                    var result = entity.Adapt<CostCurrentBankFeeDTO>();
-
-                    result.CostCenterTypeDisplay = model.CostCenterTypeTitle;
+                    var result = entity.Adapt<CostCurrentWaterSourceDTO>();
+                    result.WaterSourceTypeDisplay = model.WaterSourceTypeTitle;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.ActiveSource = model.ActiveSource;
+                    result.BaseProduction = model.BaseProduction;
+                    result.LastYearProduction = model.LastYearProduction;
+                    result.ForcastProduction = model.ForcastProduction;
 
-                    return ValidationResult<CostCurrentBankFeeDTO>.Success(result);
+                    return ValidationResult<CostCurrentWaterSourceDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<CostCurrentBankFeeDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<CostCurrentWaterSourceDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
-            return ValidationResult<CostCurrentBankFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_CostCenterTypeOrgDuplicates,
-                model.CostCenterTypeTitle, organizationDisplay)
+            return ValidationResult<CostCurrentWaterSourceDTO>.Failed(
+                string.Format(ServiceMessages.Logic_WaterSourceTypeDuplicate,
+                model.WaterSourceTypeTitle, organizationDisplay)
                 );
-
-
         }
 
-        public async Task<ValidationResult<CostCurrentBankFeeDTO>> UpdateAsync(UpdateCostCurrentBankFeeDTO model)
+        public async Task<ValidationResult<CostCurrentWaterSourceDTO>> UpdateAsync(UpdateCostCurrentWaterSourceDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
-
-            model.CostCenterTypeTitle = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
+            model.WaterSourceTypeTitle = (await _constSet.FindAsync(model.WaterSourceTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CostCenterTypeId, model.Id))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.WaterSourceTypeId, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.OrganizationId = model.OrganizationId;
                     entity.YearId = model.YearId;
-                    entity.CostCenterTypeId = model.CostCenterTypeId;
-                    entity.BankFeeLastYear = model.BankFeeLastYear;
-                    entity.BankFeeForcast = model.BankFeeForcast;
+                    entity.WaterSourceTypeId = model.WaterSourceTypeId;
+                    entity.ActiveSource = model.ActiveSource;
+                    entity.BaseProduction = model.BaseProduction;
+                    entity.LastYearProduction = model.LastYearProduction;
+                    entity.ForcastProduction = model.ForcastProduction;
 
                     try
                     {
@@ -143,28 +148,34 @@ namespace Datiss.Budget.Services
                     }
                     catch
                     {
-                        return ValidationResult<CostCurrentBankFeeDTO>.Failed(
+                        return ValidationResult<CostCurrentWaterSourceDTO>.Failed(
                             string.Format(ServiceMessages.ImportExcelCalculationField)
                             );
                     }
+                    var result = new CostCurrentWaterSourceDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        WaterSourceTypeId = model.WaterSourceTypeId,
+                        ActiveSource = model.ActiveSource,
+                        BaseProduction = model.BaseProduction,
+                        LastYearProduction = model.LastYearProduction,
+                        ForcastProduction = model.ForcastProduction,
+                        OrganizationDisplay = organizationDisplay,
+                        WaterSourceTypeDisplay = model.WaterSourceTypeTitle,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
 
-                    var result = entity.Adapt<CostCurrentBankFeeDTO>();
-
-                    result.CostCenterTypeDisplay = model.CostCenterTypeTitle;
-                    result.OrganizationDisplay = organizationDisplay;
-                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-
-                    return ValidationResult<CostCurrentBankFeeDTO>.Success(result);
+                    return ValidationResult<CostCurrentWaterSourceDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<CostCurrentBankFeeDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<CostCurrentWaterSourceDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
-
-            return ValidationResult<CostCurrentBankFeeDTO>.Failed(
-                string.Format(ServiceMessages.Logic_CostCenterTypeOrgDuplicates,
-                model.CostCenterTypeTitle, organizationDisplay)
+            return ValidationResult<CostCurrentWaterSourceDTO>.Failed(
+                string.Format(ServiceMessages.Logic_WaterSourceTypeDuplicate,
+                 model.WaterSourceTypeTitle, organizationDisplay)
                 );
         }
 
@@ -199,21 +210,13 @@ namespace Datiss.Budget.Services
             var self = await _dbSet.Where(_ => _.YearId == yearId)
                                     .Where(_ => _.OrganizationId == organizationId)
                                     .ToListAsync();
-
-            IEnumerable<CostCurrentBankFee> childrens = new CostCurrentBankFee[] { };
-
-            if (organization.Type == OrganizationType.County || organization.Type == OrganizationType.Root)
-            {
-                childrens = await getChildren(organizationId, yearId);
-            }
+            var childrens = await getChildren(organizationId, yearId);
 
             if (self.Count() == 0 && childrens.Count() == 0)
                 throw new DeleteNullRecordException();
-
             _dbSet.RemoveRange(self);
 
-            if (childrens.Any())
-                _dbSet.RemoveRange(childrens);
+            _dbSet.RemoveRange(childrens);
 
             var result = new OrganizationDeleteDataResult
             {
@@ -234,23 +237,66 @@ namespace Datiss.Budget.Services
                 new SqlParameter("YearId", yearId),
                 new SqlParameter("OrganizationId", organizationId)
             };
+
             var result = new List<CalculationItemData>();
+
+
             result.Add(new CalculationItemData
             {
-                Key = "CostCurrentBankFees_Cal1",
-                Value = await _uow.ExecuteScalar<int>(
-                        "[dbo].[CostCurrentBankFees_Cal1] @YearId, @OrganizationId",
+                Key = "CostCurrentWaterSource_Cal1",
+                Value = await _uow.ExecuteScalar<long>(
+                        "[dbo].[CostCurrentWaterSource_Cal1] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentWaterSource_Cal2",
+                Value = await _uow.ExecuteScalar<long>(
+                        "[dbo].[CostCurrentWaterSource_Cal2] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentWaterSource_Cal3",
+                Value = await _uow.ExecuteScalar<long>(
+                        "[dbo].[CostCurrentWaterSource_Cal3] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentWaterSource_Cal4",
+                Value = await _uow.ExecuteScalar<long>(
+                        "[dbo].[CostCurrentWaterSource_Cal4] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentWaterSource_Cal5",
+                Value = await _uow.ExecuteScalar<long>(
+                        "[dbo].[CostCurrentWaterSource_Cal5] @YearId, @OrganizationId",
+                        parameters: sqlParams.ToArray())
+            });
+
+            result.Add(new CalculationItemData
+            {
+                Key = "CostCurrentWaterSource_Cal6",
+                Value = await _uow.ExecuteScalar<long>(
+                        "[dbo].[CostCurrentWaterSource_Cal6] @YearId, @OrganizationId",
                         parameters: sqlParams.ToArray())
             });
 
             return await Task.FromResult(result);
         }
 
-        public async Task<PagedResult<CostCurrentBankFeeDTO>> GetListAsync(CostCurrentBankFeeFilterDTO filter)
+        public async Task<PagedResult<CostCurrentWaterSourceDTO>> GetListAsync(CostCurrentWaterSourceFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var result = new PagedResult<CostCurrentBankFeeDTO>
+            var result = new PagedResult<CostCurrentWaterSourceDTO>
             {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -270,16 +316,18 @@ namespace Datiss.Budget.Services
 
             result.Items = await query.Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
-                                    .Include(x => x.CostCenterType)
-                                    .Select(x => new CostCurrentBankFeeDTO
+                                    .Include(x => x.WaterSourceType)
+                                    .Select(x => new CostCurrentWaterSourceDTO
                                     {
                                         Id = x.Id,
-                                        CostCenterTypeDisplay = x.CostCenterType.Title,
-                                        CostCenterTypeId = x.CostCenterTypeId,
+                                        WaterSourceTypeDisplay = x.WaterSourceType.Title,
+                                        WaterSourceTypeId = x.WaterSourceTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        BankFeeLastYear = x.BankFeeLastYear,
-                                        BankFeeForcast = x.BankFeeForcast,
+                                        ActiveSource = x.ActiveSource,
+                                        BaseProduction = x.BaseProduction,
+                                        LastYearProduction = x.LastYearProduction,
+                                        ForcastProduction = x.ForcastProduction,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -296,7 +344,7 @@ namespace Datiss.Budget.Services
                 throw new CopyDestYearExxeption();
             if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
                 throw new CopyOrgNullDataException();
-            var result = new List<CostCurrentBankFee>();
+            var result = new List<CostCurrentWaterSource>();
 
             if (await Query()
                         .Where(_ => _.OrganizationId == sourceOrgId)
@@ -311,16 +359,18 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.CostCenterTypeId))
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.WaterSourceTypeId))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new CostCurrentBankFee
+                    var entity = new CostCurrentWaterSource
                     {
-                        CostCenterTypeId = item.CostCenterTypeId,
+                        WaterSourceTypeId = item.WaterSourceTypeId,
                         OrganizationId = item.OrganizationId,
                         YearId = destYearId,
-                        BankFeeLastYear = item.BankFeeLastYear,
-                        BankFeeForcast = item.BankFeeForcast
+                        ActiveSource = item.ActiveSource,
+                        BaseProduction = item.BaseProduction,
+                        LastYearProduction = item.LastYearProduction,
+                        ForcastProduction = item.ForcastProduction
                     };
                     result.Add(entity);
                 }
@@ -345,17 +395,55 @@ namespace Datiss.Budget.Services
             }
         }
 
+        public async Task<IEnumerable<CostCurrentWaterSourceDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        {
+            var filter = new CostCurrentWaterSourceFilterDTO
+            {
+                OrganizationId = organizationId,
+                YearId = yearId
+            };
+            filter.CheckArgumentIsNull(nameof(filter));
+
+            var query = Query();
+
+            query = await setFilter(query, filter);
+
+            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
+
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.WaterSourceType)
+                                    .Select(x => new CostCurrentWaterSourceDTO
+                                    {
+                                        Id = x.Id,
+                                        WaterSourceTypeDisplay = x.WaterSourceType.Title,
+                                        WaterSourceTypeId = x.WaterSourceTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        ActiveSource = x.ActiveSource,
+                                        BaseProduction = x.BaseProduction,
+                                        LastYearProduction = x.LastYearProduction,
+                                        ForcastProduction = x.ForcastProduction
+                                    }).ToListAsync();
+
+            return items;
+        }
+
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<CostCurrentBankFeeImportModel>
+            var data = await _excelService.ImportAsync<CostCurrentWaterSourceImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
 
-            var records = data.Adapt<List<CostCurrentBankFee>>();
+            var records = data.Adapt<List<CostCurrentWaterSource>>();
 
             int rowIndex = 1;
 
-            var costCenterTypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                                       x.Parent.ConstantKey == ConstantKeys.__CostCenterType);
+            var waterSourceType = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                   x.Parent.ConstantKey == ConstantKeys.__WaterSourceType).ToList();
+
             var descendents = await _organizationService
                              .GetAllDescendentsAsync(_userContext.OrganizationId);
 
@@ -379,10 +467,10 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
-                if (!await costCenterTypes.AnyAsync(x => x.Id == rec.CostCenterTypeId))
+                if (!waterSourceType.Any(x => x.Id == rec.WaterSourceTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidCostCenterType, rowIndex + 2, rec.CostCenterTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidWaterSourceType, rowIndex + 2, rec.WaterSourceTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -410,37 +498,36 @@ namespace Datiss.Budget.Services
                     existOrgs.Add(item);
             }
             //
-            //Start CostCenterType
-            var missingCostCenterType = new List<Constant>();
+            //Start WaterSourceType
+            var missingwaterType = new List<Constant>();
             string orgTitle = "";
-
             foreach (var org in existOrgs)
             {
                 if (!string.IsNullOrWhiteSpace(orgTitle))
                 {
                     break;
                 }
-                foreach (var item in costCenterTypes)
+                foreach (var item in waterSourceType)
                 {
-                    var existCostCenterTypeInExcel = records.Any(_ => _.CostCenterTypeId == item.Id &&
-                                                                      _.OrganizationId == org.Id);
-                    if (!existCostCenterTypeInExcel)
+                    var existCCNOTypeInExcel = records.Any(_ => _.WaterSourceTypeId == item.Id &&
+                                              _.OrganizationId == org.Id);
+                    if (!existCCNOTypeInExcel)
                     {
-                        missingCostCenterType.Add(item);
+                        missingwaterType.Add(item);
                         orgTitle = org.Title;
                     }
 
                 }
             }
-            if (missingCostCenterType.Any())
+            if (missingwaterType.Any())
             {
-                string costCenterTypeNames = "";
-                foreach (var item in missingCostCenterType)
+                string waterTypeNames = "";
+                foreach (var item in missingwaterType)
                 {
-                    costCenterTypeNames += "- [" + item.Title + "]<br>";
+                    waterTypeNames += "- [" + item.Title + "]<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelCostCenterTypeOrgNotInExcel, costCenterTypeNames, orgTitle));
+                    string.Format(ServiceMessages.ImportExcelWaterSourceTypeOrgNotInExcels, waterTypeNames, orgTitle));
             }
             //end
 
@@ -475,7 +562,7 @@ namespace Datiss.Budget.Services
                 if (!await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
-                    record.CostCenterTypeId))
+                    record.WaterSourceTypeId))
                 {
 
                     return ImportResult.Failed(
@@ -504,87 +591,15 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<IEnumerable<CostCurrentBankFeeDTO>> GetExportItemsAsync(int yearId, int organizationId)
-        {
-            var filter = new CostCurrentBankFeeFilterDTO
-            {
-                OrganizationId = organizationId,
-                YearId = yearId
-            };
-            filter.CheckArgumentIsNull(nameof(filter));
-
-            var query = Query();
-
-            query = await setFilter(query, filter);
-
-            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
-
-            var items = await query
-                                    .Include(x => x.FinanceYear)
-                                    .Include(x => x.Organization)
-                                    .Include(x => x.CostCenterType)
-                                    .Select(x => new CostCurrentBankFeeDTO
-                                    {
-                                        Id = x.Id,
-                                        CostCenterTypeDisplay = x.CostCenterType.Title,
-                                        CostCenterTypeId = x.CostCenterTypeId,
-                                        OrganizationDisplay = x.Organization.Title,
-                                        OrganizationId = x.OrganizationId,
-                                        BankFeeLastYear = x.BankFeeLastYear,
-                                        BankFeeForcast = x.BankFeeForcast,
-                                        Year = x.FinanceYear.Year,
-                                        YearId = x.YearId
-                                    }).ToListAsync();
-
-            return items;
-        }
-
-        public async Task<Stream> ExportExcelAsync(CostCurrentBankFeeFilterDTO filter)
-        {
-            filter.CheckArgumentIsNull(nameof(filter));
-
-            var query = Query();
-
-            query = await setFilter(query, filter);
-
-            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
-
-            var items = await query
-                                    .Include(x => x.FinanceYear)
-                                    .Include(x => x.Organization)
-                                    .Include(x => x.CostCenterType)
-                                    .Select(x => new CostCurrentBankFeeDTO
-                                    {
-                                        Id = x.Id,
-                                        CostCenterTypeDisplay = x.CostCenterType.Title,
-                                        CostCenterTypeId = x.CostCenterTypeId,
-                                        OrganizationDisplay = x.Organization.Title,
-                                        OrganizationId = x.OrganizationId,
-                                        BankFeeLastYear = x.BankFeeLastYear,
-                                        BankFeeForcast = x.BankFeeForcast,
-                                        Year = x.FinanceYear.Year,
-                                        YearId = x.YearId
-                                    }).ToListAsync();
-
-            var ms = new MemoryStream();
-            var result = _excelService.Export(items, ms);
-
-            var mem1 = new MemoryStream(ms.ToArray());
-
-            return mem1;
-        }
-
-
         #region Private Helper Methods
-
-        private async Task<IQueryable<CostCurrentBankFee>> setFilter(
-            IQueryable<CostCurrentBankFee> query,
-            CostCurrentBankFeeFilterDTO filter)
+        private async Task<IQueryable<CostCurrentWaterSource>> setFilter(
+            IQueryable<CostCurrentWaterSource> query,
+            CostCurrentWaterSourceFilterDTO filter)
         {
             query.CheckArgumentIsNull(nameof(query));
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var predicate = PredicateBuilder.New<CostCurrentBankFee>();
+            var predicate = PredicateBuilder.New<CostCurrentWaterSource>();
 
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
@@ -602,22 +617,21 @@ namespace Datiss.Budget.Services
                 query = query.Where(predicate);
             }
 
-            if (filter.CostCenterTypeId.HasValue)
-                query = query.Where(x => x.CostCenterTypeId == filter.CostCenterTypeId.Value);
+            if (filter.WaterSourceTypeId.HasValue)
+                query = query.Where(x => x.WaterSourceTypeId == filter.WaterSourceTypeId.Value);
 
 
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Organization.Title.ToUpper().Contains(filter.Search) ||
-                                         _.CostCenterType.Title.ToUpper().Contains(filter.Search));
+                query = query.Where(_ => _.WaterSourceType.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;
         }
 
-        private IQueryable<CostCurrentBankFee> setOrder(
-           IQueryable<CostCurrentBankFee> query,
+        private IQueryable<CostCurrentWaterSource> setOrder(
+           IQueryable<CostCurrentWaterSource> query,
            string orderBy = "id",
            bool desc = false)
         {
@@ -633,21 +647,21 @@ namespace Datiss.Budget.Services
                         ? query.OrderByDescending(x => x.Organization.Title)
                         : query.OrderBy(x => x.Organization.Title);
 
-                case "costCenterType":
+                case "costCurrentType":
                     return desc
-                        ? query.OrderByDescending(x => x.CostCenterType.DisplayOrder)
-                        : query.OrderBy(x => x.CostCenterType.DisplayOrder);
+                        ? query.OrderByDescending(x => x.WaterSourceType.Title)
+                        : query.OrderBy(x => x.WaterSourceType.Title);
 
                 default:
                     return query.Include(x => x.Organization)
-                                .Include(x => x.CostCenterType)
+                                .Include(x => x.WaterSourceType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
                                 .ThenBy(x => x.Organization.RowOrder)
-                                .ThenBy(x => x.CostCenterType.DisplayOrder);
+                                .ThenBy(x => x.WaterSourceType.DisplayOrder);
             }
         }
 
-        private async Task<IEnumerable<CostCurrentBankFee>> getChildrenData(
+        private async Task<IEnumerable<CostCurrentWaterSource>> getChildrenData(
             int parentOrganizationId,
             int yearId,
             int targetYearId)
@@ -658,7 +672,7 @@ namespace Datiss.Budget.Services
                             _.ParentId == parentOrganizationId)
                 .ToListAsync();
 
-            var result = new List<CostCurrentBankFee>();
+            var result = new List<CostCurrentWaterSource>();
 
             foreach (var org in children)
             {
@@ -676,16 +690,18 @@ namespace Datiss.Budget.Services
 
                 foreach (var item in data)
                 {
-                    if (!await checkLogicAsync(targetYearId, org.Id, item.CostCenterTypeId))
+                    if (!await checkLogicAsync(targetYearId, org.Id, item.WaterSourceTypeId))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new CostCurrentBankFee
+                    var entity = new CostCurrentWaterSource
                     {
-                        CostCenterTypeId = item.CostCenterTypeId,
+                        WaterSourceTypeId = item.WaterSourceTypeId,
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
-                        BankFeeLastYear = item.BankFeeLastYear,
-                        BankFeeForcast = item.BankFeeForcast
+                        ActiveSource = item.ActiveSource,
+                        BaseProduction = item.BaseProduction,
+                        LastYearProduction = item.LastYearProduction,
+                        ForcastProduction = item.ForcastProduction
                     };
 
                     result.Add(entity);
@@ -696,14 +712,14 @@ namespace Datiss.Budget.Services
 
             return result;
         }
-        private async Task<IEnumerable<CostCurrentBankFee>> getChildren(
+        private async Task<IEnumerable<CostCurrentWaterSource>> getChildren(
             int parentOrganizationId,
             int yearId)
         {
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
-            var result = new List<CostCurrentBankFee>();
+            var result = new List<CostCurrentWaterSource>();
             foreach (var org in children)
             {
                 var data = await Query()
@@ -738,14 +754,14 @@ namespace Datiss.Budget.Services
             return false;
 
         }
+
         #endregion
 
         #region Logics
-
         private async Task<bool> checkLogicAsync(
             int yearId,
-            int organizationId,
-            int costCenterTypeId,
+            int organizaionId,
+            int waterSourceTypeId,
             int? id = null)
         {
             var year = await _yearSet.FindAsync(yearId);
@@ -755,17 +771,19 @@ namespace Datiss.Budget.Services
                 throw new DisbaledYearDataInputException();
 
             var result = id == null
+
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
-                                                x.OrganizationId == organizationId &&
-                                                x.CostCenterTypeId == costCenterTypeId)
+                                            x.OrganizationId == organizaionId &&
+                                            x.WaterSourceTypeId == waterSourceTypeId)
 
                 : await Query().AnyAsync(x => x.YearId == yearId &&
-                                            x.OrganizationId == organizationId &&
-                                            x.CostCenterTypeId == costCenterTypeId &&
-                                            x.Id != id);
+                                               x.OrganizationId == organizaionId &&
+                                               x.WaterSourceTypeId == waterSourceTypeId &&
+                                               x.Id != id);
+
             return !result;
         }
-
         #endregion
+
     }
 }

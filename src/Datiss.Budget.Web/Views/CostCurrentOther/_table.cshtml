@@ -1,18 +1,35 @@
-﻿@model CostCurrentConsumableIndexViewModel
+﻿@model CostCurrentOtherIndexViewModel
 
 <div class="table-responsive">
     <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
         <thead class="thead-light">
             <tr>
-                <th style="min-width:230px">سازمان</th>
-                <th style="min-width:215px">مواد مصرفی</th>
-                <th style="min-width:210px">مقدار</th>
-                <th style="min-width:240px">مبلغ</th>
-                <th style="min-width:189px">مدیریت</th>
+                <th style="min-width:130px">سال</th>
+                <th style="min-width:180px">سازمان</th>
+                <th style="min-width:160px">مرکز هزینه</th>
+                <th style="min-width:230px">عنوان سایر هزینه ها</th>
+                <th style="min-width:145px">مبلغ پایه</th>
+                <th style="min-width:145px;font-size:small">مبلغ سال ماقبل بودجه</th>
+                <th style="min-width:140px">پیش بینی مبلغ</th>
+                <th style="min-width:190px">مدیریت</th>
             </tr>
         </thead>
         <tbody>
             <tr id="rowTemplate" style="display: none">
+                <td>
+                    <div id="divInput_Year_">
+                        <input id="hidYearId_" type="hidden" />
+                        <select class="form-control selectYear" id="inputYear_" asp-items="Model.YearSource">
+                        </select>
+                        <script>
+                            $('select#inputYear_ option[value=' + $('#yearId').val() + ']').attr('selected', true);
+                            $('#inputYear_').attr('disabled', 'disabled');
+                        </script>
+                    </div>
+                    <div id="divOutput_Year_" style="display: none">
+                        <span id="spanYear_"></span>
+                    </div>
+                </td>
                 <td>
                     <div id="divInput_Org_">
                         <input id="hidOrgId_" type="hidden" />
@@ -27,32 +44,49 @@
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_ConsumableType_">
-                        <input id="hidConsumableTypeId_" type="hidden" />
-                        <select class="form-control" id="inputConsumableType_" asp-items="Model.ConsumableTypeSource">
+                    <div id="divInput_CostCenterType_">
+                        <input id="hidCostCenterTypeId_" type="hidden" />
+                        <select class="form-control selectCostCenterType" id="inputCostCenterType_" asp-items="Model.CostCenterTypeSource">
                         </select>
                     </div>
-                    <div id="divOutput_ConsumableType_" style="display: none">
-                        <span id="spanConsumableType_"> </span>
+                    <div id="divOutput_CostCenterType_" style="display: none">
+                        <span id="spanCostCenterType_"> </span>
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_ConsumableAmount_">
-                        <input class="form-control input-keyup default-input" id="inputConsumableAmount_" type="number" min="0" />
+                    <div id="divInput_CCOtherCostsType_">
+                        <input id="hidCCOtherCostsTypeId_" type="hidden" />
+                        <select class="form-control selectCCOtherCostsType" id="inputCCOtherCostsType_" asp-items="Model.CCOtherCostsTypeSource">
+                        </select>
                     </div>
-                    <div id="divOutput_ConsumableAmount_" style="display: none">
-                        <span id="spanConsumableAmount_"> </span>
+                    <div id="divOutput_CCOtherCostsType_" style="display: none">
+                        <span id="spanCCOtherCostsType_"> </span>
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_ConsumableCost_">
-                        <input class="form-control input-keyup" id="inputConsumableCost_" type="number" min="0" />
+                    <div id="divInput_BaseFee_">
+                        <input class="form-control input-keyup default-input" id="inputBaseFee_" type="number" />
                     </div>
-                    <div id="divOutput_ConsumableCost_" style="display: none">
-                        <span id="spanConsumableCost_"> </span>
+                    <div id="divOutput_BaseFee_" style="display: none">
+                        <span id="spanBaseFee_"> </span>
                     </div>
                 </td>
-
+                <td>
+                    <div id="divInput_LastYearFee_">
+                        <input class="form-control input-keyup" id="inputLastYearFee_" type="number" />
+                    </div>
+                    <div id="divOutput_LastYearFee_" style="display: none">
+                        <span id="spanLastYearFee_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ForcastFee_">
+                        <input class="form-control input-keyup" id="inputForcastFee_" type="number" />
+                    </div>
+                    <div id="divOutput_ForcastFee_" style="display: none">
+                        <span id="spanForcastFee_"> </span>
+                    </div>
+                </td>
                 <td>
                     <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
                         <i class="fa ft-edit fa-1x"></i>
@@ -83,6 +117,20 @@
             {
                 <tr id="row_@item.Id">
                     <td>
+                        <div id="divInput_Year_@item.Id" style="display: none">
+                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            </select>
+                            <script>
+                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Year_@item.Id">
+                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                        </div>
+                    </td>
+                    <td>
                         <div id="divInput_Org_@item.Id" style="display: none">
                             <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
                             <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
@@ -97,36 +145,58 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_ConsumableType_@item.Id" style="display: none">
-                            <input id="hidConsumableTypeId_@item.Id" type="hidden" value="@item.ConsumableTypeId" />
-                            <select class="form-control selectConsumableType" id="inputConsumableType_@item.Id" asp-items="Model.ConsumableTypeSource">
+                        <div id="divInput_CostCenterType_@item.Id" style="display: none">
+                            <input id="hidCostCenterTypeId_@item.Id" type="hidden" value="@item.CostCenterTypeId" />
+                            <select class="form-control selectCostCenterType" id="inputCostCenterType_@item.Id" asp-items="Model.CostCenterTypeSource">
                             </select>
                             <script>
-                                $('select#inputConsumableType_' + @item.Id + ' option[value=' + @item.ConsumableTypeId + ']').attr('selected', true);
-                                $('#inputConsumableType_' + @item.Id).attr('disabled', 'disabled');
+                                $('select#inputCostCenterType_' + @item.Id + ' option[value=' + @item.CostCenterTypeId + ']').attr('selected', true);
+                                $('#inputCostCenterType_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>
-                        <div id="divOutput_ConsumableType_@item.Id">
-                            <span id="spanConsumableType_@item.Id">@item.ConsumableTypeDisplay </span>
+                        <div id="divOutput_CostCenterType_@item.Id">
+                            <span id="spanCostCenterType_@item.Id">@item.CostCenterTypeDisplay </span>
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_ConsumableAmount_@item.Id" style="display: none">
-                            <input class="form-control" id="inputConsumableAmount_@item.Id" value="@item.ConsumableAmount" type="number" />
+                        <div id="divInput_CCOtherCostsType_@item.Id" style="display: none">
+                            <input id="hidCCOtherCostsTypeId_@item.Id" type="hidden" value="@item.CCOtherCostsTypeId" />
+                            <select class="form-control" id="inputCCOtherCostsType_@item.Id" asp-items="Model.CCOtherCostsTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputCCOtherCostsType_' + @item.Id + ' option[value=' + @item.CCOtherCostsTypeId + ']').attr('selected', true);
+                                $('#inputCCOtherCostsType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
                         </div>
-                        <div id="divOutput_ConsumableAmount_@item.Id">
-                            <span id="spanConsumableAmount_@item.Id">@item.ConsumableAmountDisplay </span>
+                        <div id="divOutput_CCOtherCostsType_@item.Id">
+                            <span id="spanCCOtherCostsType_@item.Id">@item.CCOtherCostsTypeDisplay </span>
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_ConsumableCost_@item.Id" style="display: none">
-                            <input class="form-control" id="inputConsumableCost_@item.Id" value="@item.ConsumableCost" type="number" />
+                        <div id="divInput_BaseFee_@item.Id" style="display: none">
+                            <input class="form-control" id="inputBaseFee_@item.Id" value="@item.BaseFee" type="number" />
                         </div>
-                        <div id="divOutput_ConsumableCost_@item.Id">
-                            <span id="spanConsumableCost_@item.Id">@item.ConsumableCostDisplay </span>
+                        <div id="divOutput_BaseFee_@item.Id">
+                            <span id="spanBaseFee_@item.Id">@item.BaseFeeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_LastYearFee_@item.Id" style="display: none">
+                            <input class="form-control" id="inputLastYearFee_@item.Id" value="@item.LastYearFee" type="number" />
+                        </div>
+                        <div id="divOutput_LastYearFee_@item.Id">
+                            <span id="spanLastYearFee_@item.Id">@item.LastYearFeeDisplay </span>
                         </div>
                     </td>
 
+                    <td>
+                        <div id="divInput_ForcastFee_@item.Id" style="display: none">
+                            <input class="form-control" id="inputForcastFee_@item.Id" value="@item.ForcastFee" type="number" />
+                        </div>
+                        <div id="divOutput_ForcastFee_@item.Id">
+                            <span id="spanForcastFee_@item.Id">@item.ForcastFeeDisplay </span>
+                        </div>
+                    </td>
                     <td>
                         <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
                             <i class="fa ft-edit fa-1x"></i>
@@ -149,6 +219,7 @@
         </tbody>
     </table>
 </div>
+
 <div class="rowACJSB" style="margin-top:20px">
     <!--Tools-->
     <div class="rowACJS">
@@ -175,15 +246,10 @@
             <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
                 <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
             </button>
-            <span data-toggle="modal" data-target="#CalculationModal">
-                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
-                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
-                </button>
-            </span>
         </form>
 
     </div>
-
+    <!--Pagination-->
     <div class="rowAC">
         <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
         <div class="my-font ml-2">
@@ -201,5 +267,5 @@
         </div>
     </div>
     <!--Pagination-->
-    <vc:pager model="Model.ToPager()" controller-name="@CostCurrentConsumableController.Name" action-name="@CostCurrentConsumableController.ACTION_Index"></vc:pager>
+    <vc:pager model="Model.ToPager()" controller-name="@CostCurrentOtherController.Name" action-name="@CostCurrentOtherController.ACTION_Index"></vc:pager>
 </div>

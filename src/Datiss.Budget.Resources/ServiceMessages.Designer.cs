@@ -232,6 +232,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در فایل اکسل شما اطلاعات سایر هزینه :&lt;br&gt;{0} برای مرکز هزینه &quot;{1}&quot; ، &quot;{2}&quot; وجود ندارد..
+        /// </summary>
+        public static string ImportExcelCCOtherCostsTypeCostCenterTypeOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelCCOtherCostsTypeCostCenterTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ضرایب :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelCofficientNotInExcel {
@@ -243,9 +252,9 @@ namespace Datiss.Budget.Resources {
         /// <summary>
         ///   Looks up a localized string similar to مراکز هزینه :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
-        public static string ImportExcelCostCenterTypeOrgNotInExcels {
+        public static string ImportExcelCostCenterTypeOrgNotInExcel {
             get {
-                return ResourceManager.GetString("ImportExcelCostCenterTypeOrgNotInExcels", resourceCulture);
+                return ResourceManager.GetString("ImportExcelCostCenterTypeOrgNotInExcel", resourceCulture);
             }
         }
         
@@ -403,6 +412,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در سطر {0} فایل اکسل، کد منبع &quot;{1}&quot; معتبر نیست ..
+        /// </summary>
+        public static string ImportExcelInvalidWaterSourceType {
+            get {
+                return ResourceManager.GetString("ImportExcelInvalidWaterSourceType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to داده سطر {0} اکسل شما ،در جدول وجود دارد ..
         /// </summary>
         public static string ImportExcelLogicError {
@@ -511,6 +529,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to منابع  :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
+        /// </summary>
+        public static string ImportExcelWaterSourceTypeOrgNotInExcels {
+            get {
+                return ResourceManager.GetString("ImportExcelWaterSourceTypeOrgNotInExcels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to فرمت کد ملی وارد شده اشتباه است..
         /// </summary>
         public static string Invalid_NationalCode {
@@ -561,6 +588,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_ConsumableTypeOrgDuplicates {
             get {
                 return ResourceManager.GetString("Logic_ConsumableTypeOrgDuplicates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to اطلاعات مرکز هزینه &quot;{0}&quot; و عنوان &quot;{1}&quot; برای &quot;{2}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_CostCenterTypeCCOtherCostsTypeDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_CostCenterTypeCCOtherCostsTypeDuplicate", resourceCulture);
             }
         }
         
@@ -669,6 +705,15 @@ namespace Datiss.Budget.Resources {
         public static string Logic_UserTypeYearDuplicate {
             get {
                 return ResourceManager.GetString("Logic_UserTypeYearDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to منبع &quot;{0}&quot; برای &quot;{1}&quot; قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_WaterSourceTypeDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_WaterSourceTypeDuplicate", resourceCulture);
             }
         }
         

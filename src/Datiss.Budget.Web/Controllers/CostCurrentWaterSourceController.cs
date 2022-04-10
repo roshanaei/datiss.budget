@@ -1,58 +1,64 @@
-﻿using ClosedXML.Extensions;
-using Datiss.Budget.Common;
-using Datiss.Budget.Common.Exceptions;
-using Datiss.Budget.Common.GuardToolkit;
-using Datiss.Budget.Enum;
-using Datiss.Budget.Reports.Excel;
-using Datiss.Budget.Resources;
-using Datiss.Budget.Security;
-using Datiss.Budget.Services.Contracts;
-using Datiss.Budget.Services.Contracts.Identity;
-using Datiss.Budget.Services.Models;
-using Datiss.Budget.ViewModels;
-using Mapster;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.IO;
+using Mapster;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Datiss.Budget.Services.Identity;
+using Datiss.Budget.Services.Contracts.Identity;
+using Microsoft.AspNetCore.Http;
+using Datiss.Budget.Common.Exceptions;
+using Microsoft.AspNetCore.Hosting;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Web.Helpers;
+using Datiss.Budget.Resources;
+using ClosedXML.Extensions;
+using Datiss.Budget.Reports.Excel;
+using Microsoft.Extensions.Logging;
+using Datiss.Budget.Common;
+using Datiss.Budget.Enum;
+using Datiss.Budget.Security;
 
 namespace Datiss.Budget.Web.Controllers
 {
+
     [Authorize]
     [Route("[controller]")]
-    public class CostCurrentConsumableController : Controller
+    public class CostCurrentWaterSourceController : Controller
     {
-        public const string Name = "CostCurrentConsumable";
+
+        public const string Name = "CostCurrentWaterSource";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
         public const string ACTION_Copy = nameof(Copy);
         public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
-        public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
+        public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
-        private readonly ILogger<CostCurrentConsumableController> _logger;
+        private readonly ILogger<CostCurrentWaterSourceController> _logger;
         private readonly IWebHostEnvironment _env;
-        private readonly ICostCurrentConsumableService _costCurrentConsumableService;
+        private readonly ICostCurrentWaterSourceService _costCurrentWaterSourceService;
+        private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
         private readonly ISecurityTrimmingService _securityTrimmingService;
-        private readonly IConstantService _constantService;
 
-
-        public CostCurrentConsumableController(
-            ILogger<CostCurrentConsumableController> logger,
+        public CostCurrentWaterSourceController(
+            ILogger<CostCurrentWaterSourceController> logger,
             IWebHostEnvironment environment,
-            ICostCurrentConsumableService costCurrentConsumableService,
+            ICostCurrentWaterSourceService costCurrentWaterSourceService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             IConstantService constantService,
@@ -60,7 +66,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
-            _costCurrentConsumableService = costCurrentConsumableService ?? throw new ArgumentNullException(nameof(costCurrentConsumableService));
+            _costCurrentWaterSourceService = costCurrentWaterSourceService ?? throw new ArgumentNullException(nameof(costCurrentWaterSourceService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
@@ -69,17 +75,17 @@ namespace Datiss.Budget.Web.Controllers
 
 
         [HttpPost("[action]")]
-        [HasPermission(claimType: Name, PermissionActionType.Create)]
-        public async Task<IActionResult> Create(CreateCostCurrentConsumableViewModel model)
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        public async Task<IActionResult> Create(CreateCostCurrentWaterSourceViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 model.AddError(ViewMessages.InvalidData);
                 return Json(model);
             }
-            var data = model.Adapt<CreateCostCurrentConsumableDTO>();
+            var data = model.Adapt<CreateCostCurrentWaterSourceDTO>();
 
-            var result = await _costCurrentConsumableService.CreateAsync(data);
+            var result = await _costCurrentWaterSourceService.CreateAsync(data);
 
             if (!result.IsValid)
             {
@@ -87,13 +93,13 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            return Json(result.Result.Adapt<CostCurrentConsumableViewModel>());
+            return Json(result.Result.Adapt<CostCurrentWaterSourceViewModel>());
         }
 
 
         [HttpPost("[action]")]
-        [HasPermission(claimType: Name, PermissionActionType.Edit)]
-        public async Task<IActionResult> Edit(UpdateCostCurrentConsumableViewModel model)
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Edit)]
+        public async Task<IActionResult> Edit(UpdateCostCurrentWaterSourceViewModel model)
         {
 
             if (!ModelState.IsValid)
@@ -102,8 +108,8 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            var data = model.Adapt<UpdateCostCurrentConsumableDTO>();
-            var result = await _costCurrentConsumableService.UpdateAsync(data);
+            var data = model.Adapt<UpdateCostCurrentWaterSourceDTO>();
+            var result = await _costCurrentWaterSourceService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
@@ -112,15 +118,15 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(
-                result.Result.Adapt<CostCurrentConsumableViewModel>()
+                result.Result.Adapt<CostCurrentWaterSourceViewModel>()
             );
         }
 
         [HttpGet("{page?}")]
-        [HasPermission(claimType: Name, PermissionActionType.List)]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.List)]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var filter = new CostCurrentConsumableFilterDTO();
+            var filter = new CostCurrentWaterSourceFilterDTO();
             var orgSource = (await _organizationService.GetDropDownDataAsync())
               .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
@@ -129,32 +135,31 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var consumableTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ConsumablesType))
+            var waterTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterSourceType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
-            filter.ActivityType = ActivityType.Water;
 
             var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
-                .Adapt<List<DropDownItemViewModel>>();
+               .Adapt<List<DropDownItemViewModel>>();
 
-            var myfilter = TempData.Get<CostCurrentConsumableFilterViewModel>(_indexFilterKey);
+            var myfilter = TempData.Get<CostCurrentWaterSourceFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
             {
-                filter = myfilter.Adapt<CostCurrentConsumableFilterDTO>();
+                filter = myfilter.Adapt<CostCurrentWaterSourceFilterDTO>();
                 TempData.Put(_indexFilterKey, myfilter);
             }
 
             filter.PageNumber = page;
 
-            var result = await _costCurrentConsumableService.GetListAsync(filter);
-            var model = result.Adapt<CostCurrentConsumableIndexViewModel>();
+            var result = await _costCurrentWaterSourceService.GetListAsync(filter);
+            var model = result.Adapt<CostCurrentWaterSourceIndexViewModel>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetConsumableTypeSource(consumableTypeSource);
+            model.SetWaterSourceTypeSource(waterTypeSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
@@ -163,22 +168,22 @@ namespace Datiss.Budget.Web.Controllers
             model.Filter.OrganizationId = filter.OrganizationId;
             model.Filter.PageNumber = filter.PageNumber;
             model.Filter.PageSize = filter.PageSize;
-            model.Filter.ActivityType = filter.ActivityType;
+
             return View(model);
         }
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(CostCurrentConsumableIndexViewModel model, int page = 1)
+        public async Task<IActionResult> Index(CostCurrentWaterSourceIndexViewModel model)
         {
-            model.Filter.PageNumber = 1;
-            var filter = model.Filter.Adapt<CostCurrentConsumableFilterDTO>();
+
+            var filter = model.Filter.Adapt<CostCurrentWaterSourceFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
 
-            var result = await _costCurrentConsumableService.GetListAsync(filter);
-            model = result.Adapt<CostCurrentConsumableIndexViewModel>();
-            model.Filter = filter.Adapt<CostCurrentConsumableFilterViewModel>();
+            var result = await _costCurrentWaterSourceService.GetListAsync(filter);
+            model = result.Adapt<CostCurrentWaterSourceIndexViewModel>();
+            model.Filter = filter.Adapt<CostCurrentWaterSourceFilterViewModel>();
 
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
@@ -186,26 +191,25 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var consumableTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ConsumablesType))
+            var waterTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterSourceType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
-                .Adapt<List<DropDownItemViewModel>>();
+               .Adapt<List<DropDownItemViewModel>>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetConsumableTypeSource(consumableTypeSource);
-
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+            model.SetWaterSourceTypeSource(waterTypeSource);
 
             return View(model);
         }
 
         [HttpPost("[action]")]
-        [HasPermission(claimType: Name, PermissionActionType.Create)]
-        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model, ActivityType activityType)
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -218,10 +222,9 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _costCurrentConsumableService.ImportExcelAsync(
+                var result = await _costCurrentWaterSourceService.ImportExcelAsync(
                                                                     model.ExcelFile,
                                                                     model.YearId,
-                                                                    activityType,
                                                                     model.ContinueIfAnyOrgMissing);
 
                 if (result.AskToImport)
@@ -271,12 +274,12 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("records/delete")]
-        [HasPermission(claimType: Name, PermissionActionType.Delete)]
-        public async Task<IActionResult> DeleteRecords(int yearId, int orgId, ActivityType activityType)
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
         {
             try
             {
-                var result = await _costCurrentConsumableService.HardDeleteAsync(yearId, orgId, activityType);
+                var result = await _costCurrentWaterSourceService.HardDeleteAsync(yearId, orgId);
 
                 return Json(new
                 {
@@ -322,12 +325,12 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]/{id}")]
-        [HasPermission(claimType: Name, PermissionActionType.Delete)]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await _costCurrentConsumableService.HardDeleteAsync(id);
+                await _costCurrentWaterSourceService.HardDeleteAsync(id);
             }
             catch (DisbaledYearDataInputException)
             {
@@ -359,7 +362,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var result = await _costCurrentConsumableService.CalculationAsync(
+            var result = await _costCurrentWaterSourceService.CalculationAsync(
                 model.YearId,
                 model.OrganizationId);
 
@@ -378,9 +381,8 @@ namespace Datiss.Budget.Web.Controllers
             return PartialView("_calculationModal", viewModel);
         }
 
-
         [HttpGet("[action]")]
-        [HasPermission(claimType: Name, PermissionActionType.Create)]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
         public async Task<IActionResult> Copy()
         {
             var model = new CopyViewModel();
@@ -404,17 +406,16 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Copy(CopyViewModel model, ActivityType activityType)
+        public async Task<IActionResult> Copy(CopyViewModel model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
             try
             {
-                await _costCurrentConsumableService.CopyAsync(
+                await _costCurrentWaterSourceService.CopyAsync(
                                                     model.SourceYearId,
                                                     model.SourceOrgId,
-                                                    model.TargetYearId,
-                                                    activityType);
+                                                    model.TargetYearId);
                 model.Succeed(ViewMessages.CopySuccess);
             }
             catch (CopySameYearException)
@@ -445,58 +446,58 @@ namespace Datiss.Budget.Web.Controllers
             return Json(model);
         }
 
-        [HttpGet("import/template/{yearId}/{activity}/{orgId?}")]
-        public async Task<IActionResult> GetExcelTemplate(int yearId, ActivityType activity, int? orgId)
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
                                 .OrderBy(x => x.DisplayOrder)
                                 .ThenBy(x => x.RowOrder);
 
-            var consumableType = await _constantService.GetByConstantKeyAsync(ConstantKeys.__ConsumablesType);
+            var waterTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterSourceType);
 
-            var items = new List<CostCurrentConsumableDTO>();
+            var items = new List<CostCurrentWaterSourceDTO>();
 
             foreach (var org in organizations)
             {
-                foreach (var type in consumableType)
+                foreach (var cc in waterTypes)
                 {
-                    items.Add(new CostCurrentConsumableDTO
+                    items.Add(new CostCurrentWaterSourceDTO
                     {
+                        WaterSourceTypeDisplay = cc.Title,
+                        WaterSourceTypeId = cc.Id,
                         OrganizationId = org.Id,
                         OrganizationDisplay = org.Title,
-                        ActivityType = activity,
                         Year = year.Year,
-                        YearId = year.Id,
-                        ConsumableTypeDisplay = type.Title,
-                        ConsumableTypeId = type.Id
+                        YearId = year.Id
                     });
                 }
             }
-            using var workbook = items.GetImportTemplate(year.Year, activity);
-            return workbook.Deliver("CostCurrentConsumable-Import-Template.xlsx");
+
+            using var workbook = items.GetImportTemplate(year.Year);
+            return workbook.Deliver("CostCurrentWaterSource-Import-Template.xlsx");
         }
 
         [HttpGet("[action]/{orgid}/{yearid}")]
         public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
-            var result = await _costCurrentConsumableService.GetExportItemsAsync(yearid, orgid);
+            var result = await _costCurrentWaterSourceService.GetExportItemsAsync(yearid, orgid);
             if (result.Count() == 0)
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
-            return workbook.Deliver("CostCurrentConsumable.xlsx");
+            return workbook.Deliver("CostCurrentWaterSource.xlsx");
         }
 
         #region Private Helper Methods
         private string getCalcTitle(string key)
             => key switch
             {
-                "CostCurrentConsumable_Cal1" => SPTitles.CostCurrentConsumable_Cal1,
-                "CostCurrentConsumable_Cal2" => SPTitles.CostCurrentConsumable_Cal2,
-                "CostCurrentConsumable_Cal3" => SPTitles.CostCurrentConsumable_Cal3,
-                "CostCurrentConsumable_Cal4" => SPTitles.CostCurrentConsumable_Cal4,
-                "CostCurrentConsumable_Cal5" => SPTitles.CostCurrentConsumable_Cal5,
-                "CostCurrentConsumable_Cal6" => SPTitles.CostCurrentConsumable_Cal6,
+                "CostCurrentWaterSource_Cal1" => SPTitles.CostCurrentWaterSource_Cal1,
+                "CostCurrentWaterSource_Cal2" => SPTitles.CostCurrentWaterSource_Cal2,
+                "CostCurrentWaterSource_Cal3" => SPTitles.CostCurrentWaterSource_Cal3,
+                "CostCurrentWaterSource_Cal4" => SPTitles.CostCurrentWaterSource_Cal4,
+                "CostCurrentWaterSource_Cal5" => SPTitles.CostCurrentWaterSource_Cal5,
+                "CostCurrentWaterSource_Cal6" => SPTitles.CostCurrentWaterSource_Cal6,
                 _ => ""
             };
         #endregion
