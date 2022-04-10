@@ -213,6 +213,30 @@
   <data name="CostCurrentWaterSource_Cal6" xml:space="preserve">
     <value>مجموع تولید آب کل منابع</value>
   </data>
+  <data name="CostForcastConstructionWs_Cal1" xml:space="preserve">
+    <value>اعتبارات داخلی</value>
+  </data>
+  <data name="CostForcastConstructionWs_Cal2" xml:space="preserve">
+    <value>تبصره 2 قانون ماده واحده</value>
+  </data>
+  <data name="CostForcastConstructionWs_Cal3" xml:space="preserve">
+    <value>تبصره 3 قانون ماده واحده</value>
+  </data>
+  <data name="CostForcastConstructionWs_Cal4" xml:space="preserve">
+    <value>B.O.T</value>
+  </data>
+  <data name="CostForcastConstructionWs_Cal5" xml:space="preserve">
+    <value>B.O.O</value>
+  </data>
+  <data name="CostForcastConstructionWs_Cal6" xml:space="preserve">
+    <value>فاینانس</value>
+  </data>
+  <data name="CostForcastConstructionWs_Cal7" xml:space="preserve">
+    <value>ماده 11</value>
+  </data>
+  <data name="CostForcastConstructionWs_Cal8" xml:space="preserve">
+    <value>جمع کل</value>
+  </data>
   <data name="IncomeCurrentWH_Cal1" xml:space="preserve">
     <value>مجموع درآمد آب بها مشترکین مسکونی سالیانه</value>
   </data>

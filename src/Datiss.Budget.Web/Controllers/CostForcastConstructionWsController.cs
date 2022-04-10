@@ -1,0 +1,638 @@
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Mapster;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Datiss.Budget.Services.Contracts;
+using Datiss.Budget.Services.Models;
+using Datiss.Budget.ViewModels;
+using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Common.Exceptions;
+using Microsoft.AspNetCore.Hosting;
+using Datiss.Budget.Common.GuardToolkit;
+using Datiss.Budget.Resources;
+using ClosedXML.Extensions;
+using Datiss.Budget.Reports.Excel;
+using Microsoft.Extensions.Logging;
+using Datiss.Budget.Common;
+using Datiss.Budget.Enum;
+using Datiss.Budget.Security;
+
+namespace Datiss.Budget.Web.Controllers
+{
+
+    [Authorize]
+    [Route("[controller]")]
+    public class CostForcastConstructionWsController : Controller
+    {
+
+        public const string Name = "CostForcastConstructionWs";
+        public const string ACTION_Create = nameof(Create);
+        public const string ACTION_Index = nameof(Index);
+        public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Copy = nameof(Copy);
+        public const string ACTION_Delete = nameof(Delete);
+        public const string ACTION_DeleteRecords = nameof(DeleteRecords);
+        public const string ACTION_ImportExcel = nameof(ImportExcel);
+        public const string ACTION_Calculation = nameof(Calculation);
+        public const string ACTION_ExportExcel = nameof(ExportExcel);
+        public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
+
+        private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
+
+        private readonly ILogger<CostForcastConstructionWsController> _logger;
+        private readonly IWebHostEnvironment _env;
+        private readonly ICostForcastConstructionWsService _costForcastConstructionWsService;
+        private readonly IConstantService _constantService;
+        private readonly IOrganizationService _organizationService;
+        private readonly IFinanceYearService _financeYearService;
+        private readonly ISecurityTrimmingService _securityTrimmingService;
+
+        public CostForcastConstructionWsController(
+            ILogger<CostForcastConstructionWsController> logger,
+            IWebHostEnvironment environment,
+            ICostForcastConstructionWsService costForcastConstructionWsService,
+            IOrganizationService organizationService,
+            IFinanceYearService financeYearService,
+            IConstantService constantService,
+            ISecurityTrimmingService securityTrimmingService)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _env = environment ?? throw new ArgumentNullException(nameof(environment));
+            _costForcastConstructionWsService = costForcastConstructionWsService ?? throw new ArgumentNullException(nameof(costForcastConstructionWsService));
+            _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
+            _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
+            _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
+            _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
+        }
+
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        public async Task<IActionResult> Create(CreateCostForcastConstructionWsViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+            var data = model.Adapt<CreateCostForcastConstructionWsDTO>();
+
+            var result = await _costForcastConstructionWsService.CreateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(result.Result.Adapt<CostForcastConstructionWsViewModel>());
+        }
+
+
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Edit)]
+        public async Task<IActionResult> Edit(UpdateCostForcastConstructionWsViewModel model)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+
+            var data = model.Adapt<UpdateCostForcastConstructionWsDTO>();
+            var result = await _costForcastConstructionWsService.UpdateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(
+                result.Result.Adapt<CostForcastConstructionWsViewModel>()
+            );
+        }
+
+        [HttpGet("{page?}")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.List)]
+        public async Task<IActionResult> Index(int page = 1)
+        {
+            var filter = new CostForcastConstructionWsFilterDTO();
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+              .Adapt<List<DropDownItemViewModel>>();
+            int firstOrgId = orgSource.FirstOrDefault().Id;
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            int maxYear = yearSource.Max(_ => _.Id);
+
+            #region dropdown
+
+            var costCenterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var wasteInvestorSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__WaterInvestorsType,ConstantKeys.__CIRWaste))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+
+            var expltionAreaSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ExploitationAreaType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+
+            var measurementSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__MeasurementType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+
+            var creditSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CreditType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+
+            var extensionTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__ExtensionType);
+            var extensionTypeSource = extensionTypeData.Select(x => new DropDownItemViewModel
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToList();
+            var extensionTypeKeys = "";
+            foreach (var key in extensionTypeData)
+            {
+                extensionTypeKeys += $"'{key.ConstantKey}',";
+            }
+            ViewData["extensionTypeKeys"] = extensionTypeKeys.TrimEnd(',');
+
+
+            var suggestedBudgetTopicSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__SuggestedBudgetTopicType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            #endregion
+
+            filter.YearId = maxYear;
+            filter.OrganizationId = firstOrgId;
+
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+               .Adapt<List<DropDownItemViewModel>>();
+
+            var myfilter = TempData.Get<CostForcastConstructionWsFilterViewModel>(_indexFilterKey);
+            if (myfilter != null)
+            {
+                filter = myfilter.Adapt<CostForcastConstructionWsFilterDTO>();
+                TempData.Put(_indexFilterKey, myfilter);
+            }
+
+            filter.PageNumber = page;
+
+            var result = await _costForcastConstructionWsService.GetListAsync(filter);
+            var model = result.Adapt<CostForcastConstructionWsIndexViewModel>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+
+            model.SetCostCenterTypeSource(costCenterSource);
+            model.SetWasteInvestorsTypeSource(wasteInvestorSource);
+            model.SetMeasurementTypeSource(measurementSource);
+            model.SetExtensionTypeSource(extensionTypeSource);
+            model.SetExploitationAreaTypeSource(expltionAreaSource);
+            model.SetCreditTypeSource(creditSource);
+            model.SetSuggestedBudgetTopicTypeSource(suggestedBudgetTopicSource);
+
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+
+            model.Filter.YearId = filter.YearId;
+            model.Filter.OrganizationId = filter.OrganizationId;
+            model.Filter.PageNumber = filter.PageNumber;
+            model.Filter.PageSize = filter.PageSize;
+
+            return View(model);
+        }
+
+        [HttpPost("{page?}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(CostForcastConstructionWsIndexViewModel model)
+        {
+
+            var filter = model.Filter.Adapt<CostForcastConstructionWsFilterDTO>();
+
+            TempData.Put(_indexFilterKey, filter);
+
+            var result = await _costForcastConstructionWsService.GetListAsync(filter);
+            model = result.Adapt<CostForcastConstructionWsIndexViewModel>();
+            model.Filter = filter.Adapt<CostForcastConstructionWsFilterViewModel>();
+
+            var orgSource = (await _organizationService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var yearSource = (await _financeYearService.GetDropDownDataAsync())
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            #region dropdown
+
+            var costCenterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            var wasteInvestorSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__WaterInvestorsType,ConstantKeys.__CIRWaste))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+
+            var expltionAreaSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ExploitationAreaType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+
+            var measurementSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__MeasurementType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+
+            var creditSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CreditType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+
+            var extensionTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__ExtensionType);
+            var extensionTypeSource = extensionTypeData.Select(x => new DropDownItemViewModel
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToList();
+            var extensionTypeKeys = "";
+            foreach (var key in extensionTypeData)
+            {
+                extensionTypeKeys += $"'{key.ConstantKey}',";
+            }
+            ViewData["extensionTypeKeys"] = extensionTypeKeys.TrimEnd(',');
+
+
+            var suggestedBudgetTopicSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__SuggestedBudgetTopicType))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            #endregion
+
+            var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
+               .Adapt<List<DropDownItemViewModel>>();
+
+            model.SetYearSource(yearSource);
+            model.SetOrganizationSource(orgSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetFinanceYearFilterSource(yearSource, filter.YearId);
+            model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+
+            model.SetCostCenterTypeSource(costCenterSource);
+            model.SetWasteInvestorsTypeSource(wasteInvestorSource);
+            model.SetMeasurementTypeSource(measurementSource);
+            model.SetExtensionTypeSource(extensionTypeSource);
+            model.SetExploitationAreaTypeSource(expltionAreaSource);
+            model.SetCreditTypeSource(creditSource);
+            model.SetSuggestedBudgetTopicTypeSource(suggestedBudgetTopicSource);
+
+            return View(model);
+        }
+
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            if (model.ExcelFile == null || model.ExcelFile.Length == 0)
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelInvalidFile
+                });
+
+            try
+            {
+                var result = await _costForcastConstructionWsService.ImportExcelAsync(
+                                                                    model.ExcelFile,
+                                                                    model.YearId,
+                                                                    model.ContinueIfAnyOrgMissing);
+
+                if (result.AskToImport)
+                {
+                    return Json(new
+                    {
+                        ask = true,
+                        message = result.Message
+                    });
+                }
+
+                if (result.Success)
+                {
+                    return Json(new
+                    {
+                        hasError = false,
+                        message = result.Message
+                    });
+
+                }
+                else
+                {
+                    return Json(new
+                    {
+                        hasError = true,
+                        message = result.Message
+                    });
+                }
+            }
+            catch (ImportExcelFileFormatInvalidException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileFormatInvalid
+                });
+            }
+            catch (ImportExcelFileSizeInvalidException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ImportExcelFileSizeInvalid
+                });
+            }
+
+        }
+
+        [HttpPost("records/delete")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
+        {
+            try
+            {
+                var result = await _costForcastConstructionWsService.HardDeleteAsync(yearId, orgId);
+
+                return Json(new
+                {
+                    success = true,
+                    message = string.Format(
+                        ViewMessages.DeleteMultipleDataForOrg,
+                        result.OrganizationTitle,
+                        result.Year)
+                });
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
+            catch (DeleteNullRecordException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteNullRecord
+                });
+            }
+            catch (NullReferenceException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.NullRef
+                });
+            }
+            catch (Exception)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteRelatedData
+                });
+            }
+        }
+
+        [HttpPost("[action]/{id}")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _costForcastConstructionWsService.HardDeleteAsync(id);
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.GetBaseException().Message);
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.InvalidUpdateData
+                });
+            }
+
+            return Json(new
+            {
+                hasError = false,
+                message = ViewMessages.DeleteRowSuccess
+            });
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Calculation(CalculationInputViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var result = await _costForcastConstructionWsService.CalculationAsync(
+                model.YearId,
+                model.OrganizationId);
+
+            List<CalculationResultViewModel> viewModel = new List<CalculationResultViewModel>();
+            foreach (var item in result)
+            {
+                viewModel.Add(
+                    new CalculationResultViewModel
+                    {
+                        Result = item.Value,
+                        Title = getCalcTitle(item.Key)
+                    }
+                );
+            }
+
+            return PartialView("_calculationModal", viewModel);
+        }
+
+        [HttpGet("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        public async Task<IActionResult> Copy()
+        {
+            var model = new CopyViewModel();
+
+            model.SetOrganizationSource(
+                (await _organizationService.GetDropDownDataAsync())
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            model.SetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Disbaled))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            model.SetTargetYearSource(
+                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Enabled))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>()
+            );
+
+            return PartialView("_copyModal", model);
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Copy(CopyViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            try
+            {
+                await _costForcastConstructionWsService.CopyAsync(
+                                                    model.SourceYearId,
+                                                    model.SourceOrgId,
+                                                    model.TargetYearId);
+                model.Succeed(ViewMessages.CopySuccess);
+            }
+            catch (CopySameYearException)
+            {
+                model.AddError(ViewMessages.CopySameYear);
+            }
+            catch (CopyDestYearExxeption)
+            {
+                model.AddError(ViewMessages.CopyErrorDestYear);
+            }
+            catch (CopyOrgNullDataException)
+            {
+                model.AddError(ViewMessages.CopySourceOrgNullData);
+            }
+            catch (CopyDestYearHasDataException)
+            {
+                model.AddError(ViewMessages.CopyDestYearHasData);
+            }
+            catch (CopyDataBaseException)
+            {
+                model.AddError(ViewMessages.CalculationField);
+            }
+            catch (Exception)
+            {
+                model.AddError(ViewMessages.SystemError);
+            }
+
+            return Json(model);
+        }
+
+        [HttpGet("import/template/{yearId}/{orgId?}")]
+        public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
+        {
+            var year = await _financeYearService.GetByIdAsync(yearId);
+            var organizations = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
+                                .OrderBy(x => x.DisplayOrder)
+                                .ThenBy(x => x.RowOrder);
+
+            var model = new CostForcastConstructionWsImportViewModel();
+            var items = new List<CostForcastConstructionWsViewModel>();
+
+            foreach (var org in organizations)
+            {
+                items.Add(new CostForcastConstructionWsViewModel
+                {
+                    OrganizationId = org.Id,
+                    OrganizationDisplay = org.Title
+                });
+            }
+
+            var costCenterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+            var wasteInvestorSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__WaterInvestorsType, ConstantKeys.__CIRWaste))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+            var expltionAreaSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ExploitationAreaType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var measurementSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__MeasurementType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var creditSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CreditType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var extensionSource = (await _constantService.GetDataByKeyAsync(ConstantKeys.__ExtensionType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+            var suggestedBudgetTopicSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__SuggestedBudgetTopicType,
+                                            ConstantKeys.__ExtensionYes)).Adapt<IList<DropDownItemViewModel>>();
+            var extensionNoSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectType,
+                                            ConstantKeys.__ExtensionNo)).Adapt<IList<DropDownItemViewModel>>();
+            foreach (var item in extensionNoSource)
+            {
+                suggestedBudgetTopicSource.Add(item);
+            }
+            model.CostCenterTypeSource = costCenterSource;
+            model.WasteInvestorsTypeSource = wasteInvestorSource;
+            model.ExploitationAreaTypeSource = expltionAreaSource;
+            model.MeasurementTypeSource = measurementSource;
+            model.CreditTypeSource = creditSource;
+            model.ExtensionTypeSource = extensionSource;
+            model.SuggestedBudgetTopicTypeSource = suggestedBudgetTopicSource;
+
+            model.Items = items;
+            using var workbook = model.GetImportTemplate(year.Year);
+            return workbook.Deliver("CostForcastConstructionWs-Import-Template.xlsx");
+        }
+
+        [HttpGet("[action]/{orgid}/{yearid}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
+        {
+            var result = await _costForcastConstructionWsService.GetExportItemsAsync(yearid, orgid);
+            if (result.Count() == 0)
+                return RedirectToAction("Index");
+            using var workbook = result.ExportExcel();
+            return workbook.Deliver("CostForcastConstructionWs.xlsx");
+        }
+
+        [HttpPost, Route("GetSuggestedBudgetTopicAsync")]
+        public async Task<JsonResult> GetSuggestedBudgetTopicAsync(string key)
+        {
+            IEnumerable<DropDownItem> result = new DropDownItem[] { };
+
+            if (key.ToUpper().Trim() == ConstantKeys.__ExtensionYes.Trim().ToUpper())
+            {
+                key = key.Replace(".", "");
+                result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__SuggestedBudgetTopicType, key);
+            }
+            else
+            {
+                key = ConstantKeys.__ExtensionNo;
+                result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectType, key);
+            }
+            return new JsonResult(result);
+        }
+
+        #region Private Helper Methods
+        private string getCalcTitle(string key)
+            => key switch
+            {
+                "CostForcastConstructionWs_Cal1" => SPTitles.CostForcastConstructionWs_Cal1,
+                "CostForcastConstructionWs_Cal2" => SPTitles.CostForcastConstructionWs_Cal2,
+                "CostForcastConstructionWs_Cal3" => SPTitles.CostForcastConstructionWs_Cal3,
+                "CostForcastConstructionWs_Cal4" => SPTitles.CostForcastConstructionWs_Cal4,
+                "CostForcastConstructionWs_Cal5" => SPTitles.CostForcastConstructionWs_Cal5,
+                "CostForcastConstructionWs_Cal6" => SPTitles.CostForcastConstructionWs_Cal6,
+                "CostForcastConstructionWs_Cal7" => SPTitles.CostForcastConstructionWs_Cal7,
+                "CostForcastConstructionWs_Cal8" => SPTitles.CostForcastConstructionWs_Cal8,
+                _ => ""
+            };
+        #endregion
+
+    }
+}
