@@ -160,6 +160,21 @@ namespace Datiss.Budget.Entities
         public ICollection<CostForcastConstructionWs> CostForcastConstructionWsExtension { get; set; }
 
         public ICollection<CostForcastConstructionWs> CostForcastConstructionWsSuggestedBudgetTopic { get; set; }
+
+        public ICollection<CostForcastTransferW> CostForcastTransferWTransfer { get; set; }
+
+        public ICollection<CostForcastTransferW> CostForcastTransferWCreadit { get; set; }
+
+        public ICollection<CostForcastTransferW> CostForcastTransferWDig { get; set; }
+
+        public ICollection<CostForcastTransferW> CostForcastTransferWTube { get; set; }
+        
+        public ICollection<CostForcastTransferW> CostForcastTransferWDiameterPipe { get; set; }
+
+        public ICollection<CostForcastTransferW> CostForcastTransferWExtension { get; set; }
+
+        public ICollection<CostForcastTransferW> CostForcastTransferWSuggestedBudgetTopic { get; set; }
+
         #endregion
     }
 }

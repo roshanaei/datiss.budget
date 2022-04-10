@@ -137,6 +137,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostForcastConstructionWs> CostForcastConstructionWs { get; set; }
 
+        public ICollection<CostForcastTransferW> CostForcastTransferW { get; set; }
+
 
         #endregion
     }
