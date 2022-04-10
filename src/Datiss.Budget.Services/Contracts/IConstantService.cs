@@ -25,6 +25,8 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<IEnumerable<ConstantDTO>> GetDataByKeyAsync(string key);
 
+        Task<IEnumerable<DropDownItem>> GetRecordsByKeyAsynce(string parentkey, string key);
+
         Task<PagedResult<ConstantDTO>> GetListAsync(ConstantFilterDTO filter);
     }
 }
