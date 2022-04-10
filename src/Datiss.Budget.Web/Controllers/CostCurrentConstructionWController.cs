@@ -551,10 +551,11 @@ namespace Datiss.Budget.Web.Controllers
                 });
             }
 
-            var costCenterSource = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType);
+            var costCenterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
+                .Adapt<IList<DropDownItemViewModel>>();
 
-            var waterInvestorSource = await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterInvestorsType);
-
+            var waterInvestorSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterInvestorsType))
+                .Adapt<IList<DropDownItemViewModel>>();
 
             var expltionAreaSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ExploitationAreaType))
                 .Adapt<IList<DropDownItemViewModel>>();
@@ -571,11 +572,16 @@ namespace Datiss.Budget.Web.Controllers
             var extensionSource = (await _constantService.GetDataByKeyAsync(ConstantKeys.__ExtensionType))
                 .Adapt<IList<DropDownItemViewModel>>();
 
-            var suggestedBudgetTopicSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__SuggestedBudgetTopicType))
-                .Adapt<IList<DropDownItemViewModel>>();
-
-            //model.CostCenterTypeSource = costCenterSource;
-            //model.WaterInvestorsTypeSource = waterInvestorSource;
+            var suggestedBudgetTopicSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__SuggestedBudgetTopicType,
+                                            ConstantKeys.__ExtensionYes)).Adapt<IList<DropDownItemViewModel>>();
+            var extensionNoSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectType,
+                                            ConstantKeys.__ExtensionNo)).Adapt<IList<DropDownItemViewModel>>();
+            foreach (var item in extensionNoSource)
+            {
+                suggestedBudgetTopicSource.Add(item);
+            }
+            model.CostCenterTypeSource = costCenterSource;
+            model.WaterInvestorsTypeSource = waterInvestorSource;
             model.ExploitationAreaTypeSource = expltionAreaSource;
             model.MeasurementTypeSource = measurementSource;
             model.CreditTypeSource = creditSource;

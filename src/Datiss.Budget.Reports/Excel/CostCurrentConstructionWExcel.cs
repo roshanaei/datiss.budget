@@ -93,52 +93,123 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 4).Value = "کد مرکز هزینه";
             sheet.Cell(1, 5).Value = "حوزه بهره بردار در ستاد";
             sheet.Cell(1, 6).Value = "کد حوزه بهره بردار در ستاد";
-            sheet.Cell(1, 7).Value = "کد واحد";
-            sheet.Cell(1, 8).Value = "محل تامین اعتبار";
-            sheet.Cell(1, 9).Value = "کد محل تامین اعتبار";
-            sheet.Cell(1, 10).Value = "این پروژه در سال بودجه به بهره برداری رسیده؟";
-            sheet.Cell(1, 11).Value = "کد بهره برداری";
-            sheet.Cell(1, 12).Value = "سر فصل کلی در بودجه ";
-            sheet.Cell(1, 13).Value = "کد سر فصل کلی در بودجه ";
+            sheet.Cell(1, 7).Value = "واحد";
+            sheet.Cell(1, 8).Value = "کد واحد";
+            sheet.Cell(1, 9).Value = "محل تامین اعتبار";
+            sheet.Cell(1, 10).Value = "کد محل تامین اعتبار";
+            sheet.Cell(1, 11).Value = "این پروژه در سال بودجه به بهره برداری رسیده؟";
+            sheet.Cell(1, 12).Value = "کد بهره برداری";
+            sheet.Cell(1, 13).Value = "سر فصل کلی در بودجه ";
+            sheet.Cell(1, 14).Value = "کد سر فصل کلی در بودجه ";
+            sheet.Cell(1, 1).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 2).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 3).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 4).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 5).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 6).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 7).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 8).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 9).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 10).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 11).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 12).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 13).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 14).Style.Fill.BackgroundColor = XLColor.Cream;
             int row = 2;
             foreach (var item in model.WaterInvestorsTypeSource)
             {
                 sheet.Cell(row,1).Value = item.Title;
+                sheet.Cell(row, 1).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
                 sheet.Cell(row,2).Value = item.Id;
+                sheet.Cell(row, 2).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
                 row++;
             }
-            //sheet.Range(1, 1, 22, 13);
-            //
-            //sheet.Cell(23, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
+            row = 2;
+            foreach (var item in model.CostCenterTypeSource)
+            {
+                sheet.Cell(row, 3).Value = item.Title;
+                sheet.Cell(row, 3).Style.Fill.SetBackgroundColor(XLColor.White);
+                sheet.Cell(row, 4).Value = item.Id;
+                sheet.Cell(row, 4).Style.Fill.SetBackgroundColor(XLColor.White);
+                row++;
+            }
+            row = 2;
+            foreach (var item in model.ExploitationAreaTypeSource)
+            {
+                sheet.Cell(row, 5).Value = item.Title;
+                sheet.Cell(row, 5).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                sheet.Cell(row, 6).Value = item.Id;
+                sheet.Cell(row, 6).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                row++;
+            }
+            row = 2;
+            foreach (var item in model.MeasurementTypeSource)
+            {
+                sheet.Cell(row, 7).Value = item.Title;
+                sheet.Cell(row, 7).Style.Fill.SetBackgroundColor(XLColor.White);
+                sheet.Cell(row, 8).Value = item.Id;
+                sheet.Cell(row, 8).Style.Fill.SetBackgroundColor(XLColor.White);
+                row++;
+            }
+            row = 2;
+            foreach (var item in model.CreditTypeSource)
+            {
+                sheet.Cell(row, 9).Value = item.Title;
+                sheet.Cell(row, 9).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                sheet.Cell(row, 10).Value = item.Id;
+                sheet.Cell(row, 10).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                row++;
+            }
+            row = 2;
+            foreach (var item in model.ExtensionTypeSource)
+            {
+                sheet.Cell(row, 11).Value = item.Title;
+                sheet.Cell(row, 11).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                sheet.Cell(row, 12).Value = item.Id;
+                sheet.Cell(row, 12).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                row++;
+            }
+            row = 2;
+            foreach (var item in model.SuggestedBudgetTopicTypeSource)
+            {
+                sheet.Cell(row, 13).Value = item.Title;
+                sheet.Cell(row, 13).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                sheet.Cell(row, 14).Value = item.Id;
+                sheet.Cell(row, 14).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                row++;
+            }
+            sheet.Range(1, 1, 23, 14);
+            
+            sheet.Cell(24, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
             //sheet.Range(23, 1, 24, 15).Merge();
 
-            //sheet.Cell(24, 1).Value = "عنوان سازمان";
-            //sheet.Cell(24, 2).Value = "کد سازمان";
-            //sheet.Cell(24, 3).Value = "شرح پروژه های عمرانی";
-            //sheet.Cell(24, 4).Value = "عنوان هزینه سرمایه ای";
-            //sheet.Cell(24, 5).Value = "مرکز هزینه";
-            //sheet.Cell(24, 6).Value = "حوزه بهره بردار در ستاد";
-            //sheet.Cell(24, 7).Value = "درصد پیشرفت فیزیکی";
-            //sheet.Cell(24, 8).Value = "هزینه انجام شده (هزار ریال)";
-            //sheet.Cell(24, 9).Value = "واحد";
-            //sheet.Cell(24, 10).Value = "قیمت واحد(هزار ریال)";
-            //sheet.Cell(24, 11).Value = "مقدار";
-            //sheet.Cell(24, 12).Value = "(هزار ریال)کل هزینه اجرایی پروژه";
-            //sheet.Cell(24, 13).Value = "محل تامین اعتبار";
-            //sheet.Cell(24, 14).Value = "این پروژه در سال بودجه به بهره برداری رسیده؟";
-            //sheet.Cell(24, 15).Value = "سر فصل کلی در بودجه پیشنهادی";
+            sheet.Cell(25, 1).Value = "عنوان سازمان";
+            sheet.Cell(25, 2).Value = "کد سازمان";
+            sheet.Cell(25, 3).Value = "شرح پروژه های عمرانی";
+            sheet.Cell(25, 4).Value = "کد هزینه سرمایه ای";
+            sheet.Cell(25, 5).Value = "کد مرکز هزینه";
+            sheet.Cell(25, 6).Value = "کد حوزه بهره بردار در ستاد";
+            sheet.Cell(25, 7).Value = "درصد پیشرفت فیزیکی";
+            sheet.Cell(25, 8).Value = "هزینه انجام شده (هزار ریال)";
+            sheet.Cell(25, 9).Value = "کد واحد";
+            sheet.Cell(25, 10).Value = "قیمت واحد(هزار ریال)";
+            sheet.Cell(25, 11).Value = "مقدار";
+            sheet.Cell(25, 12).Value = "(هزار ریال)کل هزینه اجرایی پروژه";
+            sheet.Cell(25, 13).Value = "کد محل تامین اعتبار";
+            sheet.Cell(25, 14).Value = "کد بهره برداری";
+            sheet.Cell(25, 15).Value = "کد سر فصل کلی در بودجه";
 
-            //var totalCount = model.Items.Count();
-            //row = 25;
-            //for (int i = 0; i < totalCount; i++)
-            //{
-            //    var item = model.Items.ElementAt(i);
-            //    sheet.Cell(row, 1).Value = item.OrganizationDisplay;
-            //    sheet.Cell(row, 2).Value = item.OrganizationId;
-            //    row++; //for keeping index in table records
-            //}
+            var totalCount = model.Items.Count();
+            row = 26;
+            for (int i = 0; i < totalCount; i++)
+            {
+                var item = model.Items.ElementAt(i);
+                sheet.Cell(row, 1).Value = item.OrganizationDisplay;
+                sheet.Cell(row, 2).Value = item.OrganizationId;
+                row++; //for keeping index in table records
+            }
 
-            var range = sheet.Range(1, 1, row-1 , 13);
+            var range = sheet.Range(25, 1, row-1 , 15);
             //range.Column(4).Style.NumberFormat.Format = "#,##0";
             //range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other

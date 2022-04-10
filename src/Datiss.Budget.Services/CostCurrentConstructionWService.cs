@@ -422,14 +422,43 @@ namespace Datiss.Budget.Services
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<CostCurrentConstructionWImportModel>
-                (fileInfo, sheetIndex: 0, minRowNum: 2);
+                (fileInfo, sheetIndex: 0, minRowNum: 25);
 
             var records = data.Adapt<List<CostCurrentConstructionW>>();
 
-            int rowIndex = 1;
+            int rowIndex = 26;
 
-            var dwatertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                                   x.Parent.ConstantKey == ConstantKeys.__WaterDiameter);
+            var watertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                   x.Parent.ConstantKey == ConstantKeys.__WaterInvestorsType);
+
+            var costcentertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                       x.Parent.ConstantKey == ConstantKeys.__CostCenterType);
+
+            var explotationtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                       x.Parent.ConstantKey == ConstantKeys.__ExploitationAreaType);
+
+            var measurementtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                       x.Parent.ConstantKey == ConstantKeys.__MeasurementType);
+
+            var credittypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                       x.Parent.ConstantKey == ConstantKeys.__CreditType);
+
+            var extensiontypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                       x.Parent.ConstantKey == ConstantKeys.__ExtensionType);
+
+            var suggestedbudgettype = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                        x.Parent.ConstantKey == ConstantKeys.__FinanceSubjectType &&
+                                                        x.ConstantKey.Contains(ConstantKeys.__ExtensionNo)).ToList();
+
+            var extentionyestypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                        x.Parent.ConstantKey == ConstantKeys.__SuggestedBudgetTopicType &&
+                                                        x.ConstantKey.Contains(ConstantKeys.__ExtensionYes)).ToList();
+            foreach (var item in extentionyestypes)
+            {
+                suggestedbudgettype.Add(item);
+            }
+
+
             var descendents = await _organizationService
                              .GetAllDescendentsAsync(_userContext.OrganizationId);
 
@@ -444,25 +473,55 @@ namespace Datiss.Budget.Services
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex, rec.YearId)
                         );
                 }
                 if (org == null)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex, rec.OrganizationId)
                         );
                 }
-                //if (!await dwatertypes.AnyAsync(x => x.Id == rec.DWaterTypeId))
-                //{
-                //    return ImportResult.Failed(
-                //        string.Format(ServiceMessages.ImportExcelInvalidDiameterPipe, rowIndex + 2, rec.DWaterTypeId)
-                //        );
-                //}
+                if (!await watertypes.AnyAsync(x => x.Id == rec.WaterInvestorsTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.WaterInvestorsTypeId)
+                        );
+                }
+                if (!await costcentertypes.AnyAsync(x => x.Id == rec.CostCenterTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidCostCenterType, rowIndex, rec.CostCenter)
+                        );
+                }
+                if (!await explotationtypes.AnyAsync(x => x.Id == rec.ExploitationAreaTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.ExploitationAreaTypeId)
+                        );
+                }
+                if (!await measurementtypes.AnyAsync(x => x.Id == rec.MeasurementTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.MeasurementTypeId)
+                        );
+                }
+                if (!await extensiontypes.AnyAsync(x => x.Id == rec.ExtensionTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.ExtensionTypeId)
+                        );
+                }
+                if (! suggestedbudgettype.Any(x => x.Id == rec.SuggestedBudgetTopicTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.SuggestedBudgetTopicTypeId)
+                        );
+                }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex)
                         );
                 }
 
@@ -483,41 +542,8 @@ namespace Datiss.Budget.Services
                 else
                     existOrgs.Add(item);
             }
-            //
-            //Start DWaterType
-            //var missingDWType = new List<Constant>();
-            //string orgTitle = "";
-            //foreach (var org in existOrgs)
-            //{
-            //    if (!string.IsNullOrWhiteSpace(orgTitle))
-            //    {
-            //        break;
-            //    }
-            //    foreach (var item in dwatertypes)
-            //    {
-            //        var existDWTypeInExcel = records.Any(_ => _.DWaterTypeId == item.Id &&
-            //                                  _.OrganizationId == org.Id);
-            //        if (!existDWTypeInExcel)
-            //        {
-            //            missingDWType.Add(item);
-            //            orgTitle = org.Title;
-            //        }
 
-            //    }
-            //}
-            //if (missingDWType.Any())
-            //{
-            //    string dWaterTypeNames = "";
-            //    foreach (var item in missingDWType)
-            //    {
-            //        dWaterTypeNames += "- [" + item.Title + "]<br>";
-            //    }
-            //    return ImportResult.Failed(
-            //        string.Format(ServiceMessages.ImportExcelDiameterPipeOrgNotInExcel, dWaterTypeNames, orgTitle));
-            //}
-            //end
-
-            rowIndex = 1;
+            rowIndex = 26;
 
             if (!continueIfAnyOrgMissing)
             {
@@ -542,7 +568,7 @@ namespace Datiss.Budget.Services
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex)
                         );
 
                 if (!await checkLogicAsync(
@@ -552,7 +578,7 @@ namespace Datiss.Budget.Services
                 {
 
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex)
                         );
                 }
 
