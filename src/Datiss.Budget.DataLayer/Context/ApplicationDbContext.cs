@@ -275,7 +275,11 @@ namespace Datiss.Budget.DataLayer.Context
                 .ApplyConfiguration(new ReportParamConfiguration())
                 .ApplyConfiguration(new RoleConfiguration())
                 .ApplyConfiguration(new AppClaimTypeConfiguration())
-                .ApplyConfiguration(new IncomeCurrentCofficientConfiguration());
+                .ApplyConfiguration(new IncomeCurrentCofficientConfiguration())
+                .ApplyConfiguration(new CostForcastTransferWConfiguration())
+                .ApplyConfiguration(new CostForcastConstructionWsConfiguration());
+
+
 
         }
     }
