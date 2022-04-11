@@ -1,5 +1,5 @@
 ﻿@model CostForcastConstructionWsIndexViewModel
-@{ ViewData["Title"] = "اهداف عمرانی آب"; }
+@{ ViewData["Title"] = "اهداف عمرانی فاضلاب"; }
 
 <!--Title-->
 <div class="row">
@@ -455,7 +455,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(CostForcastConstructionWsController.ACTION_Index)';
+                                document.location.href = '@Url.Action(CostForcastConstructionWsController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
@@ -840,6 +840,7 @@
                         buttonsStyling: false,
                     }).then(function(result) {
                         $('#CopyModal').modal('hide');
+                        document.location.href = '@Url.Action(CostForcastConstructionWsController.ACTION_Index, new {  page = 1})';
                     });
                 },
                 error: function (request, options, err) {

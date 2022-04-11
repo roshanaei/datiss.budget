@@ -366,25 +366,11 @@ namespace Datiss.Budget.Services
                 {
                     if (!await checkLogicAsync(destYearId, sourceOrgId, item.ProjectDescription))
                         throw new CopyDestYearHasDataException();
+                    
+                    item.YearId = destYearId;
+                    item.Id = 0;
+                    var entity = item.Adapt<CostForcastConstructionWs>();
 
-                    var entity = new CostForcastConstructionWs
-                    {
-                        OrganizationId = item.OrganizationId,
-                        YearId = destYearId,
-                        ProjectDescription = item.ProjectDescription,
-                        WasteInvestorsTypeId = item.WasteInvestorsTypeId,
-                        CostCenterTypeId = item.CostCenterTypeId,
-                        ExploitationAreaTypeId = item.ExploitationAreaTypeId,
-                        ProgressPercent = item.ProgressPercent,
-                        CostDone = item.CostDone,
-                        Amount = item.Amount,
-                        MeasurementTypeId = item.MeasurementTypeId,
-                        UnitPrice = item.UnitPrice,
-                        TotalCost = item.TotalCost,
-                        CreditTypeId = item.CreditTypeId,
-                        ExtensionTypeId = item.ExtensionTypeId,
-                        SuggestedBudgetTopicTypeId = item.SuggestedBudgetTopicTypeId
-                    };
                     result.Add(entity);
                 }
             }
@@ -732,24 +718,9 @@ namespace Datiss.Budget.Services
                     if (!await checkLogicAsync(targetYearId, org.Id, item.ProjectDescription))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new CostForcastConstructionWs
-                    {
-                        OrganizationId = item.OrganizationId,
-                        YearId = targetYearId,
-                        ProjectDescription = item.ProjectDescription,
-                        WasteInvestorsTypeId = item.WasteInvestorsTypeId,
-                        CostCenterTypeId = item.CostCenterTypeId,
-                        ExploitationAreaTypeId = item.ExploitationAreaTypeId,
-                        ProgressPercent = item.ProgressPercent,
-                        CostDone = item.CostDone,
-                        Amount = item.Amount,
-                        MeasurementTypeId = item.MeasurementTypeId,
-                        UnitPrice = item.UnitPrice,
-                        TotalCost = item.TotalCost,
-                        CreditTypeId = item.CreditTypeId,
-                        ExtensionTypeId = item.ExtensionTypeId,
-                        SuggestedBudgetTopicTypeId = item.SuggestedBudgetTopicTypeId
-                    };
+                    item.YearId = targetYearId;
+                    item.Id = 0;
+                    var entity = item.Adapt<CostForcastConstructionWs>();
 
                     result.Add(entity);
                 }
