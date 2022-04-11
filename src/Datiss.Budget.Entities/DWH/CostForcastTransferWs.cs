@@ -54,7 +54,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public Constant DigType { get; set; }
 
-        public Constant Method { get; set; }
+        public Constant MethodType { get; set; }
 
         public Constant TubeType { get; set; }
 
