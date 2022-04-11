@@ -12,7 +12,7 @@ namespace Datiss.Budget.DataLayer.Mappings
                     .HasKey(x => x.Id);
 
             builder.Property(x => x.Id)
-                .HasColumnName("CFCTWId");
+                .HasColumnName("CFTWId");
 
             builder.Property(x => x.Location)
                 .HasMaxLength(300)
