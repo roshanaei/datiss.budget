@@ -27,7 +27,7 @@ using Datiss.Budget.Common;
 namespace Datiss.Budget.Services
 {
 
-    public class CostCurrentConstructionWService : ICostCurrentConstructionWService
+    public class CostForcastConstructionWService : ICostForcastConstructionWService
     {
         private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
@@ -35,12 +35,12 @@ namespace Datiss.Budget.Services
         private readonly IUserService _userService;
         private readonly IOrganizationService _organizationService;
 
-        private readonly DbSet<CostCurrentConstructionW> _dbSet;
+        private readonly DbSet<CostForcastConstructionW> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
         private readonly DbSet<FinanceYear> _yearSet;
         private readonly DbSet<Constant> _constSet;
 
-        public CostCurrentConstructionWService(
+        public CostForcastConstructionWService(
             IUserContext userContext,
             IUnitOfWork uow,
             IExcelService excelService,
@@ -49,7 +49,7 @@ namespace Datiss.Budget.Services
         {
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _dbSet = _uow.Set<CostCurrentConstructionW>();
+            _dbSet = _uow.Set<CostForcastConstructionW>();
             _orgDbSet = _uow.Set<Organization>();
             _yearSet = _uow.Set<FinanceYear>();
             _constSet = _uow.Set<Constant>();
@@ -58,20 +58,20 @@ namespace Datiss.Budget.Services
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
-        private IQueryable<CostCurrentConstructionW> Query()
+        private IQueryable<CostForcastConstructionW> Query()
             => _dbSet.AsNoTracking();
 
-        public async Task<CostCurrentConstructionW> GetByIdAsync(int id)
+        public async Task<CostForcastConstructionW> GetByIdAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult<CostCurrentConstructionWDTO>> CreateAsync(CreateCostCurrentConstructionWDTO model)
+        public async Task<ValidationResult<CostForcastConstructionWDTO>> CreateAsync(CreateCostForcastConstructionWDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var entity = new CostCurrentConstructionW
+            var entity = new CostForcastConstructionW
             {
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
@@ -102,11 +102,11 @@ namespace Datiss.Budget.Services
                     }
                     catch
                     {
-                        return ValidationResult<CostCurrentConstructionWDTO>.Failed(
+                        return ValidationResult<CostForcastConstructionWDTO>.Failed(
                             string.Format(ServiceMessages.ImportExcelCalculationField)
                             );
                     }
-                    var result = entity.Adapt<CostCurrentConstructionWDTO>();
+                    var result = entity.Adapt<CostForcastConstructionWDTO>();
 
                     result.WaterInvestorsDisplay = (await _constSet.FindAsync(model.WaterInvestorsTypeId))?.Title; 
                     result.CostCenterDisplay = (await _constSet.FindAsync(model.CostCenterTypeId))?.Title;
@@ -118,15 +118,15 @@ namespace Datiss.Budget.Services
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
 
-                    return ValidationResult<CostCurrentConstructionWDTO>.Success(result);
+                    return ValidationResult<CostForcastConstructionWDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<CostCurrentConstructionWDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<CostForcastConstructionWDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
-            return ValidationResult<CostCurrentConstructionWDTO>.Failed(
+            return ValidationResult<CostForcastConstructionWDTO>.Failed(
                 string.Format(ServiceMessages.Logic_TitleDuplicate,
                 model.ProjectDescription, organizationDisplay)
                 );
@@ -134,7 +134,7 @@ namespace Datiss.Budget.Services
 
         }
 
-        public async Task<ValidationResult<CostCurrentConstructionWDTO>> UpdateAsync(UpdateCostCurrentConstructionWDTO model)
+        public async Task<ValidationResult<CostForcastConstructionWDTO>> UpdateAsync(UpdateCostForcastConstructionWDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -167,12 +167,12 @@ namespace Datiss.Budget.Services
                     }
                     catch
                     {
-                        return ValidationResult<CostCurrentConstructionWDTO>.Failed(
+                        return ValidationResult<CostForcastConstructionWDTO>.Failed(
                             string.Format(ServiceMessages.ImportExcelCalculationField)
                             );
                     }
 
-                    var result = entity.Adapt<CostCurrentConstructionWDTO>();
+                    var result = entity.Adapt<CostForcastConstructionWDTO>();
                     result.WaterInvestorsDisplay = (await _constSet.FindAsync(model.WaterInvestorsTypeId))?.Title;
                     result.CostCenterDisplay = (await _constSet.FindAsync(model.CostCenterTypeId))?.Title;
                     result.ExploitationAreaDisplay = (await _constSet.FindAsync(model.ExploitationAreaTypeId))?.Title;
@@ -183,15 +183,15 @@ namespace Datiss.Budget.Services
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
 
-                    return ValidationResult<CostCurrentConstructionWDTO>.Success(result);
+                    return ValidationResult<CostForcastConstructionWDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<CostCurrentConstructionWDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<CostForcastConstructionWDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
-            return ValidationResult<CostCurrentConstructionWDTO>.Failed(
+            return ValidationResult<CostForcastConstructionWDTO>.Failed(
                 string.Format(ServiceMessages.Logic_TitleDuplicate,
                 model.ProjectDescription, organizationDisplay)
                 );
@@ -230,7 +230,7 @@ namespace Datiss.Budget.Services
                                     .Where(_ => _.OrganizationId == organizationId)
                                     .ToListAsync();
 
-            IEnumerable<CostCurrentConstructionW> childrens = new CostCurrentConstructionW[] { };
+            IEnumerable<CostForcastConstructionW> childrens = new CostForcastConstructionW[] { };
 
             if (organization.Type == OrganizationType.County || organization.Type == OrganizationType.Root)
             {
@@ -268,65 +268,65 @@ namespace Datiss.Budget.Services
 
             result.Add(new CalculationItemData
             {
-                Key = "CostCurrentConstructionW_Cal1",
+                Key = "CostForcastConstructionW_Cal1",
                 Value = await _uow.ExecuteScalar<long>(
-                                    "[dbo].[CostCurrentConstructionW_Cal1] @YearId, @OrganizationId",
+                                    "[dbo].[CostForcastConstructionW_Cal1] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostCurrentConstructionW_Cal2",
+                Key = "CostForcastConstructionW_Cal2",
                 Value = await _uow.ExecuteScalar<long>(
-                                    "[dbo].[CostCurrentConstructionW_Cal2] @YearId, @OrganizationId",
+                                    "[dbo].[CostForcastConstructionW_Cal2] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostCurrentConstructionW_Cal3",
+                Key = "CostForcastConstructionW_Cal3",
                 Value = await _uow.ExecuteScalar<long>(
-                         "[dbo].[CostCurrentConstructionW_Cal3] @YearId, @OrganizationId",
+                         "[dbo].[CostForcastConstructionW_Cal3] @YearId, @OrganizationId",
                          parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostCurrentConstructionW_Cal4",
+                Key = "CostForcastConstructionW_Cal4",
                 Value = await _uow.ExecuteScalar<long>(
-                         "[dbo].[CostCurrentConstructionW_Cal4] @YearId, @OrganizationId",
+                         "[dbo].[CostForcastConstructionW_Cal4] @YearId, @OrganizationId",
                          parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostCurrentConstructionW_Cal5",
+                Key = "CostForcastConstructionW_Cal5",
                 Value = await _uow.ExecuteScalar<long>(
-                         "[dbo].[CostCurrentConstructionW_Cal5] @YearId, @OrganizationId",
+                         "[dbo].[CostForcastConstructionW_Cal5] @YearId, @OrganizationId",
                          parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostCurrentConstructionW_Cal6",
+                Key = "CostForcastConstructionW_Cal6",
                 Value = await _uow.ExecuteScalar<long>(
-             "[dbo].[CostCurrentConstructionW_Cal6] @YearId, @OrganizationId",
+             "[dbo].[CostForcastConstructionW_Cal6] @YearId, @OrganizationId",
              parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostCurrentConstructionW_Cal7",
+                Key = "CostForcastConstructionW_Cal7",
                 Value = await _uow.ExecuteScalar<long>(
-             "[dbo].[CostCurrentConstructionW_Cal7] @YearId, @OrganizationId",
+             "[dbo].[CostForcastConstructionW_Cal7] @YearId, @OrganizationId",
              parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostCurrentConstructionW_Cal8",
+                Key = "CostForcastConstructionW_Cal8",
                 Value = await _uow.ExecuteScalar<long>(
-             "[dbo].[CostCurrentConstructionW_Cal8] @YearId, @OrganizationId",
+             "[dbo].[CostForcastConstructionW_Cal8] @YearId, @OrganizationId",
              parameters: sqlParams.ToArray())
             });
 
@@ -334,11 +334,11 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task<PagedResult<CostCurrentConstructionWDTO>> GetListAsync(CostCurrentConstructionWFilterDTO filter)
+        public async Task<PagedResult<CostForcastConstructionWDTO>> GetListAsync(CostForcastConstructionWFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var result = new PagedResult<CostCurrentConstructionWDTO>
+            var result = new PagedResult<CostForcastConstructionWDTO>
             {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -365,7 +365,7 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.Credit)
                                     .Include(x => x.Extension)
                                     .Include(x => x.SuggestedBudgetTopic)
-                                    .Select(x => x.Adapt<CostCurrentConstructionWDTO>())
+                                    .Select(x => x.Adapt<CostForcastConstructionWDTO>())
                                     .ToListAsync();
 
             return await Task.FromResult(result);
@@ -380,7 +380,7 @@ namespace Datiss.Budget.Services
                 throw new CopyDestYearExxeption();
             if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
                 throw new CopyOrgNullDataException();
-            var result = new List<CostCurrentConstructionW>();
+            var result = new List<CostForcastConstructionW>();
 
             if (await Query()
                         .Where(_ => _.OrganizationId == sourceOrgId)
@@ -398,7 +398,7 @@ namespace Datiss.Budget.Services
                     if (!await checkLogicAsync(destYearId, sourceOrgId, item.ProjectDescription))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new CostCurrentConstructionW
+                    var entity = new CostForcastConstructionW
                     {
                         OrganizationId = item.OrganizationId,
                         YearId = destYearId,
@@ -441,10 +441,10 @@ namespace Datiss.Budget.Services
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<CostCurrentConstructionWImportModel>
+            var data = await _excelService.ImportAsync<CostForcastConstructionWImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 25);
 
-            var records = data.Adapt<List<CostCurrentConstructionW>>();
+            var records = data.Adapt<List<CostForcastConstructionW>>();
 
             int rowIndex = 26;
 
@@ -623,9 +623,9 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<IEnumerable<CostCurrentConstructionWDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<CostForcastConstructionWDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
-            var filter = new CostCurrentConstructionWFilterDTO
+            var filter = new CostForcastConstructionWFilterDTO
             {
                 OrganizationId = organizationId,
                 YearId = yearId
@@ -648,21 +648,21 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.Credit)
                                     .Include(x => x.Extension)
                                     .Include(x => x.SuggestedBudgetTopic)
-                                    .Select(x => x.Adapt<CostCurrentConstructionWDTO>())
+                                    .Select(x => x.Adapt<CostForcastConstructionWDTO>())
                                     .ToListAsync();
             return items;
         }
 
         #region Private Helper Methods
 
-        private async Task<IQueryable<CostCurrentConstructionW>> setFilter(
-            IQueryable<CostCurrentConstructionW> query,
-            CostCurrentConstructionWFilterDTO filter)
+        private async Task<IQueryable<CostForcastConstructionW>> setFilter(
+            IQueryable<CostForcastConstructionW> query,
+            CostForcastConstructionWFilterDTO filter)
         {
             query.CheckArgumentIsNull(nameof(query));
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var predicate = PredicateBuilder.New<CostCurrentConstructionW>();
+            var predicate = PredicateBuilder.New<CostForcastConstructionW>();
 
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
@@ -692,8 +692,8 @@ namespace Datiss.Budget.Services
             return query;
         }
 
-        private IQueryable<CostCurrentConstructionW> setOrder(
-           IQueryable<CostCurrentConstructionW> query,
+        private IQueryable<CostForcastConstructionW> setOrder(
+           IQueryable<CostForcastConstructionW> query,
            string orderBy = "id",
            bool desc = false)
         {
@@ -730,7 +730,7 @@ namespace Datiss.Budget.Services
             }
         }
 
-        private async Task<IEnumerable<CostCurrentConstructionW>> getChildrenData(
+        private async Task<IEnumerable<CostForcastConstructionW>> getChildrenData(
             int parentOrganizationId,
             int yearId,
             int targetYearId)
@@ -741,7 +741,7 @@ namespace Datiss.Budget.Services
                             _.ParentId == parentOrganizationId)
                 .ToListAsync();
 
-            var result = new List<CostCurrentConstructionW>();
+            var result = new List<CostForcastConstructionW>();
 
             foreach (var org in children)
             {
@@ -762,7 +762,7 @@ namespace Datiss.Budget.Services
                     if (!await checkLogicAsync(targetYearId, org.Id, item.ProjectDescription))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new CostCurrentConstructionW
+                    var entity = new CostForcastConstructionW
                     {
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
@@ -789,14 +789,14 @@ namespace Datiss.Budget.Services
 
             return result;
         }
-        private async Task<IEnumerable<CostCurrentConstructionW>> getChildren(
+        private async Task<IEnumerable<CostForcastConstructionW>> getChildren(
             int parentOrganizationId,
             int yearId)
         {
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
-            var result = new List<CostCurrentConstructionW>();
+            var result = new List<CostForcastConstructionW>();
             foreach (var org in children)
             {
                 var data = await Query()

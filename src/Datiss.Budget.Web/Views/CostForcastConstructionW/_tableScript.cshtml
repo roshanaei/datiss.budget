@@ -170,7 +170,7 @@
 
 
         $.ajax({
-            url: '@Url.Action(CostCurrentConstructionWController.ACTION_Edit)',
+            url: '@Url.Action(CostForcastConstructionWController.ACTION_Edit)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -280,7 +280,7 @@
         console.log(model);
 
         $.ajax({
-            url: '@Url.Action(CostCurrentConstructionWController.ACTION_Create)',
+            url: '@Url.Action(CostForcastConstructionWController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -532,7 +532,7 @@
         console.log(e);
 
         $.ajax({
-            url: '@Url.Action(CostCurrentConstructionWController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(CostForcastConstructionWController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {

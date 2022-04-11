@@ -7,11 +7,11 @@ using Datiss.Budget.ViewModels;
 namespace Datiss.Budget.Reports.Excel
 {
 
-    public static class CostCurrentConstructionWExcel
+    public static class CostForcastConstructionWExcel
     {
-        private const string _sheetName = "CostCurrentConstructionW";
+        private const string _sheetName = "CostForcastConstructionW";
 
-        public static XLWorkbook ExportExcel(this IEnumerable<CostCurrentConstructionWDTO> items)
+        public static XLWorkbook ExportExcel(this IEnumerable<CostForcastConstructionWDTO> items)
         {
             if (items == null || !items.Any())
                 return null;
@@ -78,7 +78,7 @@ namespace Datiss.Budget.Reports.Excel
             return workbook;
         }
 
-        public static XLWorkbook GetImportTemplate(this CostCurrentConstructionWImportViewModel model, int year)
+        public static XLWorkbook GetImportTemplate(this CostForcastConstructionWImportViewModel model, int year)
         {
             if (!model.Items.Any())
                 return null;
