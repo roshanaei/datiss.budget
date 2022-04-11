@@ -20,7 +20,7 @@ namespace Datiss.Budget.DataLayer.Mappings
                 .IsRequired();
 
             builder.Property(x => x.ConstantKey)
-                .HasMaxLength(50)
+                .HasMaxLength(75)
                 .IsUnicode()
                 .IsRequired();
 
