@@ -1,6 +1,6 @@
 ﻿namespace Datiss.Budget.Services.Models
 {
-    public class CreateCostCurrentConstructionWDTO
+    public class CreateCostForcastConstructionWDTO
     {
         public int YearId { get; set; }
 
@@ -34,13 +34,13 @@
 
     }
 
-    public class UpdateCostCurrentConstructionWDTO : CreateCostCurrentConstructionWDTO
+    public class UpdateCostForcastConstructionWDTO : CreateCostForcastConstructionWDTO
     {
         public int Id { get; set; }
 
     }
 
-    public class CostCurrentConstructionWDTO
+    public class CostForcastConstructionWDTO
     {
         public int Id { get; set; }
         public int YearId { get; set; }

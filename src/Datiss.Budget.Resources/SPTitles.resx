@@ -141,30 +141,6 @@
   <data name="ConsumeForcast_Cal4" xml:space="preserve">
     <value>توزیع آحادی مصرف آب سالیانه غیر مسکونی</value>
   </data>
-  <data name="CostCurrentConstructionW_Cal1" xml:space="preserve">
-    <value>اعتبارات داخلی</value>
-  </data>
-  <data name="CostCurrentConstructionW_Cal2" xml:space="preserve">
-    <value>تبصره 2 قانون ماده واحده</value>
-  </data>
-  <data name="CostCurrentConstructionW_Cal3" xml:space="preserve">
-    <value>تبصره 3 قانون ماده واحده</value>
-  </data>
-  <data name="CostCurrentConstructionW_Cal4" xml:space="preserve">
-    <value>B.O.T</value>
-  </data>
-  <data name="CostCurrentConstructionW_Cal5" xml:space="preserve">
-    <value>B.O.O</value>
-  </data>
-  <data name="CostCurrentConstructionW_Cal6" xml:space="preserve">
-    <value>فاینانس</value>
-  </data>
-  <data name="CostCurrentConstructionW_Cal7" xml:space="preserve">
-    <value>ماده 11</value>
-  </data>
-  <data name="CostCurrentConstructionW_Cal8" xml:space="preserve">
-    <value>جمع کل</value>
-  </data>
   <data name="CostCurrentConsumable_Cal1" xml:space="preserve">
     <value>مجموع ماده مصرفی فعالیت آب</value>
   </data>
@@ -212,6 +188,30 @@
   </data>
   <data name="CostCurrentWaterSource_Cal6" xml:space="preserve">
     <value>مجموع تولید آب کل منابع</value>
+  </data>
+  <data name="CostForcastConstructionW_Cal1" xml:space="preserve">
+    <value>اعتبارات داخلی</value>
+  </data>
+  <data name="CostForcastConstructionW_Cal2" xml:space="preserve">
+    <value>تبصره 2 قانون ماده واحده</value>
+  </data>
+  <data name="CostForcastConstructionW_Cal3" xml:space="preserve">
+    <value>تبصره 3 قانون ماده واحده</value>
+  </data>
+  <data name="CostForcastConstructionW_Cal4" xml:space="preserve">
+    <value>B.O.T</value>
+  </data>
+  <data name="CostForcastConstructionW_Cal5" xml:space="preserve">
+    <value>B.O.O</value>
+  </data>
+  <data name="CostForcastConstructionW_Cal6" xml:space="preserve">
+    <value>فاینانس</value>
+  </data>
+  <data name="CostForcastConstructionW_Cal7" xml:space="preserve">
+    <value>ماده 11</value>
+  </data>
+  <data name="CostForcastConstructionW_Cal8" xml:space="preserve">
+    <value>جمع کل</value>
   </data>
   <data name="IncomeCurrentWH_Cal1" xml:space="preserve">
     <value>مجموع درآمد آب بها مشترکین مسکونی سالیانه</value>

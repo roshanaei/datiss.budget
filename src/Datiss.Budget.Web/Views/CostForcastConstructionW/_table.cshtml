@@ -1,4 +1,4 @@
-﻿@model CostCurrentConstructionWIndexViewModel
+﻿@model CostForcastConstructionWIndexViewModel
 <div class="table-responsive">
     <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font table-overflow">
         <thead class="thead-light">
@@ -407,5 +407,5 @@
         <div class="my-font ml-2">(صفحه <b class="font-medium-2">@Model.PageNumber</b> از <b class="font-medium-2">@Model.PagesCount</b>)</div>
     </div>
     <!--Pagination-->
-    <vc:pager model="Model.ToPager()" controller-name="@CostCurrentConstructionWController.Name" action-name="@CostCurrentConstructionWController.ACTION_Index"></vc:pager>
+    <vc:pager model="Model.ToPager()" controller-name="@CostForcastConstructionWController.Name" action-name="@CostForcastConstructionWController.ACTION_Index"></vc:pager>
 </div>
