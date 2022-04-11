@@ -234,6 +234,7 @@ namespace Datiss.Budget.DataLayer.Context
         public virtual DbSet<FinanceYear> FinanceYears { set; get; }
         public virtual DbSet<Constant> Constants { set; get; }
         public virtual DbSet<Organization> Organizations { set; get; }
+
         public virtual DbSet<WaterInstallFee> WaterInstallFees { set; get; }
         public virtual DbSet<WasteInstallFee> WasteInstallFees { set; get; }
         public virtual DbSet<WaterSalesSplit> WaterSalesSplits { set; get; }
@@ -242,8 +243,10 @@ namespace Datiss.Budget.DataLayer.Context
         public virtual DbSet<TablesFiledTitle> TablesFiledTitles { get; set; }
         public virtual DbSet<AverageContractedCapacityNHUses> AverageContractedCapacityNHUses { get; set; }
         public virtual DbSet<IncomeCurrentCofficient> IncomeCurrentCofficients { get; set; }
+        public virtual DbSet<CostForcastTransferW> CostForcastTransferW { get; set; }
+        public virtual DbSet<CostForcastConstructionWs> CostForcastConstructionWs { get; set; }
 
-
+        
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -272,7 +275,11 @@ namespace Datiss.Budget.DataLayer.Context
                 .ApplyConfiguration(new ReportParamConfiguration())
                 .ApplyConfiguration(new RoleConfiguration())
                 .ApplyConfiguration(new AppClaimTypeConfiguration())
-                .ApplyConfiguration(new IncomeCurrentCofficientConfiguration());
+                .ApplyConfiguration(new IncomeCurrentCofficientConfiguration())
+                .ApplyConfiguration(new CostForcastTransferWConfiguration())
+                .ApplyConfiguration(new CostForcastConstructionWsConfiguration());
+
+
 
         }
     }

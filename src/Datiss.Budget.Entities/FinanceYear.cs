@@ -118,6 +118,10 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentConstructionW> CostCurrentConstructionW { get; set; }
 
+        public ICollection<CostForcastConstructionWs> CostForcastConstructionWs { get; set; }
+
+        public ICollection<CostForcastTransferW> CostForcastTransferW { get; set; }
+
 
         #endregion
     }
