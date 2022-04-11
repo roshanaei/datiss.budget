@@ -2,9 +2,9 @@
 
 namespace Datiss.Budget.Entities.DWH
 {
-    public class CostCurrentConstructionW :IAuditableEntity
+    public class CostForcastConstructionW :IAuditableEntity
     {
-        public CostCurrentConstructionW() { }
+        public CostForcastConstructionW() { }
 
         #region Properties
         public int Id { get; set; } 
