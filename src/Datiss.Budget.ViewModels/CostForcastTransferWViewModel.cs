@@ -97,13 +97,13 @@ namespace Datiss.Budget.ViewModels
         public string DiameterPipeTypeDisplay { get; set; }
 
         public int CreditTypeId { get; set; }
-        public string CreditDisplay { get; set; }
+        public string CreditTypeDisplay { get; set; }
 
         public int ExtensionTypeId { get; set; }
-        public string ExtensionDisplay { get; set; }
+        public string ExtensionTypeDisplay { get; set; }
 
         public int SuggestedBudgetTopicTypeId { get; set; }
-        public string SuggestedBudgetTopicDisplay { get; set; }
+        public string SuggestedBudgetTopicTypeDisplay { get; set; }
     }
 
     public class CostForcastTransferWFilterViewModel : FilterViewModel
