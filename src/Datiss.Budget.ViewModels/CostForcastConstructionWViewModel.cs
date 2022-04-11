@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Datiss.Budget.ViewModels
 {
-    public class CreateCostCurrentConstructionWViewModel : BaseViewModel
+    public class CreateCostForcastConstructionWViewModel : BaseViewModel
     {
         public int YearId { get; set; }
         public string YearDisplay { get; set; }
@@ -56,13 +56,13 @@ namespace Datiss.Budget.ViewModels
 
     }
 
-    public class UpdateCostCurrentConstructionWViewModel : CreateCostCurrentConstructionWViewModel
+    public class UpdateCostForcastConstructionWViewModel : CreateCostForcastConstructionWViewModel
     {
         public int Id { get; set; }
 
     }
 
-    public class CostCurrentConstructionWViewModel
+    public class CostForcastConstructionWViewModel
     {
         public int Id { get; set; }
 
@@ -111,7 +111,7 @@ namespace Datiss.Budget.ViewModels
         public string SuggestedBudgetTopicDisplay { get; set; }
     }
 
-    public class CostCurrentConstructionWFilterViewModel : FilterViewModel
+    public class CostForcastConstructionWFilterViewModel : FilterViewModel
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
@@ -121,15 +121,15 @@ namespace Datiss.Budget.ViewModels
         public IList<SelectListItem> OrganizationSource { get; set; }
     }
 
-    public class CostCurrentConstructionWIndexViewModel : PagedViewModel<CostCurrentConstructionWViewModel>
+    public class CostForcastConstructionWIndexViewModel : PagedViewModel<CostForcastConstructionWViewModel>
     {
 
-        public CostCurrentConstructionWIndexViewModel()
+        public CostForcastConstructionWIndexViewModel()
         {
-            Filter = new CostCurrentConstructionWFilterViewModel();
+            Filter = new CostForcastConstructionWFilterViewModel();
         }
 
-        public CostCurrentConstructionWFilterViewModel Filter { get; set; }
+        public CostForcastConstructionWFilterViewModel Filter { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
 
@@ -247,7 +247,7 @@ namespace Datiss.Budget.ViewModels
 
     }
 
-    public class CostCurrentConstructionWImportViewModel : PagedViewModel<CostCurrentConstructionWViewModel>
+    public class CostForcastConstructionWImportViewModel : PagedViewModel<CostForcastConstructionWViewModel>
     {
         public IList<DropDownItemViewModel> WaterInvestorsTypeSource { get; set; }
         public IList<DropDownItemViewModel> CostCenterTypeSource { get; set; }

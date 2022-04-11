@@ -20,7 +20,7 @@ namespace Datiss.Budget.Services.Infrastructure
                 .Map(d => d.SelectedRoles, s => s.Roles != null && s.Roles.Any() 
                                                 ? s.Roles.Select(_ => _.RoleId).ToList() 
                                                 : null);
-            TypeAdapterConfig<CostCurrentConstructionW, CostCurrentConstructionWDTO>
+            TypeAdapterConfig<CostForcastConstructionW, CostForcastConstructionWDTO>
                 .NewConfig()
                 .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
                 .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)

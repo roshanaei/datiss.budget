@@ -2,7 +2,7 @@
 
 namespace Datiss.Budget.Services.Excel
 {
-    public class CostCurrentConstructionWImportModel
+    public class CostForcastConstructionWImportModel
     {
         [Column(MappingDirections.Both, Letter = "A")]
         public string OrganizationDisplay { get; set; }
