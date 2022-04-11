@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Datiss.Budget.DataLayer.Mappings
 {
-    public class CostCurrentConstructionWConfiguration :IEntityTypeConfiguration<CostCurrentConstructionW>
+    public class CostForcastConstructionWConfiguration :IEntityTypeConfiguration<CostForcastConstructionW>
     {
-        public void Configure(EntityTypeBuilder<CostCurrentConstructionW> builder)
+        public void Configure(EntityTypeBuilder<CostForcastConstructionW> builder)
         {
-            builder.ToTable("CostCurrentConstructionW").HasKey(x => x.Id);
+            builder.ToTable("CostForcastConstructionW").HasKey(x => x.Id);
 
             builder.Property(x => x.Id)
-                    .HasColumnName("CCCWId");
+                    .HasColumnName("CFCWId");
 
             builder.Property(x => x.ProjectDescription)
                         .HasMaxLength(500)
@@ -21,55 +21,55 @@ namespace Datiss.Budget.DataLayer.Mappings
 
 
             builder.HasOne(x => x.FinanceYear)
-                    .WithMany(x => x.CostCurrentConstructionW)
+                    .WithMany(x => x.CostForcastConstructionW)
                     .HasForeignKey(x => x.YearId)
                     .OnDelete(DeleteBehavior.Restrict);
 
 
             builder.HasOne(x => x.Organization)
-                    .WithMany(x => x.CostCurrentConstructionW)
+                    .WithMany(x => x.CostForcastConstructionW)
                     .HasForeignKey(x => x.OrganizationId)
                     .OnDelete(DeleteBehavior.Restrict);
 
 
             builder.HasOne(x => x.WaterInvestors)
-                    .WithMany(x => x.CostCurrentConstructionWInvestors)
+                    .WithMany(x => x.CostForcastConstructionWInvestors)
                     .HasForeignKey(x => x.WaterInvestorsTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
 
 
 
             builder.HasOne(x => x.CostCenter)
-                    .WithMany(x => x.CostCurrentConstructionWCostCenters)
+                    .WithMany(x => x.CostForcastConstructionWCostCenters)
                     .HasForeignKey(x => x.CostCenterTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
 
 
             builder.HasOne(x => x.ExploitationArea)
-                    .WithMany(x => x.CostCurrentConstructionWExploitationArea)
+                    .WithMany(x => x.CostForcastConstructionWExploitationArea)
                     .HasForeignKey(x => x.ExploitationAreaTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
 
 
             builder.HasOne(x => x.Measurement)
-                    .WithMany(x => x.CostCurrentConstructionWMeasurement)
+                    .WithMany(x => x.CostForcastConstructionWMeasurement)
                     .HasForeignKey(x => x.MeasurementTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
 
 
             builder.HasOne(x => x.Credit)
-                    .WithMany(x => x.CostCurrentConstructionWCredit)
+                    .WithMany(x => x.CostForcastConstructionWCredit)
                     .HasForeignKey(x => x.CreditTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
 
 
             builder.HasOne(x => x.Extension)
-                    .WithMany(x => x.CostCurrentConstructionWExtension)
+                    .WithMany(x => x.CostForcastConstructionWExtension)
                     .HasForeignKey(x => x.ExtensionTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.SuggestedBudgetTopic)
-                    .WithMany(x => x.CostCurrentConstructionWSuggestedBudgetTopic)
+                    .WithMany(x => x.CostForcastConstructionWSuggestedBudgetTopic)
                     .HasForeignKey(x => x.SuggestedBudgetTopicTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
         }
