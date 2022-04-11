@@ -32,6 +32,18 @@ namespace Datiss.Budget.Services.Infrastructure
                 .Map(d => d.ExtensionDisplay, s => s.Extension != null ? s.Extension.Title : null)
                 .Map(d => d.SuggestedBudgetTopicDisplay, s => s.SuggestedBudgetTopic != null ? s.SuggestedBudgetTopic.Title : null);
 
+            TypeAdapterConfig<CostForcastTransferW, CostForcastTransferWDTO>
+                .NewConfig()
+                .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
+                .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
+                .Map(d => d.TransferTypeDisplay, s => s.TransferType != null ? s.TransferType.Title : null)
+                .Map(d => d.DigTypeDisplay, s => s.DigType != null ? s.DigType.Title : null)
+                .Map(d => d.TubeTypeDisplay, s => s.TubeType != null ? s.TubeType.Title : null)
+                .Map(d => d.DiameterPipeTypeDisplay, s => s.DiameterType != null ? s.DiameterType.Title : null)
+                .Map(d => d.CreditTypeDisplay, s => s.Credit != null ? s.Credit.Title : null)
+                .Map(d => d.ExtensionTypeDisplay, s => s.Extension != null ? s.Extension.Title : null)
+                .Map(d => d.SuggestedBudgetTopicTypeDisplay, s => s.SuggestedBudgetTopic != null ? s.SuggestedBudgetTopic.Title : null);
+
 
         }
     }

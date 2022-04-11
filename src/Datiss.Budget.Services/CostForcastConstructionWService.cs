@@ -71,24 +71,7 @@ namespace Datiss.Budget.Services
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var entity = new CostForcastConstructionW
-            {
-                YearId = model.YearId,
-                OrganizationId = model.OrganizationId,
-                ProjectDescription = model.ProjectDescription,
-                WaterInvestorsTypeId = model.WaterInvestorsTypeId,
-                CostCenterTypeId = model.CostCenterTypeId,
-                ExploitationAreaTypeId = model.ExploitationAreaTypeId,
-                ProgressPercent = model.ProgressPercent,
-                CostDone = model.CostDone,
-                Amount = model.Amount,
-                MeasurementTypeId = model.MeasurementTypeId,
-                UnitPrice = model.UnitPrice,
-                TotalCost = model.TotalCost,
-                CreditTypeId = model.CreditTypeId,
-                ExtensionTypeId = model.ExtensionTypeId,
-                SuggestedBudgetTopicTypeId = model.SuggestedBudgetTopicTypeId
-            };
+            var entity = model.Adapt<CostForcastConstructionW>();
 
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId))?.Title;
             try
@@ -108,7 +91,7 @@ namespace Datiss.Budget.Services
                     }
                     var result = entity.Adapt<CostForcastConstructionWDTO>();
 
-                    result.WaterInvestorsDisplay = (await _constSet.FindAsync(model.WaterInvestorsTypeId))?.Title; 
+                    result.WaterInvestorsDisplay = (await _constSet.FindAsync(model.WaterInvestorsTypeId))?.Title;
                     result.CostCenterDisplay = (await _constSet.FindAsync(model.CostCenterTypeId))?.Title;
                     result.ExploitationAreaDisplay = (await _constSet.FindAsync(model.ExploitationAreaTypeId))?.Title;
                     result.MeasurementDisplay = (await _constSet.FindAsync(model.MeasurementTypeId))?.Title;
@@ -145,6 +128,7 @@ namespace Datiss.Budget.Services
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ProjectDescription, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
+
                     entity.OrganizationId = model.OrganizationId;
                     entity.YearId = model.YearId;
                     entity.ProjectDescription = model.ProjectDescription;
@@ -398,24 +382,10 @@ namespace Datiss.Budget.Services
                     if (!await checkLogicAsync(destYearId, sourceOrgId, item.ProjectDescription))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new CostForcastConstructionW
-                    {
-                        OrganizationId = item.OrganizationId,
-                        YearId = destYearId,
-                        ProjectDescription = item.ProjectDescription,
-                        WaterInvestorsTypeId = item.WaterInvestorsTypeId,
-                        CostCenterTypeId = item.CostCenterTypeId,
-                        ExploitationAreaTypeId = item.ExploitationAreaTypeId,
-                        ProgressPercent = item.ProgressPercent,
-                        CostDone = item.CostDone,
-                        Amount = item.Amount,
-                        MeasurementTypeId = item.MeasurementTypeId,
-                        UnitPrice = item.UnitPrice,
-                        TotalCost = item.TotalCost,
-                        CreditTypeId = item.CreditTypeId,
-                        ExtensionTypeId = item.ExtensionTypeId,
-                        SuggestedBudgetTopicTypeId = item.SuggestedBudgetTopicTypeId
-                    };
+                    item.YearId = destYearId;
+                    item.Id = 0;
+                    var entity = item.Adapt<CostForcastConstructionW>();
+
                     result.Add(entity);
                 }
             }
@@ -532,7 +502,7 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.ExtensionTypeId)
                         );
                 }
-                if (! suggestedbudgettype.Any(x => x.Id == rec.SuggestedBudgetTopicTypeId))
+                if (!suggestedbudgettype.Any(x => x.Id == rec.SuggestedBudgetTopicTypeId))
                 {
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.SuggestedBudgetTopicTypeId)
@@ -762,24 +732,9 @@ namespace Datiss.Budget.Services
                     if (!await checkLogicAsync(targetYearId, org.Id, item.ProjectDescription))
                         throw new CopyDestYearHasDataException();
 
-                    var entity = new CostForcastConstructionW
-                    {
-                        OrganizationId = item.OrganizationId,
-                        YearId = targetYearId,
-                        ProjectDescription = item.ProjectDescription,
-                        WaterInvestorsTypeId = item.WaterInvestorsTypeId,
-                        CostCenterTypeId = item.CostCenterTypeId,
-                        ExploitationAreaTypeId = item.ExploitationAreaTypeId,
-                        ProgressPercent = item.ProgressPercent,
-                        CostDone = item.CostDone,
-                        Amount = item.Amount,
-                        MeasurementTypeId = item.MeasurementTypeId,
-                        UnitPrice = item.UnitPrice,
-                        TotalCost = item.TotalCost,
-                        CreditTypeId = item.CreditTypeId,
-                        ExtensionTypeId = item.ExtensionTypeId,
-                        SuggestedBudgetTopicTypeId = item.SuggestedBudgetTopicTypeId
-                    };
+                    item.YearId = targetYearId;
+                    item.Id = 0;
+                    var entity = item.Adapt<CostForcastConstructionW>();
 
                     result.Add(entity);
                 }

@@ -47,7 +47,7 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 4).Value = item.Location;
                 sheet.Cell(row, 5).Value = item.CreditTypeDisplay;
                 sheet.Cell(row, 6).Value = item.DigTypeDisplay;
-                sheet.Cell(row, 7).Value = item.DigTypeDisplay;
+                sheet.Cell(row, 7).Value = item.TubeTypeDisplay;
                 sheet.Cell(row, 8).Value = item.DiameterPipeTypeDisplay;
                 sheet.Cell(row, 9).Value = item.Lenth;
                 sheet.Cell(row, 9).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
@@ -139,7 +139,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++;
             }
             row = 2;
-            foreach (var item in model.DigTypeSource)
+            foreach (var item in model.TubeTypeSource)
             {
                 sheet.Cell(row, 7).Value = item.Title;
                 sheet.Cell(row, 7).Style.Fill.SetBackgroundColor(XLColor.White);
@@ -160,9 +160,9 @@ namespace Datiss.Budget.Reports.Excel
             foreach (var item in model.ExtensionTypeSource)
             {
                 sheet.Cell(row, 11).Value = item.Title;
-                sheet.Cell(row, 11).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                sheet.Cell(row, 11).Style.Fill.SetBackgroundColor(XLColor.White);
                 sheet.Cell(row, 12).Value = item.Id;
-                sheet.Cell(row, 12).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                sheet.Cell(row, 12).Style.Fill.SetBackgroundColor(XLColor.White);
                 row++;
             }
             row = 2;
@@ -174,28 +174,28 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 14).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
                 row++;
             }
-            sheet.Range(1, 1, 23, 14);
+            sheet.Range(1, 1, 18, 14);
 
-            sheet.Cell(24, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
+            sheet.Cell(19, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
             //sheet.Range(23, 1, 24, 15).Merge();
 
-            sheet.Cell(25, 1).Value = "عنوان سازمان";
-            sheet.Cell(25, 2).Value = "کد سازمان";
-            sheet.Cell(25, 3).Value = "کد اصلاح/توسعه شبکه ...";
-            sheet.Cell(25, 4).Value = "آدرس";
-            sheet.Cell(25, 5).Value = "کد محل تامین اعتبار";
-            sheet.Cell(25, 6).Value = "کد کندمان";
-            sheet.Cell(25, 7).Value = "کد جنس لوله";
-            sheet.Cell(25, 8).Value = "کد قطر لوله";
-            sheet.Cell(25, 9).Value = "طول اجرا";
-            sheet.Cell(25, 10).Value = "هزینه هر متر خرید لوله";
-            sheet.Cell(25, 11).Value = "هزینه هر متر اجرا";
-            sheet.Cell(25, 12).Value = "جمع کل هزینه ها (هزار ریال)";
-            sheet.Cell(25, 13).Value = "کد بهره برداری";
-            sheet.Cell(25, 14).Value = "کد سر فصل کلی در بودجه";
+            sheet.Cell(20, 1).Value = "عنوان سازمان";
+            sheet.Cell(20, 2).Value = "کد سازمان";
+            sheet.Cell(20, 3).Value = "کد اصلاح/توسعه شبکه ...";
+            sheet.Cell(20, 4).Value = "آدرس";
+            sheet.Cell(20, 5).Value = "کد محل تامین اعتبار";
+            sheet.Cell(20, 6).Value = "کد کندمان";
+            sheet.Cell(20, 7).Value = "کد جنس لوله";
+            sheet.Cell(20, 8).Value = "کد قطر لوله";
+            sheet.Cell(20, 9).Value = "طول اجرا";
+            sheet.Cell(20, 10).Value = "هزینه هر متر خرید لوله";
+            sheet.Cell(20, 11).Value = "هزینه هر متر اجرا";
+            sheet.Cell(20, 12).Value = "جمع کل هزینه ها (هزار ریال)";
+            sheet.Cell(20, 13).Value = "کد بهره برداری";
+            sheet.Cell(20, 14).Value = "کد سر فصل کلی در بودجه";
 
             var totalCount = model.Items.Count();
-            row = 26;
+            row = 21;
             for (int i = 0; i < totalCount; i++)
             {
                 var item = model.Items.ElementAt(i);
@@ -204,7 +204,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(25, 1, row - 1, 14);
+            var range = sheet.Range(20, 1, row - 1, 14);
             //range.Column(4).Style.NumberFormat.Format = "#,##0";
             //range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other

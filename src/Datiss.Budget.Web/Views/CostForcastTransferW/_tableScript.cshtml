@@ -6,7 +6,7 @@
     function editRow(id) {
 
         let extensionTypeId = $('#inputExtensionType_' + id).val();
-        let suggestedBudgetTopicTypeId = $('#inputSuggestedBudgetTopicType_' + id).val();
+        let suggestedBudgetTopicTypeId = $('#hidSuggestedBudgetTopicTypeId_' + id).val();
         console.log(extensionTypeId);
         console.log(suggestedBudgetTopicTypeId);
         FillDropDown(extensionTypeId, suggestedBudgetTopicTypeId);
@@ -317,7 +317,7 @@
                 $(e).find('#spanExtensionType_').attr('id', 'spanExtensionType_' + data.id);
 
                 $('#divInput_ExtensionType_' + data.id).hide();
-                $('#spanExtensionType_' + data.id).text(data.extensionDisplay);
+                $('#spanExtensionType_' + data.id).text(data.extensionTypeDisplay);
                 $('#divOutput_ExtensionType_' + data.id).show();
 
 
@@ -329,7 +329,7 @@
                 $(e).find('#spanSuggestedBudgetTopicType_').attr('id', 'spanSuggestedBudgetTopicType_' + data.id);
 
                 $('#divInput_SuggestedBudgetTopicType_' + data.id).hide();
-                $('#spanSuggestedBudgetTopicType_' + data.id).text(data.suggestedBudgetTopicDisplay);
+                $('#spanSuggestedBudgetTopicType_' + data.id).text(data.suggestedBudgetTopicTypeDisplay);
                 $('#divOutput_SuggestedBudgetTopicType_' + data.id).show();
 
                 //Location
