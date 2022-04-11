@@ -163,7 +163,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostForcastTransferW> CostForcastTransferWTransfer { get; set; }
 
-        public ICollection<CostForcastTransferW> CostForcastTransferWCreadit { get; set; }
+        public ICollection<CostForcastTransferW> CostForcastTransferWCredit { get; set; }
 
         public ICollection<CostForcastTransferW> CostForcastTransferWDig { get; set; }
 

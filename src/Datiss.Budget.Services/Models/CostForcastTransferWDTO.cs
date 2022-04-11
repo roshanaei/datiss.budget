@@ -8,7 +8,7 @@
 
         public int TransferTypeId { get; set; }
 
-        public int CreaditTypeId { get; set; }
+        public int CreditTypeId { get; set; }
 
         public int DigTypeId { get; set; }
 
@@ -49,8 +49,8 @@
         public int TransferTypeId { get; set; }
         public string TransferTypeDisplay { get; set; }
 
-        public int CreaditTypeId { get; set; }
-        public string CreaditTypeDisplay { get; set; }
+        public int CreditTypeId { get; set; }
+        public string CreditTypeDisplay { get; set; }
 
         public int DigTypeId { get; set; }
         public string DigTypeDisplay { get; set; }

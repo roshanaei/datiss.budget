@@ -36,5 +36,10 @@
         public const string __ExtensionNo = "ExtensionNo";
         public const string __SuggestedBudgetTopicType = "SuggestedBudgetTopic";
         public const string __FinanceSubjectType = "FinanceSubject";
+        public const string __WasteTubeType = "WasteTubeType";
+        public const string __WaterTubeType = "WaterTubeType";
+        public const string __TubeType = "TubeType";
+        public const string __DigType = "DigType";
+        public const string __TransferType = "TransferType";
     }
 }
