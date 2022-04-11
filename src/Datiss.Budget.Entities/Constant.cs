@@ -133,19 +133,19 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentWaterSource> CostCurrentWaterSource { get; set; }
 
-        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWInvestors { get; set; }
+        public ICollection<CostForcastConstructionW> CostForcastConstructionWInvestors { get; set; }
 
-        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWCostCenters { get; set; }
+        public ICollection<CostForcastConstructionW> CostForcastConstructionWCostCenters { get; set; }
 
-        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWExploitationArea { get; set; }
+        public ICollection<CostForcastConstructionW> CostForcastConstructionWExploitationArea { get; set; }
 
-        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWMeasurement { get; set; }
+        public ICollection<CostForcastConstructionW> CostForcastConstructionWMeasurement { get; set; }
 
-        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWCredit { get; set; }
+        public ICollection<CostForcastConstructionW> CostForcastConstructionWCredit { get; set; }
 
-        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWExtension { get; set; }
+        public ICollection<CostForcastConstructionW> CostForcastConstructionWExtension { get; set; }
 
-        public ICollection<CostCurrentConstructionW> CostCurrentConstructionWSuggestedBudgetTopic { get; set; }
+        public ICollection<CostForcastConstructionW> CostForcastConstructionWSuggestedBudgetTopic { get; set; }
 
          public ICollection<CostForcastConstructionWs> CostForcastConstructionWsInvestors { get; set; }
 
