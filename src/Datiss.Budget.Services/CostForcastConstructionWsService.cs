@@ -71,24 +71,7 @@ namespace Datiss.Budget.Services
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var entity = new CostForcastConstructionWs
-            {
-                YearId = model.YearId,
-                OrganizationId = model.OrganizationId,
-                ProjectDescription = model.ProjectDescription,
-                WasteInvestorsTypeId = model.WasteInvestorsTypeId,
-                CostCenterTypeId = model.CostCenterTypeId,
-                ExploitationAreaTypeId = model.ExploitationAreaTypeId,
-                ProgressPercent = model.ProgressPercent,
-                CostDone = model.CostDone,
-                Amount = model.Amount,
-                MeasurementTypeId = model.MeasurementTypeId,
-                UnitPrice = model.UnitPrice,
-                TotalCost = model.TotalCost,
-                CreditTypeId = model.CreditTypeId,
-                ExtensionTypeId = model.ExtensionTypeId,
-                SuggestedBudgetTopicTypeId = model.SuggestedBudgetTopicTypeId
-            };
+            var entity = model.Adapt<CostForcastConstructionWs>();
 
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId))?.Title;
             try
@@ -145,21 +128,7 @@ namespace Datiss.Budget.Services
                 if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ProjectDescription, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
-                    entity.OrganizationId = model.OrganizationId;
-                    entity.YearId = model.YearId;
-                    entity.ProjectDescription = model.ProjectDescription;
-                    entity.WasteInvestorsTypeId = model.WasteInvestorsTypeId;
-                    entity.CostCenterTypeId = model.CostCenterTypeId;
-                    entity.ExploitationAreaTypeId = model.ExploitationAreaTypeId;
-                    entity.ProgressPercent = model.ProgressPercent;
-                    entity.CostDone = model.CostDone;
-                    entity.Amount = model.Amount;
-                    entity.MeasurementTypeId = model.MeasurementTypeId;
-                    entity.UnitPrice = model.UnitPrice;
-                    entity.TotalCost = model.TotalCost;
-                    entity.CreditTypeId = model.CreditTypeId;
-                    entity.ExtensionTypeId = model.ExtensionTypeId;
-                    entity.SuggestedBudgetTopicTypeId = model.SuggestedBudgetTopicTypeId;
+                    entity = model.Adapt<CostForcastConstructionWs>();
 
                     try
                     {
