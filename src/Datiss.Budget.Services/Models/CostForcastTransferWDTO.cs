@@ -8,6 +8,8 @@
 
         public int TransferTypeId { get; set; }
 
+        public string Location { get; set; }
+
         public int CreditTypeId { get; set; }
 
         public int DigTypeId { get; set; }
@@ -48,6 +50,8 @@
 
         public int TransferTypeId { get; set; }
         public string TransferTypeDisplay { get; set; }
+
+        public string Location { get; set; }
 
         public int CreditTypeId { get; set; }
         public string CreditTypeDisplay { get; set; }

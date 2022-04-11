@@ -17,6 +17,8 @@ namespace Datiss.Budget.ViewModels
 
         public int TransferTypeId { get; set; }
 
+        public string Location { get; set; }
+
         public int DigTypeId { get; set; }
 
         public int TubeTypeId { get; set; }
@@ -69,6 +71,9 @@ namespace Datiss.Budget.ViewModels
 
         public int TransferTypeId { get; set; }
         public string TransferTypeDisplay { get; set; }
+
+        public string Location { get; set; }
+
 
         public int DigTypeId { get; set; }
         public string DigTypeDisplay { get; set; }

@@ -14,6 +14,9 @@ namespace Datiss.Budget.DataLayer.Mappings
             builder.Property(x => x.Id)
                 .HasColumnName("CFCTWId");
 
+            builder.Property(x => x.Location)
+                .HasMaxLength(300)
+                .IsUnicode();
 
             builder.HasOne(x => x.FinanceYear)
                     .WithMany(x => x.CostForcastTransferW)

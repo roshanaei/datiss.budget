@@ -15,6 +15,8 @@ namespace Datiss.Budget.Entities.DWH
 
         public int TransferTypeId { get; set; }
 
+        public string Location { get; set; }
+
         public int CreditTypeId { get; set; }
 
         public int DigTypeId { get; set; }
