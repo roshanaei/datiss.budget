@@ -36,5 +36,6 @@
         public const string __ExtensionNo = "ExtensionNo";
         public const string __SuggestedBudgetTopicType = "SuggestedBudgetTopic";
         public const string __FinanceSubjectType = "FinanceSubject";
+        public const string __MethodsType = "MethodsType";
     }
 }

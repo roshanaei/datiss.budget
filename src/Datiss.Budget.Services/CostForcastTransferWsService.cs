@@ -92,6 +92,7 @@ namespace Datiss.Budget.Services
 
                 result.TransferTypeDisplay = (await _constSet.FindAsync(model.TransferTypeId))?.Title;
                 result.DigTypeDisplay = (await _constSet.FindAsync(model.DigTypeId))?.Title;
+                result.MethodTypeDisplay = (await _constSet.FindAsync(model.MethodTypeId))?.Title;
                 result.TubeTypeDisplay = (await _constSet.FindAsync(model.TubeTypeId))?.Title;
                 result.DiameterPipeTypeDisplay = (await _constSet.FindAsync(model.DiameterPipeTypeId))?.Title;
                 result.CreditTypeDisplay = (await _constSet.FindAsync(model.CreditTypeId))?.Title;
@@ -125,6 +126,7 @@ namespace Datiss.Budget.Services
                 entity.Location = model.Location;
                 entity.TransferTypeId = model.TransferTypeId;
                 entity.DigTypeId = model.DigTypeId;
+                entity.MethodTypeId = model.MethodTypeId;
                 entity.TubeTypeId = model.TubeTypeId;
                 entity.Lenth = model.Lenth;
                 entity.PipeCost = model.PipeCost;
@@ -149,6 +151,7 @@ namespace Datiss.Budget.Services
                 var result = entity.Adapt<CostForcastTransferWsDTO>();
                 result.TransferTypeDisplay = (await _constSet.FindAsync(model.TransferTypeId))?.Title;
                 result.DigTypeDisplay = (await _constSet.FindAsync(model.DigTypeId))?.Title;
+                result.MethodTypeDisplay = (await _constSet.FindAsync(model.MethodTypeId))?.Title;
                 result.TubeTypeDisplay = (await _constSet.FindAsync(model.TubeTypeId))?.Title;
                 result.DiameterPipeTypeDisplay = (await _constSet.FindAsync(model.DiameterPipeTypeId))?.Title;
                 result.CreditTypeDisplay = (await _constSet.FindAsync(model.CreditTypeId))?.Title;
@@ -329,6 +332,7 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.Organization)
                                     .Include(x => x.TransferType)
                                     .Include(x => x.DigType)
+                                    .Include(x => x.MethodType)
                                     .Include(x => x.TubeType)
                                     .Include(x => x.DiameterType)
                                     .Include(x => x.Credit)
@@ -406,6 +410,9 @@ namespace Datiss.Budget.Services
             var digtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                        x.Parent.ConstantKey == ConstantKeys.__DigType);
 
+            var methodtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                           x.Parent.ConstantKey == ConstantKeys.__MethodsType);
+
             var tubetypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                        x.Parent.ConstantKey == ConstantKeys.__TubeType);
 
@@ -463,7 +470,13 @@ namespace Datiss.Budget.Services
                 if (!await digtypes.AnyAsync(x => x.Id == rec.DigTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.DigType)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.DigTypeId)
+                        );
+                }
+                if (!await methodtypes.AnyAsync(x => x.Id == rec.MethodTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.MethodTypeId)
                         );
                 }
                 if (!await tubetypes.AnyAsync(x => x.Id == rec.TubeTypeId))
@@ -584,6 +597,7 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.Organization)
                                     .Include(x => x.TransferType)
                                     .Include(x => x.DigType)
+                                    .Include(x => x.MethodType)
                                     .Include(x => x.TubeType)
                                     .Include(x => x.DiameterType)
                                     .Include(x => x.Credit)
@@ -654,6 +668,7 @@ namespace Datiss.Budget.Services
                     return query.Include(x => x.Organization)
                                 .Include(x => x.TransferType)
                                 .Include(x => x.DigType)
+                                .Include(x => x.MethodType)
                                 .Include(x => x.TubeType)
                                 .Include(x => x.DiameterType)
                                 .Include(x => x.Credit)
@@ -662,6 +677,7 @@ namespace Datiss.Budget.Services
                                 .OrderBy(x => x.Organization.DisplayOrder)
                                 .ThenBy(x => x.Organization.RowOrder)
                                 .ThenBy(x => x.DigType.DisplayOrder)
+                                .ThenBy(x => x.MethodType.DisplayOrder)
                                 .ThenBy(x => x.TransferType.DisplayOrder)
                                 .ThenBy(x => x.Credit.DisplayOrder)
                                 .ThenBy(x => x.Extension.DisplayOrder)
