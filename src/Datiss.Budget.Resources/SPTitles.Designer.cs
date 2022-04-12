@@ -349,6 +349,78 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اعتبارات داخلی.
+        /// </summary>
+        public static string CostForcastConstructionWs_Cal1 {
+            get {
+                return ResourceManager.GetString("CostForcastConstructionWs_Cal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to تبصره 2 قانون ماده واحده.
+        /// </summary>
+        public static string CostForcastConstructionWs_Cal2 {
+            get {
+                return ResourceManager.GetString("CostForcastConstructionWs_Cal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to تبصره 3 قانون ماده واحده.
+        /// </summary>
+        public static string CostForcastConstructionWs_Cal3 {
+            get {
+                return ResourceManager.GetString("CostForcastConstructionWs_Cal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to B.O.T.
+        /// </summary>
+        public static string CostForcastConstructionWs_Cal4 {
+            get {
+                return ResourceManager.GetString("CostForcastConstructionWs_Cal4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to B.O.O.
+        /// </summary>
+        public static string CostForcastConstructionWs_Cal5 {
+            get {
+                return ResourceManager.GetString("CostForcastConstructionWs_Cal5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to فاینانس.
+        /// </summary>
+        public static string CostForcastConstructionWs_Cal6 {
+            get {
+                return ResourceManager.GetString("CostForcastConstructionWs_Cal6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ماده 11.
+        /// </summary>
+        public static string CostForcastConstructionWs_Cal7 {
+            get {
+                return ResourceManager.GetString("CostForcastConstructionWs_Cal7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to جمع کل.
+        /// </summary>
+        public static string CostForcastConstructionWs_Cal8 {
+            get {
+                return ResourceManager.GetString("CostForcastConstructionWs_Cal8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to مجموع درآمد آب بها مشترکین مسکونی سالیانه.
         /// </summary>
         public static string IncomeCurrentWH_Cal1 {
