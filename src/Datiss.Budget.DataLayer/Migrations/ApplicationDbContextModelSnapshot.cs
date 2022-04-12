@@ -1210,6 +1210,245 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.ToTable("CostCurrentPMDeps");
                 });
 
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentPersonel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("PersonelId")
+                        .UseIdentityColumn();
+
+                    b.Property<long>("ChildRt")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ContractTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CostCenterTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("Education")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("EmployRight")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("ExperienceMonth")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ExperienceYear")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("FixSalary")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("GenderId")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("GradeTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("HardWorkingRt")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("HolidayCost")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("HolidayValue")
+                        .HasColumnType("int");
+
+                    b.Property<long>("HolidayYearly")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("HouseRt")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("InsuranceAging")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("InsuranceMaster")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("JobDepartmentTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JobStatusDetailTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("JobStatusTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("MilitaryServiceCost")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("MissionCount")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("MissionDayCost")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ModifiedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ModifiedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("ModifiedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("OverTimeCost")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("OverTimeValue")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PersonelCode")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecordType")
+                        .HasColumnType("int");
+
+                    b.Property<long>("RegionRight")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ShiftPCost")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ShiftPercent")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("StuffRt")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("TrafficRt")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UnUseHolidayCount")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("WelfareCost")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("YearId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContractTypeId");
+
+                    b.HasIndex("CostCenterTypeId");
+
+                    b.HasIndex("GradeTypeId");
+
+                    b.HasIndex("JobDepartmentTypeId");
+
+                    b.HasIndex("JobStatusDetailTypeId");
+
+                    b.HasIndex("JobStatusTypeId");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("YearId");
+
+                    b.ToTable("CostCurrentPersonel");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentRawMaterial", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("CCRMId")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("ActivityType")
+                        .HasColumnType("int");
+
+                    b.Property<long>("BaseFee")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("CreatedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("CreatedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("ForcastFee")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("LastYearFee")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ModifiedByBrowserName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ModifiedByIp")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int?>("ModifiedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RawMaterialTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("YearId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("RawMaterialTypeId");
+
+                    b.HasIndex("YearId");
+
+                    b.ToTable("CostCurrentRawMaterial");
+                });
+
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentSharingSetad", b =>
                 {
                     b.Property<int>("Id")
@@ -1573,11 +1812,8 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("CFCTWId")
+                        .HasColumnName("CFTWId")
                         .UseIdentityColumn();
-
-                    b.Property<int>("CreaditTypeId")
-                        .HasColumnType("int");
 
                     b.Property<string>("CreatedByBrowserName")
                         .HasMaxLength(1000)
@@ -1593,6 +1829,9 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<DateTime?>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("CreditTypeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("DiameterPipeTypeId")
                         .HasColumnType("int");
 
@@ -1604,6 +1843,11 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Property<int>("Lenth")
                         .HasColumnType("int");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(300)
+                        .IsUnicode(true)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("ModifiedByBrowserName")
                         .HasMaxLength(1000)
@@ -1645,7 +1889,7 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreaditTypeId");
+                    b.HasIndex("CreditTypeId");
 
                     b.HasIndex("DiameterPipeTypeId");
 
@@ -3130,6 +3374,9 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Property<int>("OrganizationId")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("SummerIndex")
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<int>("UserTypeId")
                         .HasColumnType("int");
@@ -4916,6 +5163,100 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("Organization");
                 });
 
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentPersonel", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Constant", "Contract")
+                        .WithMany("CostCurrentPersonelContract")
+                        .HasForeignKey("ContractTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Constant", "CostCenter")
+                        .WithMany("CostCurrentPersonelCostCenter")
+                        .HasForeignKey("CostCenterTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Constant", "Grade")
+                        .WithMany("CostCurrentPersonelGrade")
+                        .HasForeignKey("GradeTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Constant", "JobDepartment")
+                        .WithMany("CostCurrentPersonelJobDepartment")
+                        .HasForeignKey("JobDepartmentTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Constant", "JobStatusDetail")
+                        .WithMany("CostCurrentPersonelJobStatusDetail")
+                        .HasForeignKey("JobStatusDetailTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Constant", "JobStatus")
+                        .WithMany("CostCurrentPersonelJobStatus")
+                        .HasForeignKey("JobStatusTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
+                        .WithMany("CostCurrentPersonel")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
+                        .WithMany("CostCurrentPersonel")
+                        .HasForeignKey("YearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Contract");
+
+                    b.Navigation("CostCenter");
+
+                    b.Navigation("FinanceYear");
+
+                    b.Navigation("Grade");
+
+                    b.Navigation("JobDepartment");
+
+                    b.Navigation("JobStatus");
+
+                    b.Navigation("JobStatusDetail");
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentRawMaterial", b =>
+                {
+                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
+                        .WithMany("CostCurrentRawMaterial")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.Constant", "RawMaterial")
+                        .WithMany("CostCurrentRawMaterial")
+                        .HasForeignKey("RawMaterialTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
+                        .WithMany("CostCurrentRawMaterial")
+                        .HasForeignKey("YearId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FinanceYear");
+
+                    b.Navigation("Organization");
+
+                    b.Navigation("RawMaterial");
+                });
+
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentSharingSetad", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
@@ -5115,8 +5456,8 @@ namespace Datiss.Budget.DataLayer.Migrations
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostForcastTransferW", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Constant", "Credit")
-                        .WithMany("CostForcastTransferWCreadit")
-                        .HasForeignKey("CreaditTypeId")
+                        .WithMany("CostForcastTransferWCredit")
+                        .HasForeignKey("CreditTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -6077,7 +6418,21 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("CostCurrentNO");
 
+                    b.Navigation("CostCurrentPersonelContract");
+
+                    b.Navigation("CostCurrentPersonelCostCenter");
+
+                    b.Navigation("CostCurrentPersonelGrade");
+
+                    b.Navigation("CostCurrentPersonelJobDepartment");
+
+                    b.Navigation("CostCurrentPersonelJobStatus");
+
+                    b.Navigation("CostCurrentPersonelJobStatusDetail");
+
                     b.Navigation("CostCurrentPMDeps");
+
+                    b.Navigation("CostCurrentRawMaterial");
 
                     b.Navigation("CostCurrentWaterSource");
 
@@ -6109,7 +6464,7 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("CostForcastConstructionWSuggestedBudgetTopic");
 
-                    b.Navigation("CostForcastTransferWCreadit");
+                    b.Navigation("CostForcastTransferWCredit");
 
                     b.Navigation("CostForcastTransferWDiameterPipe");
 
@@ -6239,7 +6594,11 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("CostCurrentOther");
 
+                    b.Navigation("CostCurrentPersonel");
+
                     b.Navigation("CostCurrentPMDeps");
+
+                    b.Navigation("CostCurrentRawMaterial");
 
                     b.Navigation("CostCurrentSharingSetad");
 
@@ -6354,7 +6713,11 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("CostCurrentOther");
 
+                    b.Navigation("CostCurrentPersonel");
+
                     b.Navigation("CostCurrentPMDeps");
+
+                    b.Navigation("CostCurrentRawMaterial");
 
                     b.Navigation("CostCurrentSharingSetad");
 

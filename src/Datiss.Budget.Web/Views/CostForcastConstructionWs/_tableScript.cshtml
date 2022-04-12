@@ -1,0 +1,601 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    let rowData = {};
+
+    function editRow(id) {
+
+        let extensionTypeId = $('#inputExtensionType_' + id).val();
+        let suggestedBudgetTopicTypeId = $('#hidSuggestedBudgetTopicTypeId_' + id).val();
+
+        console.log(extensionTypeId);
+        console.log(suggestedBudgetTopicTypeId);
+
+        FillDropDown(extensionTypeId, suggestedBudgetTopicTypeId);
+        
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_ExtensionType_' + id).hide();
+        $('#divOutput_SuggestedBudgetTopicType_' + id).hide();
+        $('#divOutput_ProjectDescription_' + id).hide();
+        $('#divOutput_WasteInvestorsType_' + id).hide();
+        $('#divOutput_CostCenterType_' + id).hide();
+        $('#divOutput_ExploitationAreaType_' + id).hide();
+        $('#divOutput_ProgressPercent_' + id).hide();
+        $('#divOutput_CostDone_' + id).hide();
+        $('#divOutput_Amount_' + id).hide();
+        $('#divOutput_MeasurementType_' + id).hide();
+        $('#divOutput_UnitPrice_' + id).hide();
+        $('#divOutput_TotalCost_' + id).hide();
+        $('#divOutput_CreditType_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_ExtensionType_' + id).show();
+        $('#divInput_SuggestedBudgetTopicType_' + id).show();
+        $('#divInput_ProjectDescription_' + id).show();
+        $('#divInput_WasteInvestorsType_' + id).show();
+        $('#divInput_CostCenterType_' + id).show();
+        $('#divInput_ExploitationAreaType_' + id).show();
+        $('#divInput_ProgressPercent_' + id).show();
+        $('#divInput_CostDone_' + id).show();
+        $('#divInput_Amount_' + id).show();
+        $('#divInput_MeasurementType_' + id).show();
+        $('#divInput_UnitPrice_' + id).show();
+        $('#divInput_TotalCost_' + id).show();
+        $('#divInput_CreditType_' + id).show();
+
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.extensionTypeId = $('#inputExtensionType_' + id).val();
+        rowData.suggestedBudgetTopicTypeId = $('#inputSuggestedBudgetTopicType_' + id).val();
+        rowData.projectDescription = $('#inputProjectDescription_' + id).val();
+        rowData.wasteInvestorsTypeId = $('#inputWasteInvestorsType_' + id).val();
+        rowData.costCenterTypeId = $('#inputCostCenterType_' + id).val();
+        rowData.exploitationAreaTypeId = $('#inputExploitationAreaType_' + id).val();
+        rowData.progressPercent = $('#inputProgressPercent_' + id).val();
+        rowData.costDone = $('#inputCostDone_' + id).val();
+        rowData.amount = $('#inputAmount_' + id).val();
+        rowData.measurementTypeId = $('#inputMeasurementType_' + id).val();
+        rowData.unitPrice = $('#inputUnitPrice_' + id).val();
+        rowData.totalCost = $('#inputTotalCost_' + id).val();
+        rowData.creditTypeId = $('#inputCreditType_' + id).val();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_ExtensionType_' + id).hide();
+        $('#divInput_SuggestedBudgetTopicType_' + id).hide();
+        $('#divInput_ProjectDescription_' + id).hide();
+        $('#divInput_WasteInvestorsType_' + id).hide();
+        $('#divInput_CostCenterType_' + id).hide();
+        $('#divInput_ExploitationAreaType_' + id).hide();
+        $('#divInput_ProgressPercent_' + id).hide();
+        $('#divInput_CostDone_' + id).hide();
+        $('#divInput_Amount_' + id).hide();
+        $('#divInput_MeasurementType_' + id).hide();
+        $('#divInput_UnitPrice_' + id).hide();
+        $('#divInput_TotalCost_' + id).hide();
+        $('#divInput_CreditType_' + id).hide();
+
+        //Retriving to OrginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputExtensionType_' + id).val(rowData.extensionTypeId);
+            $('#inputSuggestedBudgetTopicType_' + id).val(rowData.suggestedBudgetTopicTypeId);
+            $('#inputProjectDescription_' + id).val(rowData.projectDescription);
+            $('#inputWasteInvestorsType_' + id).val(rowData.wasteInvestorsTypeId);
+            $('#inputCostCenterType_' + id).val(rowData.costCenterTypeId);
+            $('#inputExploitationAreaType_' + id).val(rowData.exploitationAreaTypeId);
+            $('#inputProgressPercent_' + id).val(rowData.progressPercent);
+            $('#inputCostDone_' + id).val(rowData.costDone);
+            $('#inputAmount_' + id).val(rowData.amount);
+            $('#inputMeasurementType_' + id).val(rowData.measurementTypeId);
+            $('#inputUnitPrice_' + id).val(rowData.unitPrice);
+            $('#inputTotalCost_' + id).val(rowData.totalCost);
+            $('#inputCreditType_' + id).val(rowData.creditTypeId);
+        }
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_ExtensionType_' + id).show();
+        $('#divOutput_SuggestedBudgetTopicType_' + id).show();
+        $('#divOutput_ProjectDescription_' + id).show();
+        $('#divOutput_WasteInvestorsType_' + id).show();
+        $('#divOutput_CostCenterType_' + id).show();
+        $('#divOutput_ExploitationAreaType_' + id).show();
+        $('#divOutput_ProgressPercent_' + id).show();
+        $('#divOutput_CostDone_' + id).show();
+        $('#divOutput_Amount_' + id).show();
+        $('#divOutput_MeasurementType_' + id).show();
+        $('#divOutput_UnitPrice_' + id).show();
+        $('#divOutput_TotalCost_' + id).show();
+        $('#divOutput_CreditType_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#yearId option:selected').val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.extensionTypeId = $('#inputExtensionType_' + id).val();
+        model.suggestedBudgetTopicTypeId = $('#inputSuggestedBudgetTopicType_' + id).val();
+        model.projectDescription = $('#inputProjectDescription_' + id).val();
+        model.wasteInvestorsTypeId = $('#inputWasteInvestorsType_' + id).val();
+        model.costCenterTypeId = $('#inputCostCenterType_' + id).val();
+        model.exploitationAreaTypeId = $('#inputExploitationAreaType_' + id).val();
+        model.progressPercent = $('#inputProgressPercent_' + id).val();
+        model.costDone = $('#inputCostDone_' + id).val();
+        model.amount = $('#inputAmount_' + id).val();
+        model.measurementTypeId = $('#inputMeasurementType_' + id).val();
+        model.unitPrice = $('#inputUnitPrice_' + id).val();
+        model.totalCost = $('#inputTotalCost_' + id).val();
+        model.creditTypeId = $('#inputCreditType_' + id).val();
+
+                console.log(model);
+
+
+        $.ajax({
+            url: '@Url.Action(CostForcastConstructionWsController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+                console.log(data);
+
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.extensionTypeId = model.extensionTypeId;
+                rowData.suggestedBudgetTopicTypeId = model.suggestedBudgetTopicId;
+                rowData.projectDescription = model.projectDescription;
+                rowData.wasteInvestorsType = model.wasteInvestorsTypeId;
+                rowData.costCenterType = model.costCenterTypeId;
+                rowData.exploitationAreaType = model.exploitationAreaTypeId;
+                rowData.progressPercent = model.progressPercent;
+                rowData.costDone = model.costDone;
+                rowData.amount = model.amount;
+                rowData.measurementType = model.measurementTypeId;
+                rowData.unitPrice = model.unitPrice;
+                rowData.totalCost = model.totalCost;
+                rowData.creditType = model.creditTypeId;
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanExtensionType_' + id).text(data.extensionTypeDisplay);
+                $('#spanSuggestedBudgetTopicType_' + id).text(data.suggestedBudgetTopicDisplay);
+                $('#spanProjectDescription_' + id).text(data.projectDescription);
+                $('#spanWasteInvestorsType_' + id).text(data.wasteInvestorsTypeDisplay);
+                $('#spanCostCenterType_' + id).text(data.costCenterTypeDisplay);
+                $('#spanExploitationAreaType_' + id).text(data.exploitationAreaTypeDisplay);
+                $('#spanProgressPercent_' + id).text(data.progressPercent);
+                $('#spanCostDone_' + id).text(data.costDone);
+                $('#spanAmount_' + id).text(data.amount);
+                $('#spanMeasurementType_' + id).text(data.measurementTypeDisplay);
+                $('#spanUnitPrice_' + id).text(data.unitPrice);
+                $('#spanTotalCost_' + id).text(data.totalCost);
+                $('#spanCreditType_' + id).text(data.creditTypeDisplay);
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
+
+        var model = {};
+        model.yearId = $('#yearId option:selected').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.wasteInvestorsTypeId = $(e).find('#inputWasteInvestorsType_').val();
+        model.costCenterTypeId = $(e).find('#inputCostCenterType_').val();
+        model.exploitationAreaTypeId = $(e).find('#inputExploitationAreaType_').val();
+        model.measurementTypeId = $(e).find('#inputMeasurementType_').val();
+        model.creditTypeId = $(e).find('#inputCreditType_').val();
+        model.extensionTypeId = $(e).find('#inputExtensionType_').val();
+        model.suggestedBudgetTopicTypeId = $(e).find('#inputSuggestedBudgetTopicType_').val();
+
+        model.projectDescription = $(e).find('#inputProjectDescription_').val();
+
+        model.progressPercent = $(e).find('#inputProgressPercent_').val();
+        if (model.progressPercent == "") {
+            model.progressPercent = 0;
+        }
+        model.costDone = $(e).find('#inputCostDone_').val();
+        if (model.costDone == "") {
+            model.costDone = 0;
+        }
+        model.amount = $(e).find('#inputAmount_').val();
+        if (model.amount == "") {
+            model.amount = 0;
+        }
+        model.totalCost = $(e).find('#inputTotalCost_').val();
+        if (model.totalCost == "") {
+            model.totalCost = 0;
+        }
+        model.unitPrice = $(e).find('#inputUnitPrice_').val();
+        if (model.unitPrice == "") {
+            model.unitPrice = 0;
+        }
+        
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(CostForcastConstructionWsController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                console.log(data);
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //ExtensionType
+                $(e).find('#divInput_ExtensionType_').attr('id', 'divInput_ExtensionType_' + data.id);
+                $(e).find('#hidExtensionTypeId_').attr('id', 'hidExtensionTypeId_' + data.id);
+                $(e).find('#inputExtensionType_').attr('id', 'inputExtensionType_' + data.id);
+                $(e).find('#divOutput_ExtensionType_').attr('id', 'divOutput_ExtensionType_' + data.id);
+                $(e).find('#spanExtensionType_').attr('id', 'spanExtensionType_' + data.id);
+
+                $('#divInput_ExtensionType_' + data.id).hide();
+                $('#spanExtensionType_' + data.id).text(data.extensionDisplay);
+                $('#divOutput_ExtensionType_' + data.id).show();
+
+
+                //SuggestedBudgetTopicType
+                $(e).find('#divInput_SuggestedBudgetTopicType_').attr('id', 'divInput_SuggestedBudgetTopicType_' + data.id);
+                $(e).find('#hidSuggestedBudgetTopicTypeId_').attr('id', 'hidSuggestedBudgetTopicTypeId_' + data.id);
+                $(e).find('#inputSuggestedBudgetTopicType_').attr('id', 'inputSuggestedBudgetTopicType_' + data.id);
+                $(e).find('#divOutput_SuggestedBudgetTopicType_').attr('id', 'divOutput_SuggestedBudgetTopicType_' + data.id);
+                $(e).find('#spanSuggestedBudgetTopicType_').attr('id', 'spanSuggestedBudgetTopicType_' + data.id);
+
+                $('#divInput_SuggestedBudgetTopicType_' + data.id).hide();
+                $('#spanSuggestedBudgetTopicType_' + data.id).text(data.suggestedBudgetTopicDisplay);
+                $('#divOutput_SuggestedBudgetTopicType_' + data.id).show();
+
+                //ProjectDescription
+                $(e).find('#divInput_ProjectDescription_').attr('id', 'divInput_ProjectDescription_' + data.id);
+                $(e).find('#inputProjectDescription_').attr('id', 'inputProjectDescription_' + data.id);
+                $(e).find('#divOutput_ProjectDescription_').attr('id', 'divOutput_ProjectDescription_' + data.id);
+                $(e).find('#spanProjectDescription_').attr('id', 'spanProjectDescription_' + data.id);
+
+                $('#divInput_ProjectDescription_' + data.id).hide();
+                $('#spanProjectDescription_' + data.id).text(data.projectDescription);
+                $('#divOutput_ProjectDescription_' + data.id).show();
+
+                //WasteInvestorsType
+                $(e).find('#divInput_WasteInvestorsType_').attr('id', 'divInput_WasteInvestorsType_' + data.id);
+                $(e).find('#inputWasteInvestorsTypeId_').attr('id', 'inputWasteInvestorsTypeId_' + data.id);
+                $(e).find('#divOutput_WasteInvestorsType_').attr('id', 'divOutput_WasteInvestorsType_' + data.id);
+                $(e).find('#spanWasteInvestorsType_').attr('id', 'spanWasteInvestorsType_' + data.id);
+
+                $('#divInput_WasteInvestorsType_' + data.id).hide();
+                $('#spanWasteInvestorsType_' + data.id).text(data.wasteInvestorsDisplay);
+                $('#divOutput_WasteInvestorsType_' + data.id).show();
+
+                //CostCenterType
+                $(e).find('#divInput_CostCenterType_').attr('id', 'divInput_CostCenterType_' + data.id);
+                $(e).find('#inputCostCenterTypeId_').attr('id', 'inputCostCenterTypeId_' + data.id);
+                $(e).find('#divOutput_CostCenterType_').attr('id', 'divOutput_CostCenterType_' + data.id);
+                $(e).find('#spanCostCenterType_').attr('id', 'spanCostCenterType_' + data.id);
+
+                $('#divInput_CostCenterType_' + data.id).hide();
+                $('#spanCostCenterType_' + data.id).text(data.costCenterDisplay);
+                $('#divOutput_CostCenterType_' + data.id).show();
+
+
+                //ExploitationAreaType
+                $(e).find('#divInput_ExploitationAreaType_').attr('id', 'divInput_ExploitationAreaType_' + data.id);
+                $(e).find('#inputExploitationAreaType_').attr('id', 'inputExploitationAreaType_' + data.id);
+                $(e).find('#divOutput_ExploitationAreaType_').attr('id', 'divOutput_ExploitationAreaType_' + data.id);
+                $(e).find('#spanExploitationAreaType_').attr('id', 'spanExploitationAreaType_' + data.id);
+
+                $('#divInput_ExploitationAreaType_' + data.id).hide();
+                $('#spanExploitationAreaType_' + data.id).text(data.exploitationAreaDisplay);
+                $('#divOutput_ExploitationAreaType_' + data.id).show();
+
+                //ProgressPercent
+                $(e).find('#divInput_ProgressPercent_').attr('id', 'divInput_ProgressPercent_' + data.id);
+                $(e).find('#inputProgressPercent_').attr('id', 'inputProgressPercent_' + data.id);
+                $(e).find('#divOutput_ProgressPercent_').attr('id', 'divOutput_ProgressPercent_' + data.id);
+                $(e).find('#spanProgressPercent_').attr('id', 'spanProgressPercent_' + data.id);
+
+                $('#divInput_ProgressPercent_' + data.id).hide();
+                $('#spanProgressPercent_' + data.id).text(data.progressPercent);
+                $('#divOutput_ProgressPercent_' + data.id).show();
+
+
+                //CostDone
+                $(e).find('#divInput_CostDone_').attr('id', 'divInput_CostDone_' + data.id);
+                $(e).find('#inputCostDone_').attr('id', 'inputCostDone_' + data.id);
+                $(e).find('#divOutput_CostDone_').attr('id', 'divOutput_CostDone_' + data.id);
+                $(e).find('#spanCostDone_').attr('id', 'spanCostDone_' + data.id);
+
+                $('#divInput_CostDone_' + data.id).hide();
+                $('#spanCostDone_' + data.id).text(data.costDone);
+                $('#divOutput_CostDone_' + data.id).show();
+
+                //Amount
+                $(e).find('#divInput_Amount_').attr('id', 'divInput_Amount_' + data.id);
+                $(e).find('#inputAmount_').attr('id', 'inputAmount_' + data.id);
+                $(e).find('#divOutput_Amount_').attr('id', 'divOutput_Amount_' + data.id);
+                $(e).find('#spanAmount_').attr('id', 'spanAmount_' + data.id);
+
+                $('#divInput_Amount_' + data.id).hide();
+                $('#spanAmount_' + data.id).text(data.amount);
+                $('#divOutput_Amount_' + data.id).show();
+
+                //MeasurementType
+                $(e).find('#divInput_MeasurementType_').attr('id', 'divInput_MeasurementType_' + data.id);
+                $(e).find('#inputMeasurementType_').attr('id', 'inputMeasurementType_' + data.id);
+                $(e).find('#divOutput_MeasurementType_').attr('id', 'divOutput_MeasurementType_' + data.id);
+                $(e).find('#spanMeasurementType_').attr('id', 'spanMeasurementType_' + data.id);
+
+                $('#divInput_MeasurementType_' + data.id).hide();
+                $('#spanMeasurementType_' + data.id).text(data.measurementDisplay);
+                $('#divOutput_MeasurementType_' + data.id).show();
+
+                //UnitPrice
+                $(e).find('#divInput_UnitPrice_').attr('id', 'divInput_UnitPrice_' + data.id);
+                $(e).find('#inputUnitPrice_').attr('id', 'inputUnitPrice_' + data.id);
+                $(e).find('#divOutput_UnitPrice_').attr('id', 'divOutput_UnitPrice_' + data.id);
+                $(e).find('#spanUnitPrice_').attr('id', 'spanUnitPrice_' + data.id);
+
+                $('#divInput_UnitPrice_' + data.id).hide();
+                $('#spanUnitPrice_' + data.id).text(data.unitPrice);
+                $('#divOutput_UnitPrice_' + data.id).show();
+
+                //TotalCost
+                $(e).find('#divInput_TotalCost_').attr('id', 'divInput_TotalCost_' + data.id);
+                $(e).find('#inputTotalCost_').attr('id', 'inputTotalCost_' + data.id);
+                $(e).find('#divOutput_TotalCost_').attr('id', 'divOutput_TotalCost_' + data.id);
+                $(e).find('#spanTotalCost_').attr('id', 'spanTotalCost_' + data.id);
+
+                $('#divInput_TotalCost_' + data.id).hide();
+                $('#spanTotalCost_' + data.id).text(data.totalCost);
+                $('#divOutput_TotalCost_' + data.id).show();
+
+                //CreditType
+                $(e).find('#divInput_CreditType_').attr('id', 'divInput_CreditType_' + data.id);
+                $(e).find('#inputCreditType_').attr('id', 'inputCreditType_' + data.id);
+                $(e).find('#divOutput_CreditType_').attr('id', 'divOutput_CreditType_' + data.id);
+                $(e).find('#spanCreditType_').attr('id', 'spanCreditType_' + data.id);
+
+                $('#divInput_CreditType_' + data.id).hide();
+                $('#spanCreditType_' + data.id).text(data.creditDisplay);
+                $('#divOutput_CreditType_' + data.id).show();
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+        resetTableBackColor("my-table");
+
+        let extensionTypeid = $('#inputExtensionType_').val();
+        FillDropDown(extensionTypeid);
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(CostForcastConstructionWsController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    alert(data.message);
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+    function RelatedDropDown(e, event) {
+        let extensionTypeid = event.target.value;
+        FillDropDown(extensionTypeid);
+    }
+
+    function FillDropDown(id, selectval = null) {
+
+        let key = extensionType_source[id];
+
+        if (key != 'Extension.Yes') {
+            key = 'Extension.NO';
+        }
+
+        $.ajax({
+            url: '@Url.Action("GetSuggestedBudgetTopicAsync")',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'key': key
+                }
+        }).done(function (data) {
+            var options = $('.selectSuggestedBudgetTopicType');
+            options.empty();
+            $.each(data,
+                function (i, item) {
+                    options.append($('<option />')
+                        .val(item.id)
+                        .text(item.title));
+                });
+            if (selectval != null) {
+                options.val(selectval);
+            }
+        }).fail(function (error) {
+            alert(error);
+        });
+    }
+
+
+</script>

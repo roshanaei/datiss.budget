@@ -1,0 +1,578 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    let rowData = {};
+
+    function editRow(id) {
+
+        let extensionTypeId = $('#inputExtensionType_' + id).val();
+        let suggestedBudgetTopicTypeId = $('#hidSuggestedBudgetTopicTypeId_' + id).val();
+        console.log(extensionTypeId);
+        console.log(suggestedBudgetTopicTypeId);
+        FillDropDown(extensionTypeId, suggestedBudgetTopicTypeId);
+        
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_ExtensionType_' + id).hide();
+        $('#divOutput_SuggestedBudgetTopicType_' + id).hide();
+        $('#divOutput_Location_' + id).hide();
+        $('#divOutput_TransferType_' + id).hide();
+        $('#divOutput_DigType_' + id).hide();
+        $('#divOutput_DiameterPipeType_' + id).hide();
+        $('#divOutput_Lenth_' + id).hide();
+        $('#divOutput_PipeCost_' + id).hide();
+        $('#divOutput_RunCost_' + id).hide();
+        $('#divOutput_TubeType_' + id).hide();
+        $('#divOutput_TotalCost_' + id).hide();
+        $('#divOutput_CreditType_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_ExtensionType_' + id).show();
+        $('#divInput_SuggestedBudgetTopicType_' + id).show();
+        $('#divInput_Location_' + id).show();
+        $('#divInput_TransferType_' + id).show();
+        $('#divInput_DigType_' + id).show();
+        $('#divInput_DiameterPipeType_' + id).show();
+        $('#divInput_Lenth_' + id).show();
+        $('#divInput_PipeCost_' + id).show();
+        $('#divInput_RunCost_' + id).show();
+        $('#divInput_TubeType_' + id).show();
+        $('#divInput_TotalCost_' + id).show();
+        $('#divInput_CreditType_' + id).show();
+
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.extensionTypeId = $('#inputExtensionType_' + id).val();
+        rowData.suggestedBudgetTopicTypeId = $('#inputSuggestedBudgetTopicType_' + id).val();
+        rowData.location = $('#inputLocation_' + id).val();
+        rowData.transferTypeId = $('#inputTransferType_' + id).val();
+        rowData.digTypeId = $('#inputDigType_' + id).val();
+        rowData.diameterPipeTypeId = $('#inputDiameterPipeType_' + id).val();
+        rowData.lenth = $('#inputLenth_' + id).val();
+        rowData.pipeCost = $('#inputPipeCost_' + id).val();
+        rowData.runCost = $('#inputRunCost_' + id).val();
+        rowData.tubeTypeId = $('#inputTubeType_' + id).val();
+        rowData.totalCost = $('#inputTotalCost_' + id).val();
+        rowData.creditTypeId = $('#inputCreditType_' + id).val();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_ExtensionType_' + id).hide();
+        $('#divInput_SuggestedBudgetTopicType_' + id).hide();
+        $('#divInput_Location_' + id).hide();
+        $('#divInput_TransferType_' + id).hide();
+        $('#divInput_DigType_' + id).hide();
+        $('#divInput_DiameterPipeType_' + id).hide();
+        $('#divInput_Lenth_' + id).hide();
+        $('#divInput_PipeCost_' + id).hide();
+        $('#divInput_RunCost_' + id).hide();
+        $('#divInput_TubeType_' + id).hide();
+        $('#divInput_TotalCost_' + id).hide();
+        $('#divInput_CreditType_' + id).hide();
+
+        //Retriving to OrginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputExtensionType_' + id).val(rowData.extensionTypeId);
+            $('#inputSuggestedBudgetTopicType_' + id).val(rowData.suggestedBudgetTopicTypeId);
+            $('#inputLocation_' + id).val(rowData.location);
+            $('#inputTransferType_' + id).val(rowData.transferTypeId);
+            $('#inputDigType_' + id).val(rowData.digTypeId);
+            $('#inputDiameterPipeType_' + id).val(rowData.diameterPipeTypeId);
+            $('#inputLenth_' + id).val(rowData.lenth);
+            $('#inputPipeCost_' + id).val(rowData.pipeCost);
+            $('#inputRunCost_' + id).val(rowData.runCost);
+            $('#inputTubeType_' + id).val(rowData.tubeTypeId);
+            $('#inputTotalCost_' + id).val(rowData.totalCost);
+            $('#inputCreditType_' + id).val(rowData.creditTypeId);
+        }
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_ExtensionType_' + id).show();
+        $('#divOutput_SuggestedBudgetTopicType_' + id).show();
+        $('#divOutput_Location_' + id).show();
+        $('#divOutput_TransferType_' + id).show();
+        $('#divOutput_DigType_' + id).show();
+        $('#divOutput_DiameterPipeType_' + id).show();
+        $('#divOutput_Lenth_' + id).show();
+        $('#divOutput_PipeCost_' + id).show();
+        $('#divOutput_RunCost_' + id).show();
+        $('#divOutput_TubeType_' + id).show();
+        $('#divOutput_TotalCost_' + id).show();
+        $('#divOutput_CreditType_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#yearId option:selected').val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.extensionTypeId = $('#inputExtensionType_' + id).val();
+        model.suggestedBudgetTopicTypeId = $('#inputSuggestedBudgetTopicType_' + id).val();
+        model.location = $('#inputLocation_' + id).val();
+        model.transferTypeId = $('#inputTransferType_' + id).val();
+        model.digTypeId = $('#inputDigType_' + id).val();
+        model.diameterPipeTypeId = $('#inputDiameterPipeType_' + id).val();
+        model.lenth = $('#inputLenth_' + id).val();
+        model.pipeCost = $('#inputPipeCost_' + id).val();
+        model.runCost = $('#inputRunCost_' + id).val();
+        model.tubeTypeId = $('#inputTubeType_' + id).val();
+        model.totalCost = $('#inputTotalCost_' + id).val();
+        model.creditTypeId = $('#inputCreditType_' + id).val();
+
+                console.log(model);
+
+
+        $.ajax({
+            url: '@Url.Action(CostForcastTransferWController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+                console.log(data);
+
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.extensionTypeId = model.extensionTypeId;
+                rowData.suggestedBudgetTopicTypeId = model.suggestedBudgetTopicId;
+                rowData.location = model.location;
+                rowData.transferType = model.transferTypeId;
+                rowData.digType = model.digTypeId;
+                rowData.diameterPipeType = model.diameterPipeTypeId;
+                rowData.lenth = model.lenth;
+                rowData.pipeCost = model.pipeCost;
+                rowData.runCost = model.runCost;
+                rowData.tubeType = model.tubeTypeId;
+                rowData.totalCost = model.totalCost;
+                rowData.creditType = model.creditTypeId;
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanExtensionType_' + id).text(data.extensionTypeDisplay);
+                $('#spanSuggestedBudgetTopicType_' + id).text(data.suggestedBudgetTopicDisplay);
+                $('#spanLocation_' + id).text(data.location);
+                $('#spanTransferType_' + id).text(data.transferTypeDisplay);
+                $('#spanDigType_' + id).text(data.digTypeDisplay);
+                $('#spanDiameterPipeType_' + id).text(data.diameterPipeTypeDisplay);
+                $('#spanLenth_' + id).text(data.lenth);
+                $('#spanPipeCost_' + id).text(data.pipeCost);
+                $('#spanRunCost_' + id).text(data.runCost);
+                $('#spanTubeType_' + id).text(data.tubeTypeDisplay);
+                $('#spanTotalCost_' + id).text(data.totalCost);
+                $('#spanCreditType_' + id).text(data.creditTypeDisplay);
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
+
+        var model = {};
+        model.yearId = $('#yearId option:selected').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.transferTypeId = $(e).find('#inputTransferType_').val();
+        model.transferTypeId = $(e).find('#inputTransferType_').val();
+        model.digTypeId = $(e).find('#inputDigType_').val();
+        model.diameterPipeTypeId = $(e).find('#inputDiameterPipeType_').val();
+        model.tubeTypeId = $(e).find('#inputTubeType_').val();
+        model.creditTypeId = $(e).find('#inputCreditType_').val();
+        model.extensionTypeId = $(e).find('#inputExtensionType_').val();
+        model.suggestedBudgetTopicTypeId = $(e).find('#inputSuggestedBudgetTopicType_').val();
+
+        model.location = $(e).find('#inputLocation_').val();
+
+        model.lenth = $(e).find('#inputLenth_').val();
+        if (model.lenth == "") {
+            model.lenth = 0;
+        }
+        model.pipeCost = $(e).find('#inputPipeCost_').val();
+        if (model.pipeCost == "") {
+            model.pipeCost = 0;
+        }
+        model.runCost = $(e).find('#inputRunCost_').val();
+        if (model.runCost == "") {
+            model.runCost = 0;
+        }
+        model.totalCost = $(e).find('#inputTotalCost_').val();
+        if (model.totalCost == "") {
+            model.totalCost = 0;
+        }
+
+        
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(CostForcastTransferWController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                console.log(data);
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //ExtensionType
+                $(e).find('#divInput_ExtensionType_').attr('id', 'divInput_ExtensionType_' + data.id);
+                $(e).find('#hidExtensionTypeId_').attr('id', 'hidExtensionTypeId_' + data.id);
+                $(e).find('#inputExtensionType_').attr('id', 'inputExtensionType_' + data.id);
+                $(e).find('#divOutput_ExtensionType_').attr('id', 'divOutput_ExtensionType_' + data.id);
+                $(e).find('#spanExtensionType_').attr('id', 'spanExtensionType_' + data.id);
+
+                $('#divInput_ExtensionType_' + data.id).hide();
+                $('#spanExtensionType_' + data.id).text(data.extensionTypeDisplay);
+                $('#divOutput_ExtensionType_' + data.id).show();
+
+
+                //SuggestedBudgetTopicType
+                $(e).find('#divInput_SuggestedBudgetTopicType_').attr('id', 'divInput_SuggestedBudgetTopicType_' + data.id);
+                $(e).find('#hidSuggestedBudgetTopicTypeId_').attr('id', 'hidSuggestedBudgetTopicTypeId_' + data.id);
+                $(e).find('#inputSuggestedBudgetTopicType_').attr('id', 'inputSuggestedBudgetTopicType_' + data.id);
+                $(e).find('#divOutput_SuggestedBudgetTopicType_').attr('id', 'divOutput_SuggestedBudgetTopicType_' + data.id);
+                $(e).find('#spanSuggestedBudgetTopicType_').attr('id', 'spanSuggestedBudgetTopicType_' + data.id);
+
+                $('#divInput_SuggestedBudgetTopicType_' + data.id).hide();
+                $('#spanSuggestedBudgetTopicType_' + data.id).text(data.suggestedBudgetTopicTypeDisplay);
+                $('#divOutput_SuggestedBudgetTopicType_' + data.id).show();
+
+                //Location
+                $(e).find('#divInput_Location_').attr('id', 'divInput_Location_' + data.id);
+                $(e).find('#inputLocation_').attr('id', 'inputLocation_' + data.id);
+                $(e).find('#divOutput_Location_').attr('id', 'divOutput_Location_' + data.id);
+                $(e).find('#spanLocation_').attr('id', 'spanLocation_' + data.id);
+
+                $('#divInput_Location_' + data.id).hide();
+                $('#spanLocation_' + data.id).text(data.location);
+                $('#divOutput_Location_' + data.id).show();
+
+                //TransferType
+                $(e).find('#divInput_TransferType_').attr('id', 'divInput_TransferType_' + data.id);
+                $(e).find('#inputTransferTypeId_').attr('id', 'inputTransferTypeId_' + data.id);
+                $(e).find('#divOutput_TransferType_').attr('id', 'divOutput_TransferType_' + data.id);
+                $(e).find('#spanTransferType_').attr('id', 'spanTransferType_' + data.id);
+
+                $('#divInput_TransferType_' + data.id).hide();
+                $('#spanTransferType_' + data.id).text(data.transferTypeDisplay);
+                $('#divOutput_TransferType_' + data.id).show();
+
+                //DigType
+                $(e).find('#divInput_DigType_').attr('id', 'divInput_DigType_' + data.id);
+                $(e).find('#inputDigTypeId_').attr('id', 'inputDigTypeId_' + data.id);
+                $(e).find('#divOutput_DigType_').attr('id', 'divOutput_DigType_' + data.id);
+                $(e).find('#spanDigType_').attr('id', 'spanDigType_' + data.id);
+
+                $('#divInput_DigType_' + data.id).hide();
+                $('#spanDigType_' + data.id).text(data.digTypeDisplay);
+                $('#divOutput_DigType_' + data.id).show();
+
+
+                //DiameterPipeType
+                $(e).find('#divInput_DiameterPipeType_').attr('id', 'divInput_DiameterPipeType_' + data.id);
+                $(e).find('#inputDiameterPipeType_').attr('id', 'inputDiameterPipeType_' + data.id);
+                $(e).find('#divOutput_DiameterPipeType_').attr('id', 'divOutput_DiameterPipeType_' + data.id);
+                $(e).find('#spanDiameterPipeType_').attr('id', 'spanDiameterPipeType_' + data.id);
+
+                $('#divInput_DiameterPipeType_' + data.id).hide();
+                $('#spanDiameterPipeType_' + data.id).text(data.diameterPipeTypeDisplay);
+                $('#divOutput_DiameterPipeType_' + data.id).show();
+
+                //Lenth
+                $(e).find('#divInput_Lenth_').attr('id', 'divInput_Lenth_' + data.id);
+                $(e).find('#inputLenth_').attr('id', 'inputLenth_' + data.id);
+                $(e).find('#divOutput_Lenth_').attr('id', 'divOutput_Lenth_' + data.id);
+                $(e).find('#spanLenth_').attr('id', 'spanLenth_' + data.id);
+
+                $('#divInput_Lenth_' + data.id).hide();
+                $('#spanLenth_' + data.id).text(data.lenthDisplay);
+                $('#divOutput_Lenth_' + data.id).show();
+
+
+                //PipeCost
+                $(e).find('#divInput_PipeCost_').attr('id', 'divInput_PipeCost_' + data.id);
+                $(e).find('#inputPipeCost_').attr('id', 'inputPipeCost_' + data.id);
+                $(e).find('#divOutput_PipeCost_').attr('id', 'divOutput_PipeCost_' + data.id);
+                $(e).find('#spanPipeCost_').attr('id', 'spanPipeCost_' + data.id);
+
+                $('#divInput_PipeCost_' + data.id).hide();
+                $('#spanPipeCost_' + data.id).text(data.pipeCostDisplay);
+                $('#divOutput_PipeCost_' + data.id).show();
+
+                //RunCost
+                $(e).find('#divInput_RunCost_').attr('id', 'divInput_RunCost_' + data.id);
+                $(e).find('#inputRunCost_').attr('id', 'inputRunCost_' + data.id);
+                $(e).find('#divOutput_RunCost_').attr('id', 'divOutput_RunCost_' + data.id);
+                $(e).find('#spanRunCost_').attr('id', 'spanRunCost_' + data.id);
+
+                $('#divInput_RunCost_' + data.id).hide();
+                $('#spanRunCost_' + data.id).text(data.runCostDisplay);
+                $('#divOutput_RunCost_' + data.id).show();
+
+                //TubeType
+                $(e).find('#divInput_TubeType_').attr('id', 'divInput_TubeType_' + data.id);
+                $(e).find('#inputTubeType_').attr('id', 'inputTubeType_' + data.id);
+                $(e).find('#divOutput_TubeType_').attr('id', 'divOutput_TubeType_' + data.id);
+                $(e).find('#spanTubeType_').attr('id', 'spanTubeType_' + data.id);
+
+                $('#divInput_TubeType_' + data.id).hide();
+                $('#spanTubeType_' + data.id).text(data.tubeTypeDisplay);
+                $('#divOutput_TubeType_' + data.id).show();
+
+                //TotalCost
+                $(e).find('#divInput_TotalCost_').attr('id', 'divInput_TotalCost_' + data.id);
+                $(e).find('#inputTotalCost_').attr('id', 'inputTotalCost_' + data.id);
+                $(e).find('#divOutput_TotalCost_').attr('id', 'divOutput_TotalCost_' + data.id);
+                $(e).find('#spanTotalCost_').attr('id', 'spanTotalCost_' + data.id);
+
+                $('#divInput_TotalCost_' + data.id).hide();
+                $('#spanTotalCost_' + data.id).text(data.totalCostDisplay);
+                $('#divOutput_TotalCost_' + data.id).show();
+
+                //CreditType
+                $(e).find('#divInput_CreditType_').attr('id', 'divInput_CreditType_' + data.id);
+                $(e).find('#inputCreditType_').attr('id', 'inputCreditType_' + data.id);
+                $(e).find('#divOutput_CreditType_').attr('id', 'divOutput_CreditType_' + data.id);
+                $(e).find('#spanCreditType_').attr('id', 'spanCreditType_' + data.id);
+
+                $('#divInput_CreditType_' + data.id).hide();
+                $('#spanCreditType_' + data.id).text(data.creditTypeDisplay);
+                $('#divOutput_CreditType_' + data.id).show();
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+        resetTableBackColor("my-table");
+
+        let extensionTypeid = $('#inputExtensionType_').val();
+        FillDropDown(extensionTypeid);
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(CostForcastTransferWController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    alert(data.message);
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+    function RelatedDropDown(e, event) {
+        let extensionTypeid = event.target.value;
+        FillDropDown(extensionTypeid);
+    }
+
+    function FillDropDown(id, selectval = null) {
+
+        let key = extensionType_source[id];
+
+        if (key != 'Extension.Yes') {
+            key = 'Extension.NO';
+        }
+
+        $.ajax({
+            url: '@Url.Action("GetSuggestedBudgetTopicAsync")',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'key': key
+                }
+        }).done(function (data) {
+            var options = $('.selectSuggestedBudgetTopicType');
+            options.empty();
+            $.each(data,
+                function (i, item) {
+                    options.append($('<option />')
+                        .val(item.id)
+                        .text(item.title));
+                });
+            if (selectval != null) {
+                options.val(selectval);
+            }
+        }).fail(function (error) {
+            alert(error);
+        });
+    }
+
+
+</script>

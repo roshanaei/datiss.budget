@@ -6,7 +6,8 @@
     function editRow(id) {
 
         let extensionTypeId = $('#inputExtensionType_' + id).val();
-        let suggestedBudgetTopicTypeId = $('#inputSuggestedBudgetTopicType_' + id).val();
+        let suggestedBudgetTopicTypeId = $('#hidSuggestedBudgetTopicTypeId_' + id).val();
+
         console.log(extensionTypeId);
         console.log(suggestedBudgetTopicTypeId);
         FillDropDown(extensionTypeId, suggestedBudgetTopicTypeId);

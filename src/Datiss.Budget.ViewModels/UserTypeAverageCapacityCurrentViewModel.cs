@@ -34,6 +34,10 @@ namespace Datiss.Budget.ViewModels
 
         [Required(ErrorMessage = "*")]
         public decimal AverageCapacityWsIncome { get; set; }
+        
+        [Required(ErrorMessage = "*")]
+        public decimal SummerIndex { get; set; }
+
 
     }
 
@@ -57,6 +61,11 @@ namespace Datiss.Budget.ViewModels
 
         public decimal AverageCapacityWsIncome { get; set; }
         public string AverageCapacityWsIncomeDisplay => AverageCapacityWsIncome.ToString("N2");
+
+        public decimal SummerIndex { get; set; }
+        public string SummerIndexDisplay => SummerIndex.ToString("N2");
+
+
     }
 
     public class UserTypeAverageCapacityCurrentFilterViewModel : FilterViewModel

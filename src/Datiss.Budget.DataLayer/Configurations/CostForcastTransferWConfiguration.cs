@@ -1,5 +1,4 @@
 ﻿using Datiss.Budget.Entities.DWH;
-using Datiss.Budget.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,8 +12,11 @@ namespace Datiss.Budget.DataLayer.Mappings
                     .HasKey(x => x.Id);
 
             builder.Property(x => x.Id)
-                .HasColumnName("CFCTWId");
+                .HasColumnName("CFTWId");
 
+            builder.Property(x => x.Location)
+                .HasMaxLength(300)
+                .IsUnicode();
 
             builder.HasOne(x => x.FinanceYear)
                     .WithMany(x => x.CostForcastTransferW)
@@ -33,8 +35,8 @@ namespace Datiss.Budget.DataLayer.Mappings
 
 
             builder.HasOne(x => x.Credit)
-                     .WithMany(x => x.CostForcastTransferWCreadit)
-                     .HasForeignKey(x => x.CreaditTypeId)
+                     .WithMany(x => x.CostForcastTransferWCredit)
+                     .HasForeignKey(x => x.CreditTypeId)
                      .OnDelete(DeleteBehavior.Restrict);
 
 
