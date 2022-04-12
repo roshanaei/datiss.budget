@@ -56,10 +56,10 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 8).Value = item.P1Note3;
                 sheet.Cell(row, 8).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                sheet.Cell(row, 9).Value = item.P1Note7;
+                sheet.Cell(row, 9).Value = item.P2Note3;
                 sheet.Cell(row, 9).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                sheet.Cell(row, 10).Value = item.P2Note3;
+                sheet.Cell(row, 10).Value = item.P1Note7;
                 sheet.Cell(row, 10).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 sheet.Cell(row, 11).Value = item.P2Note7;
