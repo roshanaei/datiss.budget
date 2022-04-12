@@ -2,19 +2,16 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.IO;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Datiss.Budget.Services.Contracts.Identity;
 using Datiss.Budget.Common.Exceptions;
 using Microsoft.AspNetCore.Hosting;
 using Datiss.Budget.Common.GuardToolkit;
-using Datiss.Budget.Web.Helpers;
 using Datiss.Budget.Resources;
 using ClosedXML.Extensions;
 using Datiss.Budget.Reports.Excel;
@@ -28,10 +25,10 @@ namespace Datiss.Budget.Web.Controllers
 
     [Authorize]
     [Route("[controller]")]
-    public class CostForcastConstructionWController : Controller
+    public class CostForcastConstructionWsController : Controller
     {
 
-        public const string Name = "CostForcastConstructionW";
+        public const string Name = "CostForcastConstructionWs";
         public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
@@ -45,18 +42,18 @@ namespace Datiss.Budget.Web.Controllers
 
         private string _indexFilterKey = $"{Name}_{ACTION_Index}_filter";
 
-        private readonly ILogger<CostForcastConstructionWController> _logger;
+        private readonly ILogger<CostForcastConstructionWsController> _logger;
         private readonly IWebHostEnvironment _env;
-        private readonly ICostForcastConstructionWService _costForcastConstructionWService;
+        private readonly ICostForcastConstructionWsService _costForcastConstructionWsService;
         private readonly IConstantService _constantService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _financeYearService;
         private readonly ISecurityTrimmingService _securityTrimmingService;
 
-        public CostForcastConstructionWController(
-            ILogger<CostForcastConstructionWController> logger,
+        public CostForcastConstructionWsController(
+            ILogger<CostForcastConstructionWsController> logger,
             IWebHostEnvironment environment,
-            ICostForcastConstructionWService costForcastConstructionWService,
+            ICostForcastConstructionWsService costForcastConstructionWsService,
             IOrganizationService organizationService,
             IFinanceYearService financeYearService,
             IConstantService constantService,
@@ -64,7 +61,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _env = environment ?? throw new ArgumentNullException(nameof(environment));
-            _costForcastConstructionWService = costForcastConstructionWService ?? throw new ArgumentNullException(nameof(costForcastConstructionWService));
+            _costForcastConstructionWsService = costForcastConstructionWsService ?? throw new ArgumentNullException(nameof(costForcastConstructionWsService));
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
@@ -73,16 +70,16 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("[action]")]
         [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
-        public async Task<IActionResult> Create(CreateCostForcastConstructionWViewModel model)
+        public async Task<IActionResult> Create(CreateCostForcastConstructionWsViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 model.AddError(ViewMessages.InvalidData);
                 return Json(model);
             }
-            var data = model.Adapt<CreateCostForcastConstructionWDTO>();
+            var data = model.Adapt<CreateCostForcastConstructionWsDTO>();
 
-            var result = await _costForcastConstructionWService.CreateAsync(data);
+            var result = await _costForcastConstructionWsService.CreateAsync(data);
 
             if (!result.IsValid)
             {
@@ -90,13 +87,13 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            return Json(result.Result.Adapt<CostForcastConstructionWViewModel>());
+            return Json(result.Result.Adapt<CostForcastConstructionWsViewModel>());
         }
 
 
         [HttpPost("[action]")]
         [HasPermission(claimType: Name, actionType: PermissionActionType.Edit)]
-        public async Task<IActionResult> Edit(UpdateCostForcastConstructionWViewModel model)
+        public async Task<IActionResult> Edit(UpdateCostForcastConstructionWsViewModel model)
         {
 
             if (!ModelState.IsValid)
@@ -105,8 +102,8 @@ namespace Datiss.Budget.Web.Controllers
                 return Json(model);
             }
 
-            var data = model.Adapt<UpdateCostForcastConstructionWDTO>();
-            var result = await _costForcastConstructionWService.UpdateAsync(data);
+            var data = model.Adapt<UpdateCostForcastConstructionWsDTO>();
+            var result = await _costForcastConstructionWsService.UpdateAsync(data);
 
             if (!result.IsValid)
             {
@@ -115,7 +112,7 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             return Json(
-                result.Result.Adapt<CostForcastConstructionWViewModel>()
+                result.Result.Adapt<CostForcastConstructionWsViewModel>()
             );
         }
 
@@ -123,7 +120,7 @@ namespace Datiss.Budget.Web.Controllers
         [HasPermission(claimType: Name, actionType: PermissionActionType.List)]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var filter = new CostForcastConstructionWFilterDTO();
+            var filter = new CostForcastConstructionWsFilterDTO();
             var orgSource = (await _organizationService.GetDropDownDataAsync())
               .Adapt<List<DropDownItemViewModel>>();
             int firstOrgId = orgSource.FirstOrDefault().Id;
@@ -137,7 +134,7 @@ namespace Datiss.Budget.Web.Controllers
             var costCenterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var waterInvestorSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterInvestorsType))
+            var wasteInvestorSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__WaterInvestorsType,ConstantKeys.__CIRWaste))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
@@ -178,24 +175,24 @@ namespace Datiss.Budget.Web.Controllers
             var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
                .Adapt<List<DropDownItemViewModel>>();
 
-            var myfilter = TempData.Get<CostForcastConstructionWFilterViewModel>(_indexFilterKey);
+            var myfilter = TempData.Get<CostForcastConstructionWsFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
             {
-                filter = myfilter.Adapt<CostForcastConstructionWFilterDTO>();
+                filter = myfilter.Adapt<CostForcastConstructionWsFilterDTO>();
                 TempData.Put(_indexFilterKey, myfilter);
             }
 
             filter.PageNumber = page;
 
-            var result = await _costForcastConstructionWService.GetListAsync(filter);
-            var model = result.Adapt<CostForcastConstructionWIndexViewModel>();
+            var result = await _costForcastConstructionWsService.GetListAsync(filter);
+            var model = result.Adapt<CostForcastConstructionWsIndexViewModel>();
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
 
             model.SetCostCenterTypeSource(costCenterSource);
-            model.SetWaterInvestorsTypeSource(waterInvestorSource);
+            model.SetWasteInvestorsTypeSource(wasteInvestorSource);
             model.SetMeasurementTypeSource(measurementSource);
             model.SetExtensionTypeSource(extensionTypeSource);
             model.SetExploitationAreaTypeSource(expltionAreaSource);
@@ -215,16 +212,16 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("{page?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(CostForcastConstructionWIndexViewModel model)
+        public async Task<IActionResult> Index(CostForcastConstructionWsIndexViewModel model)
         {
 
-            var filter = model.Filter.Adapt<CostForcastConstructionWFilterDTO>();
+            var filter = model.Filter.Adapt<CostForcastConstructionWsFilterDTO>();
 
             TempData.Put(_indexFilterKey, filter);
 
-            var result = await _costForcastConstructionWService.GetListAsync(filter);
-            model = result.Adapt<CostForcastConstructionWIndexViewModel>();
-            model.Filter = filter.Adapt<CostForcastConstructionWFilterViewModel>();
+            var result = await _costForcastConstructionWsService.GetListAsync(filter);
+            model = result.Adapt<CostForcastConstructionWsIndexViewModel>();
+            model.Filter = filter.Adapt<CostForcastConstructionWsFilterViewModel>();
 
             var orgSource = (await _organizationService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
@@ -237,7 +234,7 @@ namespace Datiss.Budget.Web.Controllers
             var costCenterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var waterInvestorSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterInvestorsType))
+            var wasteInvestorSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__WaterInvestorsType,ConstantKeys.__CIRWaste))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
@@ -282,7 +279,7 @@ namespace Datiss.Budget.Web.Controllers
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
 
             model.SetCostCenterTypeSource(costCenterSource);
-            model.SetWaterInvestorsTypeSource(waterInvestorSource);
+            model.SetWasteInvestorsTypeSource(wasteInvestorSource);
             model.SetMeasurementTypeSource(measurementSource);
             model.SetExtensionTypeSource(extensionTypeSource);
             model.SetExploitationAreaTypeSource(expltionAreaSource);
@@ -307,7 +304,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                var result = await _costForcastConstructionWService.ImportExcelAsync(
+                var result = await _costForcastConstructionWsService.ImportExcelAsync(
                                                                     model.ExcelFile,
                                                                     model.YearId,
                                                                     model.ContinueIfAnyOrgMissing);
@@ -364,7 +361,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             try
             {
-                var result = await _costForcastConstructionWService.HardDeleteAsync(yearId, orgId);
+                var result = await _costForcastConstructionWsService.HardDeleteAsync(yearId, orgId);
 
                 return Json(new
                 {
@@ -415,7 +412,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             try
             {
-                await _costForcastConstructionWService.HardDeleteAsync(id);
+                await _costForcastConstructionWsService.HardDeleteAsync(id);
             }
             catch (DisbaledYearDataInputException)
             {
@@ -447,7 +444,7 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var result = await _costForcastConstructionWService.CalculationAsync(
+            var result = await _costForcastConstructionWsService.CalculationAsync(
                 model.YearId,
                 model.OrganizationId);
 
@@ -497,7 +494,7 @@ namespace Datiss.Budget.Web.Controllers
 
             try
             {
-                await _costForcastConstructionWService.CopyAsync(
+                await _costForcastConstructionWsService.CopyAsync(
                                                     model.SourceYearId,
                                                     model.SourceOrgId,
                                                     model.TargetYearId);
@@ -539,12 +536,12 @@ namespace Datiss.Budget.Web.Controllers
                                 .OrderBy(x => x.DisplayOrder)
                                 .ThenBy(x => x.RowOrder);
 
-            var model = new CostForcastConstructionWImportViewModel();
-            var items = new List<CostForcastConstructionWViewModel>();
+            var model = new CostForcastConstructionWsImportViewModel();
+            var items = new List<CostForcastConstructionWsViewModel>();
 
             foreach (var org in organizations)
             {
-                items.Add(new CostForcastConstructionWViewModel
+                items.Add(new CostForcastConstructionWsViewModel
                 {
                     OrganizationId = org.Id,
                     OrganizationDisplay = org.Title
@@ -554,7 +551,7 @@ namespace Datiss.Budget.Web.Controllers
             var costCenterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
                 .Adapt<IList<DropDownItemViewModel>>();
 
-            var waterInvestorSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterInvestorsType))
+            var wasteInvestorSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__WaterInvestorsType, ConstantKeys.__CIRWaste))
                 .Adapt<IList<DropDownItemViewModel>>();
 
             var expltionAreaSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ExploitationAreaType))
@@ -581,7 +578,7 @@ namespace Datiss.Budget.Web.Controllers
                 suggestedBudgetTopicSource.Add(item);
             }
             model.CostCenterTypeSource = costCenterSource;
-            model.WaterInvestorsTypeSource = waterInvestorSource;
+            model.WasteInvestorsTypeSource = wasteInvestorSource;
             model.ExploitationAreaTypeSource = expltionAreaSource;
             model.MeasurementTypeSource = measurementSource;
             model.CreditTypeSource = creditSource;
@@ -590,17 +587,17 @@ namespace Datiss.Budget.Web.Controllers
 
             model.Items = items;
             using var workbook = model.GetImportTemplate(year.Year);
-            return workbook.Deliver("CostForcastConstructionW-Import-Template.xlsx");
+            return workbook.Deliver("CostForcastConstructionWs-Import-Template.xlsx");
         }
 
         [HttpGet("[action]/{orgid}/{yearid}")]
         public async Task<IActionResult> ExportExcel(int orgid, int yearid)
         {
-            var result = await _costForcastConstructionWService.GetExportItemsAsync(yearid, orgid);
+            var result = await _costForcastConstructionWsService.GetExportItemsAsync(yearid, orgid);
             if (result.Count() == 0)
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
-            return workbook.Deliver("CostForcastConstructionW.xlsx");
+            return workbook.Deliver("CostForcastConstructionWs.xlsx");
         }
 
         [HttpPost, Route("GetSuggestedBudgetTopicAsync")]
@@ -625,14 +622,14 @@ namespace Datiss.Budget.Web.Controllers
         private string getCalcTitle(string key)
             => key switch
             {
-                "CostForcastConstructionW_Cal1" => SPTitles.CostForcastConstructionWs_Cal1,
-                "CostForcastConstructionW_Cal2" => SPTitles.CostForcastConstructionWs_Cal2,
-                "CostForcastConstructionW_Cal3" => SPTitles.CostForcastConstructionWs_Cal3,
-                "CostForcastConstructionW_Cal4" => SPTitles.CostForcastConstructionWs_Cal4,
-                "CostForcastConstructionW_Cal5" => SPTitles.CostForcastConstructionWs_Cal5,
-                "CostForcastConstructionW_Cal6" => SPTitles.CostForcastConstructionWs_Cal6,
-                "CostForcastConstructionW_Cal7" => SPTitles.CostForcastConstructionWs_Cal7,
-                "CostForcastConstructionW_Cal8" => SPTitles.CostForcastConstructionWs_Cal8,
+                "CostForcastConstructionWs_Cal1" => SPTitles.CostForcastConstructionWs_Cal1,
+                "CostForcastConstructionWs_Cal2" => SPTitles.CostForcastConstructionWs_Cal2,
+                "CostForcastConstructionWs_Cal3" => SPTitles.CostForcastConstructionWs_Cal3,
+                "CostForcastConstructionWs_Cal4" => SPTitles.CostForcastConstructionWs_Cal4,
+                "CostForcastConstructionWs_Cal5" => SPTitles.CostForcastConstructionWs_Cal5,
+                "CostForcastConstructionWs_Cal6" => SPTitles.CostForcastConstructionWs_Cal6,
+                "CostForcastConstructionWs_Cal7" => SPTitles.CostForcastConstructionWs_Cal7,
+                "CostForcastConstructionWs_Cal8" => SPTitles.CostForcastConstructionWs_Cal8,
                 _ => ""
             };
         #endregion
