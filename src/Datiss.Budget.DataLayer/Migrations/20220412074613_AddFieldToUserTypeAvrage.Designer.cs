@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220412074613_AddFieldToUserTypeAvrage")]
+    partial class AddFieldToUserTypeAvrage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1573,8 +1575,11 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("CFTWId")
+                        .HasColumnName("CFCTWId")
                         .UseIdentityColumn();
+
+                    b.Property<int>("CreaditTypeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("CreatedByBrowserName")
                         .HasMaxLength(1000)
@@ -1590,9 +1595,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<DateTime?>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CreditTypeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("DiameterPipeTypeId")
                         .HasColumnType("int");
 
@@ -1604,11 +1606,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Property<int>("Lenth")
                         .HasColumnType("int");
-
-                    b.Property<string>("Location")
-                        .HasMaxLength(300)
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("ModifiedByBrowserName")
                         .HasMaxLength(1000)
@@ -1650,7 +1647,7 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreditTypeId");
+                    b.HasIndex("CreaditTypeId");
 
                     b.HasIndex("DiameterPipeTypeId");
 
@@ -5123,8 +5120,8 @@ namespace Datiss.Budget.DataLayer.Migrations
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostForcastTransferW", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Constant", "Credit")
-                        .WithMany("CostForcastTransferWCredit")
-                        .HasForeignKey("CreditTypeId")
+                        .WithMany("CostForcastTransferWCreadit")
+                        .HasForeignKey("CreaditTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -6117,7 +6114,7 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("CostForcastConstructionWSuggestedBudgetTopic");
 
-                    b.Navigation("CostForcastTransferWCredit");
+                    b.Navigation("CostForcastTransferWCreadit");
 
                     b.Navigation("CostForcastTransferWDiameterPipe");
 

@@ -7,11 +7,11 @@ using Datiss.Budget.ViewModels;
 namespace Datiss.Budget.Reports.Excel
 {
 
-    public static class CostForcastConstructionWExcel
+    public static class CostForcastConstructionWsExcel
     {
-        private const string _sheetName = "CostForcastConstructionW";
+        private const string _sheetName = "CostForcastConstructionWs";
 
-        public static XLWorkbook ExportExcel(this IEnumerable<CostForcastConstructionWDTO> items)
+        public static XLWorkbook ExportExcel(this IEnumerable<CostForcastConstructionWsDTO> items)
         {
             if (items == null || !items.Any())
                 return null;
@@ -45,7 +45,7 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 1).Value = item.Year.ToString();
                 sheet.Cell(row, 2).Value = item.OrganizationDisplay;
                 sheet.Cell(row, 3).Value = item.ProjectDescription;
-                sheet.Cell(row, 4).Value = item.WaterInvestorsDisplay;
+                sheet.Cell(row, 4).Value = item.WasteInvestorsDisplay;
                 sheet.Cell(row, 5).Value = item.CostCenterDisplay;
                 sheet.Cell(row, 6).Value = item.ExploitationAreaDisplay;
                 sheet.Cell(row, 7).Value = item.ProgressPercent;
@@ -78,7 +78,7 @@ namespace Datiss.Budget.Reports.Excel
             return workbook;
         }
 
-        public static XLWorkbook GetImportTemplate(this CostForcastConstructionWImportViewModel model, int year)
+        public static XLWorkbook GetImportTemplate(this CostForcastConstructionWsImportViewModel model, int year)
         {
             if (!model.Items.Any())
                 return null;
@@ -116,7 +116,7 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 13).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 14).Style.Fill.BackgroundColor = XLColor.Cream;
             int row = 2;
-            foreach (var item in model.WaterInvestorsTypeSource)
+            foreach (var item in model.WasteInvestorsTypeSource)
             {
                 sheet.Cell(row,1).Value = item.Title;
                 sheet.Cell(row, 1).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);

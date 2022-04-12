@@ -6,7 +6,8 @@
     function editRow(id) {
 
         let userTypeId = $('#inputUserType_' + id).val();
-        let usageLayerTypeId = $('#inputUsageLayerType_' + id).val();
+        let usageLayerTypeId = $('#hidUsageLayerTypeId_' + id).val();
+
         console.log(userTypeId);
         console.log(usageLayerTypeId);
         FillDropDown(userTypeId, usageLayerTypeId);

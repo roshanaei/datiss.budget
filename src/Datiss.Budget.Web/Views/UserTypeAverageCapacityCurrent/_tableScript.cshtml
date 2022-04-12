@@ -16,6 +16,7 @@
         $('#divOutput_UserType_' + id).hide();
         $('#divOutput_AverageCapacityWIncome_' + id).hide();
         $('#divOutput_AverageCapacityWsIncome_' + id).hide();
+        $('#divOutput_SummerIndex_' + id).hide();
 
         //show input elements
         $('#divInput_Year_' + id).show();
@@ -23,6 +24,7 @@
         $('#divInput_UserType_' + id).show();
         $('#divInput_AverageCapacityWIncome_' + id).show();
         $('#divInput_AverageCapacityWsIncome_' + id).show();
+        $('#divInput_SummerIndex_' + id).show();
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -35,6 +37,7 @@
         rowData.userTypeId = $('#inputUserType_' + id).val();
         rowData.averageCapacityWIncome = $('#inputAverageCapacityWIncome_' + id).val();
         rowData.averageCapacityWsIncome = $('#inputAverageCapacityWsIncome_' + id).val();
+        rowData.summerIndex = $('#inputSummerIndex_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -47,6 +50,7 @@
         $('#divInput_UserType_' + id).hide();
         $('#divInput_AverageCapacityWIncome_' + id).hide();
         $('#divInput_AverageCapacityWsIncome_' + id).hide();
+        $('#divInput_SummerIndex_' + id).hide();
 
         //Reverting to OriginalData
         if (rowData != null) {
@@ -55,6 +59,7 @@
             $('#inputUserType_' + id).val(rowData.userTypeId);
             $('#inputAverageCapacityWIncome_' + id).val(rowData.averageCapacityWIncome);
             $('#inputAverageCapacityWsIncome_' + id).val(rowData.averageCapacityWsIncome);
+            $('#inputSummerIndex_' + id).val(rowData.summerIndex);
         }
 
         //Show output elements
@@ -63,6 +68,7 @@
         $('#divOutput_UserType_' + id).show();
         $('#divOutput_AverageCapacityWIncome_' + id).show();
         $('#divOutput_AverageCapacityWsIncome_' + id).show();
+        $('#divOutput_SummerIndex_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -88,6 +94,7 @@
         model.userTypeId = $('#inputUserType_' + id).val();
         model.averageCapacityWIncome = $('#inputAverageCapacityWIncome_' + id).val();
         model.averageCapacityWsIncome = $('#inputAverageCapacityWsIncome_' + id).val();
+        model.summerIndex = $('#inputSummerIndex_' + id).val();
 
         $.ajax({
             url: '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_Edit)',
@@ -114,6 +121,7 @@
                 rowData.userTypeId = model.userTypeId;
                 rowData.averageCapacityWIncome = model.averageCapacityWIncome;
                 rowData.averageCapacityWsIncome = model.averageCapacityWsIncome;
+                rowData.summerIndex = model.summerIndex;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
@@ -122,6 +130,7 @@
                 $('#spanUserType_' + id).text(data.userTypeDisplay);
                 $('#spanAverageCapacityWIncome_' + id).text(data.averageCapacityWIncome);
                 $('#spanAverageCapacityWsIncome_' + id).text(data.averageCapacityWsIncome);
+                $('#spanSummerIndex_' + id).text(data.summerIndex);
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
@@ -153,6 +162,10 @@
         model.averageCapacityWsIncome = $(e).find('#inputAverageCapacityWsIncome_').val();
         if (model.averageCapacityWsIncome == "") {
             model.averageCapacityWsIncome = 0;
+        }
+        model.summerIndex = $(e).find('#inputSummerIndex_').val();
+        if (model.summerIndex == "") {
+            model.summerIndex = 0;
         }
 
         console.log(model);
@@ -229,6 +242,16 @@
                 $('#divInput_AverageCapacityWsIncome_' + data.id).hide();
                 $('#spanAverageCapacityWsIncome_' + data.id).text(data.averageCapacityWsIncome);
                 $('#divOutput_AverageCapacityWsIncome_' + data.id).show();
+
+                //SummerIndex
+                $(e).find('#divInput_SummerIndex_').attr('id', 'divInput_SummerIndex_' + data.id);
+                $(e).find('#inputSummerIndex_').attr('id', 'inputSummerIndex_' + data.id);
+                $(e).find('#divOutput_SummerIndex_').attr('id', 'divOutput_SummerIndex_' + data.id);
+                $(e).find('#spanSummerIndex_').attr('id', 'spanSummerIndex_' + data.id);
+
+                $('#divInput_SummerIndex_' + data.id).hide();
+                $('#spanSummerIndex_' + data.id).text(data.summerIndex);
+                $('#divOutput_SummerIndex_' + data.id).show();
 
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);

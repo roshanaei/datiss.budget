@@ -3,12 +3,13 @@
     <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
         <thead class="thead-light">
             <tr>
-                <th style="min-width:135px">سال</th>
-                <th style="min-width:250px">سازمان</th>
-                <th style="min-width:250px">کاربری</th>
-                <th style="min-width:220px">متوسط ظرفیت قراردادی آب</th>
-                <th style="min-width:220px">متوسط ظرفیت قراردادی فاضلاب </th>
-                <th style="min-width:190px">مدیریت</th>
+                <th style="min-width:135px ; font-size:smaller">سال</th>
+                <th style="min-width:250px ; font-size:smaller">سازمان</th>
+                <th style="min-width:250px ; font-size:smaller">کاربری</th>
+                <th style="min-width:170px ; font-size:smaller">متوسط ظرفیت قراردادی آب</th>
+                <th style="min-width:170px ; font-size:smaller">متوسط ظرفیت قراردادی فاضلاب </th>
+                <th style="min-width:170px ; font-size:smaller">شاخص تابستانه</th>
+                <th style="min-width:190px ; font-size:smaller">مدیریت</th>
 
             </tr>
         </thead>
@@ -65,6 +66,14 @@
                     </div>
                     <div id="divOutput_AverageCapacityWsIncome_" style="display: none">
                         <span id="spanAverageCapacityWsIncome_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_SummerIndex_">
+                        <input class="form-control input-keyup" id="inputSummerIndex_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_SummerIndex_" style="display: none">
+                        <span id="spanSummerIndex_"> </span>
                     </div>
                 </td>
                 <td>
@@ -152,6 +161,14 @@
                         </div>
                         <div id="divOutput_AverageCapacityWsIncome_@item.Id">
                             <span id="spanAverageCapacityWsIncome_@item.Id">@item.AverageCapacityWsIncomeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_SummerIndex_@item.Id" style="display: none">
+                            <input class="form-control" id="inputSummerIndex_@item.Id" value="@item.SummerIndex" type="number" />
+                        </div>
+                        <div id="divOutput_SummerIndex_@item.Id">
+                            <span id="spanSummerIndex_@item.Id">@item.SummerIndexDisplay </span>
                         </div>
                     </td>
                     <td>

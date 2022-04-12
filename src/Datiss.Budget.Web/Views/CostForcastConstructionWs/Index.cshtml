@@ -1,5 +1,5 @@
-﻿@model UserTypeAverageCapacityCurrentIndexViewModel
-@{ ViewData["Title"] = "متوسط ظرفیت قراردادی درآمد جاری کاربری های غیرخانگی به تفکیک شهر سال"; }
+﻿@model CostForcastConstructionWsIndexViewModel
+@{ ViewData["Title"] = "اهداف عمرانی فاضلاب"; }
 
 <!--Title-->
 <div class="row">
@@ -19,8 +19,8 @@
                         <!--Filters-->
                         <form method="post"
                               id="filterForm"
-                              asp-controller="@UserTypeAverageCapacityCurrentController.Name"
-                              asp-action="@UserTypeAverageCapacityCurrentController.ACTION_Index"
+                              asp-controller="@CostForcastConstructionWsController.Name"
+                              asp-action="@CostForcastConstructionWsController.ACTION_Index"
                               asp-antiforgery="true">
                             <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
                             <div class="rowACJSB">
@@ -46,7 +46,6 @@
                                 </fieldset>
                                 <fieldset>
                                     <div class="rowACJE">
-
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
@@ -83,10 +82,8 @@
                                             <span style="margin-right:10px">رکورد</span>
 
                                         </label>
-
                                     </fieldset>
-                                    @* drop down menu *@
-
+                                    <!--DropDown Menu-->
                                     <div class="btn-group dropdown form-group">
                                         <button type="button"
                                                 class="btn btn-light my-font dropdown-toggle"
@@ -95,7 +92,7 @@
                                                 aria-expanded="false">
                                             ستون ها
                                         </button>
-                                        <div class="dropdown-menu" style="width:270px">
+                                        <div class="dropdown-menu" style="width:210%">
                                             <div id="columnSelector">
                                                 <div class="dropdown-item">
                                                     <div class="custom-control custom-checkbox">
@@ -105,7 +102,7 @@
                                                                name="col-1"
                                                                id="col-1" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-1"><span>سال</span></label>
+                                                               for="col-1"><span>سازمان</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -116,7 +113,7 @@
                                                                name="col-2"
                                                                id="col-2" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-2"><span>سازمان</span></label>
+                                                               for="col-2"><span>شرح پروژه های عمرانی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -127,7 +124,7 @@
                                                                name="col-3"
                                                                id="col-3" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-3"><span>کاربری</span></label>
+                                                               for="col-3"><span>عنوان هزینه سرمایه ای</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -138,7 +135,7 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>متوسط ظرفیت قراردادی آب </span></label>
+                                                               for="col-4"><span>مرکز هزینه</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -149,7 +146,7 @@
                                                                name="col-5"
                                                                id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>متوسط ظرفیت قراردادی فاضلاب </span></label>
+                                                               for="col-5"><span>حوزه بهره بردار در ستاد</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -160,11 +157,98 @@
                                                                name="col-6"
                                                                id="col-6" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-6"><span>شاخص تابستانه</span></label>
+                                                               for="col-6"><span>درصد پیشرفت فیزیکی</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-7"
+                                                               id="col-7" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-7"><span>هزینه انجام شده (هزار ریال)</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-8"
+                                                               id="col-8" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-8"><span style="">واحد</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-9"
+                                                               id="col-9" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-9"><span style="">قیمت واحد(هزار ریال)</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-10"
+                                                               id="col-10" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-10"><span style="">مقدار</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-11"
+                                                               id="col-11" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-11"><span style="">(هزار ریال)کل هزینه اجرایی پروژه</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-12"
+                                                               id="col-12" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-12"><span style="">محل تامین اعتبار</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-13"
+                                                               id="col-13" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-13"><span style="">بهره برداری در سال بودجه؟</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-15"
+                                                               id="col-15" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-15"><span style="">سرفصل کلی در بودجه پیشنهادی</span></label>
                                                     </div>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -173,12 +257,12 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@UserTypeAverageCapacityCurrentController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostForcastConstructionWsController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
-                                           asp-asp-controller="@UserTypeAverageCapacityCurrentController.Name"
-                                           asp-action="@UserTypeAverageCapacityCurrentController.ACTION_GetExcelTemplate"
+                                           asp-asp-controller="@CostForcastConstructionWsController.Name"
+                                           asp-action="@CostForcastConstructionWsController.ACTION_GetExcelTemplate"
                                            asp-route-yearId="@Model.Filter.YearId"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
                                             <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
@@ -218,7 +302,6 @@
     </div>
 
 
-
     <div id="divCalc">
 
     </div>
@@ -226,10 +309,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6';
+        let allColumns = '1,2,3,4,5,6,7,8,9,10,11,12,13,14';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,";
+        let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -241,7 +324,25 @@
 
     <script type="text/javascript">
 
-        $(document).ready(function () {
+    var extensionType_Ids = [
+        @Html.Raw(Model.ExtensionTypeSourceIdArray)
+    ];
+
+    var extensionType_keys = [
+        @Html.Raw(ViewData["extensionTypeKeys"].ToString())
+    ];
+
+    var extensionType_source = {};
+
+    for (var i = 0; i < extensionType_Ids.length; i++) {
+        extensionType_source[extensionType_Ids[i]] = extensionType_keys[i];
+    }
+
+
+    $(document).ready(function () {
+        console.log(extensionType_source);
+        console.log(extensionType_Ids);
+        console.log(extensionType_keys);
             console.log('ready');
             //fill input hidden with initial columns showing
             document.getElementById("hidColumns").value = showingColmuns;
@@ -304,8 +405,10 @@
                 html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
                 type: 'error',
                 showCancelButton: true,
+                //confirmButtonColor: '#2F8BE6',
                 animation: false,
                 customClass: 'animated flipInX',
+                //cancelButtonColor: '#F55252',
                 cancelButtonText: 'انصراف',
                 confirmButtonText: 'حذف اطلاعات!',
                 confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
@@ -317,7 +420,7 @@
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
                     console.log(params);
-                    let deleteUrl = '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_DeleteRecords)';
+                    let deleteUrl = '@Url.Action(CostForcastConstructionWsController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
 
                     $.ajax({
@@ -352,7 +455,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_Index, new {  page = 1})';
+                                document.location.href = '@Url.Action(CostForcastConstructionWsController.ACTION_Index, new {  page = 1})';
                             });
                         },
                         error: function(request, option, err) {
@@ -388,39 +491,60 @@
             addNewRow();
         });
 
-        $(document).on('click', '.edit-row', function () {
+    $(document).on('click', '.edit-row', function () {
+
             resetDataColumns()
             let id = $(this).data('id');
 
-            let input1 = document.getElementById('inputAverageCapacityWIncome_' + id);
-            let input2 = document.getElementById('inputAverageCapacityWsIncome_' + id);
-            let input3 = document.getElementById('inputSummerIndex_' + id);
+            let input1 = document.getElementById('inputProjectDescription_' + id);
+            let input2 = document.getElementById('inputProgressPercent_' + id);
+            let input3 = document.getElementById('inputCostDone_' + id);
+            let input4 = document.getElementById('inputAmount_' + id);
+            let input5 = document.getElementById('inputUnitPrice_' + id);
+            let input6 = document.getElementById('inputTotalCost_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
-            btnSaveEdit.addEventListener('click', function(event) {
+            input1.addEventListener("keyup", function (event) {
                 event.preventDefault();
-                $(btnSaveEdit).attr('disabled', true);
-                $(btnSaveEdit).unbind('keyup');
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input2.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input3.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input4.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input5.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input6.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
             });
 
-            input1.addEventListener('keyup', function (event) {
+            btnSaveEdit.addEventListener('click', function (evenrt) {
                 event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input2.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
-            });
-            input3.addEventListener('keyup', function (event) {
-                event.preventDefault();
-                if (event.keyCode === 13) {
-                    btnSaveEdit.click();
-                }
+                $(btnSaveEdit).attr('disabled', true);
             });
 
             editRow(id);
@@ -478,12 +602,12 @@
         $(document).on('click', '.openCopy', function() {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_Copy)',
+                url: '@Url.Action(CostForcastConstructionWsController.ACTION_Copy)',
                 success: function (data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
                     $('#CopyModal').modal('show');
-                    $('#CopyModal').on('hidden.bs.modal', function() {
+                    $('#CopyModal').on('hidden.bs.modal', function () {
                         $('#divCopy').html('');
                         $('.modal-backdrop').remove();
                     });
@@ -498,9 +622,36 @@
             });
         });
 
-        $(document).ready(function() {
-            $('.modal').on('hidden.bs.modal', function() {
+        $(document).ready(function () {
+            $('.modal').on('hidden.bs.modal', function () {
                 $('.modal-backdrop').remove();
+            });
+        });
+
+        $(document).on('click', '.calculation-button', function() {
+            let model = {};
+            model.yearId = $('#yearId').val();
+            model.organizationId = $('#organizationId').val();
+
+            console.log(model);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(CostForcastConstructionWsController.ACTION_Calculation)',
+                data: model,
+                success: function (data, status, settings) {
+                    $('#divCalc').html('');
+                    $('#divCalc').html(data);
+                    $('#CalculationModal').modal('show');
+                    $('#CalculationModal').on('hidden.bs.modal', function () {
+                        $('#divCalc').html('');
+                        $('.modal-backdrop').remove();
+                    });
+                },
+                error: function (request, options, err) {
+                    console.log(err);
+                    $('#divCalc').html('failed to load content.');
+                }
             });
         });
 
@@ -515,14 +666,13 @@
             $(".olvy").css("display", "block");
 
             $.ajax({
-                url: '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_ImportExcel)',
+                url: '@Url.Action(CostForcastConstructionWsController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
                 contentType: false,
                 success: function (data, status, settings) {
                     console.log(data);
-
                     if (data.hasError) {
                         $(".olvy").css("display", "none");
                         Swal.fire({
@@ -541,9 +691,9 @@
 
                     if (data.ask) {
                         $(".olvy").css("display", "none");
-
                         Swal.fire({
                             html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
+                            //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
                             type: 'warning',
                             showCancelButton: true,
                             confirmButtonColor: '#2F8BE6',
@@ -557,21 +707,21 @@
                             buttonsStyling: false,
                         }).then(function (result) {
 
-                            if (result.value) {
+                            if(result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
                                 console.log(fdata);
+
                                 $(".olvy").css("display", "block");
 
                                 $.ajax({
-                                    url: '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_ImportExcel)',
+                                    url: '@Url.Action(CostForcastConstructionWsController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
                                     contentType: false,
-                                    success: function (data, status, settings) {
+                                    success: function(data, status, settings) {
                                         if (data.hasError) {
-                                            $("#overlay").css("display", "none");
-
+                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">خطا</span>',
                                                 html: `<span class="my-font">${data.message}</span>`,
@@ -586,9 +736,8 @@
                                             return;
                                         }
 
-                                        if (!data.hasError) {
-                                            $("#overlay").css("display", "none");
-
+                                        if(!data.hasError) {
+                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
                                                 html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -600,15 +749,15 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                document.location.href = '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(CostForcastConstructionWsController.ACTION_Index)';
                                             });
                                         }
 
-                                        if (data.ask) {
+                                        if(data.ask) {
                                             alert('dont ask again');
                                         }
                                     },
-                                    error: function (request, options, err) {
+                                    error: function(request, options, err) {
                                         console.log(err);
                                     }
                                 });
@@ -620,10 +769,8 @@
                             }
                         });
                     }
-
                     if (!data.hasError && !data.ask) {
                         $(".olvy").css("display", "none");
-
                         Swal.fire({
                             title: '<span class="my-font">عملیات موفق</span>',
                             html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -635,7 +782,7 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_Index)';
+                            document.location.href = '@Url.Action(CostForcastConstructionWsController.ACTION_Index)';
                         });
                     }
 
@@ -662,7 +809,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(UserTypeAverageCapacityCurrentController.ACTION_Copy)',
+                url: '@Url.Action(CostForcastConstructionWsController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
                 success: function (data, status, settings) {
@@ -693,6 +840,7 @@
                         buttonsStyling: false,
                     }).then(function(result) {
                         $('#CopyModal').modal('hide');
+                        document.location.href = '@Url.Action(CostForcastConstructionWsController.ACTION_Index, new {  page = 1})';
                     });
                 },
                 error: function (request, options, err) {
