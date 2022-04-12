@@ -352,4 +352,12 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
 
     }
+
+    public class CostCurrentPersonelFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public RecordType? RecordType { get; set; }
+
+    }
 }
