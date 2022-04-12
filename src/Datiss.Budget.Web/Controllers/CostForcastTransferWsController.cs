@@ -143,11 +143,11 @@ namespace Datiss.Budget.Web.Controllers
             var methodTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__MethodsType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var diameterPipeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterTubeType))
+            var diameterPipeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteTubeType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
-            var tubeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__TubeType))
+            var tubeTypeSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType, ConstantKeys.__CIRWaste))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
@@ -246,11 +246,11 @@ namespace Datiss.Budget.Web.Controllers
             var methodTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__MethodsType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var diameterPipeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterTubeType))
+            var diameterPipeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteTubeType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
-            var tubeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__TubeType))
+            var tubeTypeSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType,ConstantKeys.__CIRWaste))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
@@ -288,7 +288,7 @@ namespace Datiss.Budget.Web.Controllers
 
             model.SetTransferTypeSource(transferTypeSource);
             model.SetDigTypeSource(digTypeSource);
-            model.SetCreditTypeSource(methodTypeSource);
+            model.SeMethodTypeSource(methodTypeSource);
             model.SetTubeTypeSource(tubeTypeSource);
             model.SetExtensionTypeSource(extensionTypeSource);
             model.SetDiameterPipeTypeSource(diameterPipeTypeSource);
@@ -566,11 +566,11 @@ namespace Datiss.Budget.Web.Controllers
             var methodeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__MethodsType))
                 .Adapt<IList<DropDownItemViewModel>>();
 
-            var diameterPipeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WaterTubeType))
+            var diameterPipeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteTubeType))
                 .Adapt<IList<DropDownItemViewModel>>();
 
 
-            var tubeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__TubeType))
+            var tubeTypeSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType,ConstantKeys.__CIRWaste))
                 .Adapt<IList<DropDownItemViewModel>>();
 
 
@@ -582,7 +582,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IList<DropDownItemViewModel>>();
 
             var suggestedBudgetTopicSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__SuggestedBudgetTopicType,
-                                            ConstantKeys.__ExtensionYes)).Adapt<IList<DropDownItemViewModel>>();
+                                            ConstantKeys.__ExtensionYes.Replace(".",""))).Adapt<IList<DropDownItemViewModel>>();
             var extensionNoSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectType,
                                             ConstantKeys.__ExtensionNo)).Adapt<IList<DropDownItemViewModel>>();
             foreach (var item in extensionNoSource)
