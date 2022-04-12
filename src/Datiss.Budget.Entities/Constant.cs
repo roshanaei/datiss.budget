@@ -190,6 +190,21 @@ namespace Datiss.Budget.Entities
         public ICollection<CostForcastTransferWs> CostForcastTransferWsExtension { get; set; }
 
         public ICollection<CostForcastTransferWs> CostForcastTransferWsSuggestedBudgetTopic { get; set; }
+
+        public ICollection<CostCurrentPersonel> CostCurrentPersonelCostCenter { get; set; }
+
+        public ICollection<CostCurrentPersonel> CostCurrentPersonelGrade { get; set; }
+
+        public ICollection<CostCurrentPersonel> CostCurrentPersonelContract { get; set; }
+
+        public ICollection<CostCurrentPersonel> CostCurrentPersonelJobDepartment { get; set; }
+
+        public ICollection<CostCurrentPersonel> CostCurrentPersonelJobStatus { get; set; }
+
+        public ICollection<CostCurrentPersonel> CostCurrentPersonelJobStatusDetail { get; set; }
+
+        public ICollection<CostCurrentRawMaterial> CostCurrentRawMaterial { get; set; }
+
         #endregion
     }
 }

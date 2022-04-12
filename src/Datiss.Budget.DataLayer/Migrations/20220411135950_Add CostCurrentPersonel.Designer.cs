@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220411135950_Add CostCurrentPersonel")]
+    partial class AddCostCurrentPersonel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1379,74 +1381,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("CostCurrentPersonel");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentRawMaterial", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("CCRMId")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("ActivityType")
-                        .HasColumnType("int");
-
-                    b.Property<long>("BaseFee")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("ForcastFee")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("LastYearFee")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RawMaterialTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("RawMaterialTypeId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("CostCurrentRawMaterial");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentSharingSetad", b =>
@@ -3370,9 +3304,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<int>("OrganizationId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("SummerIndex")
-                        .HasColumnType("decimal(18,6)");
-
                     b.Property<int>("UserTypeId")
                         .HasColumnType("int");
 
@@ -5225,33 +5156,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentRawMaterial", b =>
-                {
-                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                        .WithMany("CostCurrentRawMaterial")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.Constant", "RawMaterial")
-                        .WithMany("CostCurrentRawMaterial")
-                        .HasForeignKey("RawMaterialTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("CostCurrentRawMaterial")
-                        .HasForeignKey("YearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FinanceYear");
-
-                    b.Navigation("Organization");
-
-                    b.Navigation("RawMaterial");
-                });
-
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentSharingSetad", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
@@ -6427,8 +6331,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("CostCurrentPMDeps");
 
-                    b.Navigation("CostCurrentRawMaterial");
-
                     b.Navigation("CostCurrentWaterSource");
 
                     b.Navigation("CostForcastConstructionWCostCenters");
@@ -6593,8 +6495,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("CostCurrentPMDeps");
 
-                    b.Navigation("CostCurrentRawMaterial");
-
                     b.Navigation("CostCurrentSharingSetad");
 
                     b.Navigation("CostCurrentWaterSource");
@@ -6711,8 +6611,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("CostCurrentPersonel");
 
                     b.Navigation("CostCurrentPMDeps");
-
-                    b.Navigation("CostCurrentRawMaterial");
 
                     b.Navigation("CostCurrentSharingSetad");
 
