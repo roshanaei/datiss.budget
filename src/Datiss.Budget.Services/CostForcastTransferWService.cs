@@ -27,7 +27,7 @@ using Datiss.Budget.Common;
 namespace Datiss.Budget.Services
 {
 
-    public class CostForcastConstructionWService : ICostForcastConstructionWService
+    public class CostForcastTransferWService : ICostForcastTransferWService
     {
         private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
@@ -35,12 +35,12 @@ namespace Datiss.Budget.Services
         private readonly IUserService _userService;
         private readonly IOrganizationService _organizationService;
 
-        private readonly DbSet<CostForcastConstructionW> _dbSet;
+        private readonly DbSet<CostForcastTransferW> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
         private readonly DbSet<FinanceYear> _yearSet;
         private readonly DbSet<Constant> _constSet;
 
-        public CostForcastConstructionWService(
+        public CostForcastTransferWService(
             IUserContext userContext,
             IUnitOfWork uow,
             IExcelService excelService,
@@ -49,7 +49,7 @@ namespace Datiss.Budget.Services
         {
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _dbSet = _uow.Set<CostForcastConstructionW>();
+            _dbSet = _uow.Set<CostForcastTransferW>();
             _orgDbSet = _uow.Set<Organization>();
             _yearSet = _uow.Set<FinanceYear>();
             _constSet = _uow.Set<Constant>();
@@ -58,66 +58,59 @@ namespace Datiss.Budget.Services
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
-        private IQueryable<CostForcastConstructionW> Query()
+        private IQueryable<CostForcastTransferW> Query()
             => _dbSet.AsNoTracking();
 
-        public async Task<CostForcastConstructionW> GetByIdAsync(int id)
+        public async Task<CostForcastTransferW> GetByIdAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult<CostForcastConstructionWDTO>> CreateAsync(CreateCostForcastConstructionWDTO model)
+        public async Task<ValidationResult<CostForcastTransferWDTO>> CreateAsync(CreateCostForcastTransferWDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var entity = model.Adapt<CostForcastConstructionW>();
+            var entity = model.Adapt<CostForcastTransferW>();
 
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId))?.Title;
+
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ProjectDescription))
+                await _dbSet.AddAsync(entity);
+                try
                 {
-                    await _dbSet.AddAsync(entity);
-                    try
-                    {
-                        await _uow.SaveChangesAsync();
-                    }
-                    catch
-                    {
-                        return ValidationResult<CostForcastConstructionWDTO>.Failed(
-                            string.Format(ServiceMessages.ImportExcelCalculationField)
-                            );
-                    }
-                    var result = entity.Adapt<CostForcastConstructionWDTO>();
-
-                    result.WaterInvestorsDisplay = (await _constSet.FindAsync(model.WaterInvestorsTypeId))?.Title;
-                    result.CostCenterDisplay = (await _constSet.FindAsync(model.CostCenterTypeId))?.Title;
-                    result.ExploitationAreaDisplay = (await _constSet.FindAsync(model.ExploitationAreaTypeId))?.Title;
-                    result.MeasurementDisplay = (await _constSet.FindAsync(model.MeasurementTypeId))?.Title;
-                    result.CreditDisplay = (await _constSet.FindAsync(model.CreditTypeId))?.Title;
-                    result.ExtensionDisplay = (await _constSet.FindAsync(model.ExtensionTypeId))?.Title;
-                    result.SuggestedBudgetTopicDisplay = (await _constSet.FindAsync(model.SuggestedBudgetTopicTypeId))?.Title;
-                    result.OrganizationDisplay = organizationDisplay;
-                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-
-                    return ValidationResult<CostForcastConstructionWDTO>.Success(result);
+                    await _uow.SaveChangesAsync();
                 }
+                catch
+                {
+                    return ValidationResult<CostForcastTransferWDTO>.Failed(
+                        string.Format(ServiceMessages.ImportExcelCalculationField)
+                        );
+                }
+                var result = entity.Adapt<CostForcastTransferWDTO>();
+
+                result.TransferTypeDisplay = (await _constSet.FindAsync(model.TransferTypeId))?.Title;
+                result.DigTypeDisplay = (await _constSet.FindAsync(model.DigTypeId))?.Title;
+                result.TubeTypeDisplay = (await _constSet.FindAsync(model.TubeTypeId))?.Title;
+                result.DiameterPipeTypeDisplay = (await _constSet.FindAsync(model.DiameterPipeTypeId))?.Title;
+                result.CreditTypeDisplay = (await _constSet.FindAsync(model.CreditTypeId))?.Title;
+                result.ExtensionTypeDisplay = (await _constSet.FindAsync(model.ExtensionTypeId))?.Title;
+                result.SuggestedBudgetTopicTypeDisplay = (await _constSet.FindAsync(model.SuggestedBudgetTopicTypeId))?.Title;
+                result.OrganizationDisplay = organizationDisplay;
+                result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+
+                return ValidationResult<CostForcastTransferWDTO>.Success(result);
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<CostForcastConstructionWDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<CostForcastTransferWDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
-
-            return ValidationResult<CostForcastConstructionWDTO>.Failed(
-                string.Format(ServiceMessages.Logic_TitleDuplicate,
-                model.ProjectDescription, organizationDisplay)
-                );
 
 
         }
 
-        public async Task<ValidationResult<CostForcastConstructionWDTO>> UpdateAsync(UpdateCostForcastConstructionWDTO model)
+        public async Task<ValidationResult<CostForcastTransferWDTO>> UpdateAsync(UpdateCostForcastTransferWDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -125,60 +118,52 @@ namespace Datiss.Budget.Services
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.ProjectDescription, model.Id))
+                var entity = await _dbSet.FindAsync(model.Id);
+
+                entity.OrganizationId = model.OrganizationId;
+                entity.YearId = model.YearId;
+                entity.Location = model.Location;
+                entity.TransferTypeId = model.TransferTypeId;
+                entity.DigTypeId = model.DigTypeId;
+                entity.TubeTypeId = model.TubeTypeId;
+                entity.Lenth = model.Lenth;
+                entity.PipeCost = model.PipeCost;
+                entity.RunCost = model.RunCost;
+                entity.DiameterPipeTypeId = model.DiameterPipeTypeId;
+                entity.TotalCost = model.TotalCost;
+                entity.CreditTypeId = model.CreditTypeId;
+                entity.ExtensionTypeId = model.ExtensionTypeId;
+                entity.SuggestedBudgetTopicTypeId = model.SuggestedBudgetTopicTypeId;
+
+                try
                 {
-                    var entity = await _dbSet.FindAsync(model.Id);
-
-                    entity.OrganizationId = model.OrganizationId;
-                    entity.YearId = model.YearId;
-                    entity.ProjectDescription = model.ProjectDescription;
-                    entity.WaterInvestorsTypeId = model.WaterInvestorsTypeId;
-                    entity.CostCenterTypeId = model.CostCenterTypeId;
-                    entity.ExploitationAreaTypeId = model.ExploitationAreaTypeId;
-                    entity.ProgressPercent = model.ProgressPercent;
-                    entity.CostDone = model.CostDone;
-                    entity.Amount = model.Amount;
-                    entity.MeasurementTypeId = model.MeasurementTypeId;
-                    entity.UnitPrice = model.UnitPrice;
-                    entity.TotalCost = model.TotalCost;
-                    entity.CreditTypeId = model.CreditTypeId;
-                    entity.ExtensionTypeId = model.ExtensionTypeId;
-                    entity.SuggestedBudgetTopicTypeId = model.SuggestedBudgetTopicTypeId;
-
-                    try
-                    {
-                        await _uow.SaveChangesAsync();
-                    }
-                    catch
-                    {
-                        return ValidationResult<CostForcastConstructionWDTO>.Failed(
-                            string.Format(ServiceMessages.ImportExcelCalculationField)
-                            );
-                    }
-
-                    var result = entity.Adapt<CostForcastConstructionWDTO>();
-                    result.WaterInvestorsDisplay = (await _constSet.FindAsync(model.WaterInvestorsTypeId))?.Title;
-                    result.CostCenterDisplay = (await _constSet.FindAsync(model.CostCenterTypeId))?.Title;
-                    result.ExploitationAreaDisplay = (await _constSet.FindAsync(model.ExploitationAreaTypeId))?.Title;
-                    result.MeasurementDisplay = (await _constSet.FindAsync(model.MeasurementTypeId))?.Title;
-                    result.CreditDisplay = (await _constSet.FindAsync(model.CreditTypeId))?.Title;
-                    result.ExtensionDisplay = (await _constSet.FindAsync(model.ExtensionTypeId))?.Title;
-                    result.SuggestedBudgetTopicDisplay = (await _constSet.FindAsync(model.SuggestedBudgetTopicTypeId))?.Title;
-                    result.OrganizationDisplay = organizationDisplay;
-                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-
-                    return ValidationResult<CostForcastConstructionWDTO>.Success(result);
+                    await _uow.SaveChangesAsync();
                 }
+                catch
+                {
+                    return ValidationResult<CostForcastTransferWDTO>.Failed(
+                        string.Format(ServiceMessages.ImportExcelCalculationField)
+                        );
+                }
+
+                var result = entity.Adapt<CostForcastTransferWDTO>();
+                result.TransferTypeDisplay = (await _constSet.FindAsync(model.TransferTypeId))?.Title;
+                result.DigTypeDisplay = (await _constSet.FindAsync(model.DigTypeId))?.Title;
+                result.TubeTypeDisplay = (await _constSet.FindAsync(model.TubeTypeId))?.Title;
+                result.DiameterPipeTypeDisplay = (await _constSet.FindAsync(model.DiameterPipeTypeId))?.Title;
+                result.CreditTypeDisplay = (await _constSet.FindAsync(model.CreditTypeId))?.Title;
+                result.ExtensionTypeDisplay = (await _constSet.FindAsync(model.ExtensionTypeId))?.Title;
+                result.SuggestedBudgetTopicTypeDisplay = (await _constSet.FindAsync(model.SuggestedBudgetTopicTypeId))?.Title;
+                result.OrganizationDisplay = organizationDisplay;
+                result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+
+                return ValidationResult<CostForcastTransferWDTO>.Success(result);
+
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<CostForcastConstructionWDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<CostForcastTransferWDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
-
-            return ValidationResult<CostForcastConstructionWDTO>.Failed(
-                string.Format(ServiceMessages.Logic_TitleDuplicate,
-                model.ProjectDescription, organizationDisplay)
-                );
 
         }
 
@@ -214,7 +199,7 @@ namespace Datiss.Budget.Services
                                     .Where(_ => _.OrganizationId == organizationId)
                                     .ToListAsync();
 
-            IEnumerable<CostForcastConstructionW> childrens = new CostForcastConstructionW[] { };
+            IEnumerable<CostForcastTransferW> childrens = new CostForcastTransferW[] { };
 
             if (organization.Type == OrganizationType.County || organization.Type == OrganizationType.Root)
             {
@@ -252,65 +237,65 @@ namespace Datiss.Budget.Services
 
             result.Add(new CalculationItemData
             {
-                Key = "CostForcastConstructionW_Cal1",
+                Key = "CostForcastTransferW_Cal1",
                 Value = await _uow.ExecuteScalar<long>(
-                                    "[dbo].[CostForcastConstructionW_Cal1] @YearId, @OrganizationId",
+                                    "[dbo].[CostForcastTransferW_Cal1] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostForcastConstructionW_Cal2",
+                Key = "CostForcastTransferW_Cal2",
                 Value = await _uow.ExecuteScalar<long>(
-                                    "[dbo].[CostForcastConstructionW_Cal2] @YearId, @OrganizationId",
+                                    "[dbo].[CostForcastTransferW_Cal2] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostForcastConstructionW_Cal3",
+                Key = "CostForcastTransferW_Cal3",
                 Value = await _uow.ExecuteScalar<long>(
-                         "[dbo].[CostForcastConstructionW_Cal3] @YearId, @OrganizationId",
+                         "[dbo].[CostForcastTransferW_Cal3] @YearId, @OrganizationId",
                          parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostForcastConstructionW_Cal4",
+                Key = "CostForcastTransferW_Cal4",
                 Value = await _uow.ExecuteScalar<long>(
-                         "[dbo].[CostForcastConstructionW_Cal4] @YearId, @OrganizationId",
+                         "[dbo].[CostForcastTransferW_Cal4] @YearId, @OrganizationId",
                          parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostForcastConstructionW_Cal5",
+                Key = "CostForcastTransferW_Cal5",
                 Value = await _uow.ExecuteScalar<long>(
-                         "[dbo].[CostForcastConstructionW_Cal5] @YearId, @OrganizationId",
+                         "[dbo].[CostForcastTransferW_Cal5] @YearId, @OrganizationId",
                          parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostForcastConstructionW_Cal6",
+                Key = "CostForcastTransferW_Cal6",
                 Value = await _uow.ExecuteScalar<long>(
-             "[dbo].[CostForcastConstructionW_Cal6] @YearId, @OrganizationId",
+             "[dbo].[CostForcastTransferW_Cal6] @YearId, @OrganizationId",
              parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostForcastConstructionW_Cal7",
+                Key = "CostForcastTransferW_Cal7",
                 Value = await _uow.ExecuteScalar<long>(
-             "[dbo].[CostForcastConstructionW_Cal7] @YearId, @OrganizationId",
+             "[dbo].[CostForcastTransferW_Cal7] @YearId, @OrganizationId",
              parameters: sqlParams.ToArray())
             });
 
             result.Add(new CalculationItemData
             {
-                Key = "CostForcastConstructionW_Cal8",
+                Key = "CostForcastTransferW_Cal8",
                 Value = await _uow.ExecuteScalar<long>(
-             "[dbo].[CostForcastConstructionW_Cal8] @YearId, @OrganizationId",
+             "[dbo].[CostForcastTransferW_Cal8] @YearId, @OrganizationId",
              parameters: sqlParams.ToArray())
             });
 
@@ -318,11 +303,11 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task<PagedResult<CostForcastConstructionWDTO>> GetListAsync(CostForcastConstructionWFilterDTO filter)
+        public async Task<PagedResult<CostForcastTransferWDTO>> GetListAsync(CostForcastTransferWFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var result = new PagedResult<CostForcastConstructionWDTO>
+            var result = new PagedResult<CostForcastTransferWDTO>
             {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -342,14 +327,14 @@ namespace Datiss.Budget.Services
 
             result.Items = await query.Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
-                                    .Include(x => x.WaterInvestors)
-                                    .Include(x => x.CostCenter)
-                                    .Include(x => x.ExploitationArea)
-                                    .Include(x => x.Measurement)
+                                    .Include(x => x.TransferType)
+                                    .Include(x => x.DigType)
+                                    .Include(x => x.TubeType)
+                                    .Include(x => x.DiameterType)
                                     .Include(x => x.Credit)
                                     .Include(x => x.Extension)
                                     .Include(x => x.SuggestedBudgetTopic)
-                                    .Select(x => x.Adapt<CostForcastConstructionWDTO>())
+                                    .Select(x => x.Adapt<CostForcastTransferWDTO>())
                                     .ToListAsync();
 
             return await Task.FromResult(result);
@@ -364,7 +349,7 @@ namespace Datiss.Budget.Services
                 throw new CopyDestYearExxeption();
             if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
                 throw new CopyOrgNullDataException();
-            var result = new List<CostForcastConstructionW>();
+            var result = new List<CostForcastTransferW>();
 
             if (await Query()
                         .Where(_ => _.OrganizationId == sourceOrgId)
@@ -379,13 +364,10 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.ProjectDescription))
-                        throw new CopyDestYearHasDataException();
-
                     item.YearId = destYearId;
                     item.Id = 0;
-                    var entity = item.Adapt<CostForcastConstructionW>();
-
+                    var entity = item.Adapt<CostForcastTransferW>();
+                    
                     result.Add(entity);
                 }
             }
@@ -411,24 +393,24 @@ namespace Datiss.Budget.Services
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<CostForcastConstructionWImportModel>
-                (fileInfo, sheetIndex: 0, minRowNum: 25);
+            var data = await _excelService.ImportAsync<CostForcastTransferWImportModel>
+                (fileInfo, sheetIndex: 0, minRowNum: 20);
 
-            var records = data.Adapt<List<CostForcastConstructionW>>();
+            var records = data.Adapt<List<CostForcastTransferW>>();
 
             int rowIndex = 26;
 
-            var watertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                                   x.Parent.ConstantKey == ConstantKeys.__WaterInvestorsType);
+            var transfertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                   x.Parent.ConstantKey == ConstantKeys.__TransferType);
 
-            var costcentertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                       x.Parent.ConstantKey == ConstantKeys.__CostCenterType);
+            var digtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                       x.Parent.ConstantKey == ConstantKeys.__DigType);
 
-            var explotationtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                       x.Parent.ConstantKey == ConstantKeys.__ExploitationAreaType);
+            var tubetypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                       x.Parent.ConstantKey == ConstantKeys.__TubeType);
 
-            var measurementtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                       x.Parent.ConstantKey == ConstantKeys.__MeasurementType);
+            var watertubetypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                       x.Parent.ConstantKey == ConstantKeys.__WaterTubeType);
 
             var credittypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                        x.Parent.ConstantKey == ConstantKeys.__CreditType);
@@ -472,28 +454,28 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex, rec.OrganizationId)
                         );
                 }
-                if (!await watertypes.AnyAsync(x => x.Id == rec.WaterInvestorsTypeId))
+                if (!await transfertypes.AnyAsync(x => x.Id == rec.TransferTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.WaterInvestorsTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.TransferTypeId)
                         );
                 }
-                if (!await costcentertypes.AnyAsync(x => x.Id == rec.CostCenterTypeId))
+                if (!await digtypes.AnyAsync(x => x.Id == rec.DigTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidCostCenterType, rowIndex, rec.CostCenter)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.DigType)
                         );
                 }
-                if (!await explotationtypes.AnyAsync(x => x.Id == rec.ExploitationAreaTypeId))
+                if (!await tubetypes.AnyAsync(x => x.Id == rec.TubeTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.ExploitationAreaTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.TubeTypeId)
                         );
                 }
-                if (!await measurementtypes.AnyAsync(x => x.Id == rec.MeasurementTypeId))
+                if (!await watertubetypes.AnyAsync(x => x.Id == rec.DiameterPipeTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.MeasurementTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.DiameterPipeTypeId)
                         );
                 }
                 if (!await extensiontypes.AnyAsync(x => x.Id == rec.ExtensionTypeId))
@@ -561,17 +543,6 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelAccessError, rowIndex)
                         );
 
-                if (!await checkLogicAsync(
-                    record.YearId,
-                    record.OrganizationId,
-                    record.ProjectDescription))
-                {
-
-                    return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex)
-                        );
-                }
-
                 rowIndex++;
             }
 
@@ -593,9 +564,9 @@ namespace Datiss.Budget.Services
                 );
         }
 
-        public async Task<IEnumerable<CostForcastConstructionWDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<CostForcastTransferWDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
-            var filter = new CostForcastConstructionWFilterDTO
+            var filter = new CostForcastTransferWFilterDTO
             {
                 OrganizationId = organizationId,
                 YearId = yearId
@@ -611,28 +582,28 @@ namespace Datiss.Budget.Services
             var items = await query
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
-                                    .Include(x => x.WaterInvestors)
-                                    .Include(x => x.CostCenter)
-                                    .Include(x => x.ExploitationArea)
-                                    .Include(x => x.Measurement)
+                                    .Include(x => x.TransferType)
+                                    .Include(x => x.DigType)
+                                    .Include(x => x.TubeType)
+                                    .Include(x => x.DiameterType)
                                     .Include(x => x.Credit)
                                     .Include(x => x.Extension)
                                     .Include(x => x.SuggestedBudgetTopic)
-                                    .Select(x => x.Adapt<CostForcastConstructionWDTO>())
+                                    .Select(x => x.Adapt<CostForcastTransferWDTO>())
                                     .ToListAsync();
             return items;
         }
 
         #region Private Helper Methods
 
-        private async Task<IQueryable<CostForcastConstructionW>> setFilter(
-            IQueryable<CostForcastConstructionW> query,
-            CostForcastConstructionWFilterDTO filter)
+        private async Task<IQueryable<CostForcastTransferW>> setFilter(
+            IQueryable<CostForcastTransferW> query,
+            CostForcastTransferWFilterDTO filter)
         {
             query.CheckArgumentIsNull(nameof(query));
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var predicate = PredicateBuilder.New<CostForcastConstructionW>();
+            var predicate = PredicateBuilder.New<CostForcastTransferW>();
 
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
@@ -653,17 +624,17 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.ProjectDescription.ToUpper().Contains(filter.Search) ||
-                                         _.Extension.Title.ToUpper().Contains(filter.Search) ||
+                query = query.Where(_ => _.Extension.Title.ToUpper().Contains(filter.Search) ||
+                                         _.Location.ToUpper().Contains(filter.Search) ||
                                          _.SuggestedBudgetTopic.Title.ToUpper().Contains(filter.Search) ||
-                                         _.WaterInvestors.Title.ToUpper().Contains(filter.Search));
+                                         _.TransferType.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;
         }
 
-        private IQueryable<CostForcastConstructionW> setOrder(
-           IQueryable<CostForcastConstructionW> query,
+        private IQueryable<CostForcastTransferW> setOrder(
+           IQueryable<CostForcastTransferW> query,
            string orderBy = "id",
            bool desc = false)
         {
@@ -681,26 +652,26 @@ namespace Datiss.Budget.Services
 
                 default:
                     return query.Include(x => x.Organization)
-                                .Include(x => x.WaterInvestors)
-                                .Include(x => x.CostCenter)
-                                .Include(x => x.ExploitationArea)
-                                .Include(x => x.Measurement)
+                                .Include(x => x.TransferType)
+                                .Include(x => x.DigType)
+                                .Include(x => x.TubeType)
+                                .Include(x => x.DiameterType)
                                 .Include(x => x.Credit)
                                 .Include(x => x.Extension)
                                 .Include(x => x.SuggestedBudgetTopic)
                                 .OrderBy(x => x.Organization.DisplayOrder)
                                 .ThenBy(x => x.Organization.RowOrder)
-                                .ThenBy(x => x.CostCenter.DisplayOrder)
-                                .ThenBy(x => x.WaterInvestors.DisplayOrder)
+                                .ThenBy(x => x.DigType.DisplayOrder)
+                                .ThenBy(x => x.TransferType.DisplayOrder)
                                 .ThenBy(x => x.Credit.DisplayOrder)
                                 .ThenBy(x => x.Extension.DisplayOrder)
                                 .ThenBy(x => x.SuggestedBudgetTopic.DisplayOrder)
                                 .ThenBy(x => x.Extension.DisplayOrder)
-                                .ThenBy(x => x.Measurement.DisplayOrder);
+                                .ThenBy(x => x.DiameterType.DisplayOrder);
             }
         }
 
-        private async Task<IEnumerable<CostForcastConstructionW>> getChildrenData(
+        private async Task<IEnumerable<CostForcastTransferW>> getChildrenData(
             int parentOrganizationId,
             int yearId,
             int targetYearId)
@@ -711,7 +682,7 @@ namespace Datiss.Budget.Services
                             _.ParentId == parentOrganizationId)
                 .ToListAsync();
 
-            var result = new List<CostForcastConstructionW>();
+            var result = new List<CostForcastTransferW>();
 
             foreach (var org in children)
             {
@@ -729,12 +700,9 @@ namespace Datiss.Budget.Services
 
                 foreach (var item in data)
                 {
-                    if (!await checkLogicAsync(targetYearId, org.Id, item.ProjectDescription))
-                        throw new CopyDestYearHasDataException();
-
                     item.YearId = targetYearId;
                     item.Id = 0;
-                    var entity = item.Adapt<CostForcastConstructionW>();
+                    var entity = item.Adapt<CostForcastTransferW>();
 
                     result.Add(entity);
                 }
@@ -744,14 +712,14 @@ namespace Datiss.Budget.Services
 
             return result;
         }
-        private async Task<IEnumerable<CostForcastConstructionW>> getChildren(
+        private async Task<IEnumerable<CostForcastTransferW>> getChildren(
             int parentOrganizationId,
             int yearId)
         {
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
-            var result = new List<CostForcastConstructionW>();
+            var result = new List<CostForcastTransferW>();
             foreach (var org in children)
             {
                 var data = await Query()
@@ -786,34 +754,6 @@ namespace Datiss.Budget.Services
             return false;
 
         }
-        #endregion
-
-        #region Logics
-
-        private async Task<bool> checkLogicAsync(
-            int yearId,
-            int organizationId,
-            string projectDescription,
-            int? id = null)
-        {
-            var year = await _yearSet.FindAsync(yearId);
-            year.CheckReferenceIsNull(nameof(year));
-
-            if (year.Status == EntityStatus.Disbaled)
-                throw new DisbaledYearDataInputException();
-
-            var result = id == null
-                ? await Query().AnyAsync(x => x.YearId == yearId &&
-                                              x.OrganizationId == organizationId &&
-                                              x.ProjectDescription.Trim().ToUpper() == projectDescription.Trim().ToUpper())
-
-                : await Query().AnyAsync(x => x.YearId == yearId &&
-                                              x.OrganizationId == organizationId &&
-                                              x.ProjectDescription.Trim().ToUpper() == projectDescription.Trim().ToUpper() &&
-                                              x.Id != id);
-            return !result;
-        }
-
         #endregion
     }
 }
