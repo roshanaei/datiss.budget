@@ -152,6 +152,17 @@
                                                                for="col-5"><span>متوسط ظرفیت قراردادی فاضلاب </span></label>
                                                     </div>
                                                 </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-6"
+                                                               id="col-6" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-6"><span>شاخص تابستانه</span></label>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                         </div>
@@ -215,10 +226,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5';
+        let allColumns = '1,2,3,4,5,6';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,";
+        let showingColmuns = "1,2,3,4,5,6,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -383,6 +394,7 @@
 
             let input1 = document.getElementById('inputAverageCapacityWIncome_' + id);
             let input2 = document.getElementById('inputAverageCapacityWsIncome_' + id);
+            let input3 = document.getElementById('inputSummerIndex_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -399,6 +411,12 @@
                 }
             });
             input2.addEventListener('keyup', function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input3.addEventListener('keyup', function (event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();

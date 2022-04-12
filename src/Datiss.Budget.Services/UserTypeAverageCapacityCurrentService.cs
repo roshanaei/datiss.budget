@@ -77,7 +77,8 @@ namespace Datiss.Budget.Services
                 OrganizationId = model.OrganizationId,
                 UserTypeId = model.UserTypeId,
                 AverageCapacityWIncome = model.AverageCapacityWIncome,
-                AverageCapacityWsIncome = model.AverageCapacityWsIncome
+                AverageCapacityWsIncome = model.AverageCapacityWsIncome,
+                SummerIndex = model.SummerIndex,
             };
             model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
@@ -103,6 +104,7 @@ namespace Datiss.Budget.Services
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.AverageCapacityWIncome = entity.AverageCapacityWIncome;
                     result.AverageCapacityWsIncome = entity.AverageCapacityWsIncome;
+                    result.SummerIndex = entity.SummerIndex;
 
                     return ValidationResult<UserTypeAverageCapacityCurrentDTO>.Success(result);
                 }
@@ -136,6 +138,7 @@ namespace Datiss.Budget.Services
                     entity.UserTypeId = model.UserTypeId;
                     entity.AverageCapacityWIncome = model.AverageCapacityWIncome;
                     entity.AverageCapacityWsIncome = model.AverageCapacityWsIncome;
+                    entity.SummerIndex = model.SummerIndex;
 
                     try
                     {
@@ -154,6 +157,7 @@ namespace Datiss.Budget.Services
                         UserTypeId = model.UserTypeId,
                         AverageCapacityWIncome = model.AverageCapacityWIncome,
                         AverageCapacityWsIncome = model.AverageCapacityWsIncome,
+                        SummerIndex = model.SummerIndex,
                         OrganizationDisplay = organizationDisplay,
                         UserTypeDisplay = (await _constSet.FindAsync(model.UserTypeId)).Title,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
@@ -264,6 +268,7 @@ namespace Datiss.Budget.Services
                                         OrganizationId = x.OrganizationId,
                                         AverageCapacityWIncome = x.AverageCapacityWIncome,
                                         AverageCapacityWsIncome = x.AverageCapacityWsIncome,
+                                        SummerIndex = x.SummerIndex,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -304,7 +309,8 @@ namespace Datiss.Budget.Services
                         OrganizationId = item.OrganizationId,
                         YearId = destYearId,
                         AverageCapacityWIncome = item.AverageCapacityWIncome,
-                        AverageCapacityWsIncome = item.AverageCapacityWsIncome
+                        AverageCapacityWsIncome = item.AverageCapacityWsIncome,
+                        SummerIndex = item.SummerIndex
                     };
                     result.Add(entity);
                 }
@@ -517,6 +523,7 @@ namespace Datiss.Budget.Services
                                         OrganizationId = x.OrganizationId,
                                         AverageCapacityWIncome = x.AverageCapacityWIncome,
                                         AverageCapacityWsIncome = x.AverageCapacityWsIncome,
+                                        SummerIndex = x.SummerIndex,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -547,6 +554,7 @@ namespace Datiss.Budget.Services
                                         OrganizationId = x.OrganizationId,
                                         AverageCapacityWIncome = x.AverageCapacityWIncome,
                                         AverageCapacityWsIncome = x.AverageCapacityWsIncome,
+                                        SummerIndex = x.SummerIndex,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
                                     }).ToListAsync();
@@ -670,6 +678,7 @@ namespace Datiss.Budget.Services
                         YearId = targetYearId,
                         AverageCapacityWIncome = item.AverageCapacityWIncome,
                         AverageCapacityWsIncome = item.AverageCapacityWsIncome,
+                        SummerIndex = item.SummerIndex,
                     };
 
                     result.Add(entity);
