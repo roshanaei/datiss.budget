@@ -811,13 +811,13 @@ namespace Datiss.Budget.Services
 
                 case "usertype":
                     return desc
-                        ? query.OrderByDescending(x => x.UserType.DisplayOrder)
-                        : query.OrderBy(x => x.UserType.DisplayOrder);
+                        ? query.OrderByDescending(x => x.UserType.Title)
+                        : query.OrderBy(x => x.UserType.Title);
 
                 case "usagelayer":
                     return desc
-                        ? query.OrderByDescending(x => x.UsageLayer.DisplayOrder)
-                        : query.OrderBy(x => x.UsageLayer.DisplayOrder);
+                        ? query.OrderByDescending(x => x.UsageLayer.Title)
+                        : query.OrderBy(x => x.UsageLayer.Title);
 
                 default:
                     return query.Include(x => x.Organization)
