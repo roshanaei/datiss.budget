@@ -1,0 +1,422 @@
+﻿@model CostForcastTransferWsIndexViewModel
+<div class="table-responsive">
+    <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font table-overflow">
+        <thead class="thead-light">
+            <tr>
+
+                <th style="min-width:180px ; font-size:smaller">سازمان</th>
+                <th style="min-width:210px; font-size:smaller">اصلاح/توسعه شبکه/انتقال</th>
+                <th style="min-width:150px; font-size:smaller">آدرس</th>
+                <th style="min-width:150px; font-size:smaller">محل تامین اعتبار</th>
+                <th style="min-width:150px; font-size:smaller">نوع کندمان</th>
+                <th style="min-width:150px; font-size:smaller">روش کندمان</th>
+                <th style="min-width:150px; font-size:smaller">جنس لوله</th>
+                <th style="min-width:150px; font-size:smaller">قطر لوله</th>
+                <th style="min-width:150px; font-size:smaller">طول اجرا</th>
+                <th style="min-width:150px; font-size:smaller">هزینه هر متر خرید لوله</th>
+                <th style="min-width:150px; font-size:smaller">هزینه هر متر اجرا</th>
+                <th style="min-width:150px; font-size:smaller">جمع کل هزینه ها(هزار ریال)</th>
+                <th style="min-width:150px; font-size:smaller">این پروژه در سال بودجه به بهره برداری رسیده؟</th>
+                <th style="min-width:150px; font-size:smaller">سرفصل کلی در بودجه پیشنهادی</th>
+                <th width="10%">مدیریت</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowTemplate" style="display: none">
+                <td>
+                    <div id="divInput_Org_">
+                        <input id="hidOrgId_" type="hidden" />
+                        <select class="form-control selectOrganization" id="inputOrg_" asp-items="Model.InputOrganizationSource">
+                        </select>
+                        <script>
+                            $('select#inputOrg_ option[value=' + $('#organizationId').val() + ']').attr('selected', true);
+                        </script>
+                    </div>
+                    <div id="divOutput_Org_">
+                        <span id="spanOrg_"> </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div id="divInput_TransferType_">
+                        <input id="hidTransferTypeId_" type="hidden" />
+                        <select class="form-control" id="inputTransferType_" asp-items="Model.TransferTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_TransferType_" style="display: none">
+                        <span id="spanTransferType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Location_">
+                        <input class="form-control input-keyup default-input" id="inputLocation_" type="text" />
+                    </div>
+                    <div id="divOutput_Location_" style="display: none">
+                        <span id="spanLocation_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_CreditType_">
+                        <input id="hidCreditTypeId_" type="hidden" />
+                        <select class="form-control" id="inputCreditType_" asp-items="Model.CreditTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_CreditType_" style="display: none">
+                        <span id="spanCreditType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_DigType_">
+                        <input id="hidDigTypeId_" type="hidden" />
+                        <select class="form-control" id="inputDigType_" asp-items="Model.DigTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_DigType_" style="display: none">
+                        <span id="spanDigType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_MethodType_">
+                        <input id="hidMethodTypeId_" type="hidden" />
+                        <select class="form-control" id="inputMethodType_" asp-items="Model.MethodTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_MethodType_" style="display: none">
+                        <span id="spanMethodType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_TubeType_">
+                        <input id="hidTubeTypeId_" type="hidden" />
+                        <select class="form-control" id="inputTubeType_" asp-items="Model.TubeTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_TubeType_" style="display: none">
+                        <span id="spanTubeType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_DiameterPipeType_">
+                        <input id="hidDiameterPipeTypeId_" type="hidden" />
+                        <select class="form-control" id="inputDiameterPipeType_" asp-items="Model.DiameterPipeTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_DiameterPipeType_" style="display: none">
+                        <span id="spanDiameterPipeType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Lenth_">
+                        <input class="form-control input-keyup" id="inputLenth_" type="number" />
+                    </div>
+                    <div id="divOutput_Lenth_" style="display: none">
+                        <span id="spanLenth_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_PipeCost_">
+                        <input class="form-control input-keyup" id="inputPipeCost_" type="number" />
+                    </div>
+                    <div id="divOutput_PipeCost_" style="display: none">
+                        <span id="spanPipeCost_"> </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div id="divInput_RunCost_">
+                        <input class="form-control input-keyup" id="inputRunCost_" type="number" />
+                    </div>
+                    <div id="divOutput_RunCost_" style="display: none">
+                        <span id="spanRunCost_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_TotalCost_">
+                        <input class="form-control input-keyup" id="inputTotalCost_" type="number" />
+                    </div>
+                    <div id="divOutput_TotalCost_" style="display: none">
+                        <span id="spanTotalCost_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ExtensionType_">
+                        <input id="hidExtensionTypeId_" type="hidden" />
+                        <select class="form-control selectExtensionType" id="inputExtensionType_" asp-items="Model.ExtensionTypeSource" onchange="RelatedDropDown(this,event)">
+                        </select>
+                    </div>
+                    <div id="divOutput_ExtensionType_" style="display: none">
+                        <span id="spanExtensionType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_SuggestedBudgetTopicType_">
+                        <input id="hidSuggestedBudgetTopicTypeId_" type="hidden" />
+                        <select class="form-control selectSuggestedBudgetTopicType" id="inputSuggestedBudgetTopicType_">
+                        </select>
+                    </div>
+                    <div id="divOutput_SuggestedBudgetTopicType_" style="display: none">
+                        <span id="spanSuggestedBudgetTopicType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
+                        <i class="fa ft-edit fa-1x"></i>
+                    </a>
+
+                    <a id="btnDelete_" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" style="display: none">
+                        <i class="fa ft-trash-2"></i>
+                    </a>
+
+                    <a id="btnSaveEdit_" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+                    <a id="btnCancelEdit_" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                    <a id="btnSaveCreate_" class="save-new-row btn btn-success my-font mr-1">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+
+                    <a id="btnCancelCreate_" class="cancel-new-row btn btn-danger my-font">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                </td>
+            </tr>
+            @foreach (var item in Model.Items)
+            {
+                <tr id="row_@item.Id">
+                    <td>
+                        <div id="divInput_Org_@item.Id" style="display: none">
+                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
+                            </select>
+                            <script>
+                                $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Org_@item.Id">
+                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_TransferType_@item.Id" style="display: none">
+                            <input id="hidTransferTypeId_@item.Id" type="hidden" value="@item.TransferTypeId" />
+                            <select class="form-control selectTransferType" id="inputTransferType_@item.Id" asp-items="Model.TransferTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputTransferType_' + @item.Id + ' option[value=' + @item.TransferTypeId + ']').attr('selected', true);
+                                $('#inputTransferType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_TransferType_@item.Id">
+                            <span id="spanTransferType_@item.Id">@item.TransferTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Location_@item.Id" style="display: none">
+                            <input class="form-control" id="inputLocation_@item.Id" value="@item.Location" type="text" />
+                        </div>
+                        <div id="divOutput_Location_@item.Id">
+                            <span id="spanLocation_@item.Id">@item.Location </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_CreditType_@item.Id" style="display: none">
+                            <input id="hidCreditTypeId_@item.Id" type="hidden" value="@item.CreditTypeId" />
+                            <select class="form-control selectCreditType" id="inputCreditType_@item.Id" asp-items="Model.CreditTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputCreditType_' + @item.Id + ' option[value=' + @item.CreditTypeId + ']').attr('selected', true);
+                                $('#inputCreditType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_CreditType_@item.Id">
+                            <span id="spanCreditType_@item.Id">@item.CreditTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_DigType_@item.Id" style="display: none">
+                            <input id="hidDigTypeId_@item.Id" type="hidden" value="@item.DigTypeId" />
+                            <select class="form-control selectDigType" id="inputDigType_@item.Id" asp-items="Model.DigTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputDigType_' + @item.Id + ' option[value=' + @item.DigTypeId + ']').attr('selected', true);
+                                $('#inputDigType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_DigType_@item.Id">
+                            <span id="spanDigType_@item.Id">@item.DigTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_MethodType_@item.Id" style="display: none">
+                            <input id="hidMethodTypeId_@item.Id" type="hidden" value="@item.MethodTypeId" />
+                            <select class="form-control selectMethodType" id="inputMethodType_@item.Id" asp-items="Model.MethodTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputMethodType_' + @item.Id + ' option[value=' + @item.MethodTypeId + ']').attr('selected', true);
+                                $('#inputMethodType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_MethodType_@item.Id">
+                            <span id="spanMethodType_@item.Id">@item.MethodTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_TubeType_@item.Id" style="display: none">
+                            <input id="hidTubeTypeId_@item.Id" type="hidden" value="@item.TubeTypeId" />
+                            <select class="form-control selectTubeType" id="inputTubeType_@item.Id" asp-items="Model.TubeTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputTubeType_' + @item.Id + ' option[value=' + @item.TubeTypeId + ']').attr('selected', true);
+                                $('#inputTubeType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_TubeType_@item.Id">
+                            <span id="spanTubeType_@item.Id">@item.TubeTypeDisplay </span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div id="divInput_DiameterPipeType_@item.Id" style="display: none">
+                            <input id="hidDiameterPipeTypeId_@item.Id" type="hidden" value="@item.DiameterPipeTypeId" />
+                            <select class="form-control selectDiameterPipeType" id="inputDiameterPipeType_@item.Id" asp-items="Model.DiameterPipeTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputDiameterPipeType_' + @item.Id + ' option[value=' + @item.DiameterPipeTypeId + ']').attr('selected', true);
+                                $('#inputDiameterPipeType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_DiameterPipeType_@item.Id">
+                            <span id="spanDiameterPipeType_@item.Id">@item.DiameterPipeTypeDisplay </span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div id="divInput_Lenth_@item.Id" style="display: none">
+                            <input class="form-control" id="inputLenth_@item.Id" value="@item.Lenth" type="number" />
+                        </div>
+                        <div id="divOutput_Lenth_@item.Id">
+                            <span id="spanLenth_@item.Id">@item.LenthDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_PipeCost_@item.Id" style="display: none">
+                            <input class="form-control" id="inputPipeCost_@item.Id" value="@item.PipeCost" type="number" />
+                        </div>
+                        <div id="divOutput_PipeCost_@item.Id">
+                            <span id="spanPipeCost_@item.Id">@item.PipeCostDisplay </span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div id="divInput_RunCost_@item.Id" style="display: none">
+                            <input class="form-control" id="inputRunCost_@item.Id" value="@item.RunCost" type="number" />
+                        </div>
+                        <div id="divOutput_RunCost_@item.Id">
+                            <span id="spanRunCost_@item.Id">@item.RunCostDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_TotalCost_@item.Id" style="display: none">
+                            <input class="form-control" id="inputTotalCost_@item.Id" value="@item.TotalCost" type="number" />
+                        </div>
+                        <div id="divOutput_TotalCost_@item.Id">
+                            <span id="spanTotalCost_@item.Id">@item.TotalCostDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ExtensionType_@item.Id" style="display: none">
+                            <input id="hidExtensionTypeId_@item.Id" type="hidden" value="@item.ExtensionTypeId" />
+                            <select class="form-control selectExtensionType" id="inputExtensionType_@item.Id" asp-items="Model.ExtensionTypeSource" onchange="RelatedDropDown(this, event)">
+                            </select>
+                            <script>
+                                $('select#inputExtensionType_' + @item.Id + ' option[value=' + @item.ExtensionTypeId + ']').attr('selected', true);
+                                $('#inputExtensionType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_ExtensionType_@item.Id">
+                            <span id="spanExtensionType_@item.Id">@item.ExtensionTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_SuggestedBudgetTopicType_@item.Id" style="display: none">
+                            <input id="hidSuggestedBudgetTopicTypeId_@item.Id" type="hidden" value="@item.SuggestedBudgetTopicTypeId" />
+                            <select class="form-control selectSuggestedBudgetTopicType" id="inputSuggestedBudgetTopicType_@item.Id">
+                            </select>
+                            <script>
+                                $('#inputSuggestedBudgetTopicType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_SuggestedBudgetTopicType_@item.Id">
+                            <span id="spanSuggestedBudgetTopicType_@item.Id">@item.SuggestedBudgetTopicTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
+
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
+
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
+
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                </button>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                </button>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </button>
+            <span data-toggle="modal" data-target="#CalculationModal">
+                <button data-toggle="tooltip" data-placement="top" title="اطلاعات محاسبات" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"></i>
+                </button>
+            </span>
+        </form>
+
+    </div>
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">(صفحه <b class="font-medium-2">@Model.PageNumber</b> از <b class="font-medium-2">@Model.PagesCount</b>)</div>
+    </div>
+    <!--Pagination-->
+    <vc:pager model="Model.ToPager()" controller-name="@CostForcastTransferWsController.Name" action-name="@CostForcastTransferWsController.ACTION_Index"></vc:pager>
+</div>
