@@ -203,6 +203,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentPersonel> CostCurrentPersonelJobStatusDetail { get; set; }
 
+        public ICollection<CostCurrentRawMaterial> CostCurrentRawMaterial { get; set; }
 
         #endregion
     }
