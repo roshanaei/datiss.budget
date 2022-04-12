@@ -447,7 +447,7 @@ namespace Datiss.Budget.Services
                 if (!await usagelayers.AnyAsync(x => x.Id == rec.UsageLayerId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayer, rowIndex + 2, rec.UserTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidUsageLayer, rowIndex + 2, rec.UsageLayerId)
                         );
                 }
 
