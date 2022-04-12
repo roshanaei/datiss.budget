@@ -13,6 +13,9 @@
         public decimal AverageCapacityWIncome { get; set; }
 
         public decimal AverageCapacityWsIncome { get; set; }
+
+        public decimal SummerIndex { get; set; }
+
     }
 
     public class UpdateUserTypeAverageCapacityCurrentDTO : CreateUserTypeAverageCapacityCurrentDTO
@@ -31,5 +34,7 @@
         public string UserTypeDisplay { get; set; }
         public decimal AverageCapacityWIncome { get; set; }
         public decimal AverageCapacityWsIncome { get; set; }
+        public decimal SummerIndex { get; set; }
+
     }
 }

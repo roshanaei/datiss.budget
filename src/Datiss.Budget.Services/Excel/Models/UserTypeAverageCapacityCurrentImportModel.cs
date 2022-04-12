@@ -21,5 +21,9 @@ namespace Datiss.Budget.Services.Excel.Models
 
         [Column(MappingDirections.Both, Letter = "F")]
         public decimal AverageCapacityWsIncome { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "G")]
+        public decimal SummerIndex { get; set; }
+
     }
 }
