@@ -20,6 +20,8 @@ namespace Datiss.Budget.Entities.DWH
 
         public decimal AverageCapacityWsIncome { get; set; }
 
+        public decimal SummerIndex { get; set; }
+
         #endregion
 
         #region Navigations

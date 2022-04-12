@@ -19,6 +19,8 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.AverageCapacityWsIncome).HasColumnType("decimal(18,6)");
 
+            builder.Property(x => x.SummerIndex).HasColumnType("decimal(18,6)");
+
             builder.HasOne(x => x.FinanceYear)
                     .WithMany(x => x.UserTypeAverageCapacityCurrents)
                     .HasForeignKey(x => x.YearId)
