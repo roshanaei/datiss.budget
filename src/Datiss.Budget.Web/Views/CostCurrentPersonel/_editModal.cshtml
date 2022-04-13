@@ -1,0 +1,125 @@
+﻿@model UpdateOrganizationViewModel
+<!--Modals-->
+<div class="modal fade text-left" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title my-font" id="myModalLabel2">ویرایش سازمان</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="ft-x font-medium-2 text-bold-700"></i></span>
+                </button>
+            </div>
+            <form id="OrganizationForm">
+                <div class="modal-body">
+                    <input type="hidden" asp-for="Id" />
+                    <input type="hidden" asp-for="_CurrentPage" />
+
+                    <div class="rowAC">
+
+                        <div class="my-font" style="flex:1">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left:5px;width:90px">عنوان :</span>
+                                    <input asp-for="Title" type="text" class="form-control d-inline-block" />
+                                </label>
+                            </fieldset>
+                        </div>
+
+                    </div>
+
+                    <div class="rowAC">
+
+                        <div class="my-font" style="flex:1">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left:5px;width:90px">سازمان پدر :</span>
+                                    <select asp-for="ParentId"
+                                            asp-items="@Model.ParentList"
+                                            class="form-control d-inline-block">
+                                    </select>
+                                </label>
+                            </fieldset>
+                        </div>
+
+                    </div>
+
+                    <div class="rowAC">
+
+                        <div class="my-font" style="flex:1">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left:5px;width:115px">نوع :</span>
+                                    <select asp-for="Type"
+                                            asp-items="@Model.OrganizationTypeEditSource"
+                                            class="form-control d-inline-block">
+                                    </select>
+                                </label>
+                            </fieldset>
+                        </div>
+                        <div class="my-font" style="flex:1">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left:5px;margin-right:15px;width:90px">فاضلاب :</span>
+                                    <select asp-for="SewageStatus" class="form-control d-inline-block">
+                                        <option value="true">دارد</option>
+                                        <option value="false">ندارد</option>
+                                    </select>
+                                </label>
+                            </fieldset>
+                        </div>
+
+                    </div>
+                    <div class="rowAC">
+
+                        <div class="my-font" style="flex:1.5">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left: 5px;width:135px">ترتیب نمایش:</span>
+                                    <input asp-for="DisplayOrder" type="number" class="form-control d-inline-block" />
+                                </label>
+                            </fieldset>
+                        </div>
+                        <div class="custom-control custom-checkbox form-group" style="flex:1;margin-right:50px">
+                            <input class="custom-control-input" type="checkbox" asp-for="Enabled" id="auth-ligin" onchange="change(this)" />
+                            <label class="custom-control-label" for="auth-ligin">
+                                <span class="my-font">وضعیت :</span>
+                                <span class="my-font" id="statustext"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="divError" style="display: none">
+                        <span id="spanTitle" class="my-font error-text"></span>
+                        <span id="spanDisplayOrder" class="my-font error-text"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary bg-light-secondary mr-1 my-font" data-dismiss="modal">انصراف</button>
+                    <button id="btnDoEdit" type="button" class="btn btn-warning bg-light-warning mr-1 my-font">ثبت</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!--Modals-->
+<script>
+    $(document).ready(function () {
+        if ($('input[name="Enabled"]').is(":checked")) {
+            $('#statustext').text('فعال');
+        }
+        else {
+            $('#statustext').text('غیرفعال');
+        }
+
+    });
+    function change() {
+        if ($('input[name="Enabled"]').is(":checked")) {
+            $('#statustext').text('فعال');
+        }
+        else {
+            $('#statustext').text('غیرفعال');
+        }
+    }
+</script>

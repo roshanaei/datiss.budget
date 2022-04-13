@@ -259,12 +259,12 @@ namespace Datiss.Budget.ViewModels
     public class CostCurrentPersonelFilterViewModel : FilterViewModel
     {
         public int? YearId { get; set; }
-        public RecordType? recordType { get; set; }
+        public RecordType? RecordType { get; set; }
         public int? OrganizationId { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
         public IList<SelectListItem> OrganizationSource { get; set; }
-        public IList<SelectListItem> RecordTypeSource => EnumSelectListProvider.GetRecordTypeItems(recordType).ToList();
+        public IList<SelectListItem> RecordTypeSource => EnumSelectListProvider.GetRecordTypeItems(RecordType).ToList();
     }
 
     public class CostCurrentPersonelIndexViewModel : PagedViewModel<CostCurrentPersonelViewModel>
