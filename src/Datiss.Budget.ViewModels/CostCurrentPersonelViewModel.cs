@@ -89,6 +89,63 @@ namespace Datiss.Budget.ViewModels
 
         public long WelfareCost { get; set; }
 
+
+        public IList<SelectListItem> InputOrganizationSource { get; set; }
+        public IList<SelectListItem> GradeSource { get; set; }
+        public IList<SelectListItem> JobDepartmentSource { get; set; }
+        public IList<SelectListItem> JobStatusSource { get; set; }
+        public IList<SelectListItem> JobStatusDetailSource { get; set; }
+        public IList<SelectListItem> CostCenterSource { get; set; }
+        public IList<SelectListItem> ContractSource { get; set; }
+
+        public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => InputOrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetGradeSource(IEnumerable<DropDownItemViewModel> source)
+            => GradeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetJobDepartment(IEnumerable<DropDownItemViewModel> source)
+            => JobDepartmentSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetJobStatusSource(IEnumerable<DropDownItemViewModel> source)
+            => JobStatusSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetJobStatusDetailSource(IEnumerable<DropDownItemViewModel> source)
+            => JobStatusDetailSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetCostCenterSource(IEnumerable<DropDownItemViewModel> source)
+            => CostCenterSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetContractSource(IEnumerable<DropDownItemViewModel> source)
+            => ContractSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
     }
 
     public class CostCurrentPersonelViewModel
@@ -223,32 +280,24 @@ namespace Datiss.Budget.ViewModels
         public RecordType recordType { get; set; }
 
 
-        public IList<SelectListItem> YearSource { get; set; }
-        public IList<SelectListItem> OrganizationSource { get; set; }
-        public IList<SelectListItem> InputOrganizationSource { get; set; }
+        //public IList<SelectListItem> YearSource { get; set; }
+        //public IList<SelectListItem> OrganizationSource { get; set; }
         public IList<SelectListItem> RecordTypeSource { get; set; }
 
 
-        public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
-            => YearSource = source.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList();
+        //public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
+        //    => YearSource = source.Select(x => new SelectListItem
+        //    {
+        //        Text = x.Title,
+        //        Value = x.Id.ToString()
+        //    }).ToList();
 
-        public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
-            => OrganizationSource = source.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList();
-
-        public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
-            => InputOrganizationSource = source.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList();
+        //public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+        //    => OrganizationSource = source.Select(x => new SelectListItem
+        //    {
+        //        Text = x.Title,
+        //        Value = x.Id.ToString()
+        //    }).ToList();
 
         public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
             => Filter.OrganizationSource = source.Select(x => new SelectListItem
@@ -267,6 +316,17 @@ namespace Datiss.Budget.ViewModels
                 Value = x.Id.ToString()
             }).ToList();
         }
+
+    }
+
+    public class CostCurrentPersonelImportViewModel : PagedViewModel<CostCurrentPersonelViewModel>
+    {
+        public IList<DropDownItemViewModel> GradeTypeSource { get; set; }
+        public IList<DropDownItemViewModel> CostCenterTypeSource { get; set; }
+        public IList<DropDownItemViewModel> ContractTypeSource { get; set; }
+        public IList<DropDownItemViewModel> JobDepartmentTypeSource { get; set; }
+        public IList<DropDownItemViewModel> JobStatusTypeSource { get; set; }
+        public IList<DropDownItemViewModel> JobStatusDetailTypeSource { get; set; }
 
     }
 }

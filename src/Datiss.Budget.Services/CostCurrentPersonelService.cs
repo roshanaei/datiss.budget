@@ -153,6 +153,22 @@ namespace Datiss.Budget.Services
                 model.FirstName + " " + model.LastName)
                 );
         }
+        public async Task HardDeleteAsync(int Id)
+        {
+            var entity = await _dbSet.FindAsync(Id);
+            entity.CheckReferenceIsNull(nameof(entity));
+
+            var year = await _yearSet.FindAsync(entity.YearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+            entity.CheckArgumentIsNull(nameof(entity));
+
+            _dbSet.Remove(entity);
+
+            await _uow.SaveChangesAsync();
+        }
 
         public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId, RecordType recordType)
         {

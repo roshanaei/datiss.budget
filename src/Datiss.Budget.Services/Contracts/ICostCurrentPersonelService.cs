@@ -13,6 +13,7 @@ namespace Datiss.Budget.Services
         Task<CostCurrentPersonel> GetByIdAsync(int id);
         Task<ValidationResult<CostCurrentPersonelDTO>> UpdateAsync(UpdateCostCurrentPersonelDTO model);
         Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId, RecordType recordType);
+        Task HardDeleteAsync(int Id);
         Task<PagedResult<CostCurrentPersonelDTO>> GetListAsync(CostCurrentPersonelFilterDTO filter);
         Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
         Task<ValidationResult> CalculationAsync(int yearId, int organizationId);

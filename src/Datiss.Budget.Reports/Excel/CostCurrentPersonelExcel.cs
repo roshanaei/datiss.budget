@@ -78,7 +78,7 @@ namespace Datiss.Budget.Reports.Excel
             return workbook;
         }
 
-        public static XLWorkbook GetImportTemplate(this CostCurrentPersonelDTO model, int year)
+        public static XLWorkbook GetImportTemplate(this CostCurrentPersonelImportViewModel model, int year)
         {
             //if (!model.Items.Any())
             //    return null;
