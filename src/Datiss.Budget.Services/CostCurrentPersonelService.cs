@@ -189,7 +189,7 @@ namespace Datiss.Budget.Services
 
             if (organization.Type == OrganizationType.County || organization.Type == OrganizationType.Root)
             {
-                childrens = await getChildren(organizationId, yearId , recordType);
+                childrens = await getChildren(organizationId, yearId, recordType);
             }
 
             if (self.Count() == 0 && childrens.Count() == 0)
@@ -336,11 +336,11 @@ namespace Datiss.Budget.Services
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<CostCurrentPersonelImportModel>
-               (fileInfo, sheetIndex: 0, minRowNum: 2);
+               (fileInfo, sheetIndex: 0, minRowNum: 18);
 
             var records = data.Adapt<List<CostCurrentPersonel>>();
 
-            int rowIndex = 1;
+            int rowIndex = 19;
 
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
@@ -376,55 +376,57 @@ namespace Datiss.Budget.Services
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex + 2, rec.YearId)
+                        string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex, rec.YearId)
                         );
                 }
                 if (org == null)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
+                        string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex, rec.OrganizationId)
                         );
                 }
                 if (!await costcentertypes.AnyAsync(x => x.Id == rec.CostCenterTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.CostCenterTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex, rec.CostCenterTypeId)
                         );
                 }
                 if (!await gradetypes.AnyAsync(x => x.Id == rec.GradeTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex + 2, rec.GradeTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.GradeTypeId)
                         );
                 }
                 if (!await contracttypes.AnyAsync(x => x.Id == rec.ContractTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex + 2, rec.ContractTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.ContractTypeId)
                         );
                 }
                 if (!await jobdepartmenttypes.AnyAsync(x => x.Id == rec.JobDepartmentTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex + 2, rec.JobDepartmentTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.JobDepartmentTypeId)
                         );
                 }
                 if (!await jobstatustypes.AnyAsync(x => x.Id == rec.JobStatusTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex + 2, rec.JobStatusTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.JobStatusTypeId)
                         );
                 }
-                if (!await jobstatusdetailstypes.AnyAsync(x => x.Id == rec.JobStatusDetailTypeId))
+                var jobstatus = await _constSet.FindAsync(rec.JobStatusTypeId);
+                var jobstatusdetails = await _constSet.FindAsync(rec.JobStatusDetailTypeId);
+                if (! jobstatusdetails.ConstantKey.Contains(jobstatus.ConstantKey.Replace(".","")))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex + 2, rec.JobStatusDetailTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.JobStatusDetailTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
+                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex)
                         );
                 }
 
@@ -447,7 +449,7 @@ namespace Datiss.Budget.Services
                     existOrgs.Add(item);
             }
 
-            rowIndex = 1;
+            rowIndex = 19;
 
             if (!continueIfAnyOrgMissing)
             {
@@ -472,7 +474,7 @@ namespace Datiss.Budget.Services
 
                 if (!await _userService.HasAccessToOrganizationAsync(record.OrganizationId))
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
+                        string.Format(ServiceMessages.ImportExcelAccessError, rowIndex)
                         );
 
                 if (!await checkLogicAsync(
@@ -482,7 +484,7 @@ namespace Datiss.Budget.Services
                 {
 
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
+                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex)
                         );
                 }
 
@@ -505,6 +507,32 @@ namespace Datiss.Budget.Services
             return ImportResult.Succeed(
                 string.Format(ServiceMessages.ImportExcelSuccess)
                 );
+        }
+
+        public async Task<IEnumerable<CostCurrentPersonelDTO>> GetLastYearBaseItemsAsync(int yearId)
+        {
+            int lastyearId = await getLastYearAsync(yearId);
+            var filter = new CostCurrentPersonelFilterDTO
+            {
+                RecordType = RecordType.Base,
+                YearId = lastyearId == 0 ? yearId : lastyearId,
+            };
+            filter.CheckArgumentIsNull(nameof(filter));
+            var query = Query();
+            query = await setFilter(query, filter);
+            query = setOrder(query, "name", filter.OrderDesc);
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.CostCenter)
+                                    .Include(x => x.Grade)
+                                    .Include(x => x.Contract)
+                                    .Include(x => x.JobDepartment)
+                                    .Include(x => x.JobStatus)
+                                    .Include(x => x.JobStatusDetail)
+                                    .Select(x => x.Adapt<CostCurrentPersonelDTO>()).ToListAsync();
+
+            return items;
         }
 
 
@@ -532,6 +560,11 @@ namespace Datiss.Budget.Services
                 }
 
                 query = query.Where(predicate);
+            }
+
+            if (filter.RecordType.HasValue)
+            {
+                query = query.Where(x => x.RecordType == filter.RecordType.Value);
             }
 
             if (filter.Search.IsNotNullOrEmpty())
@@ -562,10 +595,12 @@ namespace Datiss.Budget.Services
                         ? query.OrderByDescending(x => x.FinanceYear.Year)
                         : query.OrderBy(x => x.FinanceYear.Year);
 
-                case "organization":
+                case "name":
                     return desc
-                        ? query.OrderByDescending(x => x.Organization.Title)
-                        : query.OrderBy(x => x.Organization.Title);
+                        ? query.OrderByDescending(x => x.LastName)
+                               .ThenBy(x => x.FirstName)
+                        : query.OrderBy(x => x.LastName)
+                               .ThenBy(x => x.FirstName);
 
 
                 default:
@@ -631,7 +666,7 @@ namespace Datiss.Budget.Services
                     item.Id = 0;
 
                     var entity = item.Adapt<CostCurrentPersonel>();
-                    
+
 
                     result.Add(entity);
                 }
@@ -659,6 +694,18 @@ namespace Datiss.Budget.Services
 
         //    return false;
         //}
+
+        private async Task<int> getLastYearAsync(int yearId)
+        { 
+            int result = 0;
+            var year = (await _yearSet.FindAsync(yearId)).Year;
+            var lastYear = await _yearSet.OrderBy(x => x.Year)
+                                         .LastOrDefaultAsync(x => x.Year < year &&
+                                                                  x.Status != EntityStatus.Deleted);
+            if (lastYear != null)
+                result = lastYear.Id;
+            return result;
+        }
 
         #endregion
 

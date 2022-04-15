@@ -19,5 +19,6 @@ namespace Datiss.Budget.Services
         Task<ValidationResult> CalculationAsync(int yearId, int organizationId);
         Task<IEnumerable<CostCurrentPersonelDTO>> GetExportItemsAsync(int yearId, int organizationId);
         Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
+        Task<IEnumerable<CostCurrentPersonelDTO>> GetLastYearBaseItemsAsync(int yearId);
     }
 }

@@ -284,20 +284,28 @@ namespace Datiss.Budget.ViewModels
         //public IList<SelectListItem> OrganizationSource { get; set; }
         public IList<SelectListItem> RecordTypeSource { get; set; }
 
+        public IList<SelectListItem> JobStatusTypeSource { get; set; }
 
-        //public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
-        //    => YearSource = source.Select(x => new SelectListItem
-        //    {
-        //        Text = x.Title,
-        //        Value = x.Id.ToString()
-        //    }).ToList();
-
-        //public void SetOrganizationSource(IEnumerable<DropDownItemViewModel> source)
-        //    => OrganizationSource = source.Select(x => new SelectListItem
-        //    {
-        //        Text = x.Title,
-        //        Value = x.Id.ToString()
-        //    }).ToList();
+        public string JobStatusTypeSourceIdArray
+        {
+            get
+            {
+                if (JobStatusTypeSource == null || !JobStatusTypeSource.Any())
+                    return string.Empty;
+                string result = "";
+                foreach (var item in JobStatusTypeSource)
+                {
+                    result += $"{item.Value},";
+                }
+                return result.TrimEnd(',');
+            }
+        }
+        public void SetJobStatusTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => JobStatusTypeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
 
         public void SetOrganizationFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedOrgId = null)
             => Filter.OrganizationSource = source.Select(x => new SelectListItem
@@ -327,6 +335,7 @@ namespace Datiss.Budget.ViewModels
         public IList<DropDownItemViewModel> JobDepartmentTypeSource { get; set; }
         public IList<DropDownItemViewModel> JobStatusTypeSource { get; set; }
         public IList<DropDownItemViewModel> JobStatusDetailTypeSource { get; set; }
+        public IList<DropDownItemViewModel> OrganizationSource { get; set; }
 
     }
 }

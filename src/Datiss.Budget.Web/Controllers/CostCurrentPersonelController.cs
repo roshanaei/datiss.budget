@@ -103,19 +103,6 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IList<DropDownItemViewModel>>();
 
 
-            //var extensionTypeData = await _constantService.GetDataByKeyAsync(ConstantKeys.__ExtensionType);
-            //var extensionTypeSource = extensionTypeData.Select(x => new DropDownItemViewModel
-            //{
-            //    Id = x.Id,
-            //    Title = x.Title
-            //}).ToList();
-            //var extensionTypeKeys = "";
-            //foreach (var key in extensionTypeData)
-            //{
-            //    extensionTypeKeys += $"'{key.ConstantKey}',";
-            //}
-            //ViewData["extensionTypeKeys"] = extensionTypeKeys.TrimEnd(',');
-
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(input : true))
                .Adapt<List<DropDownItemViewModel>>();
 
@@ -173,9 +160,21 @@ namespace Datiss.Budget.Web.Controllers
 
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
+            filter.RecordType = RecordType.Forcast;
 
-            //var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
-            //   .Adapt<List<DropDownItemViewModel>>();
+            var jobStatusData = await _constantService.GetDataByKeyAsync(ConstantKeys.__JobStatusType);
+            var jobStatusTypeSource = jobStatusData.Select(x => new DropDownItemViewModel
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToList();
+            var jobStatusTypeKeys = "";
+            foreach (var key in jobStatusData)
+            {
+                jobStatusTypeKeys += $"'{key.ConstantKey}',";
+            }
+            ViewData["jobStatusTypeKeys"] = jobStatusTypeKeys.TrimEnd(',');
+
 
             var myfilter = TempData.Get<CostCurrentPersonelFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
@@ -191,7 +190,7 @@ namespace Datiss.Budget.Web.Controllers
 
             //model.SetYearSource(yearSource);
             //model.SetOrganizationSource(orgSource);
-
+            model.SetJobStatusTypeSource(jobStatusTypeSource);
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
 
@@ -222,6 +221,22 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
+
+            var jobStatusData = await _constantService.GetDataByKeyAsync(ConstantKeys.__JobStatusType);
+            var jobStatusTypeSource = jobStatusData.Select(x => new DropDownItemViewModel
+            {
+                Id = x.Id,
+                Title = x.Title
+            }).ToList();
+            var jobStatusTypeKeys = "";
+            foreach (var key in jobStatusData)
+            {
+                jobStatusTypeKeys += $"'{key.ConstantKey}',";
+            }
+            ViewData["jobStatusTypeKeys"] = jobStatusTypeKeys.TrimEnd(',');
+
+
+            model.SetJobStatusTypeSource(jobStatusTypeSource);
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
 
@@ -386,16 +401,28 @@ namespace Datiss.Budget.Web.Controllers
             var organizations = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
                                 .OrderBy(x => x.DisplayOrder)
                                 .ThenBy(x => x.RowOrder);
+            
+            var lastyearRecords = await _costCurrentPersonelService.GetLastYearBaseItemsAsync(yearId);
 
             var model = new CostCurrentPersonelImportViewModel();
+
             var items = new List<CostCurrentPersonelViewModel>();
 
-            foreach (var org in organizations)
+            foreach (var item in lastyearRecords)
             {
                 items.Add(new CostCurrentPersonelViewModel
                 {
-                    OrganizationId = org.Id,
-                    OrganizationDisplay = org.Title
+                    OrganizationId = item.OrganizationId,
+                    FirstName = item.FirstName,
+                    LastName = item.LastName,
+                    GradeTypeId = item.GradeTypeId,
+                    PersonelCode = item.PersonelCode,
+                    GenderId = item.GenderId,
+                    ContractTypeId = item.ContractTypeId,
+                    JobDepartmentTypeId = item.JobDepartmentTypeId,
+                    JobStatusTypeId = item.JobStatusTypeId,
+                    JobStatusDetailTypeId = item.JobStatusDetailTypeId,
+                    CostCenterTypeId = item.CostCenterTypeId,
                 });
             }
 
@@ -420,12 +447,15 @@ namespace Datiss.Budget.Web.Controllers
             var jobSatusDetailSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__JobStatusDetailsType))
                 .Adapt<IList<DropDownItemViewModel>>();
 
+            var organizationSource = organizations.Adapt<IList<DropDownItemViewModel>>();
+
             model.CostCenterTypeSource = costCenterSource;
             model.GradeTypeSource = gradeSource;
             model.ContractTypeSource = contractSource;
             model.JobDepartmentTypeSource = jobDepartmentSource;
             model.JobStatusTypeSource = jobStatusSource;
             model.JobStatusDetailTypeSource = jobSatusDetailSource;
+            model.OrganizationSource = organizationSource;
 
             model.Items = items;
             using var workbook = model.GetImportTemplate(year.Year);
@@ -442,21 +472,11 @@ namespace Datiss.Budget.Web.Controllers
             return workbook.Deliver("CostCurrentPersonel.xlsx");
         }
 
-        [HttpPost, Route("GetSuggestedBudgetTopicAsync")]
-        public async Task<JsonResult> GetSuggestedBudgetTopicAsync(string key)
+        [HttpPost, Route("GetJobStatusDetailType")]
+        public async Task<JsonResult> GetJobStatusDetailTypeAsync(string key)
         {
-            IEnumerable<DropDownItem> result = new DropDownItem[] { };
+            var result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__JobStatusDetailsType, key.Replace(".",""));
 
-            if (key.ToUpper().Trim() == ConstantKeys.__ExtensionYes.Trim().ToUpper())
-            {
-                key = key.Replace(".", "");
-                result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__SuggestedBudgetTopicType, key);
-            }
-            else
-            {
-                key = ConstantKeys.__ExtensionNo;
-                result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectType, key);
-            }
             return new JsonResult(result);
         }
     }

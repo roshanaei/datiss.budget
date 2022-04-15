@@ -1,111 +1,138 @@
 ﻿<script type="text/javascript">
 
-    let isNewRow = false;
-    let rowData = {};
+    //function editRow(id) {
 
-    function editRow(id) {
+    //    let extensionTypeId = $('#inputExtensionType_' + id).val();
+    //    let suggestedBudgetTopicTypeId = $('#hidSuggestedBudgetTopicTypeId_' + id).val();
 
-        let extensionTypeId = $('#inputExtensionType_' + id).val();
-        let suggestedBudgetTopicTypeId = $('#hidSuggestedBudgetTopicTypeId_' + id).val();
+    //    console.log(extensionTypeId);
+    //    console.log(suggestedBudgetTopicTypeId);
 
-        console.log(extensionTypeId);
-        console.log(suggestedBudgetTopicTypeId);
+    //    FillDropDown(extensionTypeId, suggestedBudgetTopicTypeId);
 
-        FillDropDown(extensionTypeId, suggestedBudgetTopicTypeId);
-        
-        resetTableBackColor("my-table");
+    //    let row = $('#row_' + id);
 
-        let row = $('#row_' + id);
+    //    //Hide output elements
+    //    $('#divOutput_Year_' + id).hide();
+    //    $('#divOutput_Org_' + id).hide();
+    //    $('#divOutput_ExtensionType_' + id).hide();
+    //    $('#divOutput_SuggestedBudgetTopicType_' + id).hide();
+    //    $('#divOutput_ProjectDescription_' + id).hide();
+    //    $('#divOutput_WasteInvestorsType_' + id).hide();
+    //    $('#divOutput_CostCenterType_' + id).hide();
+    //    $('#divOutput_ExploitationAreaType_' + id).hide();
+    //    $('#divOutput_ProgressPercent_' + id).hide();
+    //    $('#divOutput_CostDone_' + id).hide();
+    //    $('#divOutput_Amount_' + id).hide();
+    //    $('#divOutput_MeasurementType_' + id).hide();
+    //    $('#divOutput_UnitPrice_' + id).hide();
+    //    $('#divOutput_TotalCost_' + id).hide();
+    //    $('#divOutput_CreditType_' + id).hide();
 
-        //Hide output elements
-        $('#divOutput_Year_' + id).hide();
-        $('#divOutput_Org_' + id).hide();
-        $('#divOutput_ExtensionType_' + id).hide();
-        $('#divOutput_SuggestedBudgetTopicType_' + id).hide();
-        $('#divOutput_ProjectDescription_' + id).hide();
-        $('#divOutput_WasteInvestorsType_' + id).hide();
-        $('#divOutput_CostCenterType_' + id).hide();
-        $('#divOutput_ExploitationAreaType_' + id).hide();
-        $('#divOutput_ProgressPercent_' + id).hide();
-        $('#divOutput_CostDone_' + id).hide();
-        $('#divOutput_Amount_' + id).hide();
-        $('#divOutput_MeasurementType_' + id).hide();
-        $('#divOutput_UnitPrice_' + id).hide();
-        $('#divOutput_TotalCost_' + id).hide();
-        $('#divOutput_CreditType_' + id).hide();
-
-        //show input elements
-        $('#divInput_Year_' + id).show();
-        $('#divInput_Org_' + id).show();
-        $('#divInput_ExtensionType_' + id).show();
-        $('#divInput_SuggestedBudgetTopicType_' + id).show();
-        $('#divInput_ProjectDescription_' + id).show();
-        $('#divInput_WasteInvestorsType_' + id).show();
-        $('#divInput_CostCenterType_' + id).show();
-        $('#divInput_ExploitationAreaType_' + id).show();
-        $('#divInput_ProgressPercent_' + id).show();
-        $('#divInput_CostDone_' + id).show();
-        $('#divInput_Amount_' + id).show();
-        $('#divInput_MeasurementType_' + id).show();
-        $('#divInput_UnitPrice_' + id).show();
-        $('#divInput_TotalCost_' + id).show();
-        $('#divInput_CreditType_' + id).show();
+    //    //show input elements
+    //    $('#divInput_Year_' + id).show();
+    //    $('#divInput_Org_' + id).show();
+    //    $('#divInput_ExtensionType_' + id).show();
+    //    $('#divInput_SuggestedBudgetTopicType_' + id).show();
+    //    $('#divInput_ProjectDescription_' + id).show();
+    //    $('#divInput_WasteInvestorsType_' + id).show();
+    //    $('#divInput_CostCenterType_' + id).show();
+    //    $('#divInput_ExploitationAreaType_' + id).show();
+    //    $('#divInput_ProgressPercent_' + id).show();
+    //    $('#divInput_CostDone_' + id).show();
+    //    $('#divInput_Amount_' + id).show();
+    //    $('#divInput_MeasurementType_' + id).show();
+    //    $('#divInput_UnitPrice_' + id).show();
+    //    $('#divInput_TotalCost_' + id).show();
+    //    $('#divInput_CreditType_' + id).show();
 
 
-        $('#btnEdit_' + id).hide();
-        $('#btnDelete_' + id).hide();
-        $('#btnSaveEdit_' + id).show();
-        $('#btnCancelEdit_' + id).show();
+    //    $('#btnEdit_' + id).hide();
+    //    $('#btnDelete_' + id).hide();
+    //    $('#btnSaveEdit_' + id).show();
+    //    $('#btnCancelEdit_' + id).show();
 
-        rowData = {};
-        rowData.yearId = $('#inputYear_' + id).val();
-        rowData.organizationId = $('#inputOrg_' + id).val();
-        rowData.extensionTypeId = $('#inputExtensionType_' + id).val();
-        rowData.suggestedBudgetTopicTypeId = $('#inputSuggestedBudgetTopicType_' + id).val();
-        rowData.projectDescription = $('#inputProjectDescription_' + id).val();
-        rowData.wasteInvestorsTypeId = $('#inputWasteInvestorsType_' + id).val();
-        rowData.costCenterTypeId = $('#inputCostCenterType_' + id).val();
-        rowData.exploitationAreaTypeId = $('#inputExploitationAreaType_' + id).val();
-        rowData.progressPercent = $('#inputProgressPercent_' + id).val();
-        rowData.costDone = $('#inputCostDone_' + id).val();
-        rowData.amount = $('#inputAmount_' + id).val();
-        rowData.measurementTypeId = $('#inputMeasurementType_' + id).val();
-        rowData.unitPrice = $('#inputUnitPrice_' + id).val();
-        rowData.totalCost = $('#inputTotalCost_' + id).val();
-        rowData.creditTypeId = $('#inputCreditType_' + id).val();
-    }
+    //    rowData = {};
+    //    rowData.yearId = $('#inputYear_' + id).val();
+    //    rowData.organizationId = $('#inputOrg_' + id).val();
+    //    rowData.extensionTypeId = $('#inputExtensionType_' + id).val();
+    //    rowData.suggestedBudgetTopicTypeId = $('#inputSuggestedBudgetTopicType_' + id).val();
+    //    rowData.projectDescription = $('#inputProjectDescription_' + id).val();
+    //    rowData.wasteInvestorsTypeId = $('#inputWasteInvestorsType_' + id).val();
+    //    rowData.costCenterTypeId = $('#inputCostCenterType_' + id).val();
+    //    rowData.exploitationAreaTypeId = $('#inputExploitationAreaType_' + id).val();
+    //    rowData.progressPercent = $('#inputProgressPercent_' + id).val();
+    //    rowData.costDone = $('#inputCostDone_' + id).val();
+    //    rowData.amount = $('#inputAmount_' + id).val();
+    //    rowData.measurementTypeId = $('#inputMeasurementType_' + id).val();
+    //    rowData.unitPrice = $('#inputUnitPrice_' + id).val();
+    //    rowData.totalCost = $('#inputTotalCost_' + id).val();
+    //    rowData.creditTypeId = $('#inputCreditType_' + id).val();
+    //}
 
         $(document).on('click', '#btnDoEdit', function () {
 
-            $('#spanTitle').text('');
-            $('#Title').removeClass("error-border");
+            //$('#spanTitle').text('');
+            //$('#Title').removeClass("error-border");
 
-            $('#spanDisplayOrder').text('');
-            $('#DisplayOrder').removeClass("error-border");
+            //$('#spanDisplayOrder').text('');
+            //$('#DisplayOrder').removeClass("error-border");
 
             let model = {};
 
-            model.id = $('#Id').val()
-            model.title = $('#Title').val();
-            model.parentId = $('#ParentId option:selected').val();
-            model.type = $('#Type option:selected').val();
-            model.sewageStatus = $('#SewageStatus option:selected').val();
-            model.displayOrder = $('#DisplayOrder').val();
-            model.enabled = $('input[name="Enabled"]:checked').val();
+            model.id = $('#Id').val();
+            model.yearId = $('#YearId').val();
+            model.recordType = $('#RecordType').val();
+            model.firstName = $('#FirstName').val();
+            model.lastName = $('#LastName').val();
+            model.organizationId = $('#OrganizationId option:selected').val();
+            model.costCenterTypeId = $('#CostCenterTypeId option:selected').val();
+            model.contractTypeId = $('#ContractTypeId option:selected').val();
+            model.personelCode = $('#PersonelCode').val();
+            model.genderId = $('input[name="GenderId"]:checked').val();
+            model.fixSalary = $('#FixSalary').val();
+            model.employRight = $('#EmployRight').val();
+            model.regionRight = $('#RegionRight').val();
+            model.gradeTypeId = $('#GradeTypeId option:selected').val();
+            model.jobDepartmentTypeId = $('#JobDepartmentTypeId option:selected').val();
+            model.jobStatusTypeId = $('#JobStatusTypeId option:selected').val();
+            model.jobStatusDetailTypeId = $('#JobStatusDetailTypeId option:selected').val();
+            model.experienceYear = $('#ExperienceYear').val();
+            model.experienceMonth = $('#ExperienceMonth').val();
+            model.overTimeValue = $('#OverTimeValue').val();
+            model.overTimeCost = $('#OverTimeCost').val();
+            model.holidayValue = $('#HolidayValue').val();
+            model.holidayCost = $('#HolidayCost').val();
+            model.shiftPercent = $('#ShiftPercent').val();
+            model.shiftPCost = $('#ShiftPCost').val();
+            model.missionCount = $('#MissionCount').val();
+            model.missionDayCost = $('#MissionDayCost').val();
+            model.hardWorkingRt = $('#HardWorkingRt').val();
+            model.trafficRt = $('#TrafficRt').val();
+            model.houseRt = $('#HouseRt').val();
+            model.childRt = $('#ChildRt').val();
+            model.stuffRt = $('#StuffRt').val();
+            model.education = $('#Education').val();
+            model.insuranceMaster = $('#InsuranceMaster').val();
+            model.insuranceAging = $('#InsuranceAging').val();
+            model.holidayYearly = $('#HolidayYearly').val();
+            model.militaryServiceCost = $('#MilitaryServiceCost').val();
+            model.unUseHolidayCount = $('#UnUseHolidayCount').val();
+            model.welfareCost = $('#WelfareCost').val();
 
 
-            if (model.title == '') {
-                $('#Title').addClass("error-border");
-                $('#divError').show();
-                $('#spanTitle').text('لطفا عنوان سازمان را وارد نمایید .');
-                return;
-            }
-            if (model.displayOrder < '0' || model.displayOrder == '') {
-                $('#DisplayOrder').addClass("error-border");
-                $('#divError').show();
-                $('#spanDisplayOrder').text('لطفا ترتیب نمایش را صحیح وارد کنید .');
-                return;
-            }
+            //if (model.title == '') {
+            //    $('#Title').addClass("error-border");
+            //    $('#divError').show();
+            //    $('#spanTitle').text('لطفا عنوان سازمان را وارد نمایید .');
+            //    return;
+            //}
+            //if (model.displayOrder < '0' || model.displayOrder == '') {
+            //    $('#DisplayOrder').addClass("error-border");
+            //    $('#divError').show();
+            //    $('#spanDisplayOrder').text('لطفا ترتیب نمایش را صحیح وارد کنید .');
+            //    return;
+            //}
 
 
             $.ajax({
@@ -131,7 +158,7 @@
 
                     Swal.fire({
                         title: '<span class="my-font">عملیات موفق</span>',
-                        html: '<span class="my-font">عملیات ویرایش سازمان با موفقیت انجام شد.</span>',
+                        html: '<span class="my-font">عملیات ویرایش کاربر با موفقیت انجام شد.</span>',
                         type: 'success',
                         confirmButtonColor: '#2F8BE6',
                         animation: true,
@@ -147,7 +174,7 @@
                     console.log(err);
                     Swal.fire({
                         title: '<span class="my-font">خطا</span>',
-                        html: `<span class="my-font">عملیات ویرایش سازمان با خطا مواجه شد.</span>`,
+                        html: `<span class="my-font">عملیات ویرایش کاربر با خطا مواجه شد.</span>`,
                         type: 'error',
                         confirmButtonColor: '#2F8BE6',
                         animation: false,
@@ -162,36 +189,24 @@
 
 
 
-    function resetTableBackColor(id) {
-        var table = document.getElementById(id);
-        var rows = table.getElementsByTagName("tr");
-        for (i = 2; i < rows.length - 1; i++) {
-            rows[i].style = "";
-        }
-    }
-
     function RelatedDropDown(e, event) {
-        let extensionTypeid = event.target.value;
-        FillDropDown(extensionTypeid);
+        let jobStatusTypeid = event.target.value;
+        FillDropDown(jobStatusTypeid);
     }
 
     function FillDropDown(id, selectval = null) {
 
-        let key = extensionType_source[id];
-
-        if (key != 'Extension.Yes') {
-            key = 'Extension.NO';
-        }
+        let key = jobStatusType_source[id];
 
         $.ajax({
-            url: '@Url.Action("GetSuggestedBudgetTopicAsync")',
+            url: '@Url.Action("GetJobStatusDetailType")',
             type: 'POST',
             dataType: 'json',
             data: {
                 'key': key
                 }
         }).done(function (data) {
-            var options = $('.selectSuggestedBudgetTopicType');
+            var options = $('.selectJobStatusDetailType');
             options.empty();
             $.each(data,
                 function (i, item) {

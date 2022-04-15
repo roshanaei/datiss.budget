@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Entities.Identity;
+using Datiss.Budget.Services.Excel.Models;
 using Datiss.Budget.Services.Models;
 using Mapster;
 
@@ -64,7 +65,12 @@ namespace Datiss.Budget.Services.Infrastructure
                 .Map(d => d.GradeTypeDisplay, s => s.Grade != null ? s.Grade.Title : null)
                 .Map(d => d.ContractTypeDisplay, s => s.Contract != null ? s.Contract.Title : null)
                 .Map(d => d.JobDepartmentTypeDisplay, s => s.JobDepartment != null ? s.JobDepartment.Title : null)
-                .Map(d => d.JobStatusDetailTypeDisplay, s => s.JobStatusDetail != null ? s.JobStatusDetail.Title : null);
+                .Map(d => d.JobStatusDetailTypeDisplay, s => s.JobStatusDetail != null ? s.JobStatusDetail.Title : null)
+                .Map(d => d.JobStatusTypeDisplay, s => s.JobStatus != null ? s.JobStatus.Title : null);
+
+            TypeAdapterConfig<CostCurrentPersonelImportModel, CostCurrentPersonel>
+                .NewConfig()
+                .Map(d => d.GenderId, s => s.GenderVal == 0 ? false : true);
         }
     }
 }

@@ -258,6 +258,19 @@
 
 <script type="text/javascript">
 
+    var jobStatusType_Ids = [
+        @Html.Raw(Model.JobStatusTypeSourceIdArray)
+    ];
+
+    var jobStatusType_keys = [
+        @Html.Raw(ViewData["jobStatusTypeKeys"].ToString())
+    ];
+
+    var jobStatusType_source = {};
+
+    for (var i = 0; i < jobStatusType_Ids.length; i++) {
+        jobStatusType_source[jobStatusType_Ids[i]] = jobStatusType_keys[i];
+    }
 
     $(document).ready(function () {
             //fill input hidden with initial columns showing

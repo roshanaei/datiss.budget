@@ -75,6 +75,7 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 9).Value = item.GradeTypeDisplay;
                 sheet.Cell(row, 10).Value = item.JobDepartmentTypeDisplay;
                 sheet.Cell(row, 11).Value = item.JobStatusTypeDisplay;
+                sheet.Cell(row, 11).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
                 sheet.Cell(row, 12).Value = item.JobStatusDetailTypeDisplay;
                 sheet.Cell(row, 13).Value = item.ExperienceYear + "سال و " + item.ExperienceMonth + " ماه";
                 sheet.Cell(row, 14).Value = item.OverTimeValue;
@@ -110,25 +111,26 @@ namespace Datiss.Budget.Reports.Excel
 
         public static XLWorkbook GetImportTemplate(this CostCurrentPersonelImportViewModel model, int year)
         {
-            if (!model.Items.Any())
-                return null;
-
             var workbook = new XLWorkbook();
             var sheet = workbook.Worksheets.Add(_sheetName);
             sheet.RightToLeft = true;
             //
-            sheet.Cell(1, 1).Value = "مرکز هزینه";
-            sheet.Cell(1, 2).Value = "کد مرکز هزینه";
-            sheet.Cell(1, 3).Value = "نوع قرارداد";
-            sheet.Cell(1, 4).Value = "کد نوع قرارداد";
-            sheet.Cell(1, 5).Value = "مدرک تحصیلی";
-            sheet.Cell(1, 6).Value = "کد مدرک تحصیلی";
-            sheet.Cell(1, 7).Value = "بخش مشاغل";
-            sheet.Cell(1, 8).Value = "کد بخش مشاغل";
-            sheet.Cell(1, 9).Value = "وضعیت استخدام";
-            sheet.Cell(1, 10).Value = "کد وضعیت استخدام";
-            sheet.Cell(1, 11).Value = "جزئیات استخدام";
-            sheet.Cell(1, 12).Value = "کد جزئیات استخدام";
+            sheet.Cell(1, 1).Value = "جنسیت";
+            sheet.Cell(1, 2).Value = "کد جنسیت";
+            sheet.Cell(1, 3).Value = "سازمان";
+            sheet.Cell(1, 4).Value = "کد سازمان";
+            sheet.Cell(1, 5).Value = "مرکز هزینه";
+            sheet.Cell(1, 6).Value = "کد مرکز هزینه";
+            sheet.Cell(1, 7).Value = "نوع قرارداد";
+            sheet.Cell(1, 8).Value = "کد نوع قرارداد";
+            sheet.Cell(1, 9).Value = "مدرک تحصیلی";
+            sheet.Cell(1, 10).Value = "کد مدرک تحصیلی";
+            sheet.Cell(1, 11).Value = "بخش مشاغل";
+            sheet.Cell(1, 12).Value = "کد بخش مشاغل";
+            sheet.Cell(1, 13).Value = "وضعیت استخدام";
+            sheet.Cell(1, 14).Value = "کد وضعیت استخدام";
+            sheet.Cell(1, 15).Value = "جزئیات استخدام";
+            sheet.Cell(1, 16).Value = "کد جزئیات استخدام";
             sheet.Cell(1, 1).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 2).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 3).Style.Fill.BackgroundColor = XLColor.Cream;
@@ -141,17 +143,22 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 10).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 11).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 12).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 13).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 14).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 13).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 14).Style.Fill.BackgroundColor = XLColor.Cream;
             int row = 2;
-            foreach (var item in model.ContractTypeSource)
-            {
-                sheet.Cell(row, 1).Value = item.Title;
-                sheet.Cell(row, 1).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
-                sheet.Cell(row, 2).Value = item.Id;
-                sheet.Cell(row, 2).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
-                row++;
-            }
+            sheet.Cell(row, 1).Value = "خانوم";
+            sheet.Cell(row, 1).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+            sheet.Cell(row, 2).Value = 0;
+            sheet.Cell(row, 2).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+            row++;
+            sheet.Cell(row, 1).Value = "آقا";
+            sheet.Cell(row, 1).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+            sheet.Cell(row, 2).Value = 1;
+            sheet.Cell(row, 2).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
             row = 2;
-            foreach (var item in model.ContractTypeSource)
+            foreach (var item in model.OrganizationSource)
             {
                 sheet.Cell(row, 3).Value = item.Title;
                 sheet.Cell(row, 3).Style.Fill.SetBackgroundColor(XLColor.White);
@@ -160,7 +167,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++;
             }
             row = 2;
-            foreach (var item in model.GradeTypeSource)
+            foreach (var item in model.CostCenterTypeSource)
             {
                 sheet.Cell(row, 5).Value = item.Title;
                 sheet.Cell(row, 5).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
@@ -169,7 +176,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++;
             }
             row = 2;
-            foreach (var item in model.JobDepartmentTypeSource)
+            foreach (var item in model.ContractTypeSource)
             {
                 sheet.Cell(row, 7).Value = item.Title;
                 sheet.Cell(row, 7).Style.Fill.SetBackgroundColor(XLColor.White);
@@ -178,7 +185,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++;
             }
             row = 2;
-            foreach (var item in model.JobStatusTypeSource)
+            foreach (var item in model.GradeTypeSource)
             {
                 sheet.Cell(row, 9).Value = item.Title;
                 sheet.Cell(row, 9).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
@@ -187,7 +194,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++;
             }
             row = 2;
-            foreach (var item in model.JobStatusDetailTypeSource)
+            foreach (var item in model.JobDepartmentTypeSource)
             {
                 sheet.Cell(row, 11).Value = item.Title;
                 sheet.Cell(row, 11).Style.Fill.SetBackgroundColor(XLColor.White);
@@ -195,68 +202,90 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 12).Style.Fill.SetBackgroundColor(XLColor.White);
                 row++;
             }
-            //row = 2;
-            //foreach (var item in model.SuggestedBudgetTopicTypeSource)
-            //{
-            //    sheet.Cell(row, 13).Value = item.Title;
-            //    sheet.Cell(row, 13).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
-            //    sheet.Cell(row, 14).Value = item.Id;
-            //    sheet.Cell(row, 14).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
-            //    row++;
-            //}
-            sheet.Range(1, 1, 23, 12);
+            row = 2;
+            foreach (var item in model.JobStatusTypeSource)
+            {
+                sheet.Cell(row, 13).Value = item.Title;
+                sheet.Cell(row, 13).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                sheet.Cell(row, 13).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                sheet.Cell(row, 14).Value = item.Id;
+                sheet.Cell(row, 14).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                row++;
+            }
+            row = 2;
+            foreach (var item in model.JobStatusDetailTypeSource)
+            {
+                sheet.Cell(row, 15).Value = item.Title;
+                sheet.Cell(row, 15).Style.Fill.SetBackgroundColor(XLColor.White);
+                sheet.Cell(row, 16).Value = item.Id;
+                sheet.Cell(row, 16).Style.Fill.SetBackgroundColor(XLColor.White);
+                row++;
+            }
 
-            sheet.Cell(24, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
+            sheet.Range(1, 1, 23, 16);
+
+            sheet.Cell(17, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
             //sheet.Range(23, 1, 24, 15).Merge();
 
-            row = 25;
-            sheet.Cell(row, 2).Value = "نام";
+            row = 18;
+            sheet.Cell(row, 1).Value = "نام";
             sheet.Cell(row, 2).Value = "نام خانوادگی";
-            sheet.Cell(row, 2).Value = "کد سازمان";
-            sheet.Cell(row, 3).Value = "مرکز هزینه";
-            sheet.Cell(row, 4).Value = "کد پرسنلی";
-            sheet.Cell(row, 5).Value = "نوع قرارداد";
-            sheet.Cell(row, 6).Value = "مزد ثابت";
-            sheet.Cell(row, 7).Value = "حق جذب";
-            sheet.Cell(row, 8).Value = "فوق العاده منطقه";
-            sheet.Cell(row, 9).Value = "مدرک تحصیلی";
-            sheet.Cell(row, 10).Value = "بخش مشاغل";
-            sheet.Cell(row, 11).Value = "وضعیت استخدام";
-            sheet.Cell(row, 12).Value = "جزئیات استخدام";
-            sheet.Cell(row, 13).Value = "سال سابقه";
-            sheet.Cell(row, 13).Value = "ماه سابقه";
-            sheet.Cell(row, 14).Value = "ساعت اضافه کاری";
-            sheet.Cell(row, 15).Value = "مبلغ اضافه کاری";
-            sheet.Cell(row, 16).Value = "تعداد روز  تعطیل کاری";
-            sheet.Cell(row, 17).Value = "مبلغ تعطیل کاری";
-            sheet.Cell(row, 18).Value = "درصد نوبت کاری";
-            sheet.Cell(row, 19).Value = "نوبت کاری و کشیک";
-            sheet.Cell(row, 20).Value = "تعداد ماموریت";
-            sheet.Cell(row, 21).Value = "هزینه ماموریت";
-            sheet.Cell(row, 22).Value = "حق سختی کار";
-            sheet.Cell(row, 23).Value = "حق ایاب و ذهاب";
-            sheet.Cell(row, 24).Value = "حق مسکن";
-            sheet.Cell(row, 25).Value = "حق اولاد";
-            sheet.Cell(row, 26).Value = "حق خواروبار";
-            sheet.Cell(row, 27).Value = "آموزش";
-            sheet.Cell(row, 28).Value = "بیمه سهم کارفرما";
-            sheet.Cell(row, 29).Value = "بیمه عمر و حادثه تکمیلی";
-            sheet.Cell(row, 30).Value = "عیدی سالیانه";
-            sheet.Cell(row, 31).Value = "ذخیره مزایای پایان خدمت کارکنان";
-            sheet.Cell(row, 32).Value = "مرخصی استفاده نشده";
-            sheet.Cell(row, 33).Value = "هزینه های رفاهی";
+            sheet.Cell(row, 3).Value = "جنسیت";
+            sheet.Cell(row, 4).Value = "کد سازمان";
+            sheet.Cell(row, 5).Value = "کد مرکز هزینه";
+            sheet.Cell(row, 6).Value = "کد پرسنلی";
+            sheet.Cell(row, 7).Value = "کد نوع قرارداد";
+            sheet.Cell(row, 8).Value = "مزد ثابت";
+            sheet.Cell(row, 9).Value = "حق جذب";
+            sheet.Cell(row, 10).Value = "فوق العاده منطقه";
+            sheet.Cell(row, 11).Value = "کد مدرک تحصیلی";
+            sheet.Cell(row, 12).Value = "کد بخش مشاغل";
+            sheet.Cell(row, 13).Value = "کد وضعیت استخدام";
+            sheet.Cell(row, 14).Value = "کد جزئیات استخدام";
+            sheet.Cell(row, 15).Value = "سال سابقه";
+            sheet.Cell(row, 16).Value = "ماه سابقه";
+            sheet.Cell(row, 17).Value = "ساعت اضافه کاری";
+            sheet.Cell(row, 18).Value = "مبلغ اضافه کاری";
+            sheet.Cell(row, 19).Value = "تعداد روز  تعطیل کاری";
+            sheet.Cell(row, 20).Value = "مبلغ تعطیل کاری";
+            sheet.Cell(row, 21).Value = "درصد نوبت کاری";
+            sheet.Cell(row, 22).Value = "نوبت کاری و کشیک";
+            sheet.Cell(row, 23).Value = "تعداد ماموریت";
+            sheet.Cell(row, 24).Value = "هزینه ماموریت";
+            sheet.Cell(row, 25).Value = "حق سختی کار";
+            sheet.Cell(row, 26).Value = "حق ایاب و ذهاب";
+            sheet.Cell(row, 27).Value = "حق مسکن";
+            sheet.Cell(row, 28).Value = "حق اولاد";
+            sheet.Cell(row, 29).Value = "حق خواروبار";
+            sheet.Cell(row, 30).Value = "آموزش";
+            sheet.Cell(row, 31).Value = "بیمه سهم کارفرما";
+            sheet.Cell(row, 32).Value = "بیمه عمر و حادثه تکمیلی";
+            sheet.Cell(row, 33).Value = "عیدی سالیانه";
+            sheet.Cell(row, 34).Value = "ذخیره مزایای پایان خدمت کارکنان";
+            sheet.Cell(row, 35).Value = "مرخصی استفاده نشده";
+            sheet.Cell(row, 36).Value = "هزینه های رفاهی";
 
-            //var totalCount = model.Items.Count();
-            //row = 26;
-            //for (int i = 0; i < totalCount; i++)
-            //{
-            //    var item = model.Items.ElementAt(i);
-            //    sheet.Cell(row, 1).Value = item.OrganizationDisplay;
-            //    sheet.Cell(row, 2).Value = item.OrganizationId;
-            //    row++; //for keeping index in table records
-            //}
+            if (!model.Items.Any())
+            {
+                row = 19;
+                sheet.Cell(row, 1).Value = "";
+                sheet.Cell(row, 2).Value = "";
+                row++;
+            }
+            else
+            {
+                var totalCount = model.Items.Count();
+                row = 19;
+                for (int i = 0; i < totalCount; i++)
+                {
+                    var item = model.Items.ElementAt(i);
+                    sheet.Cell(row, 1).Value = item.FirstName;
+                    sheet.Cell(row, 2).Value = item.LastName;
+                    row++; //for keeping index in table records
+                }
+            }
+            var range = sheet.Range(18, 1, row - 1, 36);
 
-            var range = sheet.Range(25, 1, row - 1, 15);
             //range.Column(4).Style.NumberFormat.Format = "#,##0";
             //range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other
