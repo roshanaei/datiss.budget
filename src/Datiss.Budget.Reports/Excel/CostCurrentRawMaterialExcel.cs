@@ -25,7 +25,7 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 4).Value = "ماده اولیه";
             sheet.Cell(1, 5).Value = "مبلغ سال پایه";
             sheet.Cell(1, 6).Value = "مبلغ سال ماقبل بودجه";
-            sheet.Cell(1, 7).Value = "مبلغ پیش بینی";
+            sheet.Cell(1, 7).Value = "پیش بینی مبلغ";
 
             var totalCount = items.Count();
             int row = 2;

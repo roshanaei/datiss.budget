@@ -134,8 +134,16 @@ namespace Datiss.Budget.Web.Controllers
             var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
                 .Adapt<List<DropDownItemViewModel>>();
 
-            var rawMaterialSource = (await _constantService.GetDataByKeyAsync(ConstantKeys.__RawMaterialType))
-                .Adapt<List<DropDownItemViewModel>>();
+            var activity = ActivityType.GetValues<ActivityType>();
+            var activityKeys = "";
+            foreach (var item in activity)
+            {
+                activityKeys += $"'{item.ToString()}',";
+            }
+            ViewData["activityKeys"] = activityKeys.TrimEnd(',');
+
+            //var rawMaterialSource = (await _constantService.GetDataByKeyAsync(ConstantKeys.__RawMaterialType))
+            //    .Adapt<List<DropDownItemViewModel>>();
 
             var myfilter = TempData.Get<CostCurrentRawMaterialFilterViewModel>(_indexFilterKey);
             if (myfilter != null)
@@ -152,7 +160,7 @@ namespace Datiss.Budget.Web.Controllers
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetRawMaterialTypeSource(rawMaterialSource);
+            //model.SetRawMaterialTypeSource(rawMaterialSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
@@ -186,14 +194,22 @@ namespace Datiss.Budget.Web.Controllers
             var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
                 .Adapt<List<DropDownItemViewModel>>();
 
-            var rawMaterialSource = (await _constantService.GetDataByKeyAsync(ConstantKeys.__RawMaterialType))
-                .Adapt<List<DropDownItemViewModel>>();
+            var activity = ActivityType.GetValues<ActivityType>();
+            var activityKeys = "";
+            foreach (var item in activity)
+            {
+                activityKeys += $"'{item.ToString()}',";
+            }
+            ViewData["activityKeys"] = activityKeys.TrimEnd(',');
+
+            //var rawMaterialSource = (await _constantService.GetDataByKeyAsync(ConstantKeys.__RawMaterialType))
+            //    .Adapt<List<DropDownItemViewModel>>();
 
 
             model.SetYearSource(yearSource);
             model.SetOrganizationSource(orgSource);
             model.SetInputOrganizationSource(inputOrgSource);
-            model.SetRawMaterialTypeSource(rawMaterialSource);
+            //model.SetRawMaterialTypeSource(rawMaterialSource);
 
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
@@ -447,7 +463,9 @@ namespace Datiss.Budget.Web.Controllers
             var organizations = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
                                 .OrderBy(x => x.DisplayOrder)
                                 .ThenBy(x => x.RowOrder);
+
             var rawTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__RawMaterialType);
+            var rawWasteTypes = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__RawMaterialType,ConstantKeys.__CIRWaste);
 
             var activity = ActivityType.GetValues<ActivityType>();
 
@@ -474,23 +492,23 @@ namespace Datiss.Budget.Web.Controllers
                             });
                         }
                     }
-                    //else
-                    //{
-                    //    foreach (var cciWs in cciWsTypes)
-                    //    {
-                    //        items.Add(new CostCurrentRawMaterialDTO
-                    //        {
-                    //            CCInstalationTypeDisplay = cciWs.Title,
-                    //            CCInstalationTypeId = cciWs.Id,
-                    //            OrganizationId = org.Id,
-                    //            OrganizationDisplay = org.Title,
-                    //            Year = year.Year,
-                    //            YearId = year.Id,
-                    //            ActivityType = act,
-                    //            ActivityTypeDisplay = act.ToDisplay()
-                    //        });
-                    //    }
-                    //}
+                    else
+                    {
+                        foreach (var raw in rawWasteTypes)
+                        {
+                            items.Add(new CostCurrentRawMaterialDTO
+                            {
+                                RawMaterialTypeDisplay = raw.Title,
+                                RawMaterialTypeId = raw.Id,
+                                OrganizationId = org.Id,
+                                OrganizationDisplay = org.Title,
+                                Year = year.Year,
+                                YearId = year.Id,
+                                ActivityType = act,
+                                ActivityTypeDisplay = act.ToDisplay()
+                            });
+                        }
+                    }
                 }
             }
 
@@ -508,18 +526,13 @@ namespace Datiss.Budget.Web.Controllers
             return workbook.Deliver("CostCurrentRawMaterial.xlsx");
         }
 
-        [HttpPost, Route("GetCCITypeAsync")]
-        public async Task<JsonResult> GetCCITypeAsync(int key)
+        [HttpPost, Route("GetRawMaterialType")]
+        public async Task<JsonResult> GetRawMaterialTypeAsync(string key)
         {
-            IEnumerable<ConstantDTO> result;
-            if (key == Convert.ToInt16(ActivityType.Water))
-            {
-                result = await _constantService.GetDataByKeyAsync(ConstantKeys.__CurrentCostInstalationWater);
-            }
-            else
-            {
-                result = await _constantService.GetDataByKeyAsync(ConstantKeys.__CurrentCostInstalationWaste);
-            }
+            if (key == ConstantKeys.__CIRWater)
+                key = "";
+            
+            var result =  await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__RawMaterialType, key);
 
             return new JsonResult(result);
         }
@@ -528,14 +541,9 @@ namespace Datiss.Budget.Web.Controllers
         private string getCalcTitle(string key)
             => key switch
             {
-                "CostForcastTransferW_Cal1" => SPTitles.CostForcastConstructionW_Cal1,
-                "CostForcastTransferW_Cal2" => SPTitles.CostForcastConstructionW_Cal2,
-                "CostForcastTransferW_Cal3" => SPTitles.CostForcastConstructionW_Cal3,
-                "CostForcastTransferW_Cal4" => SPTitles.CostForcastConstructionW_Cal4,
-                "CostForcastTransferW_Cal5" => SPTitles.CostForcastConstructionW_Cal5,
-                "CostForcastTransferW_Cal6" => SPTitles.CostForcastConstructionW_Cal6,
-                "CostForcastTransferW_Cal7" => SPTitles.CostForcastConstructionW_Cal7,
-                "CostForcastTransferW_Cal8" => SPTitles.CostForcastConstructionW_Cal8,
+                "CostCurrentRawMaterial_Cal1" => SPTitles.CostCurrentRawMaterial_Cal1,
+                "CostCurrentRawMaterial_Cal2" => SPTitles.CostCurrentRawMaterial_Cal2,
+                "CostCurrentRawMaterial_Cal3" => SPTitles.CostCurrentRawMaterial_Cal3,
                 _ => ""
             };
         #endregion

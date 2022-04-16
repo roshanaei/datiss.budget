@@ -76,11 +76,13 @@ namespace Datiss.Budget.ViewModels
 
         public int? RawMaterialTypeId { get; set; }
 
+        public ActivityType? ActivityType { get; set; }
+
         public IList<SelectListItem> YearSource { get; set; }
 
         public IList<SelectListItem> OrganizationSource { get; set; }
 
-        public IEnumerable<SelectListItem> ActivitySource => EnumSelectListProvider.GetActivityTypeItems();
+        public IEnumerable<SelectListItem> ActivitySource => EnumSelectListProvider.GetActivityTypeItems(ActivityType);
     }
 
     public class CostCurrentRawMaterialIndexViewModel : PagedViewModel<CostCurrentRawMaterialViewModel>
@@ -103,6 +105,21 @@ namespace Datiss.Budget.ViewModels
         public ActivityType ActivityType { get; set; }
 
         public IEnumerable<SelectListItem> ActivitySource => EnumSelectListProvider.GetActivityTypeItems(ActivityType);
+
+        public string ActivitySourceIdArray
+        {
+            get
+            {
+                if (ActivitySource == null || !ActivitySource.Any())
+                    return string.Empty;
+                string result = "";
+                foreach (var item in ActivitySource)
+                {
+                    result += $"{item.Value},";
+                }
+                return result.TrimEnd(',');
+            }
+        }
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
             => YearSource = source.Select(x => new SelectListItem
