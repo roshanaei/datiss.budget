@@ -249,6 +249,7 @@ namespace Datiss.Budget.DataLayer.Context
         public virtual DbSet<CostForcastConstructionWs> CostForcastConstructionWs { get; set; }
         public virtual DbSet<CostCurrentPersonel> CostCurrentPersonel { get; set; }
         public virtual DbSet<CostCurrentRawMaterial> CostCurrentRawMaterial { get; set; }
+        public virtual DbSet<CostForcastBuy> CostForcastBuy { get; set; }
 
 
 
@@ -286,7 +287,8 @@ namespace Datiss.Budget.DataLayer.Context
                 .ApplyConfiguration(new CostForcastConstructionWConfiguration())
                 .ApplyConfiguration(new CostForcastConstructionWsConfiguration())
                 .ApplyConfiguration(new CostCurrentPersonelConfiguration())
-                .ApplyConfiguration(new CostCurrentRawMaterialConfiguration());
+                .ApplyConfiguration(new CostCurrentRawMaterialConfiguration())
+                .ApplyConfiguration(new CostForcastBuyConfiguration());
         }
     }
 }
