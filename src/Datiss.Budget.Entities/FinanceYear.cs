@@ -128,6 +128,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentRawMaterial> CostCurrentRawMaterial { get; set; }
 
+        public ICollection<CostForcastBuy> CostForcastBuy { get; set; }
 
         #endregion
     }

@@ -16,7 +16,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public string BuyDescription { get; set; }
 
-        public int BuyOrganizationId { get; set; }
+        public int LocationId { get; set; }
 
         public int BuyDepartmentId { get; set; }
 
@@ -44,9 +44,9 @@ namespace Datiss.Budget.Entities.DWH
 
         public Organization Organization { get; set; }
 
-        public Organization BuyOrganization { get; set; }
+        public Organization Location { get; set; }
 
-        public Constant BuyDepartment { get; set; }
+        public Constant Department { get; set; }
 
         public Constant CostCenter { get; set; }
 
