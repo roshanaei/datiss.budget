@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services
 {
-    public class CostCurrentRawMaterialService : ICostCurrentRawMaterialService
+    public class CostCurrentInstallationService : ICostCurrentInstallationService
     {
         private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
@@ -37,12 +37,12 @@ namespace Datiss.Budget.Services
         private readonly IUserService _userService;
         private readonly IOrganizationService _organizationService;
 
-        private readonly DbSet<CostCurrentRawMaterial> _dbSet;
+        private readonly DbSet<CostCurrentInstalation> _dbSet;
         private readonly DbSet<Organization> _orgDbSet;
         private readonly DbSet<FinanceYear> _yearSet;
         private readonly DbSet<Constant> _constSet;
 
-        public CostCurrentRawMaterialService(
+        public CostCurrentInstallationService(
             IUserContext userContext,
             IUnitOfWork uow,
             IExcelService excelService,
@@ -51,7 +51,7 @@ namespace Datiss.Budget.Services
         {
             _userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
-            _dbSet = _uow.Set<CostCurrentRawMaterial>();
+            _dbSet = _uow.Set<CostCurrentInstalation>();
             _orgDbSet = _uow.Set<Organization>();
             _yearSet = _uow.Set<FinanceYear>();
             _constSet = _uow.Set<Constant>();
@@ -60,27 +60,36 @@ namespace Datiss.Budget.Services
             _organizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
-        private IQueryable<CostCurrentRawMaterial> Query()
+        private IQueryable<CostCurrentInstalation> Query()
             => _dbSet.AsNoTracking();
 
-        public async Task<CostCurrentRawMaterial> GetByIdAsync(int id)
+        public async Task<CostCurrentInstalation> GetByIdAsync(int id)
         {
             var entity = await _dbSet.FindAsync(id);
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult<CostCurrentRawMaterialDTO>> CreateAsync(CreateCostCurrentRawMaterialDTO model)
+        public async Task<ValidationResult<CostCurrentInstalationDTO>> CreateAsync(CreateCostCurrentInstalationDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var entity = model.Adapt<CostCurrentRawMaterial>();
+            var entity = new CostCurrentInstalation
+            {
+                YearId = model.YearId,
+                OrganizationId = model.OrganizationId,
+                CCInstalationTypeId = model.CCInstalationTypeId,
+                ActivityType = model.ActivityType,
+                NumberUser = model.NumberUser,
+                Cost = model.Cost,
+                Income = model.Income
+            };
 
-            model.RawMaterialTypeDisplay = (await _constSet.FindAsync(model.RawMaterialTypeId)).Title;
+            model.CCInstalationTypeDisplay = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.RawMaterialTypeId, model.ActivityType))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CCInstalationTypeId, model.ActivityType))
                 {
                     await _dbSet.AddAsync(entity);
                     try
@@ -89,49 +98,53 @@ namespace Datiss.Budget.Services
                     }
                     catch
                     {
-                        return ValidationResult<CostCurrentRawMaterialDTO>.Failed(
+                        return ValidationResult<CostCurrentInstalationDTO>.Failed(
                             string.Format(ServiceMessages.ImportExcelCalculationField)
                             );
                     }
-                    var result = entity.Adapt<CostCurrentRawMaterialDTO>();
-                    result.RawMaterialTypeDisplay = model.RawMaterialTypeDisplay;
+                    var result = entity.Adapt<CostCurrentInstalationDTO>();
+                    result.CCInstalationTypeDisplay = model.CCInstalationTypeDisplay;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.ActivityType = model.ActivityType;
+                    result.NumberUser = model.NumberUser;
+                    result.Cost = model.Cost;
+                    result.Income = model.Income;
 
-                    return ValidationResult<CostCurrentRawMaterialDTO>.Success(result);
+                    return ValidationResult<CostCurrentInstalationDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<CostCurrentRawMaterialDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<CostCurrentInstalationDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
 
-            return ValidationResult<CostCurrentRawMaterialDTO>.Failed(
+            return ValidationResult<CostCurrentInstalationDTO>.Failed(
                 string.Format(ServiceMessages.Logic_ActivityICOTypeDuplicate,
-                model.ActivityType.ToDisplay(), model.RawMaterialTypeDisplay, organizationDisplay)
+                model.ActivityType.ToDisplay(), model.CCInstalationTypeDisplay, organizationDisplay)
                 );
 
 
         }
 
-        public async Task<ValidationResult<CostCurrentRawMaterialDTO>> UpdateAsync(UpdateCostCurrentRawMaterialDTO model)
+        public async Task<ValidationResult<CostCurrentInstalationDTO>> UpdateAsync(UpdateCostCurrentInstalationDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
-            model.RawMaterialTypeDisplay = (await _constSet.FindAsync(model.RawMaterialTypeId)).Title;
+            model.CCInstalationTypeDisplay = (await _constSet.FindAsync(model.CCInstalationTypeId)).Title;
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.RawMaterialTypeId, model.ActivityType, model.Id))
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CCInstalationTypeId, model.ActivityType, model.Id))
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.OrganizationId = model.OrganizationId;
                     entity.YearId = model.YearId;
-                    entity.RawMaterialTypeId = model.RawMaterialTypeId;
+                    entity.CCInstalationTypeId = model.CCInstalationTypeId;
                     entity.ActivityType = model.ActivityType;
-                    entity.BaseFee = model.BaseFee;
-                    entity.LastYearFee = model.LastYearFee;
-                    entity.ForcastFee = model.ForcastFee;
+                    entity.NumberUser = model.NumberUser;
+                    entity.Cost = model.Cost;
+                    entity.Income = model.Income;
 
                     try
                     {
@@ -139,26 +152,35 @@ namespace Datiss.Budget.Services
                     }
                     catch
                     {
-                        return ValidationResult<CostCurrentRawMaterialDTO>.Failed(
+                        return ValidationResult<CostCurrentInstalationDTO>.Failed(
                             string.Format(ServiceMessages.ImportExcelCalculationField)
                             );
                     }
-                    var result = model.Adapt<CostCurrentRawMaterialDTO>();
+                    var result = new CostCurrentInstalationDTO
+                    {
+                        OrganizationId = model.OrganizationId,
+                        YearId = model.YearId,
+                        CCInstalationTypeId = model.CCInstalationTypeId,
+                        ActivityType = model.ActivityType,
+                        Cost = model.Cost,
+                        Income = model.Income,
+                        NumberUser = model.NumberUser,
 
-                    result.OrganizationDisplay = organizationDisplay;
-                    result.RawMaterialTypeDisplay = model.RawMaterialTypeDisplay;
-                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                        OrganizationDisplay = organizationDisplay,
+                        CCInstalationTypeDisplay = model.CCInstalationTypeDisplay,
+                        Year = (await _yearSet.FindAsync(model.YearId)).Year
+                    };
 
-                    return ValidationResult<CostCurrentRawMaterialDTO>.Success(result);
+                    return ValidationResult<CostCurrentInstalationDTO>.Success(result);
                 }
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<CostCurrentRawMaterialDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<CostCurrentInstalationDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
-            return ValidationResult<CostCurrentRawMaterialDTO>.Failed(
+            return ValidationResult<CostCurrentInstalationDTO>.Failed(
                 string.Format(ServiceMessages.Logic_ActivityICOTypeDuplicate,
-                model.ActivityType.ToDisplay(), model.RawMaterialTypeDisplay, organizationDisplay)
+                model.ActivityType.ToDisplay(), model.CCInstalationTypeDisplay, organizationDisplay)
                 );
         }
 
@@ -231,11 +253,11 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task<PagedResult<CostCurrentRawMaterialDTO>> GetListAsync(CostCurrentRawMaterialFilterDTO filter)
+        public async Task<PagedResult<CostCurrentInstalationDTO>> GetListAsync(CostCurrentInstalationFilterDTO filter)
         {
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var result = new PagedResult<CostCurrentRawMaterialDTO>
+            var result = new PagedResult<CostCurrentInstalationDTO>
             {
                 PageSize = filter.PageSize,
                 PageNumber = filter.PageNumber
@@ -254,10 +276,22 @@ namespace Datiss.Budget.Services
                 .Take(filter.PageSize);
 
             result.Items = await query.Include(x => x.FinanceYear)
-                                      .Include(x => x.Organization)
-                                      .Include(x => x.RawMaterial)
-                                      .Select(x => x.Adapt<CostCurrentRawMaterialDTO>())
-                                      .ToListAsync();
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.CCInstalationType)
+                                    .Select(x => new CostCurrentInstalationDTO
+                                    {
+                                        Id = x.Id,
+                                        CCInstalationTypeDisplay = x.CCInstalationType.Title,
+                                        CCInstalationTypeId = x.CCInstalationTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        ActivityType = x.ActivityType,
+                                        NumberUser = x.NumberUser,
+                                        Cost = x.Cost,
+                                        Income = x.Income,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId
+                                    }).ToListAsync();
 
             return await Task.FromResult(result);
         }
@@ -271,7 +305,7 @@ namespace Datiss.Budget.Services
                 throw new CopyDestYearExxeption();
             if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
                 throw new CopyOrgNullDataException();
-            var result = new List<CostCurrentRawMaterial>();
+            var result = new List<CostCurrentInstalation>();
 
             if (await Query()
                         .Where(_ => _.OrganizationId == sourceOrgId)
@@ -286,13 +320,19 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.RawMaterialTypeId, item.ActivityType))
+                    if (!await checkLogicAsync(destYearId, sourceOrgId, item.CCInstalationTypeId, item.ActivityType))
                         throw new CopyDestYearHasDataException();
 
-                    item.YearId = destYearId;
-                    item.Id = 0;
-                    var entity = item.Adapt<CostCurrentRawMaterial>();
-
+                    var entity = new CostCurrentInstalation
+                    {
+                        CCInstalationTypeId = item.CCInstalationTypeId,
+                        OrganizationId = item.OrganizationId,
+                        YearId = destYearId,
+                        ActivityType = item.ActivityType,
+                        NumberUser = item.NumberUser,
+                        Cost = item.Cost,
+                        Income = item.Income
+                    };
                     result.Add(entity);
                 }
             }
@@ -316,9 +356,9 @@ namespace Datiss.Budget.Services
             }
         }
 
-        public async Task<IEnumerable<CostCurrentRawMaterialDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<CostCurrentInstalationDTO>> GetExportItemsAsync(int yearId, int organizationId)
         {
-            var filter = new CostCurrentRawMaterialFilterDTO
+            var filter = new CostCurrentInstalationFilterDTO
             {
                 OrganizationId = organizationId,
                 YearId = yearId
@@ -331,21 +371,35 @@ namespace Datiss.Budget.Services
 
             query = setOrder(query, filter.OrderBy, filter.OrderDesc);
 
-            var items = await query.Include(x => x.FinanceYear)
-                                   .Include(x => x.Organization)
-                                   .Include(x => x.RawMaterial)
-                                   .Select(x => x.Adapt<CostCurrentRawMaterialDTO>())
-                                   .ToListAsync();
+            var items = await query
+                                    .Include(x => x.FinanceYear)
+                                    .Include(x => x.Organization)
+                                    .Include(x => x.CCInstalationType)
+                                    .Select(x => new CostCurrentInstalationDTO
+                                    {
+                                        Id = x.Id,
+                                        CCInstalationTypeDisplay = x.CCInstalationType.Title,
+                                        CCInstalationTypeId = x.CCInstalationTypeId,
+                                        OrganizationDisplay = x.Organization.Title,
+                                        OrganizationId = x.OrganizationId,
+                                        Year = x.FinanceYear.Year,
+                                        YearId = x.YearId,
+                                        ActivityType = x.ActivityType,
+                                        ActivityTypeDisplay = x.ActivityType.ToDisplay(),
+                                        NumberUser = x.NumberUser,
+                                        Cost = x.Cost,
+                                        Income = x.Income
+                                    }).ToListAsync();
 
             return items;
         }
 
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
-            var data = await _excelService.ImportAsync<CostCurrentRawMaterialImportModel>
+            var data = await _excelService.ImportAsync<CostCurrentInstallationImportModel>
                 (fileInfo, sheetIndex: 0, minRowNum: 2);
 
-            var records = data.Adapt<List<CostCurrentRawMaterial>>();
+            var records = data.Adapt<List<CostCurrentInstalation>>();
 
             int rowIndex = 1;
 
@@ -382,19 +436,19 @@ namespace Datiss.Budget.Services
                 }
                 if (rec.ActivityType == ActivityType.Water)
                 {
-                    if (!await cciwtypes.AnyAsync(x => x.Id == rec.RawMaterialTypeId))
+                    if (!await cciwtypes.AnyAsync(x => x.Id == rec.CCInstalationTypeId))
                     {
                         return ImportResult.Failed(
-                            string.Format(ServiceMessages.ImportExcelInvalidCCIActivityType, rowIndex + 2, rec.ActivityType.ToDisplay(), rec.RawMaterialTypeId)
+                            string.Format(ServiceMessages.ImportExcelInvalidCCIActivityType, rowIndex + 2, rec.ActivityType.ToDisplay(), rec.CCInstalationTypeId)
                             );
                     }
                 }
                 else
                 {
-                    if (!await cciwstypes.AnyAsync(x => x.Id == rec.RawMaterialTypeId))
+                    if (!await cciwstypes.AnyAsync(x => x.Id == rec.CCInstalationTypeId))
                     {
                         return ImportResult.Failed(
-                            string.Format(ServiceMessages.ImportExcelInvalidCCIActivityType, rowIndex + 2, rec.ActivityType.ToDisplay(), rec.RawMaterialTypeId)
+                            string.Format(ServiceMessages.ImportExcelInvalidCCIActivityType, rowIndex + 2, rec.ActivityType.ToDisplay(), rec.CCInstalationTypeId)
                             );
                     }
                 }
@@ -455,7 +509,7 @@ namespace Datiss.Budget.Services
                             {
                                 var exist = records.Any(_ => _.ActivityType == act &&
                                                              _.OrganizationId == org.Id &&
-                                                             _.RawMaterialTypeId == cciw.Id);
+                                                             _.CCInstalationTypeId == cciw.Id);
                                 if (!exist)
                                 {
                                     missingCCIWType.Add(cciw);
@@ -470,7 +524,7 @@ namespace Datiss.Budget.Services
                             {
                                 var existWs = records.Any(_ => _.ActivityType == act &&
                                                              _.OrganizationId == org.Id &&
-                                                             _.RawMaterialTypeId == cciws.Id);
+                                                             _.CCInstalationTypeId == cciws.Id);
                                 if (!existWs)
                                 {
                                     missingCCIWsType.Add(cciws);
@@ -543,7 +597,7 @@ namespace Datiss.Budget.Services
                 if (!await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
-                    record.RawMaterialTypeId,
+                    record.CCInstalationTypeId,
                     record.ActivityType))
                 {
 
@@ -574,14 +628,14 @@ namespace Datiss.Budget.Services
         }
 
         #region Private Helper Methods
-        private async Task<IQueryable<CostCurrentRawMaterial>> setFilter(
-            IQueryable<CostCurrentRawMaterial> query,
-            CostCurrentRawMaterialFilterDTO filter)
+        private async Task<IQueryable<CostCurrentInstalation>> setFilter(
+            IQueryable<CostCurrentInstalation> query,
+            CostCurrentInstalationFilterDTO filter)
         {
             query.CheckArgumentIsNull(nameof(query));
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var predicate = PredicateBuilder.New<CostCurrentRawMaterial>();
+            var predicate = PredicateBuilder.New<CostCurrentInstalation>();
 
             if (filter.YearId.HasValue)
                 query = query.Where(x => x.YearId == filter.YearId.Value);
@@ -599,8 +653,8 @@ namespace Datiss.Budget.Services
                 query = query.Where(predicate);
             }
 
-            if (filter.RawMaterialTypeId.HasValue)
-                query = query.Where(x => x.RawMaterialTypeId == filter.RawMaterialTypeId.Value);
+            if (filter.CCInstalationTypeId.HasValue)
+                query = query.Where(x => x.CCInstalationTypeId == filter.CCInstalationTypeId.Value);
 
             if (filter.ActivityType.HasValue)
                 query = query.Where(x => x.ActivityType == filter.ActivityType.Value);
@@ -608,17 +662,14 @@ namespace Datiss.Budget.Services
             if (filter.Search.IsNotNullOrEmpty())
             {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Include(x=>x.Organization)
-                             .Include(x=>x.RawMaterial)
-                             .Where(_ => _.RawMaterial.Title.ToUpper().Contains(filter.Search) ||
-                                         _.Organization.Title.ToUpper().Contains(filter.Search));
+                query = query.Where(_ => _.CCInstalationType.Title.ToUpper().Contains(filter.Search));
             }
 
             return query;
         }
 
-        private IQueryable<CostCurrentRawMaterial> setOrder(
-           IQueryable<CostCurrentRawMaterial> query,
+        private IQueryable<CostCurrentInstalation> setOrder(
+           IQueryable<CostCurrentInstalation> query,
            string orderBy = "id",
            bool desc = false)
         {
@@ -634,22 +685,22 @@ namespace Datiss.Budget.Services
                         ? query.OrderByDescending(x => x.Organization.Title)
                         : query.OrderBy(x => x.Organization.Title);
 
-                case "rawmaterialtype":
+                case "ccInstalationtype":
                     return desc
-                        ? query.OrderByDescending(x => x.RawMaterial.Title)
-                        : query.OrderBy(x => x.RawMaterial.Title);
+                        ? query.OrderByDescending(x => x.CCInstalationType.DisplayOrder)
+                        : query.OrderBy(x => x.CCInstalationType.DisplayOrder);
 
                 default:
                     return query.Include(x => x.Organization)
-                                .Include(x => x.RawMaterial)
+                                .Include(x => x.CCInstalationType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
                                 .ThenBy(x => x.Organization.RowOrder)
                                 .ThenBy(x => x.ActivityType)
-                                .ThenBy(x => x.RawMaterial.DisplayOrder);
+                                .ThenBy(x => x.CCInstalationType.DisplayOrder);
             }
         }
 
-        private async Task<IEnumerable<CostCurrentRawMaterial>> getChildrenData(
+        private async Task<IEnumerable<CostCurrentInstalation>> getChildrenData(
             int parentOrganizationId,
             int yearId,
             int targetYearId)
@@ -660,7 +711,7 @@ namespace Datiss.Budget.Services
                             _.ParentId == parentOrganizationId)
                 .ToListAsync();
 
-            var result = new List<CostCurrentRawMaterial>();
+            var result = new List<CostCurrentInstalation>();
 
             foreach (var org in children)
             {
@@ -678,12 +729,19 @@ namespace Datiss.Budget.Services
 
                 foreach (var item in data)
                 {
-                    if (!await checkLogicAsync(targetYearId, org.Id, item.RawMaterialTypeId, item.ActivityType))
+                    if (!await checkLogicAsync(targetYearId, org.Id, item.CCInstalationTypeId, item.ActivityType))
                         throw new CopyDestYearHasDataException();
 
-                    item.YearId = targetYearId;
-                    item.Id = 0;
-                    var entity = item.Adapt<CostCurrentRawMaterial>();
+                    var entity = new CostCurrentInstalation
+                    {
+                        CCInstalationTypeId = item.CCInstalationTypeId,
+                        OrganizationId = item.OrganizationId,
+                        YearId = targetYearId,
+                        ActivityType = item.ActivityType,
+                        NumberUser = item.NumberUser,
+                        Cost = item.Cost,
+                        Income = item.Income
+                    };
 
                     result.Add(entity);
                 }
@@ -693,14 +751,14 @@ namespace Datiss.Budget.Services
 
             return result;
         }
-        private async Task<IEnumerable<CostCurrentRawMaterial>> getChildren(
+        private async Task<IEnumerable<CostCurrentInstalation>> getChildren(
             int parentOrganizationId,
             int yearId)
         {
             var children = await _orgDbSet
                 .Where(_ => _.ParentId == parentOrganizationId)
                 .ToListAsync();
-            var result = new List<CostCurrentRawMaterial>();
+            var result = new List<CostCurrentInstalation>();
             foreach (var org in children)
             {
                 var data = await Query()
@@ -741,7 +799,7 @@ namespace Datiss.Budget.Services
         private async Task<bool> checkLogicAsync(
             int yearId,
             int organizationId,
-            int rawMaterialTypeId,
+            int oIFTypeId,
             ActivityType activityType,
             int? id = null)
         {
@@ -754,12 +812,12 @@ namespace Datiss.Budget.Services
             var result = id == null
                 ? await Query().AnyAsync(x => x.YearId == yearId &&
                                                 x.OrganizationId == organizationId &&
-                                                x.RawMaterialTypeId == rawMaterialTypeId &&
+                                                x.CCInstalationTypeId == oIFTypeId &&
                                                 x.ActivityType == activityType)
 
                 : await Query().AnyAsync(x => x.YearId == yearId &&
                                             x.OrganizationId == organizationId &&
-                                            x.RawMaterialTypeId == rawMaterialTypeId &&
+                                            x.CCInstalationTypeId == oIFTypeId &&
                                             x.ActivityType == activityType &&
                                             x.Id != id);
             return !result;

@@ -10,9 +10,9 @@ namespace Datiss.Budget.Services.Models
 
         public ActivityType ActivityType { get; set; }
 
-        public int RawMaterialTypeTypeId { get; set; }
+        public int RawMaterialTypeId { get; set; }
 
-        public string RawMaterialTypeTypeDisplay { get; set; }
+        public string RawMaterialTypeDisplay { get; set; }
 
         public long BaseFee { get; set; }
 
@@ -43,9 +43,9 @@ namespace Datiss.Budget.Services.Models
 
         public string ActivityTypeDisplay { get; set; }
 
-        public int RawMaterialTypeTypeId { get; set; }
+        public int RawMaterialTypeId { get; set; }
 
-        public string RawMaterialTypeTypeDisplay { get; set; }
+        public string RawMaterialTypeDisplay { get; set; }
 
         public long BaseFee { get; set; }
 
