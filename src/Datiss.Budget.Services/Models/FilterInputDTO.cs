@@ -360,4 +360,11 @@ namespace Datiss.Budget.Services.Models
         public ActivityType? ActivityType { get; set; }
         public int? RawMaterialTypeId { get; set; }
     }
+        
+    public class CostForcastTransferWsFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+    }
+    
 }
