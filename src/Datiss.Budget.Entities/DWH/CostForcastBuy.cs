@@ -12,18 +12,53 @@ namespace Datiss.Budget.Entities.DWH
 
         public int YearId { get; set; }
 
-        public int  OrganizationId { get; set; }
+        public int OrganizationId { get; set; }
 
-        public string BuyDescription { get; set; }  
+        public string BuyDescription { get; set; }
 
         public int BuyOrganizationId { get; set; }
 
+        public int BuyDepartmentId { get; set; }
+
         public int CostCenterTypeId { get; set; }
+
+        public int AssetTypeId { get; set; }
+
+        public int AssetDetailTypeId { get; set; }
+
+        public int Amount { get; set; }
+
+        public int MeasurementTypeId { get; set; }
+
+        public long UnitPrice { get; set; }
+
+        public int CreditTypeId { get; set; }
+
+        public long ProposedCost {get;set; }
 
 
         #endregion
 
         #region Navigation
+        public FinanceYear FinanceYear { get; set; }
+
+        public Organization Organization { get; set; }
+
+        public Organization BuyOrganization { get; set; }
+
+        public Constant BuyDepartment { get; set; }
+
+        public Constant CostCenter { get; set; }
+
+        public Constant Asset { get; set; }
+
+        public Constant AssetDetail { get; set; }
+
+        public Constant Measurement { get; set; }
+
+        public Constant Credit { get; set; }
+            
+
         #endregion
     }
 }
