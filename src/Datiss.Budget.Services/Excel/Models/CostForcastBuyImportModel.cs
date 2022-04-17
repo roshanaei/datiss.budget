@@ -11,10 +11,10 @@ namespace Datiss.Budget.Services.Excel
         public int OrganizationId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "C")]
-        public int LocationId { get; set; }
+        public string BuyDescription { get; set; }
 
         [Column(MappingDirections.Both, Letter = "D")]
-        public string BuyDescription { get; set; }
+        public int LocationId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
         public int BuyDepartmentId { get; set; }

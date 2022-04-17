@@ -335,11 +335,27 @@ namespace Datiss.Budget.Services
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<CostForcastBuyImportModel>
-                (fileInfo, sheetIndex: 0, minRowNum: 20);
+                (fileInfo, sheetIndex: 0, minRowNum: 26);
 
-            var records = data.Adapt<List<CostForcastBuy>>();
+            var rawRecords = data.Adapt<List<CostForcastBuy>>();
+            List<CostForcastBuy> records = new List<CostForcastBuy>();
 
-            int rowIndex = 2;
+
+            foreach (var item in rawRecords)
+            {
+                if (item.OrganizationId != 0)
+                    records.Add(item);
+            }
+
+            int rowIndex = 27;
+
+            if (!records.Any())
+            {
+                return ImportResult.Failed(
+                    string.Format(ServiceMessages.EmptyExcel)
+                    );
+            }
+
 
             var buyDepartmentTypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                           x.Parent.ConstantKey == ConstantKeys.__BuyDepartmentType);
@@ -349,10 +365,6 @@ namespace Datiss.Budget.Services
 
             var assetTypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                   x.Parent.ConstantKey == ConstantKeys.__FinanceSubjectType);
-
-            var assetDetailTypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                                     x.Parent.ConstantKey == ConstantKeys.__FinanceSubjectType &&
-                                                     x.ConstantKey.Contains(ConstantKeys.__FinanceSubjectDetailType));
 
             var credittypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                    x.Parent.ConstantKey == ConstantKeys.__CreditType);
@@ -401,12 +413,6 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelInvalidCostCenterType, rowIndex, rec.CostCenterTypeId)
                         );
                 }
-                //if (!await assetTypes.AnyAsync(x => x.Id == rec.AssetTypeId))
-                //{
-                //    return ImportResult.Failed(
-                //        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.AssetTypeId)
-                //        );
-                //}
                 if (!await measurementTypes.AnyAsync(x => x.Id == rec.MeasurementTypeId))
                 {
                     return ImportResult.Failed(
@@ -419,31 +425,26 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.CreditTypeId)
                         );
                 }
-                //if (!await extensiontypes.AnyAsync(x => x.Id == rec.ExtensionTypeId))
-                //{
-                //    return ImportResult.Failed(
-                //        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.ExtensionTypeId)
-                //        );
-                //}
-                //var extension = await _constSet.FindAsync(rec.ExtensionTypeId);
-                //if (extension.ConstantKey.Replace(".", "") == ConstantKeys.__ExtensionYes.Replace(".", ""))
-                //{
-                //    if (!extentionyestypes.Any(x => x.Id == rec.SuggestedBudgetTopicTypeId))
-                //    {
-                //        return ImportResult.Failed(
-                //            string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.SuggestedBudgetTopicTypeId)
-                //            );
-                //    }
-                //}
-                //else
-                //{
-                //    if (!suggestedbudgettype.Any(x => x.Id == rec.SuggestedBudgetTopicTypeId))
-                //    {
-                //        return ImportResult.Failed(
-                //            string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.SuggestedBudgetTopicTypeId)
-                //            );
-                //    }
-                //}
+                if (!await assetTypes.AnyAsync(x => x.Id == rec.AssetTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.AssetTypeId)
+                        );
+                }
+
+                var asset = await _constSet.FindAsync(rec.AssetTypeId);
+                var assetDetailTypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                         x.Parent.ConstantKey == ConstantKeys.__FinanceSubjectDetailType &&
+                                         x.ConstantKey.Contains(asset.ConstantKey.Replace(".", "")));
+
+
+                if (!assetDetailTypes.Any(x => x.Id == rec.AssetDetailTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.AssetDetailTypeId)
+                        );
+                }
+
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
                     return ImportResult.Failed(
