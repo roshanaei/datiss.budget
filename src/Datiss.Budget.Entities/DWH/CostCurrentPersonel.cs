@@ -110,7 +110,7 @@ namespace Datiss.Budget.Entities.DWH
         public long MilitaryServiceCost { get; set; }
 
 
-        //   مرخصی استفاده نشده
+        //مرخصی استفاده نشده
         public long UnUseHolidayCount { get; set; }
 
 
