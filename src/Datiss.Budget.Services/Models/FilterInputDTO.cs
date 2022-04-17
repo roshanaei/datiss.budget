@@ -361,6 +361,14 @@ namespace Datiss.Budget.Services.Models
         public int? RawMaterialTypeId { get; set; }
     }
         
+
+    public class CostCurrentPersonelFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public RecordType? RecordType { get; set; }
+    }
+    
     public class CostForcastTransferWsFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }

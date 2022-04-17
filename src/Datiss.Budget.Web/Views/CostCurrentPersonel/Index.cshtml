@@ -1,0 +1,648 @@
+﻿@model CostCurrentPersonelIndexViewModel
+@{
+    ViewData["Title"] = "حقوق و دستمزد";
+}
+
+<!--Title-->
+<div class="row">
+    <div class="col-12">
+        <div class="content-header">
+            <span class="my-font-bold">@ViewData["Title"]</span>
+        </div>
+    </div>
+</div>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <!--Filters-->
+                        <form method="post"
+                              id="filterForm"
+                              asp-controller="@CostCurrentPersonelController.Name"
+                              asp-action="@CostCurrentPersonelController.ACTION_Index"
+                              asp-antiforgery="true">
+                            <input type="hidden" asp-for="Filter.Columns" id="hidColumns">
+                            <div class="rowACJSB">
+                                <fieldset class="form-group mt-3">
+                                    <label asp-for="Filter.YearId" class="my-font">
+                                        سال:
+                                        <select asp-for="Filter.YearId"
+                                                asp-items="Model.Filter.YearSource"
+                                                class="form-control d-inline-block width-100"
+                                                id="yearId">
+                                        </select>
+                                    </label>
+                                    <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
+                                        سازمان:
+                                        <select asp-for="Filter.OrganizationId"
+                                                asp-items="Model.Filter.OrganizationSource"
+                                                class="form-control d-inline-block width-300"
+                                                id="organizationId">
+                                        </select>
+                                    </label>
+                                    <label asp-for="Filter.RecordType" class="my-font" style="margin-right:20px">
+                                        نوع:
+                                        <select asp-for="Filter.RecordType"
+                                                asp-items="Model.Filter.RecordTypeSource"
+                                                class="form-control d-inline-block width-150"
+                                                id="recordTypeId">
+                                        </select>
+                                    </label>
+                                    <input asp-for="Filter.OrderBy" type="hidden" />
+                                    <input asp-for="Filter.OrderDesc" type="hidden" />
+                                </fieldset>
+                                <fieldset>
+                                    <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+                                        </button>
+                                        <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                        </button>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <hr />
+                            <fieldset class="form-group position-relative has-icon-left">
+                                <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
+                                <div class="form-control-position">
+                                    <i class="ft-search font-medium-4"></i>
+                                </div>
+                            </fieldset>
+                            <!--SearchBox-->
+                            <div class="rowACJSB">
+                                <div class="d-flex flex-row-reverse align-items-center">
+
+                                    <fieldset class="form-group" style="margin-right:20px">
+                                        <label class="my-font rowAC">
+                                            <span>نمایش</span>
+
+                                            <select asp-for="Filter.PageSize"
+                                                    style="margin-right:10px"
+                                                    class="form-control"
+                                                    onchange="changePageSize();"
+                                                    id="ddlPageSize">
+                                                <option>10</option>
+                                                <option>20</option>
+                                                <option>30</option>
+                                            </select>
+                                            <span style="margin-right:10px">رکورد</span>
+
+                                        </label>
+                                    </fieldset>
+                                    <!--DropDown Menu-->
+                                    <div class="btn-group dropdown form-group">
+                                        <button type="button"
+                                                class="btn btn-light my-font dropdown-toggle"
+                                                data-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                            ستون ها
+                                        </button>
+                                        <div class="dropdown-menu" style="width:210%">
+                                            <div id="columnSelector">
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-1"
+                                                               id="col-1" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-1"><span>سازمان</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-2"
+                                                               id="col-2" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-2"><span>نام</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-3"
+                                                               id="col-3" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-3"><span>مرکز هزینه</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-4"
+                                                               id="col-4" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-4"><span>کد پرسنلی</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-5"
+                                                               id="col-5" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-5"><span>نوع قرارداد</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-6"
+                                                               id="col-6" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-6"><span>مزد ثابت</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-7"
+                                                               id="col-7" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-7"><span>حق جذب</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-8"
+                                                               id="col-8" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-8"><span style="">فوق العاده منطقه</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <fieldset>
+                                    <div class="rowACJE">
+                                        <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
+                                        </button>
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostCurrentPersonelController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
+                                        </a>
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
+                                           asp-asp-controller="@CostCurrentPersonelController.Name"
+                                           asp-action="@CostCurrentPersonelController.ACTION_GetExcelTemplate"
+                                           asp-route-yearId="@Model.Filter.YearId"
+                                           asp-route-orgId="@Model.Filter.OrganizationId">
+                                            <i _ngcontent-dpj-c129="" class="fa ft-download-cloud"></i>
+                                        </a>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                        </form>
+                        <!--DataTable-->
+                        <partial name="_table" model="Model" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section headSection {
+<link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+<link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
+<script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
+}
+
+@section footSection {
+
+<partial name="_loadingBar" />
+
+<div id="modaldiv">
+</div>
+
+<partial name="_excelModal" model="new ImportExcelViewModel()" />
+
+<partial name="_tableScript" />
+
+<script type="text/javascript">
+    let allColumns = '1,2,3,4,5,6,7,8';
+    let columnIndices = allColumns.split(',');
+    console.log(columnIndices);
+    let showingColmuns = "1,2,3,4,5,6,7,8,";
+</script>
+
+    @if (Model.Filter.Columns.IsNotNullOrEmpty())
+    {
+<script type="text/javascript">
+    showingColmuns = '@Model.Filter.Columns' ;
+</script>
+    }
+
+<script type="text/javascript">
+
+    var jobStatusType_Ids = [
+        @Html.Raw(Model.JobStatusTypeSourceIdArray)
+    ];
+
+    var jobStatusType_keys = [
+        @Html.Raw(ViewData["jobStatusTypeKeys"].ToString())
+    ];
+
+    var jobStatusType_source = {};
+
+    for (var i = 0; i < jobStatusType_Ids.length; i++) {
+        jobStatusType_source[jobStatusType_Ids[i]] = jobStatusType_keys[i];
+    }
+
+    $(document).ready(function () {
+            //fill input hidden with initial columns showing
+            document.getElementById("hidColumns").value = showingColmuns;
+
+            setDataColumns();
+
+            $(".dropdown-menu").click(function (e) {
+                e.stopPropagation();
+            });
+
+            $("#columnSelector input:checkbox:checked").change(function () {
+                let index = parseInt($(this)[0].id.split('-')[1]);
+                console.log(`showing or hiding col : ${index}`);
+                let checked = $(this)[0].checked;
+                if (checked) {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                    showingColmuns = showingColmuns + `${index},`
+                    document.getElementById("hidColumns").value = showingColmuns ;
+                } else {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+                    showingColmuns = showingColmuns.replace(`${index},`, '');
+                    document.getElementById("hidColumns").value = showingColmuns;
+                }
+            });
+
+            $('#organizationId').select2({
+                dir: 'rtl'
+            });
+        });
+
+        function resetDataColumns() {
+            $('th,tr td').show();
+            let inputs = $("#columnSelector input:checkbox");
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].checked = true
+            }
+        }
+
+        function setDataColumns() {
+            let columnsToShow = document.getElementById("hidColumns").value.split(',');
+            console.log('ColumnsToShow ');
+            console.log(columnsToShow);
+            let checkBoxes = $("#columnSelector input:checkbox");
+            for(let i = 0; i < columnIndices.length; i++) {
+                let index = parseInt(columnIndices[i]);
+                let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
+                console.log(`Column : ${index} show = ${showColumn}`);
+                checkBoxes[i].checked = showColumn;
+                if(showColumn)
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                else
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+            }
+
+        }
+
+        function hardDelete(e) {
+            Swal.fire({
+                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
+                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
+                type: 'error',
+                showCancelButton: true,
+                //confirmButtonColor: '#2F8BE6',
+                animation: false,
+                customClass: 'animated flipInX',
+                //cancelButtonColor: '#F55252',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                cancelButtonClass:  'btn btn-outline-secondary mr-1 my-font',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.value) {
+                    let params = {};
+                    params.yearId = $('#yearId option:selected').val();
+                    params.orgId = $('#organizationId option:selected').val();
+                    console.log(params);
+                    let deleteUrl = '@Url.Action(CostCurrentPersonelController.ACTION_DeleteRecords)';
+                    console.log(deleteUrl);
+
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'POST',
+                        data: params,
+                        success: function(data, status, settings) {
+                            console.log(status);
+                            if(data.hasError) {
+                                Swal.fire({
+                                    title: '<span class="my-font">خطا</span>',
+                                    html: `<span class="my-font">${data.message}</span>`,
+                                    type: 'error',
+                                    confirmButtonColor: '#2F8BE6',
+                                    animation: false,
+                                    customClass: 'animated flipInX',
+                                    confirmButtonText: 'بستن',
+                                    confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                                    buttonsStyling: false,
+                                });
+                                return;
+                            }
+
+                            Swal.fire({
+                                title: '<span class="my-font">عملیات موفق</span>',
+                                html: `<span class="my-font">${data.message}</span>`,
+                                type: 'success',
+                                confirmButtonColor: '#2F8BE6',
+                                animation: true,
+                                customClass: 'animated flipInX',
+                                confirmButtonText: 'بستن',
+                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                                buttonsStyling: false,
+                            }).then(function(result) {
+                                document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})';
+                            });
+                        },
+                        error: function(request, option, err) {
+                            if (request.status == 401 || request.status == 403) {
+                                ShowPermissionErorr();
+                                return;
+                            }
+                            ShowCommonErorr();
+                        }
+                    });
+
+                    return true;
+                }
+                else {
+
+                    return false;
+                }
+            });
+
+        }
+
+        function deleteRow(e, id) {
+            console.log(e);
+
+            $.ajax({
+                url: '@Url.Action(CostCurrentPersonelController.ACTION_Delete)' + '/' + id,
+                type: 'POST',
+                success: function (data, status, settings) {
+                    if (data.hasError) {
+                        alert(data.message);
+                        return;
+                    }
+
+                    $(e).closest('tr').remove();
+                },
+                error: function (request, options, err) {
+                    if (request.status == 401 || request.status == 403) {
+                        ShowPermissionErorr();
+                        return;
+                    }
+                    ShowCommonErorr();
+                }
+            });
+        }
+
+        function Edit(orgid) {
+            let myurl = '@Url.Action(CostCurrentPersonelController.ACTION_Edit)';
+            myurl = myurl + "/" + orgid;
+
+            $.ajax({
+                type: 'GET',
+                url: myurl,
+                success: function (data, status, settings) {
+                    $('#modaldiv').html('');
+                    $("#modaldiv").html(data);
+                    $('#EditModal').modal('show');
+                    $('#EditModal').on('hidden.bs.modal', function () {
+                        $('#modaldiv').html('');
+                        $('.modal-backdrop').remove();
+                    });
+                },
+                error: function (ajaxrequest, ajaxOptions, thrownError) {
+                    if (ajaxrequest.status == 401 || ajaxrequest.status == 403) {
+                        ShowPermissionErorr();
+                        return;
+                    }
+                    ShowCommonErorr();
+                }
+            });
+        }
+
+        function openImportExcelForm() {
+            $('#ExcellModal').modal('show');
+        }
+
+        $(document).on('click', '.delete-row', function () {
+            let id = $(this).data('id');
+            let btn = this;
+
+            Swal.fire({
+                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
+                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
+                type: 'error',
+                showCancelButton: true,
+                animation: false,
+                customClass: 'animated flipInX',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
+                buttonsStyling: false,
+            }).then(function(result) {
+                if(result.value) {
+                    deleteRow(btn, id);
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('.modal').on('hidden.bs.modal', function () {
+                $('.modal-backdrop').remove();
+            });
+        });
+
+        $(document).on('click', '#btnDoImportExcel', function() {
+            var fdata = new FormData();
+            var fileInput = $('#ExcelFile')[0];
+            var file = fileInput.files[0];
+            var yearId = $('#yearId').val();
+            fdata.append('ExcelFile', file);
+            fdata.append('yearId', yearId);
+
+            $(".olvy").css("display", "block");
+
+            $.ajax({
+                url: '@Url.Action(CostCurrentPersonelController.ACTION_ImportExcel)',
+                type: 'POST',
+                data: fdata,
+                processData: false,
+                contentType: false,
+                success: function (data, status, settings) {
+                    console.log(data);
+                    if (data.hasError) {
+                        $(".olvy").css("display", "none");
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data.message}</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
+
+                    if (data.ask) {
+                        $(".olvy").css("display", "none");
+                        Swal.fire({
+                            html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
+                            //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            cancelButtonColor: '#F55252',
+                            cancelButtonText: 'خیر',
+                            confirmButtonText: 'بله',
+                            confirmButtonClass: 'btn btn-warning my-font',
+                            cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                            buttonsStyling: false,
+                        }).then(function (result) {
+
+                            if(result.value) {
+                                fdata.append('ContinueIfAnyOrgMissing', true);
+                                console.log(fdata);
+
+                                $(".olvy").css("display", "block");
+
+                                $.ajax({
+                                    url: '@Url.Action(CostCurrentPersonelController.ACTION_ImportExcel)',
+                                    type: 'POST',
+                                    data: fdata,
+                                    processData: false,
+                                    contentType: false,
+                                    success: function(data, status, settings) {
+                                        if (data.hasError) {
+                                            $(".olvy").css("display", "none");
+                                            Swal.fire({
+                                                title: '<span class="my-font">خطا</span>',
+                                                html: `<span class="my-font">${data.message}</span>`,
+                                                type: 'error',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: false,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                                                buttonsStyling: false,
+                                            });
+                                            return;
+                                        }
+
+                                        if(!data.hasError) {
+                                            $(".olvy").css("display", "none");
+                                            Swal.fire({
+                                                title: '<span class="my-font">عملیات موفق</span>',
+                                                html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                                                type: 'success',
+                                                confirmButtonColor: '#2F8BE6',
+                                                animation: true,
+                                                customClass: 'animated flipInX',
+                                                confirmButtonText: 'بستن',
+                                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                                                buttonsStyling: false,
+                                            }).then(function (result) {
+                                                document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index)';
+                                            });
+                                        }
+
+                                        if(data.ask) {
+                                            alert('dont ask again');
+                                        }
+                                    },
+                                    error: function(request, options, err) {
+                                        console.log(err);
+                                    }
+                                });
+
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        });
+                    }
+                    if (!data.hasError && !data.ask) {
+                        $(".olvy").css("display", "none");
+                        Swal.fire({
+                            title: '<span class="my-font">عملیات موفق</span>',
+                            html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                            type: 'success',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: true,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                            buttonsStyling: false,
+                        }).then(function (result) {
+                            document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index)';
+                        });
+                    }
+
+                },
+                error: function (request, options, err) {
+                    $(".olvy").css("display", "none");
+                    if (request.status == 401 || request.status == 403) {
+                        ShowPermissionErorr();
+                        return;
+                    }
+                    ShowCommonErorr();
+                }
+            });
+
+        });
+
+        function changePageSize() {
+            let pageSize = $('#ddlPageSize').attr('value');
+            console.log(pageSize);
+            $('#filterForm').submit();
+        };
+
+</script>
+
+}
