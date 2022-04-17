@@ -576,18 +576,8 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost, Route("GetAssetDetailAsync")]
         public async Task<JsonResult> GetAssetDetailAsync(string key)
         {
-            IEnumerable<DropDownItem> result = new DropDownItem[] { };
-
-            if (key.ToUpper().Trim() == ConstantKeys.__FinanceSubjectType.Trim().ToUpper())
-            {
-                key = key.Replace(".", "");
-                result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectDetailType, key);
-            }
-            else
-            {
-                //key = ConstantKeys.__AssetNo;
-                result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectType, key);
-            }
+            var result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectDetailType, key.Replace(".",""));
+            
             return new JsonResult(result);
         }
 

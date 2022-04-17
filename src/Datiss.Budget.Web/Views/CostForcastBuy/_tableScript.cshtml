@@ -6,11 +6,11 @@
 
     function editRow(id) {
 
-        let extensionTypeId = $('#inputExtensionType_' + id).val();
-        let suggestedBudgetTopicTypeId = $('#hidSuggestedBudgetTopicTypeId_' + id).val();
-        console.log(extensionTypeId);
-        console.log(suggestedBudgetTopicTypeId);
-        FillDropDown(extensionTypeId, suggestedBudgetTopicTypeId);
+        let assetTypeId = $('#inputAssetType_' + id).val();
+        let assetDetailTypeId = $('#hidAssetDetailTypeId_' + id).val();
+        console.log(assetTypeId);
+        console.log(assetDetailTypeId);
+        FillDropDown(assetTypeId, assetDetailTypeId);
         
         resetTableBackColor("my-table");
         let row = $('#row_' + id);
@@ -18,37 +18,33 @@
         //Hide output elements
         $('#divOutput_Year_' + id).hide();
         $('#divOutput_Org_' + id).hide();
-        $('#divOutput_ExtensionType_' + id).hide();
-        $('#divOutput_SuggestedBudgetTopicType_' + id).hide();
-        $('#divOutput_Location_' + id).hide();
-        $('#divOutput_TransferType_' + id).hide();
-        $('#divOutput_DigType_' + id).hide();
-        $('#divOutput_MethodType_' + id).hide();
-        $('#divOutput_DiameterPipeType_' + id).hide();
-        $('#divOutput_Lenth_' + id).hide();
-        $('#divOutput_PipeCost_' + id).hide();
-        $('#divOutput_RunCost_' + id).hide();
-        $('#divOutput_TubeType_' + id).hide();
-        $('#divOutput_TotalCost_' + id).hide();
+        $('#divOutput_AssetType_' + id).hide();
+        $('#divOutput_AssetDetailType_' + id).hide();
+        $('#divOutput_BuyDescription_' + id).hide();
+        $('#divOutput_BuyDepartmentType_' + id).hide();
+        $('#divOutput_CostCenterType_' + id).hide();
+        $('#divOutput_MeasurementType_' + id).hide();
+        $('#divOutput_Amount_' + id).hide();
+        $('#divOutput_UnitPrice_' + id).hide();
+        $('#divOutput_ProposedCost_' + id).hide();
         $('#divOutput_CreditType_' + id).hide();
+        $('#divOutput_LocationType_' + id).hide();
 
         //show input elements
 
         $('#divInput_Year_' + id).show();
         $('#divInput_Org_' + id).show();
-        $('#divInput_ExtensionType_' + id).show();
-        $('#divInput_SuggestedBudgetTopicType_' + id).show();
-        $('#divInput_Location_' + id).show();
-        $('#divInput_TransferType_' + id).show();
-        $('#divInput_DigType_' + id).show();
-        $('#divInput_MethodType_' + id).show();
-        $('#divInput_DiameterPipeType_' + id).show();
-        $('#divInput_Lenth_' + id).show();
-        $('#divInput_PipeCost_' + id).show();
-        $('#divInput_RunCost_' + id).show();
-        $('#divInput_TubeType_' + id).show();
-        $('#divInput_TotalCost_' + id).show();
+        $('#divInput_AssetType_' + id).show();
+        $('#divInput_AssetDetailType_' + id).show();
+        $('#divInput_BuyDescription_' + id).show();
+        $('#divInput_BuyDepartmentType_' + id).show();
+        $('#divInput_CostCenterType_' + id).show();
+        $('#divInput_MeasurementType_' + id).show();
+        $('#divInput_Amount_' + id).show();
+        $('#divInput_UnitPrice_' + id).show();
+        $('#divInput_ProposedCost_' + id).show();
         $('#divInput_CreditType_' + id).show();
+        $('#divInput_LocationType_' + id).show();
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -58,19 +54,17 @@
         rowData = {};
         rowData.yearId = $('#inputYear_' + id).val();
         rowData.organizationId = $('#inputOrg_' + id).val();
-        rowData.extensionTypeId = $('#inputExtensionType_' + id).val();
-        rowData.suggestedBudgetTopicTypeId = $('#inputSuggestedBudgetTopicType_' + id).val();
-        rowData.location = $('#inputLocation_' + id).val();
-        rowData.transferTypeId = $('#inputTransferType_' + id).val();
-        rowData.digTypeId = $('#inputDigType_' + id).val();
-        rowData.methodTypeId = $('#inputMethodType_' + id).val();
-        rowData.diameterPipeTypeId = $('#inputDiameterPipeType_' + id).val();
-        rowData.lenth = $('#inputLenth_' + id).val();
-        rowData.pipeCost = $('#inputPipeCost_' + id).val();
-        rowData.runCost = $('#inputRunCost_' + id).val();
-        rowData.tubeTypeId = $('#inputTubeType_' + id).val();
-        rowData.totalCost = $('#inputTotalCost_' + id).val();
+        rowData.assetTypeId = $('#inputAssetType_' + id).val();
+        rowData.assetDetailTypeId = $('#inputAssetDetailType_' + id).val();
+        rowData.buyDescription = $('#inputBuyDescription_' + id).val();
+        rowData.buyDepartmentTypeId = $('#inputBuyDepartmentType_' + id).val();
+        rowData.costCenterTypeId = $('#inputCostCenterType_' + id).val();
+        rowData.measurementTypeId = $('#inputMeasurementType_' + id).val();
+        rowData.amount = $('#inputAmount_' + id).val();
+        rowData.unitPrice = $('#inputUnitPrice_' + id).val();
+        rowData.proposedCost = $('#inputProposedCost_' + id).val();
         rowData.creditTypeId = $('#inputCreditType_' + id).val();
+        rowData.locationTypeId = $('#inputLocationType_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -80,57 +74,51 @@
         //Hide input elements
         $('#divInput_Year_' + id).hide();
         $('#divInput_Org_' + id).hide();
-        $('#divInput_ExtensionType_' + id).hide();
-        $('#divInput_SuggestedBudgetTopicType_' + id).hide();
-        $('#divInput_Location_' + id).hide();
-        $('#divInput_TransferType_' + id).hide();
-        $('#divInput_DigType_' + id).hide();
-        $('#divInput_MethodType_' + id).hide();
-        $('#divInput_DiameterPipeType_' + id).hide();
-        $('#divInput_Lenth_' + id).hide();
-        $('#divInput_PipeCost_' + id).hide();
-        $('#divInput_RunCost_' + id).hide();
-        $('#divInput_TubeType_' + id).hide();
-        $('#divInput_TotalCost_' + id).hide();
+        $('#divInput_AssetType_' + id).hide();
+        $('#divInput_AssetDetailType_' + id).hide();
+        $('#divInput_BuyDescription_' + id).hide();
+        $('#divInput_BuyDepartmentType_' + id).hide();
+        $('#divInput_CostCenterType_' + id).hide();
+        $('#divInput_MeasurementType_' + id).hide();
+        $('#divInput_Amount_' + id).hide();
+        $('#divInput_UnitPrice_' + id).hide();
+        $('#divInput_ProposedCost_' + id).hide();
         $('#divInput_CreditType_' + id).hide();
+        $('#divInput_LocationType_' + id).hide();
 
         //Retriving to OrginalData
 
         if (rowData != null) {
             $('#inputYear_' + id).val(rowData.yearId);
             $('#inputOrg_' + id).val(rowData.organizationId);
-            $('#inputExtensionType_' + id).val(rowData.extensionTypeId);
-            $('#inputSuggestedBudgetTopicType_' + id).val(rowData.suggestedBudgetTopicTypeId);
-            $('#inputLocation_' + id).val(rowData.location);
-            $('#inputTransferType_' + id).val(rowData.transferTypeId);
-            $('#inputDigType_' + id).val(rowData.digTypeId);
-            $('#inputMethodType_' + id).val(rowData.methodTypeId);
-            $('#inputDiameterPipeType_' + id).val(rowData.diameterPipeTypeId);
-            $('#inputLenth_' + id).val(rowData.lenth);
-            $('#inputPipeCost_' + id).val(rowData.pipeCost);
-            $('#inputRunCost_' + id).val(rowData.runCost);
-            $('#inputTubeType_' + id).val(rowData.tubeTypeId);
-            $('#inputTotalCost_' + id).val(rowData.totalCost);
+            $('#inputAssetType_' + id).val(rowData.assetTypeId);
+            $('#inputAssetDetailType_' + id).val(rowData.assetDetailTypeId);
+            $('#inputBuyDescription_' + id).val(rowData.buyDescription);
+            $('#inputBuyDepartmentType_' + id).val(rowData.buyDepartmentTypeId);
+            $('#inputCostCenterType_' + id).val(rowData.costCenterTypeId);
+            $('#inputMeasurementType_' + id).val(rowData.measurementTypeId);
+            $('#inputAmount_' + id).val(rowData.amount);
+            $('#inputUnitPrice_' + id).val(rowData.unitPrice);
+            $('#inputProposedCost_' + id).val(rowData.proposedCost);
             $('#inputCreditType_' + id).val(rowData.creditTypeId);
+            $('#inputLocationType_' + id).val(rowData.locationTypeId);
         }
 
         //Show output elements
 
         $('#divOutput_Year_' + id).show();
         $('#divOutput_Org_' + id).show();
-        $('#divOutput_ExtensionType_' + id).show();
-        $('#divOutput_SuggestedBudgetTopicType_' + id).show();
-        $('#divOutput_Location_' + id).show();
-        $('#divOutput_TransferType_' + id).show();
-        $('#divOutput_DigType_' + id).show();
-        $('#divOutput_MethodType_' + id).show();
-        $('#divOutput_DiameterPipeType_' + id).show();
-        $('#divOutput_Lenth_' + id).show();
-        $('#divOutput_PipeCost_' + id).show();
-        $('#divOutput_RunCost_' + id).show();
-        $('#divOutput_TubeType_' + id).show();
-        $('#divOutput_TotalCost_' + id).show();
+        $('#divOutput_AssetType_' + id).show();
+        $('#divOutput_AssetDetailType_' + id).show();
+        $('#divOutput_BuyDescription_' + id).show();
+        $('#divOutput_BuyDepartmentType_' + id).show();
+        $('#divOutput_CostCenterType_' + id).show();
+        $('#divOutput_MeasurementType_' + id).show();
+        $('#divOutput_Amount_' + id).show();
+        $('#divOutput_UnitPrice_' + id).show();
+        $('#divOutput_ProposedCost_' + id).show();
         $('#divOutput_CreditType_' + id).show();
+        $('#divOutput_LocationType_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -155,20 +143,19 @@
         model.id = id;
         model.yearId = $('#yearId option:selected').val();
         model.organizationId = $('#inputOrg_' + id).val();
-        model.extensionTypeId = $('#inputExtensionType_' + id).val();
-        model.suggestedBudgetTopicTypeId = $('#inputSuggestedBudgetTopicType_' + id).val();
-        model.location = $('#inputLocation_' + id).val();
-        model.transferTypeId = $('#inputTransferType_' + id).val();
-        model.digTypeId = $('#inputDigType_' + id).val();
-        model.methodTypeId = $('#inputMethodType_' + id).val();
-        model.diameterPipeTypeId = $('#inputDiameterPipeType_' + id).val();
-        model.lenth = $('#inputLenth_' + id).val();
-        model.pipeCost = $('#inputPipeCost_' + id).val();
-        model.runCost = $('#inputRunCost_' + id).val();
-        model.tubeTypeId = $('#inputTubeType_' + id).val();
-        model.totalCost = $('#inputTotalCost_' + id).val();
+        model.assetTypeId = $('#inputAssetType_' + id).val();
+        model.assetDetailTypeId = $('#inputAssetDetailType_' + id).val();
+        model.buyDescription = $('#inputBuyDescription_' + id).val();
+        model.buyDepartmentId = $('#inputBuyDepartmentType_' + id).val();
+        model.costCenterTypeId = $('#inputCostCenterType_' + id).val();
+        model.measurementTypeId = $('#inputMeasurementType_' + id).val();
+        model.amount = $('#inputAmount_' + id).val();
+        model.unitPrice = $('#inputUnitPrice_' + id).val();
+        model.proposedCost = $('#inputProposedCost_' + id).val();
         model.creditTypeId = $('#inputCreditType_' + id).val();
-                console.log(model);
+        model.locationId = $('#inputLocationType_' + id).val();
+        
+        console.log(model);
 
         $.ajax({
             url: '@Url.Action(CostForcastBuyController.ACTION_Edit)',
@@ -193,37 +180,33 @@
                 rowData = {};
                 rowData.yearId = model.yearId;
                 rowData.organizationId = model.organizationId;
-                rowData.extensionTypeId = model.extensionTypeId;
-                rowData.suggestedBudgetTopicTypeId = model.suggestedBudgetTopicId;
-                rowData.location = model.location;
-                rowData.transferType = model.transferTypeId;
-                rowData.digType = model.digTypeId;
-                rowData.methodType = model.methodTypeId;
-                rowData.diameterPipeType = model.diameterPipeTypeId;
-                rowData.lenth = model.lenth;
-                rowData.pipeCost = model.pipeCost;
-                rowData.runCost = model.runCost;
-                rowData.tubeType = model.tubeTypeId;
-                rowData.totalCost = model.totalCost;
+                rowData.assetTypeId = model.assetTypeId;
+                rowData.assetDetailTypeId = model.assetDetailId;
+                rowData.buyDescription = model.buyDescription;
+                rowData.buyDepartmentType = model.buyDepartmentId;
+                rowData.costCenterType = model.costCenterTypeId;
+                rowData.measurementType = model.measurementTypeId;
+                rowData.amount = model.amount;
+                rowData.unitPrice = model.unitPrice;
+                rowData.proposedCost = model.proposedCost;
+                rowData.locationType = model.locationId;
                 rowData.creditType = model.creditTypeId;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
-                $('#spanExtensionType_' + id).text(data.extensionTypeDisplay);
-                $('#spanSuggestedBudgetTopicType_' + id).text(data.suggestedBudgetTopicDisplay);
-                $('#spanLocation_' + id).text(data.location);
-                $('#spanTransferType_' + id).text(data.transferTypeDisplay);
-                $('#spanDigType_' + id).text(data.digTypeDisplay);
-                $('#spanMethodType_' + id).text(data.methodTypeDisplay);
-                $('#spanDiameterPipeType_' + id).text(data.diameterPipeTypeDisplay);
-                $('#spanLenth_' + id).text(data.lenth);
-                $('#spanPipeCost_' + id).text(data.pipeCost);
-                $('#spanRunCost_' + id).text(data.runCost);
-                $('#spanTubeType_' + id).text(data.tubeTypeDisplay);
-                $('#spanTotalCost_' + id).text(data.totalCost);
+                $('#spanAssetType_' + id).text(data.assetTypeDisplay);
+                $('#spanAssetDetailType_' + id).text(data.assetDetailDisplay);
+                $('#spanBuyDescription_' + id).text(data.buyDescription);
+                $('#spanBuyDepartmentType_' + id).text(data.buyDepartmentDisplay);
+                $('#spanCostCenterType_' + id).text(data.costCenterTypeDisplay);
+                $('#spanMeasurementType_' + id).text(data.measurementTypeDisplay);
+                $('#spanAmount_' + id).text(data.amount);
+                $('#spanUnitPrice_' + id).text(data.unitPrice);
+                $('#spanProposedCost_' + id).text(data.proposedCost);
                 $('#spanCreditType_' + id).text(data.creditTypeDisplay);
+                $('#spanLocationType_' + id).text(data.locationDisplay);
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
                 cancelEditRow(id);
@@ -247,36 +230,30 @@
         var model = {};
         model.yearId = $('#yearId option:selected').val();
         model.organizationId = $(e).find('#inputOrg_').val();
-        model.transferTypeId = $(e).find('#inputTransferType_').val();
-        model.transferTypeId = $(e).find('#inputTransferType_').val();
-        model.digTypeId = $(e).find('#inputDigType_').val();
-        model.methodTypeId = $(e).find('#inputMethodType_').val();
-        model.diameterPipeTypeId = $(e).find('#inputDiameterPipeType_').val();
-        model.tubeTypeId = $(e).find('#inputTubeType_').val();
+        model.buyDepartmentId = $(e).find('#inputBuyDepartmentType_').val();
+        model.costCenterTypeId = $(e).find('#inputCostCenterType_').val();
+        model.measurementTypeId = $(e).find('#inputMeasurementType_').val();
         model.creditTypeId = $(e).find('#inputCreditType_').val();
-        model.extensionTypeId = $(e).find('#inputExtensionType_').val();
-        model.suggestedBudgetTopicTypeId = $(e).find('#inputSuggestedBudgetTopicType_').val();
-        model.location = $(e).find('#inputLocation_').val();
+        model.locationId = $(e).find('#inputLocationType_').val();
+        model.assetTypeId = $(e).find('#inputAssetType_').val();
+        model.assetDetailTypeId = $(e).find('#inputAssetDetailType_').val();
+        model.buyDescription = $(e).find('#inputBuyDescription_').val();
 
-        model.lenth = $(e).find('#inputLenth_').val();
-        if (model.lenth == "") {
-            model.lenth = 0;
+        model.amount = $(e).find('#inputAmount_').val();
+        if (model.amount == "") {
+            model.amount = 0;
         }
 
-        model.pipeCost = $(e).find('#inputPipeCost_').val();
-        if (model.pipeCost == "") {
-            model.pipeCost = 0;
+        model.unitPrice = $(e).find('#inputUnitPrice_').val();
+        if (model.unitPrice == "") {
+            model.unitPrice = 0;
         }
 
-        model.runCost = $(e).find('#inputRunCost_').val();
-        if (model.runCost == "") {
-            model.runCost = 0;
+        model.proposedCost = $(e).find('#inputProposedCost_').val();
+        if (model.proposedCost == "") {
+            model.proposedCost = 0;
         }
 
-        model.totalCost = $(e).find('#inputTotalCost_').val();
-        if (model.totalCost == "") {
-            model.totalCost = 0;
-        }
         
         console.log(model);
         $.ajax({
@@ -318,115 +295,88 @@
                 $('#spanOrg_' + data.id).text(data.organizationDisplay);
                 $('#divOutput_Org_' + data.id).show();
 
-                //ExtensionType
-                $(e).find('#divInput_ExtensionType_').attr('id', 'divInput_ExtensionType_' + data.id);
-                $(e).find('#hidExtensionTypeId_').attr('id', 'hidExtensionTypeId_' + data.id);
-                $(e).find('#inputExtensionType_').attr('id', 'inputExtensionType_' + data.id);
-                $(e).find('#divOutput_ExtensionType_').attr('id', 'divOutput_ExtensionType_' + data.id);
-                $(e).find('#spanExtensionType_').attr('id', 'spanExtensionType_' + data.id);
-                $('#divInput_ExtensionType_' + data.id).hide();
-                $('#spanExtensionType_' + data.id).text(data.extensionTypeDisplay);
-                $('#divOutput_ExtensionType_' + data.id).show();
+                //AssetType
+                $(e).find('#divInput_AssetType_').attr('id', 'divInput_AssetType_' + data.id);
+                $(e).find('#hidAssetTypeId_').attr('id', 'hidAssetTypeId_' + data.id);
+                $(e).find('#inputAssetType_').attr('id', 'inputAssetType_' + data.id);
+                $(e).find('#divOutput_AssetType_').attr('id', 'divOutput_AssetType_' + data.id);
+                $(e).find('#spanAssetType_').attr('id', 'spanAssetType_' + data.id);
+                $('#divInput_AssetType_' + data.id).hide();
+                $('#spanAssetType_' + data.id).text(data.assetTypeDisplay);
+                $('#divOutput_AssetType_' + data.id).show();
 
-                //SuggestedBudgetTopicType
-                $(e).find('#divInput_SuggestedBudgetTopicType_').attr('id', 'divInput_SuggestedBudgetTopicType_' + data.id);
-                $(e).find('#hidSuggestedBudgetTopicTypeId_').attr('id', 'hidSuggestedBudgetTopicTypeId_' + data.id);
-                $(e).find('#inputSuggestedBudgetTopicType_').attr('id', 'inputSuggestedBudgetTopicType_' + data.id);
-                $(e).find('#divOutput_SuggestedBudgetTopicType_').attr('id', 'divOutput_SuggestedBudgetTopicType_' + data.id);
-                $(e).find('#spanSuggestedBudgetTopicType_').attr('id', 'spanSuggestedBudgetTopicType_' + data.id);
-                $('#divInput_SuggestedBudgetTopicType_' + data.id).hide();
-                $('#spanSuggestedBudgetTopicType_' + data.id).text(data.suggestedBudgetTopicTypeDisplay);
-                $('#divOutput_SuggestedBudgetTopicType_' + data.id).show();
+                //AssetDetailType
+                $(e).find('#divInput_AssetDetailType_').attr('id', 'divInput_AssetDetailType_' + data.id);
+                $(e).find('#hidAssetDetailTypeId_').attr('id', 'hidAssetDetailTypeId_' + data.id);
+                $(e).find('#inputAssetDetailType_').attr('id', 'inputAssetDetailType_' + data.id);
+                $(e).find('#divOutput_AssetDetailType_').attr('id', 'divOutput_AssetDetailType_' + data.id);
+                $(e).find('#spanAssetDetailType_').attr('id', 'spanAssetDetailType_' + data.id);
+                $('#divInput_AssetDetailType_' + data.id).hide();
+                $('#spanAssetDetailType_' + data.id).text(data.assetDetailTypeDisplay);
+                $('#divOutput_AssetDetailType_' + data.id).show();
 
-                //Location
-                $(e).find('#divInput_Location_').attr('id', 'divInput_Location_' + data.id);
-                $(e).find('#inputLocation_').attr('id', 'inputLocation_' + data.id);
-                $(e).find('#divOutput_Location_').attr('id', 'divOutput_Location_' + data.id);
-                $(e).find('#spanLocation_').attr('id', 'spanLocation_' + data.id);
-                $('#divInput_Location_' + data.id).hide();
-                $('#spanLocation_' + data.id).text(data.location);
-                $('#divOutput_Location_' + data.id).show();
+                //BuyDescription
+                $(e).find('#divInput_BuyDescription_').attr('id', 'divInput_BuyDescription_' + data.id);
+                $(e).find('#inputBuyDescription_').attr('id', 'inputBuyDescription_' + data.id);
+                $(e).find('#divOutput_BuyDescription_').attr('id', 'divOutput_BuyDescription_' + data.id);
+                $(e).find('#spanBuyDescription_').attr('id', 'spanBuyDescription_' + data.id);
+                $('#divInput_BuyDescription_' + data.id).hide();
+                $('#spanBuyDescription_' + data.id).text(data.buyDescription);
+                $('#divOutput_BuyDescription_' + data.id).show();
 
-                //TransferType
-                $(e).find('#divInput_TransferType_').attr('id', 'divInput_TransferType_' + data.id);
-                $(e).find('#inputTransferTypeId_').attr('id', 'inputTransferTypeId_' + data.id);
-                $(e).find('#divOutput_TransferType_').attr('id', 'divOutput_TransferType_' + data.id);
-                $(e).find('#spanTransferType_').attr('id', 'spanTransferType_' + data.id);
-                $('#divInput_TransferType_' + data.id).hide();
-                $('#spanTransferType_' + data.id).text(data.transferTypeDisplay);
-                $('#divOutput_TransferType_' + data.id).show();
+                //BuyDepartmentType
+                $(e).find('#divInput_BuyDepartmentType_').attr('id', 'divInput_BuyDepartmentType_' + data.id);
+                $(e).find('#inputBuyDepartmentTypeId_').attr('id', 'inputBuyDepartmentTypeId_' + data.id);
+                $(e).find('#divOutput_BuyDepartmentType_').attr('id', 'divOutput_BuyDepartmentType_' + data.id);
+                $(e).find('#spanBuyDepartmentType_').attr('id', 'spanBuyDepartmentType_' + data.id);
+                $('#divInput_BuyDepartmentType_' + data.id).hide();
+                $('#spanBuyDepartmentType_' + data.id).text(data.buyDepartmentDisplay);
+                $('#divOutput_BuyDepartmentType_' + data.id).show();
 
-                //DigType
-                $(e).find('#divInput_DigType_').attr('id', 'divInput_DigType_' + data.id);
-                $(e).find('#inputDigTypeId_').attr('id', 'inputDigTypeId_' + data.id);
-                $(e).find('#divOutput_DigType_').attr('id', 'divOutput_DigType_' + data.id);
-                $(e).find('#spanDigType_').attr('id', 'spanDigType_' + data.id);
-                $('#divInput_DigType_' + data.id).hide();
-                $('#spanDigType_' + data.id).text(data.digTypeDisplay);
-                $('#divOutput_DigType_' + data.id).show();
+                //CostCenterType
+                $(e).find('#divInput_CostCenterType_').attr('id', 'divInput_CostCenterType_' + data.id);
+                $(e).find('#inputCostCenterTypeId_').attr('id', 'inputCostCenterTypeId_' + data.id);
+                $(e).find('#divOutput_CostCenterType_').attr('id', 'divOutput_CostCenterType_' + data.id);
+                $(e).find('#spanCostCenterType_').attr('id', 'spanCostCenterType_' + data.id);
+                $('#divInput_CostCenterType_' + data.id).hide();
+                $('#spanCostCenterType_' + data.id).text(data.costCenterTypeDisplay);
+                $('#divOutput_CostCenterType_' + data.id).show();
 
-                //MethodType
-                $(e).find('#divInput_MethodType_').attr('id', 'divInput_MethodType_' + data.id);
-                $(e).find('#inputMethodTypeId_').attr('id', 'inputMethodTypeId_' + data.id);
-                $(e).find('#divOutput_MethodType_').attr('id', 'divOutput_MethodType_' + data.id);
-                $(e).find('#spanMethodType_').attr('id', 'spanMethodType_' + data.id);
-                $('#divInput_MethodType_' + data.id).hide();
-                $('#spanMethodType_' + data.id).text(data.methodTypeDisplay);
-                $('#divOutput_MethodType_' + data.id).show();
+                //MeasurementType
+                $(e).find('#divInput_MeasurementType_').attr('id', 'divInput_MeasurementType_' + data.id);
+                $(e).find('#inputMeasurementTypeId_').attr('id', 'inputMeasurementTypeId_' + data.id);
+                $(e).find('#divOutput_MeasurementType_').attr('id', 'divOutput_MeasurementType_' + data.id);
+                $(e).find('#spanMeasurementType_').attr('id', 'spanMeasurementType_' + data.id);
+                $('#divInput_MeasurementType_' + data.id).hide();
+                $('#spanMeasurementType_' + data.id).text(data.measurementTypeDisplay);
+                $('#divOutput_MeasurementType_' + data.id).show();
 
-                //DiameterPipeType
-                $(e).find('#divInput_DiameterPipeType_').attr('id', 'divInput_DiameterPipeType_' + data.id);
-                $(e).find('#inputDiameterPipeType_').attr('id', 'inputDiameterPipeType_' + data.id);
-                $(e).find('#divOutput_DiameterPipeType_').attr('id', 'divOutput_DiameterPipeType_' + data.id);
-                $(e).find('#spanDiameterPipeType_').attr('id', 'spanDiameterPipeType_' + data.id);
-                $('#divInput_DiameterPipeType_' + data.id).hide();
-                $('#spanDiameterPipeType_' + data.id).text(data.diameterPipeTypeDisplay);
-                $('#divOutput_DiameterPipeType_' + data.id).show();
+                //Amount
+                $(e).find('#divInput_Amount_').attr('id', 'divInput_Amount_' + data.id);
+                $(e).find('#inputAmount_').attr('id', 'inputAmount_' + data.id);
+                $(e).find('#divOutput_Amount_').attr('id', 'divOutput_Amount_' + data.id);
+                $(e).find('#spanAmount_').attr('id', 'spanAmount_' + data.id);
+                $('#divInput_Amount_' + data.id).hide();
+                $('#spanAmount_' + data.id).text(data.amountDisplay);
+                $('#divOutput_Amount_' + data.id).show();
 
-                //Lenth
-                $(e).find('#divInput_Lenth_').attr('id', 'divInput_Lenth_' + data.id);
-                $(e).find('#inputLenth_').attr('id', 'inputLenth_' + data.id);
-                $(e).find('#divOutput_Lenth_').attr('id', 'divOutput_Lenth_' + data.id);
-                $(e).find('#spanLenth_').attr('id', 'spanLenth_' + data.id);
-                $('#divInput_Lenth_' + data.id).hide();
-                $('#spanLenth_' + data.id).text(data.lenthDisplay);
-                $('#divOutput_Lenth_' + data.id).show();
+                //UnitPrice
+                $(e).find('#divInput_UnitPrice_').attr('id', 'divInput_UnitPrice_' + data.id);
+                $(e).find('#inputUnitPrice_').attr('id', 'inputUnitPrice_' + data.id);
+                $(e).find('#divOutput_UnitPrice_').attr('id', 'divOutput_UnitPrice_' + data.id);
+                $(e).find('#spanUnitPrice_').attr('id', 'spanUnitPrice_' + data.id);
+                $('#divInput_UnitPrice_' + data.id).hide();
+                $('#spanUnitPrice_' + data.id).text(data.unitPriceDisplay);
+                $('#divOutput_UnitPrice_' + data.id).show();
 
-                //PipeCost
-                $(e).find('#divInput_PipeCost_').attr('id', 'divInput_PipeCost_' + data.id);
-                $(e).find('#inputPipeCost_').attr('id', 'inputPipeCost_' + data.id);
-                $(e).find('#divOutput_PipeCost_').attr('id', 'divOutput_PipeCost_' + data.id);
-                $(e).find('#spanPipeCost_').attr('id', 'spanPipeCost_' + data.id);
-                $('#divInput_PipeCost_' + data.id).hide();
-                $('#spanPipeCost_' + data.id).text(data.pipeCostDisplay);
-                $('#divOutput_PipeCost_' + data.id).show();
-
-                //RunCost
-                $(e).find('#divInput_RunCost_').attr('id', 'divInput_RunCost_' + data.id);
-                $(e).find('#inputRunCost_').attr('id', 'inputRunCost_' + data.id);
-                $(e).find('#divOutput_RunCost_').attr('id', 'divOutput_RunCost_' + data.id);
-                $(e).find('#spanRunCost_').attr('id', 'spanRunCost_' + data.id);
-                $('#divInput_RunCost_' + data.id).hide();
-                $('#spanRunCost_' + data.id).text(data.runCostDisplay);
-                $('#divOutput_RunCost_' + data.id).show();
-
-                //TubeType
-                $(e).find('#divInput_TubeType_').attr('id', 'divInput_TubeType_' + data.id);
-                $(e).find('#inputTubeType_').attr('id', 'inputTubeType_' + data.id);
-                $(e).find('#divOutput_TubeType_').attr('id', 'divOutput_TubeType_' + data.id);
-                $(e).find('#spanTubeType_').attr('id', 'spanTubeType_' + data.id);
-                $('#divInput_TubeType_' + data.id).hide();
-                $('#spanTubeType_' + data.id).text(data.tubeTypeDisplay);
-                $('#divOutput_TubeType_' + data.id).show();
-
-                //TotalCost
-                $(e).find('#divInput_TotalCost_').attr('id', 'divInput_TotalCost_' + data.id);
-                $(e).find('#inputTotalCost_').attr('id', 'inputTotalCost_' + data.id);
-                $(e).find('#divOutput_TotalCost_').attr('id', 'divOutput_TotalCost_' + data.id);
-                $(e).find('#spanTotalCost_').attr('id', 'spanTotalCost_' + data.id);
-                $('#divInput_TotalCost_' + data.id).hide();
-                $('#spanTotalCost_' + data.id).text(data.totalCostDisplay);
-                $('#divOutput_TotalCost_' + data.id).show();
+                //ProposedCost
+                $(e).find('#divInput_ProposedCost_').attr('id', 'divInput_ProposedCost_' + data.id);
+                $(e).find('#inputProposedCost_').attr('id', 'inputProposedCost_' + data.id);
+                $(e).find('#divOutput_ProposedCost_').attr('id', 'divOutput_ProposedCost_' + data.id);
+                $(e).find('#spanProposedCost_').attr('id', 'spanProposedCost_' + data.id);
+                $('#divInput_ProposedCost_' + data.id).hide();
+                $('#spanProposedCost_' + data.id).text(data.proposedCostDisplay);
+                $('#divOutput_ProposedCost_' + data.id).show();
 
                 //CreditType
                 $(e).find('#divInput_CreditType_').attr('id', 'divInput_CreditType_' + data.id);
@@ -436,6 +386,15 @@
                 $('#divInput_CreditType_' + data.id).hide();
                 $('#spanCreditType_' + data.id).text(data.creditTypeDisplay);
                 $('#divOutput_CreditType_' + data.id).show();
+
+                //LocationType
+                $(e).find('#divInput_LocationType_').attr('id', 'divInput_LocationType_' + data.id);
+                $(e).find('#inputLocationType_').attr('id', 'inputLocationType_' + data.id);
+                $(e).find('#divOutput_LocationType_').attr('id', 'divOutput_LocationType_' + data.id);
+                $(e).find('#spanLocationType_').attr('id', 'spanLocationType_' + data.id);
+                $('#divInput_LocationType_' + data.id).hide();
+                $('#spanLocationType_' + data.id).text(data.locationDisplay);
+                $('#divOutput_LocationType_' + data.id).show();
 
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);
@@ -476,8 +435,8 @@
 
         if (isNewRow) return;
         resetTableBackColor("my-table");
-        let extensionTypeid = $('#inputExtensionType_').val();
-        FillDropDown(extensionTypeid);
+        let assetTypeid = $('#inputAssetType_').val();
+        FillDropDown(assetTypeid);
         var template = $('#rowTemplate').clone()
             .appendTo($('#my-table tbody'))
             .attr('id', 'newRow')
@@ -537,24 +496,23 @@
     }
 
     function RelatedDropDown(e, event) {
-        let extensionTypeid = event.target.value;
-        FillDropDown(extensionTypeid);
+        let assetTypeid = event.target.value;
+        FillDropDown(assetTypeid);
     }
 
     function FillDropDown(id, selectval = null) {
-        let key = extensionType_source[id];
-        if (key != 'Extension.Yes') {
-            key = 'Extension.NO';
-        }
+
+        let key = assetType_source[id];
+
         $.ajax({
-            url: '@Url.Action("GetSuggestedBudgetTopicAsync")',
+            url: '@Url.Action("GetAssetDetailAsync")',
             type: 'POST',
             dataType: 'json',
             data: {
                 'key': key
                 }
         }).done(function (data) {
-            var options = $('.selectSuggestedBudgetTopicType');
+            var options = $('.selectAssetDetailType');
             options.empty();
             $.each(data,
                 function (i, item) {
