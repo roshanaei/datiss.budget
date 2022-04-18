@@ -42,6 +42,7 @@
         public const string __TubeType = "TubeType";
         public const string __DigType = "DigType";
         public const string __TransferType = "TransferType";
+        public const string __RawMaterialType = "RawMaterial";
         public const string __GradeType = "GradeType";
         public const string __ContractType = "ContractType";
         public const string __JobDepartmentType = "JobDepartment";

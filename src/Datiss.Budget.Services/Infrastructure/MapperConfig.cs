@@ -57,6 +57,12 @@ namespace Datiss.Budget.Services.Infrastructure
                 .Map(d => d.ExtensionDisplay, s => s.Extension != null ? s.Extension.Title : null)
                 .Map(d => d.SuggestedBudgetTopicDisplay, s => s.SuggestedBudgetTopic != null ? s.SuggestedBudgetTopic.Title : null);
 
+            TypeAdapterConfig<CostCurrentRawMaterial, CostCurrentRawMaterialDTO>
+                .NewConfig()
+                .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
+                .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
+                .Map(d => d.RawMaterialTypeDisplay, s => s.RawMaterial != null ? s.RawMaterial.Title : null);
+
             TypeAdapterConfig<CostCurrentPersonel, CostCurrentPersonelDTO>
                 .NewConfig()
                 .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
