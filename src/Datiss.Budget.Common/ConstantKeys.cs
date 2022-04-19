@@ -44,6 +44,7 @@
         public const string __TransferType = "TransferType";
         public const string __BuyDepartmentType = "BuyDepartment";
         public const string __FinanceSubjectDetailType = "FinanceSubjectDetail";
+        public const string __RawMaterialType = "RawMaterial";
         public const string __GradeType = "GradeType";
         public const string __ContractType = "ContractType";
         public const string __JobDepartmentType = "JobDepartment";
