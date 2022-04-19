@@ -622,14 +622,14 @@ namespace Datiss.Budget.Web.Controllers
         private string getCalcTitle(string key)
             => key switch
             {
-                "CostForcastConstructionWs_Cal1" => SPTitles.CostForcastConstructionWs_Cal1,
-                "CostForcastConstructionWs_Cal2" => SPTitles.CostForcastConstructionWs_Cal2,
-                "CostForcastConstructionWs_Cal3" => SPTitles.CostForcastConstructionWs_Cal3,
-                "CostForcastConstructionWs_Cal4" => SPTitles.CostForcastConstructionWs_Cal4,
-                "CostForcastConstructionWs_Cal5" => SPTitles.CostForcastConstructionWs_Cal5,
-                "CostForcastConstructionWs_Cal6" => SPTitles.CostForcastConstructionWs_Cal6,
-                "CostForcastConstructionWs_Cal7" => SPTitles.CostForcastConstructionWs_Cal7,
-                "CostForcastConstructionWs_Cal8" => SPTitles.CostForcastConstructionWs_Cal8,
+                "CostForcastConstructionWs_Cal1" => SPTitles.CostForcastConstructionW_Cal1,
+                "CostForcastConstructionWs_Cal2" => SPTitles.CostForcastConstructionW_Cal2,
+                "CostForcastConstructionWs_Cal3" => SPTitles.CostForcastConstructionW_Cal3,
+                "CostForcastConstructionWs_Cal4" => SPTitles.CostForcastConstructionW_Cal4,
+                "CostForcastConstructionWs_Cal5" => SPTitles.CostForcastConstructionW_Cal5,
+                "CostForcastConstructionWs_Cal6" => SPTitles.CostForcastConstructionW_Cal6,
+                "CostForcastConstructionWs_Cal7" => SPTitles.CostForcastConstructionW_Cal7,
+                "CostForcastConstructionWs_Cal8" => SPTitles.CostForcastConstructionW_Cal8,
                 _ => ""
             };
         #endregion
