@@ -113,6 +113,7 @@ namespace Datiss.Budget.Web.Controllers
 
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
+            filter.RecordType = RecordType.Forcast;
 
             var inputOrgSource = (await _organizationService.GetDropDownInputDataAsync(filter.OrganizationId))
                 .Adapt<List<DropDownItemViewModel>>();
@@ -140,6 +141,7 @@ namespace Datiss.Budget.Web.Controllers
 
             model.Filter.YearId = filter.YearId;
             model.Filter.OrganizationId = filter.OrganizationId;
+            model.Filter.RecordType = filter.RecordType;
             model.Filter.PageNumber = filter.PageNumber;
             model.Filter.PageSize = filter.PageSize;
 
@@ -253,11 +255,11 @@ namespace Datiss.Budget.Web.Controllers
 
         [HttpPost("records/delete")]
         [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
-        public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
+        public async Task<IActionResult> DeleteRecords(int yearId, int orgId,RecordType recordType)
         {
             try
             {
-                var result = await _costCurrentPMDepService.HardDeleteAsync(yearId, orgId);
+                var result = await _costCurrentPMDepService.HardDeleteAsync(yearId, orgId , recordType);
 
                 return Json(new
                 {
@@ -316,29 +318,6 @@ namespace Datiss.Budget.Web.Controllers
             return RedirectToAction("index");
         }
 
-        [HttpGet("[action]")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
-        public async Task<IActionResult> Copy()
-        {
-            var model = new CopyViewModel();
-
-            model.SetOrganizationSource(
-                (await _organizationService.GetDropDownDataAsync())
-                    .Adapt<IEnumerable<DropDownItemViewModel>>()
-            );
-
-            model.SetYearSource(
-                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Disbaled))
-                    .Adapt<IEnumerable<DropDownItemViewModel>>()
-            );
-
-            model.SetTargetYearSource(
-                (await _financeYearService.GetDropDownDataByStatusAsync(EntityStatus.Enabled))
-                    .Adapt<IEnumerable<DropDownItemViewModel>>()
-            );
-
-            return PartialView("_copyModal", model);
-        }
 
         [HttpPost("[action]")]
         public async Task<IActionResult> Copy(CopyViewModel model)
@@ -348,9 +327,8 @@ namespace Datiss.Budget.Web.Controllers
             try
             {
                 await _costCurrentPMDepService.CopyAsync(
-                                                    model.SourceYearId,
-                                                    model.SourceOrgId,
-                                                    model.TargetYearId);
+                                                    model.TargetYearId,
+                                                    model.SourceOrgId);
                 model.Succeed(ViewMessages.CopySuccess);
             }
             catch (CopySameYearException)
@@ -422,10 +400,10 @@ namespace Datiss.Budget.Web.Controllers
             return workbook.Deliver("CostCurrentPMDep-Import-Template.xlsx");
         }
 
-        [HttpGet("[action]/{orgid}/{yearid}")]
-        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
+        [HttpGet("[action]/{orgid}/{yearid}/{recordtype}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid,RecordType recordtype)
         {
-            var result = await _costCurrentPMDepService.GetExportItemsAsync(yearid, orgid);
+            var result = await _costCurrentPMDepService.GetExportItemsAsync(yearid, orgid , recordtype);
             if (result.Count() == 0)
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();

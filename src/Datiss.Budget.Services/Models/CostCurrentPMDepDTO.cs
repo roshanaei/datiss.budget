@@ -1,9 +1,4 @@
 ﻿using Datiss.Budget.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Datiss.Budget.Services.Models
 {
@@ -27,7 +22,9 @@ namespace Datiss.Budget.Services.Models
         public int CostCenterTypeId { get; set; }
 
         public string CostCenterTypeTitle { get; set; }
-        
+
+        public RecordType RecordType { get; set; }
+
         public long FinancePMCost { get; set; }
 
         public decimal RFinancePMCost_D { get; set; }
@@ -52,6 +49,9 @@ namespace Datiss.Budget.Services.Models
 
         public int CostCenterTypeId { get; set; }
         public string CostCenterTypeDisplay { get; set; }
+
+        public RecordType RecordType { get; set; }
+        public string RecordTypeDispaly { get; set; }
 
         public long FinancePMCost { get; set; }
 
