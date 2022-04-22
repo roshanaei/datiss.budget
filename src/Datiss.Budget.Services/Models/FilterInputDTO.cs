@@ -379,6 +379,7 @@ namespace Datiss.Budget.Services.Models
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
+        public int? NumberYear { get; set; }
         public int? SectionTypeId { get; set; }
     }
 
