@@ -90,6 +90,12 @@ namespace Datiss.Budget.Services.Infrastructure
             TypeAdapterConfig<CostCurrentPersonelImportModel, CostCurrentPersonel>
                 .NewConfig()
                 .Map(d => d.GenderId, s => s.GenderVal == 0 ? false : true);
+
+            TypeAdapterConfig<BudgetSourceReport, BudgetSourceReportDTO>
+                .NewConfig()
+                .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
+                .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
+                .Map(d => d.SectionTypeDisplay, s => s.SectionType != null ? s.SectionType.Title : null);
         }
     }
 }
