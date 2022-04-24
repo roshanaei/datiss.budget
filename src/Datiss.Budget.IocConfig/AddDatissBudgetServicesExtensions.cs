@@ -80,6 +80,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ICostForcastConstructionWsService, CostForcastConstructionWsService>();
             services.AddScoped<ICostCurrentRawMaterialService, CostCurrentRawMaterialService>();
             services.AddScoped<ICostCurrentPersonelService, CostCurrentPersonelService>();
+            services.AddScoped<ICostCurrentReportService, CostCurrentReportService>();
 
           
             return services;
