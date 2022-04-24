@@ -16,6 +16,7 @@ namespace Datiss.Budget.Entities
             Childrens = new HashSet<Organization>();
             WaterInstallFees = new HashSet<WaterInstallFee>();
             IncomeCurrentCofficients = new HashSet<IncomeCurrentCofficient>();
+            CostCurrentReports = new HashSet<CostCurrentReport>();
         }
 
         #region Properties
@@ -148,6 +149,10 @@ namespace Datiss.Budget.Entities
         public ICollection<CostForcastBuy> CostForcastBuy { get; set; }
 
         public ICollection<CostForcastBuy> CostForcastBuyLocation { get; set; }
+
+        public ICollection<CostCurrentReport> CostCurrentReports { get; set; }
+
+
 
 
         #endregion

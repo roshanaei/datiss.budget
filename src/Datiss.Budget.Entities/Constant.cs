@@ -20,6 +20,10 @@ namespace Datiss.Budget.Entities
             WaterPipeDiameterSalessplit = new HashSet<WaterSalesSplit>();
             UserTypeIncomeCurrentCofficients = new HashSet<IncomeCurrentCofficient>();
             UsageLayerIncomeCurrentCofficients = new HashSet<IncomeCurrentCofficient>();
+            CostCurrentReportSection = new HashSet<CostCurrentReport>();
+            CostCurrentReportUnit = new HashSet<CostCurrentReport>();
+            CostCurrentReportUnitDetail = new HashSet<CostCurrentReport>();
+            CostCurrentReportCostCenter = new HashSet<CostCurrentReport>();
         }
 
         #region Properties
@@ -216,6 +220,15 @@ namespace Datiss.Budget.Entities
         public ICollection<CostForcastBuy> CostForcastBuyMeasurement { get; set; }
 
         public ICollection<CostForcastBuy> CostForcastBuyCredit { get; set; }
+
+        public ICollection<CostCurrentReport> CostCurrentReportSection { get; set; }
+
+        public ICollection<CostCurrentReport> CostCurrentReportUnit { get; set; }
+
+        public ICollection<CostCurrentReport> CostCurrentReportUnitDetail { get; set; }
+
+        public ICollection<CostCurrentReport> CostCurrentReportCostCenter { get; set; }
+
         #endregion
     }
 }
