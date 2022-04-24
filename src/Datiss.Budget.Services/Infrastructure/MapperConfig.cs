@@ -73,7 +73,7 @@ namespace Datiss.Budget.Services.Infrastructure
                 .Map(d => d.JobDepartmentTypeDisplay, s => s.JobDepartment != null ? s.JobDepartment.Title : null)
                 .Map(d => d.JobStatusDetailTypeDisplay, s => s.JobStatusDetail != null ? s.JobStatusDetail.Title : null)
                 .Map(d => d.JobStatusTypeDisplay, s => s.JobStatus != null ? s.JobStatus.Title : null);
-          
+
             TypeAdapterConfig<CostForcastTransferWs, CostForcastTransferWsDTO>
                   .NewConfig()
                   .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
@@ -90,6 +90,15 @@ namespace Datiss.Budget.Services.Infrastructure
             TypeAdapterConfig<CostCurrentPersonelImportModel, CostCurrentPersonel>
                 .NewConfig()
                 .Map(d => d.GenderId, s => s.GenderVal == 0 ? false : true);
+
+            TypeAdapterConfig<CostCurrentReport, CostCurrentReportDTO>
+                  .NewConfig()
+                  .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
+                  .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
+                  .Map(d => d.SectionTypeDisplay, s => s.SectionType != null ? s.SectionType.Title : null)
+                  .Map(d => d.UnitTypeDisplay, s => s.UnitType != null ? s.UnitType.Title : null)
+                  .Map(d => d.UnitDetailTypeDisplay, s => s.UnitDetailType != null ? s.UnitDetailType.Title : null)
+                  .Map(d => d.CostCenterTypeDisplay, s => s.CostCenterType != null ? s.CostCenterType.Title : null);
         }
     }
 }
