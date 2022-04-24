@@ -20,7 +20,7 @@ namespace Datiss.Budget.Reports.Excel
 
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
-            sheet.Range(1, 1, 1, 10).Merge();
+            sheet.Range(1, 1, 1, 6).Merge();
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
             sheet.Cell(2, 2).Value = "کد سازمان";
@@ -28,10 +28,6 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(2, 4).Value = "کد شرح";
             sheet.Cell(2, 5).Value = $"عملکرد سال{year - 2}";
             sheet.Cell(2, 6).Value = $"عملکرد سال {year - 1}";
-            sheet.Cell(2, 7).Value = "درصد دریافت";
-            sheet.Cell(2, 8).Value = "مبلغ";
-            sheet.Cell(2, 9).Value = "درصد رشد پیش بینی به عملکرد";
-            sheet.Cell(2, 10).Value = "درصد رشد پیش بینی به بودجه";
 
 
             var totalCount = items.Count();
@@ -46,7 +42,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(2, 1, row - 1, 10);
+            var range = sheet.Range(2, 1, row - 1, 6);
             range.Column(1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other
@@ -54,14 +50,6 @@ namespace Datiss.Budget.Reports.Excel
             range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(6).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
             range.Column(6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(7).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
-            range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(8).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
-            range.Column(8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(9).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
-            range.Column(9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(10).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
-            range.Column(10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             //
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;

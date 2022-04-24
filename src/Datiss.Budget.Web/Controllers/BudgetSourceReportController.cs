@@ -377,22 +377,25 @@ namespace Datiss.Budget.Web.Controllers
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var sectionTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIRSection);
+            var sectionTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__ResourcesReportType);
 
 
             var items = new List<BudgetSourceReportDTO>();
 
             foreach (var org in organizations)
             {
-                sectionTypes.Select(sec => new BudgetSourceReportDTO
+                foreach (var sec in sectionTypes)
                 {
-                    SectionTypeDisplay = sec.Title,
-                    SectionTypeId = sec.Id,
-                    OrganizationId = org.Id,
-                    OrganizationDisplay = org.Title,
-                    Year = year.Year,
-                    YearId = year.Id,
-                }).ToList();
+                    items.Add(new BudgetSourceReportDTO
+                    {
+                        SectionTypeDisplay = sec.Title,
+                        SectionTypeId = sec.Id,
+                        OrganizationId = org.Id,
+                        OrganizationDisplay = org.Title,
+                        Year = year.Year,
+                        YearId = year.Id,
+                    });
+                }
             }
 
             using var workbook = items.GetImportTemplate(year.Year);
