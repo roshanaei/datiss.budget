@@ -194,6 +194,8 @@ namespace Datiss.Budget.Services
                                         .Include(x => x.Organization)
                                         .Include(x => x.SectionType)
                                         .Include(x => x.UnitType)
+                                        .Include(x => x.CostCenterType)
+                                        .Include(x=>x.UnitDetailType)
                                         .Select(x => x.Adapt<CostCurrentReportDTO>())
                                         .ToListAsync();
 
@@ -295,6 +297,8 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.Organization)
                                     .Include(x => x.SectionType)
                                     .Include(x => x.UnitType)
+                                    .Include(x => x.CostCenterType)
+                                    .Include(x => x.UnitDetailType)
                                     .Select(x => x.Adapt<CostCurrentReportDTO>())
                                     .ToListAsync();
 
@@ -313,13 +317,25 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
-            var sectionTypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CIRSection &&
-                                                    x.Parent.ParentId == null &&
-                                                    x.Status == EntityStatus.Enabled);
+            var costCenterTypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CostCenterType &&
+                                        x.Parent.ParentId == null &&
+                                        x.Status != EntityStatus.Deleted);
 
-            var unitTypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CIRUnit &&
+            var sectionTypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CostCurrentSectionType &&
+                                                    x.Parent.ParentId == null &&
+                                                    x.Status != EntityStatus.Deleted);
+
+            var unitTypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CostCurrentReportType &&
                                                  x.Parent.ParentId == null &&
-                                                 x.Status == EntityStatus.Enabled);
+                                                 x.Status != EntityStatus.Deleted);
+
+            int rawUnitId = _constSet.SingleOrDefault(x => x.Parent.ConstantKey == ConstantKeys.__CostCurrentUnitType &&
+                                                        x.Parent.ParentId == null &&
+                                                        x.ConstantKey.Contains(ConstantKeys.__RawMaterialType)).Id;
+
+            int noneUnitId = _constSet.SingleOrDefault(x => x.Parent.ConstantKey == ConstantKeys.__CostCurrentUnitType &&
+                                                            x.Parent.ParentId == null &&
+                                                            !x.ConstantKey.Contains(ConstantKeys.__RawMaterialType)).Id;
 
             var year = await _yearSet.FindAsync(yearId);
             year.CheckReferenceIsNull($"Year not found with id: {yearId}");
@@ -341,16 +357,22 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelNotExistOrg, rowIndex + 2, rec.OrganizationId)
                         );
                 }
+                if (!await costCenterTypes.AnyAsync(x => x.Id == rec.CostCenterTypeId))
+                {
+                    return ImportResult.Failed(
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex + 2, rec.CostCenterTypeId)
+                        );
+                }
                 if (!await sectionTypes.AnyAsync(x => x.Id == rec.SectionTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.SectionTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex + 2, rec.SectionTypeId)
                         );
                 }
-                if (!await unitTypes.AnyAsync(x => x.Id == rec.UnitTypeId))
+                if (!await unitTypes.AnyAsync(x => x.Id == rec.UnitDetailTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.UnitTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex + 2, rec.UnitTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -360,10 +382,15 @@ namespace Datiss.Budget.Services
                         );
                 }
 
+                var unitDetail = await _constSet.FindAsync(rec.UnitDetailTypeId);
+
+                if (unitDetail.ConstantKey.Contains(ConstantKeys.__RawMaterialType))
+                    rec.UnitTypeId = rawUnitId;
+                else
+                    rec.UnitTypeId = noneUnitId;
+
                 rowIndex++;
             }
-
-            //
             var missingOrgs = new List<Organization>();
             var existOrgs = new List<Organization>();
 
@@ -378,7 +405,7 @@ namespace Datiss.Budget.Services
                 else
                     existOrgs.Add(item);
             }
-           
+
             rowIndex = 1;
 
             if (!continueIfAnyOrgMissing)
@@ -512,8 +539,11 @@ namespace Datiss.Budget.Services
                     return query.Include(x => x.Organization)
                                 .Include(x => x.SectionType)
                                 .Include(x => x.UnitType)
+                                .Include(x => x.CostCenterType)
+                                .Include(x => x.UnitDetailType)
                                 .OrderBy(x => x.Organization.DisplayOrder)
                                 .ThenBy(x => x.Organization.RowOrder)
+                                .ThenBy(x => x.CostCenterType.DisplayOrder)
                                 .ThenBy(x => x.SectionType.DisplayOrder)
                                 .ThenBy(x => x.UnitType.DisplayOrder)
                                 .ThenBy(x => x.UnitDetailType.DisplayOrder);
@@ -569,7 +599,7 @@ namespace Datiss.Budget.Services
                     item.Id = 0;
                     item.YearId = targetYearId;
                     var entity = item.Adapt<CostCurrentReport>();
-                    
+
 
                     result.Add(entity);
                 }

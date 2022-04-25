@@ -377,20 +377,42 @@ namespace Datiss.Budget.Web.Controllers
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
-            var sectionTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIRSection);
-            var unitTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIRUnit);
+            var sectionTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CostCurrentSectionType);
+            var costCenterTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CostCenterType);
+            var types = await _constantService.GetDataByKeyAsync(ConstantKeys.__CostCurrentReportType);
 
 
             var items = new List<CostCurrentReportDTO>();
 
             foreach (var org in organizations)
             {
+                foreach (var center in costCenterTypes)
+                {
+                    foreach (var sec in sectionTypes)
+                    {
+                        string key = sec.ConstantKey.Substring(sec.ConstantKey.IndexOf('.') + 1);
+                        var unitDetails = types.Where(x => x.ConstantKey.Contains(key)).ToList();
+                        foreach (var unit in unitDetails)
+                        {
+                            items.Add(new CostCurrentReportDTO
+                            {
+                                OrganizationDisplay = org.Title,
+                                OrganizationId = org.Id,
+                                CostCenterTypeDisplay = center.Title,
+                                CostCenterTypeId = center.Id,
+                                SectionTypeDisplay = sec.Title,
+                                SectionTypeId = sec.Id,
+                                UnitDetailTypeDisplay = unit.Title,
+                                UnitDetailTypeId = unit.Id,
+                            });
+                        }
 
+                    }
+                }
             }
 
             using var workbook = items.GetImportTemplate(year.Year);
             return workbook.Deliver("CostCurrentReport-Import-Template.xlsx");
         }
-
     }
 }

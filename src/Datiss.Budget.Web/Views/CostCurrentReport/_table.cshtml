@@ -4,11 +4,9 @@
         <thead class="thead-light">
             <tr>
 
-                <th style="min-width:135px">سال</th>
                 <th style="min-width:250px">سازمان</th>
                 <th style="min-width:200px">مرکز هزینه</th>
                 <th style="min-width:235px">شرح</th>
-                <th style="min-width:235px">واحد</th>
                 <th style="min-width:235px">عنوان</th>
                 <th style="min-width:200px">پیش بینی سال @Model.Filter.NumberYear</th>
                 <th style="min-width:200px">عملکرد @(Model.Filter.NumberYear - 2)</th>
@@ -21,118 +19,99 @@
         <tbody>
             @foreach (var item in Model.Items)
             {
-                <tr id="row_@item.Id">
-                    <td>
-                        <div id="divInput_Year_@item.Id" style="display: none">
-                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
-                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
-                            </select>
-                            <script>
-                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
-                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
-                            </script>
-                        </div>
-                        <div id="divOutput_Year_@item.Id">
-                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_Org_@item.Id" style="display: none">
-                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
-                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
-                            </select>
-                            <script>
-                                $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
-                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
-                            </script>
-                        </div>
-                        <div id="divOutput_Org_@item.Id">
-                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_CostCenterType_@item.Id" style="display: none">
-                            <input class="form-control" id="inputCostCenterType_@item.Id" value="@item.CostCenterTypeId" type="number" />
-                        </div>
-                        <div id="divOutput_CostCenterType_@item.Id">
-                            <span id="spanCostCenterType_@item.Id">@item.CostCenterTypeDisplay </span>
-                        </div>
-                    </td>
+            
+            <input class="form-control" id="inputUnitType_@item.Id" value="@item.UnitTypeId" type="hidden" />
 
-                    <td>
-                        <div id="divInput_SectionType_@item.Id" style="display: none">
-                            <input class="form-control" id="inputSectionType_@item.Id" value="@item.SectionTypeId" type="number" />
-                        </div>
-                        <div id="divOutput_SectionType_@item.Id">
-                            <span id="spanSectionType_@item.Id">@item.SectionTypeDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_UnitType_@item.Id" style="display: none">
-                            <input class="form-control" id="inputUnitType_@item.Id" value="@item.UnitTypeId" type="number" />
-                        </div>
-                        <div id="divOutput_UnitType_@item.Id">
-                            <span id="spanUnitType_@item.Id">@item.UnitTypeDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_UnitDetailType_@item.Id" style="display: none">
-                            <input class="form-control" id="inputUnitDetailType_@item.Id" value="@item.UnitDetailTypeId" type="number" />
-                        </div>
-                        <div id="divOutput_UnitDetailType_@item.Id">
-                            <span id="spanUnitDetailType_@item.Id">@item.UnitDetailTypeDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_ForcastY_@item.Id" style="display: none">
-                            <input class="form-control" id="inputForcastY_@item.Id" value="@item.ForcastY" type="number" />
-                        </div>
-                        <div id="divOutput_ForcastY_@item.Id">
-                            <span id="spanForcastY_@item.Id">@item.ForcastYDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_FunctionalBasicYear_@item.Id" style="display: none">
-                            <input class="form-control" id="inputFunctionalBasicYear_@item.Id" value="@item.FunctionalBasicYear" type="number" />
-                        </div>
-                        <div id="divOutput_FunctionalBasicYear_@item.Id">
-                            <span id="spanFunctionalBasicYear_@item.Id">@item.FunctionalBasicYearDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_FunctionalYear_1_@item.Id" style="display: none">
-                            <input class="form-control" id="inputFunctionalYear_1_@item.Id" value="@item.FunctionalYear_1" type="number" />
-                        </div>
-                        <div id="divOutput_FunctionalYear_1_@item.Id">
-                            <span id="spanFunctionalYear_1_@item.Id">@item.FunctionalYear_1Display </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_ApproveYear_1_@item.Id" style="display: none">
-                            <input class="form-control" id="inputApproveYear_1_@item.Id" value="@item.ApproveYear_1" type="number" />
-                        </div>
-                        <div id="divOutput_ApproveYear_1_@item.Id">
-                            <span id="spanApproveYear_1_@item.Id">@item.ApproveYear_1Display </span>
-                        </div>
-                    </td>
-                    <td>
-                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
-                            <i class="fa ft-edit fa-1x"></i>
-                        </a>
+            <tr id="row_@item.Id">
+                <td>
+                    <div id="divInput_Org_@item.Id" style="display: none">
+                        <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                        <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
+                        </select>
+                        <script>
+                            $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                            $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
+                        </script>
+                    </div>
+                    <div id="divOutput_Org_@item.Id">
+                        <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_CostCenterType_@item.Id" style="display: none">
+                        <input class="form-control" id="inputCostCenterType_@item.Id" value="@item.CostCenterTypeId" type="number" />
+                    </div>
+                    <div id="divOutput_CostCenterType_@item.Id">
+                        <span id="spanCostCenterType_@item.Id">@item.CostCenterTypeDisplay </span>
+                    </div>
+                </td>
 
-                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                            <i class="fa ft-trash-2"></i>
-                        </a>
+                <td>
+                    <div id="divInput_SectionType_@item.Id" style="display: none">
+                        <input class="form-control" id="inputSectionType_@item.Id" value="@item.SectionTypeId" type="number" />
+                    </div>
+                    <div id="divOutput_SectionType_@item.Id">
+                        <span id="spanSectionType_@item.Id">@item.SectionTypeDisplay </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_UnitDetailType_@item.Id" style="display: none">
+                        <input class="form-control" id="inputUnitDetailType_@item.Id" value="@item.UnitDetailTypeId" type="number" />
+                    </div>
+                    <div id="divOutput_UnitDetailType_@item.Id">
+                        <span id="spanUnitDetailType_@item.Id">@item.UnitDetailTypeDisplay </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ForcastY_@item.Id" style="display: none">
+                        <input class="form-control" id="inputForcastY_@item.Id" value="@item.ForcastY" type="number" />
+                    </div>
+                    <div id="divOutput_ForcastY_@item.Id">
+                        <span id="spanForcastY_@item.Id">@item.ForcastYDisplay </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_FunctionalBasicYear_@item.Id" style="display: none">
+                        <input class="form-control" id="inputFunctionalBasicYear_@item.Id" value="@item.FunctionalBasicYear" type="number" />
+                    </div>
+                    <div id="divOutput_FunctionalBasicYear_@item.Id">
+                        <span id="spanFunctionalBasicYear_@item.Id">@item.FunctionalBasicYearDisplay </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_FunctionalYear_1_@item.Id" style="display: none">
+                        <input class="form-control" id="inputFunctionalYear_1_@item.Id" value="@item.FunctionalYear_1" type="number" />
+                    </div>
+                    <div id="divOutput_FunctionalYear_1_@item.Id">
+                        <span id="spanFunctionalYear_1_@item.Id">@item.FunctionalYear_1Display </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ApproveYear_1_@item.Id" style="display: none">
+                        <input class="form-control" id="inputApproveYear_1_@item.Id" value="@item.ApproveYear_1" type="number" />
+                    </div>
+                    <div id="divOutput_ApproveYear_1_@item.Id">
+                        <span id="spanApproveYear_1_@item.Id">@item.ApproveYear_1Display </span>
+                    </div>
+                </td>
+                <td>
+                    <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                        <i class="fa ft-edit fa-1x"></i>
+                    </a>
 
-                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
-                            <i class="fa ft-check-square"></i>
-                        </a>
+                    <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                        <i class="fa ft-trash-2"></i>
+                    </a>
 
-                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
-                            <i class="fa ft-x-square"></i>
-                        </a>
-                    </td>
-                </tr>
+                    <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+
+                    <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>

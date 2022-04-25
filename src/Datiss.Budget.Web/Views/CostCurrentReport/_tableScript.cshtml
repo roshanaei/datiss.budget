@@ -10,7 +10,6 @@
         let row = $('#row_' + id);
 
         //Hide output elements
-        $('#divOutput_Year_' + id).hide();
         $('#divOutput_Org_' + id).hide();
         $('#divOutput_CostCenterType_' + id);
         $('#divOutput_SectionType_' + id);
@@ -22,7 +21,6 @@
         $('#divOutput_ForcastY_' + id);
 
         //show input elements
-        $('#divInput_Year_' + id).show();
         $('#divInput_Org_' + id).show();
         $('#divInput_FunctionalYear_1_' + id).show();
         $('#divInput_FunctionalBasicYear_' + id).show();
@@ -43,7 +41,6 @@
         let row = $('#row_' + id);
 
         //Hide input elements
-        $('#divInput_Year_' + id).hide();
         $('#divInput_Org_' + id).hide();
         $('#divInput_FunctionalYear_1_' + id).hide();
         $('#divInput_FunctionalBasicYear_' + id).hide();
@@ -55,7 +52,6 @@
         }
 
         //Show output elements
-        $('#divOutput_Year_' + id).show();
         $('#divOutput_Org_' + id).show();
         $('#divOutput_FunctionalYear_1_' + id).show();
         $('#divOutput_FunctionalBasicYear_' + id).show();
@@ -78,9 +74,9 @@
         let row = $('#row_' + id);
         var model = {};
         model.id = id;
-        model.yearId = $('#inputYear_' + id).val();
+        model.yearId = $('#yearId').val();
         model.organizationId = $('#inputOrg_' + id).val();
-        model.costCenterType = $('#inputCostCenterType_' + id).val();
+        model.costCenterTypeId = $('#inputCostCenterType_' + id).val();
         model.sectionTypeId = $('#inputSectionType_' + id).val();
         model.unitTypeId = $('#inputUnitType_' + id).val();
         model.unitDetailTypeId = $('#inputUnitDetailType_' + id).val();
@@ -111,12 +107,10 @@
                 }
 
                 rowData = {};
-                rowData.yearId = model.yearId;
                 rowData.organizationId = model.organizationId;
                 rowData.functionalYear_1 = model.functionalYear_1;
                 rowData.functionalBasicYear = model.functionalBasicYear;
 
-                $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanFunctionalYear_1_' + id).text(data.functionalYear_1);
                 $('#spanFunctionalBasicYear_' + id).text(data.functionalBasicYear);

@@ -102,7 +102,7 @@
                                                                name="col-1"
                                                                id="col-1" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-1"><span>سال</span></label>
+                                                               for="col-1"><span>سازمان</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -113,7 +113,7 @@
                                                                name="col-2"
                                                                id="col-2" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-2"><span>سازمان</span></label>
+                                                               for="col-2"><span>مرکز هزینه</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -124,7 +124,7 @@
                                                                name="col-3"
                                                                id="col-3" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-3"><span>مرکز هزینه</span></label>
+                                                               for="col-3"><span>شرح</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -135,7 +135,7 @@
                                                                name="col-4"
                                                                id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-4"><span>شرح</span></label>
+                                                               for="col-4"><span>عنوان</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -146,7 +146,7 @@
                                                                name="col-5"
                                                                id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>واحد</span></label>
+                                                               for="col-5"><span>پیش بینی سال جاری</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -157,7 +157,7 @@
                                                                name="col-6"
                                                                id="col-6" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-6"><span>عنوان</span></label>
+                                                               for="col-6"><span>عملکرد سال پایه</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -168,7 +168,7 @@
                                                                name="col-7"
                                                                id="col-7" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-7"><span>پیش بینی سال جاری</span></label>
+                                                               for="col-7"><span>عملکرد سال ماقبل</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -178,28 +178,6 @@
                                                                checked
                                                                name="col-8"
                                                                id="col-8" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-8"><span>عملکرد سال پایه</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-9"
-                                                               id="col-9" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-9"><span>عملکرد سال ماقبل</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-10"
-                                                               id="col-10" />
                                                         <label class="custom-control-label my-font"
                                                                for="col-10"><span style="">مصوب سال ما قبل</span></label>
                                                     </div>
@@ -265,10 +243,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8,9,10';
+        let allColumns = '1,2,3,4,5,6,7,8';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,9,10,";
+        let showingColmuns = "1,2,3,4,5,6,7,8,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())

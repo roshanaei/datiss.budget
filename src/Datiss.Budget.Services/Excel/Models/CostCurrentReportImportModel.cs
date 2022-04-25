@@ -11,10 +11,10 @@ namespace Datiss.Budget.Services.Excel.Models
         public int OrganizationId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "C")]
-        public string ActivityName { get; set; }
+        public string CostCenterTypeDisplay { get; set; }
 
         [Column(MappingDirections.Both, Letter = "D")]
-        public int? Activity { get; set; }
+        public int CostCenterTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
         public string SectionTypeDisplay { get; set; }
@@ -23,27 +23,15 @@ namespace Datiss.Budget.Services.Excel.Models
         public int SectionTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "G")]
-        public string UnitTypeDisplay { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "H")]
-        public int UnitTypeId { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "I")]
         public string UnitDetailTypeDisplay { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "J")]
+        [Column(MappingDirections.Both, Letter = "H")]
         public int UnitDetailTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "K")]
-        public string CostCenterTypeDisplay { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "L")]
-        public int CostCenterTypeId { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "M")]
+        [Column(MappingDirections.Both, Letter = "I")]
         public long FunctionalBasicYear { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "N")]
+        [Column(MappingDirections.Both, Letter = "J")]
         public long FunctionalYear_1 { get; set; }
     }
 }
