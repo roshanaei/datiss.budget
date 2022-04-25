@@ -291,7 +291,7 @@ namespace Datiss.Budget.DataLayer.Context
                 .ApplyConfiguration(new CostCurrentPersonelConfiguration())
                 .ApplyConfiguration(new CostCurrentRawMaterialConfiguration())
                 .ApplyConfiguration(new CostForcastBuyConfiguration())
-                .ApplyConfiguration(new CostCurrentReportConfiguration());
+                .ApplyConfiguration(new CostCurrentReportConfiguration())
                 .ApplyConfiguration(new BudgetSourceReportConfiguration());
         }
     }
