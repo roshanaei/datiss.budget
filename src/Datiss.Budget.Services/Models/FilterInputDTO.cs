@@ -381,11 +381,18 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
     }
     
+    public class BudgetSourceReportFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? NumberYear { get; set; }
+        public int? SectionTypeId { get; set; }
+    }
+    
     public class CostForcastBuyFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
         public int? LocationId { get; set; }
     }
-
- }
+}
