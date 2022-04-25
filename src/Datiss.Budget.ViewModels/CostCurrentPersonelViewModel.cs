@@ -157,7 +157,7 @@ namespace Datiss.Budget.ViewModels
         public string OrganizationDisplay { get; set; }
 
         public RecordType RecordType { get; set; }
-        public string RecordTypeDisplay => RecordType == RecordType.Base ? EnumText.RecordType_Base : EnumText.RecordType_Forcast;
+        public string RecordTypeDisplay => RecordType.ToDisplay(); 
 
         public int PersonelCode { get; set; }
 

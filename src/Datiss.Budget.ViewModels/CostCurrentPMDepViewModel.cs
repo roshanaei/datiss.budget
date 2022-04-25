@@ -24,6 +24,8 @@ namespace Datiss.Budget.ViewModels
         public int CCPMDepTypeId { get; set; }
         public int CostCenterTypeId { get; set; }
 
+        public RecordType RecordType { get; set; }
+
         public long FinancePMCost { get; set; }
         public decimal RFinancePMCost_D { get; set; }
         public long FinanceDepCost { get; set; }
@@ -42,6 +44,8 @@ namespace Datiss.Budget.ViewModels
         public string CCPMDepTypeDisplay { get; set; }
         public int CostCenterTypeId { get; set; }
         public string CostCenterTypeDisplay { get; set; }
+        public RecordType RecordType { get; set; }
+        public string RecordTypeDisplay => RecordType.ToDisplay();
         public long CostCenter { get; set; }
         public string CostCenterDisplay => CostCenter.ToString("N0");
         public long FinancePMCost { get; set; }
@@ -59,9 +63,11 @@ namespace Datiss.Budget.ViewModels
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
         public int? CCPMDepTypeId { get; set; }
+        public RecordType? RecordType { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
         public IList<SelectListItem> OrganizationSource { get; set; }
+        public IList<SelectListItem> RecordTypeSource => EnumSelectListProvider.GetRecordTypeItems(RecordType).ToList();
 
     }
 
@@ -84,6 +90,10 @@ namespace Datiss.Budget.ViewModels
         public IList<SelectListItem> CCPMDepTypeSource { get; set; }
 
         public IList<SelectListItem> CostCenterTypeSource { get; set; }
+
+        public RecordType recordType { get; set; }
+
+        public IList<SelectListItem> RecordTypeSource { get; set; }
 
 
         public IFormFile ExcelFile { get; set; }

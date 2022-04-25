@@ -25,12 +25,13 @@ namespace Datiss.Budget.Reports.Excel
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "سال";
             sheet.Cell(1, 2).Value = "سازمان";
-            sheet.Cell(1, 3).Value = "مراکز هزینه";
-            sheet.Cell(1, 4).Value = "عناوین استهلاک و تعمیر و نگهداری";
-            sheet.Cell(1, 5).Value = "هزینه تعمیر و نگهداری دارائی";
-            sheet.Cell(1, 6).Value = "ضریب هزینه تعمیر و نگهداری دارائی";
-            sheet.Cell(1, 7).Value = "هزینه استهلاک دارایی";
-            sheet.Cell(1, 8).Value = "ضریب هزینه استهلاک دارایی";
+            sheet.Cell(1, 3).Value = "نوع رکورد";
+            sheet.Cell(1, 4).Value = "مراکز هزینه";
+            sheet.Cell(1, 5).Value = "عناوین استهلاک و تعمیر و نگهداری";
+            sheet.Cell(1, 6).Value = "هزینه تعمیر و نگهداری دارائی";
+            sheet.Cell(1, 7).Value = "ضریب هزینه تعمیر و نگهداری دارائی";
+            sheet.Cell(1, 8).Value = "هزینه استهلاک دارایی";
+            sheet.Cell(1, 9).Value = "ضریب هزینه استهلاک دارایی";
 
             var totalCount = items.Count();
             int row = 2;
@@ -41,31 +42,33 @@ namespace Datiss.Budget.Reports.Excel
 
                 sheet.Cell(row, 2).Value = item.OrganizationDisplay;
 
-                sheet.Cell(row, 3).Value = item.CostCenterTypeDisplay;
-                sheet.Cell(row, 3).DataType = XLDataType.Text;
+                sheet.Cell(row, 3).Value = item.RecordTypeDispaly;
 
-                sheet.Cell(row, 4).Value = item.CCPMDepTypeDisplay;
+                sheet.Cell(row, 4).Value = item.CostCenterTypeDisplay;
                 sheet.Cell(row, 4).DataType = XLDataType.Text;
 
-                sheet.Cell(row, 5).Value = item.FinancePMCost;
-                sheet.Cell(row, 5).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
-                sheet.Cell(row, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                sheet.Cell(row, 5).Value = item.CCPMDepTypeDisplay;
+                sheet.Cell(row, 5).DataType = XLDataType.Text;
 
-                sheet.Cell(row, 6).Value = item.RFinancePMCost_D;
-                sheet.Cell(row, 6).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
+                sheet.Cell(row, 6).Value = item.FinancePMCost;
+                sheet.Cell(row, 6).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
                 sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 7).Value = item.FinanceDepCost;
-                sheet.Cell(row, 7).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
+                sheet.Cell(row, 7).Value = item.RFinancePMCost_D;
+                sheet.Cell(row, 7).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
                 sheet.Cell(row, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 8).Value = item.RFinanceDepCost_D;
-                sheet.Cell(row, 8).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
+                sheet.Cell(row, 8).Value = item.FinanceDepCost;
+                sheet.Cell(row, 8).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
                 sheet.Cell(row, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                sheet.Cell(row, 9).Value = item.RFinanceDepCost_D;
+                sheet.Cell(row, 9).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
+                sheet.Cell(row, 9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
                 row++;
             }
-            var range = sheet.Range(1, 1, row - 1, 8);
+            var range = sheet.Range(1, 1, row - 1, 9);
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
@@ -114,11 +117,11 @@ namespace Datiss.Budget.Reports.Excel
             range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other
-            range.Column(7).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
+            range.Column(7).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
             range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(8).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
             range.Column(8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-            range.Column(9).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
+            range.Column(9).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
             range.Column(9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             range.Column(10).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
             range.Column(10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;

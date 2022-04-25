@@ -78,6 +78,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ICostForcastTransferWService, CostForcastTransferWService>();
             services.AddScoped<ICostForcastTransferWsService, CostForcastTransferWsService>();
             services.AddScoped<ICostForcastConstructionWsService, CostForcastConstructionWsService>();
+            services.AddScoped<ICostForcastBuyService, CostForcastBuyService>();
             services.AddScoped<ICostCurrentRawMaterialService, CostCurrentRawMaterialService>();
             services.AddScoped<ICostCurrentPersonelService, CostCurrentPersonelService>();
             services.AddScoped<IBudgetSourceReportService, BudgetSourceReportService>();
