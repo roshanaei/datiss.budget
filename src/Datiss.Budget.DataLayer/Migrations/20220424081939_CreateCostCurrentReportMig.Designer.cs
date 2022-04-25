@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220424081939_CreateCostCurrentReportMig")]
+    partial class CreateCostCurrentReportMig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -398,86 +400,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("BranchingRateIncrease");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.BudgetSourceReport", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("BudgetSourceReportId")
-                        .UseIdentityColumn();
-
-                    b.Property<long>("ApproveYear_1")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("Fee")
-                        .HasColumnType("bigint");
-
-                    b.Property<decimal>("ForcastBudgetPercent")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<decimal>("ForcastFunctionalPercent")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<long>("ForcastY")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("FunctionalBasicYear")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("FunctionalYear_1")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("OrganizationId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("ReceiptPercent")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<int>("SectionTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.HasIndex("SectionTypeId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("BudgetSourceReports");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.Cofficient", b =>
@@ -1273,11 +1195,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Property<decimal>("RFinancePMCost_D")
                         .HasColumnType("decimal(18,6)");
-
-                    b.Property<int>("RecordType")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
 
                     b.Property<int>("YearId")
                         .HasColumnType("int");
@@ -5099,33 +5016,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("UserType");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.BudgetSourceReport", b =>
-                {
-                    b.HasOne("Datiss.Budget.Entities.Organization", "Organization")
-                        .WithMany("BudgetSourceReports")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.Constant", "SectionType")
-                        .WithMany("BudgetSourceReports")
-                        .HasForeignKey("SectionTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("BudgetSourceReports")
-                        .HasForeignKey("YearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("FinanceYear");
-
-                    b.Navigation("Organization");
-
-                    b.Navigation("SectionType");
-                });
-
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.Cofficient", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Constant", "CofficientType")
@@ -6813,8 +6703,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("BranchingRateIncrease");
 
-                    b.Navigation("BudgetSourceReports");
-
                     b.Navigation("CCOtherCostsCostCurrentOther");
 
                     b.Navigation("Childrens");
@@ -7013,8 +6901,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("BranchingRateIncrease");
 
-                    b.Navigation("BudgetSourceReports");
-
                     b.Navigation("Cofficients");
 
                     b.Navigation("ConsumeForcast");
@@ -7135,8 +7021,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("BranchFeeAmounts");
 
                     b.Navigation("BranchingRateIncrease");
-
-                    b.Navigation("BudgetSourceReports");
 
                     b.Navigation("Childrens");
 
