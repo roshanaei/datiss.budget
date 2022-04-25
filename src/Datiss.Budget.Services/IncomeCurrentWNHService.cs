@@ -306,7 +306,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal1",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                     "[dbo].[IncomeCurrentWNH_Cal1] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
@@ -314,7 +314,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal2",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                     "[dbo].[IncomeCurrentWNH_Cal2] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
@@ -322,7 +322,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal3",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal3] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -330,7 +330,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal4",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal4] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -338,7 +338,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal5",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal5] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -346,7 +346,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal6",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal6] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -354,7 +354,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal7",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal7] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -362,7 +362,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal8",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal8] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -370,7 +370,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal9",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal9] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -378,7 +378,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal10",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                  "[dbo].[IncomeCurrentWNH_Cal10] @YearId, @OrganizationId",
                                  parameters: sqlParams.ToArray())
             });
