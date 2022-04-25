@@ -20,13 +20,13 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<PagedResult<CostCurrentPMDepDTO>> GetListAsync(CostCurrentPMDepFilterDTO filter);
 
-        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId);
+        Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId, RecordType recordType);
 
         Task<ValidationResult> CalculationAsync(int yearId, int organizationId);
 
-        Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
+        Task CopyAsync(int sourceYearId, int sourceOrgId);
 
-        Task<IEnumerable<CostCurrentPMDepDTO>> GetExportItemsAsync(int yearId, int organizationId);
+        Task<IEnumerable<CostCurrentPMDepDTO>> GetExportItemsAsync(int yearId, int organizationId , RecordType recordType);
 
         Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
     }

@@ -149,11 +149,7 @@
                                             <span data-i18n="ضریب افزایش حق انشعاب" class="menu-item my-font-light">ضریب افزایش حق انشعاب</span>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@FeeCityController.Name" asp-action="@FeeCityController.ACTION_Index">
-                                            <span data-i18n="ضریب قیمت شهری" class="menu-item my-font-light">ضریب قیمت شهری</span>
-                                        </a>
-                                    </li>
+
                                     <li class="nav-item">
                                         <a asp-area="" asp-controller="@UserTypeAverageCapacityForcastController.Name" asp-action="@UserTypeAverageCapacityForcastController.ACTION_Index">
                                             <span data-i18n="متوسط ظرفیت قراردادی غیرخانگی" class="menu-item my-font-light">متوسط ظرفیت قراردادی غیرخانگی</span>
@@ -167,11 +163,6 @@
                                     <li class="nav-item">
                                         <a asp-area="" asp-controller="@WasteSalesSplitController.Name" asp-action="@WasteSalesSplitController.ACTION_Index">
                                             <span data-i18n=" فروش انشعاب فاضلاب" class="menu-item my-font-light"> فروش انشعاب فاضلاب </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@SalesSplitTotalController.Name" asp-action="@SalesSplitTotalController.ACTION_Index">
-                                            <span data-i18n="گزارش عملکرد فروش انشعاب" class="menu-item my-font-light">گزارش عملکرد فروش انشعاب</span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -204,6 +195,12 @@
                                     <li class="nav-item">
                                         <a asp-area="" asp-controller="@IncomeCurrentCofficientController.Name" asp-action="@IncomeCurrentCofficientController.ACTION_Index">
                                             <span data-i18n="ضرایب" class="menu-item my-font-light">ضرایب</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="@FeeCityController.Name" asp-action="@FeeCityController.ACTION_Index">
+                                            <span data-i18n="ضریب قیمت شهری" class="menu-item my-font-light">ضریب قیمت شهری</span>
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -251,7 +248,6 @@
                                             <span data-i18n="درآمد فاضلاب بها غیر مسکونی" class="menu-item my-font-light">درآمد فاضلاب بها غیر مسکونی</span>
                                         </a>
                                     </li>
-
                                     <li class="nav-item">
                                         <a asp-area="" asp-controller="" asp-action="Index">
                                             <span data-i18n="سایر درآمدهای جاری" class="menu-item my-font-light">سایر درآمدهای جاری</span>
@@ -272,6 +268,11 @@
                                             <span data-i18n="گزارش درآمد جاری" class="menu-item my-font-light">گزارش درآمد جاری</span>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="@SalesSplitTotalController.Name" asp-action="@SalesSplitTotalController.ACTION_Index">
+                                            <span data-i18n="گزارش عملکرد فروش انشعاب" class="menu-item my-font-light">گزارش عملکرد فروش انشعاب</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>
@@ -285,7 +286,7 @@
                                 </a>
                                 <ul class="menu-content" id="CurrentIncome" parent="CollapseForcastManagment">
                                     <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CofficientController.Name" asp-action="@CofficientController.ACTION_Index" asp-route-group="@CofficientsGroup.CurrentCost">
+                                        <a asp-area="" asp-controller="@CofficientController.Name" asp-action="@CofficientController.ACTION_Index" asp-route-group="@CofficientsGroup.ForcastCost">
                                             <span data-i18n="ضرایب" class="menu-item my-font-light">ضرایب</span>
                                         </a>
                                     </li>
@@ -328,7 +329,7 @@
                                 </a>
                                 <ul class="menu-content" id="CurrentCost" parent="CollapseForcastManagment">
                                     <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CofficientController.Name" asp-action="@CofficientController.ACTION_Index" asp-route-group="@CofficientsGroup.CurrentIncome">
+                                        <a asp-area="" asp-controller="@CofficientController.Name" asp-action="@CofficientController.ACTION_Index" asp-route-group="@CofficientsGroup.CurrentCost">
                                             <span data-i18n="ضرایب" class="menu-item my-font-light">ضرایب</span>
                                         </a>
                                     </li>
