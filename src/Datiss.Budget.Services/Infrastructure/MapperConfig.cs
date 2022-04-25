@@ -87,6 +87,18 @@ namespace Datiss.Budget.Services.Infrastructure
                   .Map(d => d.ExtensionTypeDisplay, s => s.Extension != null ? s.Extension.Title : null)
                   .Map(d => d.SuggestedBudgetTopicTypeDisplay, s => s.SuggestedBudgetTopic != null ? s.SuggestedBudgetTopic.Title : null);
 
+            TypeAdapterConfig<CostForcastBuy, CostForcastBuyDTO>
+                  .NewConfig()
+                  .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
+                  .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
+                  .Map(d => d.LocationDisplay, s => s.Location != null ? s.Location.Title : null)
+                  .Map(d => d.BuyDepartmentDisplay, s => s.Department != null ? s.Department.Title : null)
+                  .Map(d => d.CostCenterTypeDisplay, s => s.CostCenter != null ? s.CostCenter.Title : null)
+                  .Map(d => d.AssetTypeDisplay, s => s.Asset != null ? s.Asset.Title : null)
+                  .Map(d => d.AssetDetailTypeDisplay, s => s.AssetDetail != null ? s.AssetDetail.Title : null)
+                  .Map(d => d.CreditTypeDisplay, s => s.Credit != null ? s.Credit.Title : null)
+                  .Map(d => d.MeasurementTypeDisplay, s => s.Measurement != null ? s.Measurement.Title : null);
+
             TypeAdapterConfig<CostCurrentPersonelImportModel, CostCurrentPersonel>
                 .NewConfig()
                 .Map(d => d.GenderId, s => s.GenderVal == 0 ? false : true);

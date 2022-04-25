@@ -97,6 +97,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to فایل اکسل شما داده ای ندارد..
+        /// </summary>
+        public static string EmptyExcel {
+            get {
+                return ResourceManager.GetString("EmptyExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to کلمه عبور مطابق با الگوی تعریف شده نیست..
         /// </summary>
         public static string Err_Password_Format {
