@@ -48,5 +48,8 @@
         public const string __JobDepartmentType = "JobDepartment";
         public const string __JobStatusType = "JobStatus";
         public const string __JobStatusDetailsType = "JobStatusDetails";
+        public const string __CostCurrentSectionType = "CostCurrentSection";
+        public const string __CostCurrentReportType = "CostCurrentReport";
+        public const string __CostCurrentUnitType = "CostCurrentUnit";
     }
 }
