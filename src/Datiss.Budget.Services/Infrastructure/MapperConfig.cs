@@ -111,6 +111,12 @@ namespace Datiss.Budget.Services.Infrastructure
                   .Map(d => d.UnitTypeDisplay, s => s.UnitType != null ? s.UnitType.Title : null)
                   .Map(d => d.UnitDetailTypeDisplay, s => s.UnitDetailType != null ? s.UnitDetailType.Title : null)
                   .Map(d => d.CostCenterTypeDisplay, s => s.CostCenterType != null ? s.CostCenterType.Title : null);
+
+            TypeAdapterConfig<BudgetSourceReport, BudgetSourceReportDTO>
+                .NewConfig()
+                .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
+                .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
+                .Map(d => d.SectionTypeDisplay, s => s.SectionType != null ? s.SectionType.Title : null);
         }
     }
 }

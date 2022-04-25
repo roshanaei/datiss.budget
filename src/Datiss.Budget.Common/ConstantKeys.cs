@@ -53,6 +53,7 @@
         public const string __CostCurrentSectionType = "CostCurrentSection";
         public const string __CostCurrentReportType = "CostCurrentReport";
         public const string __CostCurrentUnitType = "CostCurrentUnit";
+        public const string __ResourcesReportType = "ResourcesReportType";
       
       }
 }
