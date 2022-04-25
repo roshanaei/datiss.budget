@@ -15,6 +15,9 @@ namespace Datiss.Budget.DataLayer.Configurations
 
             builder.Property(x => x.Id).HasColumnName("CostCurrentPMDepId");
 
+            builder.Property(x => x.RecordType)
+                .HasDefaultValue(RecordType.Base);
+
             builder.Property(x => x.RFinancePMCost_D)
                 .IsRequired()
                 .HasColumnType("decimal(18,6)");

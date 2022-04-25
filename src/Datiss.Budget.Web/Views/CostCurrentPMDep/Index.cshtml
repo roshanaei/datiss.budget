@@ -32,6 +32,14 @@
                                                 id="yearId">
                                         </select>
                                     </label>
+                                    <label asp-for="Filter.RecordType" class="my-font" style="margin-right:20px">
+                                        نوع:
+                                        <select asp-for="Filter.RecordType"
+                                                asp-items="Model.Filter.RecordTypeSource"
+                                                class="form-control d-inline-block width-100"
+                                                id="recordTypeId">
+                                        </select>
+                                    </label>
                                     <label asp-for="Filter.OrganizationId" class="my-font" style="margin-right:20px">
                                         سازمان:
                                         <select asp-for="Filter.OrganizationId"
@@ -194,7 +202,12 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostCurrentPMDepController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" 
+                                            asp-action="@CostCurrentPMDepController.ACTION_ExportExcel" 
+                                            asp-route-orgid="@Model.Filter.OrganizationId" 
+                                            asp-route-yearid="@Model.Filter.YearId" 
+                                            asp-route-recordtype="@Model.Filter.RecordType" 
+                                            class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
@@ -337,6 +350,7 @@
                     let params = {};
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
+                    params.recordType = $('#recordTypeId option:selected').val();
                     console.log(params);
                     let deleteUrl = '@Url.Action(CostCurrentPMDepController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
@@ -455,30 +469,6 @@
             $(this).prop('disabled', true);
             saveEditRow(id);
             $(this).prop('disabled', false);
-        });
-
-
-        $(document).on('click', '.openCopy', function() {
-            $.ajax({
-                type: 'GET',
-                url: '@Url.Action(CostCurrentPMDepController.ACTION_Copy)',
-                success: function (data, status, settings) {
-                    $('#divCopy').html('');
-                    $("#divCopy").html(data);
-                    $('#CopyModal').modal('show');
-                    $('#CopyModal').on('hidden.bs.modal', function() {
-                        $('#divCopy').html('');
-                        $('.modal-backdrop').remove();
-                    });
-                },
-                error: function (request, options, err) {
-                    if (request.status == 401 || request.status == 403) {
-                        ShowPermissionErorr();
-                        return;
-                    }
-                    ShowCommonErorr();
-                }
-            });
         });
 
         $(document).ready(function() {
@@ -658,9 +648,8 @@
 
         $(document).on('click', '#btnDoCopy', function () {
             let model = {};
-            model.sourceYearId = $('#SourceYearId option:selected').val();
-            model.sourceOrgId = $('#SourceOrgId').val();
-            model.targetYearId = $('#TargetYearId option:selected').val();
+            model.sourceOrgId = $('#organizationId option:selected').val();
+            model.targetYearId = $('#yearId option:selected').val();
 
             console.log(model);
 
@@ -697,6 +686,7 @@
                         buttonsStyling: false,
                     }).then(function(result) {
                         $('#CopyModal').modal('hide');
+                        document.location.href = '@Url.Action(CostCurrentPMDepController.ACTION_Index, new {  page = 1})'
                     });
                 },
                 error: function (request, options, err) {

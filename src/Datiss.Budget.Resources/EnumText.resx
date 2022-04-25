@@ -124,13 +124,13 @@
     <value>آب</value>
   </data>
   <data name="CofficientsGroup_CurrentCost" xml:space="preserve">
-    <value>هزینه سرمایه ای</value>
+    <value>هزینه جاری</value>
   </data>
   <data name="CofficientsGroup_CurrentIncome" xml:space="preserve">
     <value>درآمد جاری</value>
   </data>
   <data name="CofficientsGroup_ForcastCost" xml:space="preserve">
-    <value>هزینه جاری</value>
+    <value>هزینه سرمایه ای</value>
   </data>
   <data name="EntityStatus_Deleted" xml:space="preserve">
     <value>حذف شده</value>

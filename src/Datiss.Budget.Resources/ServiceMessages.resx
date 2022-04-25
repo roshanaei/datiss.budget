@@ -378,4 +378,7 @@
   <data name="Logic_WaterSourceTypeDuplicate" xml:space="preserve">
     <value>منبع "{0}" برای "{1}" قبلا ثبت شده است.</value>
   </data>
+  <data name="EmptyExcel" xml:space="preserve">
+    <value>فایل اکسل شما داده ای ندارد.</value>
+  </data>
 </root>
