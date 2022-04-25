@@ -16,6 +16,8 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.AvgConsumeUser).HasColumnType("decimal(18,6)");
 
+            builder.Property(x => x.ExcessConsumption).HasColumnType("decimal(18,6)");
+
             builder.Property(x => x.Capacity).HasColumnType("decimal(18,6)");
 
             builder.HasOne(x => x.FinanceYear)

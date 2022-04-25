@@ -15,7 +15,7 @@
         $('#divOutput_UnitUser_' + id).hide();
         $('#divOutput_AvgConsumeUser_' + id).hide();
         $('#divOutput_ConsumptionUser_' + id).hide();
-        $('#divOutput_Capacity_' + id).hide();
+        $('#divOutput_ExcessConsumption_' + id).hide();
         $('#divOutput_Cost_' + id).hide();
         $('#divOutput_Income_' + id).hide();
         $('#divOutput_ExcessIncome_' + id).hide();
@@ -36,7 +36,7 @@
         $('#divInput_UnitUser_' + id).show();
         $('#divInput_AvgConsumeUser_' + id).show();
         $('#divInput_ConsumptionUser_' + id).show();
-        $('#divInput_Capacity_' + id).show();
+        $('#divInput_ExcessConsumption_' + id).show();
         $('#divInput_Cost_' + id).show();
         $('#divInput_Income_' + id).show();
         $('#divInput_ExcessIncome_' + id).show();
@@ -61,7 +61,7 @@
         rowData.unitUser = $('#inputUnitUser_' + id).val();
         rowData.avgConsumeUser = $('#inputAvgConsumeUser_' + id).val();
         rowData.consumptionUser = $('#inputConsumptionUser_' + id).val();
-        rowData.capacity = $('#inputCapacity_' + id).val();
+        rowData.excessConsumption = $('#inputExcessConsumption_' + id).val();
         rowData.cost = $('#inputCost_' + id).val();
         rowData.income = $('#inputIncome_' + id).val();
         rowData.excessIncome = $('#inputExcessIncome_' + id).val();
@@ -87,7 +87,7 @@
         $('#divInput_UnitUser_' + id).hide();
         $('#divInput_AvgConsumeUser_' + id).hide();
         $('#divInput_ConsumptionUser_' + id).hide();
-        $('#divInput_Capacity_' + id).hide();
+        $('#divInput_ExcessConsumption_' + id).hide();
         $('#divInput_Cost_' + id).hide();
         $('#divInput_Income_' + id).hide();
         $('#divInput_ExcessIncome_' + id).hide();
@@ -108,7 +108,7 @@
             $('#inputUnitUser_' + id).val(rowData.unitUser);
             $('#inputAvgConsumeUser_' + id).val(rowData.avgConsumeUser);
             $('#inputConsumptionUser_' + id).val(rowData.consumptionUser);
-            $('#inputCapacity_' + id).val(rowData.capacity);
+            $('#inputExcessConsumption_' + id).val(rowData.excessConsumption);
             $('#inputCost_' + id).val(rowData.cost);
             $('#inputIncome_' + id).val(rowData.income);
             $('#inputExcessIncome_' + id).val(rowData.excessIncome);
@@ -130,7 +130,7 @@
         $('#divOutput_UnitUser_' + id).show();
         $('#divOutput_AvgConsumeUser_' + id).show();
         $('#divOutput_ConsumptionUser_' + id).show();
-        $('#divOutput_Capacity_' + id).show();
+        $('#divOutput_ExcessConsumption_' + id).show();
         $('#divOutput_Cost_' + id).show();
         $('#divOutput_Income_' + id).show();
         $('#divOutput_ExcessIncome_' + id).show();
@@ -168,7 +168,7 @@
         model.unitUser = $('#inputUnitUser_' + id).val();
         model.avgConsumeUser = $('#inputAvgConsumeUser_' + id).val();
         model.consumptionUser = $('#inputConsumptionUser_' + id).val();
-        model.capacity = $('#inputCapacity_' + id).val();
+        model.excessConsumption = $('#inputExcessConsumption_' + id).val();
         model.cost = $('#inputCost_' + id).val();
         model.income = $('#inputIncome_' + id).val();
         model.excessIncome = $('#inputExcessIncome_' + id).val();
@@ -207,7 +207,7 @@
                 rowData.unitUser = model.unitUser;
                 rowData.avgConsumeUser = model.avgConsumeUser;
                 rowData.consumptionUser = model.consumptionUser;
-                rowData.capacity = model.capacity;
+                rowData.excessConsumption = model.excessConsumption;
                 rowData.cost = model.cost;
                 rowData.income = model.income;
                 rowData.excessIncome = model.excessIncome;
@@ -229,7 +229,7 @@
                 $('#spanUnitUser_' + id).text(data.unitUser);
                 $('#spanAvgConsumeUser_' + id).text(data.avgConsumeUser);
                 $('#spanConsumptionUser_' + id).text(data.consumptionUser);
-                $('#spanCapacity_' + id).text(data.capacity);
+                $('#spanExcessConsumption_' + id).text(data.excessConsumption);
                 $('#spanCost_' + id).text(data.cost);
                 $('#spanIncome_' + id).text(data.income);
                 $('#spanExcessIncome_' + id).text(data.excessIncome);
@@ -280,9 +280,9 @@
         if (model.consumptionUser == "") {
             model.consumptionUser = 0;
         }
-        model.capacity = $(e).find('#inputCapacity_').val();
-        if (model.capacity == "") {
-            model.capacity = 0;
+        model.excessConsumption = $(e).find('#inputExcessConsumption_').val();
+        if (model.excessConsumption == "") {
+            model.excessConsumption = 0;
         }
         model.cost = $(e).find('#inputCost_').val();
         if (model.cost == "") {
@@ -423,15 +423,15 @@
                 $('#spanConsumptionUser_' + data.id).text(data.consumptionUser);
                 $('#divOutput_ConsumptionUser_' + data.id).show();
 
-                //Capacity
-                $(e).find('#divInput_Capacity_').attr('id', 'divInput_Capacity_' + data.id);
-                $(e).find('#inputCapacity_').attr('id', 'inputCapacity_' + data.id);
-                $(e).find('#divOutput_Capacity_').attr('id', 'divOutput_Capacity_' + data.id);
-                $(e).find('#spanCapacity_').attr('id', 'spanCapacity_' + data.id);
+                //ExcessConsumption
+                $(e).find('#divInput_ExcessConsumption_').attr('id', 'divInput_ExcessConsumption_' + data.id);
+                $(e).find('#inputExcessConsumption_').attr('id', 'inputExcessConsumption_' + data.id);
+                $(e).find('#divOutput_ExcessConsumption_').attr('id', 'divOutput_ExcessConsumption_' + data.id);
+                $(e).find('#spanExcessConsumption_').attr('id', 'spanExcessConsumption_' + data.id);
 
-                $('#divInput_Capacity_' + data.id).hide();
-                $('#spanCapacity_' + data.id).text(data.capacity);
-                $('#divOutput_Capacity_' + data.id).show();
+                $('#divInput_ExcessConsumption_' + data.id).hide();
+                $('#spanExcessConsumption_' + data.id).text(data.excessConsumption);
+                $('#divOutput_ExcessConsumption_' + data.id).show();
 
                 //Cost
                 $(e).find('#divInput_Cost_').attr('id', 'divInput_Cost_' + data.id);
