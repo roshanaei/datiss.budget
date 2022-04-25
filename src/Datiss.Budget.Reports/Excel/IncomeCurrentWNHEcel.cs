@@ -28,7 +28,8 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 5).Value = "آحاد مشترک";
             sheet.Cell(1, 6).Value = "متوسط مصرف ماهیانه";
             sheet.Cell(1, 7).Value = "مصرف آب";
-            sheet.Cell(1, 8).Value = "ظرفیت قراردادی";
+            //sheet.Cell(1, 8).Value = "ظرفیت قراردادی";
+            sheet.Cell(1, 8).Value = "مصرف مازاد";
             sheet.Cell(1, 9).Value = "قیمت هر کاربری";
             sheet.Cell(1, 10).Value = "درآمد آب بها";
             sheet.Cell(1, 11).Value = "درآمد آب بها مازاد بر ظرفیت";
@@ -62,7 +63,7 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 7).Value = item.ConsumptionUser;
                 sheet.Cell(row, 7).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                sheet.Cell(row, 8).Value = item.Capacity;
+                sheet.Cell(row, 8).Value = item.ExcessConsumption;
                 sheet.Cell(row, 8).Style.NumberFormat.Format = "#,##0.00";
                 sheet.Cell(row, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 sheet.Cell(row, 9).Value = item.Cost;

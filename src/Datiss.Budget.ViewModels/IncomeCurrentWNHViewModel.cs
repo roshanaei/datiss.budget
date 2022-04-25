@@ -25,7 +25,9 @@ namespace Datiss.Budget.ViewModels
 
         public int ConsumptionUser { get; set; }
 
-        public decimal Capacity { get; set; }
+        //public decimal Capacity { get; set; }
+
+        public decimal ExcessConsumption { get; set; }
 
         public long Cost { get; set; }
 
@@ -76,8 +78,10 @@ namespace Datiss.Budget.ViewModels
         public string AvgConsumeUserDisplay => AvgConsumeUser.ToString("N2");
         public int ConsumptionUser { get; set; }
         public string ConsumptionUserDisplay => ConsumptionUser.ToString("N0");
-        public decimal Capacity { get; set; }
-        public string CapacityDisplay => Capacity.ToString("N2");
+        //public decimal Capacity { get; set; }
+        //public string CapacityDisplay => Capacity.ToString("N2");
+        public decimal ExcessConsumption { get; set; }
+        public string ExcessConsumptionDisplay => ExcessConsumption.ToString("N2");
         public long Cost { get; set; }
         public string CostDisplay => Cost.ToString("N0");
         public long Income { get; set; }

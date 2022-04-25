@@ -80,7 +80,8 @@ namespace Datiss.Budget.Services
                 UnitUser = model.UnitUser,
                 AvgConsumeUser = model.AvgConsumeUser,
                 ConsumptionUser = model.ConsumptionUser,
-                Capacity = model.Capacity,
+                //Capacity = model.Capacity,
+                ExcessConsumption = model.ExcessConsumption,
                 Cost = model.Cost,
                 Income = model.Income,
                 ExcessIncome = model.ExcessIncome,
@@ -119,7 +120,8 @@ namespace Datiss.Budget.Services
                     result.UnitUser = model.UnitUser;
                     result.AvgConsumeUser = model.AvgConsumeUser;
                     result.ConsumptionUser = model.ConsumptionUser;
-                    result.Capacity = model.Capacity;
+                    //result.Capacity = model.Capacity;
+                    result.ExcessConsumption = model.ExcessConsumption;
                     result.Cost = model.Cost;
                     result.Income = model.Income;
                     result.ExcessIncome = model.ExcessIncome;
@@ -167,7 +169,8 @@ namespace Datiss.Budget.Services
                     entity.UnitUser = model.UnitUser;
                     entity.AvgConsumeUser = model.AvgConsumeUser;
                     entity.ConsumptionUser = model.ConsumptionUser;
-                    entity.Capacity = model.Capacity;
+                    //entity.Capacity = model.Capacity;
+                    entity.ExcessConsumption = model.ExcessConsumption;
                     entity.Cost = model.Cost;
                     entity.Income = model.Income;
                     entity.ExcessIncome = model.ExcessIncome;
@@ -199,7 +202,8 @@ namespace Datiss.Budget.Services
                         UnitUser = model.UnitUser,
                         AvgConsumeUser = model.AvgConsumeUser,
                         ConsumptionUser = model.ConsumptionUser,
-                        Capacity = model.Capacity,
+                        //Capacity = model.Capacity,
+                        ExcessConsumption = model.ExcessConsumption,
                         Cost = model.Cost,
                         Income = model.Income,
                         ExcessIncome = model.ExcessIncome,
@@ -302,7 +306,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal1",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                     "[dbo].[IncomeCurrentWNH_Cal1] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
@@ -310,7 +314,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal2",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                     "[dbo].[IncomeCurrentWNH_Cal2] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
@@ -318,7 +322,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal3",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal3] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -326,7 +330,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal4",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal4] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -334,7 +338,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal5",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal5] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -342,7 +346,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal6",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal6] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -350,7 +354,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal7",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal7] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -358,7 +362,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal8",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal8] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -366,7 +370,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal9",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                      "[dbo].[IncomeCurrentWNH_Cal9] @YearId, @OrganizationId",
                                      parameters: sqlParams.ToArray())
             });
@@ -374,7 +378,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWNH_Cal10",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                  "[dbo].[IncomeCurrentWNH_Cal10] @YearId, @OrganizationId",
                                  parameters: sqlParams.ToArray())
             });
@@ -418,7 +422,8 @@ namespace Datiss.Budget.Services
                                         UnitUser = x.UnitUser,
                                         AvgConsumeUser = x.AvgConsumeUser,
                                         ConsumptionUser = x.ConsumptionUser,
-                                        Capacity = x.Capacity,
+                                        //Capacity = x.Capacity,
+                                        ExcessConsumption = x.ExcessConsumption,
                                         Cost = x.Cost,
                                         Income = x.Income,
                                         ExcessIncome = x.ExcessIncome,
@@ -473,7 +478,8 @@ namespace Datiss.Budget.Services
                         UnitUser = item.UnitUser,
                         AvgConsumeUser = item.AvgConsumeUser,
                         ConsumptionUser = item.ConsumptionUser,
-                        Capacity = item.Capacity,
+                        //Capacity = item.Capacity,
+                        ExcessConsumption = item.ExcessConsumption,
                         Cost = item.Cost,
                         Income = item.Income,
                         ExcessIncome = item.ExcessIncome,
@@ -698,7 +704,8 @@ namespace Datiss.Budget.Services
                                         UnitUser = x.UnitUser,
                                         AvgConsumeUser = x.AvgConsumeUser,
                                         ConsumptionUser = x.ConsumptionUser,
-                                        Capacity = x.Capacity,
+                                        //Capacity = x.Capacity,
+                                        ExcessConsumption = x.ExcessConsumption,
                                         Cost = x.Cost,
                                         Income = x.Income,
                                         ExcessIncome = x.ExcessIncome,
@@ -742,7 +749,8 @@ namespace Datiss.Budget.Services
                                         UnitUser = x.UnitUser,
                                         AvgConsumeUser = x.AvgConsumeUser,
                                         ConsumptionUser = x.ConsumptionUser,
-                                        Capacity = x.Capacity,
+                                        //Capacity = x.Capacity,
+                                        ExcessConsumption = x.ExcessConsumption,
                                         Cost = x.Cost,
                                         Income = x.Income,
                                         ExcessIncome = x.ExcessIncome,
@@ -880,7 +888,8 @@ namespace Datiss.Budget.Services
                         UnitUser = item.UnitUser,
                         AvgConsumeUser = item.AvgConsumeUser,
                         ConsumptionUser = item.ConsumptionUser,
-                        Capacity = item.Capacity,
+                        //Capacity = item.Capacity,
+                        ExcessConsumption = item.ExcessConsumption,
                         Cost = item.Cost,
                         Income = item.Income,
                         ExcessIncome = item.ExcessIncome,
