@@ -20,6 +20,8 @@ namespace Datiss.Budget.Services.Models
 
         public decimal AvgConsumeUser { get; set; }
 
+        public decimal ExcessConsumption { get; set; }
+
         public int ConsumptionUser { get; set; }
 
         public decimal Capacity { get; set; }
@@ -66,6 +68,7 @@ namespace Datiss.Budget.Services.Models
         public int NumberUser { get; set; }
         public int UnitUser { get; set; }
         public decimal AvgConsumeUser { get; set; }
+        public decimal ExcessConsumption { get; set; }
         public int ConsumptionUser { get; set; }
         public decimal Capacity { get; set; }
         public long Cost { get; set; }
