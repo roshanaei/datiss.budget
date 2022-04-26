@@ -9,7 +9,7 @@
                 <th style="min-width:160px">تعداد مشترک</th>
                 <th style="min-width:160px">آحاد مشترک</th>
                 <th style="min-width:180px">متوسط حجم دفع</th>
-                <th style="min-width:180px">ظرفیت قراردادی</th>
+                <th style="min-width:180px">مصرف مازاد</th>
                 <th style="min-width:160px">حجم دفع</th>
                 <th style="min-width:175px">قیمت هر کاربری</th>
                 <th style="min-width:175px">درآمد کارمزد دفع</th>
@@ -86,11 +86,11 @@
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_Capacity_">
-                        <input class="form-control input-keyup" id="inputCapacity_" type="number" min="0" />
+                    <div id="divInput_ExcessConsumption_">
+                        <input class="form-control input-keyup" id="inputExcessConsumption_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_Capacity_" style="display: none">
-                        <span id="spanCapacity_"> </span>
+                    <div id="divOutput_ExcessConsumption_" style="display: none">
+                        <span id="spanExcessConsumption_"> </span>
                     </div>
                 </td>
                 <td>
@@ -262,11 +262,11 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_Capacity_@item.Id" style="display: none">
-                            <input class="form-control" id="inputCapacity_@item.Id" value="@item.Capacity" type="number" />
+                        <div id="divInput_ExcessConsumption_@item.Id" style="display: none">
+                            <input class="form-control" id="inputExcessConsumption_@item.Id" value="@item.ExcessConsumption" type="number" />
                         </div>
-                        <div id="divOutput_Capacity_@item.Id">
-                            <span id="spanCapacity_@item.Id">@item.CapacityDisplay </span>
+                        <div id="divOutput_ExcessConsumption_@item.Id">
+                            <span id="spanExcessConsumption_@item.Id">@item.ExcessConsumptionDisplay </span>
                         </div>
                     </td>
                     <td>
