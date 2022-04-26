@@ -80,7 +80,7 @@ namespace Datiss.Budget.Services
                 UnitUser = model.UnitUser,
                 AvgConsumeUser = model.AvgConsumeUser,
                 ConsumptionUser = model.ConsumptionUser,
-                Capacity = model.Capacity,
+                ExcessConsumption = model.ExcessConsumption,
                 Cost = model.Cost,
                 Income = model.Income,
                 ExcessIncome = model.ExcessIncome,
@@ -116,7 +116,7 @@ namespace Datiss.Budget.Services
                     result.UnitUser = model.UnitUser;
                     result.AvgConsumeUser = model.AvgConsumeUser;
                     result.ConsumptionUser = model.ConsumptionUser;
-                    result.Capacity = model.Capacity;
+                    result.ExcessConsumption = model.ExcessConsumption;
                     result.Cost = model.Cost;
                     result.Income = model.Income;
                     result.ExcessIncome = model.ExcessIncome;
@@ -159,7 +159,7 @@ namespace Datiss.Budget.Services
                     entity.UnitUser = model.UnitUser;
                     entity.AvgConsumeUser = model.AvgConsumeUser;
                     entity.ConsumptionUser = model.ConsumptionUser;
-                    entity.Capacity = model.Capacity;
+                    entity.ExcessConsumption = model.ExcessConsumption;
                     entity.Cost = model.Cost;
                     entity.Income = model.Income;
                     entity.ExcessIncome = model.ExcessIncome;
@@ -188,7 +188,7 @@ namespace Datiss.Budget.Services
                         UnitUser = model.UnitUser,
                         AvgConsumeUser = model.AvgConsumeUser,
                         ConsumptionUser = model.ConsumptionUser,
-                        Capacity = model.Capacity,
+                        ExcessConsumption = model.ExcessConsumption,
                         Cost = model.Cost,
                         Income = model.Income,
                         ExcessIncome = model.ExcessIncome,
@@ -397,7 +397,7 @@ namespace Datiss.Budget.Services
                                         UnitUser = x.UnitUser,
                                         AvgConsumeUser = x.AvgConsumeUser,
                                         ConsumptionUser = x.ConsumptionUser,
-                                        Capacity = x.Capacity,
+                                        ExcessConsumption = x.ExcessConsumption,
                                         Cost = x.Cost,
                                         Income = x.Income,
                                         ExcessIncome = x.ExcessIncome,
@@ -449,7 +449,7 @@ namespace Datiss.Budget.Services
                         UnitUser = item.UnitUser,
                         AvgConsumeUser = item.AvgConsumeUser,
                         ConsumptionUser = item.ConsumptionUser,
-                        Capacity = item.Capacity,
+                        ExcessConsumption = item.ExcessConsumption,
                         Cost = item.Cost,
                         Income = item.Income,
                         ExcessIncome = item.ExcessIncome,
@@ -673,7 +673,7 @@ namespace Datiss.Budget.Services
                                         UnitUser = x.UnitUser,
                                         AvgConsumeUser = x.AvgConsumeUser,
                                         ConsumptionUser = x.ConsumptionUser,
-                                        Capacity = x.Capacity,
+                                        ExcessConsumption = x.ExcessConsumption,
                                         Cost = x.Cost,
                                         Income = x.Income,
                                         ExcessIncome = x.ExcessIncome,
@@ -714,7 +714,7 @@ namespace Datiss.Budget.Services
                                         UnitUser = x.UnitUser,
                                         AvgConsumeUser = x.AvgConsumeUser,
                                         ConsumptionUser = x.ConsumptionUser,
-                                        Capacity = x.Capacity,
+                                        ExcessConsumption = x.ExcessConsumption,
                                         Cost = x.Cost,
                                         Income = x.Income,
                                         ExcessIncome = x.ExcessIncome,
@@ -846,7 +846,7 @@ namespace Datiss.Budget.Services
                         UnitUser = item.UnitUser,
                         AvgConsumeUser = item.AvgConsumeUser,
                         ConsumptionUser = item.ConsumptionUser,
-                        Capacity = item.Capacity,
+                        ExcessConsumption = item.ExcessConsumption,
                         Cost = item.Cost,
                         Income = item.Income,
                         ExcessIncome = item.ExcessIncome,
