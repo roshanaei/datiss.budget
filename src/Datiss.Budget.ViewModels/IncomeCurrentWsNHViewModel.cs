@@ -5,8 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -36,7 +34,7 @@ namespace Datiss.Budget.ViewModels
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
-        public decimal Capacity { get; set; }
+        public decimal ExcessConsumption { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
         [Range(0, int.MaxValue, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "isNumber")]
@@ -121,9 +119,9 @@ namespace Datiss.Budget.ViewModels
 
         public string AvgConsumeUserDisplay => AvgConsumeUser.ToString("N2");
 
-        public decimal Capacity { get; set; }
+        public decimal ExcessConsumption { get; set; }
 
-        public string CapacityDisplay => Capacity.ToString("N2");
+        public string ExcessConsumptionDisplay => ExcessConsumption.ToString("N2");
 
         public int ConsumptionUser { get; set; }
 
