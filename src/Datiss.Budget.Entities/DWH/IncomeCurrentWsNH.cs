@@ -24,6 +24,8 @@ namespace Datiss.Budget.Entities.DWH
 
         public decimal Capacity { get; set; }
 
+        public decimal ExcessConsumption { get; set; }
+
         public int ConsumptionUser { get; set; }
 
         public long Cost { get; set; }
