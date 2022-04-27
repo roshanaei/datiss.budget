@@ -8,20 +8,20 @@
                 <th style="min-width:240px">کاربری</th>
                 <th style="min-width:160px">تعداد مشترک</th>
                 <th style="min-width:160px">آحاد مشترک</th>
-                <th style="min-width:180px">متوسط مصرف ماهیانه</th>
+                <th style="min-width:180px;font-size:smaller">متوسط مصرف ماهیانه</th>
                 <th style="min-width:160px">مصرف آب</th>
                 <th style="min-width:175px">مصرف مازاد</th>
                 <th style="min-width:175px">قیمت هر کاربری</th>
                 <th style="min-width:160px">درآمد آب بها</th>
-                <th style="min-width:180px">درآمد آب بها مازاد بر ظرفیت</th>
+                <th style="min-width:180px;font-size:x-small">درآمد آب بها مازاد بر ظرفیت</th>
                 <th style="min-width:175px">درآمد آب بها فصلی</th>
                 <th style="min-width:170px">قیمت آب تبصره 3</th>
-                <th style="min-width:180px">درآمد تبصره 3 آب بها</th>
+                <th style="min-width:180px;font-size:smaller">درآمد تبصره 3 آب بها</th>
                 <th style="min-width:160px">درآمد آبونمان</th>
                 <th style="min-width:160px">درآمد کل آب بها</th>
-                <th style="min-width:180px">درآمد تبصره 2 آب بها</th>
-                <th style="min-width:160px">حجم دفع</th>
-                <th style="min-width:180px">تفاوت حجم مصرف آب و دفع فاضلاب</th>
+                <th style="min-width:180px;font-size:smaller">درآمد تبصره 2 آب بها</th>
+                <th style="min-width:160px;font-size:smaller">حجم دفع فاضلاب</th>
+                <th style="min-width:200px;font-size:xx-small">تفاوت حجم مصرف آب و دفع فاضلاب</th>
                 <th style="min-width:200px">مدیریت</th>
             </tr>
         </thead>
@@ -168,14 +168,7 @@
                         <span id="spanTotalIncome_"> </span>
                     </div>
                 </td>
-                <td>
-                    <div id="divInput_Diff_ConsWsVolume_">
-                        <input class="form-control input-keyup" id="inputDiff_ConsWsVolume_" type="number" min="0" />
-                    </div>
-                    <div id="divOutput_Diff_ConsWsVolume_" style="display: none">
-                        <span id="spanDiff_ConsWsVolume_"> </span>
-                    </div>
-                </td>
+
                 <td>
                     <div id="divInput_Note2Income_">
                         <input class="form-control input-keyup" id="inputNote2Income_" type="number" min="0" />
@@ -192,7 +185,14 @@
                         <span id="spanWasteVolume_"> </span>
                     </div>
                 </td>
-
+                <td>
+                    <div id="divInput_Diff_ConsWsVolume_">
+                        <input class="form-control input-keyup" id="inputDiff_ConsWsVolume_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_Diff_ConsWsVolume_" style="display: none">
+                        <span id="spanDiff_ConsWsVolume_"> </span>
+                    </div>
+                </td>
                 <td>
                     <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
                         <i class="fa ft-edit fa-1x"></i>
@@ -369,14 +369,6 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_Diff_ConsWsVolume_@item.Id" style="display: none">
-                            <input class="form-control" id="inputDiff_ConsWsVolume_@item.Id" value="@item.Diff_ConsWsVolume" type="number" />
-                        </div>
-                        <div id="divOutput_Diff_ConsWsVolume_@item.Id">
-                            <span id="spanDiff_ConsWsVolume_@item.Id">@item.Diff_ConsWsVolumeDisplay </span>
-                        </div>
-                    </td>
-                    <td>
                         <div id="divInput_Note2Income_@item.Id" style="display: none">
                             <input class="form-control" id="inputNote2Income_@item.Id" value="@item.Note2Income" type="number" />
                         </div>
@@ -390,6 +382,14 @@
                         </div>
                         <div id="divOutput_WasteVolume_@item.Id">
                             <span id="spanWasteVolume_@item.Id">@item.WasteVolumeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Diff_ConsWsVolume_@item.Id" style="display: none">
+                            <input class="form-control" id="inputDiff_ConsWsVolume_@item.Id" value="@item.Diff_ConsWsVolume" type="number" />
+                        </div>
+                        <div id="divOutput_Diff_ConsWsVolume_@item.Id">
+                            <span id="spanDiff_ConsWsVolume_@item.Id">@item.Diff_ConsWsVolumeDisplay </span>
                         </div>
                     </td>
                     <td>
