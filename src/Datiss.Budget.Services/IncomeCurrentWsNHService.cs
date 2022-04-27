@@ -289,7 +289,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsNH_Cal1",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                     "[dbo].[IncomeCurrentWsNH_Cal1] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
@@ -297,7 +297,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsNH_Cal2",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                     "[dbo].[IncomeCurrentWsNH_Cal2] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
@@ -305,7 +305,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsNH_Cal3",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                     "[dbo].[IncomeCurrentWsNH_Cal3] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
@@ -313,7 +313,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsNH_Cal4",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                     "[dbo].[IncomeCurrentWsNH_Cal4] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
@@ -321,7 +321,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsNH_Cal5",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                     "[dbo].[IncomeCurrentWsNH_Cal5] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
@@ -329,7 +329,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsNH_Cal6",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                     "[dbo].[IncomeCurrentWsNH_Cal6] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
@@ -337,7 +337,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsNH_Cal7",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                     "[dbo].[IncomeCurrentWsNH_Cal7] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
@@ -345,7 +345,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsNH_Cal8",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                     "[dbo].[IncomeCurrentWsNH_Cal8] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
@@ -353,7 +353,7 @@ namespace Datiss.Budget.Services
             result.Add(new CalculationItemData
             {
                 Key = "IncomeCurrentWsNH_Cal9",
-                Value = await _uow.ExecuteScalar<int>(
+                Value = await _uow.ExecuteScalar<long>(
                                     "[dbo].[IncomeCurrentWsNH_Cal9] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray())
             });
