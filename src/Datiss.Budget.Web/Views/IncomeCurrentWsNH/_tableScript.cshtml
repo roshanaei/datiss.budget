@@ -21,7 +21,6 @@
         $('#divOutput_SubscriptionIncome_' + id).hide();
         $('#divOutput_ExcessIncome_' + id).hide();
         $('#divOutput_SeasonalIncome_' + id).hide();
-        $('#divOutput_Note3Price_' + id).hide();
         $('#divOutput_Note3Income_' + id).hide();
         $('#divOutput_TotalIncome_' + id).hide();
 
@@ -39,7 +38,6 @@
         $('#divInput_SubscriptionIncome_' + id).show();
         $('#divInput_ExcessIncome_' + id).show();
         $('#divInput_SeasonalIncome_' + id).show();
-        $('#divInput_Note3Price_' + id).show();
         $('#divInput_Note3Income_' + id).show();
         $('#divInput_TotalIncome_' + id).show();
 
@@ -61,7 +59,6 @@
         rowData.subscriptionIncome = $('#inputSubscriptionIncome_' + id).val();
         rowData.excessIncome = $('#inputExcessIncome_' + id).val();
         rowData.seasonalIncome = $('#inputSeasonalIncome_' + id).val();
-        rowData.note3Price = $('#inputNote3Price_' + id).val();
         rowData.note3Income = $('#inputNote3Income_' + id).val();
         rowData.totalIncome = $('#inputTotalIncome_' + id).val();
     }
@@ -83,7 +80,6 @@
         $('#divInput_Income_' + id).hide();
         $('#divInput_ExcessIncome_' + id).hide();
         $('#divInput_SeasonalIncome_' + id).hide();
-        $('#divInput_Note3Price_' + id).hide();
         $('#divInput_Note3Income_' + id).hide();
         $('#divInput_SubscriptionIncome_' + id).hide();
         $('#divInput_TotalIncome_' + id).hide();
@@ -102,7 +98,6 @@
             $('#inputSubscriptionIncome_' + id).attr(rowData.subscriptionIncome);
             $('#inputExcessIncome_' + id).attr(rowData.excessIncome);
             $('#inputSeasonalIncome_' + id).attr(rowData.seasonalIncome);
-            $('#inputNote3Price_' + id).attr(rowData.note3Price);
             $('#inputNote3Income_' + id).attr(rowData.note3Income);
             $('#inputTotalIncome_' + id).attr(rowData.totalIncome);
         }
@@ -120,7 +115,6 @@
         $('#divOutput_Income_' + id).show();
         $('#divOutput_ExcessIncome_' + id).show();
         $('#divOutput_SeasonalIncome_' + id).show();
-        $('#divOutput_Note3Price_' + id).show();
         $('#divOutput_Note3Income_' + id).show();
         $('#divOutput_SubscriptionIncome_' + id).show();
         $('#divOutput_TotalIncome_' + id).show();
@@ -155,14 +149,9 @@
         model.income = $('#inputIncome_' + id).val();
         model.excessIncome = $('#inputExcessIncome_' + id).val();
         model.seasonalIncome = $('#inputSeasonalIncome_' + id).val();
-        model.note3Price = $('#inputNote3Price_' + id).val();
         model.note3Income = $('#inputNote3Income_' + id).val();
         model.subscriptionIncome = $('#inputSubscriptionIncome_' + id).val();
         model.totalIncome = $('#inputTotalIncome_' + id).val();
-        model.diff_ConsWsVolume = $('#inputDiff_ConsWsVolume_' + id).val();
-        model.note2Income = $('#inputNote2Income_' + id).val();
-        model.wasteVolume = $('#inputWasteVolume_' + id).val();
-
         $.ajax({
             url: '@Url.Action(IncomeCurrentWsNHController.ACTION_Edit)',
             type: 'POST',
@@ -181,7 +170,6 @@
                         });
                         return;
                 }
-
                 rowData = {};
                 rowData.yearId = model.yearId;
                 rowData.organizationId = model.organizationId;
@@ -196,7 +184,6 @@
                 rowData.subscriptionIncome = model.subscriptionIncome;
                 rowData.excessIncome = model.excessIncome;
                 rowData.seasonalIncome = model.seasonalIncome;
-                rowData.note3Price = model.note3Price;
                 rowData.note3Income = model.note3Income;
                 rowData.totalIncome = model.totalIncome;
 
@@ -214,7 +201,6 @@
                 $('#spanIncome_' + id).text(data.income);
                 $('#spanExcessIncome_' + id).text(data.excessIncome);
                 $('#spanSeasonalIncome_' + id).text(data.seasonalIncome);
-                $('#spanNote3Price_' + id).text(data.note3Price);
                 $('#spanNote3Income_' + id).text(data.note3Income);
                 $('#spanSubscriptionIncome_' + id).text(data.subscriptionIncome);
                 $('#spanTotalIncome_' + id).text(data.totalIncome);
@@ -277,9 +263,7 @@
         if (model.seasonalIncome == "") {
             model.seasonalIncome = 0;
         }
-        model.note3Price = $(e).find('#inputNote3Price_').val();
-        if (model.note3Price == "") {
-            model.note3Price = 0;
+        model.note3Price = 0;
         }
         model.note3Income = $(e).find('#inputNote3Income_').val();
         if (model.note3Income == "") {
@@ -436,16 +420,6 @@
                 $('#divInput_SeasonalIncome_' + data.id).hide();
                 $('#spanSeasonalIncome_' + data.id).text(data.seasonalIncome);
                 $('#divOutput_SeasonalIncome_' + data.id).show();
-
-                //Note3Price
-                $(e).find('#divInput_Note3Price_').attr('id', 'divInput_Note3Price_' + data.id);
-                $(e).find('#inputNote3Price_').attr('id', 'inputNote3Price_' + data.id);
-                $(e).find('#divOutput_Note3Price_').attr('id', 'divOutput_Note3Price_' + data.id);
-                $(e).find('#spanNote3Price_').attr('id', 'spanNote3Price_' + data.id);
-
-                $('#divInput_Note3Price_' + data.id).hide();
-                $('#spanNote3Price_' + data.id).text(data.note3Price);
-                $('#divOutput_Note3Price_' + data.id).show();
 
                 //Note3Income
                 $(e).find('#divInput_Note3Income_').attr('id', 'divInput_Note3Income_' + data.id);
