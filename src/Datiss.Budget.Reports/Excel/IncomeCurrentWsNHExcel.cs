@@ -89,11 +89,11 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 14).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 14).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 15).Value = item.Note3Income;
+                sheet.Cell(row, 15).Value = item.TotalIncome;
                 sheet.Cell(row, 15).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 15).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-                sheet.Cell(row, 16).Value = item.TotalIncome;
+                sheet.Cell(row, 16).Value = item.Note3Income; 
                 sheet.Cell(row, 16).Style.NumberFormat.Format = "#,##0";
                 sheet.Cell(row, 16).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 

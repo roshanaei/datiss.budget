@@ -1,16 +1,13 @@
-﻿using ClosedXML.Extensions;
-using Datiss.Budget.Common;
+﻿using Datiss.Budget.Common;
 using Datiss.Budget.Common.Exceptions;
 using Datiss.Budget.Common.GuardToolkit;
 using Datiss.Budget.Enum;
-using Datiss.Budget.Reports.Excel;
 using Datiss.Budget.Resources;
-using Datiss.Budget.Security;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Contracts.Identity;
+using Datiss.Budget.Services.Identity;
 using Datiss.Budget.Services.Models;
 using Datiss.Budget.ViewModels;
-using Datiss.Budget.Web.Helpers;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -18,9 +15,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Datiss.Budget.Reports.Excel;
+using ClosedXML.Extensions;
+using Datiss.Budget.Security;
 
 namespace Datiss.Budget.Web.Controllers
 {
@@ -37,7 +36,6 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
-        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
@@ -71,14 +69,8 @@ namespace Datiss.Budget.Web.Controllers
         }
 
 
-        private void showMessage(string type, string message)
-        {
-            ViewData["type"] = type;
-            ViewData["message"] = message;
-        }
-
         [HttpPost("[action]")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> Create(CreateIncomeCurrentWsNHViewModel model)
         {
             if (!ModelState.IsValid)
@@ -100,7 +92,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.Edit)]
+        [HasPermission(claimType: Name, PermissionActionType.Edit)]
         public async Task<IActionResult> Edit(UpdateIncomeCurrentWsNHViewModel model)
         {
 
@@ -125,7 +117,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("{page?}")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.List)]
+        [HasPermission(claimType: Name, PermissionActionType.List)]
         public async Task<IActionResult> Index(int page = 1)
         {
             var filter = new IncomeCurrentWsNHFilterDTO();
@@ -210,7 +202,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("[action]")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> ImportExcel(ImportExcelViewModel model)
         {
             model.CheckArgumentIsNull(nameof(model));
@@ -258,8 +250,6 @@ namespace Datiss.Budget.Web.Controllers
             }
             catch (ImportExcelFileFormatInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileFormatInvalid);
                 return Json(new
                 {
                     hasError = true,
@@ -268,8 +258,6 @@ namespace Datiss.Budget.Web.Controllers
             }
             catch (ImportExcelFileSizeInvalidException)
             {
-                showMessage(CssClassNames.Error,
-                    ViewMessages.ImportExcelFileSizeInvalid);
                 return Json(new
                 {
                     hasError = true,
@@ -280,7 +268,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpPost("records/delete")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
+        [HasPermission(claimType: Name, PermissionActionType.Delete)]
         public async Task<IActionResult> DeleteRecords(int yearId, int orgId)
         {
             try
@@ -332,7 +320,7 @@ namespace Datiss.Budget.Web.Controllers
 
 
         [HttpPost("[action]/{id}")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
+        [HasPermission(claimType: Name, PermissionActionType.Delete)]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -389,19 +377,7 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> DownloadExcelTemplate()
-        {
-            var filePath = $"{_env.WebRootPath}\\Excel\\IncomeCurrentWsNHImport.xlsx";
-
-            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return File(
-                stream,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "IncomeCurrentWsNH.xlsx");
-        }
-
-        [HttpGet("[action]")]
-        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> Copy()
         {
             var model = new CopyViewModel();
@@ -513,14 +489,14 @@ namespace Datiss.Budget.Web.Controllers
             => key switch
             {
                 "IncomeCurrentWsNH_Cal1" => SPTitles.IncomeCurrentWsNH_Cal1,
-                "IncomeCurrentWsNH_Cal2" => SPTitles.IncomeCurrentWsNH_Cal1,
-                "IncomeCurrentWsNH_Cal3" => SPTitles.IncomeCurrentWsNH_Cal1,
-                "IncomeCurrentWsNH_Cal4" => SPTitles.IncomeCurrentWsNH_Cal1,
-                "IncomeCurrentWsNH_Cal5" => SPTitles.IncomeCurrentWsNH_Cal1,
-                "IncomeCurrentWsNH_Cal6" => SPTitles.IncomeCurrentWsNH_Cal1,
-                "IncomeCurrentWsNH_Cal7" => SPTitles.IncomeCurrentWsNH_Cal1,
-                "IncomeCurrentWsNH_Cal8" => SPTitles.IncomeCurrentWsNH_Cal1,
-                "IncomeCurrentWsNH_Cal9" => SPTitles.IncomeCurrentWsNH_Cal1,
+                "IncomeCurrentWsNH_Cal2" => SPTitles.IncomeCurrentWsNH_Cal2,
+                "IncomeCurrentWsNH_Cal3" => SPTitles.IncomeCurrentWsNH_Cal3,
+                "IncomeCurrentWsNH_Cal4" => SPTitles.IncomeCurrentWsNH_Cal4,
+                "IncomeCurrentWsNH_Cal5" => SPTitles.IncomeCurrentWsNH_Cal5,
+                "IncomeCurrentWsNH_Cal6" => SPTitles.IncomeCurrentWsNH_Cal6,
+                "IncomeCurrentWsNH_Cal7" => SPTitles.IncomeCurrentWsNH_Cal7,
+                "IncomeCurrentWsNH_Cal8" => SPTitles.IncomeCurrentWsNH_Cal8,
+                "IncomeCurrentWsNH_Cal9" => SPTitles.IncomeCurrentWsNH_Cal9,
                 _ => ""
             };
         }
