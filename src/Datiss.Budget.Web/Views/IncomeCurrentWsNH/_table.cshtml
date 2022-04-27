@@ -17,9 +17,9 @@
                 <th style="min-width:180px">درآمد فاضلاب بهاء مازاد بر ظرفیت</th>
                 <th style="min-width:175px">درآمد فاضلاب بهاء فصلی</th>
                 <th style="min-width:170px">درآمد کل فاضلاب بهاء</th>
-                <th style="min-width:160px">قیمت فاضلاب تبصره 3</th>
                 <th style="min-width:160px">درآمد تبصره 3 فاضلاب بهاء</th>
                 <th style="min-width:200px">مدیریت</th>
+
             </tr>
         </thead>
         <tbody>
@@ -142,11 +142,11 @@
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_Note3Price_">
-                        <input class="form-control input-keyup" id="inputNote3Price_" type="number" min="0" />
+                    <div id="divInput_TotalIncome_">
+                        <input class="form-control input-keyup" id="inputTotalIncome_" type="number" min="0" />
                     </div>
-                    <div id="divOutput_Note3Price_" style="display: none">
-                        <span id="spanNote3Price_"> </span>
+                    <div id="divOutput_TotalIncome_" style="display: none">
+                        <span id="spanTotalIncome_"> </span>
                     </div>
                 </td>
                 <td>
@@ -155,14 +155,6 @@
                     </div>
                     <div id="divOutput_Note3Income_" style="display: none">
                         <span id="spanNote3Income_"> </span>
-                    </div>
-                </td>
-                <td>
-                    <div id="divInput_TotalIncome_">
-                        <input class="form-control input-keyup" id="inputTotalIncome_" type="number" min="0" />
-                    </div>
-                    <div id="divOutput_TotalIncome_" style="display: none">
-                        <span id="spanTotalIncome_"> </span>
                     </div>
                 </td>
 
@@ -318,11 +310,11 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_Note3Price_@item.Id" style="display: none">
-                            <input class="form-control" id="inputNote3Price_@item.Id" value="@item.Note3Price" type="number" />
+                        <div id="divInput_TotalIncome_@item.Id" style="display: none">
+                            <input class="form-control" id="inputTotalIncome_@item.Id" value="@item.TotalIncome" type="number" />
                         </div>
-                        <div id="divOutput_Note3Price_@item.Id">
-                            <span id="spanNote3Price_@item.Id">@item.Note3PriceDisplay </span>
+                        <div id="divOutput_TotalIncome_@item.Id">
+                            <span id="spanTotalIncome_@item.Id">@item.TotalIncomeDisplay </span>
                         </div>
                     </td>
                     <td>
@@ -331,14 +323,6 @@
                         </div>
                         <div id="divOutput_Note3Income_@item.Id">
                             <span id="spanNote3Income_@item.Id">@item.Note3IncomeDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_TotalIncome_@item.Id" style="display: none">
-                            <input class="form-control" id="inputTotalIncome_@item.Id" value="@item.TotalIncome" type="number" />
-                        </div>
-                        <div id="divOutput_TotalIncome_@item.Id">
-                            <span id="spanTotalIncome_@item.Id">@item.TotalIncomeDisplay </span>
                         </div>
                     </td>
 
