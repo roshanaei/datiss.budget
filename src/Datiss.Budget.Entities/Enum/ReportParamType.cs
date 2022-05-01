@@ -7,9 +7,11 @@
         Date = 2,
         Year = 3,
         Organization = 4,
-        Constant = 5,
-        County = 6, //شهرستان
-        City = 7, //شهر
-        Village = 8, //روستا
+        FirstConstant = 5,
+        SecondConstant = 6,
+        ThirdConstant = 7,
+        County = 8, //شهرستان
+        City = 9, //شهر
+        Village = 10, //روستا
     }
 }

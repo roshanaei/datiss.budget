@@ -54,7 +54,9 @@ namespace Datiss.Budget.ViewModels
         public static string ToDisplay(this ReportParamType paramType)
             => paramType switch
             {
-                ReportParamType.Constant => EnumText.ReportParamType_Constant,
+                ReportParamType.FirstConstant => EnumText.ReportParamType_Constant,
+                ReportParamType.SecondConstant => EnumText.ReportParamType_Constant2,
+                ReportParamType.ThirdConstant => EnumText.ReportParamType_Constant3,
                 ReportParamType.Date => EnumText.ReportParamType_Date,
                 ReportParamType.Organization => EnumText.ReportParamType_Organization,
                 ReportParamType.Year => EnumText.ReportParamType_Year,

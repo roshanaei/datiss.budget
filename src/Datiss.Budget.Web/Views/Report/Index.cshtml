@@ -1,6 +1,7 @@
 ﻿@model ReportIndexViewModel
 @{
     ViewData["Title"] = "گزارشات سامانه";
+    int i = 1;
 }
 <!--Title-->
 <div class="row">
@@ -40,9 +41,13 @@
                                 @foreach (var item in Model.Items) {
                                     <tr>
                                         <td class="text-nowrap">
+                                            <span>@i -  </span>
+                                            @{
+                                                i = i + 1;
+                                            }
                                             <span>
-                                                <i class="ft-edit-2 tab-content"></i>
-                                                @item.Title
+@*                                                <i class="ft-edit-2 tab-content"></i>
+*@                                                @item.Title
                                             </span>
                                         </td>
                                         <td class="text-nowrap last-td-transparent">

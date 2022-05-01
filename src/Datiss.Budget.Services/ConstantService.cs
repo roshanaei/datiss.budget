@@ -119,6 +119,7 @@ namespace Datiss.Budget.Services
             => await _dbSet
                         .Include(x => x.Parent)
                         .Where(x => x.Parent.ConstantKey.ToUpper() == key.ToUpper())
+                        .Where(x=>x.Status != EntityStatus.Deleted)
                         .OrderBy(x => x.DisplayOrder)
                         .Select(x => new DropDownItem
                         {
@@ -131,6 +132,7 @@ namespace Datiss.Budget.Services
                         .Include(x => x.Parent)
                         .Where(x => x.ConstantKey.ToUpper() != key.ToUpper() &&
                                     x.Parent.ConstantKey.ToUpper() == parentkey.ToUpper())
+                        .Where(x => x.Status != EntityStatus.Deleted)
                         .OrderBy(x => x.DisplayOrder)
                         .Select(x => new DropDownItem
                         {
@@ -141,6 +143,7 @@ namespace Datiss.Budget.Services
                         .Include(x => x.Parent)
                         .Where(x => x.ConstantKey.ToUpper() == key.ToUpper() &&
                                     x.Parent.ConstantKey.ToUpper() == parentkey.ToUpper())
+                        .Where(x => x.Status != EntityStatus.Deleted)
                         .OrderBy(x => x.DisplayOrder)
                         .Select(x => new DropDownItem
                         {
@@ -153,6 +156,7 @@ namespace Datiss.Budget.Services
                         .Include(x => x.Parent)
                         .Where(x => x.Parent.ConstantKey.ToUpper() == parentkey.ToUpper())
                         .Where(x => x.ConstantKey.ToUpper().Trim().Contains(key.ToUpper().Trim()))
+                        .Where(x => x.Status != EntityStatus.Deleted)
                         .OrderBy(x => x.DisplayOrder)
                         .Select(x => new DropDownItem
                         {
@@ -166,6 +170,7 @@ namespace Datiss.Budget.Services
                         .Include(x => x.Parent)
                         .Where(x => x.Parent.ConstantKey.ToUpper() == parentkey.ToUpper() &&
                                     x.ConstantKey.ToUpper().Contains(key.ToUpper()))
+                        .Where(x => x.Status != EntityStatus.Deleted)
                         .OrderBy(x => x.DisplayOrder)
                         .Select(x => new DropDownItem
                         {
