@@ -25,6 +25,9 @@ namespace Datiss.Budget.ViewModels
             Report = new ReportViewModel();
             YearSource = new List<SelectListItem>();
             OrganizationSource = new List<SelectListItem>();
+            ConstantSource = new List<SelectListItem>();
+            SecondConstantSource = new List<SelectListItem>();
+            ThirdConstantSource = new List<SelectListItem>();
             CitySource = new List<SelectListItem>();
             CountySource = new List<SelectListItem>();
             VillageSource = new List<SelectListItem>();
@@ -37,6 +40,10 @@ namespace Datiss.Budget.ViewModels
         public IEnumerable<SelectListItem> YearSource { get; private set; }
 
         public IEnumerable<SelectListItem> OrganizationSource { get; private set; }
+
+        public IEnumerable<SelectListItem> ConstantSource { get; private set; }
+        public IEnumerable<SelectListItem> SecondConstantSource { get; private set; }
+        public IEnumerable<SelectListItem> ThirdConstantSource { get; private set; }
 
         public IEnumerable<SelectListItem> CitySource { get; private set; }
 
@@ -57,6 +64,25 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
+
+        public void SetConstantSource(IEnumerable<DropDownItemViewModel> source)
+            => ConstantSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+        public void SetSecondConstantSource(IEnumerable<DropDownItemViewModel> source)
+            => SecondConstantSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList().AddEmptySelectListItemReport();
+        public void SetThirdConstantSource(IEnumerable<DropDownItemViewModel> source)
+            => ThirdConstantSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList().AddEmptySelectListItemReport();
 
         public void SetCitySource(IEnumerable<DropDownItemViewModel> source)
             => CitySource = source.Select(x => new SelectListItem

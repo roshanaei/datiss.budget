@@ -18,6 +18,17 @@ namespace Datiss.Budget.ViewModels
             return items;
         }
 
+        public static IList<SelectListItem> AddEmptySelectListItemReport(this IList<SelectListItem> items)
+        {
+            items.Insert(0, new SelectListItem
+            {
+                Value = "0",
+                Text = "[انتخاب کنید]"
+            });
+
+            return items;
+        }
+
         public static string ToStringArray(this IEnumerable<SelectListItem> items) {
             string result = "";
             foreach(var item in items) {
