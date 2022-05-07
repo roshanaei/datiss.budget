@@ -295,6 +295,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to در فایل اکسل شما اطلاعات دارایی های :&lt;br&gt;{0} برای مرکز هزینه &quot;{1}&quot; ، &quot;{2}&quot; وجود ندارد..
+        /// </summary>
+        public static string ImportExcelFinanceTypeCostCenterTypeOrgNotInExcel {
+            get {
+                return ResourceManager.GetString("ImportExcelFinanceTypeCostCenterTypeOrgNotInExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to عنوان های :&lt;br&gt;{0} در بخش &quot;{1}&quot; برای &quot;{2}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelICOTypeActivityOrgNotInExcel {

@@ -117,6 +117,13 @@ namespace Datiss.Budget.Services.Infrastructure
                 .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
                 .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
                 .Map(d => d.SectionTypeDisplay, s => s.SectionType != null ? s.SectionType.Title : null);
+
+            TypeAdapterConfig<CostForcastFinance, CostForcastFinanceDTO>
+                .NewConfig()
+                .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
+                .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
+                .Map(d => d.CostCenterTypeDisplay, s => s.CostCenter != null ? s.CostCenter.Title : null)
+                .Map(d => d.FinanceSubjectTypeDisplay, s => s.FinanceSubject != null ? s.FinanceSubject.Title : null);
         }
     }
 }
