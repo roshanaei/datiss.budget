@@ -19,6 +19,7 @@ using Stimulsoft.Base;
 using System.IO;
 using Microsoft.AspNetCore.WebUtilities;
 using Stimulsoft.Report;
+using Datiss.Budget.Common;
 
 namespace Datiss.Budget.Web.Controllers {
 
@@ -38,13 +39,17 @@ namespace Datiss.Budget.Web.Controllers {
         private readonly IReportService _reportService;
         private readonly IOrganizationService _organizationService;
         private readonly IFinanceYearService _yearService;
+        private readonly IConstantService _constantService;
+        private readonly IWebHostEnvironment _environment;
 
         public ReportController(
             IWebHostEnvironment host,
             IReportEngine reportEngine,
             IReportService reportService,
             IOrganizationService organizationService,
-            IFinanceYearService yearService) {
+            IFinanceYearService yearService,
+            IConstantService constantService,
+            IWebHostEnvironment environment) {
             _host = host
                 ?? throw new ArgumentNullException(nameof(host));
             _reportEngine = reportEngine
@@ -55,8 +60,16 @@ namespace Datiss.Budget.Web.Controllers {
                 ?? throw new ArgumentNullException(nameof(organizationService));
             _yearService = yearService
                 ?? throw new ArgumentNullException(nameof(yearService));
+            _constantService = constantService
+                ?? throw new ArgumentNullException(nameof(constantService));
+            _environment = environment
+                ?? throw new ArgumentNullException(nameof(environment));
 
-            StiFontCollection.AddFontFile("wwwroot\\fonts\\B Nazanin.ttf");
+
+            string fileName = "fonts\\B Nazanin.ttf";
+            string fontPath = Path.Combine(_environment.WebRootPath, fileName);
+            StiFontCollection.AddFontFile(fontPath);
+
             var stimulLicenseKey = Path.Combine(_host.WebRootPath, "reporting\\license.key");
             StiLicense.LoadFromFile(stimulLicenseKey);
         }
@@ -204,8 +217,29 @@ namespace Datiss.Budget.Web.Controllers {
                 model.SetOrganizationSource((await _organizationService.GetDropDownDataAsync())
                     .Adapt<IEnumerable<DropDownItemViewModel>>());
             }
-            
-            if(model.Report.Params.Any(_=> _.ParamType == ReportParamType.County)) {
+
+            if (model.Report.Params.Any(_ => _.ParamType == ReportParamType.FirstConstant))
+            {
+                int index = model.Report.Params.ToList().FindIndex(x => x.ParamType == ReportParamType.FirstConstant);
+                model.SetConstantSource((await _constantService.GetByConstantKeyAsync(model.Report.Params[index].Name))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>());
+            }
+
+            if (model.Report.Params.Any(_ => _.ParamType == ReportParamType.SecondConstant))
+            {
+                int index = model.Report.Params.ToList().FindIndex(x => x.ParamType == ReportParamType.SecondConstant);
+                model.SetSecondConstantSource((await _constantService.GetByConstantKeyAsync(model.Report.Params[index].Name))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>());
+            }
+
+            if (model.Report.Params.Any(_ => _.ParamType == ReportParamType.ThirdConstant))
+            {
+                int index = model.Report.Params.ToList().FindIndex(x => x.ParamType == ReportParamType.ThirdConstant);
+                model.SetThirdConstantSource((await _constantService.GetByConstantKeyAsync(model.Report.Params[index].Name))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>());
+            }
+
+            if (model.Report.Params.Any(_=> _.ParamType == ReportParamType.County)) {
                 model.SetCountySource((await _organizationService
                     .GetDropDownDataAsync(input: false, OrganizationType.County))
                         .Adapt<IEnumerable<DropDownItemViewModel>>());

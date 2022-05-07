@@ -130,6 +130,24 @@ namespace Datiss.Budget.Extensions
                 },
                 new SelectListItem
                 {
+                    Text = EnumText.ReportParamType_Constant,
+                    Value = ((int)ReportParamType.FirstConstant).ToString(),
+                    Selected = paramType == ReportParamType.FirstConstant
+                },
+                new SelectListItem
+                {
+                    Text = EnumText.ReportParamType_Constant2,
+                    Value = ((int)ReportParamType.SecondConstant).ToString(),
+                    Selected = paramType == ReportParamType.SecondConstant
+                },
+                new SelectListItem
+                {
+                    Text = EnumText.ReportParamType_Constant3,
+                    Value = ((int)ReportParamType.ThirdConstant).ToString(),
+                    Selected = paramType == ReportParamType.ThirdConstant
+                },
+                new SelectListItem
+                {
                     Text = EnumText.OrganizationType_County,
                     Value = ((int)ReportParamType.County).ToString(),
                     Selected = paramType == ReportParamType.County

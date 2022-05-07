@@ -196,11 +196,29 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ثابت.
+        ///   Looks up a localized string similar to اولین ثابت.
         /// </summary>
         public static string ReportParamType_Constant {
             get {
                 return ResourceManager.GetString("ReportParamType_Constant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to دومین ثابت.
+        /// </summary>
+        public static string ReportParamType_Constant2 {
+            get {
+                return ResourceManager.GetString("ReportParamType_Constant2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to سومین ثابت.
+        /// </summary>
+        public static string ReportParamType_Constant3 {
+            get {
+                return ResourceManager.GetString("ReportParamType_Constant3", resourceCulture);
             }
         }
         

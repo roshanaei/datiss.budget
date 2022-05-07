@@ -163,7 +163,13 @@
     <value>شهر</value>
   </data>
   <data name="ReportParamType_Constant" xml:space="preserve">
-    <value>ثابت</value>
+    <value>اولین ثابت</value>
+  </data>
+  <data name="ReportParamType_Constant2" xml:space="preserve">
+    <value>دومین ثابت</value>
+  </data>
+  <data name="ReportParamType_Constant3" xml:space="preserve">
+    <value>سومین ثابت</value>
   </data>
   <data name="ReportParamType_County" xml:space="preserve">
     <value>شهرستان</value>
