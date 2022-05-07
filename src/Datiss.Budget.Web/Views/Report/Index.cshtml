@@ -1,7 +1,7 @@
 ﻿@model ReportIndexViewModel
 @{
     ViewData["Title"] = "گزارشات سامانه";
-    int i = 1;
+    int i = ((@Model.PageNumber-1)*@Model.PageSize)+1;
 }
 <!--Title-->
 <div class="row">
