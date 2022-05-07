@@ -1,0 +1,427 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    let rowData = {};
+
+    function editRow(id) {
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_CostCenterType_' + id).hide();
+        $('#divOutput_FinanceSubjectType_' + id).hide();
+        $('#divOutput_RemainingAssets_' + id).hide();
+        $('#divOutput_AssetsCreated6_1_' + id).hide();
+        $('#divOutput_AssetsCreated6_2_' + id).hide();
+        $('#divOutput_ForcastAssets_D_' + id).hide();
+        $('#divOutput_TotalAssetsCreated_D_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_CostCenterType_' + id).show();
+        $('#divInput_FinanceSubjectType_' + id).show();
+        $('#divInput_RemainingAssets_' + id).show();
+        $('#divInput_AssetsCreated6_1_' + id).show();
+        $('#divInput_AssetsCreated6_2_' + id).show();
+        $('#divInput_ForcastAssets_D_' + id).show();
+        $('#divInput_TotalAssetsCreated_D_' + id).show();
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.organizationId = $('#inputOrg_' + id).val();
+        rowData.costCenterTypeId = $('#inputCostCenterType_' + id).val();
+        rowData.financeSubjectTypeId = $('#inputFinanceSubjectType_' + id).val();
+        rowData.remainingAssets = $('#inputRemainingAssets_' + id).val();
+        rowData.assetsCreated6_1 = $('#inputAssetsCreated6_1_' + id).val();
+        rowData.assetsCreated6_2 = $('#inputAssetsCreated6_2_' + id).val();
+        rowData.forcastAssets_D = $('#inputForcastAssets_D_' + id).val();
+        rowData.totalAssetsCreated_D = $('#inputTotalAssetsCreated_D_' + id).val();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_CostCenterType_' + id).hide();
+        $('#divInput_FinanceSubjectType_' + id).hide();
+        $('#divInput_RemainingAssets_' + id).hide();
+        $('#divInput_AssetsCreated6_1_' + id).hide();
+        $('#divInput_AssetsCreated6_2_' + id).hide();
+        $('#divInput_ForcastAssets_D_' + id).hide();
+        $('#divInput_TotalAssetsCreated_D_' + id).hide();
+
+        //Reverting to OriginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputOrg_' + id).val(rowData.organizationId);
+            $('#inputCostCenterType_' + id).val(rowData.costCenterTypeId);
+            $('#inputFinanceSubjectType_' + id).val(rowData.financeSubjectTypeId);
+            $('#inputRemainingAssets_' + id).val(rowData.remainingAssets);
+            $('#inputAssetsCreated6_1_' + id).val(rowData.assetsCreated6_1);
+            $('#inputAssetsCreated6_2_' + id).val(rowData.assetsCreated6_2);
+            $('#inputForcastAssets_D_' + id).val(rowData.forcastAssets_D);
+            $('#inputTotalAssetsCreated_D_' + id).val(rowData.totalAssetsCreated_D);
+        }
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_CostCenterType_' + id).show();
+        $('#divOutput_FinanceSubjectType_' + id).show();
+        $('#divOutput_RemainingAssets_' + id).show();
+        $('#divOutput_AssetsCreated6_1_' + id).show();
+        $('#divOutput_AssetsCreated6_2_' + id).show();
+        $('#divOutput_ForcastAssets_D_' + id).show();
+        $('#divOutput_TotalAssetsCreated_D_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+
+
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.costCenterTypeId = $('#inputCostCenterType_' + id).val();
+        model.financeSubjectTypeId = $('#inputFinanceSubjectType_' + id).val();
+        model.remainingAssets = $('#inputRemainingAssets_' + id).val();
+        model.assetsCreated6_1 = $('#inputAssetsCreated6_1_' + id).val();
+        model.assetsCreated6_2 = $('#inputAssetsCreated6_2_' + id).val();
+        model.forcastAssets_D = $('#inputForcastAssets_D_' + id).val();
+        model.totalAssetsCreated_D = $('#inputTotalAssetsCreated_D_' + id).val();
+
+        $.ajax({
+            url: '@Url.Action(CostForcastFinanceController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.costCenterTypeId = model.costCenterTypeId;
+                rowData.financeSubjectTypeId = model.financeSubjectTypeId;
+                rowData.remainingAssets = model.remainingAssets;
+                rowData.assetsCreated6_1 = model.assetsCreated6_1;
+                rowData.assetsCreated6_2 = model.assetsCreated6_2;
+                rowData.forcastAssets_D = model.forcastAssets_D;
+                rowData.totalAssetsCreated_D = model.totalAssetsCreated_D;
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanOrg_' + id).text(data.organizationDisplay);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanCostCenterType_' + id).text(data.costCenterTypeDisplay);
+                $('#spanFinanceSubjectType_' + id).text(data.financeSubjectTypeDisplay);
+                $('#spanRemainingAssets_' + id).text(data.remainingAssets);
+                $('#spanAssetsCreated6_1_' + id).text(data.assetsCreated6_1);
+                $('#spanAssetsCreated6_2_' + id).text(data.assetsCreated6_2);
+                $('#spanForcastAssets_D_' + id).text(data.forcastAssets_D);
+                $('#spanTotalAssetsCreated_D_' + id).text(data.totalAssetsCreated_D);
+
+
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+        model.organizationId = $(e).find('#inputOrg_').val();
+        model.costCenterTypeId = $(e).find('#inputCostCenterType_').val();
+        model.financeSubjectTypeId = $(e).find('#inputFinanceSubjectType_').val();
+        model.remainingAssets = $(e).find('#inputRemainingAssets_').val();
+        if(model.remainingAssets == "")
+            model.remainingAssets = 0;
+        model.assetsCreated6_1 = $(e).find('#inputAssetsCreated6_1_').val();
+        if (model.assetsCreated6_1 == "")
+            model.assetsCreated6_1 = 0;
+        model.assetsCreated6_2 = $(e).find('#inputAssetsCreated6_2_').val();
+        if (model.assetsCreated6_2 == "")
+            model.assetsCreated6_2 = 0;
+        model.forcastAssets_D = $(e).find('#inputForcastAssets_D_').val();
+        if (model.forcastAssets_D == "")
+            model.forcastAssets_D = 0;
+        model.totalAssetsCreated_D = $(e).find('#inputTotalAssetsCreated_D_').val();
+        if (model.totalAssetsCreated_D == "")
+            model.totalAssetsCreated_D = 0;
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(CostForcastFinanceController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //Organization
+                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
+                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
+                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
+                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
+                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+
+                $('#divInput_Org_' + data.id).hide();
+                $('#spanOrg_' + data.id).text(data.organizationDisplay);
+                $('#divOutput_Org_' + data.id).show();
+
+                //CostCenterType
+                $(e).find('#divInput_CostCenterType_').attr('id', 'divInput_CostCenterType_' + data.id);
+                $(e).find('#hidCostCenterTypeId_').attr('id', 'hidCostCenterTypeId_' + data.id);
+                $(e).find('#inputCostCenterType_').attr('id', 'inputCostCenterType_' + data.id);
+                $(e).find('#divOutput_CostCenterType_').attr('id', 'divOutput_CostCenterType_' + data.id);
+                $(e).find('#spanCostCenterType_').attr('id', 'spanCostCenterType_' + data.id);
+
+                $('#divInput_CostCenterType_' + data.id).hide();
+                $('#spanCostCenterType_' + data.id).text(data.costCenterTypeDisplay);
+                $('#divOutput_CostCenterType_' + data.id).show();
+
+                //FinanceSubjectTypeType
+                $(e).find('#divInput_FinanceSubjectType_').attr('id', 'divInput_FinanceSubjectType_' + data.id);
+                $(e).find('#hidFinanceSubjectTypeId_').attr('id', 'hidFinanceSubjectTypeId_' + data.id);
+                $(e).find('#inputFinanceSubjectType_').attr('id', 'inputFinanceSubjectType_' + data.id);
+                $(e).find('#divOutput_FinanceSubjectType_').attr('id', 'divOutput_FinanceSubjectType_' + data.id);
+                $(e).find('#spanFinanceSubjectType_').attr('id', 'spanFinanceSubjectType_' + data.id);
+
+                $('#divInput_FinanceSubjectType_' + data.id).hide();
+                $('#spanFinanceSubjectType_' + data.id).text(data.financeSubjectTypeDisplay);
+                $('#divOutput_FinanceSubjectType_' + data.id).show();
+
+                //RemainingAssets
+                $(e).find('#divInput_RemainingAssets_').attr('id', 'divInput_RemainingAssets_' + data.id);
+                $(e).find('#inputRemainingAssets_').attr('id', 'inputRemainingAssets_' + data.id);
+                $(e).find('#divOutput_RemainingAssets_').attr('id', 'divOutput_RemainingAssets_' + data.id);
+                $(e).find('#spanRemainingAssets_').attr('id', 'spanRemainingAssets_' + data.id);
+
+                $('#divInput_RemainingAssets_' + data.id).hide();
+                $('#spanRemainingAssets_' + data.id).text(data.remainingAssets);
+                $('#divOutput_RemainingAssets_' + data.id).show();
+
+                //AssetsCreated6_1
+                $(e).find('#divInput_AssetsCreated6_1_').attr('id', 'divInput_AssetsCreated6_1_' + data.id);
+                $(e).find('#inputAssetsCreated6_1_').attr('id', 'inputAssetsCreated6_1_' + data.id);
+                $(e).find('#divOutput_AssetsCreated6_1_').attr('id', 'divOutput_AssetsCreated6_1_' + data.id);
+                $(e).find('#spanAssetsCreated6_1_').attr('id', 'spanAssetsCreated6_1_' + data.id);
+
+                $('#divInput_AssetsCreated6_1_' + data.id).hide();
+                $('#spanAssetsCreated6_1_' + data.id).text(data.assetsCreated6_1);
+                $('#divOutput_AssetsCreated6_1_' + data.id).show();
+
+                //AssetsCreated6_2
+                $(e).find('#divInput_AssetsCreated6_2_').attr('id', 'divInput_AssetsCreated6_2_' + data.id);
+                $(e).find('#inputAssetsCreated6_2_').attr('id', 'inputAssetsCreated6_2_' + data.id);
+                $(e).find('#divOutput_AssetsCreated6_2_').attr('id', 'divOutput_AssetsCreated6_2_' + data.id);
+                $(e).find('#spanAssetsCreated6_2_').attr('id', 'spanAssetsCreated6_2_' + data.id);
+
+                $('#divInput_AssetsCreated6_2_' + data.id).hide();
+                $('#spanAssetsCreated6_2_' + data.id).text(data.assetsCreated6_2);
+                $('#divOutput_AssetsCreated6_2_' + data.id).show();
+
+                //ForcastAssets_D
+                $(e).find('#divInput_ForcastAssets_D_').attr('id', 'divInput_ForcastAssets_D_' + data.id);
+                $(e).find('#inputForcastAssets_D_').attr('id', 'inputForcastAssets_D_' + data.id);
+                $(e).find('#divOutput_ForcastAssets_D_').attr('id', 'divOutput_ForcastAssets_D_' + data.id);
+                $(e).find('#spanForcastAssets_D_').attr('id', 'spanForcastAssets_D_' + data.id);
+
+                $('#divInput_ForcastAssets_D_' + data.id).hide();
+                $('#spanForcastAssets_D_' + data.id).text(data.forcastAssets_D);
+                $('#divOutput_ForcastAssets_D_' + data.id).show();
+
+                //TotalAssetsCreated_D
+                $(e).find('#divInput_TotalAssetsCreated_D_').attr('id', 'divInput_TotalAssetsCreated_D_' + data.id);
+                $(e).find('#inputTotalAssetsCreated_D_').attr('id', 'inputTotalAssetsCreated_D_' + data.id);
+                $(e).find('#divOutput_TotalAssetsCreated_D_').attr('id', 'divOutput_TotalAssetsCreated_D_' + data.id);
+                $(e).find('#spanTotalAssetsCreated_D_').attr('id', 'spanTotalAssetsCreated_D_' + data.id);
+
+                $('#divInput_TotalAssetsCreated_D_' + data.id).hide();
+                $('#spanTotalAssetsCreated_D_' + data.id).text(data.totalAssetsCreated_D);
+                $('#divOutput_TotalAssetsCreated_D_' + data.id).show();
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectOrganization:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(CostForcastFinanceController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+</script>
