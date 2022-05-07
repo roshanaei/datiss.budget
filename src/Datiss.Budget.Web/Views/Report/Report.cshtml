@@ -72,6 +72,21 @@
                                                     <select name="@p.Name" class="form-control my-font" asp-items="Model.OrganizationSource">
                                                     </select>
                                                 }
+                                                else if (p.ParamType == ReportParamType.FirstConstant)
+                                                {
+                                                    <select name="@p.Name" class="form-control my-font" asp-items="Model.ConstantSource">
+                                                    </select>
+                                                }
+                                                else if (p.ParamType == ReportParamType.SecondConstant)
+                                                {
+                                                    <select name="@p.Name" class="form-control my-font" asp-items="Model.SecondConstantSource">
+                                                    </select>
+                                                }
+                                                else if (p.ParamType == ReportParamType.ThirdConstant)
+                                                {
+                                                    <select name="@p.Name" class="form-control my-font" asp-items="Model.ThirdConstantSource">
+                                                    </select>
+                                                }
                                                 else if (p.ParamType == ReportParamType.County)
                                                 {
                                                     <select name="@p.Name" class="form-control my-font" asp-items="Model.CountySource">
