@@ -21,7 +21,7 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 1).Value = "سال";
             sheet.Cell(1, 2).Value = "سازمان";
             sheet.Cell(1, 3).Value = "مرکز هزینه";
-            sheet.Cell(1, 4).Value = "عنوان دارئی";
+            sheet.Cell(1, 4).Value = "عنوان دارایی";
             sheet.Cell(1, 5).Value = "مانده دارایی در سال پایه بودجه";
             sheet.Cell(1, 6).Value = "دارایی ایجاد شده در نیمه اول سال ماقبل بودجه";
             sheet.Cell(1, 7).Value = "پیش بینی دارایی ایجاد شده در نیمه دوم";
