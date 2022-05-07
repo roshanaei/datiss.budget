@@ -381,4 +381,7 @@
   <data name="EmptyExcel" xml:space="preserve">
     <value>فایل اکسل شما داده ای ندارد.</value>
   </data>
+  <data name="ImportExcelFinanceTypeCostCenterTypeOrgNotInExcel" xml:space="preserve">
+    <value>در فایل اکسل شما اطلاعات دارایی های :&lt;br&gt;{0} برای مرکز هزینه "{1}" ، "{2}" وجود ندارد.</value>
+  </data>
 </root>
