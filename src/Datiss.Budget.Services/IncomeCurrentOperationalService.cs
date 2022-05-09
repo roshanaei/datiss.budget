@@ -109,6 +109,7 @@ namespace Datiss.Budget.Services
                     }
                     var result = entity.Adapt<IncomeCurrentOperationalDTO>();
                     result.ICOTypeDisplay = model.ICOTypeDisplay;
+                    result.ICOTypeId = model.ICOTypeId;
                     result.ActivityType = model.ActivityType;
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
@@ -307,6 +308,7 @@ namespace Datiss.Budget.Services
                                     {
                                         Id = x.Id,
                                         ICOTypeDisplay = x.ICOType.Title,
+                                        ICOTypeId = x.ICOTypeId,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
                                         Year = x.FinanceYear.Year,
