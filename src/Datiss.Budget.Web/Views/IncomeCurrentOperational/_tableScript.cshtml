@@ -5,10 +5,13 @@
 
     function editRow(id) {
 
-        let activityType = $('#inputActivityType_' + id).val();
-        let icoTypeId = $('#inputICOType_' + id).val();
+        let activityType = $('#hidActivityTypeId_' + id).val();
+        let icoTypeId = $('#hidICOTypeId_' + id).val();
+
         FillDropDown(activityType, icoTypeId);
-        
+
+
+
         resetTableBackColor("my-table");
 
         let row = $('#row_' + id);
@@ -425,7 +428,7 @@
 
         let activitytype = $('#inputActivityType_').val();
         FillDropDown(activitytype);
-        
+
 
         var template = $('#rowTemplate').clone()
             .appendTo($('#my-table tbody'))
@@ -495,14 +498,10 @@
     }
 
     function FillDropDown(at, selectval = null) {
-        
-        let key;
-        if (at == 0) {
-            key = 0;
-        }
-        else {
-            key = 1
-        }
+
+
+        let key = at;
+
 
         $.ajax({
             url: '@Url.Action("GetICOTypeAsync")',
