@@ -373,6 +373,8 @@ namespace Datiss.Budget.Services
 
             foreach (var rec in records)
             {
+                if (rec.ContractDescription == null)
+                    rec.ContractDescription = "";
                 rec.YearId = yearId;
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
 
@@ -759,7 +761,8 @@ namespace Datiss.Budget.Services
 
             if (year.Status == EntityStatus.Disbaled)
                 throw new DisbaledYearDataInputException();
-
+            if (string.IsNullOrWhiteSpace(contractDescription))
+                return true;
             var result = id == null
                 ? await Query().AnyAsync(x => x.ContractDescription.Trim() == contractDescription.Trim())
 
