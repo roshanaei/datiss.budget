@@ -88,6 +88,9 @@
                 <td>
                     <div id="divInput_CostH_">
                         <input class="form-control input-keyup" id="inputCostH_" type="number" />
+                        <script>
+                            $('#inputCostH_').attr('disabled', 'disabled');
+                        </script>
                     </div>
                     <div id="divOutput_CostH_" style="display: none">
                         <span id="spanCostH_"> </span>
@@ -112,6 +115,9 @@
                 <td>
                     <div id="divInput_CostNH_">
                         <input class="form-control input-keyup" id="inputCostNH_" type="number" />
+                        <script>
+                            $('#inputCostNH_').attr('disabled', 'disabled');
+                        </script>
                     </div>
                     <div id="divOutput_CostNH_" style="display: none">
                         <span id="spanCostNH_"> </span>
@@ -199,10 +205,11 @@
                     </td>
                     <td>
                         <div id="divInput_ActivityType_@item.Id" style="display: none">
-                            <input id="hidActivityTypeId_@item.Id" type="hidden" value="@item.ActivityType" />
+                            <input id="hidActivityTypeId_@item.Id" type="hidden" value="@item.ActivityTypeId" />
                             <select class="form-control selectActivityType" id="inputActivityType_@item.Id" asp-items="Model.ActivityTypeSource" onchange="RelatedDropDown(this, event)">
                             </select>
                             <script>
+                                $('select#inputActivityType_' + @item.Id + ' option[value=' + @item.ActivityTypeId + ']').attr('selected', true);
                                 $('#inputActivityType_' + @item.Id).attr('disabled', 'disabled');
                             </script>
                         </div>

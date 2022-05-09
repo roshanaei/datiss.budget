@@ -34,15 +34,10 @@ namespace Datiss.Budget.Services.Excel.Models
         public long PriceH { get; set; }
 
         [Column(MappingDirections.Both, Letter = "I")]
-        public long CostH { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "J")]
         public int CountNH { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "K")]
+        [Column(MappingDirections.Both, Letter = "J")]
         public long PriceNH { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "L")]
-        public long CostNH { get; set; }
     }
 }

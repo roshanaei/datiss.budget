@@ -89,6 +89,8 @@ namespace Datiss.Budget.ViewModels
 
         public ActivityType ActivityType { get; set; }
 
+        public int ActivityTypeId => (int)ActivityType;
+
         public string ActivityTypeDisplay => ActivityType.ToDisplay();
 
         public int ICOTypeId { get; set; }
