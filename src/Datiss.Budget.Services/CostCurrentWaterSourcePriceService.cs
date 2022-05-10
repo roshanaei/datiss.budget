@@ -111,7 +111,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<CostCurrentWaterSourcePriceDTO>.Failed(
-                string.Format(ServiceMessages.Logic_DiameterPipeOrgDuplicate,
+                string.Format(ServiceMessages.Logic_WaterSourceTypeDuplicate,
                 model.WaterSourceTypeTitle, organizationDisplay)
                 );
 
@@ -161,7 +161,7 @@ namespace Datiss.Budget.Services
             }
 
             return ValidationResult<CostCurrentWaterSourcePriceDTO>.Failed(
-                string.Format(ServiceMessages.Logic_DiameterPipeOrgDuplicate,
+                string.Format(ServiceMessages.Logic_WaterSourceTypeDuplicate,
                 model.WaterSourceTypeTitle, organizationDisplay)
                 );
         }
@@ -351,7 +351,7 @@ namespace Datiss.Budget.Services
             int rowIndex = 1;
 
             var waterSourcetypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                                   x.Parent.ConstantKey == ConstantKeys.__WaterDiameter);
+                                                        x.Parent.ConstantKey == ConstantKeys.__WaterSourceType);
             var descendents = await _organizationService
                              .GetAllDescendentsAsync(_userContext.OrganizationId);
 
@@ -378,7 +378,7 @@ namespace Datiss.Budget.Services
                 if (!await waterSourcetypes.AnyAsync(x => x.Id == rec.WaterSourceTypeId))
                 {
                     return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidDiameterPipe, rowIndex + 2, rec.WaterSourceTypeId)
+                        string.Format(ServiceMessages.ImportExcelInvalidWaterSourceType, rowIndex + 2, rec.WaterSourceTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -435,7 +435,7 @@ namespace Datiss.Budget.Services
                     waterSourceTypeNames += "- [" + item.Title + "]<br>";
                 }
                 return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelDiameterPipeOrgNotInExcel, waterSourceTypeNames, orgTitle));
+                    string.Format(ServiceMessages.ImportExcelWaterSourceTypeOrgNotInExcels, waterSourceTypeNames, orgTitle));
             }
             //end
 

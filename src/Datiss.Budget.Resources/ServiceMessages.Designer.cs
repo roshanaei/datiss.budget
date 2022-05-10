@@ -547,7 +547,7 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to منابع  :&lt;br&gt;{0} در فایل اکسل شما اطلاعاتی ندارند..
+        ///   Looks up a localized string similar to منابع  :&lt;br&gt;{0} برای &quot;{1}&quot; در فایل اکسل شما اطلاعاتی ندارند..
         /// </summary>
         public static string ImportExcelWaterSourceTypeOrgNotInExcels {
             get {
