@@ -403,4 +403,10 @@ namespace Datiss.Budget.Services.Models
         public int? CostCenterTypeId { get; set; }
         public int? FinanceSubjectTypeId { get; set; }
     }
+
+    public class DefaultFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? OrganizationId { get; set; }
+    }
 }
