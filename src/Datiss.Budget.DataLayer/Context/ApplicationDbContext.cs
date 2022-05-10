@@ -254,6 +254,7 @@ namespace Datiss.Budget.DataLayer.Context
         public virtual DbSet<BudgetSourceReport> BudgetSourceReports { get; set; }
         public virtual DbSet<IncomeCurrentWsNH> IncomeCurrentWsNH { get; set; }
         public virtual DbSet<CostForcastFinance> CostForcastFinance { get; set; }
+        public virtual DbSet<CostCurrentWaterSourcePrice> CostCurrentWaterSourcePrice { get; set; }
 
 
 
@@ -296,7 +297,8 @@ namespace Datiss.Budget.DataLayer.Context
                 .ApplyConfiguration(new CostCurrentReportConfiguration())
                 .ApplyConfiguration(new BudgetSourceReportConfiguration())
                 .ApplyConfiguration(new IncomeCurrentWsNHConfiguration())
-                .ApplyConfiguration(new CostForcastFinanceConfiguration());
+                .ApplyConfiguration(new CostForcastFinanceConfiguration())
+                .ApplyConfiguration(new CostCurrentWaterSourcePriceConfiguration());
         }
     }
 }
