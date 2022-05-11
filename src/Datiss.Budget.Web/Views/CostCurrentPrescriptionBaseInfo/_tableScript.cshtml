@@ -1,0 +1,488 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    let rowData = {};
+
+    function editRow(id) {
+
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+        //row.css('background-color', '#7598f3');
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_FixSalary_' + id).hide();
+        $('#divOutput_HouseRt_' + id).hide();
+        $('#divOutput_EmployRight_' + id).hide();
+        $('#divOutput_RegionRight_' + id).hide();
+        $('#divOutput_Copun_' + id).hide();
+        $('#divOutput_ChildRt_' + id).hide();
+        $('#divOutput_StuffRt_' + id).hide();
+        $('#divOutput_HardWorkingRt_' + id).hide();
+        $('#divOutput_Healths_' + id).hide();
+        $('#divOutput_NewFixSalary_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_FixSalary_' + id).show();
+        $('#divInput_HouseRt_' + id).show();
+        $('#divInput_EmployRight_' + id).show();
+        $('#divInput_RegionRight_' + id).show();
+        $('#divInput_Copun_' + id).show();
+        $('#divInput_ChildRt_' + id).show();
+        $('#divInput_StuffRt_' + id).show();
+        $('#divInput_HardWorkingRt_' + id).show();
+        $('#divInput_Healths_' + id).show();
+        $('#divInput_NewFixSalary_' + id).show();
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.fixSalary = $('#inputFixSalary_' + id).val();
+        rowData.houseRt = $('#inputHouseRt_' + id).val();
+        rowData.employRight = $('#inputEmployRight_' + id).val();
+        rowData.regionRight = $('#inputRegionRight_' + id).val();
+        rowData.copun = $('#inputCopun_' + id).val();
+        rowData.childRt = $('#inputChildRt_' + id).val();
+        rowData.stuffRt = $('#inputStuffRt_' + id).val();
+        rowData.hardWorkingRt = $('#inputHardWorkingRt_' + id).val();
+        rowData.healths = $('#inputHealths_' + id).val();
+        rowData.newFixSalary = $('#inputNewFixSalary_' + id).val();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_FixSalary_' + id).hide();
+        $('#divInput_HouseRt_' + id).hide();
+        $('#divInput_EmployRight_' + id).hide();
+        $('#divInput_RegionRight_' + id).hide();
+        $('#divInput_Copun_' + id).hide();
+        $('#divInput_ChildRt_' + id).hide();
+        $('#divInput_StuffRt_' + id).hide();
+        $('#divInput_HardWorkingRt_' + id).hide();
+        $('#divInput_Healths_' + id).hide();
+        $('#divInput_NewFixSalary_' + id).hide();
+
+        //Reverting to OriginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputFixSalary_' + id).val(rowData.fixSalary);
+            $('#inputHouseRt_' + id).val(rowData.houseRt);
+            $('#inputEmployRight_' + id).val(rowData.employRight);
+            $('#inputRegionRight_' + id).val(rowData.regionRight);
+            $('#inputCopun_' + id).val(rowData.copun);
+            $('#inputChildRt_' + id).val(rowData.childRt);
+            $('#inputStuffRt_' + id).val(rowData.stuffRt);
+            $('#inputHardWorkingRt_' + id).val(rowData.hardWorkingRt);
+            $('#inputHealths_' + id).val(rowData.healths);
+            $('#inputNewFixSalary_' + id).val(rowData.newFixSalary);
+        }
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_FixSalary_' + id).show();
+        $('#divOutput_HouseRt_' + id).show();
+        $('#divOutput_EmployRight_' + id).show();
+        $('#divOutput_RegionRight_' + id).show();
+        $('#divOutput_Copun_' + id).show();
+        $('#divOutput_ChildRt_' + id).show();
+        $('#divOutput_StuffRt_' + id).show();
+        $('#divOutput_HardWorkingRt_' + id).show();
+        $('#divOutput_Healths_' + id).show();
+        $('#divOutput_NewFixSalary_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.fixSalary = $('#inputFixSalary_' + id).val();
+        model.houseRt = $('#inputHouseRt_' + id).val();
+        model.employRight = $('#inputEmployRight_' + id).val();
+        model.regionRight = $('#inputRegionRight_' + id).val();
+        model.copun = $('#inputCopun_' + id).val();
+        model.childRt = $('#inputChildRt_' + id).val();
+        model.stuffRt = $('#inputStuffRt_' + id).val();
+        model.hardWorkingRt = $('#inputHardWorkingRt_' + id).val();
+        model.healths = $('#inputHealths_' + id).val();
+        model.newFixSalary = $('#inputNewFixSalary_' + id).val();
+
+        $.ajax({
+            url: '@Url.Action(CostCurrentPrescriptionBaseInfoController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.fixSalary = model.fixSalary;
+                rowData.houseRt = model.houseRt;
+                rowData.employRight = model.employRight;
+                rowData.regionRight = model.regionRight;
+                rowData.copun = model.copun;
+                rowData.childRt = model.childRt;
+                rowData.stuffRt = model.stuffRt;
+                rowData.hardWorkingRt = model.hardWorkingRt;
+                rowData.healths = model.healths;
+                rowData.newFixSalary = model.newFixSalary;
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidFIxSalary_' + id).attr('value', model.fixSalary);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanFixSalary_' + id).text(data.fixSalaryDisplay);
+                $('#spanHouseRt_' + id).text(data.houseRt);
+                $('#spanEmployRight_' + id).text(data.employRight);
+                $('#spanRegionRight_' + id).text(data.regionRight);
+                $('#spanCopun_' + id).text(data.copun);
+                $('#spanChildRt_' + id).text(data.childRt);
+                $('#spanStuffRt_' + id).text(data.stuffRt);
+                $('#spanHardWorkingRt_' + id).text(data.hardWorkingRt);
+                $('#spanHealths_' + id).text(data.healths);
+                $('#spanNewFixSalary_' + id).text(data.newFixSalary);
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
+
+        var model = {};
+        model.yearId = $(e).find('#inputYear_').val();
+
+        model.fixSalary = $(e).find('#inputFixSalary_').val();
+        if (model.fixSalary == "") {
+            model.fixSalary = 0;
+        }
+        model.houseRt = $(e).find('#inputHouseRt_').val();
+        if (model.houseRt == "") {
+            model.houseRt = 0;
+        }
+        model.employRight = $(e).find('#inputEmployRight_').val();
+        if (model.employRight == "") {
+            model.employRight = 0;
+        }
+        model.regionRight = $(e).find('#inputRegionRight_').val();
+        if (model.regionRight == "") {
+            model.regionRight = 0;
+        }
+        model.copun = $(e).find('#inputCopun_').val();
+        if (model.copun == "") {
+            model.copun = 0;
+        }
+        model.childRt = $(e).find('#inputChildRt_').val();
+        if (model.childRt == "") {
+            model.childRt = 0;
+        }
+        model.stuffRt = $(e).find('#inputStuffRt_').val();
+        if (model.stuffRt == "") {
+            model.stuffRt = 0;
+        }
+        model.hardWorkingRt = $(e).find('#inputHardWorkingRt_').val();
+        if (model.hardWorkingRt == "") {
+            model.hardWorkingRt = 0;
+        }
+        model.healths = $(e).find('#inputHealths_').val();
+        if (model.healths == "") {
+            model.healths = 0;
+        }
+        model.newFixSalary = $(e).find('#inputNewFixSalary_').val();
+        if (model.newFixSalary == "") {
+            model.newFixSalary = 0;
+        }
+
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(CostCurrentPrescriptionBaseInfoController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+                //FixSalary
+                $(e).find('#divInput_FixSalary_').attr('id', 'divInput_FixSalary_' + data.id);
+                $(e).find('#hidFIxSalary_').attr('id', 'hidFIxSalary_' + data.id);
+                $(e).find('#inputFixSalary_').attr('id', 'inputFixSalary_' + data.id);
+                $(e).find('#divOutput_FixSalary_').attr('id', 'divOutput_FixSalary_' + data.id);
+                $(e).find('#spanFixSalary_').attr('id', 'spanFixSalary_' + data.id);
+
+                $('#divInput_FixSalary_' + data.id).hide();
+                $('#spanFixSalary_' + data.id).text(data.fixSalaryDisplay);
+                $('#divOutput_FixSalary_' + data.id).show();
+
+                //HouseRt
+                $(e).find('#divInput_HouseRt_').attr('id', 'divInput_HouseRt_' + data.id);
+                $(e).find('#inputHouseRt_').attr('id', 'inputHouseRt_' + data.id);
+                $(e).find('#divOutput_HouseRt_').attr('id', 'divOutput_HouseRt_' + data.id);
+                $(e).find('#spanHouseRt_').attr('id', 'spanHouseRt_' + data.id);
+
+                $('#divInput_HouseRt_' + data.id).hide();
+                $('#spanHouseRt_' + data.id).text(data.houseRt);
+                $('#divOutput_HouseRt_' + data.id).show();
+
+                //EmployRight
+                $(e).find('#divInput_EmployRight_').attr('id', 'divInput_EmployRight_' + data.id);
+                $(e).find('#inputEmployRight_').attr('id', 'inputEmployRight_' + data.id);
+                $(e).find('#divOutput_EmployRight_').attr('id', 'divOutput_EmployRight_' + data.id);
+                $(e).find('#spanEmployRight_').attr('id', 'spanEmployRight_' + data.id);
+
+                $('#divInput_EmployRight_' + data.id).hide();
+                $('#spanEmployRight_' + data.id).text(data.employRight);
+                $('#divOutput_EmployRight_' + data.id).show();
+
+                //RegionRight
+                $(e).find('#divInput_RegionRight_').attr('id', 'divInput_RegionRight_' + data.id);
+                $(e).find('#inputRegionRight_').attr('id', 'inputRegionRight_' + data.id);
+                $(e).find('#divOutput_RegionRight_').attr('id', 'divOutput_RegionRight_' + data.id);
+                $(e).find('#spanRegionRight_').attr('id', 'spanRegionRight_' + data.id);
+
+                $('#divInput_RegionRight_' + data.id).hide();
+                $('#spanRegionRight_' + data.id).text(data.regionRight);
+                $('#divOutput_RegionRight_' + data.id).show();
+
+                //Copun
+                $(e).find('#divInput_Copun_').attr('id', 'divInput_Copun_' + data.id);
+                $(e).find('#inputCopun_').attr('id', 'inputCopun_' + data.id);
+                $(e).find('#divOutput_Copun_').attr('id', 'divOutput_Copun_' + data.id);
+                $(e).find('#spanCopun_').attr('id', 'spanCopun_' + data.id);
+
+                $('#divInput_Copun_' + data.id).hide();
+                $('#spanCopun_' + data.id).text(data.copun);
+                $('#divOutput_Copun_' + data.id).show();
+
+                //ChildRt
+                $(e).find('#divInput_ChildRt_').attr('id', 'divInput_ChildRt_' + data.id);
+                $(e).find('#inputChildRt_').attr('id', 'inputChildRt_' + data.id);
+                $(e).find('#divOutput_ChildRt_').attr('id', 'divOutput_ChildRt_' + data.id);
+                $(e).find('#spanChildRt_').attr('id', 'spanChildRt_' + data.id);
+
+                $('#divInput_ChildRt_' + data.id).hide();
+                $('#spanChildRt_' + data.id).text(data.childRt);
+                $('#divOutput_ChildRt_' + data.id).show();
+
+                //StuffRt
+                $(e).find('#divInput_StuffRt_').attr('id', 'divInput_StuffRt_' + data.id);
+                $(e).find('#inputStuffRt_').attr('id', 'inputStuffRt_' + data.id);
+                $(e).find('#divOutput_StuffRt_').attr('id', 'divOutput_StuffRt_' + data.id);
+                $(e).find('#spanStuffRt_').attr('id', 'spanStuffRt_' + data.id);
+
+                $('#divInput_StuffRt_' + data.id).hide();
+                $('#spanStuffRt_' + data.id).text(data.stuffRt);
+                $('#divOutput_StuffRt_' + data.id).show();
+
+                //HardWorkingRt
+                $(e).find('#divInput_HardWorkingRt_').attr('id', 'divInput_HardWorkingRt_' + data.id);
+                $(e).find('#inputHardWorkingRt_').attr('id', 'inputHardWorkingRt_' + data.id);
+                $(e).find('#divOutput_HardWorkingRt_').attr('id', 'divOutput_HardWorkingRt_' + data.id);
+                $(e).find('#spanHardWorkingRt_').attr('id', 'spanHardWorkingRt_' + data.id);
+
+                $('#divInput_HardWorkingRt_' + data.id).hide();
+                $('#spanHardWorkingRt_' + data.id).text(data.hardWorkingRt);
+                $('#divOutput_HardWorkingRt_' + data.id).show();
+
+                //Healths
+                $(e).find('#divInput_Healths_').attr('id', 'divInput_Healths_' + data.id);
+                $(e).find('#inputHealths_').attr('id', 'inputHealths_' + data.id);
+                $(e).find('#divOutput_Healths_').attr('id', 'divOutput_Healths_' + data.id);
+                $(e).find('#spanHealths_').attr('id', 'spanHealths_' + data.id);
+
+                $('#divInput_Healths_' + data.id).hide();
+                $('#spanHealths_' + data.id).text(data.healths);
+                $('#divOutput_Healths_' + data.id).show();
+
+                //NewFixSalary
+                $(e).find('#divInput_NewFixSalary_').attr('id', 'divInput_NewFixSalary_' + data.id);
+                $(e).find('#inputNewFixSalary_').attr('id', 'inputNewFixSalary_' + data.id);
+                $(e).find('#divOutput_NewFixSalary_').attr('id', 'divOutput_NewFixSalary_' + data.id);
+                $(e).find('#spanNewFixSalary_').attr('id', 'spanNewFixSalary_' + data.id);
+
+                $('#divInput_NewFixSalary_' + data.id).hide();
+                $('#spanNewFixSalary_' + data.id).text(data.newFixSalary);
+                $('#divOutput_NewFixSalary_' + data.id).show();
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+
+        resetTableBackColor("my-table");
+
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+        $('.selectFixSalary:last').select2({
+            dir: 'rtl'
+        });
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(CostCurrentPrescriptionBaseInfoController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+</script>

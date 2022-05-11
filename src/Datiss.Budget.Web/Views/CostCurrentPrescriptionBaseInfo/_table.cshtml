@@ -1,0 +1,304 @@
+﻿@model CostCurrentPrescriptionBaseInfoIndexViewModel
+<div class="table-responsive">
+    <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font table-overflow">
+        <thead class="thead-light">
+            <tr>
+                <th style="min-width:130px;font-size:small">سال</th>
+                <th style="font-size:small">حداقل دستمزد</th>
+                <th style="font-size:small">حق مسکن</th>
+                <th style="font-size:small">بن کارگری</th>
+                <th style="font-size:small">حق جذب</th>
+                <th style="font-size:small">حق خوار و بار</th>
+                <th style="font-size:small">حق اولاد</th>
+                <th style="font-size:small">سختی کار</th>
+                <th style="font-size:small">فوق العاده منطقه</th>
+                <th style="font-size:small">بهداشت و درمان</th>
+                <th style="font-size:small">مزد ثابت نیروی جدید</th>
+                <th width="10%" style="font-size:small">مدیریت</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowTemplate" style="display: none">
+                <td>
+                    <div id="divInput_Year_">
+                        <input id="hidYearId_" type="hidden" />
+                        <select class="form-control selectYear" id="inputYear_" asp-items="Model.YearSource">
+                        </select>
+                        <script>
+                            $('select#inputYear_ option[value=' + $('#yearId').val() + ']').attr('selected', true);
+                            $('#inputYear_').attr('disabled', 'disabled');
+                        </script>
+                    </div>
+                    <div id="divOutput_Year_" style="display: none">
+                        <span id="spanYear_"></span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_FixSalary_">
+                        <input class="form-control default-input input-keyup" id="inputFixSalary_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_FixSalary_" style="display: none">
+                        <span id="spanFixSalary_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_HouseRt_">
+                        <input class="form-control input-keyup" id="inputHouseRt_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_HouseRt_" style="display: none">
+                        <span id="spanHouseRt_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Copun_">
+                        <input class="form-control input-keyup" id="inputCopun_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_Copun_" style="display: none">
+                        <span id="spanCopun_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_EmployRight_">
+                        <input class="form-control input-keyup" id="inputEmployRight_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_EmployRight_" style="display: none">
+                        <span id="spanEmployRight_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_StuffRt_">
+                        <input class="form-control input-keyup" id="inputStuffRt_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_StuffRt_" style="display: none">
+                        <span id="spanStuffRt_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_ChildRt_">
+                        <input class="form-control input-keyup" id="inputChildRt_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_ChildRt_" style="display: none">
+                        <span id="spanChildRt_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_HardWorkingRt_">
+                        <input class="form-control input-keyup" id="inputHardWorkingRt_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_HardWorkingRt_" style="display: none">
+                        <span id="spanHardWorkingRt_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_RegionRight_">
+                        <input class="form-control input-keyup" id="inputRegionRight_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_RegionRight_" style="display: none">
+                        <span id="spanRegionRight_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_Healths_">
+                        <input class="form-control input-keyup" id="inputHealths_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_Healths_" style="display: none">
+                        <span id="spanHealths_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_NewFixSalary_">
+                        <input class="form-control input-keyup" id="inputNewFixSalary_" type="number" min="0" />
+                    </div>
+                    <div id="divOutput_NewFixSalary_" style="display: none">
+                        <span id="spanNewFixSalary_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
+                        <i class="fa ft-edit fa-1x"></i>
+                    </a>
+
+                    <a id="btnDelete_" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" style="display: none">
+                        <i class="fa ft-trash-2"></i>
+                    </a>
+
+                    <a id="btnSaveEdit_" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+                    <a id="btnCancelEdit_" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                    <a id="btnSaveCreate_" class="save-new-row btn btn-success my-font mr-1">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+
+                    <a id="btnCancelCreate_" class="cancel-new-row btn btn-danger my-font">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                </td>
+            </tr>
+            @foreach (var item in Model.Items)
+            {
+                <tr id="row_@item.Id">
+                    <td>
+                        <div id="divInput_Year_@item.Id" style="display: none">
+                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            </select>
+                            <script>
+                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Year_@item.Id">
+                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_FixSalary_@item.Id" style="display: none">
+                            <input class="form-control" id="inputFixSalary_@item.Id" value="@item.FixSalary" type="number" />
+                        </div>
+                        <div id="divOutput_FixSalary_@item.Id">
+                            <span id="spanFixSalary_@item.Id">@item.FixSalary </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_HouseRt_@item.Id" style="display: none">
+                            <input class="form-control" id="inputHouseRt_@item.Id" value="@item.HouseRt" type="number" />
+                        </div>
+                        <div id="divOutput_HouseRt_@item.Id">
+                            <span id="spanHouseRt_@item.Id">@item.HouseRt </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Copun_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCopun_@item.Id" value="@item.Copun" type="number" />
+                        </div>
+                        <div id="divOutput_Copun_@item.Id">
+                            <span id="spanCopun_@item.Id">@item.Copun </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_EmployRight_@item.Id" style="display: none">
+                            <input class="form-control" id="inputEmployRight_@item.Id" value="@item.EmployRight" type="number" />
+                        </div>
+                        <div id="divOutput_EmployRight_@item.Id">
+                            <span id="spanEmployRight_@item.Id">@item.EmployRight </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_StuffRt_@item.Id" style="display: none">
+                            <input class="form-control" id="inputStuffRt_@item.Id" value="@item.StuffRt" type="number" />
+                        </div>
+                        <div id="divOutput_StuffRt_@item.Id">
+                            <span id="spanStuffRt_@item.Id">@item.StuffRt </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ChildRt_@item.Id" style="display: none">
+                            <input class="form-control" id="inputChildRt_@item.Id" value="@item.ChildRt" type="number" />
+                        </div>
+                        <div id="divOutput_ChildRt_@item.Id">
+                            <span id="spanChildRt_@item.Id">@item.ChildRt </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_HardWorkingRt_@item.Id" style="display: none">
+                            <input class="form-control" id="inputHardWorkingRt_@item.Id" value="@item.HardWorkingRt" type="number" />
+                        </div>
+                        <div id="divOutput_HardWorkingRt_@item.Id">
+                            <span id="spanHardWorkingRt_@item.Id">@item.HardWorkingRt </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_RegionRight_@item.Id" style="display: none">
+                            <input class="form-control" id="inputRegionRight_@item.Id" value="@item.RegionRight" type="number" />
+                        </div>
+                        <div id="divOutput_RegionRight_@item.Id">
+                            <span id="spanRegionRight_@item.Id">@item.RegionRight </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Healths_@item.Id" style="display: none">
+                            <input class="form-control" id="inputHealths_@item.Id" value="@item.Healths" type="number" />
+                        </div>
+                        <div id="divOutput_Healths_@item.Id">
+                            <span id="spanHealths_@item.Id">@item.Healths </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_NewFixSalary_@item.Id" style="display: none">
+                            <input class="form-control" id="inputNewFixSalary_@item.Id" value="@item.NewFixSalary" type="number" />
+                        </div>
+                        <div id="divOutput_NewFixSalary_@item.Id">
+                            <span id="spanNewFixSalary_@item.Id">@item.NewFixSalary </span>
+                        </div>
+                    </td>
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
+
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
+
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
+
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="rowACJSB" style="margin-top:20px">
+        <!--Tools-->
+        <div class="rowACJS">
+            <form id="toolForm"
+                  enctype="multipart/form-data"
+                  method="post"
+                  asp-antiforgery="true">
+                <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+
+                <span data-toggle="modal" data-target="#backdrop">
+                    <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                        <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                    </button>
+                </span>
+                <span data-toggle="modal" data-target="#CopyModal">
+                    <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                        <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                    </button>
+                </span>
+                <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+                </button>
+                <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                </button>
+            </form>
+
+        </div>
+
+        <div class="rowAC">
+            <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+            <div class="my-font ml-2">
+                (صفحه <b class="font-medium-2">@Model.PageNumber</b> از
+                <b class="font-medium-2">
+                    @if (Model.PagesCount == 0)
+                    {<span>1</span>}
+                    else
+                    {<span>@Model.PagesCount</span>}
+                </b>)
+            </div>
+        </div>
+        <!--Pagination-->
+        <vc:pager model="Model.ToPager()" controller-name="@CostCurrentPrescriptionBaseInfoController.Name" action-name="@CostCurrentPrescriptionBaseInfoController.ACTION_Index"></vc:pager>
+    </div>
+</div>

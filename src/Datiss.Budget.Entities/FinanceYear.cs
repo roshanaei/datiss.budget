@@ -18,6 +18,7 @@ namespace Datiss.Budget.Entities
             BudgetSourceReports = new HashSet<BudgetSourceReport>();
             CostForcastFinance = new HashSet<CostForcastFinance>();
             CostCurrentWaterSourcePrices = new HashSet<CostCurrentWaterSourcePrice>();
+            CostCurrentPrescriptionBaseInfo = new HashSet<CostCurrentPrescriptionBaseInfo>();
         }
 
         #region Properties
@@ -141,6 +142,8 @@ namespace Datiss.Budget.Entities
         public ICollection<CostForcastFinance> CostForcastFinance { get; set; }
 
         public ICollection<CostCurrentWaterSourcePrice> CostCurrentWaterSourcePrices { get; set; }
+
+        public ICollection<CostCurrentPrescriptionBaseInfo> CostCurrentPrescriptionBaseInfo { get; set; }
 
         #endregion
     }
