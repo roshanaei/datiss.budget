@@ -124,6 +124,10 @@ namespace Datiss.Budget.Services.Infrastructure
                 .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
                 .Map(d => d.CostCenterTypeDisplay, s => s.CostCenter != null ? s.CostCenter.Title : null)
                 .Map(d => d.FinanceSubjectTypeDisplay, s => s.FinanceSubject != null ? s.FinanceSubject.Title : null);
+
+            TypeAdapterConfig<CostCurrentPrescriptionBaseInfo, CostCurrentPrescriptionBaseInfoDTO>
+                .NewConfig()
+                .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0);
         }
     }
 }
