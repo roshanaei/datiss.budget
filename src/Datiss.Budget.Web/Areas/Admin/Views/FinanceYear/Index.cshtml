@@ -56,7 +56,16 @@
                                     {
                                         <tr>
                                             <td>@item.Title</td>
-                                            <td>@item.StatusDisplay</td>
+                                            <td style="@(item.Status == Datiss.Budget.Enum.EntityStatus.Enabled?"color:#40c057":"color:#f77e17")">@item.StatusDisplay</td>
+
+@*                                            @if (@item.Status == Datiss.Budget.Enum.EntityStatus.Enabled)
+                                            {
+                                                <td style="color:#40c057">@item.StatusDisplay</td>
+                                            }
+                                            else
+                                            {
+                                                <td style="color:#f77e17">@item.StatusDisplay</td>                                                
+                                            }*@
                                             <td>
                                                 <span data-toggle="modal" data-target="#EditModal">
                                                     <button value="@item.Id" data-toggle="tooltip" data-placement="top" title="ویرایش اطلاعات" type="button" name="btnEdit" class="btn bg-light-info btn-info mr-1 my-font modallink" onclick="Edit(@item.Id)">
