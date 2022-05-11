@@ -85,6 +85,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IBudgetSourceReportService, BudgetSourceReportService>();
             services.AddScoped<ICostForcastFinanceService, CostForcastFinanceService>();
             services.AddScoped<ICostCurrentWaterSourcePriceService, CostCurrentWaterSourcePriceService>();
+            services.AddScoped<ICostCurrentPrescriptionBaseInfoService, CostCurrentPrescriptionBaseInfoService>();
 
           
             return services;

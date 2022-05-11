@@ -281,7 +281,7 @@ namespace Datiss.Budget.Services.Models
 
     public class CostCurrentNOFilterDTO : FilterInputDTO
     {
-        public int? YearId { get; set; }    
+        public int? YearId { get; set; }
 
         public int? OrganizationId { get; set; }
 
@@ -308,7 +308,7 @@ namespace Datiss.Budget.Services.Models
         public int? CostCenterTypeId { get; set; }
         public int? CCOtherCostsTypeId { get; set; }
     }
-    
+
 
     public class CostCurrentSharingSetadFilterDTO : FilterInputDTO
     {
@@ -344,7 +344,7 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
 
     }
-    
+
     public class CostForcastConstructionWsFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
@@ -359,7 +359,7 @@ namespace Datiss.Budget.Services.Models
         public ActivityType? ActivityType { get; set; }
         public int? RawMaterialTypeId { get; set; }
     }
-        
+
 
     public class CostCurrentPersonelFilterDTO : FilterInputDTO
     {
@@ -367,7 +367,7 @@ namespace Datiss.Budget.Services.Models
         public int? OrganizationId { get; set; }
         public RecordType? RecordType { get; set; }
     }
-    
+
     public class CostForcastTransferWsFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
@@ -380,7 +380,7 @@ namespace Datiss.Budget.Services.Models
         public int? NumberYear { get; set; }
         public int? OrganizationId { get; set; }
     }
-    
+
     public class BudgetSourceReportFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
@@ -388,7 +388,7 @@ namespace Datiss.Budget.Services.Models
         public int? NumberYear { get; set; }
         public int? SectionTypeId { get; set; }
     }
-    
+
     public class CostForcastBuyFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
@@ -408,5 +408,10 @@ namespace Datiss.Budget.Services.Models
     {
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
+    }
+
+    public class CostCurrentPrescriptionBaseInfoFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
     }
 }
