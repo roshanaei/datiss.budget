@@ -6,36 +6,33 @@ namespace Datiss.Budget.Services.Excel
     {
 
         [Column(MappingDirections.Both, Letter = "A")]
-        public string OrganizationDisplay { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "B")]
         public long FixSalary { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "C")]
+        [Column(MappingDirections.Both, Letter = "B")]
         public long HouseRt { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "D")]
+        [Column(MappingDirections.Both, Letter = "C")]
         public int Copun { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "E")]
+        [Column(MappingDirections.Both, Letter = "D")]
         public long EmployRight { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "F")]
+        [Column(MappingDirections.Both, Letter = "E")]
         public long StuffRt { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "G")]
+        [Column(MappingDirections.Both, Letter = "F")]
         public long ChildRt { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "H")]
+        [Column(MappingDirections.Both, Letter = "G")]
         public long HardWorkingRt { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "I")]
+        [Column(MappingDirections.Both, Letter = "H")]
         public long RegionRight { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "J")]
+        [Column(MappingDirections.Both, Letter = "I")]
         public long Healths { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "K")]
+        [Column(MappingDirections.Both, Letter = "J")]
         public long NewFixSalary { get; set; }
     }
 }
