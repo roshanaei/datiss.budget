@@ -256,7 +256,7 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(sourceYearId, sourceOrgId, item.CCPMDepTypeId, item.CostCenterTypeId, item.RecordType))
+                    if (!await checkLogicAsync(sourceYearId, sourceOrgId, item.CCPMDepTypeId, item.CostCenterTypeId, RecordType.Forcast))
                         throw new CopyDestYearHasDataException();
 
                     var entity = new CostCurrentPMDep
@@ -269,7 +269,8 @@ namespace Datiss.Budget.Services
                         RFinancePMCost_D = 0,
                         FinanceDepCost = 0,
                         RFinanceDepCost_D = 0,
-                        RecordType = RecordType.Forcast
+                        RecordType = RecordType.Forcast,
+                        ParentId = item.Id
                     };
                     result.Add(entity);
                 }
@@ -649,7 +650,8 @@ namespace Datiss.Budget.Services
                         RecordType = RecordType.Forcast,
                         RFinancePMCost_D = 0,
                         FinanceDepCost = 0,
-                        RFinanceDepCost_D = 0
+                        RFinanceDepCost_D = 0,
+                        ParentId = item.Id
                     };
 
                     result.Add(entity);
