@@ -637,6 +637,56 @@
 
         });
 
+        $(document).on('click', '#btnDoCopy', function () {
+            let model = {};
+            model.sourceOrgId = $('#organizationId option:selected').val();
+            model.targetYearId = $('#yearId option:selected').val();
+
+            console.log(model);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action(CostCurrentPersonelController.ACTION_Copy)',
+                data: model,
+                dataType: 'json',
+                success: function (data, status, settings) {
+                    if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
+
+                    Swal.fire({
+                        title: '<span class="my-font">عملیات موفق</span>',
+                        html: '<span class="my-font">عملیات کپی اطلاعات با موفقیت انجام شد.</span>',
+                        type: 'success',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: true,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                        buttonsStyling: false,
+                    }).then(function(result) {
+                        $('#CopyModal').modal('hide');
+                        document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})'
+                    });
+                },
+                error: function (request, options, err) {
+                    console.log(err);
+                    alert('عملیات کپی با خطا مواجه شد.');
+                }
+            });
+        });
+
         function changePageSize() {
             let pageSize = $('#ddlPageSize').attr('value');
             console.log(pageSize);
