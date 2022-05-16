@@ -263,14 +263,18 @@ namespace Datiss.Budget.Services
             return ValidationResult.Success();
         }
 
-        public async Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId)
+        public async Task CopyAsync(int sourceYearId, int sourceOrgId)
         {
-            if (sourceYearId == destYearId)
-                throw new CopySameYearException();
-            if (destYearId < sourceYearId)
-                throw new CopySameYearException();
-
+            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId, RecordType.Base))
+                throw new CopyOrgNullDataException();
             var result = new List<CostCurrentPersonel>();
+
+            if (await Query()
+                        .Where(_ => _.OrganizationId == sourceOrgId)
+                        .Where(_ => _.YearId == sourceYearId)
+                        .Where(_ => _.RecordType == RecordType.Forcast)
+                        .AnyAsync())
+                throw new CopyDestYearHasDataException();
 
             var selfData = await Query().Where(_ => _.OrganizationId == sourceOrgId)
                                         .Where(_ => _.YearId == sourceYearId)
@@ -281,7 +285,9 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
-                    item.YearId = destYearId;
+                    item.YearId = sourceYearId;
+                    item.RecordType = RecordType.Forcast;
+                    item.ParentId = item.Id;
                     item.Id = 0;
                     var entity = item.Adapt<CostCurrentPersonel>();
 
@@ -289,7 +295,7 @@ namespace Datiss.Budget.Services
                 }
             }
 
-            var childrens = await getChildrenData(sourceOrgId, sourceYearId, destYearId);
+            var childrens = await getChildrenData(sourceOrgId, sourceYearId, RecordType.Base);
 
             if (childrens.Any())
             {
@@ -642,27 +648,34 @@ namespace Datiss.Budget.Services
         private async Task<IEnumerable<CostCurrentPersonel>> getChildrenData(
             int parentOrganizationId,
             int yearId,
-            int targetYearId)
+            RecordType recordType)
         {
-
             var children = await _orgDbSet
-                .Where(x => x.Status != EntityStatus.Deleted &&
-                            x.ParentId == parentOrganizationId)
+                .Where(_ => _.ParentId == parentOrganizationId &&
+                            _.Status != EntityStatus.Deleted)
                 .ToListAsync();
-
             var result = new List<CostCurrentPersonel>();
-
             foreach (var org in children)
             {
+                if (await Query()
+                            .Where(_ => _.OrganizationId == org.Id)
+                            .Where(_ => _.YearId == yearId)
+                            .Where(_ => _.RecordType == RecordType.Forcast).AnyAsync())
+                {
+                    throw new CopyDestYearHasDataException();
+                }
+
                 var data = await Query()
-                                .Where(x => x.YearId == yearId)
-                                .Where(x => x.OrganizationId == org.Id)
-                                .Where(x => x.RecordType == RecordType.Base)
+                                .Where(_ => _.YearId == yearId)
+                                .Where(_ => _.OrganizationId == org.Id)
+                                .Where(_ => _.RecordType == RecordType.Base)
                                 .ToListAsync();
 
                 foreach (var item in data)
                 {
-                    item.YearId = targetYearId;
+                    item.YearId = yearId;
+                    item.ParentId = item.Id;
+                    item.RecordType = recordType;
                     item.Id = 0;
 
                     var entity = item.Adapt<CostCurrentPersonel>();
@@ -671,29 +684,33 @@ namespace Datiss.Budget.Services
                     result.Add(entity);
                 }
 
-                result.AddRange(await getChildrenData(org.Id, yearId, targetYearId));
+                result.AddRange(await getChildrenData(org.Id, yearId, recordType));
             }
             return result;
         }
 
-        //private async Task<bool> hasAnyDataAsync(int orgid, int yearid)
-        //{
-        //    bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
-        //                                        x.YearId == yearid);
-        //    if (any)
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        var childs = await _organizationService.GetWithChildrenAsync(orgid);
-        //        foreach (var child in childs)
-        //            if (await Query().AnyAsync(x => x.YearId == yearid && x.OrganizationId == child.Id))
-        //                return true;
-        //    }
+        private async Task<bool> hasAnyDataAsync(int orgid, int yearid, RecordType recordType)
+        {
+            bool any = await Query().AnyAsync(x => x.OrganizationId == orgid &&
+                                                   x.YearId == yearid &&
+                                                   x.RecordType == recordType);
+            if (any)
+            {
+                return true;
+            }
+            else
+            {
+                var childs = await _organizationService.GetWithChildrenAsync(orgid);
+                foreach (var child in childs)
+                    if (await Query().AnyAsync(x => x.YearId == yearid &&
+                                                    x.OrganizationId == child.Id &&
+                                                    x.RecordType == recordType))
+                        return true;
+            }
 
-        //    return false;
-        //}
+            return false;
+
+        }
 
         private async Task<int> getLastYearAsync(int yearId)
         { 

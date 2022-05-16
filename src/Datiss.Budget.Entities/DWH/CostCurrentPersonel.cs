@@ -11,6 +11,8 @@ namespace Datiss.Budget.Entities.DWH
         #region Properties
         public int Id { get; set; }
 
+        public int? ParentId { get; set; }
+
         public int YearId { get; set; }
 
         public int OrganizationId { get; set; }
@@ -121,6 +123,11 @@ namespace Datiss.Budget.Entities.DWH
         #endregion
 
         #region Navigations
+
+        public CostCurrentPersonel Parent { get; set; }
+
+        public CostCurrentPersonel Children { get; set; }
+
         public FinanceYear FinanceYear { get; set; }
 
         public Organization Organization { get; set; }

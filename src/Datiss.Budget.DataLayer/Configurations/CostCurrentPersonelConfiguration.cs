@@ -62,6 +62,13 @@ namespace Datiss.Budget.DataLayer.Mappings
                     .HasForeignKey(x => x.JobStatusDetailTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasOne(x => x.Parent)
+                    .WithOne(x => x.Children)
+                    .HasForeignKey<CostCurrentPersonel>(x => x.ParentId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+
+
         }
     }
 }

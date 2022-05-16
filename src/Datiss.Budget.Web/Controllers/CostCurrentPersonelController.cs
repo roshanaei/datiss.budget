@@ -32,6 +32,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string Name = "CostCurrentPersonel";
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
+        public const string ACTION_Copy = nameof(Copy);
         public const string ACTION_Delete = nameof(Delete);
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
@@ -392,6 +393,46 @@ namespace Datiss.Budget.Web.Controllers
                 hasError = false,
                 message = ViewMessages.DeleteRowSuccess
             });
+        }
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Copy(CopyViewModel model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            try
+            {
+                await _costCurrentPersonelService.CopyAsync(
+                                                    model.TargetYearId,
+                                                    model.SourceOrgId);
+                model.Succeed(ViewMessages.CopySuccess);
+            }
+            catch (CopySameYearException)
+            {
+                model.AddError(ViewMessages.CopySameYear);
+            }
+            catch (CopyDestYearExxeption)
+            {
+                model.AddError(ViewMessages.CopyErrorDestYear);
+            }
+            catch (CopyOrgNullDataException)
+            {
+                model.AddError(ViewMessages.CopySourceOrgNullData);
+            }
+            catch (CopyDestYearHasDataException)
+            {
+                model.AddError(ViewMessages.CopyDestYearHasData);
+            }
+            catch (CopyDataBaseException)
+            {
+                model.AddError(ViewMessages.CalculationField);
+            }
+            catch (Exception)
+            {
+                model.AddError(ViewMessages.SystemError);
+            }
+
+            return Json(model);
         }
 
         [HttpGet("import/template/{yearId}/{orgId?}")]

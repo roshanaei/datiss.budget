@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220516065255_AddFieldToPersonelMig")]
+    partial class AddFieldToPersonelMig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1268,9 +1270,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Property<int>("OrganizationId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("RFinanceDepCost_D")
                         .HasColumnType("decimal(18,6)");
 
@@ -1292,10 +1291,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("CostCenterTypeId");
 
                     b.HasIndex("OrganizationId");
-
-                    b.HasIndex("ParentId")
-                        .IsUnique()
-                        .HasFilter("[ParentId] IS NOT NULL");
 
                     b.HasIndex("YearId");
 
@@ -5674,11 +5669,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Datiss.Budget.Entities.DWH.CostCurrentPMDep", "Parent")
-                        .WithOne("Children")
-                        .HasForeignKey("Datiss.Budget.Entities.DWH.CostCurrentPMDep", "ParentId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
                         .WithMany("CostCurrentPMDeps")
                         .HasForeignKey("YearId")
@@ -5692,8 +5682,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("FinanceYear");
 
                     b.Navigation("Organization");
-
-                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentPersonel", b =>
@@ -7320,11 +7308,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("WaterPipeDiameterSalessplit");
 
                     b.Navigation("WWsFee");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentPMDep", b =>
-                {
-                    b.Navigation("Children");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostCurrentPersonel", b =>
