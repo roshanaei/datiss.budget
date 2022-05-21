@@ -14,7 +14,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public int TubeTypeId { get; set; }
 
-        public int DiamaterPipeTypeId { get; set; }
+        public int DiameterPipeTypeId { get; set; }
 
         public int DigTypeId { get; set; }
 
@@ -31,7 +31,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public Constant TubeType { get; set; }
 
-        public Constant DiamaterPipeType { get; set; }
+        public Constant DiameterPipeType { get; set; }
 
         public Constant DigType { get; set; }
 
