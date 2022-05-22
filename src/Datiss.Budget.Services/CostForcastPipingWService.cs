@@ -26,7 +26,7 @@ using Datiss.Budget.Common;
 
 namespace Datiss.Budget.Services
 {
-    public class CostForcastPipingWService
+    public class CostForcastPipingWService : ICostForcastPipingWService
     {
         private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
