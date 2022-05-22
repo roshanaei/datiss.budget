@@ -61,13 +61,11 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
 
-        public async Task<ValidationResult<CostForcastTransferWDTO>> CreateAsync(CreateCostForcastTransferWDTO model)
+        public async Task<ValidationResult<CostForcastPipingWDTO>> CreateAsync(CreateCostForcastPipingWDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            var entity = model.Adapt<CostForcastTransferW>();
-
-            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId))?.Title;
+            var entity = model.Adapt<CostForcastPipingW>();
 
             try
             {
@@ -78,56 +76,42 @@ namespace Datiss.Budget.Services
                 }
                 catch
                 {
-                    return ValidationResult<CostForcastTransferWDTO>.Failed(
+                    return ValidationResult<CostForcastPipingWDTO>.Failed(
                         string.Format(ServiceMessages.ImportExcelCalculationField)
                         );
                 }
-                var result = entity.Adapt<CostForcastTransferWDTO>();
+                var result = entity.Adapt<CostForcastPipingWDTO>();
 
-                result.TransferTypeDisplay = (await _constSet.FindAsync(model.TransferTypeId))?.Title;
                 result.DigTypeDisplay = (await _constSet.FindAsync(model.DigTypeId))?.Title;
                 result.TubeTypeDisplay = (await _constSet.FindAsync(model.TubeTypeId))?.Title;
                 result.DiameterPipeTypeDisplay = (await _constSet.FindAsync(model.DiameterPipeTypeId))?.Title;
-                result.CreditTypeDisplay = (await _constSet.FindAsync(model.CreditTypeId))?.Title;
-                result.ExtensionTypeDisplay = (await _constSet.FindAsync(model.ExtensionTypeId))?.Title;
-                result.SuggestedBudgetTopicTypeDisplay = (await _constSet.FindAsync(model.SuggestedBudgetTopicTypeId))?.Title;
-                result.OrganizationDisplay = organizationDisplay;
                 result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
 
-                return ValidationResult<CostForcastTransferWDTO>.Success(result);
+                return ValidationResult<CostForcastPipingWDTO>.Success(result);
             }
             catch (DisbaledYearDataInputException)
             {
-                return ValidationResult<CostForcastTransferWDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+                return ValidationResult<CostForcastPipingWDTO>.Failed(ServiceMessages.Logic_CostForcastPipingDuplicates);
             }
 
 
         }
 
-        public async Task<ValidationResult<CostForcastTransferWDTO>> UpdateAsync(UpdateCostForcastTransferWDTO model)
+        public async Task<ValidationResult<CostForcastPipingWDTO>> UpdateAsync(UpdateCostForcastPipingWDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
-
-            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId))?.Title;
 
             try
             {
                 var entity = await _dbSet.FindAsync(model.Id);
 
-                entity.OrganizationId = model.OrganizationId;
                 entity.YearId = model.YearId;
-                entity.Location = model.Location;
-                entity.TransferTypeId = model.TransferTypeId;
                 entity.DigTypeId = model.DigTypeId;
                 entity.TubeTypeId = model.TubeTypeId;
-                entity.Lenth = model.Lenth;
-                entity.PipeCost = model.PipeCost;
+                entity.TubeBuyCost = model.TubeBuyCost;
                 entity.RunCost = model.RunCost;
                 entity.DiameterPipeTypeId = model.DiameterPipeTypeId;
                 entity.TotalCost = model.TotalCost;
-                entity.CreditTypeId = model.CreditTypeId;
-                entity.ExtensionTypeId = model.ExtensionTypeId;
-                entity.SuggestedBudgetTopicTypeId = model.SuggestedBudgetTopicTypeId;
 
                 try
                 {
