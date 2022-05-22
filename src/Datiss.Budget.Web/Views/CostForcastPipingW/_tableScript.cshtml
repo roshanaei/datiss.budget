@@ -1,0 +1,394 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    let rowData = {};
+
+    function editRow(id) {
+
+        
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_DigType_' + id).hide();
+        $('#divOutput_DiameterPipeType_' + id).hide();
+        $('#divOutput_PipeCost_' + id).hide();
+        $('#divOutput_RunCost_' + id).hide();
+        $('#divOutput_TubeType_' + id).hide();
+        $('#divOutput_TotalCost_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_DigType_' + id).show();
+        $('#divInput_DiameterPipeType_' + id).show();
+        $('#divInput_PipeCost_' + id).show();
+        $('#divInput_RunCost_' + id).show();
+        $('#divInput_TubeType_' + id).show();
+        $('#divInput_TotalCost_' + id).show();
+
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.yearId = $('#inputYear_' + id).val();
+        rowData.digTypeId = $('#inputDigType_' + id).val();
+        rowData.diameterPipeTypeId = $('#inputDiameterPipeType_' + id).val();
+        rowData.pipeCost = $('#inputPipeCost_' + id).val();
+        rowData.runCost = $('#inputRunCost_' + id).val();
+        rowData.tubeTypeId = $('#inputTubeType_' + id).val();
+        rowData.totalCost = $('#inputTotalCost_' + id).val();
+    }
+
+    function cancelEditRow(id) {
+        let row = $('#row_' + id);
+        //row.css('background-color', '');
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_DigType_' + id).hide();
+        $('#divInput_DiameterPipeType_' + id).hide();
+        $('#divInput_PipeCost_' + id).hide();
+        $('#divInput_RunCost_' + id).hide();
+        $('#divInput_TubeType_' + id).hide();
+        $('#divInput_TotalCost_' + id).hide();
+
+        //Retriving to OrginalData
+        if (rowData != null) {
+            $('#inputYear_' + id).val(rowData.yearId);
+            $('#inputDigType_' + id).val(rowData.digTypeId);
+            $('#inputDiameterPipeType_' + id).val(rowData.diameterPipeTypeId);
+            $('#inputPipeCost_' + id).val(rowData.pipeCost);
+            $('#inputRunCost_' + id).val(rowData.runCost);
+            $('#inputTubeType_' + id).val(rowData.tubeTypeId);
+            $('#inputTotalCost_' + id).val(rowData.totalCost);
+        }
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_DigType_' + id).show();
+        $('#divOutput_DiameterPipeType_' + id).show();
+        $('#divOutput_PipeCost_' + id).show();
+        $('#divOutput_RunCost_' + id).show();
+        $('#divOutput_TubeType_' + id).show();
+        $('#divOutput_TotalCost_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+
+        var model = {};
+        model.id = id;
+        model.yearId = $('#yearId option:selected').val();
+        model.digTypeId = $('#inputDigType_' + id).val();
+        model.diameterPipeTypeId = $('#inputDiameterPipeType_' + id).val();
+        model.pipeCost = $('#inputPipeCost_' + id).val();
+        model.runCost = $('#inputRunCost_' + id).val();
+        model.tubeTypeId = $('#inputTubeType_' + id).val();
+        model.totalCost = $('#inputTotalCost_' + id).val();
+
+                console.log(model);
+
+
+        $.ajax({
+            url: '@Url.Action(CostForcastPipingWController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                            type: 'error',
+                            animation: false,
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                }
+                console.log(data);
+
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.digType = model.digTypeId;
+                rowData.diameterPipeType = model.diameterPipeTypeId;
+                rowData.pipeCost = model.pipeCost;
+                rowData.runCost = model.runCost;
+                rowData.tubeType = model.tubeTypeId;
+                rowData.totalCost = model.totalCost;
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#spanYear_' + id).text(data.year);
+                $('#spanDigType_' + id).text(data.digTypeDisplay);
+                $('#spanDiameterPipeType_' + id).text(data.diameterPipeTypeDisplay);
+                $('#spanPipeCost_' + id).text(data.pipeCost);
+                $('#spanRunCost_' + id).text(data.runCost);
+                $('#spanTubeType_' + id).text(data.tubeTypeDisplay);
+                $('#spanTotalCost_' + id).text(data.totalCost);
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function saveNewRow(e) {
+
+        resetTableBackColor("my-table");
+
+        var model = {};
+        model.yearId = $('#yearId option:selected').val();
+        model.digTypeId = $(e).find('#inputDigType_').val();
+        model.diameterPipeTypeId = $(e).find('#inputDiameterPipeType_').val();
+        model.tubeTypeId = $(e).find('#inputTubeType_').val();
+
+
+
+        model.pipeCost = $(e).find('#inputPipeCost_').val();
+        if (model.pipeCost == "") {
+            model.pipeCost = 0;
+        }
+        model.runCost = $(e).find('#inputRunCost_').val();
+        if (model.runCost == "") {
+            model.runCost = 0;
+        }
+        model.totalCost = $(e).find('#inputTotalCost_').val();
+        if (model.totalCost == "") {
+            model.totalCost = 0;
+        }
+
+        
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(CostForcastPipingWController.ACTION_Create)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                console.log(data);
+
+                //Year
+                $(e).find('#divInput_Year_').attr('id', 'divInput_Year_' + data.id);
+                $(e).find('#hidYearId_').attr('id', 'hidYearId_' + data.id);
+                $(e).find('#inputYear_').attr('id', 'inputYear_' + data.id);
+                $(e).find('#divOutput_Year_').attr('id', 'divOutput_Year_' + data.id);
+                $(e).find('#spanYear_').attr('id', 'spanYear_' + data.id);
+
+                $('#divInput_Year_' + data.id).hide();
+                $('#spanYear_' + data.id).text(data.year);
+                $('#divOutput_Year_' + data.id).show();
+
+
+
+                //DigType
+                $(e).find('#divInput_DigType_').attr('id', 'divInput_DigType_' + data.id);
+                $(e).find('#inputDigTypeId_').attr('id', 'inputDigTypeId_' + data.id);
+                $(e).find('#divOutput_DigType_').attr('id', 'divOutput_DigType_' + data.id);
+                $(e).find('#spanDigType_').attr('id', 'spanDigType_' + data.id);
+
+                $('#divInput_DigType_' + data.id).hide();
+                $('#spanDigType_' + data.id).text(data.digTypeDisplay);
+                $('#divOutput_DigType_' + data.id).show();
+
+
+                //DiameterPipeType
+                $(e).find('#divInput_DiameterPipeType_').attr('id', 'divInput_DiameterPipeType_' + data.id);
+                $(e).find('#inputDiameterPipeType_').attr('id', 'inputDiameterPipeType_' + data.id);
+                $(e).find('#divOutput_DiameterPipeType_').attr('id', 'divOutput_DiameterPipeType_' + data.id);
+                $(e).find('#spanDiameterPipeType_').attr('id', 'spanDiameterPipeType_' + data.id);
+
+                $('#divInput_DiameterPipeType_' + data.id).hide();
+                $('#spanDiameterPipeType_' + data.id).text(data.diameterPipeTypeDisplay);
+                $('#divOutput_DiameterPipeType_' + data.id).show();
+
+
+                //PipeCost
+                $(e).find('#divInput_PipeCost_').attr('id', 'divInput_PipeCost_' + data.id);
+                $(e).find('#inputPipeCost_').attr('id', 'inputPipeCost_' + data.id);
+                $(e).find('#divOutput_PipeCost_').attr('id', 'divOutput_PipeCost_' + data.id);
+                $(e).find('#spanPipeCost_').attr('id', 'spanPipeCost_' + data.id);
+
+                $('#divInput_PipeCost_' + data.id).hide();
+                $('#spanPipeCost_' + data.id).text(data.pipeCostDisplay);
+                $('#divOutput_PipeCost_' + data.id).show();
+
+                //RunCost
+                $(e).find('#divInput_RunCost_').attr('id', 'divInput_RunCost_' + data.id);
+                $(e).find('#inputRunCost_').attr('id', 'inputRunCost_' + data.id);
+                $(e).find('#divOutput_RunCost_').attr('id', 'divOutput_RunCost_' + data.id);
+                $(e).find('#spanRunCost_').attr('id', 'spanRunCost_' + data.id);
+
+                $('#divInput_RunCost_' + data.id).hide();
+                $('#spanRunCost_' + data.id).text(data.runCostDisplay);
+                $('#divOutput_RunCost_' + data.id).show();
+
+                //TubeType
+                $(e).find('#divInput_TubeType_').attr('id', 'divInput_TubeType_' + data.id);
+                $(e).find('#inputTubeType_').attr('id', 'inputTubeType_' + data.id);
+                $(e).find('#divOutput_TubeType_').attr('id', 'divOutput_TubeType_' + data.id);
+                $(e).find('#spanTubeType_').attr('id', 'spanTubeType_' + data.id);
+
+                $('#divInput_TubeType_' + data.id).hide();
+                $('#spanTubeType_' + data.id).text(data.tubeTypeDisplay);
+                $('#divOutput_TubeType_' + data.id).show();
+
+                //TotalCost
+                $(e).find('#divInput_TotalCost_').attr('id', 'divInput_TotalCost_' + data.id);
+                $(e).find('#inputTotalCost_').attr('id', 'inputTotalCost_' + data.id);
+                $(e).find('#divOutput_TotalCost_').attr('id', 'divOutput_TotalCost_' + data.id);
+                $(e).find('#spanTotalCost_').attr('id', 'spanTotalCost_' + data.id);
+
+                $('#divInput_TotalCost_' + data.id).hide();
+                $('#spanTotalCost_' + data.id).text(data.totalCostDisplay);
+                $('#divOutput_TotalCost_' + data.id).show();
+
+
+
+                //Buttons
+                $(e).find('#btnEdit_').data('id', data.id);
+                $(e).find('#btnDelete_').data('id', data.id);
+                $(e).find('#btnSaveEdit_').data('id', data.id);
+                $(e).find('#btnCancelEdit_').data('id', data.id);
+                $(e).find('#btnSaveCreate_').data('id', data.id);
+                $(e).find('#btnCancelCreate_').data('id', data.id);
+
+                $(e).find('#btnEdit_').attr('id', 'btnEdit_' + data.id);
+                $(e).find('#btnDelete_').attr('id', 'btnDelete_' + data.id);
+                $(e).find('#btnSaveEdit_').attr('id', 'btnSaveEdit_' + data.id);
+                $(e).find('#btnCancelEdit_').attr('id', 'btnCancelEdit_' + data.id);
+                $(e).find('#btnSaveCreate_').attr('id', 'btnSaveCreate_' + data.id);
+                $(e).find('#btnCancelCreate_').attr('id', 'btnCancelCreate_' + data.id);
+
+                $('#btnSaveCreate_' + data.id).hide();
+                $('#btnCancelCreate_' + data.id).hide();
+                $('#btnEdit_' + data.id).show();
+                $('#btnDelete_' + data.id).show();
+
+                $('#inputOrg_' + data.id).select2();
+                $(e).css('background-color', 'rgb(245 245 246)');
+                isNewRow = false;
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function addNewRow() {
+        if (isNewRow) return;
+        resetTableBackColor("my-table");
+
+        var template = $('#rowTemplate').clone()
+            .appendTo($('#my-table tbody'))
+            .attr('id', 'newRow')
+            .css('background-color', 'rgb(230 247 228)')
+            .show();
+
+
+
+        $('.input-keyup').keyup(function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                let row = $(this).closest('tr');
+                saveNewRow(row);
+            }
+        });
+
+        let newRowElement = document.getElementById('newRow');
+        newRowElement.scrollIntoView();
+        $('.default-input:last').focus();
+
+        isNewRow = true;
+    }
+
+    function cancelNewRow(e) {
+        $(e).closest('tr').remove();
+        isNewRow = false;
+    }
+
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(CostForcastPipingWController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function (data, status, settings) {
+                if (data.hasError) {
+                    alert(data.message);
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+
+    function RelatedDropDown(e, event) {
+        let extensionTypeid = event.target.value;
+        FillDropDown(extensionTypeid);
+    }
+
+    }
+
+
+</script>
