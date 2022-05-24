@@ -212,10 +212,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8,9,10,11,12,13';
+        let allColumns = '1,2,3,4,5,6,7,8';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,12,13,";
+        let showingColmuns = "1,2,3,4,5,6,7,8,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -226,6 +226,77 @@
     }
 
     <script type="text/javascript">
+
+        $(document).ready(function () {
+            console.log('ready');
+            //fill input hidden with initial columns showing
+            document.getElementById("hidColumns").value = showingColmuns;
+
+            setDataColumns();
+
+            $(".dropdown-menu").click(function (e) {
+                e.stopPropagation();
+            });
+
+            $("#columnSelector input:checkbox:checked").change(function () {
+                let index = parseInt($(this)[0].id.split('-')[1]);
+                console.log(`showing or hiding col : ${index}`);
+                let checked = $(this)[0].checked;
+                if (checked) {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                    showingColmuns = showingColmuns + `${index},`
+                    document.getElementById("hidColumns").value = showingColmuns;
+                } else {
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+                    showingColmuns = showingColmuns.replace(`${index},`, '');
+                    document.getElementById("hidColumns").value = showingColmuns;
+                }
+            });
+        });
+
+        function resetDataColumns() {
+            $('th,tr td').show();
+            let inputs = $("#columnSelector input:checkbox");
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].checked = true
+            }
+        }
+
+        function setDataColumns() {
+            let columnsToShow = document.getElementById("hidColumns").value.split(',');
+            console.log('ColumnsToShow ');
+            console.log(columnsToShow);
+            let checkBoxes = $("#columnSelector input:checkbox");
+            for (let i = 0; i < columnIndices.length; i++) {
+                let index = parseInt(columnIndices[i]);
+                let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
+                console.log(`Column : ${index} show = ${showColumn}`);
+                checkBoxes[i].checked = showColumn;
+                if (showColumn)
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                else
+                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+            }
+
+        }
+
+
+
+        function openImportExcelForm() {
+            $('#ExcellModal').modal('show');
+        }
+
+        $(window).keydown(function (event) {
+            if (event.altKey && event.keyCode == 78) {
+                addNewRow();
+            }
+        });
+
+
+        $(document).on('click', '#btnCreate', function () {
+            addNewRow();
+        });
+
 
     $(document).on('click', '.edit-row', function () {
 
@@ -297,7 +368,6 @@
         });
 
         $(document).on('click', '.save-new-row', function () {
-            $(this).attr('disabled', true);
             let row = $(this).closest('tr');
             saveNewRow(row);
         });
