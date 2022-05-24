@@ -1,5 +1,4 @@
 ﻿<script type="text/javascript">
-
     let isNewRow = false;
     let rowData = {};
 
@@ -8,13 +7,11 @@
         
         resetTableBackColor("my-table");
 
-        let row = $('#row_' + id);
-
         //Hide output elements
         $('#divOutput_Year_' + id).hide();
         $('#divOutput_DigType_' + id).hide();
         $('#divOutput_DiameterPipeType_' + id).hide();
-        $('#divOutput_PipeCost_' + id).hide();
+        $('#divOutput_TubeBuyCost_' + id).hide();
         $('#divOutput_RunCost_' + id).hide();
         $('#divOutput_TubeType_' + id).hide();
         $('#divOutput_TotalCost_' + id).hide();
@@ -23,7 +20,7 @@
         $('#divInput_Year_' + id).show();
         $('#divInput_DigType_' + id).show();
         $('#divInput_DiameterPipeType_' + id).show();
-        $('#divInput_PipeCost_' + id).show();
+        $('#divInput_TubeBuyCost_' + id).show();
         $('#divInput_RunCost_' + id).show();
         $('#divInput_TubeType_' + id).show();
         $('#divInput_TotalCost_' + id).show();
@@ -38,7 +35,7 @@
         rowData.yearId = $('#inputYear_' + id).val();
         rowData.digTypeId = $('#inputDigType_' + id).val();
         rowData.diameterPipeTypeId = $('#inputDiameterPipeType_' + id).val();
-        rowData.pipeCost = $('#inputPipeCost_' + id).val();
+        rowData.pipeCost = $('#inputTubeBuyCost_' + id).val();
         rowData.runCost = $('#inputRunCost_' + id).val();
         rowData.tubeTypeId = $('#inputTubeType_' + id).val();
         rowData.totalCost = $('#inputTotalCost_' + id).val();
@@ -52,7 +49,7 @@
         $('#divInput_Year_' + id).hide();
         $('#divInput_DigType_' + id).hide();
         $('#divInput_DiameterPipeType_' + id).hide();
-        $('#divInput_PipeCost_' + id).hide();
+        $('#divInput_TubeBuyCost_' + id).hide();
         $('#divInput_RunCost_' + id).hide();
         $('#divInput_TubeType_' + id).hide();
         $('#divInput_TotalCost_' + id).hide();
@@ -62,7 +59,7 @@
             $('#inputYear_' + id).val(rowData.yearId);
             $('#inputDigType_' + id).val(rowData.digTypeId);
             $('#inputDiameterPipeType_' + id).val(rowData.diameterPipeTypeId);
-            $('#inputPipeCost_' + id).val(rowData.pipeCost);
+            $('#inputTubeBuyCost_' + id).val(rowData.tubeBuyCost);
             $('#inputRunCost_' + id).val(rowData.runCost);
             $('#inputTubeType_' + id).val(rowData.tubeTypeId);
             $('#inputTotalCost_' + id).val(rowData.totalCost);
@@ -72,7 +69,7 @@
         $('#divOutput_Year_' + id).show();
         $('#divOutput_DigType_' + id).show();
         $('#divOutput_DiameterPipeType_' + id).show();
-        $('#divOutput_PipeCost_' + id).show();
+        $('#divOutput_TubeBuyCost_' + id).show();
         $('#divOutput_RunCost_' + id).show();
         $('#divOutput_TubeType_' + id).show();
         $('#divOutput_TotalCost_' + id).show();
@@ -99,7 +96,7 @@
         model.yearId = $('#yearId option:selected').val();
         model.digTypeId = $('#inputDigType_' + id).val();
         model.diameterPipeTypeId = $('#inputDiameterPipeType_' + id).val();
-        model.pipeCost = $('#inputPipeCost_' + id).val();
+        model.tubeBuyCost = $('#inputTubeBuyCost_' + id).val();
         model.runCost = $('#inputRunCost_' + id).val();
         model.tubeTypeId = $('#inputTubeType_' + id).val();
         model.totalCost = $('#inputTotalCost_' + id).val();
@@ -132,7 +129,7 @@
                 rowData.yearId = model.yearId;
                 rowData.digType = model.digTypeId;
                 rowData.diameterPipeType = model.diameterPipeTypeId;
-                rowData.pipeCost = model.pipeCost;
+                rowData.tubeBuyCost = model.tubeBuyCost;
                 rowData.runCost = model.runCost;
                 rowData.tubeType = model.tubeTypeId;
                 rowData.totalCost = model.totalCost;
@@ -141,7 +138,7 @@
                 $('#spanYear_' + id).text(data.year);
                 $('#spanDigType_' + id).text(data.digTypeDisplay);
                 $('#spanDiameterPipeType_' + id).text(data.diameterPipeTypeDisplay);
-                $('#spanPipeCost_' + id).text(data.pipeCost);
+                $('#spanTubeBuyCost_' + id).text(data.tubeBuyCost);
                 $('#spanRunCost_' + id).text(data.runCost);
                 $('#spanTubeType_' + id).text(data.tubeTypeDisplay);
                 $('#spanTotalCost_' + id).text(data.totalCost);
@@ -160,6 +157,7 @@
     }
 
     function saveNewRow(e) {
+                alert('in func ..12');
 
         resetTableBackColor("my-table");
 
@@ -171,9 +169,9 @@
 
 
 
-        model.pipeCost = $(e).find('#inputPipeCost_').val();
-        if (model.pipeCost == "") {
-            model.pipeCost = 0;
+        model.tubeBuyCost = $(e).find('#inputTubeBuyCost_').val();
+        if (model.tubeBuyCost == "") {
+            model.tubeBuyCost = 0;
         }
         model.runCost = $(e).find('#inputRunCost_').val();
         if (model.runCost == "") {
@@ -243,15 +241,15 @@
                 $('#divOutput_DiameterPipeType_' + data.id).show();
 
 
-                //PipeCost
-                $(e).find('#divInput_PipeCost_').attr('id', 'divInput_PipeCost_' + data.id);
-                $(e).find('#inputPipeCost_').attr('id', 'inputPipeCost_' + data.id);
-                $(e).find('#divOutput_PipeCost_').attr('id', 'divOutput_PipeCost_' + data.id);
-                $(e).find('#spanPipeCost_').attr('id', 'spanPipeCost_' + data.id);
+                //TubeBuyCost
+                $(e).find('#divInput_TubeBuyCost_').attr('id', 'divInput_TubeBuyCost_' + data.id);
+                $(e).find('#inputTubeBuyCost_').attr('id', 'inputTubeBuyCost_' + data.id);
+                $(e).find('#divOutput_TubeBuyCost_').attr('id', 'divOutput_TubeBuyCost_' + data.id);
+                $(e).find('#spanTubeBuyCost_').attr('id', 'spanTubeBuyCost_' + data.id);
 
-                $('#divInput_PipeCost_' + data.id).hide();
-                $('#spanPipeCost_' + data.id).text(data.pipeCostDisplay);
-                $('#divOutput_PipeCost_' + data.id).show();
+                $('#divInput_TubeBuyCost_' + data.id).hide();
+                $('#spanTubeBuyCost_' + data.id).text(data.tubeBuyCostDisplay);
+                $('#divOutput_TubeBuyCost_' + data.id).show();
 
                 //RunCost
                 $(e).find('#divInput_RunCost_').attr('id', 'divInput_RunCost_' + data.id);
@@ -320,6 +318,9 @@
     }
 
     function addNewRow() {
+
+        alert('in func ..');
+
         if (isNewRow) return;
         resetTableBackColor("my-table");
 

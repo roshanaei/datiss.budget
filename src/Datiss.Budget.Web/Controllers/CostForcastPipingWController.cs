@@ -373,10 +373,6 @@ namespace Datiss.Budget.Web.Controllers
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
 
-            var model = new CostForcastPipingWImportViewModel();
-            var items = new List<CostForcastPipingWViewModel>();
-
-
             var digTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__DigType))
                 .Adapt<IList<DropDownItemViewModel>>();
 
@@ -387,13 +383,32 @@ namespace Datiss.Budget.Web.Controllers
             var tubeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__TubeType))
                 .Adapt<IList<DropDownItemViewModel>>();
 
+            var items = new List<CostForcastPipingWDTO>();
 
-            model.DigTypeSource = digTypeSource;
-            model.DiameterPipeTypeSource = diameterPipeTypeSource;
-            model.TubeTypeSource = tubeTypeSource;
+            foreach (var tube in tubeTypeSource)
+            {
+                foreach (var diameter in diameterPipeTypeSource)
+                {
+                    foreach (var dig in digTypeSource)
 
-            model.Items = items;
-            using var workbook = model.GetImportTemplate(year.Year);
+                    {
+                        items.Add(new CostForcastPipingWDTO
+                        {
+                            TubeTypeDisplay = tube.Title,
+                            TubeTypeId = tube.Id,
+                            DiameterPipeTypeDisplay = diameter.Title,
+                            DiameterPipeTypeId = diameter.Id,
+                            DigTypeDisplay = dig.Title,
+                            DigTypeId = dig.Id,
+                            Year = year.Year,
+                            YearId = year.Id
+                        });
+                    }
+       
+                }
+            }
+
+            using var workbook = items.GetImportTemplate(year.Year);
             return workbook.Deliver("CostForcastPipingW-Import-Template.xlsx");
         }
 
