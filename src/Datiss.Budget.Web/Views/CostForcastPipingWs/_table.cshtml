@@ -1,0 +1,235 @@
+﻿@model CostForcastPipingWsIndexViewModel
+<div class="table-responsive">
+    <table id="my-table" class=" table table-hover table-bordered m-0 my-font ">
+        <thead class="thead-light">
+            <tr>
+
+                <th style="min-width:140px; font-size:smaller">جنس لوله</th>
+                <th style="min-width:140px; font-size:smaller">قطر لوله</th>
+                <th style="min-width:130px; font-size:smaller">نوع کندمان</th>
+                <th style="min-width:140px; font-size:smaller">هزینه هر متر خرید لوله</th>
+                <th style="min-width:140px; font-size:smaller">هزینه اجرای نقب</th>
+                <th style="min-width:130px; font-size:smaller">هزینه اجرای ترانشه</th>
+                <th style="min-width:110px">مدیریت</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowTemplate" style="display: none">
+                
+                <td>
+                    <div id="divInput_TubeType_">
+                        <input id="hidTubeTypeId_" type="hidden" />
+                        <select class="form-control" id="inputTubeType_" asp-items="Model.TubeTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_TubeType_" style="display: none">
+                        <span id="spanTubeType_"> </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div id="divInput_DiameterPipeType_">
+                        <input id="hidDiameterPipeTypeId_" type="hidden" />
+                        <select class="form-control" id="inputDiameterPipeType_" asp-items="Model.DiameterPipeTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_DiameterPipeType_" style="display: none">
+                        <span id="spanDiameterPipeType_"> </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div id="divInput_DigType_">
+                        <input id="hidDigTypeId_" type="hidden" />
+                        <select class="form-control" id="inputDigType_" asp-items="Model.DigTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_DigType_" style="display: none">
+                        <span id="spanDigType_"> </span>
+                    </div>
+                </td>
+                
+                <td>
+                    <div id="divInput_TubeBuyCost_">
+                        <input class="form-control input-keyup" id="inputTubeBuyCost_" type="number" />
+                    </div>
+                    <div id="divOutput_TubeBuyCost_" style="display: none">
+                        <span id="spanTubeBuyCost_"> </span>
+                    </div>
+                </td>
+                
+                <td>
+                    <div id="divInput_NaghabCost_">
+                        <input class="form-control input-keyup" id="inputNaghabCost_" type="number" />
+                    </div>
+                    <div id="divOutput_NaghabCost_" style="display: none">
+                        <span id="spanNaghabCost_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_TeransheCost_">
+                        <input class="form-control input-keyup" id="inputTeransheCost_" type="number" />
+                    </div>
+                    <div id="divOutput_TeransheCost_" style="display: none">
+                        <span id="spanTeransheCost_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
+                        <i class="fa ft-edit fa-1x"></i>
+                    </a>
+
+                    <a id="btnDelete_" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" style="display: none">
+                        <i class="fa ft-trash-2"></i>
+                    </a>
+
+                    <a id="btnSaveEdit_" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+                    <a id="btnCancelEdit_" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                    <a id="btnSaveCreate_" class="save-new-row btn btn-success my-font mr-1">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+
+                    <a id="btnCancelCreate_" class="cancel-new-row btn btn-danger my-font">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                </td>
+            </tr>
+            @foreach (var item in Model.Items)
+            {
+                <tr id="row_@item.Id">
+
+                    <td>
+                        <div id="divInput_TubeType_@item.Id" style="display: none">
+                            <input id="hidTubeTypeId_@item.Id" type="hidden" value="@item.TubeTypeId" />
+                            <select class="form-control selectTubeType" id="inputTubeType_@item.Id" asp-items="Model.TubeTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputTubeType_' + @item.Id + ' option[value=' + @item.TubeTypeId + ']').attr('selected', true);
+                                $('#inputTubeType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_TubeType_@item.Id">
+                            <span id="spanTubeType_@item.Id">@item.TubeTypeDisplay </span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div id="divInput_DiameterPipeType_@item.Id" style="display: none">
+                            <input id="hidDiameterPipeTypeId_@item.Id" type="hidden" value="@item.DiameterPipeTypeId" />
+                            <select class="form-control selectDiameterPipeType" id="inputDiameterPipeType_@item.Id" asp-items="Model.DiameterPipeTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputDiameterPipeType_' + @item.Id + ' option[value=' + @item.DiameterPipeTypeId + ']').attr('selected', true);
+                                $('#inputDiameterPipeType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_DiameterPipeType_@item.Id">
+                            <span id="spanDiameterPipeType_@item.Id">@item.DiameterPipeTypeDisplay </span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div id="divInput_DigType_@item.Id" style="display: none">
+                            <input id="hidDigTypeId_@item.Id" type="hidden" value="@item.DigTypeId" />
+                            <select class="form-control selectDigType" id="inputDigType_@item.Id" asp-items="Model.DigTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputDigType_' + @item.Id + ' option[value=' + @item.DigTypeId + ']').attr('selected', true);
+                                $('#inputDigType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_DigType_@item.Id">
+                            <span id="spanDigType_@item.Id">@item.DigTypeDisplay </span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div id="divInput_TubeBuyCost_@item.Id" style="display: none">
+                            <input class="form-control" id="inputTubeBuyCost_@item.Id" value="@item.TubeBuyCost" type="number" />
+                        </div>
+                        <div id="divOutput_TubeBuyCost_@item.Id">
+                            <span id="spanTubeBuyCost_@item.Id">@item.TubeBuyCostDisplay </span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div id="divInput_NaghabCost_@item.Id" style="display: none">
+                            <input class="form-control" id="inputNaghabCost_@item.Id" value="@item.NaghabCost" type="number" />
+                        </div>
+                        <div id="divOutput_NaghabCost_@item.Id">
+                            <span id="spanNaghabCost_@item.Id">@item.NaghabCostDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_TeransheCost_@item.Id" style="display: none">
+                            <input class="form-control" id="inputTeransheCost_@item.Id" value="@item.TeransheCost" type="number" />
+                        </div>
+                        <div id="divOutput_TeransheCost_@item.Id">
+                            <span id="spanTeransheCost_@item.Id">@item.TeransheCostDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
+
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
+
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
+
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                </button>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                </button>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </button>
+        </form>
+
+    </div>
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">(صفحه <b class="font-medium-2">@Model.PageNumber</b> از <b class="font-medium-2">@Model.PagesCount</b>)</div>
+    </div>
+    <!--Pagination-->
+    <vc:pager model="Model.ToPager()" controller-name="@CostForcastPipingWController.Name" action-name="@CostForcastPipingWController.ACTION_Index"></vc:pager>
+</div>
