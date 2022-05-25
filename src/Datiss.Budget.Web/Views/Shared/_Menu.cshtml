@@ -320,6 +320,11 @@
                                             <span data-i18n="اهداف عمرانی فاضلاب" class="menu-item my-font-light">اهداف عمرانی فاضلاب</span>
                                         </a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="@CostForcastPipingWController.Name" asp-action="@CostForcastPipingWController.ACTION_Index">
+                                            <span data-i18n="هزینه لوله گذاری شبکه توزیع آب" class="menu-item my-font-light">هزینه لوله گذاری شبکه توزیع آب</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>
@@ -526,3 +531,19 @@
 </div>
 
 <!-- / main menu-->
+
+<script type="text/javascript">
+
+      let url = window.location.href;
+
+      $('li a').each(function() {
+
+        if ($(this)[0].href === url) {
+
+          $(this).parent().addClass('active');
+
+        }
+
+      });
+
+</script>

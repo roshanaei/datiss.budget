@@ -384,4 +384,7 @@
   <data name="ImportExcelFinanceTypeCostCenterTypeOrgNotInExcel" xml:space="preserve">
     <value>در فایل اکسل شما اطلاعات دارایی های :&lt;br&gt;{0} برای مرکز هزینه "{1}" ، "{2}" وجود ندارد.</value>
   </data>
+  <data name="Logic_CostForcastPipingDuplicates" xml:space="preserve">
+    <value>اطلاعات  جنس لوله {0} ،قطر لوله {1} و نوع کندمان {2} برای سال "{3}" قبلا ثبت شده است.</value>
+  </data>
 </root>

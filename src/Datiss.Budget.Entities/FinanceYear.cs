@@ -145,6 +145,9 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentPrescriptionBaseInfo> CostCurrentPrescriptionBaseInfo { get; set; }
 
+        public ICollection<CostForcastPipingW> CostForcastPipingW { get; set; }
+
+
         #endregion
     }
 }
