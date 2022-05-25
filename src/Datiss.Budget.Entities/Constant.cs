@@ -247,6 +247,12 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostForcastPipingW> CostForcastPipingWDigType { get; set; }
 
+        public ICollection<CostForcastPipingWs> CostForcastPipingWsTubeType { get; set; }
+
+        public ICollection<CostForcastPipingWs> CostForcastPipingWsDiameterPipeType { get; set; }
+
+        public ICollection<CostForcastPipingWs> CostForcastPipingWsDigType { get; set; }
+
 
         #endregion
     }
