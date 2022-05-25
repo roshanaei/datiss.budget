@@ -1,10 +1,12 @@
 ﻿<script type="text/javascript">
+
     let isNewRow = false;
     let rowData = {};
 
     function editRow(id) {
 
-        
+        alert('edit');
+
         resetTableBackColor("my-table");
 
         //Hide output elements
@@ -157,7 +159,6 @@
     }
 
     function saveNewRow(e) {
-                alert('in func ..12');
 
         resetTableBackColor("my-table");
 
@@ -319,8 +320,6 @@
 
     function addNewRow() {
 
-        alert('in func ..');
-
         if (isNewRow) return;
         resetTableBackColor("my-table");
 
@@ -382,13 +381,6 @@
         for (i = 2; i < rows.length - 1; i++) {
             rows[i].style = "";
         }
-    }
-
-    function RelatedDropDown(e, event) {
-        let extensionTypeid = event.target.value;
-        FillDropDown(extensionTypeid);
-    }
-
     }
 
 

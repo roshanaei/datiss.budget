@@ -1,5 +1,7 @@
 ﻿@model CostForcastPipingWIndexViewModel
-@{ ViewData["Title"] = "هزینه لوله گذاری شبکه توزیع آب"; }
+@{
+    ViewData["Title"] = "هزینه لوله گذاری شبکه توزیع آب";
+}
 
 <!--Title-->
 <div class="row">
@@ -161,7 +163,7 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostForcastPipingWController.ACTION_ExportExcel"  asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostForcastPipingWController.ACTION_ExportExcel" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
@@ -185,47 +187,44 @@
 </section>
 
 @section headSection {
-    <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
-    <link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
-    <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
+<link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+<link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
+<script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
 }
 
 @section footSection {
 
-    <partial name="_loadingBar" />
+<partial name="_loadingBar" />
 
-    <div id="divCopy">
+<div id="divCopy">
+</div>
 
-    </div>
+<partial name="_excelModal" model="new ImportExcelViewModel()" />
 
-    <partial name="_excelModal" model="new ImportExcelViewModel()" />
-
-    <div id="divCreate">
-
-    </div>
+<div id="divCreate">
+</div>
 
 
-    <div id="divCalc">
+<div id="divCalc">
+</div>
 
-    </div>
+<partial name="_tableScript" />
 
-    <partial name="_tableScript" />
-
-    <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8';
-        let columnIndices = allColumns.split(',');
-        console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,";
-    </script>
+<script type="text/javascript">
+    let allColumns = '1,2,3,4,5,6,7,8';
+    let columnIndices = allColumns.split(',');
+    console.log(columnIndices);
+    let showingColmuns = "1,2,3,4,5,6,7,8,";
+</script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
     {
-        <script type="text/javascript">
-            showingColmuns = '@Model.Filter.Columns' ;
-        </script>
+<script type="text/javascript">
+    showingColmuns = '@Model.Filter.Columns' ;
+</script>
     }
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
         $(document).ready(function () {
             console.log('ready');
@@ -280,7 +279,82 @@
 
         }
 
+        function hardDelete(e) {
+            Swal.fire({
+                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
+                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
+                type: 'error',
+                showCancelButton: true,
+                //confirmButtonColor: '#2F8BE6',
+                animation: false,
+                customClass: 'animated flipInX',
+                //cancelButtonColor: '#F55252',
+                cancelButtonText: 'انصراف',
+                confirmButtonText: 'حذف اطلاعات!',
+                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                cancelButtonClass:  'btn btn-outline-secondary mr-1 my-font',
+                buttonsStyling: false,
+            }).then(function (result) {
+                if (result.value) {
+                    let params = {};
+                    params.yearId = $('#yearId option:selected').val();
+                    console.log(params);
+                    let deleteUrl = '@Url.Action(CostForcastPipingWController.ACTION_DeleteRecords)';
+                    console.log(deleteUrl);
 
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'POST',
+                        data: params,
+                        success: function(data, status, settings) {
+                            console.log(status);
+                            if(data.hasError) {
+                                Swal.fire({
+                                    title: '<span class="my-font">خطا</span>',
+                                    html: `<span class="my-font">${data.message}</span>`,
+                                    type: 'error',
+                                    confirmButtonColor: '#2F8BE6',
+                                    animation: false,
+                                    customClass: 'animated flipInX',
+                                    confirmButtonText: 'بستن',
+                                    confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                                    buttonsStyling: false,
+                                });
+                                return;
+                            }
+
+                            Swal.fire({
+                                title: '<span class="my-font">عملیات موفق</span>',
+                                html: `<span class="my-font">${data.message}</span>`,
+                                type: 'success',
+                                confirmButtonColor: '#2F8BE6',
+                                animation: true,
+                                customClass: 'animated flipInX',
+                                confirmButtonText: 'بستن',
+                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                                buttonsStyling: false,
+                            }).then(function(result) {
+                                document.location.href = '@Url.Action(CostForcastPipingWController.ACTION_Index, new {  page = 1})';
+                            });
+                        },
+                        error: function(request, option, err) {
+                            if (request.status == 401 || request.status == 403) {
+                                ShowPermissionErorr();
+                                return;
+                            }
+                            ShowCommonErorr();
+                        }
+                    });
+
+                    return true;
+                }
+                else {
+
+                    return false;
+                }
+            });
+
+        }
 
         function openImportExcelForm() {
             $('#ExcellModal').modal('show');
@@ -303,8 +377,9 @@
             resetDataColumns()
             let id = $(this).data('id');
 
-            let input1 = document.getElementById('inputPipeCost_' + id);
+            let input1 = document.getElementById('inputTubeBuyCost_' + id);
             let input2 = document.getElementById('inputRunCost_' + id);
+            let input3 = document.getElementById('inputTotalCost_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -320,6 +395,14 @@
                     btnSaveEdit.click();
                 }
             });
+
+            input3.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+
             btnSaveEdit.addEventListener('click', function (evenrt) {
                 event.preventDefault();
                 $(btnSaveEdit).attr('disabled', true);
@@ -368,6 +451,7 @@
         });
 
         $(document).on('click', '.save-new-row', function () {
+            $(this).attr('disabled', true);
             let row = $(this).closest('tr');
             saveNewRow(row);
         });
@@ -607,6 +691,6 @@
             $('#filterForm').submit();
         };
 
-    </script>
+</script>
 
 }

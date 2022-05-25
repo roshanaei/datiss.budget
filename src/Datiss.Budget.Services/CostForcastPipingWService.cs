@@ -26,6 +26,7 @@ using Datiss.Budget.Common;
 
 namespace Datiss.Budget.Services
 {
+
     public class CostForcastPipingWService : ICostForcastPipingWService
     {
         private readonly IUserContext _userContext;
@@ -109,7 +110,7 @@ namespace Datiss.Budget.Services
                 entity.DigTypeId = model.DigTypeId;
                 entity.TubeTypeId = model.TubeTypeId;
                 entity.TubeBuyCost = model.TubeBuyCost;
-                entity.RunCost = model.RunCost; 
+                entity.RunCost = model.RunCost;
                 entity.DiameterPipeTypeId = model.DiameterPipeTypeId;
 
                 try
@@ -154,6 +155,32 @@ namespace Datiss.Budget.Services
             _dbSet.Remove(entity);
 
             await _uow.SaveChangesAsync();
+        }
+
+        public async Task<SubscriptionDeleteDataResult> HardDeleteAllAsync(int yearId)
+        {
+            var year = await _yearSet.FindAsync(yearId);
+            year.CheckReferenceIsNull(nameof(year));
+
+            if (year.Status == EntityStatus.Disbaled)
+                throw new DisbaledYearDataInputException();
+
+            var self = await _dbSet.Where(_ => _.YearId == yearId)
+                                    .ToListAsync();
+
+            if (self.Count() == 0)
+                throw new DeleteNullRecordException();
+            _dbSet.RemoveRange(self);
+
+            var result = new SubscriptionDeleteDataResult
+            {
+                Year = year.Year,
+                YearTitle = year.Title
+            };
+
+            await _uow.SaveChangesAsync();
+
+            return await Task.FromResult(result);
         }
 
         public async Task<PagedResult<CostForcastPipingWDTO>> GetListAsync(CostForcastPipingWFilterDTO filter)
@@ -217,7 +244,7 @@ namespace Datiss.Budget.Services
             }
 
 
-           
+
 
             _dbSet.AddRange(result);
 
@@ -234,7 +261,7 @@ namespace Datiss.Budget.Services
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId)
         {
             var data = await _excelService.ImportAsync<CostForcastPipingWImportModel>
-                (fileInfo, sheetIndex: 0, minRowNum: 20);
+                (fileInfo, sheetIndex: 0, minRowNum: 2);
 
             var records = data.Adapt<List<CostForcastPipingW>>();
 
@@ -264,8 +291,8 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelInvalidFinanceYear, rowIndex, rec.YearId)
                         );
                 }
-               
-               
+
+
                 if (!await digtypes.AnyAsync(x => x.Id == rec.DigTypeId))
                 {
                     return ImportResult.Failed(
@@ -291,9 +318,9 @@ namespace Datiss.Budget.Services
 
 
 
-            rowIndex = 26;
+            rowIndex = 2;
 
-           
+
             await _dbSet.AddRangeAsync(records);
 
             try
@@ -371,22 +398,18 @@ namespace Datiss.Budget.Services
                 orderBy = "id";
 
             orderBy = orderBy.ToLower();
-            switch (orderBy)
-            {
 
-                default:
-                    return query.Include(x => x.TubeType)
-                                .Include(x => x.DiameterPipeType)
-                                .Include(x => x.DigType)
-                                .OrderBy(x => x.TubeType.DisplayOrder)
-                                .ThenBy(x => x.DiameterPipeType.DisplayOrder)
-                                .ThenBy(x => x.DigType.DisplayOrder);
-            }
+            return query.Include(x => x.TubeType)
+                        .Include(x => x.DiameterPipeType)
+                        .Include(x => x.DigType)
+                        .OrderBy(x => x.TubeType.DisplayOrder)
+                        .ThenBy(x => x.DiameterPipeType.DisplayOrder)
+                        .ThenBy(x => x.DigType.DisplayOrder);
         }
 
 
 
-        private async Task<bool> hasAnyDataAsync( int yearid)
+        private async Task<bool> hasAnyDataAsync(int yearid)
         {
             bool any = await Query().AnyAsync(x => x.YearId == yearid);
 
