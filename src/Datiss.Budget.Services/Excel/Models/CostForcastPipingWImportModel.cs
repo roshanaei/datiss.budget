@@ -6,18 +6,27 @@ namespace Datiss.Budget.Services.Excel
     {
 
         [Column(MappingDirections.Both, Letter = "A")]
-        public int TubeTypeId { get; set; }
+        public string TubeTypeDisplay { get; set; }
 
         [Column(MappingDirections.Both, Letter = "B")]
-        public int DiameterPipeTypeId { get; set; }
+        public int TubeTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "C")]
-        public int DigTypeId { get; set; }
+        public string DiameterPipeTypeDisplay { get; set; }
 
         [Column(MappingDirections.Both, Letter = "D")]
-        public long TubeBuyCost { get; set; }
+        public int DiameterPipeTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
+        public string DigTypeDisplay { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "F")]
+        public int DigTypeId { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "G")]
+        public long TubeBuyCost { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "H")]
         public long RunCost { get; set; }
 
     }

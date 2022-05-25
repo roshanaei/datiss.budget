@@ -37,6 +37,7 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_Edit = nameof(Edit);
         public const string ACTION_Copy = nameof(Copy);
         public const string ACTION_Delete = nameof(Delete);
+        public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
@@ -278,6 +279,49 @@ namespace Datiss.Budget.Web.Controllers
 
         }
 
+
+        [HttpPost("records/delete")]
+        [HasPermission(claimType: Name, PermissionActionType.Delete)]
+        public async Task<IActionResult> DeleteRecords(int yearId)
+        {
+            try
+            {
+                var result = await _costForcastPipingWService.HardDeleteAllAsync(yearId);
+
+                return Json(new
+                {
+                    success = true,
+                    message = string.Format(
+                        ViewMessages.DeleteMultipleDataForYear,
+                        result.Year)
+                });
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.Logic_InputDisableYearData
+                });
+            }
+            catch (DeleteNullRecordException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.DeleteNullRecord
+                });
+            }
+            catch (NullReferenceException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.NullRef
+                });
+            }
+        }
+
         [HttpPost("[action]/{id}")]
         [HasPermission(claimType: Name, actionType: PermissionActionType.Delete)]
         public async Task<IActionResult> Delete(int id)
@@ -400,8 +444,6 @@ namespace Datiss.Budget.Web.Controllers
                             DiameterPipeTypeId = diameter.Id,
                             DigTypeDisplay = dig.Title,
                             DigTypeId = dig.Id,
-                            Year = year.Year,
-                            YearId = year.Id
                         });
                     }
        

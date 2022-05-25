@@ -4,29 +4,19 @@
         <thead class="thead-light">
             <tr>
 
-                <th style="min-width:150px; font-size:smaller">جنس لوله</th>
-                <th style="min-width:150px; font-size:smaller">قطر لوله</th>
-                <th style="min-width:150px; font-size:smaller">نوع کندمان</th>
-                <th style="min-width:150px; font-size:smaller">هزینه هر متر خرید لوله</th>
-                <th style="min-width:150px; font-size:smaller">هزینه هر متر اجرا</th>
-                <th style="min-width:150px; font-size:smaller">جمع کل هزینه ها(هزار ریال)</th>
-                <th width="10%">مدیریت</th>
+                <th style="min-width:140px; font-size:smaller">جنس لوله</th>
+                <th style="min-width:140px; font-size:smaller">قطر لوله</th>
+                <th style="min-width:130px; font-size:smaller">نوع کندمان</th>
+                <th style="min-width:140px; font-size:smaller">هزینه هر متر خرید لوله</th>
+                <th style="min-width:140px; font-size:smaller">هزینه هر متر اجرا</th>
+                <th style="min-width:130px; font-size:smaller">جمع کل هزینه ها(هزار ریال)</th>
+                <th style="min-width:110px">مدیریت</th>
 
             </tr>
         </thead>
         <tbody>
             <tr id="rowTemplate" style="display: none">
                 
-                <td>
-                    <div id="divInput_DigType_">
-                        <input id="hidDigTypeId_" type="hidden" />
-                        <select class="form-control" id="inputDigType_" asp-items="Model.DigTypeSource">
-                        </select>
-                    </div>
-                    <div id="divOutput_DigType_" style="display: none">
-                        <span id="spanDigType_"> </span>
-                    </div>
-                </td>
                 <td>
                     <div id="divInput_TubeType_">
                         <input id="hidTubeTypeId_" type="hidden" />
@@ -37,6 +27,7 @@
                         <span id="spanTubeType_"> </span>
                     </div>
                 </td>
+
                 <td>
                     <div id="divInput_DiameterPipeType_">
                         <input id="hidDiameterPipeTypeId_" type="hidden" />
@@ -45,6 +36,17 @@
                     </div>
                     <div id="divOutput_DiameterPipeType_" style="display: none">
                         <span id="spanDiameterPipeType_"> </span>
+                    </div>
+                </td>
+
+                <td>
+                    <div id="divInput_DigType_">
+                        <input id="hidDigTypeId_" type="hidden" />
+                        <select class="form-control" id="inputDigType_" asp-items="Model.DigTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_DigType_" style="display: none">
+                        <span id="spanDigType_"> </span>
                     </div>
                 </td>
                 
@@ -102,20 +104,7 @@
             @foreach (var item in Model.Items)
             {
                 <tr id="row_@item.Id">
-                    <td>
-                        <div id="divInput_DigType_@item.Id" style="display: none">
-                            <input id="hidDigTypeId_@item.Id" type="hidden" value="@item.DigTypeId" />
-                            <select class="form-control selectDigType" id="inputDigType_@item.Id" asp-items="Model.DigTypeSource">
-                            </select>
-                            <script>
-                                $('select#inputDigType_' + @item.Id + ' option[value=' + @item.DigTypeId + ']').attr('selected', true);
-                                $('#inputDigType_' + @item.Id).attr('disabled', 'disabled');
-                            </script>
-                        </div>
-                        <div id="divOutput_DigType_@item.Id">
-                            <span id="spanDigType_@item.Id">@item.DigTypeDisplay </span>
-                        </div>
-                    </td>
+
                     <td>
                         <div id="divInput_TubeType_@item.Id" style="display: none">
                             <input id="hidTubeTypeId_@item.Id" type="hidden" value="@item.TubeTypeId" />
@@ -143,6 +132,21 @@
                         </div>
                         <div id="divOutput_DiameterPipeType_@item.Id">
                             <span id="spanDiameterPipeType_@item.Id">@item.DiameterPipeTypeDisplay </span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div id="divInput_DigType_@item.Id" style="display: none">
+                            <input id="hidDigTypeId_@item.Id" type="hidden" value="@item.DigTypeId" />
+                            <select class="form-control selectDigType" id="inputDigType_@item.Id" asp-items="Model.DigTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputDigType_' + @item.Id + ' option[value=' + @item.DigTypeId + ']').attr('selected', true);
+                                $('#inputDigType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_DigType_@item.Id">
+                            <span id="spanDigType_@item.Id">@item.DigTypeDisplay </span>
                         </div>
                     </td>
 

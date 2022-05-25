@@ -18,6 +18,8 @@ namespace Datiss.Budget.Services.Contracts
 
         Task HardDeleteAsync(int Id);
 
+        Task<SubscriptionDeleteDataResult> HardDeleteAllAsync(int yearId);
+
         Task<PagedResult<CostForcastPipingWDTO>> GetListAsync(CostForcastPipingWFilterDTO filter);
 
         Task CopyAsync(int sourceYearId, int destYearId);
