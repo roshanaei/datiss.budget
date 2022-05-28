@@ -637,6 +637,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات {0} ،{1}، {2} قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_CostForcastBuyDescriptionDuplicates {
+            get {
+                return ResourceManager.GetString("Logic_CostForcastBuyDescriptionDuplicates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات  جنس لوله {0} ،قطر لوله {1} و نوع کندمان {2} برای سال &quot;{3}&quot; قبلا ثبت شده است..
         /// </summary>
         public static string Logic_CostForcastPipingDuplicates {
