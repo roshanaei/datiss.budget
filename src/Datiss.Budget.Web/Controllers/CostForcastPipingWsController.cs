@@ -427,7 +427,7 @@ namespace Datiss.Budget.Web.Controllers
             var tubeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__TubeType))
                 .Adapt<IList<DropDownItemViewModel>>();
 
-            var items = new List<CostForcastPipingWDTO>();
+            var items = new List<CostForcastPipingWsDTO>();
 
             foreach (var tube in tubeTypeSource)
             {
@@ -436,7 +436,7 @@ namespace Datiss.Budget.Web.Controllers
                     foreach (var dig in digTypeSource)
 
                     {
-                        items.Add(new CostForcastPipingWDTO
+                        items.Add(new CostForcastPipingWsDTO
                         {
                             TubeTypeDisplay = tube.Title,
                             TubeTypeId = tube.Id,
