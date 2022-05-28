@@ -257,6 +257,9 @@ namespace Datiss.Budget.DataLayer.Context
         public virtual DbSet<CostCurrentWaterSourcePrice> CostCurrentWaterSourcePrice { get; set; }
         public virtual DbSet<CostCurrentPrescriptionBaseInfo> CostCurrentPrescriptionBaseInfo { get; set; }
         public virtual DbSet<CostForcastPipingW> CostForcastPipingW { get; set; }
+        public virtual DbSet<CostForcastBuyDescription> CostForcastBuyDescription { get; set; }
+
+
 
 
 
@@ -302,7 +305,8 @@ namespace Datiss.Budget.DataLayer.Context
                 .ApplyConfiguration(new CostForcastFinanceConfiguration())
                 .ApplyConfiguration(new CostCurrentWaterSourcePriceConfiguration())
                 .ApplyConfiguration(new CostCurrentPrescriptionBaseInfoConfiguration())
-                .ApplyConfiguration(new CostForcastPipingWConfiguration());
+                .ApplyConfiguration(new CostForcastPipingWConfiguration())
+                .ApplyConfiguration(new CostForcastBuyDescriptionConfiguration());
         }
     }
 }
