@@ -31,7 +31,7 @@
         public string AssetTypeDisplay { get; set; }
 
         public int AssetDetailTypeId { get; set; }
-        public string AssetDetailTypeIdDisplay { get; set; }
+        public string AssetDetailTypeDisplay { get; set; }
 
         public int MeasurementTypeId { get; set; }
         public string MeasurementTypeDisplay { get; set; }
