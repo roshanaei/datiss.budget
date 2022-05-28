@@ -254,7 +254,6 @@ namespace Datiss.Budget.Entities
         public ICollection<CostForcastBuyDescription> CostForcastBuyDescriptionMeasurementType { get; set; }
 
 
-
         #endregion
     }
 }
