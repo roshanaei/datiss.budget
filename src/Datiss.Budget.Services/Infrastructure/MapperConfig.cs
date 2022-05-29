@@ -136,6 +136,13 @@ namespace Datiss.Budget.Services.Infrastructure
                 .Map(d => d.TubeTypeDisplay, s => s.TubeType != null ? s.TubeType.Title : null)
                 .Map(d => d.DiameterPipeTypeDisplay, s => s.DiameterPipeType != null ? s.DiameterPipeType.Title : null);
 
+            TypeAdapterConfig<CostForcastPipingWs, CostForcastPipingWsDTO>
+                .NewConfig()
+                .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
+                .Map(d => d.DigTypeDisplay, s => s.DigType != null ? s.DigType.Title : null)
+                .Map(d => d.TubeTypeDisplay, s => s.TubeType != null ? s.TubeType.Title : null)
+                .Map(d => d.DiameterPipeTypeDisplay, s => s.DiameterPipeType != null ? s.DiameterPipeType.Title : null);
+
         }
     }
 }
