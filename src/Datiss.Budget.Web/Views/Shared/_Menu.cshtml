@@ -193,11 +193,15 @@
                                 </a>
                                 <ul class="menu-content" id="CapitalCost" parent="CollapseForcastManagment">
                                     <li class="nav-item">
-                                        <a asp-area="" asp-controller="@IncomeCurrentCofficientController.Name" asp-action="@IncomeCurrentCofficientController.ACTION_Index">
+                                        <a asp-area="" asp-controller="@CofficientController.Name" asp-action="@CofficientController.ACTION_Index" asp-route-group="@CofficientsGroup.CurrentIncome">
                                             <span data-i18n="ضرایب" class="menu-item my-font-light">ضرایب</span>
                                         </a>
                                     </li>
-
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="@IncomeCurrentCofficientController.Name" asp-action="@IncomeCurrentCofficientController.ACTION_Index">
+                                            <span data-i18n="ضرایب درآمد جاری" class="menu-item my-font-light">ضرایب درآمد جاری</span>
+                                        </a>
+                                    </li>
                                     <li class="nav-item">
                                         <a asp-area="" asp-controller="@FeeCityController.Name" asp-action="@FeeCityController.ACTION_Index">
                                             <span data-i18n="ضریب قیمت شهری" class="menu-item my-font-light">ضریب قیمت شهری</span>
