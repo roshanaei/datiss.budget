@@ -421,6 +421,12 @@ namespace Datiss.Budget.Services.Models
 
     }
 
+    public class CostForcastPipingWsFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+
+    }
+
     public class CostForcastBuyDescriptionFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }

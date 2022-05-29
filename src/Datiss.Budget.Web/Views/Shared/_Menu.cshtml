@@ -249,7 +249,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a asp-area="" asp-controller="" asp-action="Index">
+                                        <a href="#">
                                             <span data-i18n="سایر درآمدهای جاری" class="menu-item my-font-light">سایر درآمدهای جاری</span>
                                         </a>
                                     </li>
@@ -291,6 +291,16 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
+                                        <a asp-area="" asp-controller="@CostForcastPipingWController.Name" asp-action="@CostForcastPipingWController.ACTION_Index">
+                                            <span data-i18n="هزینه لوله گذاری شبکه توزیع آب" class="menu-item my-font-light">هزینه لوله گذاری شبکه توزیع آب</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="" asp-controller="@CostForcastPipingWsController.Name" asp-action="@CostForcastPipingWsController.ACTION_Index">
+                                            <span data-i18n="هزینه لوله گذاری شبکه توزیع فاضلاب" class="menu-item my-font-light">هزینه لوله گذاری شبکه توزیع فاضلاب</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a asp-area="" asp-controller="@CostForcastFinanceController.Name" asp-action="@CostForcastFinanceController.ACTION_Index">
                                             <span data-i18n="دارایی ها" class="menu-item my-font-light">دارایی ها</span>
                                         </a>
@@ -318,11 +328,6 @@
                                     <li class="nav-item">
                                         <a asp-area="" asp-controller="@CostForcastConstructionWsController.Name" asp-action="@CostForcastConstructionWsController.ACTION_Index">
                                             <span data-i18n="اهداف عمرانی فاضلاب" class="menu-item my-font-light">اهداف عمرانی فاضلاب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostForcastPipingWController.Name" asp-action="@CostForcastPipingWController.ACTION_Index">
-                                            <span data-i18n="هزینه لوله گذاری شبکه توزیع آب" class="menu-item my-font-light">هزینه لوله گذاری شبکه توزیع آب</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -436,7 +441,7 @@
                     </li>
                     <!-- کنترل بودجه-->
                     <li class="nav-item">
-                        <a asp-area="" asp-controller="" asp-action="Index">
+                        <a href="#">
                             <i class="ft-refresh-cw"></i>
                             <span data-i18n="کنترل بودجه" class="menu-title my-font"> کنترل بودجه </span>
                         </a>

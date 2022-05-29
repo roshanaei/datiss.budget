@@ -12,18 +12,18 @@
         $('#divOutput_DigType_' + id).hide();
         $('#divOutput_DiameterPipeType_' + id).hide();
         $('#divOutput_TubeBuyCost_' + id).hide();
-        $('#divOutput_RunCost_' + id).hide();
+        $('#divOutput_NaghabCost_' + id).hide();
         $('#divOutput_TubeType_' + id).hide();
-        $('#divOutput_TotalCost_' + id).hide();
+        $('#divOutput_TeransheCost_' + id).hide();
 
         //show input elements
         $('#divInput_Year_' + id).show();
         $('#divInput_DigType_' + id).show();
         $('#divInput_DiameterPipeType_' + id).show();
         $('#divInput_TubeBuyCost_' + id).show();
-        $('#divInput_RunCost_' + id).show();
+        $('#divInput_NaghabCost_' + id).show();
         $('#divInput_TubeType_' + id).show();
-        $('#divInput_TotalCost_' + id).show();
+        $('#divInput_TeransheCost_' + id).show();
 
 
         $('#btnEdit_' + id).hide();
@@ -36,9 +36,9 @@
         rowData.digTypeId = $('#inputDigType_' + id).val();
         rowData.diameterPipeTypeId = $('#inputDiameterPipeType_' + id).val();
         rowData.pipeCost = $('#inputTubeBuyCost_' + id).val();
-        rowData.runCost = $('#inputRunCost_' + id).val();
+        rowData.naghabCost = $('#inputNaghabCost_' + id).val();
         rowData.tubeTypeId = $('#inputTubeType_' + id).val();
-        rowData.totalCost = $('#inputTotalCost_' + id).val();
+        rowData.teransheCost = $('#inputTeransheCost_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -50,9 +50,9 @@
         $('#divInput_DigType_' + id).hide();
         $('#divInput_DiameterPipeType_' + id).hide();
         $('#divInput_TubeBuyCost_' + id).hide();
-        $('#divInput_RunCost_' + id).hide();
+        $('#divInput_NaghabCost_' + id).hide();
         $('#divInput_TubeType_' + id).hide();
-        $('#divInput_TotalCost_' + id).hide();
+        $('#divInput_TeransheCost_' + id).hide();
 
         //Retriving to OrginalData
         if (rowData != null) {
@@ -60,9 +60,9 @@
             $('#inputDigType_' + id).val(rowData.digTypeId);
             $('#inputDiameterPipeType_' + id).val(rowData.diameterPipeTypeId);
             $('#inputTubeBuyCost_' + id).val(rowData.tubeBuyCost);
-            $('#inputRunCost_' + id).val(rowData.runCost);
+            $('#inputNaghabCost_' + id).val(rowData.naghabCost);
             $('#inputTubeType_' + id).val(rowData.tubeTypeId);
-            $('#inputTotalCost_' + id).val(rowData.totalCost);
+            $('#inputTeransheCost_' + id).val(rowData.teransheCost);
         }
 
         //Show output elements
@@ -70,9 +70,9 @@
         $('#divOutput_DigType_' + id).show();
         $('#divOutput_DiameterPipeType_' + id).show();
         $('#divOutput_TubeBuyCost_' + id).show();
-        $('#divOutput_RunCost_' + id).show();
+        $('#divOutput_NaghabCost_' + id).show();
         $('#divOutput_TubeType_' + id).show();
-        $('#divOutput_TotalCost_' + id).show();
+        $('#divOutput_TeransheCost_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -97,15 +97,15 @@
         model.digTypeId = $('#inputDigType_' + id).val();
         model.diameterPipeTypeId = $('#inputDiameterPipeType_' + id).val();
         model.tubeBuyCost = $('#inputTubeBuyCost_' + id).val();
-        model.runCost = $('#inputRunCost_' + id).val();
+        model.naghabCost = $('#inputNaghabCost_' + id).val();
         model.tubeTypeId = $('#inputTubeType_' + id).val();
-        model.totalCost = $('#inputTotalCost_' + id).val();
+        model.teransheCost = $('#inputTeransheCost_' + id).val();
 
                 console.log(model);
 
 
         $.ajax({
-            url: '@Url.Action(CostForcastPipingWController.ACTION_Edit)',
+            url: '@Url.Action(CostForcastPipingWsController.ACTION_Edit)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -130,18 +130,18 @@
                 rowData.digType = model.digTypeId;
                 rowData.diameterPipeType = model.diameterPipeTypeId;
                 rowData.tubeBuyCost = model.tubeBuyCost;
-                rowData.runCost = model.runCost;
+                rowData.naghabCost = model.naghabCost;
                 rowData.tubeType = model.tubeTypeId;
-                rowData.totalCost = model.totalCost;
+                rowData.teransheCost = model.teransheCost;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#spanYear_' + id).text(data.year);
                 $('#spanDigType_' + id).text(data.digTypeDisplay);
                 $('#spanDiameterPipeType_' + id).text(data.diameterPipeTypeDisplay);
                 $('#spanTubeBuyCost_' + id).text(data.tubeBuyCost);
-                $('#spanRunCost_' + id).text(data.runCost);
+                $('#spanNaghabCost_' + id).text(data.naghabCost);
                 $('#spanTubeType_' + id).text(data.tubeTypeDisplay);
-                $('#spanTotalCost_' + id).text(data.totalCost);
+                $('#spanTeransheCost_' + id).text(data.teransheCost);
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
                 cancelEditRow(id);
@@ -172,20 +172,20 @@
         if (model.tubeBuyCost == "") {
             model.tubeBuyCost = 0;
         }
-        model.runCost = $(e).find('#inputRunCost_').val();
-        if (model.runCost == "") {
-            model.runCost = 0;
+        model.naghabCost = $(e).find('#inputNaghabCost_').val();
+        if (model.naghabCost == "") {
+            model.naghabCost = 0;
         }
-        model.totalCost = $(e).find('#inputTotalCost_').val();
-        if (model.totalCost == "") {
-            model.totalCost = 0;
+        model.teransheCost = $(e).find('#inputTeransheCost_').val();
+        if (model.teransheCost == "") {
+            model.teransheCost = 0;
         }
 
         
         console.log(model);
 
         $.ajax({
-            url: '@Url.Action(CostForcastPipingWController.ACTION_Create)',
+            url: '@Url.Action(CostForcastPipingWsController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -250,15 +250,15 @@
                 $('#spanTubeBuyCost_' + data.id).text(data.tubeBuyCostDisplay);
                 $('#divOutput_TubeBuyCost_' + data.id).show();
 
-                //RunCost
-                $(e).find('#divInput_RunCost_').attr('id', 'divInput_RunCost_' + data.id);
-                $(e).find('#inputRunCost_').attr('id', 'inputRunCost_' + data.id);
-                $(e).find('#divOutput_RunCost_').attr('id', 'divOutput_RunCost_' + data.id);
-                $(e).find('#spanRunCost_').attr('id', 'spanRunCost_' + data.id);
+                //NaghabCost
+                $(e).find('#divInput_NaghabCost_').attr('id', 'divInput_NaghabCost_' + data.id);
+                $(e).find('#inputNaghabCost_').attr('id', 'inputNaghabCost_' + data.id);
+                $(e).find('#divOutput_NaghabCost_').attr('id', 'divOutput_NaghabCost_' + data.id);
+                $(e).find('#spanNaghabCost_').attr('id', 'spanNaghabCost_' + data.id);
 
-                $('#divInput_RunCost_' + data.id).hide();
-                $('#spanRunCost_' + data.id).text(data.runCostDisplay);
-                $('#divOutput_RunCost_' + data.id).show();
+                $('#divInput_NaghabCost_' + data.id).hide();
+                $('#spanNaghabCost_' + data.id).text(data.naghabCostDisplay);
+                $('#divOutput_NaghabCost_' + data.id).show();
 
                 //TubeType
                 $(e).find('#divInput_TubeType_').attr('id', 'divInput_TubeType_' + data.id);
@@ -270,15 +270,15 @@
                 $('#spanTubeType_' + data.id).text(data.tubeTypeDisplay);
                 $('#divOutput_TubeType_' + data.id).show();
 
-                //TotalCost
-                $(e).find('#divInput_TotalCost_').attr('id', 'divInput_TotalCost_' + data.id);
-                $(e).find('#inputTotalCost_').attr('id', 'inputTotalCost_' + data.id);
-                $(e).find('#divOutput_TotalCost_').attr('id', 'divOutput_TotalCost_' + data.id);
-                $(e).find('#spanTotalCost_').attr('id', 'spanTotalCost_' + data.id);
+                //TeransheCost
+                $(e).find('#divInput_TeransheCost_').attr('id', 'divInput_TeransheCost_' + data.id);
+                $(e).find('#inputTeransheCost_').attr('id', 'inputTeransheCost_' + data.id);
+                $(e).find('#divOutput_TeransheCost_').attr('id', 'divOutput_TeransheCost_' + data.id);
+                $(e).find('#spanTeransheCost_').attr('id', 'spanTeransheCost_' + data.id);
 
-                $('#divInput_TotalCost_' + data.id).hide();
-                $('#spanTotalCost_' + data.id).text(data.totalCostDisplay);
-                $('#divOutput_TotalCost_' + data.id).show();
+                $('#divInput_TeransheCost_' + data.id).hide();
+                $('#spanTeransheCost_' + data.id).text(data.teransheCostDisplay);
+                $('#divOutput_TeransheCost_' + data.id).show();
 
 
 
@@ -353,7 +353,7 @@
         console.log(e);
 
         $.ajax({
-            url: '@Url.Action(CostForcastPipingWController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(CostForcastPipingWsController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {

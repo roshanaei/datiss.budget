@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220525114715_Add CostForcastPipingWs")]
+    partial class AddCostForcastPipingWs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2010,70 +2012,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("CostForcastBuy");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostForcastBuyDescription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("CFBDId")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("AssetDetailTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AssetTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MeasurementTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("UnitPrice")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssetDetailTypeId");
-
-                    b.HasIndex("AssetTypeId");
-
-                    b.HasIndex("MeasurementTypeId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("CostForcastBuyDescription");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostForcastConstructionW", b =>
@@ -6211,41 +6149,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostForcastBuyDescription", b =>
-                {
-                    b.HasOne("Datiss.Budget.Entities.Constant", "AssetDetail")
-                        .WithMany("CostForcastBuyDescriptionAssetDetailType")
-                        .HasForeignKey("AssetDetailTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.Constant", "Asset")
-                        .WithMany("CostForcastBuyDescriptionAssetType")
-                        .HasForeignKey("AssetTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.Constant", "Measurement")
-                        .WithMany("CostForcastBuyDescriptionMeasurementType")
-                        .HasForeignKey("MeasurementTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("CostForcastBuyDescription")
-                        .HasForeignKey("YearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Asset");
-
-                    b.Navigation("AssetDetail");
-
-                    b.Navigation("FinanceYear");
-
-                    b.Navigation("Measurement");
-                });
-
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostForcastConstructionW", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Constant", "CostCenter")
@@ -7506,12 +7409,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("CostForcastBuyDepartment");
 
-                    b.Navigation("CostForcastBuyDescriptionAssetDetailType");
-
-                    b.Navigation("CostForcastBuyDescriptionAssetType");
-
-                    b.Navigation("CostForcastBuyDescriptionMeasurementType");
-
                     b.Navigation("CostForcastBuyMeasurement");
 
                     b.Navigation("CostForcastConstructionWCostCenters");
@@ -7717,8 +7614,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("CostCurrentWaterSourcePrices");
 
                     b.Navigation("CostForcastBuy");
-
-                    b.Navigation("CostForcastBuyDescription");
 
                     b.Navigation("CostForcastConstructionW");
 
