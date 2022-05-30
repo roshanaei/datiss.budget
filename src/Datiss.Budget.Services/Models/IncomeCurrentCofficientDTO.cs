@@ -16,6 +16,9 @@
 
         public decimal Fee { get; set; }
 
+        public decimal FeeWs { get; set; }
+
+
     }
 
     public class UpdateIncomeCurrentCofficientDTO : CreateIncomeCurrentCofficientDTO
