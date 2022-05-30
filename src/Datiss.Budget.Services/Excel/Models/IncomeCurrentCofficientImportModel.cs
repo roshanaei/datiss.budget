@@ -30,5 +30,8 @@ namespace Datiss.Budget.Services.Excel
         [Column(MappingDirections.Both, Letter = "G")]
         public decimal Fee { get; set; }
 
+        [Column(MappingDirections.Both, Letter = "H")]
+        public decimal FeeWs { get; set; }
+
     }
 }
