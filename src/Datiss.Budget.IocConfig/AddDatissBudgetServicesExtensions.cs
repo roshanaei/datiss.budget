@@ -88,6 +88,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ICostCurrentPrescriptionBaseInfoService, CostCurrentPrescriptionBaseInfoService>();
             services.AddScoped<ICostForcastPipingWService, CostForcastPipingWService>();
             services.AddScoped<ICostForcastPipingWsService, CostForcastPipingWsService>();
+            services.AddScoped<ICostForcastBuyDescriptionService, CostForcastBuyDescriptionService>();
 
 
             return services;
