@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Http;
 
 namespace Datiss.Budget.ViewModels
 {
@@ -14,7 +12,10 @@ namespace Datiss.Budget.ViewModels
 
         public int AssetTypeId { get; set; }
 
+        [Required(ErrorMessage = "*")]
         public int AssetDetailTypeId { get; set; }
+
+        [Required(ErrorMessage = "*")]
 
         public int MeasurementTypeId { get; set; }
 
@@ -22,9 +23,13 @@ namespace Datiss.Budget.ViewModels
         public long UnitPrice { get; set; }
 
 
-        public IEnumerable<SelectListItem> AssetTypeSource { get; set; }
-        public IEnumerable<SelectListItem> AssetDetailSource { get; set; }
-        public IEnumerable<SelectListItem> MeasurementTypeSource { get; set; }
+
+        //public IEnumerable<SelectListItem> MeasurementTypeSource { get; set; }
+        //public IEnumerable<SelectListItem> BuyDepartmentTypeSource { get; set; }
+        //public IEnumerable<SelectListItem> CostCenterTypeSource { get; set; }
+        //public IEnumerable<SelectListItem> CreditTypeSource { get; set; }
+        //public IEnumerable<SelectListItem> AssetTypeSource { get; set; }
+        //public IEnumerable<SelectListItem> AssetDetailTypeSource { get; set; }
 
     }
 
@@ -41,7 +46,6 @@ namespace Datiss.Budget.ViewModels
         public int YearId { get; set; }
         public int Year { get; set; }
 
-
         public int AssetTypeId { get; set; }
         public string AssetTypeDisplay { get; set; }
 
@@ -50,7 +54,6 @@ namespace Datiss.Budget.ViewModels
 
         public int MeasurementTypeId { get; set; }
         public string MeasurementTypeDisplay { get; set; }
-
 
         public long UnitPrice { get; set; }
         public string UnitPriceDisplay => UnitPrice.ToString("N0");
@@ -62,9 +65,10 @@ namespace Datiss.Budget.ViewModels
         public int? YearId { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
+
     }
 
-    public class CostForcastBuyDescriptionIndexViewModel : PagedViewModel<CostForcastPipingWViewModel>
+    public class CostForcastBuyDescriptionIndexViewModel : PagedViewModel<CostForcastBuyDescriptionViewModel>
     {
 
         public CostForcastBuyDescriptionIndexViewModel()
@@ -76,27 +80,27 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> YearSource { get; set; }
 
-        public IList<SelectListItem> AssetTypeSource { get; set; }
-        public IList<SelectListItem> AssetDetailSource { get; set; }
         public IList<SelectListItem> MeasurementTypeSource { get; set; }
+        public IList<SelectListItem> AssetTypeSource { get; set; }
+        public IList<SelectListItem> AssetDetailTypeSource { get; set; }
 
+        public string AssetTypeSourceIdArray
+        {
+            get
+            {
+                if (AssetTypeSource == null || !AssetTypeSource.Any())
+                    return string.Empty;
+                string result = "";
+                foreach (var item in AssetTypeSource)
+                {
+                    result += $"{item.Value},";
+                }
+                return result.TrimEnd(',');
+            }
+        }
 
         public void SetYearSource(IEnumerable<DropDownItemViewModel> source)
             => YearSource = source.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList();
-
-
-        public void SetAssetTypeSource(IEnumerable<DropDownItemViewModel> source)
-            => AssetTypeSource = source.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList();
-        public void SetAssetDetailSource(IEnumerable<DropDownItemViewModel> source)
-            => AssetDetailSource = source.Select(x => new SelectListItem
             {
                 Text = x.Title,
                 Value = x.Id.ToString()
@@ -109,6 +113,19 @@ namespace Datiss.Budget.ViewModels
                 Value = x.Id.ToString()
             }).ToList();
 
+        public void SetAssetTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => AssetTypeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetAssetDetailTypeSource(IEnumerable<DropDownItemViewModel> source)
+            => AssetDetailTypeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
 
         public void SetFinanceYearFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectedYearId = null)
             => Filter.YearSource = source.Select(x => new SelectListItem
@@ -122,9 +139,9 @@ namespace Datiss.Budget.ViewModels
 
     public class CostForcastBuyDescriptionImportViewModel : PagedViewModel<CostForcastBuyDescriptionViewModel>
     {
-        public IList<DropDownItemViewModel> AssetTypeSource { get; set; }
-        public IList<DropDownItemViewModel> AssetDetailSource { get; set; }
         public IList<DropDownItemViewModel> MeasurementTypeSource { get; set; }
+        public IList<DropDownItemViewModel> AssetTypeSource { get; set; }
+        public IList<DropDownItemViewModel> AssetDetailTypeSource { get; set; }
 
     }
 
