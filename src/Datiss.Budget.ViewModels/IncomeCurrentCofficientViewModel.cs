@@ -24,6 +24,9 @@ namespace Datiss.Budget.ViewModels
 
         public decimal Fee { get; set; }
 
+        public decimal FeeWs { get; set; }
+
+
         public IEnumerable<SelectListItem> UserTypeSource { get; set; }
 
         public string UserTypeTitle
@@ -79,6 +82,10 @@ namespace Datiss.Budget.ViewModels
         public decimal Fee { get; set; }
 
         public string FeeDisplay => Fee.ToString("N2");
+
+        public decimal FeeWs { get; set; }
+
+        public string FeeWsDisplay => FeeWs.ToString("N2");
 
     }
 

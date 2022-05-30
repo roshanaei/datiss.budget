@@ -20,6 +20,9 @@ namespace Datiss.Budget.Entities.DWH
 
         public decimal Fee { get; set; }
 
+        public decimal FeeWs { get; set; }
+
+
 
         #endregion
 

@@ -146,7 +146,18 @@
                                                                name="col-5"
                                                                id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>ضریب</span></label>
+                                                               for="col-5"><span>ضریب آب</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-5"
+                                                               id="col-5" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-5"><span>ضریب فاضلاب</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -210,10 +221,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5';
+        let allColumns = '1,2,3,4,5,6';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,";
+        let showingColmuns = "1,2,3,4,5,6,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())

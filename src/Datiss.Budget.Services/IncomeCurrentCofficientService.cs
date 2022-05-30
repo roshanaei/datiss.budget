@@ -76,7 +76,8 @@ namespace Datiss.Budget.Services
                 OrganizationId = model.OrganizationId,
                 UserTypeId = model.UserTypeId,
                 UsageLayerId = model.UsageLayerId,
-                Fee = model.Fee
+                Fee = model.Fee,
+                FeeWs = model.FeeWs
             };
 
             model.UserTypeTitle = (await _constSet.FindAsync(model.UserTypeId)).Title;
@@ -105,6 +106,8 @@ namespace Datiss.Budget.Services
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.Fee = entity.Fee;
+                    result.FeeWs = entity.FeeWs;
+
 
                     return ValidationResult<IncomeCurrentCofficientDTO>.Success(result);
                 }
@@ -140,6 +143,7 @@ namespace Datiss.Budget.Services
                     entity.UserTypeId = model.UserTypeId;
                     entity.UsageLayerId = model.UsageLayerId;
                     entity.Fee = model.Fee;
+                    entity.FeeWs = model.FeeWs;
 
                     try
                     {
@@ -158,6 +162,7 @@ namespace Datiss.Budget.Services
                         UserTypeId = model.UserTypeId,
                         UsageLayerId = model.UsageLayerId,
                         Fee = model.Fee,
+                        FeeWs = model.FeeWs,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year,
                         OrganizationDisplay = organizationDisplay,
                         UserTypeTitle = model.UserTypeTitle,
@@ -277,6 +282,7 @@ namespace Datiss.Budget.Services
                                             UsageLayerId = x.UsageLayerId,
                                             UsageLayerTitle = x.UsageLayer.Title,
                                             Fee = x.Fee,
+                                            FeeWs = x.FeeWs,
                                         }).ToListAsync();
 
             return await Task.FromResult(result);
@@ -316,6 +322,7 @@ namespace Datiss.Budget.Services
                         UserTypeId = item.UserTypeId,
                         UsageLayerId = item.UsageLayerId,
                         Fee = item.Fee,
+                        FeeWs  = item.FeeWs,
                     };
                     result.Add(entity);
                 }
@@ -621,7 +628,8 @@ namespace Datiss.Budget.Services
                                         UserTypeTitle = x.UserType.Title,
                                         UserTypeId = x.UserTypeId,
                                         UsageLayerTitle = x.UsageLayer.Title,
-                                        Fee = x.Fee
+                                        Fee = x.Fee,
+                                        FeeWs = x.FeeWs
                                     }).ToListAsync();
 
             return items;
@@ -652,7 +660,8 @@ namespace Datiss.Budget.Services
                                         UserTypeTitle = x.UserType.Title,
                                         UserTypeId = x.UserTypeId,
                                         UsageLayerTitle = x.UsageLayer.Title,
-                                        Fee = x.Fee
+                                        Fee = x.Fee,
+                                        FeeWs  = x.FeeWs
                                     }).ToListAsync();
 
             var ms = new MemoryStream();
@@ -782,6 +791,7 @@ namespace Datiss.Budget.Services
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
                         Fee = item.Fee,
+                        FeeWs = item.FeeWs,
                     };
 
                     result.Add(entity);
