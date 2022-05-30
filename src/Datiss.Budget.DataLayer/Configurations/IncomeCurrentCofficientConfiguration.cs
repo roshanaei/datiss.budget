@@ -15,6 +15,8 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.Fee).HasColumnType("decimal(18,6)");
 
+            builder.Property(x => x.FeeWs).HasColumnType("decimal(18,6)");
+
 
             builder.HasOne(x => x.FinanceYear)
                     .WithMany(x => x.IncomeCurrentCofficients)
