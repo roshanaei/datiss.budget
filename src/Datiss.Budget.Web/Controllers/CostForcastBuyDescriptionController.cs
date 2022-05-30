@@ -474,8 +474,20 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost, Route("GetAssetDetailAsync")]
         public async Task<JsonResult> GetAssetDetailAsync(string key)
         {
-            var result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectDetailType, key.Replace(".", ""));
 
+            key = key.Substring(key.IndexOf('.') + 1);
+
+            if(key != key.Substring(key.IndexOf('.') + 1))
+            {
+                key = key.Substring(0, key.IndexOf('.'));
+            }
+
+
+            var result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectDetailType, key.Replace(".", ""));
+            if(result.Count() == 0)
+            {
+                result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectDetailType, "Dash");
+            }
             return new JsonResult(result);
         }
 
