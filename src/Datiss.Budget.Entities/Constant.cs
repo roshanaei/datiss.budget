@@ -253,6 +253,12 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostForcastPipingWs> CostForcastPipingWsDigType { get; set; }
 
+        public ICollection<CostForcastBuyDescription> CostForcastBuyDescriptionAssetType { get; set; }
+
+        public ICollection<CostForcastBuyDescription> CostForcastBuyDescriptionAssetDetailType { get; set; }
+
+        public ICollection<CostForcastBuyDescription> CostForcastBuyDescriptionMeasurementType { get; set; }
+
 
         #endregion
     }

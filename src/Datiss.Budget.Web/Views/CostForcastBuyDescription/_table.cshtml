@@ -1,0 +1,198 @@
+﻿@model CostForcastBuyDescriptionIndexViewModel
+<div class="table-responsive">
+    <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
+        <thead class="thead-light">
+            <tr>
+
+                <th style="min-width:150px">عنوان دارائی</th>
+                <th style="min-width:150px">شرح خرید دارئی</th>
+                <th style="min-width:150px">واحد اندازه گیری</th>
+                <th style="min-width:150px">قیمت واحد(هزار ریال)</th>
+                <th style="min-width:150px">مدیریت</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="rowTemplate" style="display: none">
+
+
+                <td>
+                    <div id="divInput_AssetType_">
+                        <input id="hidAssetTypeId_" type="hidden" />
+                        <select class="form-control selectAssetType" id="inputAssetType_" asp-items="Model.AssetTypeSource" onchange="RelatedDropDown(this,event)">
+                        </select>
+                    </div>
+                    <div id="divOutput_AssetType_" style="display: none">
+                        <span id="spanAssetType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_AssetDetailType_">
+                        <input id="hidAssetDetailTypeId_" type="hidden" />
+                        <select class="form-control selectAssetDetailType" id="inputAssetDetailType_">
+                        </select>
+                    </div>
+                    <div id="divOutput_AssetDetailType_" style="display: none">
+                        <span id="spanAssetDetailType_"> </span>
+                    </div>
+                </td>
+                
+                <td>
+                    <div id="divInput_MeasurementType_">
+                        <input id="hidMeasurementTypeId_" type="hidden" />
+                        <select class="form-control" id="inputMeasurementType_" asp-items="Model.MeasurementTypeSource">
+                        </select>
+                    </div>
+                    <div id="divOutput_MeasurementType_" style="display: none">
+                        <span id="spanMeasurementType_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_UnitPrice_">
+                        <input class="form-control input-keyup" id="inputUnitPrice_" type="number" />
+                    </div>
+                    <div id="divOutput_UnitPrice_" style="display: none">
+                        <span id="spanUnitPrice_"> </span>
+                    </div>
+                </td>
+               
+                <td>
+                    <a id="btnEdit_" class="edit-row btn bg-light-info btn-info mr-1 my-font" style="display: none">
+                        <i class="fa ft-edit fa-1x"></i>
+                    </a>
+
+                    <a id="btnDelete_" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font" style="display: none">
+                        <i class="fa ft-trash-2"></i>
+                    </a>
+
+                    <a id="btnSaveEdit_" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+                    <a id="btnCancelEdit_" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                    <a id="btnSaveCreate_" class="save-new-row btn btn-success my-font mr-1">
+                        <i class="fa ft-check-square"></i>
+                    </a>
+
+                    <a id="btnCancelCreate_" class="cancel-new-row btn btn-danger my-font">
+                        <i class="fa ft-x-square"></i>
+                    </a>
+
+                </td>
+            </tr>
+            @foreach (var item in Model.Items)
+            {
+                <tr id="row_@item.Id">
+
+                    <td>
+                        <div id="divInput_AssetType_@item.Id" style="display: none">
+                            <input id="hidAssetTypeId_@item.Id" type="hidden" value="@item.AssetTypeId" />
+                            <select class="form-control selectAssetType" id="inputAssetType_@item.Id" asp-items="Model.AssetTypeSource" onchange="RelatedDropDown(this, event)">
+                            </select>
+                            <script>
+                                $('select#inputAssetType_' + @item.Id + ' option[value=' + @item.AssetTypeId + ']').attr('selected', true);
+                                $('#inputAssetType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_AssetType_@item.Id">
+                            <span id="spanAssetType_@item.Id">@item.AssetTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_AssetDetailType_@item.Id" style="display: none">
+                            <input id="hidAssetDetailTypeId_@item.Id" type="hidden" value="@item.AssetDetailTypeId" />
+                            <select class="form-control selectAssetDetailType" id="inputAssetDetailType_@item.Id">
+                            </select>
+                            <script>
+                                $('#inputAssetDetailType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_AssetDetailType_@item.Id">
+                            <span id="spanAssetDetailType_@item.Id">@item.AssetDetailTypeDisplay </span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div id="divInput_MeasurementType_@item.Id" style="display: none">
+                            <input id="hidMeasurementTypeId_@item.Id" type="hidden" value="@item.MeasurementTypeId" />
+                            <select class="form-control selectMeasurementType" id="inputMeasurementType_@item.Id" asp-items="Model.MeasurementTypeSource">
+                            </select>
+                            <script>
+                                $('select#inputMeasurementType_' + @item.Id + ' option[value=' + @item.MeasurementTypeId + ']').attr('selected', true);
+                                $('#inputMeasurementType_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_MeasurementType_@item.Id">
+                            <span id="spanMeasurementType_@item.Id">@item.MeasurementTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_UnitPrice_@item.Id" style="display: none">
+                            <input class="form-control" id="inputUnitPrice_@item.Id" value="@item.UnitPrice" type="number" />
+                        </div>
+                        <div id="divOutput_UnitPrice_@item.Id">
+                            <span id="spanUnitPrice_@item.Id">@item.UnitPriceDisplay </span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
+
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
+
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
+
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="tooltip" data-placement="top" title="ورود اطلاعات از اکسل" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"></i>
+                </button>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="tooltip" data-placement="top" title="کپی اطلاعات" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"></i>
+                </button>
+            </span>
+            <button data-toggle="tooltip" data-placement="top" title="حذف اطلاعات" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"></i>
+            </button>
+            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+            </button>
+
+        </form>
+
+    </div>
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">(صفحه <b class="font-medium-2">@Model.PageNumber</b> از <b class="font-medium-2">@Model.PagesCount</b>)</div>
+    </div>
+    <!--Pagination-->
+    <vc:pager model="Model.ToPager()" controller-name="@CostForcastBuyDescriptionController.Name" action-name="@CostForcastBuyDescriptionController.ACTION_Index"></vc:pager>
+</div>

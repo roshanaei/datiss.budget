@@ -4,14 +4,16 @@ using Datiss.Budget.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Datiss.Budget.DataLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220528123920_Add CostForcastBuyDescription")]
+    partial class AddCostForcastBuyDescription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2432,76 +2434,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.HasIndex("YearId");
 
                     b.ToTable("CostForcastPipingW");
-                });
-
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostForcastPipingWs", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("CFPWsId")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("CreatedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("CreatedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("CreatedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DiameterPipeTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DigTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ModifiedByBrowserName")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("ModifiedByIp")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int?>("ModifiedByUserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("ModifiedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("NaghabCost")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("TeransheCost")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("TubeBuyCost")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("TubeTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DiameterPipeTypeId");
-
-                    b.HasIndex("DigTypeId");
-
-                    b.HasIndex("TubeTypeId");
-
-                    b.HasIndex("YearId");
-
-                    b.ToTable("CostForcastPipingWs");
                 });
 
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostForcastTransferW", b =>
@@ -6466,41 +6398,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("TubeType");
                 });
 
-            modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostForcastPipingWs", b =>
-                {
-                    b.HasOne("Datiss.Budget.Entities.Constant", "DiameterPipeType")
-                        .WithMany("CostForcastPipingWsDiameterPipeType")
-                        .HasForeignKey("DiameterPipeTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.Constant", "DigType")
-                        .WithMany("CostForcastPipingWsDigType")
-                        .HasForeignKey("DigTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.Constant", "TubeType")
-                        .WithMany("CostForcastPipingWsTubeType")
-                        .HasForeignKey("TubeTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Datiss.Budget.Entities.FinanceYear", "FinanceYear")
-                        .WithMany("CostForcastPipingWs")
-                        .HasForeignKey("YearId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("DiameterPipeType");
-
-                    b.Navigation("DigType");
-
-                    b.Navigation("FinanceYear");
-
-                    b.Navigation("TubeType");
-                });
-
             modelBuilder.Entity("Datiss.Budget.Entities.DWH.CostForcastTransferW", b =>
                 {
                     b.HasOne("Datiss.Budget.Entities.Constant", "Credit")
@@ -7550,12 +7447,6 @@ namespace Datiss.Budget.DataLayer.Migrations
 
                     b.Navigation("CostForcastPipingWDigType");
 
-                    b.Navigation("CostForcastPipingWsDiameterPipeType");
-
-                    b.Navigation("CostForcastPipingWsDigType");
-
-                    b.Navigation("CostForcastPipingWsTubeType");
-
                     b.Navigation("CostForcastPipingWTubeType");
 
                     b.Navigation("CostForcastTransferWCredit");
@@ -7727,8 +7618,6 @@ namespace Datiss.Budget.DataLayer.Migrations
                     b.Navigation("CostForcastFinance");
 
                     b.Navigation("CostForcastPipingW");
-
-                    b.Navigation("CostForcastPipingWs");
 
                     b.Navigation("CostForcastTransferW");
 
