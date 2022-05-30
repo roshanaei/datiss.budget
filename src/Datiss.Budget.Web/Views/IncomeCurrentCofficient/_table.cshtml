@@ -7,7 +7,8 @@
                 <th style="min-width:180px">سازمان</th>
                 <th style="min-width:180px">کاربری</th>
                 <th style="min-width:160px">طبقه مصرف</th>
-                <th style="min-width:150px">ضریب</th>
+                <th style="min-width:150px">ضریب آب</th>
+                <th style="min-width:150px">ضریب فاضلاب</th>
                 <th>مدیریت</th>
             </tr>
         </thead>
@@ -66,6 +67,14 @@
                     </div>
                     <div id="divOutput_Fee_" style="display: none">
                         <span id="spanFee_"> </span>
+                    </div>
+                </td>
+                <td>
+                    <div id="divInput_FeeWs_">
+                        <input class="form-control input-keyup default-input" id="inputFeeWs_" type="number" />
+                    </div>
+                    <div id="divOutput_FeeWs_" style="display: none">
+                        <span id="spanFeeWs_"> </span>
                     </div>
                 </td>
 
@@ -161,7 +170,16 @@
                             <span id="spanFee_@item.Id">@item.FeeDisplay </span>
                         </div>
                     </td>
-                    
+                    <td>
+                        <div id="divInput_FeeWs_@item.Id" style="display: none">
+                            <input class="form-control" id="inputFeeWs_@item.Id" value="@item.FeeWs" type="number" />
+                        </div>
+                        <div id="divOutput_FeeWs_@item.Id">
+                            <span id="spanFeeWs_@item.Id">@item.FeeWsDisplay </span>
+                        </div>
+                    </td>
+
+
                     <td>
                         <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
                             <i class="fa ft-edit fa-1x"></i>

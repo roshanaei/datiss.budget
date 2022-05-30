@@ -22,7 +22,9 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 2).Value = "سازمان";
             sheet.Cell(1, 3).Value = "کاربری";
             sheet.Cell(1, 4).Value = "طبقه مصرف";
-            sheet.Cell(1, 5).Value = "ضریب";
+            sheet.Cell(1, 5).Value = "ضریب آب";
+            sheet.Cell(1, 6).Value = "ضریب فاضلاب";
+
 
             var totalCount = items.Count();
             int row = 2;
@@ -37,10 +39,13 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 5).Value = item.Fee;
                 sheet.Cell(row, 5).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
                 sheet.Cell(row, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                sheet.Cell(row, 6).Value = item.FeeWs;
+                sheet.Cell(row, 6).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
+                sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 row++;
             }
 
-            var range = sheet.Range(1, 1, row - 1, 5);
+            var range = sheet.Range(1, 1, row - 1, 7);
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
@@ -58,7 +63,7 @@ namespace Datiss.Budget.Reports.Excel
 
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
-            sheet.Range(1, 1, 1, 7).Merge();
+            sheet.Range(1, 1, 1, 8).Merge();
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
             sheet.Cell(2, 2).Value = "کد سازمان";
@@ -66,7 +71,8 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(2, 4).Value = "کد کاربری";
             sheet.Cell(2, 5).Value = "طبقه مصرف";
             sheet.Cell(2, 6).Value = "کد طبقه مصرف";
-            sheet.Cell(2, 7).Value = "ضریب";
+            sheet.Cell(2, 7).Value = "ضریب آب";
+            sheet.Cell(2, 8).Value = "ضریب فاضلاب";
 
             var totalCount = items.Count();
             int row = 3;
@@ -87,6 +93,10 @@ namespace Datiss.Budget.Reports.Excel
             //Other
             range.Column(7).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
             range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            //
+            //Other
+            range.Column(8).Style.NumberFormat.Format = ConstantReport.__DecimalFormat;
+            range.Column(8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
             //
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
