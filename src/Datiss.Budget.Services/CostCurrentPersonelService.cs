@@ -675,7 +675,7 @@ namespace Datiss.Budget.Services
                 {
                     item.YearId = yearId;
                     item.ParentId = item.Id;
-                    item.RecordType = recordType;
+                    item.RecordType = RecordType.Forcast;
                     item.Id = 0;
 
                     var entity = item.Adapt<CostCurrentPersonel>();
