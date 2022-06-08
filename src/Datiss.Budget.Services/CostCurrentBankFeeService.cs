@@ -539,42 +539,6 @@ namespace Datiss.Budget.Services
             return items;
         }
 
-        public async Task<Stream> ExportExcelAsync(CostCurrentBankFeeFilterDTO filter)
-        {
-            filter.CheckArgumentIsNull(nameof(filter));
-
-            var query = Query();
-
-            query = await setFilter(query, filter);
-
-            query = setOrder(query, filter.OrderBy, filter.OrderDesc);
-
-            var items = await query
-                                    .Include(x => x.FinanceYear)
-                                    .Include(x => x.Organization)
-                                    .Include(x => x.CostCenterType)
-                                    .Select(x => new CostCurrentBankFeeDTO
-                                    {
-                                        Id = x.Id,
-                                        CostCenterTypeDisplay = x.CostCenterType.Title,
-                                        CostCenterTypeId = x.CostCenterTypeId,
-                                        OrganizationDisplay = x.Organization.Title,
-                                        OrganizationId = x.OrganizationId,
-                                        BankFeeLastYear = x.BankFeeLastYear,
-                                        BankFeeForcast = x.BankFeeForcast,
-                                        Year = x.FinanceYear.Year,
-                                        YearId = x.YearId
-                                    }).ToListAsync();
-
-            var ms = new MemoryStream();
-            var result = _excelService.Export(items, ms);
-
-            var mem1 = new MemoryStream(ms.ToArray());
-
-            return mem1;
-        }
-
-
         #region Private Helper Methods
 
         private async Task<IQueryable<CostCurrentBankFee>> setFilter(
