@@ -348,6 +348,7 @@
                     let params = {};
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
+                    params.recordType = $('#recordTypeId option:selected').val();
                     console.log(params);
                     let deleteUrl = '@Url.Action(CostCurrentPersonelController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
