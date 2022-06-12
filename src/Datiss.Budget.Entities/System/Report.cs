@@ -26,6 +26,8 @@ namespace Datiss.Budget.Entities
 
         public EntityStatus Status { get; set; }
 
+        public int CategoryTypeId { get; set; }
+
         public byte[] FileData { get; set; }
 
         public string FilePath { get; set; }
@@ -35,6 +37,9 @@ namespace Datiss.Budget.Entities
         #region Navigations
 
         public ICollection<ReportParam> Params { get; set; }
+
+        public Constant ReportCategory { get; set; }
+
 
         #endregion
     }
