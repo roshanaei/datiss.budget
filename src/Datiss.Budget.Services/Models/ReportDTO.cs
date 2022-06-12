@@ -12,6 +12,7 @@ namespace Datiss.Budget.Services.Models
         public string Description { get; set; }
         public EntityStatus Status { get; set; }
         public int CategoryTypeId { get; set; }
+        public string CategoryTypeDisplay { get; set; }
         public byte[] FileData { get; set; }
         public string FilePath { get; set; }
         public IList<ReportParamDTO> Params { get; set; }
@@ -37,6 +38,7 @@ namespace Datiss.Budget.Services.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public int CategoryTypeId { get; set; }
+        public string CategoryTypeDisplay { get; set; }
         public byte[] FileData { get; set; }
         public IList<CreateReportParamDTO> Params { get; set; }
     }

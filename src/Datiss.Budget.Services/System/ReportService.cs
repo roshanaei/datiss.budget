@@ -13,19 +13,22 @@ using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
 using Mapster;
+using Datiss.Budget.Security;
 
 namespace Datiss.Budget.Services
 {
 
     public class ReportService : IReportService
     {
-
         private readonly IUnitOfWork _uow;
         private readonly DbSet<Report> _dbSet;
+        private readonly DbSet<Constant> _constSet;
+
 
         public ReportService(IUnitOfWork uow) {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<Report>();
+            _constSet = _uow.Set<Constant>();
         }
 
         public async Task<ReportData> GetAsync(int id) {
@@ -133,11 +136,15 @@ namespace Datiss.Budget.Services
                 Name = model.Name.CorrectYeKe(),
                 Title = model.Title.CorrectYeKe(),
                 Status = EntityStatus.Enabled,
+                CategoryTypeId = model.CategoryTypeId,
                 Description = model.Description?.CorrectYeKe(),
                 FileData = model.FileData
             };
 
-            foreach(var p in model.Params) {
+            model.CategoryTypeDisplay = (await _constSet.FindAsync(model.CategoryTypeId)).Title;
+
+
+            foreach (var p in model.Params) {
                 report.Params.Add(p.Adapt<ReportParam>());
             }
 
@@ -169,6 +176,7 @@ namespace Datiss.Budget.Services
             report.Title = model.Title.CorrectYeKe();
             report.Description = model.Description?.CorrectYeKe();
             report.Status = model.Status;
+            report.CategoryTypeId = model.CategoryTypeId;
             if(model.FileData != null && model.FileData.Length > 0) {
                 report.FileData = model.FileData;
             }
