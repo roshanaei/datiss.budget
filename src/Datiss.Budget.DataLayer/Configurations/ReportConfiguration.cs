@@ -19,7 +19,12 @@ namespace Datiss.Budget.DataLayer.Mappings
             builder.Property(_ => _.Title).HasMaxLength(255).IsUnicode().IsRequired();
             builder.Property(_ => _.Description).HasMaxLength(500).IsUnicode();
             builder.Property(_ => _.Status).HasDefaultValue(EntityStatus.Enabled);
-            
+
+            builder.HasOne(_ => _.ReportCategory)
+                    .WithMany(_ => _.ReportCategoryType)
+                    .HasForeignKey(_ => _.CategoryTypeId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 
