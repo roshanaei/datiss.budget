@@ -15,6 +15,7 @@ namespace Datiss.Budget.ViewModels
         public int Id { get; set; }
         public string Name { get; set; }
         public string Title { get; set; }
+        public int CategoryTypeId { get; set; }
         public string Description { get; set; }
         public EntityStatus Status { get; set; }
         public string StatusDisplay => Status.ToDisplay();
