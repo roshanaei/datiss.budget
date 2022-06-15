@@ -12,6 +12,9 @@ using Datiss.Budget.Common.WebToolkit;
 using Datiss.Budget.Resources;
 using Datiss.Budget.Enum;
 using Mapster;
+using Datiss.Budget.Common;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Datiss.Budget.Web.Admin.Controllers
 {
@@ -32,10 +35,12 @@ namespace Datiss.Budget.Web.Admin.Controllers
         private const string _reportExt = ".mrt";
 
         private readonly IReportService _reportService;
-
+        private readonly IConstantService _constantService;
         public ReportsController(
-            IReportService reportService) {
+            IReportService reportService,
+            IConstantService constantService) {
             _reportService = reportService ?? throw new ArgumentNullException(nameof(reportService));
+            _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
         }
 
         [HttpGet("{page?}")]
@@ -73,13 +78,24 @@ namespace Datiss.Budget.Web.Admin.Controllers
         
         [HttpGet("create")]
         public async Task<IActionResult> Create() {
+
             var model = new CreateReportViewModel();
+
+            var categories = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ReportCategory))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+            model.SetCatergorySource(categories);
+
             return View(model);
         }
 
         [HttpPost("create"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateReportViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
+
+            var categories = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ReportCategory))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
 
             model.FixParams();
             if (!ModelState.IsValid) {
@@ -115,6 +131,9 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 model.AddError(ViewMessages.SystemError);
             }
 
+            model.SetCatergorySource(categories);
+
+
             return View(model);
         }
 
@@ -123,6 +142,13 @@ namespace Datiss.Budget.Web.Admin.Controllers
             try {
                 var data = await _reportService.GetAsync(id);
                 var model = data.Adapt<UpdateReportViewModel>();
+
+                var categories = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ReportCategory))
+                    .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+                model.SetCatergorySource(categories,model.CategoryTypeId);
+
+
                 if (data.Status == EntityStatus.Enabled)
                     model.Enabled = true;
                 if(model.Params.Any())
@@ -138,6 +164,12 @@ namespace Datiss.Budget.Web.Admin.Controllers
         [HttpPost("edit/{id}"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, UpdateReportViewModel model) {
             model.CheckArgumentIsNull(nameof(model));
+
+            var categories = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ReportCategory))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
+
+            model.SetCatergorySource(categories, model.CategoryTypeId);
 
             model.FixParams();
             if (!ModelState.IsValid) {
