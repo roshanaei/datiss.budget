@@ -68,6 +68,17 @@
                                     </div>
                                 </div>
                             </div>
+                             <div class="form-group">
+                                <div class="col-12">
+                                    <label asp-for="Name" class="col-md-3 col-form-label my-font">
+                                        دسته بندی گزارش
+                                    </label>
+                                    <div class="form-group">
+                                        <select name="CategoryTypeId" asp-items="Model.CategoriesList" class="form-control my-font paramType">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div class="col-12">
                                     <label asp-for="Enabled" class="col-md-3 col-form-label my-font">
