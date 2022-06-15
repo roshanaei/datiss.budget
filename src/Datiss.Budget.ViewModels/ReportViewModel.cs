@@ -15,6 +15,7 @@ namespace Datiss.Budget.ViewModels
         public string Title { get; set; }
         public string Description { get; set; }
         public EntityStatus Status { get; set; }
+        public int CategoryTypeId { get; set; }
         public byte[] FileData { get; set; }
         public IList<ReportParamViewModel> Params { get; set; }
     }

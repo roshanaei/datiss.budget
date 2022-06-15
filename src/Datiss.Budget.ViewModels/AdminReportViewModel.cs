@@ -57,6 +57,9 @@ namespace Datiss.Budget.ViewModels
         [MaxLength(500, ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "MaxLen")]
         public string Description { get; set; }
 
+        [Required(ErrorMessageResourceType = typeof(ViewModelString), ErrorMessageResourceName = "Required")]
+        public int CategoryTypeId { get; set; }
+
         public IFormFile ReportFile { get; set; }
 
         public void FixParams() {
@@ -94,6 +97,17 @@ namespace Datiss.Budget.ViewModels
         public IList<int> ParamTypes { get; set; }
         public IList<SelectListItem> ParamTypeSource 
             => EnumSelectListProvider.GetReportParamTypes().ToList();
+
+        public IList<SelectListItem> CategoriesList { get; set; }
+
+        public void SetCatergorySource(IEnumerable<DropDownItemViewModel> source , int? selectedValu = null)
+            => CategoriesList = source.Select(x => new SelectListItem
+            {
+                Selected = x.Id == selectedValu,
+                Text = x.Title,
+                Value = x.Id.ToString()          
+            }).ToList();
+        
 
     }
 
