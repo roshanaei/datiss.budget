@@ -141,8 +141,6 @@ namespace Datiss.Budget.Services
                 FileData = model.FileData
             };
 
-            model.CategoryTypeDisplay = (await _constSet.FindAsync(model.CategoryTypeId)).Title;
-
 
             foreach (var p in model.Params) {
                 report.Params.Add(p.Adapt<ReportParam>());
