@@ -25,19 +25,19 @@
                               asp-antiforgery="true">
 
                             <input type="hidden" asp-for="Filter.PageNumber" />
-                            <fieldset class="form-group position-relative has-icon-left">
-                                <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
-                                <div class="form-control-position">
-                                    <i class="ft-search font-medium-4"></i>
-                                </div>
-                            </fieldset>
+                                <fieldset class="form-group position-relative has-icon-left">
+                                    <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
+                                    <div class="form-control-position">
+                                        <i class="ft-search font-medium-4"></i>
+                                    </div>
+                                </fieldset>
                         </form>
+
                         <div class="row table-responsive">
                             <table style="width: 100%;" id="my-table" class="table table-hover table-card-bordered m-0 my-font">
                                 @*<thead class="thead-light">
 
                                     </thead>*@
-
                                 @foreach (var item in Model.Items) {
                                     <tr>
                                         <td class="text-nowrap">
@@ -46,8 +46,7 @@
                                                 i = i + 1;
                                             }
                                             <span>
-@*                                                <i class="ft-edit-2 tab-content"></i>
-*@                                                @item.Title
+                                               @item.Title
                                             </span>
                                         </td>
                                         <td class="text-nowrap last-td-transparent">
@@ -60,9 +59,8 @@
                                         </td>
                                     </tr>
                                 }
-
                             </table>
-                            <div class="rowACJSB" style="margin-top:20px">
+                          <div class="rowACJSB" style="margin-top:20px">
                                 <div class="rowAC">
                                     <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
                                     <div class="my-font ml-2">
@@ -89,3 +87,105 @@
         </div>
     </div>
 </section>
+
+
+<body class="row">
+
+    <div class="col-12">
+
+        <div class="card">
+            <!-- BEGIN : Main Content-->
+            <div class="card-content">
+                <div class="content-overlay"></div>
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-12">
+                                 <fieldset class="form-group position-relative has-icon-left">
+                                    <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
+                                    <div class="form-control-position">
+                                        <i class="ft-search font-medium-4"></i>
+                                    </div>
+                                </fieldset>
+                        </div>
+                    </div>
+                    <!-- Accordion with Icons starts -->
+                    <section id="icon-accordion">
+                        <div class="row">
+                            <div class="col-12 col-xl-12">
+                                <div class="card collapse-icon accordion-icon-rotate">
+                                    <div class="accordion" id="accordionExample2">
+                                        <div class="card-body">
+                                            <div>
+                                                <div class="card-header border-bottom pb-3" id="headingAccordion11">
+                                                    <a data-toggle="collapse" href="#accordion11" aria-expanded="true" aria-controls="accordion11" class="card-title">Accordion Group 1</a>
+                                                </div>
+                                                <div id="accordion11" class="collapse show" aria-labelledby="headingAccordion11" data-parent="#accordionExample2">
+                                                <!--List Group with badges Starts-->
+                                                <div class="col-12 col-md-12 col-lg-12">
+                                                    <div class="card">
+                                                        <div class="card-content">
+                                                            <div class="card-body">
+                                                                <ul class="list-group">
+                                                                    <li class="list-group-item">
+                                                                        <span class="badge badge-primary mr-2">7</span> Cras justo odio
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <span class="badge badge-danger mr-2">2</span> Dapibus ac facilisis in
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <span class="badge badge-success mr-2">1</span> Morbi leo risus
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <span class="badge badge-warning mr-2">4</span> Porta ac consectetur ac
+                                                                    </li>
+                                                                    <li class="list-group-item">
+                                                                        <span class="badge badge-info mr-2">8</span> Vestibulum at eros
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!--List Group with badges Ends-->                                                
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Accordion with Icons ends -->
+                </div>
+            </div>
+            <!-- END : End Main Content-->
+            <!-- Scroll to top button -->
+            <button class="btn btn-primary scroll-top" type="button"><i class="ft-arrow-up"></i></button>
+
+        </div>
+    </div>
+    <!-- ////////////////////////////////////////////////////////////////////////////-->
+
+
+    <!-- END Notification Sidebar-->
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+    <!-- BEGIN VENDOR JS-->
+    <script src="../../../app-assets/vendors/js/vendors.min.js"></script>
+    <script src="../../../app-assets/vendors/js/switchery.min.js"></script>
+    <!-- BEGIN VENDOR JS-->
+    <!-- BEGIN PAGE VENDOR JS-->
+    <!-- END PAGE VENDOR JS-->
+    <!-- BEGIN APEX JS-->
+    <script src="../../../app-assets/js/core/app-menu.js"></script>
+    <script src="../../../app-assets/js/core/app.js"></script>
+    <script src="../../../app-assets/js/notification-sidebar.js"></script>
+    <script src="../../../app-assets/js/customizer.js"></script>
+    <script src="../../../app-assets/js/scroll-top.js"></script>
+    <!-- END APEX JS-->
+    <!-- BEGIN PAGE LEVEL JS-->
+    <!-- END PAGE LEVEL JS-->
+    <!-- BEGIN: Custom CSS-->
+    <script src="../../../assets/js/scripts.js"></script>
+    <!-- END: Custom CSS-->
+</body>
