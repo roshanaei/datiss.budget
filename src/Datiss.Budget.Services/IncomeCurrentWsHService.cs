@@ -507,7 +507,7 @@ namespace Datiss.Budget.Services
                                                  x.Status != EntityStatus.Deleted);
 
             var usagelayer = _constSet.Where(x => x.Parent.ConstantKey.ToUpper() == ConstantKeys.__UsageLayerType.ToUpper() &&
-                                                  x.ConstantKey.ToUpper() != ConstantKeys.__UsageLayerType.ToUpper() &&
+                                                  x.ConstantKey.Contains(ConstantKeys.__House.Replace(".", "")) &&
                                                   x.Status != EntityStatus.Deleted);
 
             var year = await _yearSet.FindAsync(yearId);

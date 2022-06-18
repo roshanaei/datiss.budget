@@ -40,7 +40,6 @@ namespace Datiss.Budget.Web.Controllers
         public const string ACTION_DeleteRecords = nameof(DeleteRecords);
         public const string ACTION_ImportExcel = nameof(ImportExcel);
         public const string ACTION_Calculation = nameof(Calculation);
-        public const string ACTION_DownloadExcelTemplate = nameof(DownloadExcelTemplate);
         public const string ACTION_ExportExcel = nameof(ExportExcel);
         public const string ACTION_GetExcelTemplate = nameof(GetExcelTemplate);
 
@@ -415,18 +414,6 @@ namespace Datiss.Budget.Web.Controllers
         }
 
         [HttpGet("[action]")]
-        public async Task<IActionResult> DownloadExcelTemplate()
-        {
-            var filePath = $"{_env.WebRootPath}\\Excel\\ConsumeForcastWsImport.xlsx";
-
-            var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            return File(
-                stream,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "ConsumeForcastWs.xlsx");
-        }
-
-        [HttpGet("[action]")]
         [HasPermission(claimType: Name, PermissionActionType.Create)]
         public async Task<IActionResult> Copy()
         {
@@ -500,8 +487,14 @@ namespace Datiss.Budget.Web.Controllers
 
             var userTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
 
-            var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType,true);
-            var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
+            var houseUsageLayer = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__UsageLayerType, ConstantKeys.__House.Replace(".", ""));
+            var usagelayers = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType);
+            var nhouseUsagelayer = new List<DropDownItem>();
+            foreach (var item in usagelayers)
+            {
+                if (!houseUsageLayer.Any(x => x.Id == item.Id))
+                    nhouseUsagelayer.Add(item);
+            }
 
             if (year == null ||
                 organizations.Count() == 0 ||
@@ -564,11 +557,10 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost, Route("GetUsageLayerAsync")]
         public async Task<JsonResult> GetUsageLayerAsync(string key)
         {
-            bool isHouse = false;
-            if (key == ConstantKeys.__House)
-                isHouse = true;
+            if (key != ConstantKeys.__House)
+                key = "[-]";
             var result = await _constantService
-                .GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType,isHouse);
+                .GetRecordsByKeyAsynce(ConstantKeys.__UsageLayerType, key.Replace(".", ""));
 
             return new JsonResult(result);
         }
