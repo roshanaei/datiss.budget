@@ -134,7 +134,7 @@ namespace Datiss.Budget.Web.Controllers
             var userTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var usageLayerTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType,true))
+            var usageLayerTypeSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__UsageLayerType, ConstantKeys.__House.Replace(".", "")))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             filter.YearId = maxYear;
@@ -193,7 +193,7 @@ namespace Datiss.Budget.Web.Controllers
             var userTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var usageLayerTypeSource = (await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType,true))
+            var usageLayerTypeSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__UsageLayerType, ConstantKeys.__House.Replace(".", "")))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
@@ -461,7 +461,7 @@ namespace Datiss.Budget.Web.Controllers
             var organizations = await _organizationService.GetDropDownInputDataAsync(orgId, true);
 
             var userTypes = await _constantService.GetByKeyAsync(ConstantKeys.__House, ConstantKeys.__UserType);
-            var houseUsageLayerTypes = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType,true);
+            var houseUsageLayerTypes = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__UsageLayerType, ConstantKeys.__House.Replace(".", ""));
 
             if (year == null || organizations.Count() == 0 || userTypes.Count() == 0 || houseUsageLayerTypes.Count() == 0)
                 return RedirectToAction("Index");
@@ -511,7 +511,7 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<JsonResult> GetUsageLayerAsync(string key)
         {
             var result = await _constantService
-                .GetByKeyAsync(key, ConstantKeys.__UsageLayerType);
+                .GetRecordsByKeyAsynce(ConstantKeys.__UsageLayerType, key.Replace(".", ""));
 
             return new JsonResult(result);
         }
