@@ -449,8 +449,14 @@ namespace Datiss.Budget.Web.Controllers
                                 .ThenBy(x => x.RowOrder);
             var userTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__UserType);
 
-            var houseUsageLayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType,true);
-            var nhouseUsagelayer = await _constantService.GetByKeyAsync(ConstantKeys.__UsageLayerType, ConstantKeys.__UsageLayerType);
+            var houseUsageLayer = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__UsageLayerType, ConstantKeys.__House.Replace(".", ""));
+            var usagelayers = await _constantService.GetByConstantKeyAsync(ConstantKeys.__UsageLayerType);
+            var nhouseUsagelayer = new List<DropDownItem>();
+            foreach (var item in usagelayers)
+            {
+                if (!houseUsageLayer.Any(x => x.Id == item.Id))
+                    nhouseUsagelayer.Add(item);
+            }
 
             var items = new List<IncomeCurrentCofficientDTO>();
 
@@ -508,11 +514,11 @@ namespace Datiss.Budget.Web.Controllers
         [HttpPost, Route("GetUsageLayerAsync")]
         public async Task<JsonResult> GetUsageLayerAsync(string key)
         {
-            bool isHouse = false;
-            if (key == ConstantKeys.__House)
-                isHouse = true;
+            if (key != ConstantKeys.__House)
+                key = "[-]";
             var result = await _constantService
-                .GetByKeyAsync(ConstantKeys.__UsageLayerType,ConstantKeys.__UsageLayerType,isHouse);
+                .GetRecordsByKeyAsynce(ConstantKeys.__UsageLayerType, key.Replace(".", ""));
+
             return new JsonResult(result);
         }
     }
