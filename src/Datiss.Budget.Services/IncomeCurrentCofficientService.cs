@@ -365,8 +365,13 @@ namespace Datiss.Budget.Services
             var usagelayers = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                    x.Parent.ConstantKey == ConstantKeys.__UsageLayerType);
 
-            var houseUsageLayer = await usagelayers.Where(x => x.ConstantKey != ConstantKeys.__UsageLayerType).ToListAsync();
-            var noneHouseUsageLayer = await usagelayers.Where(x => x.ConstantKey == ConstantKeys.__UsageLayerType).ToListAsync();
+            var houseUsageLayer = await usagelayers.Where(x => x.ConstantKey.Contains(ConstantKeys.__House.Replace(".", ""))).ToListAsync();
+            var noneHouseUsageLayer = new List<Constant>();
+            foreach (var item in usagelayers)
+            {
+                if (!houseUsageLayer.Any(x => x.Id == item.Id))
+                    noneHouseUsageLayer.Add(item);
+            }
 
             //Year
             var year = await _yearSet.FindAsync(yearId);
