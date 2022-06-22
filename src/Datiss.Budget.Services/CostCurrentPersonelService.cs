@@ -183,6 +183,7 @@ namespace Datiss.Budget.Services
 
             var self = await _dbSet.Where(x => x.YearId == yearId)
                                    .Where(x => x.OrganizationId == organizationId)
+                                   .Where(x => x.RecordType == recordType)
                                    .ToListAsync();
 
             IEnumerable<CostCurrentPersonel> childrens = new CostCurrentPersonel[] { };
@@ -314,12 +315,13 @@ namespace Datiss.Budget.Services
             }
         }
 
-        public async Task<IEnumerable<CostCurrentPersonelDTO>> GetExportItemsAsync(int yearId, int organizationId)
+        public async Task<IEnumerable<CostCurrentPersonelDTO>> GetExportItemsAsync(int yearId, int organizationId, RecordType recordType)
         {
             var filter = new CostCurrentPersonelFilterDTO
             {
                 OrganizationId = organizationId,
-                YearId = yearId
+                YearId = yearId,
+                RecordType = recordType
             };
             filter.CheckArgumentIsNull(nameof(filter));
             var query = Query();
@@ -423,7 +425,7 @@ namespace Datiss.Budget.Services
                 }
                 var jobstatus = await _constSet.FindAsync(rec.JobStatusTypeId);
                 var jobstatusdetails = await _constSet.FindAsync(rec.JobStatusDetailTypeId);
-                if (! jobstatusdetails.ConstantKey.Contains(jobstatus.ConstantKey.Replace(".","")))
+                if (!jobstatusdetails.ConstantKey.Contains(jobstatus.ConstantKey.Replace(".", "")))
                 {
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.JobStatusDetailTypeId)
@@ -713,7 +715,7 @@ namespace Datiss.Budget.Services
         }
 
         private async Task<int> getLastYearAsync(int yearId)
-        { 
+        {
             int result = 0;
             var year = (await _yearSet.FindAsync(yearId)).Year;
             var lastYear = await _yearSet.OrderBy(x => x.Year)
