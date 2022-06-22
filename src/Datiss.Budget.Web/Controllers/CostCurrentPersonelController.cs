@@ -161,7 +161,6 @@ namespace Datiss.Budget.Web.Controllers
 
             filter.YearId = maxYear;
             filter.OrganizationId = firstOrgId;
-            filter.RecordType = RecordType.Forcast;
 
             var jobStatusData = await _constantService.GetDataByKeyAsync(ConstantKeys.__JobStatusType);
             var jobStatusTypeSource = jobStatusData.Select(x => new DropDownItemViewModel
@@ -185,6 +184,7 @@ namespace Datiss.Budget.Web.Controllers
             }
 
             filter.PageNumber = page;
+            filter.RecordType = RecordType.Forcast;
 
             var result = await _costCurrentPersonelService.GetListAsync(filter);
             var model = result.Adapt<CostCurrentPersonelIndexViewModel>();
@@ -503,10 +503,10 @@ namespace Datiss.Budget.Web.Controllers
             return workbook.Deliver("CostCurrentPersonel-Import-Template.xlsx");
         }
 
-        [HttpGet("[action]/{orgid}/{yearid}")]
-        public async Task<IActionResult> ExportExcel(int orgid, int yearid)
+        [HttpGet("[action]/{orgid}/{yearid}/{recordType}")]
+        public async Task<IActionResult> ExportExcel(int orgid, int yearid , RecordType recordType)
         {
-            var result = await _costCurrentPersonelService.GetExportItemsAsync(yearid, orgid);
+            var result = await _costCurrentPersonelService.GetExportItemsAsync(yearid, orgid , recordType);
             if (result.Count() == 0)
                 return RedirectToAction("Index");
             using var workbook = result.ExportExcel();
