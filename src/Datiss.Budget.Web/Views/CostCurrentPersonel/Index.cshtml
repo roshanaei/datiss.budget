@@ -201,7 +201,11 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostCurrentPersonelController.ACTION_ExportExcel" asp-route-orgid="@Model.Filter.OrganizationId" asp-route-yearid="@Model.Filter.YearId" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostCurrentPersonelController.ACTION_ExportExcel" 
+                                                asp-route-orgid="@Model.Filter.OrganizationId" 
+                                                asp-route-yearid="@Model.Filter.YearId" 
+                                                asp-route-recordType="@Model.Filter.RecordType"
+                                                class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
@@ -588,7 +592,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function (result) {
-                                                document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})';
                                             });
                                         }
 
@@ -621,7 +625,7 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function (result) {
-                            document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index)';
+                            document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})';
                         });
                     }
 
@@ -668,7 +672,7 @@
 
                     Swal.fire({
                         title: '<span class="my-font">عملیات موفق</span>',
-                        html: '<span class="my-font">عملیات کپی اطلاعات با موفقیت انجام شد.</span>',
+                        html: '<span class="my-font">عملیات ایجاد پیش بینی اطلاعات با موفقیت انجام شد.</span>',
                         type: 'success',
                         confirmButtonColor: '#2F8BE6',
                         animation: true,
