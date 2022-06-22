@@ -90,8 +90,8 @@ namespace Datiss.Budget.Services
 
             var result = new PagedResult<ReportData>
             {
-                PageSize = filter.PageSize,
-                PageNumber = filter.PageNumber
+                //PageSize = filter.PageSize,
+                //PageNumber = filter.PageNumber
             };
 
             var query = _dbSet.Where(_ => _.Status == EntityStatus.Enabled);
@@ -107,9 +107,9 @@ namespace Datiss.Budget.Services
             //apply sorting
             query = setOrder(query, "id", desc: true);
             //apply paging
-            query = query
-                .Skip(filter.StartIndex)
-                .Take(filter.PageSize);
+            //query = query
+            //    .Skip(filter.StartIndex)
+            //    .Take(filter.PageSize);
 
             result.Items = await query.Include(_ => _.Params)
                                       .Select(_ => _.Adapt<ReportData>())
