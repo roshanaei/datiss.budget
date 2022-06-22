@@ -361,6 +361,11 @@ namespace Datiss.Budget.Services
 
             var records = data.Adapt<List<CostCurrentContractual>>();
 
+            foreach (var item in records)
+            {
+                item.ExtensionId = true;
+            }
+
             int rowIndex = 1;
 
             var costCenterTypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
