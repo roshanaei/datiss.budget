@@ -23,7 +23,7 @@ namespace Datiss.Budget.DataLayer.Mappings
             builder.HasOne(_ => _.ReportCategory)
                     .WithMany(_ => _.ReportCategoryType)
                     .HasForeignKey(_ => _.CategoryTypeId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.Restrict);
 
         }
     }
