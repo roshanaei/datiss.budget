@@ -122,6 +122,8 @@ namespace Datiss.Budget.ViewModels
         }
 
         public ReportFilterViewModel Filter { get; set; }
+
+        public IEnumerable<DropDownItemViewModel> Categories { get; set; }
     }
 
     public class ShowReportViewModel

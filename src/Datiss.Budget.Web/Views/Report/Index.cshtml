@@ -1,7 +1,7 @@
 ﻿@model ReportIndexViewModel
 @{
     ViewData["Title"] = "گزارشات سامانه";
-    int i = ((@Model.PageNumber-1)*@Model.PageSize)+1;
+    int i = 1;
 }
 <!--Title-->
 <div class="row">
@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<section>
+@*<section>
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -32,13 +32,14 @@
                                 </div>
                             </fieldset>
                         </form>
+
                         <div class="row table-responsive">
                             <table style="width: 100%;" id="my-table" class="table table-hover table-card-bordered m-0 my-font">
-                                @*<thead class="thead-light">
+                                <thead class="thead-light">
 
-                                    </thead>*@
-
-                                @foreach (var item in Model.Items) {
+                                    </thead>
+                                @foreach (var item in Model.Items)
+                                {
                                     <tr>
                                         <td class="text-nowrap">
                                             <span>@i -  </span>
@@ -46,21 +47,19 @@
                                                 i = i + 1;
                                             }
                                             <span>
-@*                                                <i class="ft-edit-2 tab-content"></i>
-*@                                                @item.Title
+                                                @item.Title
                                             </span>
                                         </td>
                                         <td class="text-nowrap last-td-transparent">
                                             <a asp-controller="@ReportController.Name"
                                            asp-action="@ReportController.ACTION_Report"
                                            asp-route-id="@item.Id"
-                                           class="btn bg-light-info btn-info" >
+                                           class="btn bg-light-info btn-info">
                                                 <i class=""></i> مشاهده گزارش
                                             </a>
                                         </td>
                                     </tr>
                                 }
-
                             </table>
                             <div class="rowACJSB" style="margin-top:20px">
                                 <div class="rowAC">
@@ -88,4 +87,99 @@
             </div>
         </div>
     </div>
+</section>*@
+
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <!-- BEGIN : Main Content-->
+                <div class="card-content">
+                    <div class="card-body">
+                        <form id="my-form"
+                              asp-controller="@ReportController.Name"
+                              asp-action="@ReportController.ACTION_Index"
+                              asp-antiforgery="true">
+
+                            <div class="form-group position-relative has-icon-left">
+                                <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
+                                <div class="form-control-position">
+                                    <i class="ft-search font-medium-4"></i>
+                                </div>
+                            </div>
+
+                        </form>
+                        <div class="content-wrapper">
+                            <!-- Accordion with Icons starts -->
+                            <section id="icon-accordion">
+                                <div class="row">
+                                    <div class="col-12 col-xl-12">
+                                        <div class="card collapse-icon accordion-icon-rotate">
+                                            <div class="accordion" id="accordionExample2">
+                                                <div class="card-body my-font">
+                                                    @foreach (var category in Model.Categories)
+                                                    {
+                                                        i = 1;
+                                                        <div>
+                                                            <div class="card-header border-bottom pb-3" id="headingAccordion11">
+                                                                <a data-toggle="collapse" href="#accordion_@category.Id" aria-expanded="false" aria-controls="accordion_@category.Id" class="card-title">@category.Title</a>
+                                                            </div>
+                                                            <div id="accordion_@category.Id" class="collapse" aria-labelledby="headingAccordion11" data-parent="#accordionExample2">
+                                                                <!--List Group with badges Starts-->
+                                                            <div class="col-12 col-md-12 col-lg-12">
+                                                                    <div class="card">
+                                                                        <div class="card-content">
+                                                                            <div class="card-body">
+                                                                                <ul class="list-group">
+                                                                                    @foreach (var item in Model.Items)
+                                                                                    {
+                                                                                        if (item.CategoryTypeId == category.Id)
+                                                                                        {
+                                                                                            <li class="list-group-item">
+                                                                                                <td class="text-nowrap">
+                                                                                                    <span>@i -  </span>
+                                                                                                    @{
+                                                                                                        i = i + 1;
+                                                                                                    }
+                                                                                                    <span>
+                                                                                                        @item.Title
+                                                                                                    </span>
+                                                                                                </td>
+                                                                                                <td class="text-nowrap last-td-transparent" >
+                                                                                                    <a asp-controller="@ReportController.Name"
+                                                                                                       asp-action="@ReportController.ACTION_Report"
+                                                                                                       asp-route-id="@item.Id"
+                                                                                                       class="btn bg-light-info btn-info" style="float:left ; margin-left:50px">
+                                                                                                        <i class=""></i> مشاهده گزارش
+                                                                                                    </a>
+                                                                                                </td>
+                                                                                            </li>
+                                                                                        }
+                                                                                    }
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                        </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <!-- END : End Main Content-->
+                <!-- Scroll to top button -->
+                <button class="btn btn-primary scroll-top" type="button"><i class="ft-arrow-up"></i></button>
+
+            </div>
+        </div>
+    </div>
+
 </section>
