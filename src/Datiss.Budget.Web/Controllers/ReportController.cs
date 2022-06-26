@@ -98,14 +98,15 @@ namespace Datiss.Budget.Web.Controllers {
         public async Task<IActionResult> Index(ReportIndexViewModel model, int page = 1) {
             model.CheckArgumentIsNull(nameof(model));
 
-            model.Categories = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ReportCategory))
-                 .Adapt<IEnumerable<DropDownItemViewModel>>();
-
             var filter = model.Filter.Adapt<ReportFilterDTO>();
             TempData.Put(_indexFilterKey, filter);
 
             var result = await _reportService.GetUserListAsync(filter);
             model = result.Adapt<ReportIndexViewModel>();
+
+            model.Categories = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ReportCategory))
+                 .Adapt<IEnumerable<DropDownItemViewModel>>();
+
             model.Filter = filter.Adapt<ReportFilterViewModel>();
 
             return View(model);
