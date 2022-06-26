@@ -112,13 +112,16 @@ namespace Datiss.Budget.Entities.DWH
         public long MilitaryServiceCost { get; set; }
 
 
-        //مرخصی استفاده نشده
-        public long UnUseHolidayCount { get; set; }
+        //  حق سنوات
+        public long EndJobReward { get; set; }
 
 
         //هزینه های رفاهی
         public long WelfareCost { get; set; }
 
+
+        //ماه بازنشستگی
+        public int RetirementMonth { get; set; }
 
         #endregion
 
