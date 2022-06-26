@@ -103,12 +103,15 @@ namespace Datiss.Budget.Services.Models
         public long MilitaryServiceCost { get; set; }
 
 
-        //مرخصی استفاده نشده
-        public long UnUseHolidayCount { get; set; }
+        //  سنوات
+        public long EndJobReward { get; set; }
 
 
         //هزینه های رفاهی
         public long WelfareCost { get; set; }
+
+        //ماه بازنشستگی
+        public int RetirementMonth { get; set; }
     }
 
     public class UpdateCostCurrentPersonelDTO : CreateCostCurrentPersonelDTO
@@ -204,8 +207,10 @@ namespace Datiss.Budget.Services.Models
 
         public long MilitaryServiceCost { get; set; }
 
-        public long UnUseHolidayCount { get; set; }
+        public long EndJobReward { get; set; }
 
         public long WelfareCost { get; set; }
+
+        public int RetirementMonth { get; set; }
     }
 }

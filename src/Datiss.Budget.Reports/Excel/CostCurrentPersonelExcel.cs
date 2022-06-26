@@ -96,12 +96,15 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 29).Value = item.InsuranceAging;
                 sheet.Cell(row, 30).Value = item.HolidayYearly;
                 sheet.Cell(row, 31).Value = item.MilitaryServiceCost;
-                sheet.Cell(row, 32).Value = item.UnUseHolidayCount;
+                sheet.Cell(row, 32).Value = item.EndJobReward;
                 sheet.Cell(row, 33).Value = item.WelfareCost;
+                sheet.Cell(row, 34).Value = item.RetirementMonth;
+
+                
 
                 row++;
             }
-            var range = sheet.Range(1, 1, row - 1, 33);
+            var range = sheet.Range(1, 1, row - 1, 34);
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
@@ -262,8 +265,10 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(row, 32).Value = "بیمه عمر و حادثه تکمیلی";
             sheet.Cell(row, 33).Value = "عیدی سالیانه";
             sheet.Cell(row, 34).Value = "ذخیره مزایای پایان خدمت کارکنان";
-            sheet.Cell(row, 35).Value = "مرخصی استفاده نشده";
+            sheet.Cell(row, 35).Value = "سنوات";
             sheet.Cell(row, 36).Value = "هزینه های رفاهی";
+            sheet.Cell(row, 37).Value = "ماه کارکرد بازنشستگی";
+
 
             if (!model.Items.Any())
             {
