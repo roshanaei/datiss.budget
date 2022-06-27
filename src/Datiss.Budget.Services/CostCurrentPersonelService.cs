@@ -114,9 +114,10 @@ namespace Datiss.Budget.Services
                     entity.InsuranceAging = model.InsuranceAging;
                     entity.HolidayYearly = model.HolidayYearly;
                     entity.MilitaryServiceCost = model.MilitaryServiceCost;
-                    entity.UnUseHolidayCount = model.UnUseHolidayCount;
+                    entity.EndJobReward = model.EndJobReward;
                     entity.WelfareCost = model.WelfareCost;
-
+                    entity.RetirementMonth = model.RetirementMonth;
+                    
                     try
                     {
                         await _uow.SaveChangesAsync();

@@ -85,9 +85,11 @@ namespace Datiss.Budget.ViewModels
 
         public long MilitaryServiceCost { get; set; }
 
-        public long UnUseHolidayCount { get; set; }
+        public long EndJobReward { get; set; }
 
         public long WelfareCost { get; set; }
+
+        public int RetirementMonth { get; set; }
 
 
         public IList<SelectListItem> InputOrganizationSource { get; set; }
@@ -248,10 +250,16 @@ namespace Datiss.Budget.ViewModels
         public long MilitaryServiceCost { get; set; }
         public string MilitaryServiceCostDisplay => MilitaryServiceCost.ToString("N0");
 
-        public long UnUseHolidayCount { get; set; }
+        public long EndJobReward { get; set; }
 
         public long WelfareCost { get; set; }
         public string WelfareCostDisplay => WelfareCost.ToString("N0");
+
+
+
+        public long RetirementMonth { get; set; }
+        public string RetirementMonthDisplay => RetirementMonth.ToString("N0");
+        
 
 
     }
