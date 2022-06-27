@@ -52,8 +52,9 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 29).Value = "بیمه عمر و حادثه تکمیلی";
             sheet.Cell(1, 30).Value = "عیدی سالیانه";
             sheet.Cell(1, 31).Value = "ذخیره مزایای پایان خدمت کارکنان";
-            sheet.Cell(1, 32).Value = "مرخصی استفاده نشده";
+            sheet.Cell(1, 32).Value = "سنوات";
             sheet.Cell(1, 33).Value = "هزینه های رفاهی";
+            sheet.Cell(1, 34).Value = "ماه کارکرد بازنشستگی";
 
             var totalCount = items.Count();
             int row = 2;
@@ -289,7 +290,7 @@ namespace Datiss.Budget.Reports.Excel
                     row++; //for keeping index in table records
                 }
             }
-            var range = sheet.Range(18, 1, row - 1, 36);
+            var range = sheet.Range(18, 1, row - 1, 37);
 
             //range.Column(4).Style.NumberFormat.Format = "#,##0";
             //range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
