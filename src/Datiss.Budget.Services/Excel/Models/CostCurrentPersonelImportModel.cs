@@ -107,9 +107,14 @@ namespace Datiss.Budget.Services.Excel.Models
         public long MilitaryServiceCost { get; set; }
 
         [Column(MappingDirections.Both, Letter = "AI")]
-        public long UnUseHolidayCount { get; set; }
+        public long EndJobReward { get; set; }
 
         [Column(MappingDirections.Both, Letter = "AJ")]
         public long WelfareCost { get; set; }
+
+        [Column(MappingDirections.Both, Letter = "AK")]
+        public long RetirementMonth { get; set; }
+
+        
     }
 }
