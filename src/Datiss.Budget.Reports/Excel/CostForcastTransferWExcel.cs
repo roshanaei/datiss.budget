@@ -188,11 +188,11 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(20, 7).Value = "کد جنس لوله";
             sheet.Cell(20, 8).Value = "کد قطر لوله";
             sheet.Cell(20, 9).Value = "طول اجرا";
-            sheet.Cell(20, 10).Value = "هزینه هر متر خرید لوله";
-            sheet.Cell(20, 11).Value = "هزینه هر متر اجرا";
-            sheet.Cell(20, 12).Value = "جمع کل هزینه ها (هزار ریال)";
-            sheet.Cell(20, 13).Value = "کد بهره برداری";
-            sheet.Cell(20, 14).Value = "کد سر فصل کلی در بودجه";
+            //sheet.Cell(20, 10).Value = "هزینه هر متر خرید لوله";
+            //sheet.Cell(20, 11).Value = "هزینه هر متر اجرا";
+            //sheet.Cell(20, 12).Value = "جمع کل هزینه ها (هزار ریال)";
+            sheet.Cell(20, 10).Value = "کد بهره برداری";
+            sheet.Cell(20, 11).Value = "کد سر فصل کلی در بودجه";
 
             var totalCount = model.Items.Count();
             row = 21;
@@ -204,7 +204,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(20, 1, row - 1, 14);
+            var range = sheet.Range(20, 1, row - 1, 11);
             //range.Column(4).Style.NumberFormat.Format = "#,##0";
             //range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other

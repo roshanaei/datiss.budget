@@ -210,9 +210,17 @@ namespace Datiss.Budget.Services
                 new SqlParameter("OrganizationId", organizationId)
             };
 
-            await _uow.ExecuteScalar<ValidationResult>(
-                                    "[dbo].[CostCurrentReport_Calculation] @YearId, @OrganizationId",
-                                    parameters: sqlParams.ToArray());
+            try
+            {
+
+                var result = await _uow.ExecuteScalar<ValidationResult>(
+                                        "[dbo].[CostCurrentReport_Insert] @YearId, @OrganizationId",
+                                        parameters: sqlParams.ToArray());
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
 
             return ValidationResult.Success();
