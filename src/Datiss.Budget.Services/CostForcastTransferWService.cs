@@ -398,7 +398,7 @@ namespace Datiss.Budget.Services
 
             var records = data.Adapt<List<CostForcastTransferW>>();
 
-            int rowIndex = 26;
+            int rowIndex = 21;
 
             var transfertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                    x.Parent.ConstantKey == ConstantKeys.__TransferType);
@@ -515,7 +515,7 @@ namespace Datiss.Budget.Services
                     existOrgs.Add(item);
             }
 
-            rowIndex = 26;
+            rowIndex = 21;
 
             if (!continueIfAnyOrgMissing)
             {

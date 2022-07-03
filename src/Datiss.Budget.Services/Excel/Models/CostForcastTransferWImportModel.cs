@@ -31,19 +31,19 @@ namespace Datiss.Budget.Services.Excel
         [Column(MappingDirections.Both, Letter = "I")]
         public int Lenth { get; set; }
 
+        //[Column(MappingDirections.Both, Letter = "J")]
+        //public long PipeCost { get; set; }
+
+        //[Column(MappingDirections.Both, Letter = "k")]
+        //public long RunCost { get; set; }
+
+        //[Column(MappingDirections.Both, Letter = "L")]
+        //public long TotalCost { get; set; }
+
         [Column(MappingDirections.Both, Letter = "J")]
-        public long PipeCost { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "k")]
-        public long RunCost { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "L")]
-        public long TotalCost { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "M")]
         public int ExtensionTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "N")]
+        [Column(MappingDirections.Both, Letter = "K")]
         public int SuggestedBudgetTopicTypeId { get; set; }
 
     }
