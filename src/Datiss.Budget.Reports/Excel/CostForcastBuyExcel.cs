@@ -80,20 +80,21 @@ namespace Datiss.Budget.Reports.Excel
             var sheet = workbook.Worksheets.Add(_sheetName);
             sheet.RightToLeft = true;
             //
-            sheet.Cell(1, 3).Value = "سازمان مکان استقرار";
-            sheet.Cell(1, 4).Value = "کد سازمان";
-            sheet.Cell(1, 5).Value = "واحد سازمانی مربوطه";
-            sheet.Cell(1, 6).Value = "کد واحد سازمانی";
-            sheet.Cell(1, 7).Value = "مرکز هزینه";
-            sheet.Cell(1, 8).Value = "کد مرکز هزینه";
-            sheet.Cell(1, 9).Value = "محل تامین اعتبار";
-            sheet.Cell(1, 10).Value = "کد محل تامین";
-            sheet.Cell(1, 11).Value = "عنوان دارائی";
-            sheet.Cell(1, 12).Value = "کد عنوان دارائی";
-            sheet.Cell(1, 13).Value = "شرح خرید دارئی";
-            sheet.Cell(1, 14).Value = "کد شرح خرید دارئی";
+            sheet.Cell(1, 2).Value = "سازمان مکان استقرار";
+            sheet.Cell(1, 3).Value = "کد سازمان";
+            sheet.Cell(1, 4).Value = "واحد سازمانی مربوطه";
+            sheet.Cell(1, 5).Value = "کد واحد سازمانی";
+            sheet.Cell(1, 6).Value = "مرکز هزینه";
+            sheet.Cell(1, 7).Value = "کد مرکز هزینه";
+            sheet.Cell(1, 8).Value = "محل تامین اعتبار";
+            sheet.Cell(1, 9).Value = "کد محل تامین";
+            sheet.Cell(1, 10).Value = "عنوان دارائی";
+            sheet.Cell(1, 11).Value = "کد عنوان دارائی";
+            sheet.Cell(1, 12).Value = "شرح خرید دارئی";
+            sheet.Cell(1, 13).Value = "کد شرح خرید دارئی";
+            sheet.Cell(1, 2).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 3).Style.Fill.BackgroundColor = XLColor.Cream;
-            sheet.Cell(1, 4).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(1, 5).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 5).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 6).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 7).Style.Fill.BackgroundColor = XLColor.Cream;
@@ -103,35 +104,34 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 11).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 12).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 13).Style.Fill.BackgroundColor = XLColor.Cream;
-            sheet.Cell(1, 14).Style.Fill.BackgroundColor = XLColor.Cream;
             int row = 2;
             foreach (var item in model.LocationTypeSource)
             {
-                sheet.Cell(row, 3).Value = item.Title;
+                sheet.Cell(row, 2).Value = item.Title;
+                sheet.Cell(row, 2).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                sheet.Cell(row, 2).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                sheet.Cell(row, 3).Value = item.Id;
                 sheet.Cell(row, 3).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
-                sheet.Cell(row, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                sheet.Cell(row, 4).Value = item.Id;
-                sheet.Cell(row, 4).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
                 row++;
             }
             row = 2;
             foreach (var item in model.BuyDepartmentTypeSource)
             {
-                sheet.Cell(row, 5).Value = item.Title;
+                sheet.Cell(row, 4).Value = item.Title;
+                sheet.Cell(row, 4).Style.Fill.SetBackgroundColor(XLColor.White);
+                sheet.Cell(row, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                sheet.Cell(row, 5).Value = item.Id;
                 sheet.Cell(row, 5).Style.Fill.SetBackgroundColor(XLColor.White);
-                sheet.Cell(row, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                sheet.Cell(row, 6).Value = item.Id;
-                sheet.Cell(row, 6).Style.Fill.SetBackgroundColor(XLColor.White);
                 row++;
             }
             row = 2;
             foreach (var item in model.CostCenterTypeSource)
             {
-                sheet.Cell(row, 7).Value = item.Title;
+                sheet.Cell(row, 6).Value = item.Title;
+                sheet.Cell(row, 6).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                sheet.Cell(row, 7).Value = item.Id;
                 sheet.Cell(row, 7).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
-                sheet.Cell(row, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                sheet.Cell(row, 8).Value = item.Id;
-                sheet.Cell(row, 8).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
                 row++;
             }
 
@@ -147,34 +147,34 @@ namespace Datiss.Budget.Reports.Excel
             row = 2;
             foreach (var item in model.CreditTypeSource)
             {
-                sheet.Cell(row, 9).Value = item.Title;
+                sheet.Cell(row, 8).Value = item.Title;
+                sheet.Cell(row, 8).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                sheet.Cell(row, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                sheet.Cell(row, 9).Value = item.Id;
                 sheet.Cell(row, 9).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
-                sheet.Cell(row, 9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                sheet.Cell(row, 10).Value = item.Id;
-                sheet.Cell(row, 10).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
                 row++;
             }
             row = 2;
             foreach (var item in model.AssetTypeSource)
             {
-                sheet.Cell(row, 11).Value = item.Title;
+                sheet.Cell(row, 10).Value = item.Title;
+                sheet.Cell(row, 10).Style.Fill.SetBackgroundColor(XLColor.White);
+                sheet.Cell(row, 10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                sheet.Cell(row, 11).Value = item.Id;
                 sheet.Cell(row, 11).Style.Fill.SetBackgroundColor(XLColor.White);
-                sheet.Cell(row, 11).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                sheet.Cell(row, 12).Value = item.Id;
-                sheet.Cell(row, 12).Style.Fill.SetBackgroundColor(XLColor.White);
                 row++;
             }
             row = 2;
             foreach (var item in model.AssetDetailTypeSource)
             {
-                sheet.Cell(row, 13).Value = item.Title;
+                sheet.Cell(row, 12).Value = item.Title;
+                sheet.Cell(row, 12).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+                sheet.Cell(row, 12).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                sheet.Cell(row, 13).Value = item.Id;
                 sheet.Cell(row, 13).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
-                sheet.Cell(row, 13).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                sheet.Cell(row, 14).Value = item.Id;
-                sheet.Cell(row, 14).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
                 row++;
             }
-            sheet.Range(1, 1, 24, 14);
+            sheet.Range(1, 1, 24, 13);
 
             sheet.Cell(25, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
 
@@ -190,7 +190,6 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(row, 8).Value = "کد شرح خرید دارئی";
             sheet.Cell(row, 9).Value = "تعداد/مقدار";
             sheet.Cell(row, 10).Value = "کد محل تامین اعتبار";
-            sheet.Cell(row, 11).Value = "هزینه پیشنهادی خرید دارایی در سال بودجه";
 
             var totalCount = model.Items.Count();
             row = 27;
@@ -202,7 +201,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(26, 1, row - 1, 11);
+            var range = sheet.Range(26, 1, row - 1, 10);
 
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
