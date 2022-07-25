@@ -264,11 +264,14 @@ namespace Datiss.Budget.Services
 
             var records = data.Adapt<List<CostForcastBuyDescription>>();
 
-            int rowIndex = 2;
+            int rowIndex = 3;
 
 
             var assetypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                        x.Parent.ConstantKey == ConstantKeys.__FinanceSubjectType);
+
+            var assetypeDetails = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                       x.Parent.ConstantKey == ConstantKeys.__FinanceSubjectDetailType);
 
             var measurementtypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                        x.Parent.ConstantKey == ConstantKeys.__MeasurementType);
@@ -304,10 +307,14 @@ namespace Datiss.Budget.Services
                 }
 
                 var asset = await _constSet.FindAsync(rec.AssetTypeId);
+                
                 var assetDetailTypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                          x.Parent.ConstantKey == ConstantKeys.__FinanceSubjectDetailType &&
-                                         x.ConstantKey.Contains(asset.ConstantKey.Replace(".", "")));
-
+                                         x.ConstantKey.Contains(asset.ConstantKey.Split(new char[] { '.', '.' })[1]));
+                if(!assetDetailTypes.Any())
+                    assetDetailTypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+                                                             x.Parent.ConstantKey == ConstantKeys.__FinanceSubjectDetailType &&
+                                                             x.ConstantKey.Contains("Dash"));
 
                 if (!assetDetailTypes.Any(x => x.Id == rec.AssetDetailTypeId))
                 {
@@ -318,12 +325,8 @@ namespace Datiss.Budget.Services
 
                 rowIndex++;
             }
-            //
-
-
-
+          
             rowIndex = 2;
-
 
             await _dbSet.AddRangeAsync(records);
 
