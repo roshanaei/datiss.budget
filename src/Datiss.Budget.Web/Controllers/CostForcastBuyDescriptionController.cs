@@ -430,33 +430,41 @@ namespace Datiss.Budget.Web.Controllers
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
 
-            var model = new CostForcastBuyDescriptionImportViewModel();
+            var model = new CostForcastBuyDescriptionImportModel();
 
-            var measurementeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__MeasurementType))
+            model.MeasurementTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__MeasurementType))
                 .Adapt<IList<DropDownItemViewModel>>();
 
-            var assetSource = (await _constantService.GetDataByKeyAsync(ConstantKeys.__FinanceSubjectType))
-                .Adapt<IList<DropDownItemViewModel>>();
+            var assetSource = (await _constantService.GetDataByKeyAsync(ConstantKeys.__FinanceSubjectType));
 
-            var assetDetailSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__FinanceSubjectDetailType))
-                .Adapt<IList<DropDownItemViewModel>>();
+            var assetDetailSource = (await _constantService.GetDataByKeyAsync(ConstantKeys.__FinanceSubjectDetailType));
 
-            var items = new List<CostForcastBuyDescriptionDTO>();
+            var items = new List<CostForcastBuyDescriptionViewModel>();
 
             foreach (var assest in assetSource)
             {
-                foreach (var assestDetail in assetDetailSource)
+
+                string assestKey = assest.ConstantKey;
+                string key = assestKey.Split(new char[] { '.', '.' })[1];
+
+                var assetDetailList = assetDetailSource.Where(x => x.ConstantKey.Contains(key))
+                    .Adapt<IEnumerable<DropDownItem>>();
+
+                if (!assetDetailList.Any())
+                    assetDetailList = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectDetailType, "Dash");
+
+                foreach (var assestDetail in assetDetailList)
                 {
-                        items.Add(new CostForcastBuyDescriptionDTO
-                        {
-                            AssetTypeDisplay = assest.Title,
-                            AssetTypeId = assest.Id,
-                            AssetDetailTypeDisplay = assestDetail.Title,
-                            AssetDetailTypeId = assestDetail.Id,
-                        });
+                    items.Add(new CostForcastBuyDescriptionViewModel
+                    {
+                        AssetTypeDisplay = assest.Title,
+                        AssetTypeId = assest.Id,
+                        AssetDetailTypeDisplay = assestDetail.Title,
+                        AssetDetailTypeId = assestDetail.Id,
+                    });
                 }
             }
-
+            model.CostForcastBuyDescriptions = items;
             using var workbook = model.GetImportTemplate(year.Year);
             return workbook.Deliver("CostForcastBuyDescription-Import-Template.xlsx");
         }
@@ -477,14 +485,14 @@ namespace Datiss.Budget.Web.Controllers
 
             key = key.Substring(key.IndexOf('.') + 1);
 
-            if(key != key.Substring(key.IndexOf('.') + 1))
+            if (key != key.Substring(key.IndexOf('.') + 1))
             {
                 key = key.Substring(0, key.IndexOf('.'));
             }
 
 
             var result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectDetailType, key.Replace(".", ""));
-            if(result.Count() == 0)
+            if (result.Count() == 0)
             {
                 result = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectDetailType, "Dash");
             }
