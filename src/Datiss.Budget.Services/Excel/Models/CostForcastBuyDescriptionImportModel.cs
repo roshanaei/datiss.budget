@@ -18,12 +18,9 @@ namespace Datiss.Budget.Services.Excel
         public int AssetDetailTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
-        public string MeasurementTypeDisplay { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "F")]
         public int MeasurementTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "G")]
+        [Column(MappingDirections.Both, Letter = "F")]
         public long UnitPrice { get; set; }
 
     }
