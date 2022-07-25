@@ -34,9 +34,5 @@ namespace Datiss.Budget.Services.Excel
         [Column(MappingDirections.Both, Letter = "J")]
         public int CreditTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "K")]
-        public long ProposedCost { get; set; }
-
-
     }
 }

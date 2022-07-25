@@ -515,6 +515,9 @@ namespace Datiss.Budget.Web.Controllers
         [HttpGet("import/template/{yearId}/{orgId?}")]
         public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
         {
+            if(orgId == null || orgId == 1)
+                return RedirectToAction("Index");
+
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
                                 .OrderBy(x => x.DisplayOrder)
