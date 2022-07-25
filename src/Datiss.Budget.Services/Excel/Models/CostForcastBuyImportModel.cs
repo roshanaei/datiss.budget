@@ -32,15 +32,9 @@ namespace Datiss.Budget.Services.Excel
         public int Amount { get; set; }
 
         [Column(MappingDirections.Both, Letter = "J")]
-        public int MeasurementTypeId { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "K")]
-        public long UnitPrice { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "L")]
         public int CreditTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "M")]
+        [Column(MappingDirections.Both, Letter = "K")]
         public long ProposedCost { get; set; }
 
 

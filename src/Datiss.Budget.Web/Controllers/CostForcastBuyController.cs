@@ -544,19 +544,33 @@ namespace Datiss.Budget.Web.Controllers
             var creditSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CreditType))
                 .Adapt<IList<DropDownItemViewModel>>();
 
-            var assetSource = (await _constantService.GetDataByKeyAsync(ConstantKeys.__FinanceSubjectType))
-                .Adapt<IList<DropDownItemViewModel>>();
+            var assetSource = (await _constantService.GetDataByKeyAsync(ConstantKeys.__FinanceSubjectType));
 
-            var assetDetailSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__FinanceSubjectDetailType))
-                .Adapt<IList<DropDownItemViewModel>>();
+            var assetDetailSource = (await _constantService.GetDataByKeyAsync(ConstantKeys.__FinanceSubjectDetailType));
 
             model.LocationTypeSource = organizations.Adapt<IList<DropDownItemViewModel>>();
             model.BuyDepartmentTypeSource = buyDepartmentTypeSource;
             model.CostCenterTypeSource = costCenterTypeSource;
             model.MeasurementTypeSource = measurementeTypeSource;
             model.CreditTypeSource = creditSource;
-            model.AssetTypeSource = assetSource;
-            model.AssetDetailTypeSource = assetDetailSource;
+
+            foreach (var assest in assetSource)
+            {
+                string assestKey = assest.ConstantKey;
+                string key = assestKey.Split(new char[] { '.', '.' })[1];
+
+                var assetDetailList = assetDetailSource.Where(x => x.ConstantKey.Contains(key))
+                    .Adapt<IEnumerable<DropDownItem>>();
+
+                if (!assetDetailList.Any())
+                {
+                    assest.Title += " (-)"; 
+                }
+
+            }
+            model.AssetTypeSource = assetSource.Adapt<IList<DropDownItemViewModel>>();
+            model.AssetDetailTypeSource = assetDetailSource
+                .Adapt<IList<DropDownItemViewModel>>();
 
             model.Items = items;
             using var workbook = model.GetImportTemplate(year.Year);
