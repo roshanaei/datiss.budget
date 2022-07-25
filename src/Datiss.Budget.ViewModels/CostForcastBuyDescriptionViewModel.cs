@@ -137,11 +137,11 @@ namespace Datiss.Budget.ViewModels
 
     }
 
-    public class CostForcastBuyDescriptionImportViewModel : PagedViewModel<CostForcastBuyDescriptionViewModel>
+    public class CostForcastBuyDescriptionImportModel
     {
         public IList<DropDownItemViewModel> MeasurementTypeSource { get; set; }
-        public IList<DropDownItemViewModel> AssetTypeSource { get; set; }
-        public IList<DropDownItemViewModel> AssetDetailTypeSource { get; set; }
+
+        public List<CostForcastBuyDescriptionViewModel> CostForcastBuyDescriptions { get; set; }
 
     }
 
