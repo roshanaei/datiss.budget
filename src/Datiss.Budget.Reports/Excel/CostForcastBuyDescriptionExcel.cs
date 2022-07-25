@@ -55,49 +55,68 @@ namespace Datiss.Budget.Reports.Excel
             return workbook;
         }
 
-        public static XLWorkbook GetImportTemplate(this CostForcastBuyDescriptionImportViewModel model, int year)
+        public static XLWorkbook GetImportTemplate(this CostForcastBuyDescriptionImportModel model, int year)
         {
-            if (!model.Items.Any())
+            if (!model.MeasurementTypeSource.Any())
+                return null;
+
+            if (!model.CostForcastBuyDescriptions.Any())
                 return null;
 
             var workbook = new XLWorkbook();
             var sheet = workbook.Worksheets.Add(_sheetName);
             sheet.RightToLeft = true;
-            //
-            sheet.Cell(1, 9).Value = "واحد اندازه گیری";
-            sheet.Cell(1, 10).Value = "کد واحد اندازه گیری";
 
-            sheet.Cell(1, 9).Style.Fill.BackgroundColor = XLColor.Cream;
-            sheet.Cell(1, 10).Style.Fill.BackgroundColor = XLColor.Cream;
-            
-            int row = 2;
-           
+            sheet.Cell(2, 8).Value = "واحد اندازه گیری";
+            sheet.Cell(2, 9).Value = "کد واحد اندازه گیری";
+            sheet.Cell(2, 8).Style.Fill.BackgroundColor = XLColor.Cream;
+            sheet.Cell(2, 9).Style.Fill.BackgroundColor = XLColor.Cream;
+
+            int row = 3;
+
             foreach (var item in model.MeasurementTypeSource)
             {
-                sheet.Cell(row, 9).Value = item.Title;
+                sheet.Cell(row, 8).Value = item.Title;
+                sheet.Cell(row, 8).Style.Fill.SetBackgroundColor(XLColor.White);
+                sheet.Cell(row, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                sheet.Cell(row, 9).Value = item.Id;
                 sheet.Cell(row, 9).Style.Fill.SetBackgroundColor(XLColor.White);
-                sheet.Cell(row, 10).Value = item.Id;
-                sheet.Cell(row, 10).Style.Fill.SetBackgroundColor(XLColor.White);
                 row++;
             }
-           
-            sheet.Range(1, 1, 1, 16);
 
-            sheet.Cell(25, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
+            sheet.Range(1, 8, row , 9);
 
-            row = 1;
+            sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
+            sheet.Range(1, 1, 1, 6).Merge();
 
-            sheet.Cell(row, 1).Value = "کد عنوان دارائی";
-            sheet.Cell(row, 2).Value = "کد شرح خرید دارئی";
-            sheet.Cell(row, 3).Value = "کد واحد اندازه گیری";
-            sheet.Cell(row, 4).Value = "قیمت واحد(هزار ریال)";
+            row = 2;
 
-            var totalCount = model.Items.Count();
-            row = 1;
+            sheet.Cell(row, 1).Value = "عنوان دارائی";
+            sheet.Cell(row, 2).Value = "کد عنوان دارائی";
+            sheet.Cell(row, 3).Value = "شرح خرید دارئی";
+            sheet.Cell(row, 4).Value = "کد شرح خرید دارئی";
+            sheet.Cell(row, 5).Value = "کد واحد اندازه گیری";
+            sheet.Cell(row, 6).Value = "قیمت واحد(هزار ریال)";
 
+            var totalCount = model.CostForcastBuyDescriptions.ToList().Count();
+            row = 3;
+            for (int i = 0; i < totalCount; i++)
+            {
+                var item = model.CostForcastBuyDescriptions.ElementAt(i);
+                sheet.Cell(row, 1).Value = item.AssetTypeDisplay;
+                sheet.Cell(row, 2).Value = item.AssetTypeId;
+                sheet.Cell(row, 3).Value = item.AssetDetailTypeDisplay;
+                sheet.Cell(row, 4).Value = item.AssetDetailTypeId;
+                row++; //for keeping index in table records
+            }
 
-            var range = sheet.Range(1, 1, row - 1, 6);
-
+            var range = sheet.Range(2, 1, row - 1, 6);
+            range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            //Other
+            range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(6).Style.NumberFormat.Format = ConstantReport.__NumberFormat;
+            range.Column(6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            //
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
