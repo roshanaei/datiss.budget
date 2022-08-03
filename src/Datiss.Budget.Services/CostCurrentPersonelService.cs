@@ -96,7 +96,7 @@ namespace Datiss.Budget.Services
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.CostCenterTypeId, model.CCOtherCostsTypeId))
+                if (await checkLogicAsync(model.YearId, model.PersonelCode,model.RecordType))
                 {
                     await _dbSet.AddAsync(entity);
 
@@ -188,7 +188,7 @@ namespace Datiss.Budget.Services
                     entity.EndJobReward = model.EndJobReward;
                     entity.WelfareCost = model.WelfareCost;
                     entity.RetirementMonth = model.RetirementMonth;
-                    
+
                     try
                     {
                         await _uow.SaveChangesAsync();
