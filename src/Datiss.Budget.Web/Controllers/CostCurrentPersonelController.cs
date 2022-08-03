@@ -30,6 +30,7 @@ namespace Datiss.Budget.Web.Controllers
     {
 
         public const string Name = "CostCurrentPersonel";
+        public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
         public const string ACTION_Copy = nameof(Copy);
@@ -65,6 +66,29 @@ namespace Datiss.Budget.Web.Controllers
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
+        }
+
+
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        public async Task<IActionResult> Create(CreateCostCurrentPersonelViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+            var data = model.Adapt<CreateCostCurrentPersonelDTO>();
+
+            var result = await _costCurrentPersonelService.CreateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(result.Result.Adapt<CostCurrentPersonelViewModel>());
         }
 
         [HttpGet("[action]/{id}")]
