@@ -120,6 +120,85 @@ namespace Datiss.Budget.Services.Models
     public class UpdateCostCurrentPersonelDTO : CreateCostCurrentPersonelDTO
     {
         public int Id { get; set; }
+
+        //مزد ثابت سال جاری
+        public long FixSalary { get; set; }
+
+        //حق جذب سال جاری
+        public long EmployRight { get; set; }
+
+        //فوق العاده منطقه
+        public long RegionRight { get; set; }
+
+        //ساعت اضافه کاری
+        public int OverTimeValue { get; set; }
+
+        // مبلغ اضافه کاری
+        public long OverTimeCost { get; set; }
+
+        //تعداد روز  تعطیل کاری
+        public int HolidayValue { get; set; }
+
+        // مبلغ تعطیل کاری
+        public long HolidayCost { get; set; }
+
+        //درصد نوبت کاری
+        public long ShiftPercent { get; set; }
+        //نوبت کاری و کشیک
+        public long ShiftPCost { get; set; }
+
+        // تعداد ماموریت
+        public long MissionCount { get; set; }
+        // هزینه ماموریت
+        public long MissionDayCost { get; set; }
+
+        // حق سختی کار
+        public long HardWorkingRt { get; set; }
+
+        // حق ایاب و ذهاب
+        public long TrafficRt { get; set; }
+
+
+        //حق مسکن
+        public long HouseRt { get; set; }
+
+
+        // حق اولاد
+        public long ChildRt { get; set; }
+
+
+        //حق خواروبار
+        public long StuffRt { get; set; }
+
+
+        //آموزش
+        public long Education { get; set; }
+
+
+        //بیمه سهم کارفرما
+        public long InsuranceMaster { get; set; }
+
+        // بیمه عمر و حادثه تکمیلی
+        public long InsuranceAging { get; set; }
+
+
+        //عیدی سالیانه
+        public long HolidayYearly { get; set; }
+
+
+        //ذخیره مزایای پایان خدمت کارکنان
+        public long MilitaryServiceCost { get; set; }
+
+
+        //  سنوات
+        public long EndJobReward { get; set; }
+
+
+        //هزینه های رفاهی
+        public long WelfareCost { get; set; }
+
+        //ماه بازنشستگی
+        public int RetirementMonth { get; set; }
     }
 
     public class CostCurrentPersonelDTO
