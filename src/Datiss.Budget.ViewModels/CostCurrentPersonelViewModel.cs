@@ -7,6 +7,51 @@ using Datiss.Budget.Extensions;
 
 namespace Datiss.Budget.ViewModels
 {
+
+
+    public class CreateCostCurrentPersonelViewModel : BaseViewModel
+    {
+        public int YearId { get; set; }
+        
+        public string YearDisplay { get; set; }
+
+        public int OrganizationId { get; set; }
+
+        public string OrganizationDisplay { get; set; }
+
+        public RecordType RecordType { get; set; }
+        public string RecordTypeDisplay => RecordType.ToDisplay();
+
+        public int PersonelCode { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public bool GenderId { get; set; }
+
+        public int GradeTypeId { get; set; }
+        public string GradeTypeDisplay { get; set; }
+
+        public int ContractTypeId { get; set; }
+        public string ContractTypeDisplay { get; set; }
+
+        public int JobDepartmentTypeId { get; set; }
+        public string JobDepartmentTypeDisplay { get; set; }
+
+        public int CostCenterTypeId { get; set; }
+        public string CostCenterTypeDisplay { get; set; }
+
+        public int JobStatusTypeId { get; set; }
+        public string JobStatusTypeDisplay { get; set; }
+
+        public int JobStatusDetailTypeId { get; set; }
+
+        public string JobStatusDetailTypeDisplay { get; set; }
+
+        public int ExperienceMonth { get; set; }
+
+    }
     public class UpdateCostCurrentPersonelViewModel : BaseViewModel
     {
         public int Id { get; set; }
