@@ -59,9 +59,13 @@
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
+                                         <span data-toggle="modal" data-target="#CreateModal">
                                         <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
                                         </button>
+                                        </span>
+
+
                                     </div>
                                 </fieldset>
                             </div>
@@ -427,6 +431,33 @@
                 },
                 error: function (request, options, err) {
                     if (request.status == 401 || request.status == 403) {
+                        ShowPermissionErorr();
+                        return;
+                    }
+                    ShowCommonErorr();
+                }
+            });
+        }
+
+
+         function Create() {
+            let myurl = '@Url.Action(CostCurrentPersonelController.ACTION_Create)';
+            myurl = myurl + "/" + orgid;
+
+            $.ajax({
+                type: 'GET',
+                url: myurl,
+                success: function (data, status, settings) {
+                    $('#modaldiv').html('');
+                    $("#modaldiv").html(data);
+                    $('#CreateModal').modal('show');
+                    $('#CreateModal').on('hidden.bs.modal', function () {
+                        $('#modaldiv').html('');
+                        $('.modal-backdrop').remove();
+                    });
+                },
+                error: function (ajaxrequest, ajaxOptions, thrownError) {
+                    if (ajaxrequest.status == 401 || ajaxrequest.status == 403) {
                         ShowPermissionErorr();
                         return;
                     }
