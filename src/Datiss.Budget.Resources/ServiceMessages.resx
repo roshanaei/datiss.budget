@@ -390,4 +390,7 @@
   <data name="Logic_CostForcastBuyDescriptionDuplicates" xml:space="preserve">
     <value>اطلاعات {0} ،{1}، {2} قبلا ثبت شده است.</value>
   </data>
+  <data name="GeneralError" xml:space="preserve">
+    <value>عملیات مورد نظر شما با خطا مواجه شده است .</value>
+  </data>
 </root>
