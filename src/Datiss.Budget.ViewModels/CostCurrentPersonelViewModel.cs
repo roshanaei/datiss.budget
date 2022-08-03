@@ -51,6 +51,64 @@ namespace Datiss.Budget.ViewModels
 
         public int ExperienceMonth { get; set; }
 
+
+        public IList<SelectListItem> InputOrganizationSource { get; set; }
+        public IList<SelectListItem> GradeSource { get; set; }
+        public IList<SelectListItem> JobDepartmentSource { get; set; }
+        public IList<SelectListItem> JobStatusSource { get; set; }
+        public IList<SelectListItem> JobStatusDetailSource { get; set; }
+        public IList<SelectListItem> CostCenterSource { get; set; }
+        public IList<SelectListItem> ContractSource { get; set; }
+
+        public void SetInputOrganizationSource(IEnumerable<DropDownItemViewModel> source)
+            => InputOrganizationSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetGradeSource(IEnumerable<DropDownItemViewModel> source)
+            => GradeSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetJobDepartment(IEnumerable<DropDownItemViewModel> source)
+            => JobDepartmentSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetJobStatusSource(IEnumerable<DropDownItemViewModel> source)
+            => JobStatusSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetJobStatusDetailSource(IEnumerable<DropDownItemViewModel> source)
+            => JobStatusDetailSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetCostCenterSource(IEnumerable<DropDownItemViewModel> source)
+            => CostCenterSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
+        public void SetContractSource(IEnumerable<DropDownItemViewModel> source)
+            => ContractSource = source.Select(x => new SelectListItem
+            {
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList();
+
     }
     public class UpdateCostCurrentPersonelViewModel : BaseViewModel
     {
