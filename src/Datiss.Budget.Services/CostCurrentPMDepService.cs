@@ -276,11 +276,16 @@ namespace Datiss.Budget.Services
                 }
             }
 
-            var childrens = await getChildrenData(sourceOrgId, sourceYearId,RecordType.Base);
+            var organization = await _orgDbSet.FindAsync(sourceOrgId);
 
-            if (childrens.Any())
+            if (organization.Type == OrganizationType.County || organization.Type == OrganizationType.Root)
             {
-                result.AddRange(childrens);
+                var childrens = await getChildrenData(sourceOrgId, sourceYearId, RecordType.Base);
+
+                if (childrens.Any())
+                {
+                    result.AddRange(childrens);
+                }
             }
 
             _dbSet.AddRange(result);
