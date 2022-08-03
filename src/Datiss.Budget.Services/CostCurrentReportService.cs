@@ -219,7 +219,7 @@ namespace Datiss.Budget.Services
             }
             catch (Exception ex)
             {
-                throw;
+                return ValidationResult.Failed(ServiceMessages.GeneralError);
             }
 
 
@@ -451,8 +451,8 @@ namespace Datiss.Budget.Services
                 var entity = await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
-                    record.SectionTypeId,
-                    record.UnitTypeId);
+                    record.UnitDetailTypeId,
+                    record.CostCenterTypeId);
                 if (entity == null)
                 {
                     await _dbSet.AddAsync(record);
