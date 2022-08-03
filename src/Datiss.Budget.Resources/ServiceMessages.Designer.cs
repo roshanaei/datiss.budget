@@ -169,6 +169,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to عملیات مورد نظر شما با خطا مواجه شده است ..
+        /// </summary>
+        public static string GeneralError {
+            get {
+                return ResourceManager.GetString("GeneralError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to دسترسی شما برای وارد کردن اطلاعات سازمان وجود ندارد. [سطر {0} فایل اکسل].
         /// </summary>
         public static string ImportExcelAccessError {

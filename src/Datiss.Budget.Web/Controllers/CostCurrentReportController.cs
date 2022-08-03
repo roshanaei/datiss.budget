@@ -236,12 +236,17 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            await _costCurrentReportService.CalculationAsync(
+            var result = await _costCurrentReportService.CalculationAsync(
                         model.YearId,
                         model.OrganizationId);
 
-            return RedirectToAction("Index");
+            return Json(new
+            {
+                hasError = result.NotValid,
+                message = result.Message,
+            });
         }
+    
 
 
         [HttpGet("[action]")]
