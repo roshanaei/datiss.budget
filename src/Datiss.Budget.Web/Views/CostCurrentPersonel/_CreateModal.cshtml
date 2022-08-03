@@ -1,6 +1,6 @@
-﻿@model UpdateCostCurrentPersonelViewModel
+﻿@model CreateCostCurrentPersonelViewModel
 <!--Modals-->
-<div class="modal fade text-left" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
+<div class="modal fade text-left" id="CreateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color:#e0e0e0">
@@ -97,32 +97,7 @@
                             </label>
                         </div>
                     </div>
-                    <div class="rowAC">
-                        <div class="my-font" style="flex:0.9">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 5px;width:120px">مزد ثابت :</span>
-                                    <input asp-for="FixSalary" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:0.8">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 5px;width:120px">حق جذب :</span>
-                                    <input asp-for="EmployRight" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:1.3">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left:-5px;margin-right:5px;width:145px;font-size:small">فوق العاده منطقه :</span>
-                                    <input asp-for="RegionRight" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                    </div>
+
                     <div class="rowAC">
 
                         <div class="my-font" style="flex:1.1">
@@ -131,17 +106,6 @@
                                     <span style="margin-left:0px;width:145px">مدرک تحصیلی :</span>
                                     <select asp-for="GradeTypeId"
                                             asp-items="@Model.GradeSource"
-                                            class="form-control d-inline-block">
-                                    </select>
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:0.9">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left:0px;margin-right:5px;width:150px">بخش مشاغل :</span>
-                                    <select asp-for="JobDepartmentTypeId"
-                                            asp-items="@Model.JobDepartmentSource"
                                             class="form-control d-inline-block">
                                     </select>
                                 </label>
@@ -171,225 +135,6 @@
                                             asp-items="@Model.JobStatusDetailSource"
                                             class="form-control d-inline-block selectJobStatusDetailType">
                                     </select>
-                                </label>
-                            </fieldset>
-                        </div>
-                    </div>
-
-                    <div class="rowAC">
-                        <div class="my-font" style="flex:1">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left: 5px;width:110px">سال سابقه :</span>
-                                    <input asp-for="ExperienceYear" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:1">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 5px;width:115px">ماه سابقه :</span>
-                                    <input asp-for="ExperienceMonth" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                    </div>
-
-                    <div class="rowAC">
-                        <div class="my-font" style="flex:0.9">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left: 0px;width:215px">ساعت اضافه کاری :</span>
-                                    <input asp-for="OverTimeValue" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-
-                        <div class="my-font" style="flex:1.1">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 5px;margin-left:-5px;width:205px">مبلغ اضافه کاری :</span>
-                                    <input asp-for="OverTimeCost" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                    </div>
-
-                    <div class="rowAC">
-                        <div class="my-font" style="flex:1">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left: 0px;width:130px">تعداد روز تعطیل کاری :</span>
-                                    <input asp-for="HolidayValue" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:1">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 5px;margin-left:0px;width:215px">مبلغ تعطیل کاری :</span>
-                                    <input asp-for="HolidayCost" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                    </div>
-
-                    <div class="rowAC">
-                        <div class="my-font" style="flex:0.9">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left: 0px;width:195px">درصد نوبت کاری :</span>
-                                    <input asp-for="ShiftPercent" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:1">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 1px;margin-left:-6px;width:230px">نوبت کاری و کشیک:</span>
-                                    <input asp-for="ShiftPCost" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                    </div>
-
-                    <div class="rowAC">
-                        <div class="my-font" style="flex:1">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left: 0px;width:165px">تعداد ماموریت :</span>
-                                    <input asp-for="MissionCount" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:1">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 2px;width:165px">هزینه ماموریت:</span>
-                                    <input asp-for="MissionDayCost" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                    </div>
-
-                    <div class="rowAC">
-                        <div class="my-font" style="flex:1">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left: 0px;width:120px">حق سختی کار:</span>
-                                    <input asp-for="HardWorkingRt" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:1.1">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 5px;width:130px">حق ایاب و ذهاب:</span>
-                                    <input asp-for="TrafficRt" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:0.9">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 5px;width:90px">حق مسکن:</span>
-                                    <input asp-for="HouseRt" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                    </div>
-
-                    <div class="rowAC">
-
-                        <div class="my-font" style="flex:0.9">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left: 0px;width:115px">حق اولاد:</span>
-                                    <input asp-for="ChildRt" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:1.2">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 5px;width:170px">حق خوار و بار:</span>
-                                    <input asp-for="StuffRt" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:0.9">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 5px;width:95px">آموزش:</span>
-                                    <input asp-for="Education" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                    </div>
-
-                    <div class="rowAC">
-
-                        <div class="my-font" style="flex:0.9">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left: 0px;width:95px">بیمه سهم کارفرما:</span>
-                                    <input asp-for="InsuranceMaster" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:1.1">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 5px;width:145px">بیمه عمر و حادثه تکمیلی:</span>
-                                    <input asp-for="InsuranceAging" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-
-                    </div>
-
-                    <div class="rowAC">
-                        <div class="my-font" style="flex:0.9">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left: 0px;width:125px">عیدی سالانه :</span>
-                                    <input asp-for="HolidayYearly" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:1.1">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 5px;width:200px">ذخیره مزایای پایان خدمت کارکنان :</span>
-                                    <input asp-for="MilitaryServiceCost" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                    </div>
-
-                    <div class="rowAC">
-
-                        <div class="my-font" style="flex:0.8">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left: 0px;width:110px">سنوات :</span>
-                                    <input asp-for="EndJobReward" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:1.3">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-right: 5px;width:140px">هزینه رفاهی:</span>
-                                    <input asp-for="WelfareCost" type="number" class="form-control d-inline-block" />
-                                </label>
-                            </fieldset>
-                        </div>
-                        <div class="my-font" style="flex:0.9">
-                            <fieldset class="form-group">
-                                <label class="my-font rowAC">
-                                    <span style="margin-left: 0px;width:120px">ماه بازنشستگی:</span>
-                                    <input asp-for="RetirementMonth" type="number" class="form-control d-inline-block" />
                                 </label>
                             </fieldset>
                         </div>
