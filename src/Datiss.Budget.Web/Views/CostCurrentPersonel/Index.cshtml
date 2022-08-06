@@ -59,9 +59,13 @@
                                         <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
                                         </button>
-                                        <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" type="button" class="btn btn-success bg-light-success my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
-                                        </button>
+                                        <span data-toggle="modal" data-target="#CreateModal">
+                                            <button id="btnCreate" data-toggle="tooltip" data-placement="top" title="رکورد جدید" name="btnCreate" type="button" class="btn btn-success bg-light-success my-font openCreate">
+                                                <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i>
+                                            </button>
+                                        </span>
+
+
                                     </div>
                                 </fieldset>
                             </div>
@@ -201,11 +205,11 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostCurrentPersonelController.ACTION_ExportExcel" 
-                                                asp-route-orgid="@Model.Filter.OrganizationId" 
-                                                asp-route-yearid="@Model.Filter.YearId" 
-                                                asp-route-recordType="@Model.Filter.RecordType"
-                                                class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" asp-action="@CostCurrentPersonelController.ACTION_ExportExcel"
+                                           asp-route-orgid="@Model.Filter.OrganizationId"
+                                           asp-route-yearid="@Model.Filter.YearId"
+                                           asp-route-recordType="@Model.Filter.RecordType"
+                                           class="btn btn-secondary bg-light-secondary mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa ft-database"></i>
                                         </a>
                                         <a data-toggle="tooltip" data-placement="top" title="دانلود فرمت اکسل" class="btn btn-warning bg-light-warning my-font"
@@ -230,70 +234,70 @@
 </section>
 
 @section headSection {
-<link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
-<link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
-<script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
+    <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+    <link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
 }
 
-@section footSection {
+    @section footSection {
 
-<partial name="_loadingBar" />
+    <partial name="_loadingBar" />
 
-<div id="modaldiv">
-</div>
+    <div id="modaldiv">
+    </div>
 
-<partial name="_excelModal" model="new ImportExcelViewModel()" />
+    <partial name="_excelModal" model="new ImportExcelViewModel()" />
 
-<partial name="_tableScript" />
+    <partial name="_tableScript" />
 
-<script type="text/javascript">
-    let allColumns = '1,2,3,4,5,6,7,8';
-    let columnIndices = allColumns.split(',');
-    console.log(columnIndices);
-    let showingColmuns = "1,2,3,4,5,6,7,8,";
-</script>
+    <script type="text/javascript">
+        let allColumns = '1,2,3,4,5,6,7,8';
+        let columnIndices = allColumns.split(',');
+        console.log(columnIndices);
+        let showingColmuns = "1,2,3,4,5,6,7,8,";
+    </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
     {
-<script type="text/javascript">
-    showingColmuns = '@Model.Filter.Columns' ;
-</script>
+        <script type="text/javascript">
+            showingColmuns = '@Model.Filter.Columns';
+        </script>
     }
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    var jobStatusType_Ids = [
+        var jobStatusType_Ids = [
         @Html.Raw(Model.JobStatusTypeSourceIdArray)
-    ];
+                    ];
 
-    var jobStatusType_keys = [
+        var jobStatusType_keys = [
         @Html.Raw(ViewData["jobStatusTypeKeys"].ToString())
-    ];
+                    ];
 
-    var jobStatusType_source = {};
+        var jobStatusType_source = {};
 
-    for (var i = 0; i < jobStatusType_Ids.length; i++) {
-        jobStatusType_source[jobStatusType_Ids[i]] = jobStatusType_keys[i];
-    }
+        for (var i = 0; i < jobStatusType_Ids.length; i++) {
+            jobStatusType_source[jobStatusType_Ids[i]] = jobStatusType_keys[i];
+        }
 
-    $(document).ready(function () {
+        $(document).ready(function() {
             //fill input hidden with initial columns showing
             document.getElementById("hidColumns").value = showingColmuns;
 
             setDataColumns();
 
-            $(".dropdown-menu").click(function (e) {
+            $(".dropdown-menu").click(function(e) {
                 e.stopPropagation();
             });
 
-            $("#columnSelector input:checkbox:checked").change(function () {
+            $("#columnSelector input:checkbox:checked").change(function() {
                 let index = parseInt($(this)[0].id.split('-')[1]);
                 console.log(`showing or hiding col : ${index}`);
                 let checked = $(this)[0].checked;
                 if (checked) {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
                     showingColmuns = showingColmuns + `${index},`
-                    document.getElementById("hidColumns").value = showingColmuns ;
+                    document.getElementById("hidColumns").value = showingColmuns;
                 } else {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
                     showingColmuns = showingColmuns.replace(`${index},`, '');
@@ -319,12 +323,12 @@
             console.log('ColumnsToShow ');
             console.log(columnsToShow);
             let checkBoxes = $("#columnSelector input:checkbox");
-            for(let i = 0; i < columnIndices.length; i++) {
+            for (let i = 0; i < columnIndices.length; i++) {
                 let index = parseInt(columnIndices[i]);
                 let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
                 console.log(`Column : ${index} show = ${showColumn}`);
                 checkBoxes[i].checked = showColumn;
-                if(showColumn)
+                if (showColumn)
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
                 else
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
@@ -345,9 +349,9 @@
                 cancelButtonText: 'انصراف',
                 confirmButtonText: 'حذف اطلاعات!',
                 confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
-                cancelButtonClass:  'btn btn-outline-secondary mr-1 my-font',
+                cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
                 buttonsStyling: false,
-            }).then(function (result) {
+            }).then(function(result) {
                 if (result.value) {
                     let params = {};
                     params.yearId = $('#yearId option:selected').val();
@@ -363,7 +367,7 @@
                         data: params,
                         success: function(data, status, settings) {
                             console.log(status);
-                            if(data.hasError) {
+                            if (data.hasError) {
                                 Swal.fire({
                                     title: '<span class="my-font">خطا</span>',
                                     html: `<span class="my-font">${data.message}</span>`,
@@ -417,7 +421,7 @@
             $.ajax({
                 url: '@Url.Action(CostCurrentPersonelController.ACTION_Delete)' + '/' + id,
                 type: 'POST',
-                success: function (data, status, settings) {
+                success: function(data, status, settings) {
                     if (data.hasError) {
                         alert(data.message);
                         return;
@@ -425,7 +429,7 @@
 
                     $(e).closest('tr').remove();
                 },
-                error: function (request, options, err) {
+                error: function(request, options, err) {
                     if (request.status == 401 || request.status == 403) {
                         ShowPermissionErorr();
                         return;
@@ -435,6 +439,37 @@
             });
         }
 
+        $(document).on('click', '.openCreate', function() {
+
+            var recordType = $('#recordTypeId').val();
+
+
+            if (recordType == 1) {
+                let myurl = '@Url.Action(CostCurrentPersonelController.ACTION_Create)';
+                $.ajax({
+                    type: 'GET',
+                    url: myurl,
+                    success: function(data, status, settings) {
+                        $('#modaldiv').html('');
+                        $("#modaldiv").html(data);
+                        $('#CreateModal').modal('show');
+                        $('#CreateModal').on('hidden.bs.modal', function() {
+                            $('#modaldiv').html('');
+                            $('.modal-backdrop').remove();
+                        });
+                    },
+                    error: function(ajaxrequest, ajaxOptions, thrownError) {
+                        if (ajaxrequest.status == 401 || ajaxrequest.status == 403) {
+                            ShowPermissionErorr();
+                            return;
+                        }
+                        ShowCommonErorr();
+                    }
+                });
+            }
+
+        });
+
         function Edit(orgid) {
             let myurl = '@Url.Action(CostCurrentPersonelController.ACTION_Edit)';
             myurl = myurl + "/" + orgid;
@@ -442,16 +477,16 @@
             $.ajax({
                 type: 'GET',
                 url: myurl,
-                success: function (data, status, settings) {
+                success: function(data, status, settings) {
                     $('#modaldiv').html('');
                     $("#modaldiv").html(data);
                     $('#EditModal').modal('show');
-                    $('#EditModal').on('hidden.bs.modal', function () {
+                    $('#EditModal').on('hidden.bs.modal', function() {
                         $('#modaldiv').html('');
                         $('.modal-backdrop').remove();
                     });
                 },
-                error: function (ajaxrequest, ajaxOptions, thrownError) {
+                error: function(ajaxrequest, ajaxOptions, thrownError) {
                     if (ajaxrequest.status == 401 || ajaxrequest.status == 403) {
                         ShowPermissionErorr();
                         return;
@@ -465,7 +500,7 @@
             $('#ExcellModal').modal('show');
         }
 
-        $(document).on('click', '.delete-row', function () {
+        $(document).on('click', '.delete-row', function() {
             let id = $(this).data('id');
             let btn = this;
 
@@ -482,7 +517,7 @@
                 cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
                 buttonsStyling: false,
             }).then(function(result) {
-                if(result.value) {
+                if (result.value) {
                     deleteRow(btn, id);
                     return true;
                 }
@@ -492,8 +527,8 @@
             });
         });
 
-        $(document).ready(function () {
-            $('.modal').on('hidden.bs.modal', function () {
+        $(document).ready(function() {
+            $('.modal').on('hidden.bs.modal', function() {
                 $('.modal-backdrop').remove();
             });
         });
@@ -514,7 +549,7 @@
                 data: fdata,
                 processData: false,
                 contentType: false,
-                success: function (data, status, settings) {
+                success: function(data, status, settings) {
                     console.log(data);
                     if (data.hasError) {
                         $(".olvy").css("display", "none");
@@ -548,9 +583,9 @@
                             confirmButtonClass: 'btn btn-warning my-font',
                             cancelButtonClass: 'btn btn-danger  my-font ml-1',
                             buttonsStyling: false,
-                        }).then(function (result) {
+                        }).then(function(result) {
 
-                            if(result.value) {
+                            if (result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
                                 console.log(fdata);
 
@@ -579,7 +614,7 @@
                                             return;
                                         }
 
-                                        if(!data.hasError) {
+                                        if (!data.hasError) {
                                             $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
@@ -591,12 +626,12 @@
                                                 confirmButtonText: 'بستن',
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
-                                            }).then(function (result) {
+                                            }).then(function(result) {
                                                 document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})';
                                             });
                                         }
 
-                                        if(data.ask) {
+                                        if (data.ask) {
                                             alert('dont ask again');
                                         }
                                     },
@@ -624,13 +659,13 @@
                             confirmButtonText: 'بستن',
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
-                        }).then(function (result) {
+                        }).then(function(result) {
                             document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})';
                         });
                     }
 
                 },
-                error: function (request, options, err) {
+                error: function(request, options, err) {
                     $(".olvy").css("display", "none");
                     if (request.status == 401 || request.status == 403) {
                         ShowPermissionErorr();
@@ -642,7 +677,7 @@
 
         });
 
-        $(document).on('click', '#btnDoCopy', function () {
+        $(document).on('click', '#btnDoCopy', function() {
             let model = {};
             model.sourceOrgId = $('#organizationId option:selected').val();
             model.targetYearId = $('#yearId option:selected').val();
@@ -654,7 +689,7 @@
                 url: '@Url.Action(CostCurrentPersonelController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
-                success: function (data, status, settings) {
+                success: function(data, status, settings) {
                     if (data._HasError) {
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
@@ -685,7 +720,7 @@
                         document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})'
                     });
                 },
-                error: function (request, options, err) {
+                error: function(request, options, err) {
                     console.log(err);
                     alert('عملیات کپی با خطا مواجه شد.');
                 }
@@ -698,6 +733,6 @@
             $('#filterForm').submit();
         };
 
-</script>
+    </script>
 
 }

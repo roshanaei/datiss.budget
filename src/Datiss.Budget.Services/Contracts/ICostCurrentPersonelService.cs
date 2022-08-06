@@ -10,6 +10,7 @@ namespace Datiss.Budget.Services
 {
     public interface ICostCurrentPersonelService
     {
+        Task<ValidationResult<CostCurrentPersonelDTO>> CreateAsync(CreateCostCurrentPersonelDTO model);
         Task<CostCurrentPersonel> GetByIdAsync(int id);
         Task<ValidationResult<CostCurrentPersonelDTO>> UpdateAsync(UpdateCostCurrentPersonelDTO model);
         Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId, RecordType recordType);

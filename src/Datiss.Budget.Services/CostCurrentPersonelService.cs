@@ -69,6 +69,77 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(entity);
         }
 
+
+        public async Task<ValidationResult<CostCurrentPersonelDTO>> CreateAsync(CreateCostCurrentPersonelDTO model)
+        {
+            model.CheckArgumentIsNull(nameof(model));
+
+            var entity = new CostCurrentPersonel
+            {
+                YearId = model.YearId,
+                OrganizationId = model.OrganizationId,
+                CostCenterTypeId = model.CostCenterTypeId,
+                RecordType = RecordType.Forcast,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                GradeTypeId = model.GradeTypeId,
+                GenderId = model.GenderId,
+                ContractTypeId = model.ContractTypeId,
+                PersonelCode = model.PersonelCode,
+                JobStatusTypeId = model.JobStatusTypeId,
+                JobStatusDetailTypeId = model.JobStatusDetailTypeId,
+            };
+
+            model.CostCenterTypeTitle = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
+            model.GradeTypeTitle = (await _constSet.FindAsync(model.GradeTypeId)).Title;
+            var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
+
+            try
+            {
+                if (await checkLogicAsync(model.YearId, model.PersonelCode,model.RecordType))
+                {
+                    await _dbSet.AddAsync(entity);
+
+                    try
+                    {
+                        await _uow.SaveChangesAsync();
+                    }
+                    catch
+                    {
+                        return ValidationResult<CostCurrentPersonelDTO>.Failed(
+                            string.Format(ServiceMessages.ImportExcelCalculationField)
+                            );
+                    }
+
+                    var result = entity.Adapt<CostCurrentPersonelDTO>();
+                    result.CostCenterTypeDisplay = model.CostCenterTypeTitle;
+                    result.GradeTypeDisplay = model.GradeTypeTitle;
+                    result.OrganizationDisplay = organizationDisplay;
+                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                    result.FirstName = entity.FirstName;
+                    result.LastName = model.LastName;
+                    result.GenderId = model.GenderId;
+                    result.ContractTypeId = model.ContractTypeId;
+                    result.PersonelCode = model.PersonelCode;
+                    result.JobStatusTypeId = model.JobStatusTypeId;
+                    result.JobStatusDetailTypeId = model.JobStatusDetailTypeId;
+
+                    return ValidationResult<CostCurrentPersonelDTO>.Success(result);
+                }
+            }
+            catch (DisbaledYearDataInputException)
+            {
+                return ValidationResult<CostCurrentPersonelDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
+            }
+
+
+            return ValidationResult<CostCurrentPersonelDTO>.Failed(
+                string.Format(ServiceMessages.Exist_Username,
+                    model.FirstName + " " + model.LastName)
+                );
+        }
+
+
         public async Task<ValidationResult<CostCurrentPersonelDTO>> UpdateAsync(UpdateCostCurrentPersonelDTO model)
         {
             model.CheckArgumentIsNull(nameof(model));
@@ -117,7 +188,7 @@ namespace Datiss.Budget.Services
                     entity.EndJobReward = model.EndJobReward;
                     entity.WelfareCost = model.WelfareCost;
                     entity.RetirementMonth = model.RetirementMonth;
-                    
+
                     try
                     {
                         await _uow.SaveChangesAsync();
