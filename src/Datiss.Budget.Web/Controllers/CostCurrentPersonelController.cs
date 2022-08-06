@@ -30,6 +30,7 @@ namespace Datiss.Budget.Web.Controllers
     {
 
         public const string Name = "CostCurrentPersonel";
+        public const string ACTION_Create = nameof(Create);
         public const string ACTION_Index = nameof(Index);
         public const string ACTION_Edit = nameof(Edit);
         public const string ACTION_Copy = nameof(Copy);
@@ -65,6 +66,76 @@ namespace Datiss.Budget.Web.Controllers
             _financeYearService = financeYearService ?? throw new ArgumentNullException(nameof(financeYearService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
             _securityTrimmingService = securityTrimmingService ?? throw new ArgumentNullException(nameof(securityTrimmingService));
+        }
+
+
+        [HttpGet("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
+        public async Task<IActionResult> Create()
+        {
+            var model = new CreateCostCurrentPersonelViewModel();
+
+            #region dropdown
+
+            var costCenterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+            var gradeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__GradeType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+            var contractSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ContractType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var jobDepartmentSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__JobDepartmentType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var jobStatusSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__JobStatusType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var jobSatusDetailSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__JobStatusDetailsType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(input: true))
+               .Adapt<List<DropDownItemViewModel>>();
+
+            #endregion
+
+            model.SetContractSource(contractSource);
+            model.SetCostCenterSource(costCenterSource);
+            model.SetGradeSource(gradeSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetJobDepartment(jobDepartmentSource);
+            model.SetJobStatusSource(jobStatusSource);
+            model.SetJobStatusDetailSource(jobSatusDetailSource);
+
+            return PartialView("_createModal", model);
+        }
+
+
+        [HttpPost("[action]")]
+        [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
+        public async Task<IActionResult> Create(CreateCostCurrentPersonelViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.AddError(ViewMessages.InvalidData);
+                return Json(model);
+            }
+            var data = model.Adapt<CreateCostCurrentPersonelDTO>();
+
+            var result = await _costCurrentPersonelService.CreateAsync(data);
+
+            if (!result.IsValid)
+            {
+                model.AddError(result.Message);
+                return Json(model);
+            }
+
+            return Json(result.Result.Adapt<CostCurrentPersonelViewModel>());
         }
 
         [HttpGet("[action]/{id}")]
