@@ -69,6 +69,53 @@ namespace Datiss.Budget.Web.Controllers
         }
 
 
+        [HttpGet("[action]")]
+        [HasPermission(claimType: Name, PermissionActionType.Create)]
+        public async Task<IActionResult> Create()
+        {
+            var model = new CreateCostCurrentPersonelViewModel();
+
+            #region dropdown
+
+            var costCenterSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+            var gradeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__GradeType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+            var contractSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ContractType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var jobDepartmentSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__JobDepartmentType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var jobStatusSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__JobStatusType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var jobSatusDetailSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__JobStatusDetailsType))
+                .Adapt<IList<DropDownItemViewModel>>();
+
+
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(input: true))
+               .Adapt<List<DropDownItemViewModel>>();
+
+            #endregion
+
+            model.SetContractSource(contractSource);
+            model.SetCostCenterSource(costCenterSource);
+            model.SetGradeSource(gradeSource);
+            model.SetInputOrganizationSource(inputOrgSource);
+            model.SetJobDepartment(jobDepartmentSource);
+            model.SetJobStatusSource(jobStatusSource);
+            model.SetJobStatusDetailSource(jobSatusDetailSource);
+
+            return PartialView("_createModal", model);
+        }
+
+
         [HttpPost("[action]")]
         [HasPermission(claimType: Name, actionType: PermissionActionType.Create)]
         public async Task<IActionResult> Create(CreateCostCurrentPersonelViewModel model)

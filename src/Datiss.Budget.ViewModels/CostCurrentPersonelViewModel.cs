@@ -12,15 +12,10 @@ namespace Datiss.Budget.ViewModels
     public class CreateCostCurrentPersonelViewModel : BaseViewModel
     {
         public int YearId { get; set; }
-        
-        public string YearDisplay { get; set; }
 
         public int OrganizationId { get; set; }
 
         public string OrganizationDisplay { get; set; }
-
-        public RecordType RecordType { get; set; }
-        public string RecordTypeDisplay => RecordType.ToDisplay();
 
         public int PersonelCode { get; set; }
 
