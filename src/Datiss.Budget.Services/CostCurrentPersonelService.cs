@@ -87,6 +87,7 @@ namespace Datiss.Budget.Services
                 ContractTypeId = model.ContractTypeId,
                 PersonelCode = model.PersonelCode,
                 JobStatusTypeId = model.JobStatusTypeId,
+                JobDepartmentTypeId = 424,
                 JobStatusDetailTypeId = model.JobStatusDetailTypeId,
             };
 

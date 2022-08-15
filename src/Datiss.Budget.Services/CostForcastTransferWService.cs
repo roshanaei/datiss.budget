@@ -418,17 +418,17 @@ namespace Datiss.Budget.Services
             var extensiontypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                        x.Parent.ConstantKey == ConstantKeys.__ExtensionType);
 
-            var suggestedbudgettype = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                                        x.Parent.ConstantKey == ConstantKeys.__FinanceSubjectType &&
-                                                        x.ConstantKey.Contains(ConstantKeys.__ExtensionNo)).ToList();
+            //var suggestedbudgettype = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+            //                                            x.Parent.ConstantKey == ConstantKeys.__FinanceSubjectType &&
+            //                                            x.ConstantKey.Contains(ConstantKeys.__ExtensionNo)).ToList();
 
-            var extentionyestypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
-                                                        x.Parent.ConstantKey == ConstantKeys.__SuggestedBudgetTopicType &&
-                                                        x.ConstantKey.Contains(ConstantKeys.__ExtensionYes)).ToList();
-            foreach (var item in extentionyestypes)
-            {
-                suggestedbudgettype.Add(item);
-            }
+            //var extentionyestypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
+            //                                            x.Parent.ConstantKey == ConstantKeys.__SuggestedBudgetTopicType &&
+            //                                            x.ConstantKey.Contains(ConstantKeys.__ExtensionYes)).ToList();
+            //foreach (var item in extentionyestypes)
+            //{
+            //    suggestedbudgettype.Add(item);
+            //}
 
 
             var descendents = await _organizationService
@@ -440,6 +440,7 @@ namespace Datiss.Budget.Services
             foreach (var rec in records)
             {
                 rec.YearId = yearId;
+                rec.SuggestedBudgetTopicTypeId = 344;
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
 
                 if (year == null || year.Status == EntityStatus.Disbaled)
@@ -484,12 +485,12 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.ExtensionTypeId)
                         );
                 }
-                if (!suggestedbudgettype.Any(x => x.Id == rec.SuggestedBudgetTopicTypeId))
-                {
-                    return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.SuggestedBudgetTopicTypeId)
-                        );
-                }
+                //if (!suggestedbudgettype.Any(x => x.Id == rec.SuggestedBudgetTopicTypeId))
+                //{
+                //    return ImportResult.Failed(
+                //        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.SuggestedBudgetTopicTypeId)
+                //        );
+                //}
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
                 {
                     return ImportResult.Failed(

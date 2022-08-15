@@ -95,8 +95,6 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 10).Value = "کد قطر لوله";
             sheet.Cell(1, 11).Value = "این پروژه در سال بودجه به بهره برداری رسیده؟";
             sheet.Cell(1, 12).Value = "کد بهره برداری";
-            sheet.Cell(1, 13).Value = "سر فصل کلی در بودجه ";
-            sheet.Cell(1, 14).Value = "کد سر فصل کلی در بودجه ";
             sheet.Cell(1, 1).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 2).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 3).Style.Fill.BackgroundColor = XLColor.Cream;
@@ -109,8 +107,6 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 10).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 11).Style.Fill.BackgroundColor = XLColor.Cream;
             sheet.Cell(1, 12).Style.Fill.BackgroundColor = XLColor.Cream;
-            sheet.Cell(1, 13).Style.Fill.BackgroundColor = XLColor.Cream;
-            sheet.Cell(1, 14).Style.Fill.BackgroundColor = XLColor.Cream;
             int row = 2;
             foreach (var item in model.TransferTypeSource)
             {
@@ -165,16 +161,16 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 12).Style.Fill.SetBackgroundColor(XLColor.White);
                 row++;
             }
-            row = 2;
-            foreach (var item in model.SuggestedBudgetTopicTypeSource)
-            {
-                sheet.Cell(row, 13).Value = item.Title;
-                sheet.Cell(row, 13).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
-                sheet.Cell(row, 14).Value = item.Id;
-                sheet.Cell(row, 14).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
-                row++;
-            }
-            sheet.Range(1, 1, 18, 14);
+            //row = 2;
+            //foreach (var item in model.SuggestedBudgetTopicTypeSource)
+            //{
+            //    sheet.Cell(row, 13).Value = item.Title;
+            //    sheet.Cell(row, 13).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+            //    sheet.Cell(row, 14).Value = item.Id;
+            //    sheet.Cell(row, 14).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
+            //    row++;
+            //}
+            sheet.Range(1, 1, 18, 12);
 
             sheet.Cell(19, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
             //sheet.Range(23, 1, 24, 15).Merge();
@@ -192,7 +188,7 @@ namespace Datiss.Budget.Reports.Excel
             //sheet.Cell(20, 11).Value = "هزینه هر متر اجرا";
             //sheet.Cell(20, 12).Value = "جمع کل هزینه ها (هزار ریال)";
             sheet.Cell(20, 10).Value = "کد بهره برداری";
-            sheet.Cell(20, 11).Value = "کد سر فصل کلی در بودجه";
+            //sheet.Cell(20, 11).Value = "کد سر فصل کلی در بودجه";
 
             var totalCount = model.Items.Count();
             row = 21;
@@ -204,7 +200,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(20, 1, row - 1, 11);
+            var range = sheet.Range(20, 1, row - 1, 10);
             //range.Column(4).Style.NumberFormat.Format = "#,##0";
             //range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other
