@@ -3,4 +3,8 @@
     public class DisbaledYearDataInputException : BaseAppException
     {
     }
+
+    public class TableHasForcastDataException : BaseAppException
+    {
+    }
 }
