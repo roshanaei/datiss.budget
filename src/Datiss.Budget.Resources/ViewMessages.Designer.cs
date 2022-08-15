@@ -88,6 +88,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to سال انتخاب شده داری داده پیش بینی می باشد . .
+        /// </summary>
+        public static string CopyDestYearHasForcastData {
+            get {
+                return ResourceManager.GetString("CopyDestYearHasForcastData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to نمی توانید کپی اطلاعات را برای سال های قبلی انجام دهید..
         /// </summary>
         public static string CopyErrorDestYear {
@@ -219,6 +228,15 @@ namespace Datiss.Budget.Resources {
         public static string FinanceYearSuccessSoftDelete {
             get {
                 return ResourceManager.GetString("FinanceYearSuccessSoftDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to جدول شما دارای داده های پیش بینی هست ابتدا آن ها را باید پاک کنید ..
+        /// </summary>
+        public static string ForcastData {
+            get {
+                return ResourceManager.GetString("ForcastData", resourceCulture);
             }
         }
         

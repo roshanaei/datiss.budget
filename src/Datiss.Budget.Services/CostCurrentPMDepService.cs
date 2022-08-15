@@ -144,6 +144,9 @@ namespace Datiss.Budget.Services
             if (year.Status == EntityStatus.Disbaled)
                 throw new DisbaledYearDataInputException();
 
+            if (await hasAnyDataAsync(organizationId, yearId, RecordType.Forcast))
+                throw new TableHasForcastDataException();
+
             var self = await _dbSet.Where(_ => _.YearId == yearId)
                                    .Where(_ => _.OrganizationId == organizationId)
                                    .Where(_ => _.RecordType == recordType)
@@ -301,7 +304,7 @@ namespace Datiss.Budget.Services
         }
 
 
-        public async Task<IEnumerable<CostCurrentPMDepDTO>> GetExportItemsAsync(int yearId, int organizationId,RecordType recordType)
+        public async Task<IEnumerable<CostCurrentPMDepDTO>> GetExportItemsAsync(int yearId, int organizationId, RecordType recordType)
         {
             var filter = new CostCurrentPMDepFilterDTO
             {

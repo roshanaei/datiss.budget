@@ -278,6 +278,14 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.Logic_InputDisableYearData
                 });
             }
+            catch(TableHasForcastDataException)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ViewMessages.ForcastData
+                });
+            }
             catch (DeleteNullRecordException)
             {
                 return Json(new
@@ -345,7 +353,7 @@ namespace Datiss.Budget.Web.Controllers
             }
             catch (CopyDestYearHasDataException)
             {
-                model.AddError(ViewMessages.CopyDestYearHasData);
+                model.AddError(ViewMessages.CopyDestYearHasForcastData);
             }
             catch (CopyDataBaseException)
             {

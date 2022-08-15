@@ -126,6 +126,9 @@
   <data name="CopyDestYearHasData" xml:space="preserve">
     <value>سال مقصد نباید دیتا داشته باشد.</value>
   </data>
+  <data name="CopyDestYearHasForcastData" xml:space="preserve">
+    <value>سال انتخاب شده داری داده پیش بینی می باشد . </value>
+  </data>
   <data name="CopyErrorDestYear" xml:space="preserve">
     <value>نمی توانید کپی اطلاعات را برای سال های قبلی انجام دهید.</value>
   </data>
@@ -170,6 +173,9 @@
   </data>
   <data name="FinanceYearSuccessSoftDelete" xml:space="preserve">
     <value>سال مالی با موفقیت حذف شد . امکان برگشت این عملیات وجود دارد . .</value>
+  </data>
+  <data name="ForcastData" xml:space="preserve">
+    <value>جدول شما دارای داده های پیش بینی هست ابتدا آن ها را باید پاک کنید .</value>
   </data>
   <data name="ImportExcelFileFormatInvalid" xml:space="preserve">
     <value>فرمت فایل اکسل نمی باشد.</value>
