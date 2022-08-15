@@ -11,7 +11,7 @@
             </div>
             <form>
                 <div class="modal-body">
-                    <input type="hidden" asp-for="YearId"/>
+                    <input type="hidden" asp-for="YearId" />
                     <input type="hidden" asp-for="_CurrentPage" />
 
                     <div class="rowAC">
@@ -119,9 +119,11 @@
                                     <span style="margin-left:0px;width:130px;font-size:small">وضعیت استخدام :</span>
                                     <select asp-for="JobStatusTypeId"
                                             asp-items="@Model.JobStatusSource"
-                                            class="form-control d-inline-block"
-                                            onchange="RelatedDropDown(this,event)">
+                                            class="form-control d-inline-block">
                                     </select>
+                                    <script>
+                                        $('#JobStatusTypeId').attr('disabled', 'disabled');
+                                    </script>
                                 </label>
                             </fieldset>
                         </div>
@@ -174,7 +176,7 @@
         console.log(jobStatusDetailTypeId);
 
         FillDropDown(jobStatusTypeId, jobStatusDetailTypeId);
-        
+
         resetTableBackColor("my-table");
 
     });
