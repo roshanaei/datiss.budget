@@ -43,8 +43,5 @@ namespace Datiss.Budget.Services.Excel
         [Column(MappingDirections.Both, Letter = "J")]
         public int ExtensionTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "K")]
-        public int SuggestedBudgetTopicTypeId { get; set; }
-
     }
 }
