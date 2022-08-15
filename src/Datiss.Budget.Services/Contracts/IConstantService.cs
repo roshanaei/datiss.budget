@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Datiss.Budget.Entities;
+using Datiss.Budget.Enum;
 using Datiss.Budget.Services.Infrastructure;
 using Datiss.Budget.Services.Models;
 
@@ -18,9 +19,9 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<IEnumerable<DropDownItem>> GetParentsAsync();
 
-        Task<IEnumerable<DropDownItem>> GetByConstantKeyAsync(string key);
+        Task<IEnumerable<DropDownItem>> GetByConstantKeyAsync(string key, EntityStatus? status = EntityStatus.Deleted);
 
-        Task<IEnumerable<DropDownItem>> GetByKeyAsync(string key,string parentkey,bool none = false);
+        Task<IEnumerable<DropDownItem>> GetByKeyAsync(string key, string parentkey, bool none = false);
         Task<IEnumerable<DropDownItem>> GetCofficientByKeysAsync(string key, string parentkey);
 
         Task<IEnumerable<ConstantDTO>> GetDataByKeyAsync(string key);

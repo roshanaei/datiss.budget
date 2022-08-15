@@ -365,7 +365,8 @@ namespace Datiss.Budget.Services
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
             var ccPMDepType = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CCPMDep &&
-                                                   x.Status != EntityStatus.Deleted);
+                                                   x.Status != EntityStatus.Deleted &&
+                                                   x.Status != EntityStatus.Disbaled);
             var costCenterType = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CostCenterType &&
                                                       x.Status != EntityStatus.Deleted);
 

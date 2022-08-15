@@ -104,7 +104,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
             int maxYear = yearSource.Max(_ => _.Id);
 
-            var ccPMDepTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDep))
+            var ccPMDepTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDep,EntityStatus.Disbaled))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var costCenterTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
@@ -167,7 +167,7 @@ namespace Datiss.Budget.Web.Controllers
             var yearSource = (await _financeYearService.GetDropDownDataAsync())
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-            var ccPMDepTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDep))
+            var ccPMDepTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDep,EntityStatus.Disbaled))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
             var costCenterTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType))
@@ -374,7 +374,7 @@ namespace Datiss.Budget.Web.Controllers
             var organizations = (await _organizationService.GetWithChildrenAsync(orgId, input: true))
                                 .OrderBy(x => x.DisplayOrder)
                                 .ThenBy(x => x.RowOrder);
-            var ccPMDepTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDep);
+            var ccPMDepTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CCPMDep,EntityStatus.Disbaled);
             var costCurrentTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType);
 
             if(!ccPMDepTypes.Any() || !costCurrentTypes.Any())
