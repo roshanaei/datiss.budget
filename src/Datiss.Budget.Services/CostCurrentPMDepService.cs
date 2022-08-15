@@ -144,7 +144,7 @@ namespace Datiss.Budget.Services
             if (year.Status == EntityStatus.Disbaled)
                 throw new DisbaledYearDataInputException();
 
-            if (await hasAnyDataAsync(organizationId, yearId, RecordType.Forcast))
+            if (await hasAnyDataAsync(organizationId, yearId, RecordType.Forcast) && recordType == RecordType.Base)
                 throw new TableHasForcastDataException();
 
             var self = await _dbSet.Where(_ => _.YearId == yearId)
