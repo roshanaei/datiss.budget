@@ -46,14 +46,14 @@ namespace Datiss.Budget.Services.Models
         ////فوق العاده منطقه
         //public long RegionRight { get; set; }
 
-        ////ساعت اضافه کاری
-        //public int OverTimeValue { get; set; }
+        //ساعت اضافه کاری
+        public int OverTimeValue { get; set; }
 
         //// مبلغ اضافه کاری
         //public long OverTimeCost { get; set; }
 
-        ////تعداد روز  تعطیل کاری
-        //public int HolidayValue { get; set; }
+        //تعداد روز  تعطیل کاری
+        public int HolidayValue { get; set; }
 
         //// مبلغ تعطیل کاری
         //public long HolidayCost { get; set; }

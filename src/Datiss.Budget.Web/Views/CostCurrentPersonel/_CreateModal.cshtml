@@ -110,6 +110,18 @@
                             </fieldset>
                         </div>
 
+                        <div class="my-font" style="flex:0.9">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left:0px;margin-right:5px;width:150px">بخش مشاغل :</span>
+                                    <select asp-for="JobDepartmentTypeId"
+                                            asp-items="@Model.JobDepartmentSource"
+                                            class="form-control d-inline-block">
+                                    </select>
+                                </label>
+                            </fieldset>
+                        </div>
+
                     </div>
 
                     <div class="rowAC">
@@ -135,6 +147,26 @@
                                             asp-items="@Model.JobStatusDetailSource"
                                             class="form-control d-inline-block selectJobStatusDetailType">
                                     </select>
+                                </label>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="rowAC">
+                        <div class="my-font" style="flex:0.9">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-left: 0px;width:215px">ساعت اضافه کاری :</span>
+                                    <input asp-for="OverTimeValue" type="number" class="form-control d-inline-block" />
+                                </label>
+                            </fieldset>
+                        </div>
+
+                        <div class="my-font" style="flex:1.1">
+                            <fieldset class="form-group">
+                                <label class="my-font rowAC">
+                                    <span style="margin-right: 5px;margin-left:-5px;width:205px">روز  تعطیل کاری :</span>
+                                    <input asp-for="HolidayValue" type="number" class="form-control d-inline-block" />
                                 </label>
                             </fieldset>
                         </div>

@@ -158,9 +158,6 @@
         model.totalCost = $('#inputTotalCost_' + id).val();
         model.creditTypeId = $('#inputCreditType_' + id).val();
 
-                console.log(model);
-
-
         $.ajax({
             url: '@Url.Action(CostForcastTransferWController.ACTION_Edit)',
             type: 'POST',
@@ -179,8 +176,6 @@
                         });
                         return;
                 }
-                console.log(data);
-
 
                 rowData = {};
                 rowData.yearId = model.yearId;
@@ -188,15 +183,15 @@
                 rowData.extensionTypeId = model.extensionTypeId;
                 rowData.suggestedBudgetTopicTypeId = model.suggestedBudgetTopicId;
                 rowData.location = model.location;
-                rowData.transferType = model.transferTypeId;
-                rowData.digType = model.digTypeId;
-                rowData.diameterPipeType = model.diameterPipeTypeId;
+                rowData.transferTypeId = model.transferTypeId;
+                rowData.digTypeId = model.digTypeId;
+                rowData.diameterPipeTypeId = model.diameterPipeTypeId;
                 rowData.lenth = model.lenth;
                 rowData.pipeCost = model.pipeCost;
                 rowData.runCost = model.runCost;
-                rowData.tubeType = model.tubeTypeId;
+                rowData.tubeTypeId = model.tubeTypeId;
                 rowData.totalCost = model.totalCost;
-                rowData.creditType = model.creditTypeId;
+                rowData.creditTypeId = model.creditTypeId;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);

@@ -46,6 +46,9 @@ namespace Datiss.Budget.ViewModels
 
         public int ExperienceMonth { get; set; }
 
+        public int OverTimeValue { get; set; }
+
+        public int HolidayValue { get; set; }
 
         public IList<SelectListItem> InputOrganizationSource { get; set; }
         public IList<SelectListItem> GradeSource { get; set; }

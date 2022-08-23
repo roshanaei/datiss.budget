@@ -134,7 +134,10 @@
             model.gradeTypeId = $('#GradeTypeId option:selected').val();
             model.jobStatusTypeId = $('#JobStatusTypeId option:selected').val();
             model.jobStatusDetailTypeId = $('#JobStatusDetailTypeId option:selected').val();
+            model.jobDepartmentTypeId = $('#JobDepartmentTypeId option:selected').val();
             model.experienceYear = $('#ExperienceYear').val();
+            model.overTimeValue = $('#OverTimeValue').val();
+            model.holidayValue = $('#HolidayValue').val();
 
             $.ajax({
                 type: 'POST',
