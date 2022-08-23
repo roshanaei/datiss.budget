@@ -102,6 +102,8 @@ namespace Datiss.Budget.Web.Controllers
             var inputOrgSource = (await _organizationService.GetDropDownDataAsync(input: true))
                .Adapt<List<DropDownItemViewModel>>();
 
+
+
             #endregion
 
             model.SetContractSource(contractSource);

@@ -87,8 +87,10 @@ namespace Datiss.Budget.Services
                 ContractTypeId = model.ContractTypeId,
                 PersonelCode = model.PersonelCode,
                 JobStatusTypeId = model.JobStatusTypeId,
-                JobDepartmentTypeId = 424,
+                JobDepartmentTypeId = model.JobDepartmentTypeId,
                 JobStatusDetailTypeId = model.JobStatusDetailTypeId,
+                OverTimeValue = model.OverTimeValue,
+                HolidayValue = model.HolidayValue,
             };
 
             model.CostCenterTypeTitle = (await _constSet.FindAsync(model.CostCenterTypeId)).Title;
@@ -124,7 +126,8 @@ namespace Datiss.Budget.Services
                     result.PersonelCode = model.PersonelCode;
                     result.JobStatusTypeId = model.JobStatusTypeId;
                     result.JobStatusDetailTypeId = model.JobStatusDetailTypeId;
-
+                    result.OverTimeValue = model.OverTimeValue;
+                    result.HolidayValue = model.HolidayValue;
                     return ValidationResult<CostCurrentPersonelDTO>.Success(result);
                 }
             }
