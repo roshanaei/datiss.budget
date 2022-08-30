@@ -79,7 +79,9 @@
                             <!--SearchBox-->
                             <div class="rowACJSB">
                                 <div class="d-flex flex-row-reverse align-items-center">
-
+                                    <div class="form-group" style="margin-right:350px">
+                                        <input asp-for="Filter.AverageSalary" class="form-control my-font" style="border-color:red !important"/>
+                                    </div>
                                     <fieldset class="form-group" style="margin-right:20px">
                                         <label class="my-font rowAC">
                                             <span>نمایش</span>
@@ -97,6 +99,7 @@
 
                                         </label>
                                     </fieldset>
+
                                     <!--DropDown Menu-->
                                     <div class="btn-group dropdown form-group">
                                         <button type="button"
@@ -234,254 +237,226 @@
 </section>
 
 @section headSection {
-    <link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
-    <link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
-    <script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
+<link href="~/assets/vendors/css/select2.min.css" rel="stylesheet" />
+<link href="~/assets/css-rtl/overlay.css" rel="stylesheet" />
+<script type="text/javascript" src="~/assets/vendors/js/select2.full.min.js"></script>
 }
 
-    @section footSection {
+@section footSection {
 
-    <partial name="_loadingBar" />
+<partial name="_loadingBar" />
 
-    <div id="modaldiv">
-    </div>
+<div id="modaldiv">
+</div>
 
-    <partial name="_excelModal" model="new ImportExcelViewModel()" />
+<partial name="_excelModal" model="new ImportExcelViewModel()" />
 
-    <partial name="_tableScript" />
+<partial name="_tableScript" />
 
-    <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8';
-        let columnIndices = allColumns.split(',');
-        console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,";
-    </script>
+<script type="text/javascript">
+    let allColumns = '1,2,3,4,5,6,7,8';
+    let columnIndices = allColumns.split(',');
+    console.log(columnIndices);
+    let showingColmuns = "1,2,3,4,5,6,7,8,";
+</script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
     {
-        <script type="text/javascript">
-            showingColmuns = '@Model.Filter.Columns';
-        </script>
+<script type="text/javascript">
+    showingColmuns = '@Model.Filter.Columns';
+</script>
     }
 
-    <script type="text/javascript">
+<script type="text/javascript">
 
-        var jobStatusType_Ids = [
-        @Html.Raw(Model.JobStatusTypeSourceIdArray)
-                    ];
+    var jobStatusType_Ids = [
+    @Html.Raw(Model.JobStatusTypeSourceIdArray)
+                ];
 
-        var jobStatusType_keys = [
-        @Html.Raw(ViewData["jobStatusTypeKeys"].ToString())
-                    ];
+    var jobStatusType_keys = [
+    @Html.Raw(ViewData["jobStatusTypeKeys"].ToString())
+                ];
 
-        var jobStatusType_source = {};
+    var jobStatusType_source = {};
 
-        for (var i = 0; i < jobStatusType_Ids.length; i++) {
-            jobStatusType_source[jobStatusType_Ids[i]] = jobStatusType_keys[i];
-        }
+    for (var i = 0; i < jobStatusType_Ids.length; i++) {
+        jobStatusType_source[jobStatusType_Ids[i]] = jobStatusType_keys[i];
+    }
 
-        $(document).ready(function() {
-            //fill input hidden with initial columns showing
-            document.getElementById("hidColumns").value = showingColmuns;
+    $(document).ready(function() {
+        //fill input hidden with initial columns showing
+        document.getElementById("hidColumns").value = showingColmuns;
 
-            setDataColumns();
+        setDataColumns();
 
-            $(".dropdown-menu").click(function(e) {
-                e.stopPropagation();
-            });
-
-            $("#columnSelector input:checkbox:checked").change(function() {
-                let index = parseInt($(this)[0].id.split('-')[1]);
-                console.log(`showing or hiding col : ${index}`);
-                let checked = $(this)[0].checked;
-                if (checked) {
-                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
-                    showingColmuns = showingColmuns + `${index},`
-                    document.getElementById("hidColumns").value = showingColmuns;
-                } else {
-                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
-                    showingColmuns = showingColmuns.replace(`${index},`, '');
-                    document.getElementById("hidColumns").value = showingColmuns;
-                }
-            });
-
-            $('#organizationId').select2({
-                dir: 'rtl'
-            });
+        $(".dropdown-menu").click(function(e) {
+            e.stopPropagation();
         });
 
-        function resetDataColumns() {
-            $('th,tr td').show();
-            let inputs = $("#columnSelector input:checkbox");
-            for (let i = 0; i < inputs.length; i++) {
-                inputs[i].checked = true
+        $("#columnSelector input:checkbox:checked").change(function() {
+            let index = parseInt($(this)[0].id.split('-')[1]);
+            console.log(`showing or hiding col : ${index}`);
+            let checked = $(this)[0].checked;
+            if (checked) {
+                $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+                showingColmuns = showingColmuns + `${index},`
+                document.getElementById("hidColumns").value = showingColmuns;
+            } else {
+                $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
+                showingColmuns = showingColmuns.replace(`${index},`, '');
+                document.getElementById("hidColumns").value = showingColmuns;
             }
+        });
+
+        $('#organizationId').select2({
+            dir: 'rtl'
+        });
+    });
+
+    function resetDataColumns() {
+        $('th,tr td').show();
+        let inputs = $("#columnSelector input:checkbox");
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].checked = true
+        }
+    }
+
+    function setDataColumns() {
+        let columnsToShow = document.getElementById("hidColumns").value.split(',');
+        console.log('ColumnsToShow ');
+        console.log(columnsToShow);
+        let checkBoxes = $("#columnSelector input:checkbox");
+        for (let i = 0; i < columnIndices.length; i++) {
+            let index = parseInt(columnIndices[i]);
+            let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
+            console.log(`Column : ${index} show = ${showColumn}`);
+            checkBoxes[i].checked = showColumn;
+            if (showColumn)
+                $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
+            else
+                $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
         }
 
-        function setDataColumns() {
-            let columnsToShow = document.getElementById("hidColumns").value.split(',');
-            console.log('ColumnsToShow ');
-            console.log(columnsToShow);
-            let checkBoxes = $("#columnSelector input:checkbox");
-            for (let i = 0; i < columnIndices.length; i++) {
-                let index = parseInt(columnIndices[i]);
-                let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
-                console.log(`Column : ${index} show = ${showColumn}`);
-                checkBoxes[i].checked = showColumn;
-                if (showColumn)
-                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
-                else
-                    $(`th:nth-child(${index}), tr td:nth-child(${index})`).hide();
-            }
+    }
 
-        }
+    function hardDelete(e) {
+        Swal.fire({
+            title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
+            html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
+            type: 'error',
+            showCancelButton: true,
+            //confirmButtonColor: '#2F8BE6',
+            animation: false,
+            customClass: 'animated flipInX',
+            //cancelButtonColor: '#F55252',
+            cancelButtonText: 'انصراف',
+            confirmButtonText: 'حذف اطلاعات!',
+            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+            cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
+            buttonsStyling: false,
+        }).then(function(result) {
+            if (result.value) {
+                let params = {};
+                params.yearId = $('#yearId option:selected').val();
+                params.orgId = $('#organizationId option:selected').val();
+                params.recordType = $('#recordTypeId option:selected').val();
+                console.log(params);
+                let deleteUrl = '@Url.Action(CostCurrentPersonelController.ACTION_DeleteRecords)';
+                console.log(deleteUrl);
 
-        function hardDelete(e) {
-            Swal.fire({
-                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
-                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
-                type: 'error',
-                showCancelButton: true,
-                //confirmButtonColor: '#2F8BE6',
-                animation: false,
-                customClass: 'animated flipInX',
-                //cancelButtonColor: '#F55252',
-                cancelButtonText: 'انصراف',
-                confirmButtonText: 'حذف اطلاعات!',
-                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
-                cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
-                buttonsStyling: false,
-            }).then(function(result) {
-                if (result.value) {
-                    let params = {};
-                    params.yearId = $('#yearId option:selected').val();
-                    params.orgId = $('#organizationId option:selected').val();
-                    params.recordType = $('#recordTypeId option:selected').val();
-                    console.log(params);
-                    let deleteUrl = '@Url.Action(CostCurrentPersonelController.ACTION_DeleteRecords)';
-                    console.log(deleteUrl);
-
-                    $.ajax({
-                        url: deleteUrl,
-                        type: 'POST',
-                        data: params,
-                        success: function(data, status, settings) {
-                            console.log(status);
-                            if (data.hasError) {
-                                Swal.fire({
-                                    title: '<span class="my-font">خطا</span>',
-                                    html: `<span class="my-font">${data.message}</span>`,
-                                    type: 'error',
-                                    confirmButtonColor: '#2F8BE6',
-                                    animation: false,
-                                    customClass: 'animated flipInX',
-                                    confirmButtonText: 'بستن',
-                                    confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
-                                    buttonsStyling: false,
-                                });
-                                return;
-                            }
-
+                $.ajax({
+                    url: deleteUrl,
+                    type: 'POST',
+                    data: params,
+                    success: function(data, status, settings) {
+                        console.log(status);
+                        if (data.hasError) {
                             Swal.fire({
-                                title: '<span class="my-font">عملیات موفق</span>',
+                                title: '<span class="my-font">خطا</span>',
                                 html: `<span class="my-font">${data.message}</span>`,
-                                type: 'success',
+                                type: 'error',
                                 confirmButtonColor: '#2F8BE6',
-                                animation: true,
+                                animation: false,
                                 customClass: 'animated flipInX',
                                 confirmButtonText: 'بستن',
-                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
                                 buttonsStyling: false,
-                            }).then(function(result) {
-                                document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})';
                             });
-                        },
-                        error: function(request, option, err) {
-                            if (request.status == 401 || request.status == 403) {
-                                ShowPermissionErorr();
-                                return;
-                            }
-                            ShowCommonErorr();
+                            return;
                         }
-                    });
 
-                    return true;
-                }
-                else {
-
-                    return false;
-                }
-            });
-
-        }
-
-        function deleteRow(e, id) {
-            console.log(e);
-
-            $.ajax({
-                url: '@Url.Action(CostCurrentPersonelController.ACTION_Delete)' + '/' + id,
-                type: 'POST',
-                success: function(data, status, settings) {
-                    if (data.hasError) {
-                        alert(data.message);
-                        return;
-                    }
-
-                    $(e).closest('tr').remove();
-                },
-                error: function(request, options, err) {
-                    if (request.status == 401 || request.status == 403) {
-                        ShowPermissionErorr();
-                        return;
-                    }
-                    ShowCommonErorr();
-                }
-            });
-        }
-
-        $(document).on('click', '.openCreate', function() {
-
-            var recordType = $('#recordTypeId').val();
-
-
-            if (recordType == 1) {
-                let myurl = '@Url.Action(CostCurrentPersonelController.ACTION_Create)';
-                $.ajax({
-                    type: 'GET',
-                    url: myurl,
-                    success: function(data, status, settings) {
-                        $('#modaldiv').html('');
-                        $("#modaldiv").html(data);
-                        $('#CreateModal').modal('show');
-                        $('#CreateModal').on('hidden.bs.modal', function() {
-                            $('#modaldiv').html('');
-                            $('.modal-backdrop').remove();
+                        Swal.fire({
+                            title: '<span class="my-font">عملیات موفق</span>',
+                            html: `<span class="my-font">${data.message}</span>`,
+                            type: 'success',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: true,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                            buttonsStyling: false,
+                        }).then(function(result) {
+                            document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})';
                         });
                     },
-                    error: function(ajaxrequest, ajaxOptions, thrownError) {
-                        if (ajaxrequest.status == 401 || ajaxrequest.status == 403) {
+                    error: function(request, option, err) {
+                        if (request.status == 401 || request.status == 403) {
                             ShowPermissionErorr();
                             return;
                         }
                         ShowCommonErorr();
                     }
                 });
-            }
 
+                return true;
+            }
+            else {
+
+                return false;
+            }
         });
 
-        function Edit(orgid) {
-            let myurl = '@Url.Action(CostCurrentPersonelController.ACTION_Edit)';
-            myurl = myurl + "/" + orgid;
+    }
 
+    function deleteRow(e, id) {
+        console.log(e);
+
+        $.ajax({
+            url: '@Url.Action(CostCurrentPersonelController.ACTION_Delete)' + '/' + id,
+            type: 'POST',
+            success: function(data, status, settings) {
+                if (data.hasError) {
+                    alert(data.message);
+                    return;
+                }
+
+                $(e).closest('tr').remove();
+            },
+            error: function(request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    $(document).on('click', '.openCreate', function() {
+
+        var recordType = $('#recordTypeId').val();
+
+
+        if (recordType == 1) {
+            let myurl = '@Url.Action(CostCurrentPersonelController.ACTION_Create)';
             $.ajax({
                 type: 'GET',
                 url: myurl,
                 success: function(data, status, settings) {
                     $('#modaldiv').html('');
                     $("#modaldiv").html(data);
-                    $('#EditModal').modal('show');
-                    $('#EditModal').on('hidden.bs.modal', function() {
+                    $('#CreateModal').modal('show');
+                    $('#CreateModal').on('hidden.bs.modal', function() {
                         $('#modaldiv').html('');
                         $('.modal-backdrop').remove();
                     });
@@ -496,218 +471,190 @@
             });
         }
 
-        function openImportExcelForm() {
-            $('#ExcellModal').modal('show');
-        }
+    });
 
-        $(document).on('click', '.delete-row', function() {
-            let id = $(this).data('id');
-            let btn = this;
+    function Edit(orgid) {
+        let myurl = '@Url.Action(CostCurrentPersonelController.ACTION_Edit)';
+        myurl = myurl + "/" + orgid;
 
-            Swal.fire({
-                title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
-                html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
-                type: 'error',
-                showCancelButton: true,
-                animation: false,
-                customClass: 'animated flipInX',
-                cancelButtonText: 'انصراف',
-                confirmButtonText: 'حذف اطلاعات!',
-                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
-                cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
-                buttonsStyling: false,
-            }).then(function(result) {
-                if (result.value) {
-                    deleteRow(btn, id);
-                    return true;
+        $.ajax({
+            type: 'GET',
+            url: myurl,
+            success: function(data, status, settings) {
+                $('#modaldiv').html('');
+                $("#modaldiv").html(data);
+                $('#EditModal').modal('show');
+                $('#EditModal').on('hidden.bs.modal', function() {
+                    $('#modaldiv').html('');
+                    $('.modal-backdrop').remove();
+                });
+            },
+            error: function(ajaxrequest, ajaxOptions, thrownError) {
+                if (ajaxrequest.status == 401 || ajaxrequest.status == 403) {
+                    ShowPermissionErorr();
+                    return;
                 }
-                else {
-                    return false;
-                }
-            });
+                ShowCommonErorr();
+            }
         });
+    }
 
-        $(document).ready(function() {
-            $('.modal').on('hidden.bs.modal', function() {
-                $('.modal-backdrop').remove();
-            });
+    function openImportExcelForm() {
+        $('#ExcellModal').modal('show');
+    }
+
+    $(document).on('click', '.delete-row', function() {
+        let id = $(this).data('id');
+        let btn = this;
+
+        Swal.fire({
+            title: '<span class="my-font">برای حذف اطمینان دارید؟</span>',
+            html: '<span class="my-font">توجه داشته باشید که این عملیات قابل برگشت نیست!</span>',
+            type: 'error',
+            showCancelButton: true,
+            animation: false,
+            customClass: 'animated flipInX',
+            cancelButtonText: 'انصراف',
+            confirmButtonText: 'حذف اطلاعات!',
+            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+            cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
+            buttonsStyling: false,
+        }).then(function(result) {
+            if (result.value) {
+                deleteRow(btn, id);
+                return true;
+            }
+            else {
+                return false;
+            }
         });
+    });
 
-        $(document).on('click', '#btnDoImportExcel', function() {
-            var fdata = new FormData();
-            var fileInput = $('#ExcelFile')[0];
-            var file = fileInput.files[0];
-            var yearId = $('#yearId').val();
-            fdata.append('ExcelFile', file);
-            fdata.append('yearId', yearId);
+    $(document).ready(function() {
+        $('.modal').on('hidden.bs.modal', function() {
+            $('.modal-backdrop').remove();
+        });
+    });
 
-            $(".olvy").css("display", "block");
+    $(document).on('click', '#btnDoImportExcel', function() {
+        var fdata = new FormData();
+        var fileInput = $('#ExcelFile')[0];
+        var file = fileInput.files[0];
+        var yearId = $('#yearId').val();
+        fdata.append('ExcelFile', file);
+        fdata.append('yearId', yearId);
 
-            $.ajax({
-                url: '@Url.Action(CostCurrentPersonelController.ACTION_ImportExcel)',
-                type: 'POST',
-                data: fdata,
-                processData: false,
-                contentType: false,
-                success: function(data, status, settings) {
-                    console.log(data);
-                    if (data.hasError) {
-                        $(".olvy").css("display", "none");
-                        Swal.fire({
-                            title: '<span class="my-font">خطا</span>',
-                            html: `<span class="my-font">${data.message}</span>`,
-                            type: 'error',
-                            confirmButtonColor: '#2F8BE6',
-                            animation: false,
-                            customClass: 'animated flipInX',
-                            confirmButtonText: 'بستن',
-                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
-                            buttonsStyling: false,
-                        });
-                        return;
-                    }
+        $(".olvy").css("display", "block");
 
-                    if (data.ask) {
-                        $(".olvy").css("display", "none");
-                        Swal.fire({
-                            html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
-                            //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
-                            type: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#2F8BE6',
-                            animation: false,
-                            customClass: 'animated flipInX',
-                            cancelButtonColor: '#F55252',
-                            cancelButtonText: 'خیر',
-                            confirmButtonText: 'بله',
-                            confirmButtonClass: 'btn btn-warning my-font',
-                            cancelButtonClass: 'btn btn-danger  my-font ml-1',
-                            buttonsStyling: false,
-                        }).then(function(result) {
-
-                            if (result.value) {
-                                fdata.append('ContinueIfAnyOrgMissing', true);
-                                console.log(fdata);
-
-                                $(".olvy").css("display", "block");
-
-                                $.ajax({
-                                    url: '@Url.Action(CostCurrentPersonelController.ACTION_ImportExcel)',
-                                    type: 'POST',
-                                    data: fdata,
-                                    processData: false,
-                                    contentType: false,
-                                    success: function(data, status, settings) {
-                                        if (data.hasError) {
-                                            $(".olvy").css("display", "none");
-                                            Swal.fire({
-                                                title: '<span class="my-font">خطا</span>',
-                                                html: `<span class="my-font">${data.message}</span>`,
-                                                type: 'error',
-                                                confirmButtonColor: '#2F8BE6',
-                                                animation: false,
-                                                customClass: 'animated flipInX',
-                                                confirmButtonText: 'بستن',
-                                                confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
-                                                buttonsStyling: false,
-                                            });
-                                            return;
-                                        }
-
-                                        if (!data.hasError) {
-                                            $(".olvy").css("display", "none");
-                                            Swal.fire({
-                                                title: '<span class="my-font">عملیات موفق</span>',
-                                                html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
-                                                type: 'success',
-                                                confirmButtonColor: '#2F8BE6',
-                                                animation: true,
-                                                customClass: 'animated flipInX',
-                                                confirmButtonText: 'بستن',
-                                                confirmButtonClass: 'btn btn-secondary mr-1 my-font',
-                                                buttonsStyling: false,
-                                            }).then(function(result) {
-                                                document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})';
-                                            });
-                                        }
-
-                                        if (data.ask) {
-                                            alert('dont ask again');
-                                        }
-                                    },
-                                    error: function(request, options, err) {
-                                        console.log(err);
-                                    }
-                                });
-
-                                return true;
-                            }
-                            else {
-                                return false;
-                            }
-                        });
-                    }
-                    if (!data.hasError && !data.ask) {
-                        $(".olvy").css("display", "none");
-                        Swal.fire({
-                            title: '<span class="my-font">عملیات موفق</span>',
-                            html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
-                            type: 'success',
-                            confirmButtonColor: '#2F8BE6',
-                            animation: true,
-                            customClass: 'animated flipInX',
-                            confirmButtonText: 'بستن',
-                            confirmButtonClass: 'btn btn-secondary mr-1 my-font',
-                            buttonsStyling: false,
-                        }).then(function(result) {
-                            document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})';
-                        });
-                    }
-
-                },
-                error: function(request, options, err) {
+        $.ajax({
+            url: '@Url.Action(CostCurrentPersonelController.ACTION_ImportExcel)',
+            type: 'POST',
+            data: fdata,
+            processData: false,
+            contentType: false,
+            success: function(data, status, settings) {
+                console.log(data);
+                if (data.hasError) {
                     $(".olvy").css("display", "none");
-                    if (request.status == 401 || request.status == 403) {
-                        ShowPermissionErorr();
-                        return;
-                    }
-                    ShowCommonErorr();
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
                 }
-            });
 
-        });
+                if (data.ask) {
+                    $(".olvy").css("display", "none");
+                    Swal.fire({
+                        html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
+                        //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        cancelButtonColor: '#F55252',
+                        cancelButtonText: 'خیر',
+                        confirmButtonText: 'بله',
+                        confirmButtonClass: 'btn btn-warning my-font',
+                        cancelButtonClass: 'btn btn-danger  my-font ml-1',
+                        buttonsStyling: false,
+                    }).then(function(result) {
 
-        $(document).on('click', '#btnDoCopy', function() {
-            let model = {};
-            model.sourceOrgId = $('#organizationId option:selected').val();
-            model.targetYearId = $('#yearId option:selected').val();
+                        if (result.value) {
+                            fdata.append('ContinueIfAnyOrgMissing', true);
+                            console.log(fdata);
 
-            console.log(model);
+                            $(".olvy").css("display", "block");
 
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action(CostCurrentPersonelController.ACTION_Copy)',
-                data: model,
-                dataType: 'json',
-                success: function(data, status, settings) {
-                    if (data._HasError) {
-                        Swal.fire({
-                            title: '<span class="my-font">خطا</span>',
-                            html: `<span class="my-font">${data._ErrorMessage}</span>`,
-                            type: 'error',
-                            confirmButtonColor: '#2F8BE6',
-                            animation: false,
-                            customClass: 'animated flipInX',
-                            confirmButtonText: 'بستن',
-                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
-                            buttonsStyling: false,
-                        });
-                        return;
-                    }
+                            $.ajax({
+                                url: '@Url.Action(CostCurrentPersonelController.ACTION_ImportExcel)',
+                                type: 'POST',
+                                data: fdata,
+                                processData: false,
+                                contentType: false,
+                                success: function(data, status, settings) {
+                                    if (data.hasError) {
+                                        $(".olvy").css("display", "none");
+                                        Swal.fire({
+                                            title: '<span class="my-font">خطا</span>',
+                                            html: `<span class="my-font">${data.message}</span>`,
+                                            type: 'error',
+                                            confirmButtonColor: '#2F8BE6',
+                                            animation: false,
+                                            customClass: 'animated flipInX',
+                                            confirmButtonText: 'بستن',
+                                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                                            buttonsStyling: false,
+                                        });
+                                        return;
+                                    }
 
+                                    if (!data.hasError) {
+                                        $(".olvy").css("display", "none");
+                                        Swal.fire({
+                                            title: '<span class="my-font">عملیات موفق</span>',
+                                            html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
+                                            type: 'success',
+                                            confirmButtonColor: '#2F8BE6',
+                                            animation: true,
+                                            customClass: 'animated flipInX',
+                                            confirmButtonText: 'بستن',
+                                            confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                                            buttonsStyling: false,
+                                        }).then(function(result) {
+                                            document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})';
+                                        });
+                                    }
+
+                                    if (data.ask) {
+                                        alert('dont ask again');
+                                    }
+                                },
+                                error: function(request, options, err) {
+                                    console.log(err);
+                                }
+                            });
+
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    });
+                }
+                if (!data.hasError && !data.ask) {
+                    $(".olvy").css("display", "none");
                     Swal.fire({
                         title: '<span class="my-font">عملیات موفق</span>',
-                        html: '<span class="my-font">عملیات ایجاد پیش بینی اطلاعات با موفقیت انجام شد.</span>',
+                        html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
                         type: 'success',
                         confirmButtonColor: '#2F8BE6',
                         animation: true,
@@ -716,23 +663,79 @@
                         confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                         buttonsStyling: false,
                     }).then(function(result) {
-                        $('#CopyModal').modal('hide');
-                        document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})'
+                        document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})';
                     });
-                },
-                error: function(request, options, err) {
-                    console.log(err);
-                    alert('عملیات کپی با خطا مواجه شد.');
                 }
-            });
+
+            },
+            error: function(request, options, err) {
+                $(".olvy").css("display", "none");
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
         });
 
-        function changePageSize() {
-            let pageSize = $('#ddlPageSize').attr('value');
-            console.log(pageSize);
-            $('#filterForm').submit();
-        };
+    });
 
-    </script>
+    $(document).on('click', '#btnDoCopy', function() {
+        let model = {};
+        model.sourceOrgId = $('#organizationId option:selected').val();
+        model.targetYearId = $('#yearId option:selected').val();
+
+        console.log(model);
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action(CostCurrentPersonelController.ACTION_Copy)',
+            data: model,
+            dataType: 'json',
+            success: function(data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: '<span class="my-font">عملیات موفق</span>',
+                    html: '<span class="my-font">عملیات ایجاد پیش بینی اطلاعات با موفقیت انجام شد.</span>',
+                    type: 'success',
+                    confirmButtonColor: '#2F8BE6',
+                    animation: true,
+                    customClass: 'animated flipInX',
+                    confirmButtonText: 'بستن',
+                    confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                    buttonsStyling: false,
+                }).then(function(result) {
+                    $('#CopyModal').modal('hide');
+                    document.location.href = '@Url.Action(CostCurrentPersonelController.ACTION_Index, new {  page = 1})'
+                });
+            },
+            error: function(request, options, err) {
+                console.log(err);
+                alert('عملیات کپی با خطا مواجه شد.');
+            }
+        });
+    });
+
+    function changePageSize() {
+        let pageSize = $('#ddlPageSize').attr('value');
+        console.log(pageSize);
+        $('#filterForm').submit();
+    };
+
+</script>
 
 }

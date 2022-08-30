@@ -274,6 +274,9 @@ namespace Datiss.Budget.Web.Controllers
             model.Filter.PageNumber = filter.PageNumber;
             model.Filter.PageSize = filter.PageSize;
 
+            //TO DO
+            model.Filter.AverageSalary = await _costCurrentPersonelService.CalculationAsync(filter.YearId.Value, filter.OrganizationId.Value);
+
             return View(model);
         }
 
@@ -315,6 +318,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
 
+            //TO DO
+            model.Filter.AverageSalary = await _costCurrentPersonelService.CalculationAsync(filter.YearId.Value, filter.OrganizationId.Value);
 
             return View(model);
         }

@@ -370,6 +370,7 @@ namespace Datiss.Budget.ViewModels
         public int? YearId { get; set; }
         public RecordType? RecordType { get; set; }
         public int? OrganizationId { get; set; }
+        public decimal AverageSalary { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
         public IList<SelectListItem> OrganizationSource { get; set; }
