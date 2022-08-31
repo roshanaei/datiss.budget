@@ -370,7 +370,8 @@ namespace Datiss.Budget.ViewModels
         public int? YearId { get; set; }
         public RecordType? RecordType { get; set; }
         public int? OrganizationId { get; set; }
-        public decimal AverageSalary { get; set; }
+        public long AverageSalary { get; set; }
+        public string AverageSalaryDispaly => AverageSalary.ToString("N0");
 
         public IList<SelectListItem> YearSource { get; set; }
         public IList<SelectListItem> OrganizationSource { get; set; }
@@ -433,6 +434,11 @@ namespace Datiss.Budget.ViewModels
                 Text = x.Title,
                 Value = x.Id.ToString()
             }).ToList();
+        }
+
+        public void SetAverageSalaryFilter(long val)
+        {
+            Filter.AverageSalary = val;
         }
 
     }
