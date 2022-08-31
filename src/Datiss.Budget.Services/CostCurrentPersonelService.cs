@@ -324,7 +324,7 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task<decimal> CalculationAsync(int yearId, int organizationId)
+        public async Task<long> CalculationAsync(int yearId, int organizationId)
         {
             List<SqlParameter> sqlParams = new List<SqlParameter>
             {
@@ -333,7 +333,7 @@ namespace Datiss.Budget.Services
             };
             try
             {
-                return await _uow.ExecuteScalar<decimal>(
+                return await _uow.ExecuteScalar<long>(
                                         "[dbo].[CostCurrentPersonel_AverageSalary] @YearId, @OrganizationId",
                                                    parameters: sqlParams.ToArray());
             }

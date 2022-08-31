@@ -261,21 +261,19 @@ namespace Datiss.Budget.Web.Controllers
 
             var result = await _costCurrentPersonelService.GetListAsync(filter);
             var model = result.Adapt<CostCurrentPersonelIndexViewModel>();
-
+            model.Filter.AverageSalary = await _costCurrentPersonelService.CalculationAsync(filter.YearId.Value, filter.OrganizationId.Value);
             //model.SetYearSource(yearSource);
             //model.SetOrganizationSource(orgSource);
             model.SetJobStatusTypeSource(jobStatusTypeSource);
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
+            model.SetAverageSalaryFilter(model.Filter.AverageSalary);
 
             model.Filter.YearId = filter.YearId;
             model.Filter.OrganizationId = filter.OrganizationId;
             model.Filter.RecordType = filter.RecordType;
             model.Filter.PageNumber = filter.PageNumber;
             model.Filter.PageSize = filter.PageSize;
-
-            //TO DO
-            model.Filter.AverageSalary = await _costCurrentPersonelService.CalculationAsync(filter.YearId.Value, filter.OrganizationId.Value);
 
             return View(model);
         }
@@ -317,10 +315,8 @@ namespace Datiss.Budget.Web.Controllers
             model.SetJobStatusTypeSource(jobStatusTypeSource);
             model.SetFinanceYearFilterSource(yearSource, filter.YearId);
             model.SetOrganizationFilterSource(orgSource, filter.OrganizationId);
-
-            //TO DO
-            model.Filter.AverageSalary = await _costCurrentPersonelService.CalculationAsync(filter.YearId.Value, filter.OrganizationId.Value);
-
+            model.SetAverageSalaryFilter(await _costCurrentPersonelService.CalculationAsync(filter.YearId.Value, filter.OrganizationId.Value));
+            
             return View(model);
         }
 
