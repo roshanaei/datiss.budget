@@ -40,20 +40,19 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 3).Value = item.CostCenterTypeDisplay;
                 sheet.Cell(row, 4).Value = item.SectionTypeDisplay;
                 sheet.Cell(row, 5).Value = item.UnitDetailTypeDisplay;
-                sheet.Cell(row, 6).Value = item.CostCenterTypeDisplay;
+                sheet.Cell(row, 6).Value = item.ForcastY;
                 sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                sheet.Cell(row, 7).Value = item.ForcastY;
+                sheet.Cell(row, 7).Value = item.FunctionalBasicYear;
                 sheet.Cell(row, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                sheet.Cell(row, 8).Value = item.FunctionalBasicYear;
+                sheet.Cell(row, 8).Value = item.FunctionalYear_1;
                 sheet.Cell(row, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                sheet.Cell(row, 9).Value = item.FunctionalYear_1;
+                sheet.Cell(row, 9).Value = item.ApproveYear_1;
                 sheet.Cell(row, 9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                sheet.Cell(row, 10).Value = item.ApproveYear_1;
-                sheet.Cell(row, 10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
 
                 row++;
             }
-            var range = sheet.Range(1, 1, row - 1, 10);
+            var range = sheet.Range(1, 1, row - 1, 9);
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
