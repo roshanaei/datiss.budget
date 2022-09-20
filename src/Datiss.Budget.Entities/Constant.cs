@@ -263,8 +263,6 @@ namespace Datiss.Budget.Entities
 
         public ICollection<IncomeForcastSourcesReport> IncomeForcastSourcesReport { get; set; }
 
-
-
         #endregion
     }
 }
