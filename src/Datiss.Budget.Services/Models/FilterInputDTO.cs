@@ -238,6 +238,14 @@ namespace Datiss.Budget.Services.Models
         public ActivityType? Activity { get; set; }
     }
 
+    public class IncomeForcastSourcesReportFilterDTO : FilterInputDTO
+    {
+        public int? YearId { get; set; }
+        public int? NumberYear { get; set; }
+        public int? OrganizationId { get; set; }
+        public int? SourceDescriptionId { get; set; }
+    }
+
     public class CostCurrentPMDepFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
