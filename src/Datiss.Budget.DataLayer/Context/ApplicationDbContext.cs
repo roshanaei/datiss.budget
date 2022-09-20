@@ -308,7 +308,9 @@ namespace Datiss.Budget.DataLayer.Context
                 .ApplyConfiguration(new CostCurrentPrescriptionBaseInfoConfiguration())
                 .ApplyConfiguration(new CostForcastPipingWConfiguration())
                 .ApplyConfiguration(new CostForcastPipingWsConfiguration())
-                .ApplyConfiguration(new CostForcastBuyDescriptionConfiguration());
+                .ApplyConfiguration(new CostForcastBuyDescriptionConfiguration())
+                .ApplyConfiguration(new IncomeForcastSourcesReportConfiguration());
+
         }
     }
 }
