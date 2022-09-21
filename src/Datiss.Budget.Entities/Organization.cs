@@ -161,6 +161,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentWaterSourcePrice> CostCurrentWaterSourcePrices { get; set; }
 
+        public ICollection<CostForcastConsumptionReport> CostForcastConsumptionReport { get; set; }
+
         #endregion
     }
 }
