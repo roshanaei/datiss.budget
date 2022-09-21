@@ -259,6 +259,9 @@ namespace Datiss.Budget.DataLayer.Context
         public virtual DbSet<CostForcastPipingW> CostForcastPipingW { get; set; }
         public virtual DbSet<CostForcastPipingWs> CostForcastPipingWs { get; set; }
         public virtual DbSet<CostForcastBuyDescription> CostForcastBuyDescription { get; set; }
+        public virtual DbSet<CostForcastConsumptionReport> CostForcastConsumptionReport { get; set; }
+
+        
 
 
 
@@ -308,7 +311,8 @@ namespace Datiss.Budget.DataLayer.Context
                 .ApplyConfiguration(new CostCurrentPrescriptionBaseInfoConfiguration())
                 .ApplyConfiguration(new CostForcastPipingWConfiguration())
                 .ApplyConfiguration(new CostForcastPipingWsConfiguration())
-                .ApplyConfiguration(new CostForcastBuyDescriptionConfiguration());
+                .ApplyConfiguration(new CostForcastBuyDescriptionConfiguration())
+                .ApplyConfiguration(new CostForcastConsumptionReportConfiguration());
         }
     }
 }

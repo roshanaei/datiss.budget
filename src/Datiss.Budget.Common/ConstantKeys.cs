@@ -55,7 +55,9 @@
         public const string __CostCurrentUnitType = "CostCurrentUnit";
         public const string __ResourcesReportType = "ResourcesReportType";
         public const string __ReportCategory = "ReportCategory";
-
-
-      }
+        public const string __CFConsumptionReportType = "CFConsumptionReport";
+        public const string __CCProfitLossReportType = "CCProfitLossReport";
+        public const string __GeneralWaterReportType = "GeneralWaterReport";
+        public const string __GeneralWasteReportType = "GeneralWasteReport";
+    }
 }
