@@ -1,0 +1,134 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    let rowData = {};
+
+    function editRow(id) {
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_SectionType_' + id);
+        $('#divOutput_FunctionalYear_1_' + id).hide();
+        $('#divOutput_FunctionalBasicYear_' + id).hide();
+        $('#divOutput_ApproveYear_1_' + id);
+        $('#divOutput_ForcastY_' + id);
+
+        //show input elements
+        $('#divInput_Org_' + id).show();
+        $('#divInput_FunctionalYear_1_' + id).show();
+        $('#divInput_FunctionalBasicYear_' + id).show();
+
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.functionalYear_1 = $('#inputFunctionalYear_1_' + id).val();
+        rowData.functionalBasicYear = $('#inputFunctionalBasicYear_' + id).val();
+    }
+
+    function cancelEditRow(id) {
+
+        let row = $('#row_' + id);
+
+        //Hide input elements
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_FunctionalYear_1_' + id).hide();
+        $('#divInput_FunctionalBasicYear_' + id).hide();
+
+        //Reverting to OriginalData
+        if (rowData != null) {
+            $('#inputFunctionalYear_1_' + id).val(rowData.functionalYear_1);
+            $('#inputFunctionalBasicYear_' + id).val(rowData.functionalBasicYear);
+        }
+
+        //Show output elements
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_FunctionalYear_1_' + id).show();
+        $('#divOutput_FunctionalBasicYear_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+        var model = {};
+        model.id = id;
+        model.yearId = $('#yearId').val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.sectionTypeId = $('#inputSectionType_' + id).val();
+        model.functionalYear_1 = $('#inputFunctionalYear_1_' + id).val();
+        model.functionalBasicYear = $('#inputFunctionalBasicYear_' + id).val();
+        model.approveYear_1 = $('#inputApproveYear_1_' + id).val();
+        model.forcastY = $('#inputForcastY_' + id).val();
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(CostCurrentProfitLossReportController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                rowData = {};
+                rowData.organizationId = model.organizationId;
+                rowData.functionalYear_1 = model.functionalYear_1;
+                rowData.functionalBasicYear = model.functionalBasicYear;
+
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#spanFunctionalYear_1_' + id).text(data.functionalYear_1);
+                $('#spanFunctionalBasicYear_' + id).text(data.functionalBasicYear);
+
+
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+</script>
