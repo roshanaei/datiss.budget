@@ -150,6 +150,12 @@ namespace Datiss.Budget.Services.Infrastructure
                   .Map(d => d.AssetTypeDisplay, s => s.Asset != null ? s.Asset.Title : null)
                   .Map(d => d.AssetDetailTypeDisplay, s => s.AssetDetail != null ? s.AssetDetail.Title : null)
                   .Map(d => d.MeasurementTypeDisplay, s => s.Measurement != null ? s.Measurement.Title : null);
+
+            TypeAdapterConfig<CostCurrentProfitLossReport, CostCurrentProfitLossReportDTO>
+                  .NewConfig()
+                  .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
+                  .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
+                  .Map(d => d.SectionTypeDisplay, s => s.SectionType != null ? s.SectionType.Title : null);
         }
     }
 }
