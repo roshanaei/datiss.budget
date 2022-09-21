@@ -87,7 +87,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(2, 1, row - 1, 10);
+            var range = sheet.Range(2, 1, row - 1, 6);
             range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
 
             //Other
