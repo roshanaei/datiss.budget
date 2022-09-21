@@ -261,6 +261,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<Report> ReportCategoryType { get; set; }
 
+        public ICollection<CostForcastConsumptionReport> CostForcastConsumptionReport { get; set; }
 
         #endregion
     }
