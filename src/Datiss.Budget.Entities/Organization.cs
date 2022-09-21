@@ -163,6 +163,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostForcastConsumptionReport> CostForcastConsumptionReport { get; set; }
 
+        public ICollection<CostCurrentProfitLossReport> CostCurrentProfitLossReport { get; set; }
+
         #endregion
     }
 }
