@@ -314,7 +314,7 @@
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
                     console.log(params);
-                    let deleteUrl = '@Url.Action(CostCurrentReportController.ACTION_DeleteRecords)';
+                    let deleteUrl = '@Url.Action(CostCurrentProfitLossReportController.ACTION_DeleteRecords)';
                     console.log(deleteUrl);
 
                     $.ajax({
@@ -349,7 +349,7 @@
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
                             }).then(function(result) {
-                                document.location.href = '@Url.Action(CostCurrentReportController.ACTION_Index, new { page = 1 })';
+                                document.location.href = '@Url.Action(CostCurrentProfitLossReportController.ACTION_Index, new { page = 1 })';
                             });
                         },
                         error: function(request, option, err) {
@@ -421,7 +421,7 @@
         $(document).on('click', '.openCopy', function() {
             $.ajax({
                 type: 'GET',
-                url: '@Url.Action(CostCurrentReportController.ACTION_Copy)',
+                url: '@Url.Action(CostCurrentProfitLossReportController.ACTION_Copy)',
                 success: function(data, status, settings) {
                     $('#divCopy').html('');
                     $("#divCopy").html(data);
@@ -456,7 +456,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(CostCurrentReportController.ACTION_Calculation)',
+                url: '@Url.Action(CostCurrentProfitLossReportController.ACTION_Calculation)',
                 data: model,
                 success: function(data, status, settings) {
 
@@ -488,7 +488,7 @@
                         confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                         buttonsStyling: false,
                     }).then(function(result) {
-                        document.location.href = '@Url.Action(CostCurrentReportController.ACTION_Index)';
+                        document.location.href = '@Url.Action(CostCurrentProfitLossReportController.ACTION_Index)';
                     });
                 },
                 error: function(request, options, err) {
@@ -514,7 +514,7 @@
             $(".olvy").css("display", "block");
 
             $.ajax({
-                url: '@Url.Action(CostCurrentReportController.ACTION_ImportExcel)',
+                url: '@Url.Action(CostCurrentProfitLossReportController.ACTION_ImportExcel)',
                 type: 'POST',
                 data: fdata,
                 processData: false,
@@ -561,7 +561,7 @@
                                 $(".olvy").css("display", "block");
 
                                 $.ajax({
-                                    url: '@Url.Action(CostCurrentReportController.ACTION_ImportExcel)',
+                                    url: '@Url.Action(CostCurrentProfitLossReportController.ACTION_ImportExcel)',
                                     type: 'POST',
                                     data: fdata,
                                     processData: false,
@@ -596,7 +596,7 @@
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
                                             }).then(function(result) {
-                                                document.location.href = '@Url.Action(CostCurrentReportController.ACTION_Index)';
+                                                document.location.href = '@Url.Action(CostCurrentProfitLossReportController.ACTION_Index)';
                                             });
                                         }
 
@@ -629,7 +629,7 @@
                             confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                             buttonsStyling: false,
                         }).then(function(result) {
-                            document.location.href = '@Url.Action(CostCurrentReportController.ACTION_Index)';
+                            document.location.href = '@Url.Action(CostCurrentProfitLossReportController.ACTION_Index)';
                         });
                     }
 
@@ -656,7 +656,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action(CostCurrentReportController.ACTION_Copy)',
+                url: '@Url.Action(CostCurrentProfitLossReportController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
                 success: function(data, status, settings) {
