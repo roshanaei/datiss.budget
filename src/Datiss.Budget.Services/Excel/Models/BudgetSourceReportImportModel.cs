@@ -11,21 +11,15 @@ namespace Datiss.Budget.Services.Excel.Models
         public int OrganizationId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "C")]
-        public string ActivityName { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "D")]
-        public int? Activity { get; set; }
-
-        [Column(MappingDirections.Both, Letter = "E")]
         public string SectionTypeDisplay { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "F")]
-        public int SectionTypeId { get; set; }
+        [Column(MappingDirections.Both, Letter = "D")]
+        public int? SectionTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "G")]
+        [Column(MappingDirections.Both, Letter = "E")]
         public long FunctionalBasicYear { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "H")]
+        [Column(MappingDirections.Both, Letter = "F")]
         public long FunctionalYear_1 { get; set; }
     }
 }
