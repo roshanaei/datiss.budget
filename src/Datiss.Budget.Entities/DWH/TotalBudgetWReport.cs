@@ -21,6 +21,8 @@ namespace Datiss.Budget.Entities.DWH
 
         public int SectionTypeId { get; set; }
 
+        public int UnitTypeId { get; set; }
+
         public long FunctionalYear_1 { get; set; }
 
         public long FunctionalBasicYear { get; set; }
@@ -42,6 +44,9 @@ namespace Datiss.Budget.Entities.DWH
         public Organization Organization { get; set; }
 
         public Constant SectionType { get; set; }
+
+        public Constant UnitType { get; set; }
+
 
         #endregion
     }

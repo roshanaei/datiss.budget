@@ -39,6 +39,11 @@ namespace Datiss.Budget.DataLayer.Configurations
                     .WithMany(x => x.TotalBudgetWReport)
                     .HasForeignKey(x => x.SectionTypeId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(x => x.UnitType)
+                    .WithMany(x => x.TotalBudgetWReportUnitType)
+                    .HasForeignKey(x => x.UnitTypeId)
+                     .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
