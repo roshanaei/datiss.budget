@@ -265,6 +265,8 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentProfitLossReport> CostCurrentProfitLossReport { get; set; }
 
+        public ICollection<TotalBudgetW_Report> TotalBudgetW_Report { get; set; }
+
 
         #endregion
     }
