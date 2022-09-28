@@ -379,6 +379,8 @@ namespace Datiss.Budget.Web.Controllers
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
             var sectionTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__GeneralWaterReportType);
+            var unitTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__MeasurementType);
+
 
 
             var items = new List<TotalBudgetWReportDTO>();
@@ -391,6 +393,8 @@ namespace Datiss.Budget.Web.Controllers
                     {
                         SectionTypeDisplay = sec.Title,
                         SectionTypeId = sec.Id,
+                        UnitTypeDisplay =sec.Title,
+                        UnitTypeId = sec.Id,
                         OrganizationId = org.Id,
                         OrganizationDisplay = org.Title,
                         Year = year.Year,
