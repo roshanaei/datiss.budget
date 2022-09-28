@@ -8,9 +8,9 @@ using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Entities.DWH
 {
-    public class TotalBudgetW_Report :IAuditableEntity
+    public class TotalBudgetWReport :IAuditableEntity
     {
-        public TotalBudgetW_Report() { }
+        public TotalBudgetWReport() { }
 
         #region Properties
         public int Id { get; set; }
