@@ -303,7 +303,7 @@ namespace Datiss.Budget.Services
             var descendents = await _organizationService
                 .GetAllDescendentsAsync(_userContext.OrganizationId);
 
-            var sectionTypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CFConsumptionReportType &&
+            var sectionTypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__GeneralWaterReportType &&
                                                     x.Parent.ParentId == null &&
                                                     x.Status != EntityStatus.Deleted);
 
