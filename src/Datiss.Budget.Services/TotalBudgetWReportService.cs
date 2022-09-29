@@ -316,7 +316,7 @@ namespace Datiss.Budget.Services
             foreach (var rec in records)
             {
                 rec.YearId = yearId;
-
+                rec.UnitTypeId = 312;
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {

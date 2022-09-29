@@ -89,6 +89,22 @@
                             <span id="spanApproveYear_1_@item.Id">@item.ApproveYear_1Display </span>
                         </div>
                     </td>
+                     <td>
+                        <div id="divInput_ForcastFunctionalPercent_@item.Id" style="display: none">
+                            <input class="form-control" id="inputForcastFunctionalPercent_@item.Id" value="@item.ForcastFunctionalPercent" type="number" />
+                        </div>
+                        <div id="divOutput_ForcastFunctionalPercent_@item.Id">
+                            <span id="spanForcastFunctionalPercent_@item.Id">@item.ForcastFunctionalPercentDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ForcastBudgetPercent_@item.Id" style="display: none">
+                            <input class="form-control" id="inputForcastBudgetPercent_@item.Id" value="@item.ForcastBudgetPercent" type="number" />
+                        </div>
+                        <div id="divOutput_ForcastBudgetPercent_@item.Id">
+                            <span id="spanForcastBudgetPercent_@item.Id">@item.ForcastBudgetPercentDisplay </span>
+                        </div>
+                    </td>
                     <td>
                         <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
                             <i class="fa ft-edit fa-1x"></i>
