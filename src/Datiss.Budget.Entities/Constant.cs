@@ -269,6 +269,10 @@ namespace Datiss.Budget.Entities
 
         public ICollection<TotalBudgetWReport> TotalBudgetWReportUnitType { get; set; }
 
+        public ICollection<TotalBudgetWsReport> TotalBudgetWsReport { get; set; }
+
+        public ICollection<TotalBudgetWsReport> TotalBudgetWsReportUnitType { get; set; }
+
         #endregion
     }
 }
