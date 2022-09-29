@@ -176,28 +176,6 @@
                                                         <input type="checkbox"
                                                                class="custom-control-input"
                                                                checked
-                                                               name="col-8"
-                                                               id="col-8" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-8"><span style="">درصد دریافت</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
-                                                               name="col-9"
-                                                               id="col-9" />
-                                                        <label class="custom-control-label my-font"
-                                                               for="col-9"><span style="">مبلغ</span></label>
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown-item">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox"
-                                                               class="custom-control-input"
-                                                               checked
                                                                name="col-10"
                                                                id="col-10" />
                                                         <label class="custom-control-label my-font"
@@ -276,10 +254,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8,9,10,11';
+        let allColumns = '1,2,3,4,5,6,7,8,9';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,";
+        let showingColmuns = "1,2,3,4,5,6,7,8,9,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
