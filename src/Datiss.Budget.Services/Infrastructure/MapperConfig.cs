@@ -162,6 +162,12 @@ namespace Datiss.Budget.Services.Infrastructure
                   .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
                   .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
                   .Map(d => d.SectionTypeDisplay, s => s.SectionType != null ? s.SectionType.Title : null);
+
+            TypeAdapterConfig<TotalBudgetWsReport, TotalBudgetWsReportDTO>
+                  .NewConfig()
+                  .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
+                  .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
+                  .Map(d => d.SectionTypeDisplay, s => s.SectionType != null ? s.SectionType.Title : null);
         }
     }
 }
