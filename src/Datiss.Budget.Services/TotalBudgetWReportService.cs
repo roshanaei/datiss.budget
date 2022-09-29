@@ -102,6 +102,7 @@ namespace Datiss.Budget.Services
 
                     result.OrganizationDisplay = organizationDisplay;
                     result.SectionTypeDisplay = model.SectionTypeTitle;
+                    result.UnitTypeDisplay = model.UnitTypeTitle;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                                   
                     return ValidationResult<TotalBudgetWReportDTO>.Success(result);
@@ -185,6 +186,7 @@ namespace Datiss.Budget.Services
             result.Items = await query.Include(x => x.FinanceYear)
                                         .Include(x => x.Organization)
                                         .Include(x => x.SectionType)
+                                        .Include(x => x.UnitType)
                                         .Select(x => x.Adapt<TotalBudgetWReportDTO>())
                                         .ToListAsync();
 
@@ -285,6 +287,7 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.FinanceYear)
                                     .Include(x => x.Organization)
                                     .Include(x => x.SectionType)
+                                    .Include(x => x.UnitType)
                                     .Select(x => x.Adapt<TotalBudgetWReportDTO>())
                                     .ToListAsync();
 
