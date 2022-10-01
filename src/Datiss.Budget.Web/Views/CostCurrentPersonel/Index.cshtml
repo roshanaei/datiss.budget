@@ -360,16 +360,14 @@
                 params.yearId = $('#yearId option:selected').val();
                 params.orgId = $('#organizationId option:selected').val();
                 params.recordType = $('#recordTypeId option:selected').val();
-                console.log(params);
                 let deleteUrl = '@Url.Action(CostCurrentPersonelController.ACTION_DeleteRecords)';
-                console.log(deleteUrl);
-
+                $(".olvy").css("display", "block");
                 $.ajax({
                     url: deleteUrl,
                     type: 'POST',
                     data: params,
                     success: function(data, status, settings) {
-                        console.log(status);
+                        $(".olvy").css("display", "none");
                         if (data.hasError) {
                             Swal.fire({
                                 title: '<span class="my-font">خطا</span>',
@@ -400,6 +398,7 @@
                         });
                     },
                     error: function(request, option, err) {
+                        $(".olvy").css("display", "none");
                         if (request.status == 401 || request.status == 403) {
                             ShowPermissionErorr();
                             return;
@@ -553,9 +552,8 @@
             processData: false,
             contentType: false,
             success: function(data, status, settings) {
-                console.log(data);
+               $(".olvy").css("display", "none");
                 if (data.hasError) {
-                    $(".olvy").css("display", "none");
                     Swal.fire({
                         title: '<span class="my-font">خطا</span>',
                         html: `<span class="my-font">${data.message}</span>`,
@@ -571,7 +569,6 @@
                 }
 
                 if (data.ask) {
-                    $(".olvy").css("display", "none");
                     Swal.fire({
                         html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
                         //text: "توجه داشته باشید که این عملیات قابل برگشت نیست!",
@@ -601,8 +598,8 @@
                                 processData: false,
                                 contentType: false,
                                 success: function(data, status, settings) {
+                                    $(".olvy").css("display", "none");
                                     if (data.hasError) {
-                                        $(".olvy").css("display", "none");
                                         Swal.fire({
                                             title: '<span class="my-font">خطا</span>',
                                             html: `<span class="my-font">${data.message}</span>`,
@@ -618,7 +615,6 @@
                                     }
 
                                     if (!data.hasError) {
-                                        $(".olvy").css("display", "none");
                                         Swal.fire({
                                             title: '<span class="my-font">عملیات موفق</span>',
                                             html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -639,6 +635,7 @@
                                     }
                                 },
                                 error: function(request, options, err) {
+                                    $(".olvy").css("display", "none");
                                     console.log(err);
                                 }
                             });
@@ -651,7 +648,6 @@
                     });
                 }
                 if (!data.hasError && !data.ask) {
-                    $(".olvy").css("display", "none");
                     Swal.fire({
                         title: '<span class="my-font">عملیات موفق</span>',
                         html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
@@ -684,8 +680,7 @@
         let model = {};
         model.sourceOrgId = $('#organizationId option:selected').val();
         model.targetYearId = $('#yearId option:selected').val();
-
-        console.log(model);
+        $(".olvy").css("display", "block");
 
         $.ajax({
             type: 'POST',
@@ -693,6 +688,7 @@
             data: model,
             dataType: 'json',
             success: function(data, status, settings) {
+                $(".olvy").css("display", "none");
                 if (data._HasError) {
                     Swal.fire({
                         title: '<span class="my-font">خطا</span>',
@@ -724,6 +720,7 @@
                 });
             },
             error: function(request, options, err) {
+                $(".olvy").css("display", "none");
                 console.log(err);
                 alert('عملیات کپی با خطا مواجه شد.');
             }
