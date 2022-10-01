@@ -202,7 +202,7 @@ namespace Datiss.Budget.Services
             };
 
             await _uow.ExecuteScalar<ValidationResult>(
-                                    "[dbo].[TotalBudgetWReport_Calculation] @YearId, @OrganizationId",
+                                    "[dbo].[TotalBudgetWReport_Insert] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray());
 
 
