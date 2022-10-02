@@ -200,7 +200,7 @@ namespace Datiss.Budget.Services
             };
 
             await _uow.ExecuteScalar<ValidationResult>(
-                                    "[dbo].[CostForcastConsumptionReport_Calculation] @YearId, @OrganizationId",
+                                    "[dbo].[CostForcastConsumptionReport_Insert] @YearId, @OrganizationId",
                                     parameters: sqlParams.ToArray());
 
 
