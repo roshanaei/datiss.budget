@@ -92,6 +92,39 @@
                         </div>
                     </td>
                     <td>
+                        <div id="divInput_ReceiptPercent_@item.Id" style="display: none">
+                            <input class="form-control" id="inputReceiptPercent_@item.Id" value="@item.ReceiptPercent" type="number" />
+                        </div>
+                        <div id="divOutput_ReceiptPercent_@item.Id">
+                            <span id="spanReceiptPercent_@item.Id">@item.ReceiptPercentDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Fee_@item.Id" style="display: none">
+                            <input class="form-control" id="inputFee_@item.Id" value="@item.Fee" type="number" />
+                        </div>
+                        <div id="divOutput_Fee_@item.Id">
+                            <span id="spanFee_@item.Id">@item.FeeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ForcastFunctionalPercent_@item.Id" style="display: none">
+                            <input class="form-control" id="inputForcastFunctionalPercent_@item.Id" value="@item.ForcastFunctionalPercent" type="number" />
+                        </div>
+                        <div id="divOutput_ForcastFunctionalPercent_@item.Id">
+                            <span id="spanForcastFunctionalPercent_@item.Id">@item.ForcastFunctionalPercentDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_ForcastBudgetPercent_@item.Id" style="display: none">
+                            <input class="form-control" id="inputForcastBudgetPercent_@item.Id" value="@item.ForcastBudgetPercent" type="number" />
+                        </div>
+                        <div id="divOutput_ForcastBudgetPercent_@item.Id">
+                            <span id="spanForcastBudgetPercent_@item.Id">@item.ForcastBudgetPercentDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+
                         <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
                             <i class="fa ft-edit fa-1x"></i>
                         </a>
