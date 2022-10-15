@@ -31,8 +31,8 @@ namespace Datiss.Budget.ViewModels
         public int ContractTypeId { get; set; }
         public string ContractTypeDisplay { get; set; }
 
-        public int JobDepartmentTypeId { get; set; }
-        public string JobDepartmentTypeDisplay { get; set; }
+        //public int JobDepartmentTypeId { get; set; }
+        //public string JobDepartmentTypeDisplay { get; set; }
 
         public int CostCenterTypeId { get; set; }
         public string CostCenterTypeDisplay { get; set; }
@@ -52,7 +52,7 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> InputOrganizationSource { get; set; }
         public IList<SelectListItem> GradeSource { get; set; }
-        public IList<SelectListItem> JobDepartmentSource { get; set; }
+        //public IList<SelectListItem> JobDepartmentSource { get; set; }
         public IList<SelectListItem> JobStatusSource { get; set; }
         public IList<SelectListItem> JobStatusDetailSource { get; set; }
         public IList<SelectListItem> CostCenterSource { get; set; }
@@ -72,12 +72,12 @@ namespace Datiss.Budget.ViewModels
                 Value = x.Id.ToString()
             }).ToList();
 
-        public void SetJobDepartment(IEnumerable<DropDownItemViewModel> source)
-            => JobDepartmentSource = source.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList();
+        //public void SetJobDepartment(IEnumerable<DropDownItemViewModel> source)
+        //    => JobDepartmentSource = source.Select(x => new SelectListItem
+        //    {
+        //        Text = x.Title,
+        //        Value = x.Id.ToString()
+        //    }).ToList();
 
         public void SetJobStatusSource(IEnumerable<DropDownItemViewModel> source)
             => JobStatusSource = source.Select(x => new SelectListItem
@@ -132,7 +132,7 @@ namespace Datiss.Budget.ViewModels
 
         public int ContractTypeId { get; set; }
 
-        public int JobDepartmentTypeId { get; set; }
+        //public int JobDepartmentTypeId { get; set; }
 
         public int CostCenterTypeId { get; set; }
 
@@ -195,7 +195,7 @@ namespace Datiss.Budget.ViewModels
 
         public IList<SelectListItem> InputOrganizationSource { get; set; }
         public IList<SelectListItem> GradeSource { get; set; }
-        public IList<SelectListItem> JobDepartmentSource { get; set; }
+        //public IList<SelectListItem> JobDepartmentSource { get; set; }
         public IList<SelectListItem> JobStatusSource { get; set; }
         public IList<SelectListItem> JobStatusDetailSource { get; set; }
         public IList<SelectListItem> CostCenterSource { get; set; }
@@ -215,12 +215,12 @@ namespace Datiss.Budget.ViewModels
                 Value = x.Id.ToString()
             }).ToList();
 
-        public void SetJobDepartment(IEnumerable<DropDownItemViewModel> source)
-            => JobDepartmentSource = source.Select(x => new SelectListItem
-            {
-                Text = x.Title,
-                Value = x.Id.ToString()
-            }).ToList();
+        //public void SetJobDepartment(IEnumerable<DropDownItemViewModel> source)
+        //    => JobDepartmentSource = source.Select(x => new SelectListItem
+        //    {
+        //        Text = x.Title,
+        //        Value = x.Id.ToString()
+        //    }).ToList();
 
         public void SetJobStatusSource(IEnumerable<DropDownItemViewModel> source)
             => JobStatusSource = source.Select(x => new SelectListItem
@@ -276,8 +276,8 @@ namespace Datiss.Budget.ViewModels
         public int ContractTypeId { get; set; }
         public string ContractTypeDisplay { get; set; }
 
-        public int JobDepartmentTypeId { get; set; }
-        public string JobDepartmentTypeDisplay { get; set; }
+        //public int JobDepartmentTypeId { get; set; }
+        //public string JobDepartmentTypeDisplay { get; set; }
 
         public int CostCenterTypeId { get; set; }
         public string CostCenterTypeDisplay { get; set; }

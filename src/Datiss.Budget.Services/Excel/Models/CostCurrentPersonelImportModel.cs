@@ -37,82 +37,82 @@ namespace Datiss.Budget.Services.Excel.Models
         [Column(MappingDirections.Both, Letter = "K")]
         public int GradeTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "L")]
-        public int JobDepartmentTypeId { get; set; }
+        //[Column(MappingDirections.Both, Letter = "L")]
+        //public int JobDepartmentTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "M")]
+        [Column(MappingDirections.Both, Letter = "L")]
         public int JobStatusTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "N")]
+        [Column(MappingDirections.Both, Letter = "M")]
         public int JobStatusDetailTypeId { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "O")]
+        [Column(MappingDirections.Both, Letter = "N")]
         public int ExperienceYear { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "P")]
+        [Column(MappingDirections.Both, Letter = "O")]
         public int ExperienceMonth { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "Q")]
+        [Column(MappingDirections.Both, Letter = "P")]
         public int OverTimeValue { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "R")]
+        [Column(MappingDirections.Both, Letter = "Q")]
         public long OverTimeCost { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "S")]
+        [Column(MappingDirections.Both, Letter = "R")]
         public int HolidayValue { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "T")]
+        [Column(MappingDirections.Both, Letter = "S")]
         public long HolidayCost { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "U")]
+        [Column(MappingDirections.Both, Letter = "T")]
         public long ShiftPercent { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "V")]
+        [Column(MappingDirections.Both, Letter = "U")]
         public long ShiftPCost { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "W")]
+        [Column(MappingDirections.Both, Letter = "V")]
         public long MissionCount { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "X")]
+        [Column(MappingDirections.Both, Letter = "W")]
         public long MissionDayCost { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "Y")]
+        [Column(MappingDirections.Both, Letter = "X")]
         public long HardWorkingRt { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "Z")]
+        [Column(MappingDirections.Both, Letter = "Y")]
         public long TrafficRt { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "AA")]
+        [Column(MappingDirections.Both, Letter = "Z")]
         public long HouseRt { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "AB")]
+        [Column(MappingDirections.Both, Letter = "AA")]
         public long ChildRt { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "AC")]
+        [Column(MappingDirections.Both, Letter = "AB")]
         public long StuffRt { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "AD")]
+        [Column(MappingDirections.Both, Letter = "AC")]
         public long Education { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "AE")]
+        [Column(MappingDirections.Both, Letter = "AD")]
         public long InsuranceMaster { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "AF")]
+        [Column(MappingDirections.Both, Letter = "AE")]
         public long InsuranceAging { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "AG")]
+        [Column(MappingDirections.Both, Letter = "AF")]
         public long HolidayYearly { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "AH")]
+        [Column(MappingDirections.Both, Letter = "AG")]
         public long MilitaryServiceCost { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "AI")]
+        [Column(MappingDirections.Both, Letter = "AH")]
         public long EndJobReward { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "AJ")]
+        [Column(MappingDirections.Both, Letter = "AI")]
         public long WelfareCost { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "AK")]
+        [Column(MappingDirections.Both, Letter = "AJ")]
         public long RetirementMonth { get; set; }
 
         
