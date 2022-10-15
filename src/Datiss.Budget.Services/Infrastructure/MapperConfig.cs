@@ -70,7 +70,7 @@ namespace Datiss.Budget.Services.Infrastructure
                 .Map(d => d.CostCenterTypeDisplay, s => s.CostCenter != null ? s.CostCenter.Title : null)
                 .Map(d => d.GradeTypeDisplay, s => s.Grade != null ? s.Grade.Title : null)
                 .Map(d => d.ContractTypeDisplay, s => s.Contract != null ? s.Contract.Title : null)
-                .Map(d => d.JobDepartmentTypeDisplay, s => s.JobDepartment != null ? s.JobDepartment.Title : null)
+                //.Map(d => d.JobDepartmentTypeDisplay, s => s.JobDepartment != null ? s.JobDepartment.Title : null)
                 .Map(d => d.JobStatusDetailTypeDisplay, s => s.JobStatusDetail != null ? s.JobStatusDetail.Title : null)
                 .Map(d => d.JobStatusTypeDisplay, s => s.JobStatus != null ? s.JobStatus.Title : null);
 

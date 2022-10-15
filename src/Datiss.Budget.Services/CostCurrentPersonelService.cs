@@ -87,7 +87,7 @@ namespace Datiss.Budget.Services
                 ContractTypeId = model.ContractTypeId,
                 PersonelCode = model.PersonelCode,
                 JobStatusTypeId = model.JobStatusTypeId,
-                JobDepartmentTypeId = model.JobDepartmentTypeId,
+                JobDepartmentTypeId = 423,
                 JobStatusDetailTypeId = model.JobStatusDetailTypeId,
                 OverTimeValue = model.OverTimeValue,
                 HolidayValue = model.HolidayValue,
@@ -162,7 +162,7 @@ namespace Datiss.Budget.Services
                     entity.GenderId = model.GenderId;
                     entity.GradeTypeId = model.GradeTypeId;
                     entity.ContractTypeId = model.ContractTypeId;
-                    entity.JobDepartmentTypeId = model.JobDepartmentTypeId;
+                    //entity.JobDepartmentTypeId = model.JobDepartmentTypeId;
                     entity.CostCenterTypeId = model.CostCenterTypeId;
                     entity.JobStatusTypeId = model.JobStatusTypeId;
                     entity.JobStatusDetailTypeId = model.JobStatusDetailTypeId;
@@ -210,7 +210,7 @@ namespace Datiss.Budget.Services
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
                     result.GradeTypeDisplay = (await _constSet.FindAsync(model.GradeTypeId))?.Title;
                     result.ContractTypeDisplay = (await _constSet.FindAsync(model.ContractTypeId))?.Title;
-                    result.JobDepartmentTypeDisplay = (await _constSet.FindAsync(model.JobDepartmentTypeId))?.Title;
+                    //result.JobDepartmentTypeDisplay = (await _constSet.FindAsync(model.JobDepartmentTypeId))?.Title;
                     result.CostCenterTypeDisplay = (await _constSet.FindAsync(model.CostCenterTypeId))?.Title;
                     result.JobStatusTypeDisplay = (await _constSet.FindAsync(model.JobStatusTypeId))?.Title;
                     result.JobStatusDetailTypeDisplay = (await _constSet.FindAsync(model.JobStatusDetailTypeId))?.Title;
@@ -458,7 +458,7 @@ namespace Datiss.Budget.Services
             foreach (var rec in records)
             {
                 rec.YearId = yearId;
-
+                rec.JobDepartmentTypeId = 423;
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
@@ -490,12 +490,12 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.ContractTypeId)
                         );
                 }
-                if (!await jobdepartmenttypes.AnyAsync(x => x.Id == rec.JobDepartmentTypeId))
-                {
-                    return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.JobDepartmentTypeId)
-                        );
-                }
+                //if (!await jobdepartmenttypes.AnyAsync(x => x.Id == rec.JobDepartmentTypeId))
+                //{
+                //    return ImportResult.Failed(
+                //        string.Format(ServiceMessages.ImportExcelInvalidTitle, rowIndex, rec.JobDepartmentTypeId)
+                //        );
+                //}
                 if (!await jobstatustypes.AnyAsync(x => x.Id == rec.JobStatusTypeId))
                 {
                     return ImportResult.Failed(

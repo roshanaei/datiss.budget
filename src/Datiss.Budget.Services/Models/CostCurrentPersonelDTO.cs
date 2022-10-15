@@ -23,7 +23,7 @@ namespace Datiss.Budget.Services.Models
 
         public int ContractTypeId { get; set; }
 
-        public int JobDepartmentTypeId { get; set; }
+        //public int JobDepartmentTypeId { get; set; }
 
         public int CostCenterTypeId { get; set; }
         public string CostCenterTypeTitle { get; set; }
@@ -231,8 +231,8 @@ namespace Datiss.Budget.Services.Models
         public int ContractTypeId { get; set; }
         public string ContractTypeDisplay { get; set; }
 
-        public int JobDepartmentTypeId { get; set; }
-        public string JobDepartmentTypeDisplay { get; set; }
+        //public int JobDepartmentTypeId { get; set; }
+        //public string JobDepartmentTypeDisplay { get; set; }
 
         public int CostCenterTypeId { get; set; }
         public string CostCenterTypeDisplay { get; set; }
