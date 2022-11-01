@@ -13,6 +13,59 @@ namespace Datiss.Budget.Reports.Excel
     {
         private const string _sheetName = "IncomeCurrentReport";
 
+        public static XLWorkbook ExportExcel(this IEnumerable<IncomeCurrentReportDTO> items)
+        {
+            if (items == null || !items.Any())
+                return null;
+
+            var workbook = new XLWorkbook();
+            var sheet = workbook.Worksheets.Add(_sheetName);
+
+            sheet.RightToLeft = true;
+
+            sheet.Cell(1, 1).Value = "سال";
+            sheet.Cell(1, 2).Value = "سازمان";
+            sheet.Cell(1, 3).Value = "بخش";
+            sheet.Cell(1, 4).Value = "شرح";
+
+            sheet.Cell(1, 5).Value = "واحد";
+            sheet.Cell(1, 6).Value = "پیش بینی";
+            sheet.Cell(1, 7).Value = "عملکرد سال پایه";
+            sheet.Cell(1, 8).Value = $"عملکرد سال ما قبل";
+            sheet.Cell(1, 9).Value = $"مصوب سال ما قبل";
+
+            var totalcount = items.Count();
+
+            int row = 2;
+            for (int i = 0; i < totalcount; i++)
+            {
+                var item = items.ElementAt(i);
+                sheet.Cell(row, 1).Value = item.Year.ToString();
+                sheet.Cell(row, 2).Value = item.OrganizationDisplay;
+                sheet.Cell(row, 3).Value = item.Activity;
+                sheet.Cell(row, 4).Value = item.SectionTypeDisplay;
+                sheet.Cell(row, 5).Value = item.UnitTypeDisplay;
+                sheet.Cell(row, 6).Value = item.ForcastY;
+                sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                sheet.Cell(row, 7).Value = item.FunctionalBasicYear;
+                sheet.Cell(row, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                sheet.Cell(row, 8).Value = item.FunctionalYear_1;
+                sheet.Cell(row, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+                sheet.Cell(row, 9).Value = item.ApproveYear_1;
+                sheet.Cell(row, 9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+
+                row++;
+            }
+            var range = sheet.Range(1, 1, row - 1, 9);
+            var table = range.CreateTable($"{_sheetName}_Table");
+            table.Theme = XLTableTheme.TableStyleLight16;
+            sheet.Columns().AdjustToContents();
+
+            return workbook;
+        }
+
+
+
         public static XLWorkbook GetImportTemplate(this IEnumerable<IncomeCurrentReportDTO> items, int year)
         {
             if (items == null || !items.Any())
