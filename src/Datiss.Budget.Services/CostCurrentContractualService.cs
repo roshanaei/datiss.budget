@@ -86,7 +86,7 @@ namespace Datiss.Budget.Services
             var organizationDisplay = (await _orgDbSet.FindAsync(model.OrganizationId)).Title;
             try
             {
-                if (await checkLogicAsync(model.YearId, model.ContractDescription))
+                if (true)
                 {
                     await _dbSet.AddAsync(entity);
                     try
@@ -130,7 +130,7 @@ namespace Datiss.Budget.Services
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.ContractDescription, model.Id))
+                if (true)
                 {
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.OrganizationId = model.OrganizationId;
@@ -318,8 +318,8 @@ namespace Datiss.Budget.Services
             {
                 foreach (var item in selfData)
                 {
-                    if (!await checkLogicAsync(destYearId, item.ContractDescription))
-                        throw new CopyDestYearHasDataException();
+                    //if (!await checkLogicAsync(destYearId, item.ContractDescription))
+                    //    throw new CopyDestYearHasDataException();
 
                     var entity = new CostCurrentContractual
                     {
@@ -478,15 +478,15 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelAccessError, rowIndex + 2)
                         );
 
-                if (!await checkLogicAsync(
-                    record.YearId,
-                    record.ContractDescription))
-                {
+                //if (!await checkLogicAsync(
+                //    record.YearId,
+                //    record.ContractDescription))
+                //{
 
-                    return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
-                        );
-                }
+                //    return ImportResult.Failed(
+                //        string.Format(ServiceMessages.ImportExcelLogicError, rowIndex + 2)
+                //        );
+                //}
 
                 rowIndex++;
             }
@@ -688,8 +688,8 @@ namespace Datiss.Budget.Services
 
                 foreach (var item in data)
                 {
-                    if (!await checkLogicAsync(targetYearId, item.ContractDescription))
-                        throw new CopyDestYearHasDataException();
+                    //if (!await checkLogicAsync(targetYearId, item.ContractDescription))
+                    //    throw new CopyDestYearHasDataException();
 
                     var entity = new CostCurrentContractual
                     {
@@ -756,25 +756,24 @@ namespace Datiss.Budget.Services
 
         #region Logics
 
-        private async Task<bool> checkLogicAsync(
-            int yearId,
-            string contractDescription,
-            int? id = null)
-        {
-            var year = await _yearSet.FindAsync(yearId);
-            year.CheckReferenceIsNull(nameof(year));
+        //private async Task<bool> checkLogicAsync(
+        //    int yearId,
+        //    int? id = null)
+        //{
+        //    var year = await _yearSet.FindAsync(yearId);
+        //    year.CheckReferenceIsNull(nameof(year));
 
-            if (year.Status == EntityStatus.Disbaled)
-                throw new DisbaledYearDataInputException();
-            if (string.IsNullOrWhiteSpace(contractDescription))
-                return true;
-            var result = id == null
-                ? await Query().AnyAsync(x => x.ContractDescription.Trim() == contractDescription.Trim())
+        //    if (year.Status == EntityStatus.Disbaled)
+        //        throw new DisbaledYearDataInputException();
+        //    if (string.IsNullOrWhiteSpace(contractDescription))
+        //        return true;
+        //    var result = id == null
+        //        ? await Query().AnyAsync(x => x.ContractDescription.Trim() == contractDescription.Trim())
 
-                : await Query().AnyAsync(x => x.ContractDescription.Trim() == contractDescription.Trim() &&
-                                              x.Id != id);
-            return !result;
-        }
+        //        : await Query().AnyAsync(x => x.ContractDescription.Trim() == contractDescription.Trim() &&
+        //                                      x.Id != id);
+        //    return !result;
+        //}
 
         #endregion
     }
