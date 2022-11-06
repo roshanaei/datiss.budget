@@ -322,7 +322,6 @@ namespace Datiss.Budget.Web.Controllers
                     hasError = true,
                     message = ViewMessages.ImportExcelInvalidFile
                 });
-
             try
             {
                 var result = await _incomeCurrentReportService.ImportExcelAsync(
@@ -369,6 +368,14 @@ namespace Datiss.Budget.Web.Controllers
                 {
                     hasError = true,
                     message = ViewMessages.ImportExcelFileSizeInvalid
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ex.Message
                 });
             }
         }
