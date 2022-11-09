@@ -27,6 +27,7 @@ namespace Datiss.Budget.Entities.DWH
         #region Navigation
         public FinanceYear FinanceYear { get; set; }
         public Organization Organization { get; set; }
+        public Constant CostCenterType { get; set; }
         public Constant SectionType { get; set; }
         public Constant UnitType { get; set; }  
         #endregion
