@@ -98,8 +98,7 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(2, 4).Value = "کد مرکز هزینه";
             sheet.Cell(2, 5).Value = "عنوان شرح";
             sheet.Cell(2, 6).Value = "کد شرح";
-            sheet.Cell(2, 7).Value = "عنوان واحد اندازه گیری";
-            sheet.Cell(2, 8).Value = "کد واحد اندازه گیری";
+
 
 
             var totalCount = items.Count();
@@ -113,12 +112,10 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 4).Value = item.CostCenterTypeId;
                 sheet.Cell(row, 5).Value = item.SectionTypeDisplay;
                 sheet.Cell(row, 6).Value = item.SectionTypeId;
-                sheet.Cell(row, 7).Value = item.UnitTypeDisplay;
-                sheet.Cell(row, 8).Value = item.UnitTypeId;
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(2, 1, row - 1, 8);
+            var range = sheet.Range(2, 1, row - 1, 6);
             range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other
