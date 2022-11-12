@@ -267,6 +267,7 @@ namespace Datiss.Budget.Services.Models
     public class CostForcastWInvestmentReportFilterDTO : FilterInputDTO
     {
         public int? YearId { get; set; }
+        public int? NumberYear { get; set; }
         public int? OrganizationId { get; set; }
 
     }
