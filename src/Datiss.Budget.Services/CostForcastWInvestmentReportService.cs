@@ -29,7 +29,7 @@ using Datiss.Budget.ViewModels;
 
 namespace Datiss.Budget.Services
 {
-    public class CostForcastWInvestmentReportService
+    public class CostForcastWInvestmentReportService : ICostForcastWInvestmentReportService
     {
         private readonly IUserContext _userContext;
         private readonly IUnitOfWork _uow;
@@ -352,28 +352,8 @@ namespace Datiss.Budget.Services
                                     .Include(x => x.CostCenterType)
                                     .Include(x => x.SectionType)
                                     .Include(x => x.UnitType)
-                                    .Select(x => new CostForcastWInvestmentReportDTO
-                                    {
-                                        Id = x.Id,
-                                        YearId = x.YearId,
-                                        Year = x.FinanceYear.Year,
-                                        OrganizationId = x.OrganizationId,
-                                        OrganizationDisplay = x.Organization.Title,
-                                        CostCenterTypeId = x.CostCenterTypeId,
-                                        CostCenterTypeDisplay = x.CostCenterType.Title,
-                                        SectionTypeId = x.SectionTypeId,
-                                        SectionTypeDisplay = x.SectionType.Title,
-                                        UnitTypeId = x.UnitTypeId,
-                                        UnitTypeDisplay = x.UnitType.Title,
-                                        Amount1 = x.Amount1,
-                                        Cost1 = x.Cost1,
-                                        Amount2 = x.Amount2,
-                                        Cost2 = x.Cost2,
-                                        Amount3 = x.Amount3,
-                                        Cost3 = x.Cost3,
-                                        Amount4 = x.Amount4,
-                                        Cost4 = x.Cost4
-                                    }).ToListAsync();
+                                    .Select(x => x.Adapt< CostForcastWInvestmentReportDTO>())
+                                    .ToListAsync();
 
             return items;
         }
@@ -399,17 +379,14 @@ namespace Datiss.Budget.Services
                                                     x.Parent.ParentId == null &&
                                                     x.Status == EntityStatus.Enabled);
 
-            var unitTypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__CIRUnit &&
-                                                 x.Parent.ParentId == null &&
-                                                 x.Status == EntityStatus.Enabled);
-
             var year = await _yearSet.FindAsync(yearId);
+            
             year.CheckReferenceIsNull($"Year not found with id: {yearId}");
 
             foreach (var rec in records)
             {
                 rec.YearId = yearId;
-
+                rec.UnitTypeId = 295;
                 var org = await _orgDbSet.FindAsync(rec.OrganizationId);
                 if (year == null || year.Status == EntityStatus.Disbaled)
                 {
@@ -433,12 +410,6 @@ namespace Datiss.Budget.Services
                 {
                     return ImportResult.Failed(
                         string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.SectionTypeId)
-                        );
-                }
-                if (!await unitTypes.AnyAsync(x => x.Id == rec.UnitTypeId))
-                {
-                    return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.UnitTypeId)
                         );
                 }
                 if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
@@ -472,36 +443,12 @@ namespace Datiss.Budget.Services
 
             var missingSectionType = new List<Constant>();
             var missingCostCenterType = new List<Constant>();
-            var missingUnitType = new List<Constant>();
 
-            string activityOrg = "";
             string costCenterTitle = "";
             string sectionOrgTitle = "";
-            string unitOrgTitle = "";
-            string missingActivity = "";
-            string sectionTitle = "";
 
             foreach (var org in existOrgs)
             {
-                //if (!records.Any(_ => _.Activity == ActivityType.Water && _.OrganizationId == org.Id))
-                //{
-                //    activityOrg = org.Title;
-                //    missingActivity = ActivityType.Water.ToDisplay();
-                //    break;
-                //}
-                //if (!records.Any(_ => _.Activity == ActivityType.Waste && _.OrganizationId == org.Id))
-                //{
-                //    activityOrg = org.Title;
-                //    missingActivity = ActivityType.Waste.ToDisplay();
-                //    break;
-                //}
-                //if (!records.Any(_ => _.Activity == null && _.OrganizationId == org.Id))
-                //{
-                //    activityOrg = org.Title;
-                //    missingActivity = "-";
-                //    break;
-                //}
-
                 foreach (var section in sectionTypes)
                 {
                     var existSectionTypeInExcel = records.Any(_ => _.SectionTypeId == section.Id &&
@@ -511,31 +458,7 @@ namespace Datiss.Budget.Services
                         missingSectionType.Add(section);
                         sectionOrgTitle = org.Title;
                     }
-                    else
-                    {
-                        var sectionKey = section.ConstantKey.Replace(".", "");
-                        var unitTypeInSection = unitTypes.Where(_ => _.ConstantKey.ToUpper().Contains(sectionKey.ToUpper()));
-                        foreach (var unit in unitTypeInSection)
-                        {
-                            var exist = records.Any(_ => _.SectionTypeId == section.Id &&
-                                                         _.OrganizationId == org.Id &&
-                                                         _.UnitTypeId == unit.Id);
-                            if (!exist)
-                            {
-                                missingUnitType.Add(unit);
-                                sectionTitle = section.Title;
-                                unitOrgTitle = org.Title;
-                            }
-                        }
-
-                    }
                 }
-            }
-
-            if (missingActivity != "")
-            {
-                return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelActivityTypeNotInExcel, missingActivity, activityOrg));
             }
 
             if (missingSectionType.Any())
@@ -547,17 +470,6 @@ namespace Datiss.Budget.Services
                 }
                 return ImportResult.Failed(
                     string.Format(ServiceMessages.ImportExcelSectionTypesNotInExcel, sectionTypeNames, sectionOrgTitle));
-            }
-
-            if (missingUnitType.Any())
-            {
-                string unitTypeNames = "";
-                foreach (var item in missingUnitType)
-                {
-                    unitTypeNames += "- [" + item.Title + "]<br>";
-                }
-                return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelUnitTypesSectionTypeNotInExcel, unitTypeNames, sectionTitle, unitOrgTitle));
             }
 
             #endregion

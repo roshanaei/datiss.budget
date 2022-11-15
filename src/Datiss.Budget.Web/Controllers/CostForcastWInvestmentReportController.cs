@@ -385,35 +385,26 @@ namespace Datiss.Budget.Web.Controllers
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
             var sectionTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__WInvestmentReportType);
             var costCenterTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CostCenterType);
-            var unitTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CIRUnit);
-
 
             var items = new List<CostForcastWInvestmentReportDTO>();
 
             foreach (var org in organizations)
             {
-                //Water
-                costCenterTypes.Where(ccenter => ccenter.ConstantKey.ToUpper().Contains(ConstantKeys.__CostCenterType.ToUpper()) &&
-                          ccenter.Status == EntityStatus.Enabled);
-
-                sectionTypes.Where(sec => sec.ConstantKey.ToUpper().Contains(ConstantKeys.__WInvestmentReportType.ToUpper()) &&
-                                          sec.Status == EntityStatus.Enabled)
-
-                    .ToList()
-                    .ForEach(sec => items.AddRange(unitTypes.Where(x => x.ConstantKey.ToUpper().Contains(sec.ConstantKey.Replace(".", "").ToUpper()))
-                                        .Select(unit => new CostForcastWInvestmentReportDTO
-                                        {
-                                            SectionTypeDisplay = sec.Title,
-                                            SectionTypeId = sec.Id,
-                                            UnitTypeDisplay = unit.Title,
-                                            UnitTypeId = unit.Id,
-                                            //CostCenterTypeDisplay = ccenter.Title,
-                                            OrganizationId = org.Id,
-                                            OrganizationDisplay = org.Title,
-                                            Year = year.Year,
-                                            YearId = year.Id,
-                                        }).ToList())
-                    );
+                foreach (var center in costCenterTypes)
+                {
+                    foreach (var sec in sectionTypes)
+                    {                       
+                            items.Add(new CostForcastWInvestmentReportDTO
+                            {
+                                OrganizationDisplay = org.Title,
+                                OrganizationId = org.Id,
+                                CostCenterTypeDisplay = center.Title,
+                                CostCenterTypeId = center.Id,
+                                SectionTypeDisplay = sec.Title,
+                                SectionTypeId = sec.Id,
+                            });
+                    }
+                }
             }
 
             using var workbook = items.GetImportTemplate(year.Year);
