@@ -93,6 +93,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<ICostCurrentProfitLossReportService, CostCurrentProfitLossReportService>();
             services.AddScoped<ITotalBudgetWReportService, TotalBudgetWReportService>();
             services.AddScoped<ITotalBudgetWsReportService, TotalBudgetWsReportService>();
+            services.AddScoped<ICostForcastWInvestmentReportService, CostForcastWInvestmentReportService>();
+
             return services;
         }
     }
