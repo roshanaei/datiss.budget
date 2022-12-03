@@ -12,19 +12,28 @@
         //Hide output elements
         $('#divOutput_Year_' + id).hide();
         $('#divOutput_Org_' + id).hide();
-        $('#divOutput_Activity_' + id);
-        $('#divOutput_SectionType_' + id);
-        $('#divOutput_UnitType_' + id);
-        $('#divOutput_FunctionalYear_1_' + id).hide();
-        $('#divOutput_FunctionalBasicYear_' + id).hide();
-        $('#divOutput_ApproveYear_1_' + id);
-        $('#divOutput_ForcastY_' + id);
+        $('#divOutput_CostCnterType_' + id).hide();
+        $('#divOutput_SectionType_' + id).hide();
+        $('#divOutput_UnitType_' + id).hide();
+        $('#divOutput_Amount1_' + id).hide();
+        $('#divOutput_Cost1_' + id).hide();
+        $('#divOutput_Amount2_' + id).hide();
+        $('#divOutput_Cost2_' + id).hide();
+        $('#divOutput_Amount3_' + id).hide();
+        $('#divOutput_Cost3_' + id).hide();
 
         //show input elements
         $('#divInput_Year_' + id).show();
         $('#divInput_Org_' + id).show();
-        $('#divInput_FunctionalYear_1_' + id).show();
-        $('#divInput_FunctionalBasicYear_' + id).show();
+        $('#divInput_CostCnterType_' + id).show();
+        $('#divInput_SectionType_' + id).show();
+        $('#divInput_UnitType_' + id).show();
+        $('#divInput_Amount1_' + id).show();
+        $('#divInput_Cost1_' + id).show();
+        $('#divInput_Amount2_' + id).show();
+        $('#divInput_Cost2_' + id).show();
+        $('#divInput_Amount3_' + id).show();
+        $('#divInput_Cost3_' + id).show();
 
 
         $('#btnEdit_' + id).hide();
@@ -33,8 +42,12 @@
         $('#btnCancelEdit_' + id).show();
 
         rowData = {};
-        rowData.functionalYear_1 = $('#inputFunctionalYear_1_' + id).val();
-        rowData.functionalBasicYear = $('#inputFunctionalBasicYear_' + id).val();
+        rowData.amount1 = $('#inputAmount1_' + id).val();
+        rowData.cost1 = $('#inputCost1_' + id).val();
+        rowData.amount2 = $('#inputAmount2_' + id).val();
+        rowData.cost2 = $('#inputCost2_' + id).val();
+        rowData.amount3 = $('#inputAmount3_' + id).val();
+        rowData.cost3 = $('#inputCost3_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -44,20 +57,38 @@
         //Hide input elements
         $('#divInput_Year_' + id).hide();
         $('#divInput_Org_' + id).hide();
-        $('#divInput_FunctionalYear_1_' + id).hide();
-        $('#divInput_FunctionalBasicYear_' + id).hide();
+        $('#divInput_CostCnterType_' + id).hide();
+        $('#divInput_SectionType_' + id).hide();
+        $('#divInput_UnitType_' + id).hide();
+        $('#divInput_Amount1_' + id).hide();
+        $('#divInput_Cost1_' + id).hide();
+        $('#divInput_Amount2_' + id).hide();
+        $('#divInput_Cost2_' + id).hide();        
+        $('#divInput_Amount3_' + id).hide();
+        $('#divInput_Cost3_' + id).hide();
 
         //Reverting to OriginalData
         if (rowData != null) {
-            $('#inputFunctionalYear_1_' + id).val(rowData.functionalYear_1);
-            $('#inputFunctionalBasicYear_' + id).val(rowData.functionalBasicYear);
+            $('#inputAmount1_' + id).val(rowData.amount1);
+            $('#inputCost1_' + id).val(rowData.cost1);
+            $('#inputAmount2_' + id).val(rowData.amount2);
+            $('#inputCost2_' + id).val(rowData.cost2);
+            $('#inputAmount3_' + id).val(rowData.amount3);
+            $('#inputCost3_' + id).val(rowData.cost3);
         }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
         $('#divOutput_Org_' + id).show();
-        $('#divOutput_FunctionalYear_1_' + id).show();
-        $('#divOutput_FunctionalBasicYear_' + id).show();
+        $('#divOutput_CostCnterType_' + id).show();
+        $('#divOutput_SectionType_' + id).show();
+        $('#divOutput_UnitType_' + id).show();
+        $('#divOutput_Amount1_' + id).show();
+        $('#divOutput_Cost1_' + id).show();
+        $('#divOutput_Amount2_' + id).show();
+        $('#divOutput_Cost2_' + id).show();
+        $('#divOutput_Amount3_' + id).show();
+        $('#divOutput_Cost3_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -79,13 +110,15 @@
         model.id = id;
         model.yearId = $('#inputYear_' + id).val();
         model.organizationId = $('#inputOrg_' + id).val();
-        model.activity = $('#inputActivity_' + id).val();
+        model.costCenterTypeId = $('#inputCostCnterType_' + id).val();
         model.sectionTypeId = $('#inputSectionType_' + id).val();
         model.unitTypeId = $('#inputUnitType_' + id).val();
-        model.functionalYear_1 = $('#inputFunctionalYear_1_' + id).val();
-        model.functionalBasicYear = $('#inputFunctionalBasicYear_' + id).val();
-        model.approveYear_1 = $('#inputApproveYear_1_' + id).val();
-        model.forcastY = $('#inputForcastY_' + id).val();
+        model.amount1 = $('#inputAmount1_' + id).val();
+        model.cost1 = $('#inputCost1_' + id).val();
+        model.amount2 = $('#inputAmount2_' + id).val();
+        model.cost2 = $('#inputCost2_' + id).val();
+        model.amount3 = $('#inputAmount3_' + id).val();
+        model.cost3 = $('#inputCost3_' + id).val();
 
         console.log(model);
 
@@ -111,13 +144,29 @@
                 rowData = {};
                 rowData.yearId = model.yearId;
                 rowData.organizationId = model.organizationId;
-                rowData.functionalYear_1 = model.functionalYear_1;
-                rowData.functionalBasicYear = model.functionalBasicYear;
+                rowData.costCenterTypeId = model.costCenterTypeId;
+                rowData.sectionTypeId = model.sectionTypeId;
+                rowData.unitTypeId = model.unitTypeId;
+                rowData.amount1 = model.amount1;
+                rowData.cost1 = model.cost1;
+                rowData.amount2 = model.amount2;
+                rowData.cost2 = model.cost2;
+                rowData.amount3 = model.amount3;
+                rowData.cost3 = model.cost3;
+
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
-                $('#spanFunctionalYear_1_' + id).text(data.functionalYear_1);
-                $('#spanFunctionalBasicYear_' + id).text(data.functionalBasicYear);
+                $('#hidCostCnterTypeId_' + id).attr('value', model.costCenterTypeId);
+                $('#hidSectionTypeId_' + id).attr('value', model.sectionTypeId);
+                $('#hidUnitTypeId_' + id).attr('value', model.unitTypeId);
+
+                $('#spanAmount1_' + id).text(data.amount1);
+                $('#spanCost1_' + id).text(data.cost1);
+                $('#spanAmount2_' + id).text(data.amount2);
+                $('#spanCost2_' + id).text(data.cost2);
+                $('#spanAmount3_' + id).text(data.amount3);
+                $('#spanCost3_' + id).text(data.cost3);
 
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
