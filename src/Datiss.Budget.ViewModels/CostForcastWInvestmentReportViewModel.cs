@@ -35,6 +35,7 @@ namespace Datiss.Budget.ViewModels
         public int OrganizationId { get; set; }
         public string OrganizationDisplay { get; set; }
         public int CostCenterTypeId { get; set; }
+        public string CostCenterTypeDisplay { get; set; }
         public int SectionTypeId { get; set; }
         public string SectionTypeDisplay { get; set; }
         public int UnitTypeId { get; set; }
@@ -70,7 +71,7 @@ namespace Datiss.Budget.ViewModels
     }
 
 
-    public class CostForcastWInvestmentReportIndexViewModel : PagedViewModel<CostCurrentProfitLossReportViewModel>
+    public class CostForcastWInvestmentReportIndexViewModel : PagedViewModel<CostForcastWInvestmentReportViewModel>
     {
 
         public CostForcastWInvestmentReportIndexViewModel()

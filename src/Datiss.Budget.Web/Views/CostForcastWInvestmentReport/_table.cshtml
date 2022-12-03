@@ -9,10 +9,12 @@
                 <th style="min-width:185px">مرکز هزینه</th>
                 <th style="min-width:235px">شرح</th>
                 <th style="min-width:240px">واحد</th>
-                <th style="min-width:200px">پیش بینی سال @Model.Filter.NumberYear</th>
-                <th style="min-width:200px">عملکرد @(Model.Filter.NumberYear - 2)</th>
-                <th style="min-width:200px">عملکرد سال @(Model.Filter.NumberYear - 1)</th>
-                <th style="min-width:200px">مصوب سال @(Model.Filter.NumberYear - 1)</th>
+                <th style="min-width:200px">مقدار از محل منابع داخلی</th>
+                <th style="min-width:200px">مبلغ از محل منابع داخلی</th>
+                <th style="min-width:200px">مقدار از محل منابع عمرانی</th>
+                <th style="min-width:200px">مبلغ از محل منابع عمرانی</th>
+                <th style="min-width:200px">مقدار از محل مشارکت غیر دولتی</th>
+                <th style="min-width:200px">مبلغ از محل مشارکت غیر دولتی</th>
                 <th style="min-width:190px">مدیریت</th>
 
             </tr>
@@ -32,7 +34,7 @@
                             </script>
                         </div>
                         <div id="divOutput_Year_@item.Id">
-                            <span id="spanYear_@item.Id">@item.Year.ToString()</span>
+                            <span id="spanYear_@item.Id">@item.YearDisplay</span>
                         </div>
                     </td>
                     <td>
@@ -49,14 +51,14 @@
                             <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
                         </div>
                     </td>
-@*                    <td>
+                    <td>
                         <div id="divInput_CostCnterType_@item.Id" style="display: none">
                             <input class="form-control" id="inputCostCnterType_@item.Id" value="@item." type="number" />
                         </div>
                         <div id="divOutput_CostCnterType_@item.Id">
-                            <span id="spanCostCnterType_@item.Id">@item.co </span>
+                            <span id="spanCostCnterType_@item.Id">@item.CostCenterTypeDisplay </span>
                         </div>
-                    </td>*@
+                    </td>
 
                     <td>
                         <div id="divInput_SectionType_@item.Id" style="display: none">
@@ -66,44 +68,60 @@
                             <span id="spanSectionType_@item.Id">@item.SectionTypeDisplay </span>
                         </div>
                     </td>
-                    @*<td>
+                    <td>
                         <div id="divInput_UnitType_@item.Id" style="display: none">
                             <input class="form-control" id="inputUnitType_@item.Id" value="@item.UnitTypeId" type="number" />
                         </div>
                         <div id="divOutput_UnitType_@item.Id">
                             <span id="spanUnitType_@item.Id">@item.UnitTypeDisplay </span>
                         </div>
-                    </td>*@
+                    </td>
                     <td>
-                        <div id="divInput_ForcastY_@item.Id" style="display: none">
-                            <input class="form-control" id="inputForcastY_@item.Id" value="@item.ForcastY" type="number" />
+                        <div id="divInput_Amount1_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAmount1_@item.Id" value="@item.Amount1" type="number" />
                         </div>
-                        <div id="divOutput_ForcastY_@item.Id">
-                            <span id="spanForcastY_@item.Id">@item.ForcastYDisplay </span>
+                        <div id="divOutput_Amount1_@item.Id">
+                            <span id="spanAmount1_@item.Id">@item.Amount1Display </span>
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_FunctionalBasicYear_@item.Id" style="display: none">
-                            <input class="form-control" id="inputFunctionalBasicYear_@item.Id" value="@item.FunctionalBasicYear" type="number" />
+                        <div id="divInput_Cost1_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCost1_@item.Id" value="@item.Cost1" type="number" />
                         </div>
-                        <div id="divOutput_FunctionalBasicYear_@item.Id">
-                            <span id="spanFunctionalBasicYear_@item.Id">@item.FunctionalBasicYearDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_FunctionalYear_1_@item.Id" style="display: none">
-                            <input class="form-control" id="inputFunctionalYear_1_@item.Id" value="@item.FunctionalYear_1" type="number" />
-                        </div>
-                        <div id="divOutput_FunctionalYear_1_@item.Id">
-                            <span id="spanFunctionalYear_1_@item.Id">@item.FunctionalYear_1Display </span>
+                        <div id="divOutput_Cost1_@item.Id">
+                            <span id="spanCost1_@item.Id">@item.Cost1Display </span>
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_ApproveYear_1_@item.Id" style="display: none">
-                            <input class="form-control" id="inputApproveYear_1_@item.Id" value="@item.ApproveYear_1" type="number" />
+                        <div id="divInput_Amount2_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAmount2_@item.Id" value="@item.Amount2" type="number" />
                         </div>
-                        <div id="divOutput_ApproveYear_1_@item.Id">
-                            <span id="spanApproveYear_1_@item.Id">@item.ApproveYear_1Display </span>
+                        <div id="divOutput_Amount2_@item.Id">
+                            <span id="spanAmount2_@item.Id">@item.Amount2Display </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Cost2_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCost2_@item.Id" value="@item.Cost2" type="number" />
+                        </div>
+                        <div id="divOutput_Cost2_@item.Id">
+                            <span id="spanCost2_@item.Id">@item.Cost2Display </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Amount3_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAmount3_@item.Id" value="@item.Amount3" type="number" />
+                        </div>
+                        <div id="divOutput_Amount3_@item.Id">
+                            <span id="spanAmount3_@item.Id">@item.Amount3Display </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Cost3_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCost3_@item.Id" value="@item.Cost3" type="number" />
+                        </div>
+                        <div id="divOutput_Cost3_@item.Id">
+                            <span id="spanCost3_@item.Id">@item.Cost3Display </span>
                         </div>
                     </td>
                     <td>

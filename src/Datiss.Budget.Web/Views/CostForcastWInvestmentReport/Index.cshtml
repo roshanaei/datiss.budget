@@ -157,7 +157,7 @@
                                                                name="col-6"
                                                                id="col-6" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-6"><span>پیش بینی سال جاری</span></label>
+                                                               for="col-6"><span>مقدار از محل منابع داخلی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -168,7 +168,7 @@
                                                                name="col-7"
                                                                id="col-7" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-7"><span>عملکرد سال پایه</span></label>
+                                                               for="col-7"><span>مبلغ از محل منابع داخلی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -179,7 +179,7 @@
                                                                name="col-8"
                                                                id="col-8" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-8"><span>عملکرد سال ماقبل</span></label>
+                                                               for="col-8"><span>مقدار از محل منابع عمرانی</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -190,7 +190,29 @@
                                                                name="col-9"
                                                                id="col-9" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-9"><span style="">مصوب سال ما قبل</span></label>
+                                                               for="col-9"><span>مبلغ از محل منابع عمرانی</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-10"
+                                                               id="col-10" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-10"><span>مقدار از محل مشارکت غیر دولتی</span></label>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown-item">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox"
+                                                               class="custom-control-input"
+                                                               checked
+                                                               name="col-11"
+                                                               id="col-11" />
+                                                        <label class="custom-control-label my-font"
+                                                               for="col-11"><span>مبلغ از محل ممشارکت غیر دولتی</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -257,10 +279,10 @@
     <partial name="_tableScript" />
 
     <script type="text/javascript">
-        let allColumns = '1,2,3,4,5,6,7,8,9';
+        let allColumns = '1,2,3,4,5,6,7,8,9,10,11';
         let columnIndices = allColumns.split(',');
         console.log(columnIndices);
-        let showingColmuns = "1,2,3,4,5,6,7,8,9,";
+        let showingColmuns = "1,2,3,4,5,6,7,8,9,10,11,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -415,8 +437,12 @@
             resetDataColumns()
             let id = $(this).data('id');
 
-            let input1 = document.getElementById('inputFunctionalYear_1_' + id);
-            let input2 = document.getElementById('inputFunctionalBasicYear_' + id);
+            let input1 = document.getElementById('inputAmount1_' + id);
+            let input2 = document.getElementById('inputCost1_' + id);
+            let input3 = document.getElementById('inputAmount2_' + id);
+            let input4 = document.getElementById('inputCost2_' + id);            
+            let input5 = document.getElementById('inputAmount3_' + id);
+            let input6 = document.getElementById('inputCost3_' + id);
 
             let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
 
@@ -427,6 +453,30 @@
                 }
             });
             input2.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input3.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input4.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input5.addEventListener("keyup", function (event) {
+                event.preventDefault();
+                if (event.keyCode === 13) {
+                    btnSaveEdit.click();
+                }
+            });
+            input6.addEventListener("keyup", function (event) {
                 event.preventDefault();
                 if (event.keyCode === 13) {
                     btnSaveEdit.click();
