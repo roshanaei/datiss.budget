@@ -1,0 +1,181 @@
+﻿<script type="text/javascript">
+
+    let isNewRow = false;
+    let rowData = {};
+
+    function editRow(id) {
+
+        resetTableBackColor("my-table");
+
+        let row = $('#row_' + id);
+
+        //Hide output elements
+        $('#divOutput_Year_' + id).hide();
+        $('#divOutput_Org_' + id).hide();
+        $('#divOutput_Amount1_' + id).hide();
+        $('#divOutput_Cost1_' + id).hide();
+        $('#divOutput_Amount2_' + id).hide();
+        $('#divOutput_Cost2_' + id).hide();
+        $('#divOutput_Amount3_' + id).hide();
+        $('#divOutput_Cost3_' + id).hide();
+
+        //show input elements
+        $('#divInput_Year_' + id).show();
+        $('#divInput_Org_' + id).show();
+        $('#divInput_Amount1_' + id).show();
+        $('#divInput_Cost1_' + id).show();
+        $('#divInput_Amount2_' + id).show();
+        $('#divInput_Cost2_' + id).show();
+        $('#divInput_Amount3_' + id).show();
+        $('#divInput_Cost3_' + id).show();
+
+
+        $('#btnEdit_' + id).hide();
+        $('#btnDelete_' + id).hide();
+        $('#btnSaveEdit_' + id).show();
+        $('#btnCancelEdit_' + id).show();
+
+        rowData = {};
+        rowData.amount1 = $('#inputAmount1_' + id).val();
+        rowData.cost1 = $('#inputCost1_' + id).val();
+        rowData.amount2 = $('#inputAmount2_' + id).val();
+        rowData.cost2 = $('#inputCost2_' + id).val();
+        rowData.amount3 = $('#inputAmount3_' + id).val();
+        rowData.cost3 = $('#inputCost3_' + id).val();
+    }
+
+    function cancelEditRow(id) {
+
+        let row = $('#row_' + id);
+
+        //Hide input elements
+        $('#divInput_Year_' + id).hide();
+        $('#divInput_Org_' + id).hide();
+        $('#divInput_Amount1_' + id).hide();
+        $('#divInput_Cost1_' + id).hide();
+        $('#divInput_Amount2_' + id).hide();
+        $('#divInput_Cost2_' + id).hide();        
+        $('#divInput_Amount3_' + id).hide();
+        $('#divInput_Cost3_' + id).hide();
+
+        //Reverting to OriginalData
+        if (rowData != null) {
+            $('#inputAmount1_' + id).val(rowData.amount1);
+            $('#inputCost1_' + id).val(rowData.cost1);
+            $('#inputAmount2_' + id).val(rowData.amount2);
+            $('#inputCost2_' + id).val(rowData.cost2);
+            $('#inputAmount3_' + id).val(rowData.amount3);
+            $('#inputCost3_' + id).val(rowData.cost3);
+        }
+
+        //Show output elements
+        $('#divOutput_Year_' + id).show();
+        $('#divOutput_Org_' + id).show();
+        $('#divOutput_Amount1_' + id).show();
+        $('#divOutput_Cost1_' + id).show();
+        $('#divOutput_Amount2_' + id).show();
+        $('#divOutput_Cost2_' + id).show();
+        $('#divOutput_Amount3_' + id).show();
+        $('#divOutput_Cost3_' + id).show();
+
+        $('#btnEdit_' + id).show();
+        $('#btnDelete_' + id).show();
+        $('#btnSaveEdit_' + id).hide();
+        $('#btnCancelEdit_' + id).hide();
+
+        $('th,tr td').hide();
+        showingColmuns.split(',').forEach((value, index) => {
+            if (value !== '') {
+                $(`th:nth-child(${value}), tr td:nth-child(${value})`).show();
+            }
+        })
+        $(`th:last-child, tr td:last-child`).show();
+    }
+
+    function saveEditRow(id) {
+        let row = $('#row_' + id);
+        var model = {};
+        model.id = id;
+        model.yearId = $('#inputYear_' + id).val();
+        model.organizationId = $('#inputOrg_' + id).val();
+        model.costCenterTypeId = $('#inputCostCenterType_' + id).val();
+        model.sectionTypeId = $('#inputSectionType_' + id).val();
+        model.unitTypeId = $('#inputUnitType_' + id).val();
+        model.amount1 = $('#inputAmount1_' + id).val();
+        model.cost1 = $('#inputCost1_' + id).val();
+        model.amount2 = $('#inputAmount2_' + id).val();
+        model.cost2 = $('#inputCost2_' + id).val();
+        model.amount3 = $('#inputAmount3_' + id).val();
+        model.cost3 = $('#inputCost3_' + id).val();
+
+        console.log(model);
+
+        $.ajax({
+            url: '@Url.Action(CostForcastWInvestmentReportController.ACTION_Edit)',
+            type: 'POST',
+            data: model,
+            dataType: 'json',
+            success: function (data, status, settings) {
+                if (data._HasError) {
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data._ErrorMessage}</span>`,
+                        type: 'error',
+                        animation: false,
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
+                    return;
+                }
+
+                rowData = {};
+                rowData.yearId = model.yearId;
+                rowData.organizationId = model.organizationId;
+                rowData.costCenterTypeId = model.costCenterTypeId;
+                rowData.sectionTypeId = model.sectionTypeId;
+                rowData.unitTypeId = model.unitTypeId;
+                rowData.amount1 = model.amount1;
+                rowData.cost1 = model.cost1;
+                rowData.amount2 = model.amount2;
+                rowData.cost2 = model.cost2;
+                rowData.amount3 = model.amount3;
+                rowData.cost3 = model.cost3;
+
+
+                $('#hidYearId_' + id).attr('value', model.yearId);
+                $('#hidOrgId_' + id).attr('value', model.organizationId);
+                $('#hidCostCenterTypeId_' + id).attr('value', model.costCenterTypeId);
+                $('#hidSectionTypeId_' + id).attr('value', model.sectionTypeId);
+                $('#hidUnitTypeId_' + id).attr('value', model.unitTypeId);
+
+                $('#spanAmount1_' + id).text(data.amount1);
+                $('#spanCost1_' + id).text(data.cost1);
+                $('#spanAmount2_' + id).text(data.amount2);
+                $('#spanCost2_' + id).text(data.cost2);
+                $('#spanAmount3_' + id).text(data.amount3);
+                $('#spanCost3_' + id).text(data.cost3);
+
+
+                $('#row_' + id).css('background-color', 'rgb(245 245 246)');
+
+                cancelEditRow(id);
+            },
+            error: function (request, options, err) {
+                if (request.status == 401 || request.status == 403) {
+                    ShowPermissionErorr();
+                    return;
+                }
+                ShowCommonErorr();
+            }
+        });
+    }
+
+    function resetTableBackColor(id) {
+        var table = document.getElementById(id);
+        var rows = table.getElementsByTagName("tr");
+        for (i = 2; i < rows.length - 1; i++) {
+            rows[i].style = "";
+        }
+    }
+</script>
