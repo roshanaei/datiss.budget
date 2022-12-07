@@ -12,9 +12,6 @@
         //Hide output elements
         $('#divOutput_Year_' + id).hide();
         $('#divOutput_Org_' + id).hide();
-        $('#divOutput_CostCnterType_' + id).hide();
-        $('#divOutput_SectionType_' + id).hide();
-        $('#divOutput_UnitType_' + id).hide();
         $('#divOutput_Amount1_' + id).hide();
         $('#divOutput_Cost1_' + id).hide();
         $('#divOutput_Amount2_' + id).hide();
@@ -25,9 +22,6 @@
         //show input elements
         $('#divInput_Year_' + id).show();
         $('#divInput_Org_' + id).show();
-        $('#divInput_CostCnterType_' + id).show();
-        $('#divInput_SectionType_' + id).show();
-        $('#divInput_UnitType_' + id).show();
         $('#divInput_Amount1_' + id).show();
         $('#divInput_Cost1_' + id).show();
         $('#divInput_Amount2_' + id).show();
@@ -57,9 +51,6 @@
         //Hide input elements
         $('#divInput_Year_' + id).hide();
         $('#divInput_Org_' + id).hide();
-        $('#divInput_CostCnterType_' + id).hide();
-        $('#divInput_SectionType_' + id).hide();
-        $('#divInput_UnitType_' + id).hide();
         $('#divInput_Amount1_' + id).hide();
         $('#divInput_Cost1_' + id).hide();
         $('#divInput_Amount2_' + id).hide();
@@ -80,9 +71,6 @@
         //Show output elements
         $('#divOutput_Year_' + id).show();
         $('#divOutput_Org_' + id).show();
-        $('#divOutput_CostCnterType_' + id).show();
-        $('#divOutput_SectionType_' + id).show();
-        $('#divOutput_UnitType_' + id).show();
         $('#divOutput_Amount1_' + id).show();
         $('#divOutput_Cost1_' + id).show();
         $('#divOutput_Amount2_' + id).show();
@@ -110,7 +98,7 @@
         model.id = id;
         model.yearId = $('#inputYear_' + id).val();
         model.organizationId = $('#inputOrg_' + id).val();
-        model.costCenterTypeId = $('#inputCostCnterType_' + id).val();
+        model.costCenterTypeId = $('#inputCostCenterType_' + id).val();
         model.sectionTypeId = $('#inputSectionType_' + id).val();
         model.unitTypeId = $('#inputUnitType_' + id).val();
         model.amount1 = $('#inputAmount1_' + id).val();
@@ -157,7 +145,7 @@
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
-                $('#hidCostCnterTypeId_' + id).attr('value', model.costCenterTypeId);
+                $('#hidCostCenterTypeId_' + id).attr('value', model.costCenterTypeId);
                 $('#hidSectionTypeId_' + id).attr('value', model.sectionTypeId);
                 $('#hidUnitTypeId_' + id).attr('value', model.unitTypeId);
 
