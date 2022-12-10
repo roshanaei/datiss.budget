@@ -1,0 +1,188 @@
+﻿@model CostForcastWsInvestmentReportIndexViewModel
+<div class="table-responsive">
+    <table style="width:100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
+        <thead class="thead-light">
+            <tr>
+
+                <th style="min-width:135px">سال</th>
+                <th style="min-width:250px">سازمان</th>
+                <th style="min-width:185px">مرکز هزینه</th>
+                <th style="min-width:235px">شرح</th>
+                <th style="min-width:240px">واحد</th>
+                <th style="min-width:200px">مقدار از محل منابع داخلی</th>
+                <th style="min-width:200px">مبلغ از محل منابع داخلی</th>
+                <th style="min-width:200px">مقدار از محل منابع عمرانی</th>
+                <th style="min-width:200px">مبلغ از محل منابع عمرانی</th>
+                <th style="min-width:200px">مقدار از محل مشارکت غیر دولتی</th>
+                <th style="min-width:200px">مبلغ از محل مشارکت غیر دولتی</th>
+                <th style="min-width:190px">مدیریت</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr id="row_@item.Id">
+                    <td>
+                        <div id="divInput_Year_@item.Id" style="display: none">
+                            <input id="hidYearId_@item.Id" type="hidden" value="@item.YearId" />
+                            <select class="form-control selectYear" id="inputYear_@item.Id" asp-items="Model.YearSource">
+                            </select>
+                            <script>
+                                $('select#inputYear_' + @item.Id + ' option[value=' + @item.YearId + ']').attr('selected', true);
+                                $('#inputYear_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Year_@item.Id">
+                            <span id="spanYear_@item.Id">@item.YearDisplay</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Org_@item.Id" style="display: none">
+                            <input id="hidOrgId_@item.Id" type="hidden" value="@item.OrganizationId" />
+                            <select class="form-control selectOrganization" id="inputOrg_@item.Id" asp-items="Model.InputOrganizationSource">
+                            </select>
+                            <script>
+                                $('select#inputOrg_' + @item.Id + ' option[value=' + @item.OrganizationId + ']').attr('selected', true);
+                                $('#inputOrg_' + @item.Id).attr('disabled', 'disabled');
+                            </script>
+                        </div>
+                        <div id="divOutput_Org_@item.Id">
+                            <span id="spanOrg_@item.Id">@item.OrganizationDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_CostCenterType_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCostCenterType_@item.Id" value="@item.CostCenterTypeId" type="number" />
+                        </div>
+                        <div id="divOutput_CostCenterType_@item.Id">
+                            <span id="spanCostCenterType_@item.Id">@item.CostCenterTypeDisplay </span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div id="divInput_SectionType_@item.Id" style="display: none">
+                            <input class="form-control" id="inputSectionType_@item.Id" value="@item.SectionTypeId" type="number" />
+                        </div>
+                        <div id="divOutput_SectionType_@item.Id">
+                            <span id="spanSectionType_@item.Id">@item.SectionTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_UnitType_@item.Id" style="display: none">
+                            <input class="form-control" id="inputUnitType_@item.Id" value="@item.UnitTypeId" type="number" />
+                        </div>
+                        <div id="divOutput_UnitType_@item.Id">
+                            <span id="spanUnitType_@item.Id">@item.UnitTypeDisplay </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Amount1_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAmount1_@item.Id" value="@item.Amount1" type="number" />
+                        </div>
+                        <div id="divOutput_Amount1_@item.Id">
+                            <span id="spanAmount1_@item.Id">@item.Amount1Display </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Cost1_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCost1_@item.Id" value="@item.Cost1" type="number" />
+                        </div>
+                        <div id="divOutput_Cost1_@item.Id">
+                            <span id="spanCost1_@item.Id">@item.Cost1Display </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Amount2_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAmount2_@item.Id" value="@item.Amount2" type="number" />
+                        </div>
+                        <div id="divOutput_Amount2_@item.Id">
+                            <span id="spanAmount2_@item.Id">@item.Amount2Display </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Cost2_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCost2_@item.Id" value="@item.Cost2" type="number" />
+                        </div>
+                        <div id="divOutput_Cost2_@item.Id">
+                            <span id="spanCost2_@item.Id">@item.Cost2Display </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Amount3_@item.Id" style="display: none">
+                            <input class="form-control" id="inputAmount3_@item.Id" value="@item.Amount3" type="number" />
+                        </div>
+                        <div id="divOutput_Amount3_@item.Id">
+                            <span id="spanAmount3_@item.Id">@item.Amount3Display </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="divInput_Cost3_@item.Id" style="display: none">
+                            <input class="form-control" id="inputCost3_@item.Id" value="@item.Cost3" type="number" />
+                        </div>
+                        <div id="divOutput_Cost3_@item.Id">
+                            <span id="spanCost3_@item.Id">@item.Cost3Display </span>
+                        </div>
+                    </td>
+                    <td>
+                        <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font">
+                            <i class="fa ft-edit fa-1x"></i>
+                        </a>
+
+                        <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                            <i class="fa ft-trash-2"></i>
+                        </a>
+
+                        <a id="btnSaveEdit_@item.Id" data-id="@item.Id" class="save-edit-row btn btn-success my-font mr-1" style="display: none">
+                            <i class="fa ft-check-square"></i>
+                        </a>
+
+                        <a id="btnCancelEdit_@item.Id" data-id="@item.Id" class="cancel-edit-row btn btn-secondary my-font" style="display: none">
+                            <i class="fa ft-x-square"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="rowACJSB" style="margin-top:20px">
+    <!--Tools-->
+    <div class="rowACJS">
+        <form id="toolForm"
+              enctype="multipart/form-data"
+              method="post"
+              asp-antiforgery="true">
+            <input name="filterYearId" type="hidden" value="@Model.Filter.YearId" />
+            <input name="filterOrganizationId" type="hidden" value="@Model.Filter.OrganizationId" />
+
+            @*<input asp-for="ExcelFile" type="file" />*@
+            <span data-toggle="modal" data-target="#backdrop">
+                <button data-toggle="" data-placement="top" title="" type="button" name="btnExcelImport" onclick="openImportExcelForm();" class="btn btn-secondary bg-light-secondary mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-cloud-upload"><span class="my-font" style="font-size:small">   ثبت عملکرد</span></i>
+                </button>
+            </span>
+            <span data-toggle="modal" data-target="#CopyModal">
+                <button data-toggle="" data-placement="top" title="" type="button" name="btnCopy" class="btn btn-warning bg-light-warning mr-1 my-font openCopy">
+                    <i _ngcontent-dpj-c129="" class="fa fa-copy"><span class="my-font" style="font-size:small">   ثبت مصوب</span></i>
+                </button>
+            </span>
+            <button data-toggle="" data-placement="top" title="" type="button" onclick="return hardDelete(this.click);" name="btnDelete" class="btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                <i _ngcontent-dpj-c129="" class="fa fa-trash"><span class="my-font" style="font-size:small">   حذف اطلاعات</span></i>
+            </button>
+            <span data-toggle="modal" data-target="#CalculationModal">
+                <button data-toggle="" data-placement="top" title="" type="button" name="btnCalculaton" class="btn btn-info calculation-button bg-light-info mr-1 my-font">
+                    <i _ngcontent-dpj-c129="" class="fa fa-calculator"><span class="my-font" style="font-size:small">   ثبت پیش بینی</span></i>
+                </button>
+            </span>
+        </form>
+
+    </div>
+    <div class="rowAC">
+        <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+        <div class="my-font ml-2">(صفحه <b class="font-medium-2">@Model.PageNumber</b> از <b class="font-medium-2">@Model.PagesCount</b>)</div>
+    </div>
+    <!--Pagination-->
+    <vc:pager model="Model.ToPager()" controller-name="@CostForcastWsInvestmentReportController.Name" action-name="@CostForcastWsInvestmentReportController.ACTION_Index"></vc:pager>
+</div>
