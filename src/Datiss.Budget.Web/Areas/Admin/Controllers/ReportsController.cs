@@ -229,5 +229,16 @@ namespace Datiss.Budget.Web.Admin.Controllers
             }
         }
 
+        [HttpGet("download/{id}")]
+        public async Task<IActionResult> Download(int id)
+        {
+            var report = await _reportService.GetAsync(id);
+
+            if (report == null)
+                return NotFound();
+
+            return File(report.FileData, "application/octet-stream", $"{report.Name}.mrt");
+        }
+
     }
 }
