@@ -28,43 +28,51 @@
                         <div class="table-responsive" style="padding-top: 20px;">
                             <table style="width: 100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
                                 <thead class="thead-light">
-                                <tr>
-                                    <th>
-                                        عنوان
-                                    </th>
-                                    <th>نام</th>
-                                    <th>وضعیت</th>
-                                    <th>عملیات</th>
-                                </tr>
+                                    <tr>
+                                        <th>
+                                            عنوان
+                                        </th>
+                                        <th>نام</th>
+                                        <th>وضعیت</th>
+                                        <th>عملیات</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                @foreach (var item in Model.Items) {
-                                    <tr>
-                                        <td>
-                                            <span>@item.Title</span>
-                                        </td>
-                                        <td>
-                                            <span>@item.Name</span>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                @item.StatusDisplay
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font"
+                                    @foreach (var item in Model.Items)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <span>@item.Title</span>
+                                            </td>
+                                            <td>
+                                                <span>@item.Name</span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    @item.StatusDisplay
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font"
                                                asp-controller="@ReportsController.Name"
                                                asp-action="@ReportsController.ACTION_Edit"
                                                asp-route-id="@item.Id">
-                                                <i class="fa ft-edit fa-1x"></i>
-                                            </a>
+                                                    <i class="fa ft-edit fa-1x"></i>
+                                                </a>
 
-                                            <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                                                <i class="fa ft-trash-2"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                }
+                                                <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+                                                    <i class="fa ft-trash-2"></i>
+                                                </a>
+
+                                                <a  asp-controller="@ReportsController.Name"
+                                                    asp-action="Download"
+                                                    asp-route-id="@item.Id" 
+                                                    class="btn btn-info bg-light-info mr-1 my-font">
+                                                    <i class="ft ft-download"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
                                 </tbody>
                             </table>
 
@@ -90,14 +98,14 @@
 
     <script type="text/javascript">
 
-        $(document).ready(function() {
-            $('.delete-row').click(function(e) {
+        $(document).ready(function () {
+            $('.delete-row').click(function (e) {
                 e.preventDefault();
                 var id = $(this).data('id');
-                
+
                 confirmDelete()
-                    .then(function(res) {
-                        if(res.value) {
+                    .then(function (res) {
+                        if (res.value) {
                             deleteReport(id);
                         }
                     });
@@ -108,16 +116,16 @@
             $.ajax({
                 url: '@Url.Action(ReportsController.ACTION_Delete, ReportsController.Name)' + '/' + id,
                 type: 'POST',
-                success: function(data, status, setting) {
-                    if(data.hasError) {
+                success: function (data, status, setting) {
+                    if (data.hasError) {
                         errorMsg(data.message);
                     }
-                        
-                    document.location.href= '@Url.Action(ReportsController.ACTION_Index)' ;
+
+                    document.location.href = '@Url.Action(ReportsController.ACTION_Index)';
 
                     return;
                 },
-                error: function(request, option, err) {
+                error: function (request, option, err) {
                     console.log(request);
                     ShowCommonErorr();
                 }
