@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Datiss.Budget.Entities;
 using Datiss.Budget.Entities.DWH;
 using Datiss.Budget.Entities.Identity;
 using Datiss.Budget.Services.Excel.Models;
@@ -175,6 +176,10 @@ namespace Datiss.Budget.Services.Infrastructure
                   .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
                   .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
                   .Map(d => d.SectionTypeDisplay, s => s.SectionType != null ? s.SectionType.Title : null);
+
+            TypeAdapterConfig<Report, ReportData>
+                  .NewConfig()
+                  .Map(d => d.CategoryTypeDisplay, s => s.ReportCategory != null ? s.ReportCategory.Title : null);
         }
     }
 }

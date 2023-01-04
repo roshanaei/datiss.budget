@@ -50,7 +50,11 @@ namespace Datiss.Budget.Services.Models
 
     public class ReportFilterDTO : FilterInputDTO
     {
+        public string ReportTitle { get; set; }
 
+        public int? CategoryId { get; set; }
+
+        public EntityStatus? Status { get; set; }
     }
 
 }
