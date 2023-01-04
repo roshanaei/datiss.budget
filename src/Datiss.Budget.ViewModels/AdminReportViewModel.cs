@@ -16,6 +16,7 @@ namespace Datiss.Budget.ViewModels
         public string Name { get; set; }
         public string Title { get; set; }
         public int CategoryTypeId { get; set; }
+        public string CategoryTypeDisplay { get; set; }
         public string Description { get; set; }
         public EntityStatus Status { get; set; }
         public string StatusDisplay => Status.ToDisplay();
@@ -25,6 +26,15 @@ namespace Datiss.Budget.ViewModels
 
     public class AdminReportFilterViewModel : FilterViewModel
     {
+        public string ReportTitle { get; set; }
+
+        public int? CategoryId { get; set; }
+
+        public EntityStatus? Status { get; set; }
+
+        public IList<SelectListItem> CategoryTypeSource { get; set; }
+
+        public IList<SelectListItem> ReportStatusSource => EnumSelectListProvider.GetEntityStatusItems(Status).ToList().AddEmptySelectListItem();
 
     }
 
@@ -36,6 +46,16 @@ namespace Datiss.Budget.ViewModels
         }
 
         public AdminReportFilterViewModel Filter { get; set; }
+
+        public void SetCategoriesFilterSource(IEnumerable<DropDownItemViewModel> source, int? selectCategoryId = null)
+        {
+            Filter.CategoryTypeSource = source.Select(x => new SelectListItem
+            {
+                Selected = x.Id == selectCategoryId,
+                Text = x.Title,
+                Value = x.Id.ToString()
+            }).ToList().AddEmptySelectListItem();
+        }
     }
 
     public class CreateReportViewModel : BaseViewModel {

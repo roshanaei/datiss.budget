@@ -16,23 +16,93 @@
             <div class="card">
                 <div class="card-content">
                     <div class="card-body">
-                        <div class="rowACJSB">
-                            <fieldset>
-                                <div class="rowACJE">
-                                    <a asp-action="Create" data-toggle="tooltip" data-placement="top" title="رکورد جدید" class="btn btn-success bg-light-success my-font">
-                                        <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i> تعریف گزارش جدید
-                                    </a>
+                        <!--Filters-->
+                        <form method="post"
+                              id="filterForm"
+                              asp-controller="@ReportsController.Name"
+                              asp-action="@ReportsController.ACTION_Index"
+                              asp-antiforgery="true">
+
+                            <div class="rowACJSB">
+
+                                <fieldset class="form-group mt-3">
+                                    <label class="my-font" style="margin-right:15px">
+                                        عنوان گزارش:
+                                        <input asp-for="Filter.ReportTitle"
+                                                class="form-control d-inline-block width-250" />
+                                    </label>
+                                    <label  class="my-font" style="margin-right:15px">
+                                        دسته بندی:
+                                        <select asp-for="Filter.CategoryId"
+                                                asp-items="Model.Filter.CategoryTypeSource"
+                                                class="form-control d-inline-block width-200">
+                                        </select>
+                                    </label>
+                                    <label class="my-font" style="margin-right:15px">
+                                        وضعیت:
+                                        <select asp-for="Filter.Status"
+                                                asp-items="Model.Filter.ReportStatusSource"
+                                                class="form-control d-inline-block width-150">
+                                        </select>
+                                    </label>
+                                </fieldset>
+                                <fieldset>
+                                    <div class="rowACJSB">
+                                        <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
+                                            <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+                                        </button>
+                                        <fieldset>
+                                            <div class="rowACJE">
+                                                <a asp-action="Create" data-toggle="tooltip" data-placement="top" title="رکورد جدید" class="btn btn-success bg-light-success my-font">
+                                                    <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i> تعریف گزارش جدید
+                                                </a>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <hr />
+                            <!--SearchBox-->
+                            <fieldset class="form-group position-relative has-icon-left">
+                                <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
+                                <div class="form-control-position">
+                                    <i class="ft-search font-medium-4"></i>
                                 </div>
                             </fieldset>
-                        </div>
+                            <!--SearchBox-->
+                            <div class="rowACJSB">
+                                <div class="d-flex flex-row-reverse align-items-center">
+
+                                    <fieldset class="form-group" style="margin-right:20px">
+                                        <label class="my-font rowAC">
+                                            <span>نمایش</span>
+
+                                            <select asp-for="Filter.PageSize"
+                                                    style="margin-right:10px"
+                                                    class="form-control"
+                                                    onchange="changePageSize();"
+                                                    id="ddlPageSize">
+                                                <option>10</option>
+                                                <option>20</option>
+                                                <option>30</option>
+                                            </select>
+                                            <span style="margin-right:10px">رکورد</span>
+
+                                        </label>
+
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </form>
+
                         <div class="table-responsive" style="padding-top: 20px;">
                             <table style="width: 100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>
-                                            عنوان
-                                        </th>
+                                        <th>عنوان</th>
                                         <th>نام</th>
+                                        <th>دسته بندی</th>
                                         <th>وضعیت</th>
                                         <th>عملیات</th>
                                     </tr>
@@ -46,6 +116,9 @@
                                             </td>
                                             <td>
                                                 <span>@item.Name</span>
+                                            </td>
+                                            <td>
+                                                <span>@item.CategoryTypeDisplay</span>
                                             </td>
                                             <td>
                                                 <span>

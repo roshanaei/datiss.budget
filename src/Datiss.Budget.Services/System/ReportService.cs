@@ -60,7 +60,7 @@ namespace Datiss.Budget.Services
                 PageNumber = filter.PageNumber
             };
 
-            var query = _dbSet.Where(_ => _.Status != EntityStatus.Deleted);
+            var query = _dbSet.Include(_=>_.ReportCategory).Where(_ => _.Status != EntityStatus.Deleted);
 
             //set filter
             if(filter.Search.IsNotNullOrEmpty()) {
@@ -68,6 +68,15 @@ namespace Datiss.Budget.Services
                 query = query.Where(_ => _.Title.ToUpper().Contains(filter.Search) ||
                                         _.Name.ToUpper().Contains(filter.Search));
             }
+
+            if (filter.CategoryId.HasValue)
+                query = query.Where(x => x.CategoryTypeId == filter.CategoryId.Value);
+
+            if (! string.IsNullOrWhiteSpace(filter.ReportTitle))
+                query = query.Where(_ => _.Title.ToUpper().Contains(filter.ReportTitle));
+
+            if (filter.Status.HasValue)
+                query = query.Where(x => x.Status == filter.Status.Value);
 
             result.TotalCount = await query.CountAsync();
 

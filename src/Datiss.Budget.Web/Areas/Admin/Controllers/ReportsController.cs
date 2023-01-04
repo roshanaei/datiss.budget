@@ -14,7 +14,6 @@ using Datiss.Budget.Enum;
 using Mapster;
 using Datiss.Budget.Common;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Datiss.Budget.Web.Admin.Controllers
 {
@@ -46,16 +45,22 @@ namespace Datiss.Budget.Web.Admin.Controllers
         [HttpGet("{page?}")]
         public async Task<IActionResult> Index(int page = 1) {
             var filter = new ReportFilterDTO();
-            filter.PageSize = 50;
+            filter.PageSize = 100;
             var myfilter = TempData.Get<AdminReportFilterViewModel>(_indexFilterKey);
             if(myfilter != null) {
                 filter = myfilter.Adapt<ReportFilterDTO>();
                 TempData.Put(_indexFilterKey, filter);
             }
+
+            var categorySource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ReportCategory))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+
             filter.PageNumber = page;
             var result = await _reportService.GetAdminListAsync(filter);
             var model = result.Adapt<AdminReportIndexViewModel>();
             model.Filter = filter.Adapt<AdminReportFilterViewModel>();
+
+            model.SetCategoriesFilterSource(categorySource, filter.CategoryId);
 
             return View(model);
         }
@@ -65,13 +70,17 @@ namespace Datiss.Budget.Web.Admin.Controllers
             model.CheckArgumentIsNull(nameof(model));
 
             var filter = model.Filter.Adapt<ReportFilterDTO>();
-            filter.PageSize = 50;
+            filter.PageSize = 100;
 
             TempData.Put(_indexFilterKey, filter);
 
             var result = await _reportService.GetAdminListAsync(filter);
             model = result.Adapt<AdminReportIndexViewModel>();
             model.Filter = filter.Adapt<AdminReportFilterViewModel>();
+
+            var categorySource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ReportCategory))
+                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            model.SetCategoriesFilterSource(categorySource, filter.CategoryId);
 
             return View(model);
         }
