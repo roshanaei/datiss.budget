@@ -285,6 +285,10 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostForcastWsInvestmentReport> CostForcastWsInvestmentReportUnitType { get; set; }
 
+        public ICollection<DirectoratReport> DirectoratReportSectionType { get; set; }
+
+        public ICollection<DirectoratReport> DirectoratReportUnitType { get; set; }
+
         #endregion
     }
 }

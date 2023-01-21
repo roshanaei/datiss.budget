@@ -173,7 +173,9 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostForcastWsInvestmentReport> CostForcastWsInvestmentReport { get; set; }
 
+        public ICollection<DirectoratReport> DirectoratReport { get; set; }
 
+        
         #endregion
     }
 }
