@@ -265,7 +265,7 @@ namespace Datiss.Budget.DataLayer.Context
         public virtual DbSet<TotalBudgetWsReport> TotalBudgetWsReport { get; set; }
         public virtual DbSet<CostForcastWInvestmentReport> CostForcastWInvestmentReport { get; set; }
         public virtual DbSet<CostForcastWsInvestmentReport> CostForcastWsInvestmentReport { get; set; }
-
+        public virtual DbSet<DirectoratReport> DirectoratReport  { get; set; }
 
 
 
@@ -323,7 +323,8 @@ namespace Datiss.Budget.DataLayer.Context
                 .ApplyConfiguration(new TotalBudgetWReportConfiguration())
                 .ApplyConfiguration(new TotalBudgetWsReportConfiguration())
                 .ApplyConfiguration(new CostForcastWInvestmentReportConfiguration())
-                .ApplyConfiguration(new CostForcastWsInvestmentReportConfiguration());
+                .ApplyConfiguration(new CostForcastWsInvestmentReportConfiguration())
+                .ApplyConfiguration(new DirectoratReportConfiguration());
         }
     }
 }
