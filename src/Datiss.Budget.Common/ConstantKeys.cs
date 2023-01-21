@@ -61,6 +61,9 @@
         public const string __GeneralWasteReportType = "GeneralWasteReport";
         public const string __WInvestmentReportType  = "CostForcastWInvestmentReport";
         public const string __WsInvestmentReportType = "CostForcastWsInvestmentReport";
+        public const string __DirectorateReportType = "DirectorateReport";
+
+        
 
     }
 }
