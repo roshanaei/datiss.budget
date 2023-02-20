@@ -291,7 +291,7 @@ namespace Datiss.Budget.Entities
 
         public ICollection<CostCurrentOtherCofficient> CostCurrentOtherCofficientCostCenter { get; set; }
 
-        public ICollection<CostCurrentOtherCofficient> CostCurrentOtherCofficientTypeId { get; set; }
+        public ICollection<CostCurrentOtherCofficient> CostCurrentOtherCofficientType { get; set; }
 
 
 
