@@ -289,6 +289,12 @@ namespace Datiss.Budget.Entities
 
         public ICollection<DirectoratReport> DirectoratReportUnitType { get; set; }
 
+        public ICollection<CostCurrentOtherCofficient> CostCurrentOtherCofficientCostCenter { get; set; }
+
+        public ICollection<CostCurrentOtherCofficient> CostCurrentOtherCofficientTypeId { get; set; }
+
+
+
         #endregion
     }
 }

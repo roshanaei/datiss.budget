@@ -16,7 +16,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public int CCOtherCostsTypeId { get; set; }
 
-        public long ForcastFee { get; set; }
+        public decimal Fee { get; set; }
 
         #endregion
 
