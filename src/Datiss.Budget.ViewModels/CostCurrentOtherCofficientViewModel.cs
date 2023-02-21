@@ -65,9 +65,9 @@ namespace Datiss.Budget.ViewModels
     {
         public CostCurrentOtherCofficientIndexViewModel()
         {
-            Filter = new CostCurrentOtherFilterViewModel();
+            Filter = new CostCurrentOtherCofficientFilterViewModel();
         }
-        public CostCurrentOtherFilterViewModel Filter { get; set; }
+        public CostCurrentOtherCofficientFilterViewModel Filter { get; set; }
         public IList<SelectListItem> YearSource { get; set; }
         public IList<SelectListItem> InputOrganizationSource { get; set; }
         public IList<SelectListItem> CostCenterTypeSource { get; set; }
