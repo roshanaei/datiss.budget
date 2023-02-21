@@ -13,22 +13,23 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<CostCurrentOtherCofficient> GetByIdAsync(int id);
 
-        Task<ValidationResult<CostCurrentOtherCofficientDTO>> CreateAsync(CreateCostCurrentOtherDTO model);
+        Task<ValidationResult<CostCurrentOtherCofficientDTO>> CreateAsync(CreateCostCurrentOtherCofficientDTO model);
 
-        Task<ValidationResult<CostCurrentOtherCofficientDTO>> UpdateAsync(UpdateCostCurrentOtherDTO model);
+        Task<ValidationResult<CostCurrentOtherCofficientDTO>> UpdateAsync(UpdateCostCurrentOtherCofficientDTO model);
 
         Task HardDeleteAsync(int Id);
 
-        Task<PagedResult<CostCurrentOtherCofficientDTO>> GetListAsync(CostCurrentOtherFilterDTO filter);
+        Task<SubscriptionDeleteDataResult> HardDeleteAllAsync(int yearId);
 
-        Task CopyAsync(int sourceYearId, int sourceOrgId, int destYearId);
+        Task<PagedResult<CostCurrentOtherCofficientDTO>> GetListAsync(CostCurrentOtherCofficientFilterDTO filter);
+
+        Task CopyAsync(int sourceYearId, int destYearId);
 
         Task<Stream> ExportExcelAsync(CostCurrentOtherCofficientFilterDTO filter);
 
-        Task<IEnumerable<CostCurrentOtherCofficientDTO>> GetExportItemsAsync(int yearId, int organizationId);
+        Task<IEnumerable<CostCurrentOtherCofficientDTO>> GetExportItemsAsync(int yearId);
 
-        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false);
-
+        Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId);
     }
 
 }
