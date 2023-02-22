@@ -406,22 +406,19 @@ namespace Datiss.Budget.Web.Controllers
 
             var items = new List<CostCurrentOtherCofficientDTO>();
 
-            foreach (var org in costCenterTypes)
+            foreach (var cct in costCenterTypes)
             {
-                foreach (var usert in costCenterTypes)
+                foreach (var ct in ccOtherCostsType)
                 {
-                    foreach (var item in ccOtherCostsType)
-                    {
                         items.Add(new CostCurrentOtherCofficientDTO
                         {
-                            CostCenterTypeDisplay = usert.Title,
-                            CostCenterTypeId = usert.Id,
-                            CCOtherCostsTypeId = item.Id,
-                            CCOtherCostsTypeDisplay = item.Title,
+                            CostCenterTypeDisplay = cct.Title,
+                            CostCenterTypeId = cct.Id,
+                            CCOtherCostsTypeId = ct.Id,
+                            CCOtherCostsTypeDisplay = ct.Title,
                             Year = year.Year,
                             YearId = year.Id
                         });
-                    }
                 }
             }
 
