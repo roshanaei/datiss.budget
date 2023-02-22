@@ -30,7 +30,7 @@
         rowData.yearId = $('#inputYear_' + id).val();
         rowData.costCenterTypeId = $('#inputCostCenterType_' + id).val();
         rowData.ccOtherCostsTypeId = $('#inputCCOtherCostsType_' + id).val();
-        rowData.baseFee = $('#inputFee_' + id).val();
+        rowData.fee = $('#inputFee_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -47,7 +47,7 @@
             $('#inputYear_' + id).val(rowData.yearId);
             $('#inputCostCenterType_' + id).val(rowData.costCenterTypeId);
             $('#inputCCOtherCostsType_' + id).val(rowData.ccOtherCostsTypeId);
-            $('#inputFee_' + id).val(rowData.baseFee);
+            $('#inputFee_' + id).val(rowData.fee);
         }
 
         //Show output elements
