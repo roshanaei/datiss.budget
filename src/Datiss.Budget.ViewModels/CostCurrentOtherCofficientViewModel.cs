@@ -47,6 +47,7 @@ namespace Datiss.Budget.ViewModels
         public int CCOtherCostsTypeId { get; set; }
         public string CCOtherCostsTypeDisplay { get; set; }
         public decimal Fee { get; set; }
+        public string FeeDisplay { get; set; }
     }
 
     public class CostCurrentOtherCofficientFilterViewModel : FilterViewModel
