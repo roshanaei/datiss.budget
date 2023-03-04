@@ -474,14 +474,17 @@
 
             console.log(model);
 
+            $(".olvy").css("display", "block");
+
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action(CostCurrentReportController.ACTION_Calculation)',
                 data: model,
                 success: function(data, status, settings) {
 
+                    $(".olvy").css("display", "none");
+
                     if (data.hasError) {
-                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
                             html: `<span class="my-font">${data.message}</span>`,
@@ -496,7 +499,6 @@
                         return;
                     }
 
-                    $(".olvy").css("display", "none");
                     Swal.fire({
                         title: '<span class="my-font">عملیات موفق</span>',
                         html: '<span class="my-font">عملیات محاسبه اطلاعات با موفقیت انجام شد.</span>',
