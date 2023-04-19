@@ -223,7 +223,6 @@
     <script type="text/javascript">
         let allColumns = '1,2,3,4,5,6';
         let columnIndices = allColumns.split(',');
-        console.log(columnIndices);
         let showingColmuns = "1,2,3,4,5,6,";
     </script>
 
@@ -252,10 +251,6 @@
 
 
     $(document).ready(function () {
-        console.log(userType_source);
-        console.log(userType_Ids);
-        console.log(userType_keys);
-            console.log('ready');
             //fill input hidden with initial columns showing
             document.getElementById("hidColumns").value = showingColmuns;
 
@@ -267,7 +262,6 @@
 
             $("#columnSelector input:checkbox:checked").change(function () {
                 let index = parseInt($(this)[0].id.split('-')[1]);
-                console.log(`showing or hiding col : ${index}`);
                 let checked = $(this)[0].checked;
                 if (checked) {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
@@ -295,13 +289,10 @@
 
         function setDataColumns() {
             let columnsToShow = document.getElementById("hidColumns").value.split(',');
-            console.log('ColumnsToShow ');
-            console.log(columnsToShow);
             let checkBoxes = $("#columnSelector input:checkbox");
             for(let i = 0; i < columnIndices.length; i++) {
                 let index = parseInt(columnIndices[i]);
                 let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
-                console.log(`Column : ${index} show = ${showColumn}`);
                 checkBoxes[i].checked = showColumn;
                 if(showColumn)
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
@@ -331,16 +322,13 @@
                     let params = {};
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
-                    console.log(params);
                     let deleteUrl = '@Url.Action(IncomeCurrentCofficientController.ACTION_DeleteRecords)';
-                    console.log(deleteUrl);
 
                     $.ajax({
                         url: deleteUrl,
                         type: 'POST',
                         data: params,
                         success: function(data, status, settings) {
-                            console.log(status);
                             if(data.hasError) {
                                 Swal.fire({
                                     title: '<span class="my-font">خطا</span>',
@@ -522,7 +510,6 @@
                 processData: false,
                 contentType: false,
                 success: function (data, status, settings) {
-                    console.log(data);
                     if (data.hasError) {
                         $(".olvy").css("display", "none");
                         Swal.fire({
@@ -559,7 +546,6 @@
 
                             if(result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
-                                console.log(fdata);
 
                                 $(".olvy").css("display", "block");
 
@@ -655,8 +641,6 @@
             model.sourceOrgId = $('#SourceOrgId').val();
             model.targetYearId = $('#TargetYearId option:selected').val();
 
-            console.log(model);
-
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action(IncomeCurrentCofficientController.ACTION_Copy)',
@@ -702,7 +686,6 @@
 
         function changePageSize() {
             let pageSize = $('#ddlPageSize').attr('value');
-            console.log(pageSize);
             $('#filterForm').submit();
         };
 
