@@ -619,6 +619,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to اطلاعات مرکز هزینه &quot;{0}&quot; و عنوان &quot;{1}&quot;  قبلا ثبت شده است..
+        /// </summary>
+        public static string Logic_CostCenterTypeCCOtherCofficientCostsTypeDuplicate {
+            get {
+                return ResourceManager.GetString("Logic_CostCenterTypeCCOtherCofficientCostsTypeDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to اطلاعات مرکز هزینه &quot;{0}&quot; و عنوان &quot;{1}&quot; برای &quot;{2}&quot; قبلا ثبت شده است..
         /// </summary>
         public static string Logic_CostCenterTypeCCOtherCostsTypeDuplicate {

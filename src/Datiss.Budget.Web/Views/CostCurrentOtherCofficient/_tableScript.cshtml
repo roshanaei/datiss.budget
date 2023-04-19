@@ -5,33 +5,21 @@
 
     function editRow(id) {
 
-        let userTypeId = $('#inputUserType_' + id).val();
-        let usageLayerTypeId = $('#hidUsageLayerTypeId_' + id).val();
-
-        FillDropDown(userTypeId, usageLayerTypeId);
-        
         resetTableBackColor("my-table");
 
         let row = $('#row_' + id);
 
         //Hide output elements
         $('#divOutput_Year_' + id).hide();
-        $('#divOutput_Org_' + id).hide();
-        $('#divOutput_UserType_' + id).hide();
-        $('#divOutput_UsageLayerType_' + id).hide();
+        $('#divOutput_CostCenterType_' + id).hide();
+        $('#divOutput_CCOtherCostsType_' + id).hide();
         $('#divOutput_Fee_' + id).hide();
-        $('#divOutput_FeeWs_' + id).hide();
-
 
         //show input elements
         $('#divInput_Year_' + id).show();
-        $('#divInput_Org_' + id).show();
-        $('#divInput_UserType_' + id).show();
-        $('#divInput_UsageLayerType_' + id).show();
+        $('#divInput_CostCenterType_' + id).show();
+        $('#divInput_CCOtherCostsType_' + id).show();
         $('#divInput_Fee_' + id).show();
-        $('#divInput_FeeWs_' + id).show();
-
-
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -40,47 +28,33 @@
 
         rowData = {};
         rowData.yearId = $('#inputYear_' + id).val();
-        rowData.organizationId = $('#inputOrg_' + id).val();
-        rowData.userTypeId = $('#inputUserType_' + id).val();
-        rowData.usageLayerTypeId = $('#inputUsageLayerType_' + id).val();
-        rowData.usageLayerTypeId = $('#inputUsageLayerType_' + id).val();
+        rowData.costCenterTypeId = $('#inputCostCenterType_' + id).val();
+        rowData.ccOtherCostsTypeId = $('#inputCCOtherCostsType_' + id).val();
         rowData.fee = $('#inputFee_' + id).val();
-        rowData.feeWs = $('#inputFeeWs_' + id).val();
-
     }
 
     function cancelEditRow(id) {
         let row = $('#row_' + id);
-        //row.css('background-color', '');
 
         //Hide input elements
         $('#divInput_Year_' + id).hide();
-        $('#divInput_Org_' + id).hide();
-        $('#divInput_UserType_' + id).hide();
-        $('#divInput_UsageLayerType_' + id).hide();
+        $('#divInput_CostCenterType_' + id).hide();
+        $('#divInput_CCOtherCostsType_' + id).hide();
         $('#divInput_Fee_' + id).hide();
-        $('#divInput_FeeWs_' + id).hide();
 
-
-        //Retriving to OrginalData
+        //Reverting to OriginalData
         if (rowData != null) {
             $('#inputYear_' + id).val(rowData.yearId);
-            $('#inputOrg_' + id).val(rowData.organizationId);
-            $('#inputUserType_' + id).val(rowData.userTypeId);
-            $('#inputUsageLayerType_' + id).val(rowData.usageLayerTypeId);
+            $('#inputCostCenterType_' + id).val(rowData.costCenterTypeId);
+            $('#inputCCOtherCostsType_' + id).val(rowData.ccOtherCostsTypeId);
             $('#inputFee_' + id).val(rowData.fee);
-            $('#inputFeeWs_' + id).val(rowData.feeWs);
-
         }
 
         //Show output elements
         $('#divOutput_Year_' + id).show();
-        $('#divOutput_Org_' + id).show();
-        $('#divOutput_UserType_' + id).show();
-        $('#divOutput_UsageLayerType_' + id).show();
+        $('#divOutput_CostCenterType_' + id).show();
+        $('#divOutput_CCOtherCostsType_' + id).show();
         $('#divOutput_Fee_' + id).show();
-        $('#divOutput_FeeWs_' + id).show();
-
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -97,19 +71,19 @@
     }
 
     function saveEditRow(id) {
+
+
         let row = $('#row_' + id);
 
         var model = {};
         model.id = id;
         model.yearId = $('#inputYear_' + id).val();
-        model.organizationId = $('#inputOrg_' + id).val();
-        model.userTypeId = $('#inputUserType_' + id).val();
-        model.usageLayerId = $('#inputUsageLayerType_' + id).val();
+        model.costCenterTypeId = $('#inputCostCenterType_' + id).val();
+        model.ccOtherCostsTypeId = $('#inputCCOtherCostsType_' + id).val();
         model.fee = $('#inputFee_' + id).val();
-        model.feeWs = $('#inputFeeWs_' + id).val();
 
         $.ajax({
-            url: '@Url.Action(IncomeCurrentCofficientController.ACTION_Edit)',
+            url: '@Url.Action(CostCurrentOtherCofficientController.ACTION_Edit)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -129,21 +103,16 @@
 
                 rowData = {};
                 rowData.yearId = model.yearId;
-                rowData.organizationId = model.organizationId;
-                rowData.userTypeId = model.userTypeId;
-                rowData.usageLayerTypeId = model.usageLayerId;
+                rowData.costCenterTypeId = model.costCenterTypeId;
+                rowData.ccOtherCostsTypeId = model.ccOtherCostsTypeId;
                 rowData.fee = model.fee;
-                rowData.feeWs = model.feeWs;
-
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
-                $('#hidOrgId_' + id).attr('value', model.organizationId);
-                $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
-                $('#spanUserType_' + id).text(data.userTypeTitle);
-                $('#spanUsageLayerType_' + id).text(data.usageLayerTitle);
+                $('#spanCostCenterType_' + id).text(data.costCenterTypeDisplay);
+                $('#spanCCOtherCostsType_' + id).text(data.ccOtherCostsTypeDisplay);
                 $('#spanFee_' + id).text(data.fee);
-                $('#spanFeeWs_' + id).text(data.feeWs);
+
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
@@ -165,21 +134,16 @@
 
         var model = {};
         model.yearId = $(e).find('#inputYear_').val();
-        model.organizationId = $(e).find('#inputOrg_').val();
-        model.userTypeId = $(e).find('#inputUserType_').val();
-        model.usageLayerId = $(e).find('#inputUsageLayerType_').val();
+        model.costCenterTypeId = $(e).find('#inputCostCenterType_').val();
+        model.ccOtherCostsTypeId = $(e).find('#inputCCOtherCostsType_').val();
         model.fee = $(e).find('#inputFee_').val();
-        if (model.fee == "") {
+        if(model.fee == "")
             model.fee = 0;
-        }
 
-        model.feeWs = $(e).find('#inputFeeWs_').val();
-        if (model.feeWs == "") {
-            model.feeWs = 0;
-        }
+        console.log(model);
 
         $.ajax({
-            url: '@Url.Action(IncomeCurrentCofficientController.ACTION_Create)',
+            url: '@Url.Action(CostCurrentOtherCofficientController.ACTION_Create)',
             type: 'POST',
             data: model,
             dataType: 'json',
@@ -208,41 +172,29 @@
                 $('#spanYear_' + data.id).text(data.year);
                 $('#divOutput_Year_' + data.id).show();
 
-                //Organization
-                $(e).find('#divInput_Org_').attr('id', 'divInput_Org_' + data.id);
-                $(e).find('#hidOrgId_').attr('id', 'hidOrgId_' + data.id);
-                $(e).find('#inputOrg_').attr('id', 'inputOrg_' + data.id);
-                $(e).find('#divOutput_Org_').attr('id', 'divOutput_Org_' + data.id);
-                $(e).find('#spanOrg_').attr('id', 'spanOrg_' + data.id);
+                //CostCenterType
+                $(e).find('#divInput_CostCenterType_').attr('id', 'divInput_CostCenterType_' + data.id);
+                $(e).find('#hidCostCenterTypeId_').attr('id', 'hidCostCenterTypeId_' + data.id);
+                $(e).find('#inputCostCenterType_').attr('id', 'inputCostCenterType_' + data.id);
+                $(e).find('#divOutput_CostCenterType_').attr('id', 'divOutput_CostCenterType_' + data.id);
+                $(e).find('#spanCostCenterType_').attr('id', 'spanCostCenterType_' + data.id);
 
-                $('#divInput_Org_' + data.id).hide();
-                $('#spanOrg_' + data.id).text(data.organizationDisplay);
-                $('#divOutput_Org_' + data.id).show();
+                $('#divInput_CostCenterType_' + data.id).hide();
+                $('#spanCostCenterType_' + data.id).text(data.costCenterTypeDisplay);
+                $('#divOutput_CostCenterType_' + data.id).show();
 
-                //UserType
-                $(e).find('#divInput_UserType_').attr('id', 'divInput_UserType_' + data.id);
-                $(e).find('#hidUserTypeId_').attr('id', 'hidUserTypeId_' + data.id);
-                $(e).find('#inputUserType_').attr('id', 'inputUserType_' + data.id);
-                $(e).find('#divOutput_UserType_').attr('id', 'divOutput_UserType_' + data.id);
-                $(e).find('#spanUserType_').attr('id', 'spanUserType_' + data.id);
+                //CCOtherCostsTypeType
+                $(e).find('#divInput_CCOtherCostsType_').attr('id', 'divInput_CCOtherCostsType_' + data.id);
+                $(e).find('#hidCCOtherCostsTypeId_').attr('id', 'hidCCOtherCostsTypeId_' + data.id);
+                $(e).find('#inputCCOtherCostsType_').attr('id', 'inputCCOtherCostsType_' + data.id);
+                $(e).find('#divOutput_CCOtherCostsType_').attr('id', 'divOutput_CCOtherCostsType_' + data.id);
+                $(e).find('#spanCCOtherCostsType_').attr('id', 'spanCCOtherCostsType_' + data.id);
 
-                $('#divInput_UserType_' + data.id).hide();
-                $('#spanUserType_' + data.id).text(data.userTypeTitle);
-                $('#divOutput_UserType_' + data.id).show();
+                $('#divInput_CCOtherCostsType_' + data.id).hide();
+                $('#spanCCOtherCostsType_' + data.id).text(data.ccOtherCostsTypeDisplay);
+                $('#divOutput_CCOtherCostsType_' + data.id).show();
 
-
-                //UsageLayerType
-                $(e).find('#divInput_UsageLayerType_').attr('id', 'divInput_UsageLayerType_' + data.id);
-                $(e).find('#hidUsageLayerTypeId_').attr('id', 'hidUsageLayerTypeId_' + data.id);
-                $(e).find('#inputUsageLayerType_').attr('id', 'inputUsageLayerType_' + data.id);
-                $(e).find('#divOutput_UsageLayerType_').attr('id', 'divOutput_UsageLayerType_' + data.id);
-                $(e).find('#spanUsageLayerType_').attr('id', 'spanUsageLayerType_' + data.id);
-
-                $('#divInput_UsageLayerType_' + data.id).hide();
-                $('#spanUsageLayerType_' + data.id).text(data.usageLayerTitle);
-                $('#divOutput_UsageLayerType_' + data.id).show();
-
-                //Fee
+                //BaseFee
                 $(e).find('#divInput_Fee_').attr('id', 'divInput_Fee_' + data.id);
                 $(e).find('#inputFee_').attr('id', 'inputFee_' + data.id);
                 $(e).find('#divOutput_Fee_').attr('id', 'divOutput_Fee_' + data.id);
@@ -250,19 +202,9 @@
 
                 $('#divInput_Fee_' + data.id).hide();
                 $('#spanFee_' + data.id).text(data.fee);
-                $('#divOutput_Fee_' + data.id).show();      
-                
+                $('#divOutput_Fee_' + data.id).show();
 
-                //FeeWs
-                $(e).find('#divInput_FeeWs_').attr('id', 'divInput_FeeWs_' + data.id);
-                $(e).find('#inputFeeWs_').attr('id', 'inputFeeWs_' + data.id);
-                $(e).find('#divOutput_FeeWs_').attr('id', 'divOutput_FeeWs_' + data.id);
-                $(e).find('#spanFeeWs_').attr('id', 'spanFeeWs_' + data.id);
-
-                $('#divInput_Fee_' + data.id).hide();
-                $('#spanFee_' + data.id).text(data.fee);
-                $('#divOutput_Fee_' + data.id).show(); 
-
+               
                 //Buttons
                 $(e).find('#btnEdit_').data('id', data.id);
                 $(e).find('#btnDelete_').data('id', data.id);
@@ -284,6 +226,7 @@
                 $('#btnDelete_' + data.id).show();
 
                 $('#inputOrg_' + data.id).select2();
+
                 $(e).css('background-color', 'rgb(245 245 246)');
                 isNewRow = false;
             },
@@ -299,12 +242,6 @@
 
     function addNewRow() {
         if (isNewRow) return;
-
-        resetTableBackColor("my-table");
-
-        let usertypeid = $('#inputUserType_').val();
-        FillDropDown(usertypeid);
-        
 
         var template = $('#rowTemplate').clone()
             .appendTo($('#my-table tbody'))
@@ -337,12 +274,24 @@
     }
 
     function deleteRow(e, id) {
+        console.log(e);
+
         $.ajax({
-            url: '@Url.Action(IncomeCurrentCofficientController.ACTION_Delete)' + '/' + id,
+            url: '@Url.Action(CostCurrentOtherController.ACTION_Delete)' + '/' + id,
             type: 'POST',
             success: function (data, status, settings) {
                 if (data.hasError) {
-                    alert(data.message);
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">${data.message}</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
                     return;
                 }
 
@@ -365,42 +314,5 @@
             rows[i].style = "";
         }
     }
-
-    function RelatedDropDown(e, event) {
-        let usertypeid = event.target.value;
-        FillDropDown(usertypeid);
-    }
-
-    function FillDropDown(id, selectval = null) {
-
-        let key = userType_source[id];
-        if (key != 'UserType.House') {
-            key = 'UsageLayer';
-        }
-
-        $.ajax({
-            url: '@Url.Action("GetUsageLayerAsync")',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                'key': key
-                }
-        }).done(function (data) {
-            var options = $('.selectUsageLayerType');
-            options.empty();
-            $.each(data,
-                function (i, item) {
-                    options.append($('<option />')
-                        .val(item.id)
-                        .text(item.title));
-                });
-            if (selectval != null) {
-                options.val(selectval);
-            }
-        }).fail(function (error) {
-            alert(error);
-        });
-    }
-
 
 </script>
