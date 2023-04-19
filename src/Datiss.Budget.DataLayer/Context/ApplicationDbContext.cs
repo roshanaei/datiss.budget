@@ -164,6 +164,8 @@ namespace Datiss.Budget.DataLayer.Context
             var con = Database.GetDbConnection();
             using (var command = con.CreateCommand())
             {
+                command.CommandTimeout = 500;
+
                 command.CommandText = sql;
                 if (parameters != null)
                 {

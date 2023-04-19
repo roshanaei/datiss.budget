@@ -244,7 +244,6 @@
     <script type="text/javascript">
         let allColumns = '1,2,3,4,5,6,7,8';
         let columnIndices = allColumns.split(',');
-        console.log(columnIndices);
         let showingColmuns = "1,2,3,4,5,6,7,8,";
     </script>
 
@@ -257,9 +256,7 @@
 
     <script type="text/javascript">
 
-
         $(document).ready(function() {
-            console.log('ready');
             //fill input hidden with initial columns showing
             document.getElementById("hidColumns").value = showingColmuns;
 
@@ -271,7 +268,6 @@
 
             $("#columnSelector input:checkbox:checked").change(function() {
                 let index = parseInt($(this)[0].id.split('-')[1]);
-                console.log(`showing or hiding col : ${index}`);
                 let checked = $(this)[0].checked;
                 if (checked) {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
@@ -299,13 +295,10 @@
 
         function setDataColumns() {
             let columnsToShow = document.getElementById("hidColumns").value.split(',');
-            console.log('ColumnsToShow ');
-            console.log(columnsToShow);
             let checkBoxes = $("#columnSelector input:checkbox");
             for (let i = 0; i < columnIndices.length; i++) {
                 let index = parseInt(columnIndices[i]);
                 let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
-                console.log(`Column : ${index} show = ${showColumn}`);
                 checkBoxes[i].checked = showColumn;
                 if (showColumn)
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
@@ -333,16 +326,14 @@
                     let params = {};
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
-                    console.log(params);
                     let deleteUrl = '@Url.Action(CostCurrentReportController.ACTION_DeleteRecords)';
-                    console.log(deleteUrl);
-
+                    $(".olvy").css("display", "block");
                     $.ajax({
                         url: deleteUrl,
                         type: 'POST',
                         data: params,
                         success: function(data, status, settings) {
-                            console.log(status);
+                            $(".olvy").css("display", "none");
                             if (data.hasError) {
                                 Swal.fire({
                                     title: '<span class="my-font">خطا</span>',
@@ -373,6 +364,7 @@
                             });
                         },
                         error: function(request, option, err) {
+                            $(".olvy").css("display", "none");
                             if (request.status == 401 || request.status == 403) {
                                 ShowPermissionErorr();
                                 return;
@@ -472,16 +464,15 @@
             model.yearId = $('#yearId').val();
             model.organizationId = $('#organizationId').val();
 
-            console.log(model);
+            $(".olvy").css("display", "block");
 
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action(CostCurrentReportController.ACTION_Calculation)',
                 data: model,
                 success: function(data, status, settings) {
-
+                    $(".olvy").css("display", "none");
                     if (data.hasError) {
-                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
                             html: `<span class="my-font">${data.message}</span>`,
@@ -496,7 +487,6 @@
                         return;
                     }
 
-                    $(".olvy").css("display", "none");
                     Swal.fire({
                         title: '<span class="my-font">عملیات موفق</span>',
                         html: '<span class="my-font">عملیات محاسبه اطلاعات با موفقیت انجام شد.</span>',
@@ -512,8 +502,7 @@
                     });
                 },
                 error: function(request, options, err) {
-                    console.log(err);
-                    $(".olvy").css("display", "none");
+                    $(".olvy").css("display", "none");                    
                     if (request.status == 401 || request.status == 403) {
                         ShowPermissionErorr();
                         return;
@@ -540,7 +529,6 @@
                 processData: false,
                 contentType: false,
                 success: function(data, status, settings) {
-                    console.log(data);
                     if (data.hasError) {
                         $(".olvy").css("display", "none");
                         Swal.fire({
@@ -576,7 +564,6 @@
 
                             if (result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
-                                console.log(fdata);
 
                                 $(".olvy").css("display", "block");
 
@@ -672,7 +659,7 @@
             model.sourceOrgId = $('#SourceOrgId').val();
             model.targetYearId = $('#TargetYearId option:selected').val();
 
-            console.log(model);
+            $(".olvy").css("display", "block");
 
             $.ajax({
                 type: 'POST',
@@ -680,6 +667,7 @@
                 data: model,
                 dataType: 'json',
                 success: function(data, status, settings) {
+                    $(".olvy").css("display", "none");
                     if (data._HasError) {
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
@@ -707,9 +695,11 @@
                         buttonsStyling: false,
                     }).then(function(result) {
                         $('#CopyModal').modal('hide');
+                        document.location.href = '@Url.Action(CostCurrentReportController.ACTION_Index, new { page = 1 })';
                     });
                 },
                 error: function(request, options, err) {
+                    $(".olvy").css("display", "none");
                     console.log(err);
                     alert('عملیات کپی با خطا مواجه شد.');
                 }
@@ -719,7 +709,6 @@
 
         function changePageSize() {
             let pageSize = $('#ddlPageSize').attr('value');
-            console.log(pageSize);
             $('#filterForm').submit();
         };
 

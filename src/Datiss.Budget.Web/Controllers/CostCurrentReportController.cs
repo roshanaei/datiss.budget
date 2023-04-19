@@ -307,7 +307,7 @@ namespace Datiss.Budget.Web.Controllers
             {
                 model.AddError(ViewMessages.CalculationField);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 model.AddError(ViewMessages.SystemError);
             }
