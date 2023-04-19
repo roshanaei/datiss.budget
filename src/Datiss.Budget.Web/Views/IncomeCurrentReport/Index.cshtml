@@ -1,5 +1,7 @@
 ﻿@model IncomeCurrentReportIndexViewModel
-@{ ViewData["Title"] = "گزارش درآمد های جاری"; }
+@{
+    ViewData["Title"] = "گزارش درآمد های جاری";
+}
 
 <!--Title-->
 <div class="row">
@@ -202,7 +204,7 @@
                                         <button data-toggle="tooltip" data-placement="top" title="به روز رسانی داده ها" type="submit" name="btnRefreshTable" class="btn btn-info bg-light-info  mr-1 my-font">
                                             <i _ngcontent-dpj-c129="" class="fa fa-refresh"></i>
                                         </button>
-                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font"                                           asp-asp-controller="@IncomeCurrentReportController.Name"
+                                        <a data-toggle="tooltip" data-placement="top" title="دانلود اطلاعات جدول" name="btnExportExcel" class="btn btn-secondary bg-light-secondary mr-1 my-font" asp-asp-controller="@IncomeCurrentReportController.Name"
                                            asp-action="@IncomeCurrentReportController.ACTION_ExportExcel"
                                            asp-route-yearId="@Model.Filter.YearId"
                                            asp-route-orgId="@Model.Filter.OrganizationId">
@@ -240,18 +242,15 @@
     <partial name="_loadingBar" />
 
     <div id="divCopy">
-
     </div>
 
     <partial name="_excelModal" model="new ImportExcelViewModel()" />
 
     <div id="divCreate">
-
     </div>
 
 
     <div id="divCalc">
-
     </div>
 
     <partial name="_tableScript" />
@@ -259,14 +258,13 @@
     <script type="text/javascript">
         let allColumns = '1,2,3,4,5,6,7,8,9';
         let columnIndices = allColumns.split(',');
-        console.log(columnIndices);
         let showingColmuns = "1,2,3,4,5,6,7,8,9,";
     </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
     {
         <script type="text/javascript">
-            showingColmuns = '@Model.Filter.Columns' ;
+            showingColmuns = '@Model.Filter.Columns';
         </script>
     }
 
@@ -274,7 +272,6 @@
 
 
         $(document).ready(function () {
-            console.log('ready');
             //fill input hidden with initial columns showing
             document.getElementById("hidColumns").value = showingColmuns;
 
@@ -286,7 +283,6 @@
 
             $("#columnSelector input:checkbox:checked").change(function () {
                 let index = parseInt($(this)[0].id.split('-')[1]);
-                console.log(`showing or hiding col : ${index}`);
                 let checked = $(this)[0].checked;
                 if (checked) {
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
@@ -314,13 +310,10 @@
 
         function setDataColumns() {
             let columnsToShow = document.getElementById("hidColumns").value.split(',');
-            console.log('ColumnsToShow ');
-            console.log(columnsToShow);
             let checkBoxes = $("#columnSelector input:checkbox");
             for (let i = 0; i < columnIndices.length; i++) {
                 let index = parseInt(columnIndices[i]);
                 let showColumn = columnsToShow.indexOf(columnIndices[i]) !== -1;
-                console.log(`Column : ${index} show = ${showColumn}`);
                 checkBoxes[i].checked = showColumn;
                 if (showColumn)
                     $(`th:nth-child(${index}), tr td:nth-child(${index})`).show();
@@ -341,24 +334,23 @@
                 cancelButtonText: 'انصراف',
                 confirmButtonText: 'حذف اطلاعات!',
                 confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
-                cancelButtonClass:  'btn btn-outline-secondary mr-1 my-font',
+                cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
                 buttonsStyling: false,
             }).then(function (result) {
                 if (result.value) {
                     let params = {};
                     params.yearId = $('#yearId option:selected').val();
                     params.orgId = $('#organizationId option:selected').val();
-                    console.log(params);
                     let deleteUrl = '@Url.Action(IncomeCurrentReportController.ACTION_DeleteRecords)';
-                    console.log(deleteUrl);
+                    $(".olvy").css("display", "block");
 
                     $.ajax({
                         url: deleteUrl,
                         type: 'POST',
                         data: params,
-                        success: function(data, status, settings) {
-                            console.log(status);
-                            if(data.hasError) {
+                        success: function (data, status, settings) {
+                            $(".olvy").css("display", "none");
+                            if (data.hasError) {
                                 Swal.fire({
                                     title: '<span class="my-font">خطا</span>',
                                     html: `<span class="my-font">${data.message}</span>`,
@@ -383,11 +375,12 @@
                                 confirmButtonText: 'بستن',
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
-                            }).then(function(result) {
+                            }).then(function (result) {
                                 document.location.href = '@Url.Action(IncomeCurrentReportController.ACTION_Index, new { page = 1 })';
                             });
                         },
-                        error: function(request, option, err) {
+                        error: function (request, option, err) {
+                            $(".olvy").css("display", "none");
                             if (request.status == 401 || request.status == 403) {
                                 ShowPermissionErorr();
                                 return;
@@ -453,7 +446,7 @@
             $(this).prop('disabled', false);
         });
 
-        $(document).on('click', '.openCopy', function() {
+        $(document).on('click', '.openCopy', function () {
             $.ajax({
                 type: 'GET',
                 url: '@Url.Action(IncomeCurrentReportController.ACTION_Copy)',
@@ -482,18 +475,19 @@
             });
         });
 
-        $(document).on('click', '.calculation-button', function() {
+        $(document).on('click', '.calculation-button', function () {
             let model = {};
             model.yearId = $('#yearId').val();
             model.organizationId = $('#organizationId').val();
 
-            console.log(model);
+            $(".olvy").css("display", "block");
 
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action(IncomeCurrentReportController.ACTION_Calculation)',
                 data: model,
                 success: function (data, status, settings) {
+                    $(".olvy").css("display", "none");
                     $('#divCalc').html('');
                     $('#divCalc').html(data);
                     $('#CalculationModal').modal('show');
@@ -503,13 +497,14 @@
                     });
                 },
                 error: function (request, options, err) {
+                    $(".olvy").css("display", "none");
                     console.log(err);
                     $('#divCalc').html('failed to load content.');
                 }
             });
         });
 
-        $(document).on('click', '#btnDoImportExcel', function() {
+        $(document).on('click', '#btnDoImportExcel', function () {
             var fdata = new FormData();
             var fileInput = $('#ExcelFile')[0];
             var file = fileInput.files[0];
@@ -526,9 +521,9 @@
                 processData: false,
                 contentType: false,
                 success: function (data, status, settings) {
-                    console.log(data);
+                    $(".olvy").css("display", "block");
+
                     if (data.hasError) {
-                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
                             html: `<span class="my-font">${data.message}</span>`,
@@ -544,7 +539,6 @@
                     }
 
                     if (data.ask) {
-                        $(".olvy").css("display", "none");
                         Swal.fire({
                             html: `<span class="my-font">سازمان های :<br>${data.message} در فایل اکسل شما اطلاعاتی ندارند. آیا مایل به ادامه هستید؟</span>`,
                             type: 'warning',
@@ -560,9 +554,8 @@
                             buttonsStyling: false,
                         }).then(function (result) {
 
-                            if(result.value) {
+                            if (result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
-                                console.log(fdata);
 
                                 $(".olvy").css("display", "block");
 
@@ -572,9 +565,9 @@
                                     data: fdata,
                                     processData: false,
                                     contentType: false,
-                                    success: function(data, status, settings) {
+                                    success: function (data, status, settings) {
+                                        $(".olvy").css("display", "none");
                                         if (data.hasError) {
-                                            $(".olvy").css("display", "none");
                                             Swal.fire({
                                                 title: '<span class="my-font">خطا</span>',
                                                 html: `<span class="my-font">${data.message}</span>`,
@@ -590,8 +583,7 @@
                                         }
 
                                         if (!data.hasError) {
-                                            $(".olvy").css("display", "none");
-                                          Swal.fire({
+                                            Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
                                                 html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
                                                 type: 'success',
@@ -601,16 +593,17 @@
                                                 confirmButtonText: 'بستن',
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
-                                          }).then(function (result) {
+                                            }).then(function (result) {
                                                 document.location.href = '@Url.Action(IncomeCurrentReportController.ACTION_ImportExcel)';
                                             });
                                         }
 
-                                        if(data.ask) {
+                                        if (data.ask) {
                                             alert('dont ask again');
                                         }
                                     },
-                                    error: function(request, options, err) {
+                                    error: function (request, options, err) {
+                                        $(".olvy").css("display", "none");
                                         console.log(err);
                                     }
                                 });
@@ -658,14 +651,14 @@
             model.sourceOrgId = $('#SourceOrgId').val();
             model.targetYearId = $('#TargetYearId option:selected').val();
 
-            console.log(model);
-
+            $(".olvy").css("display", "block");
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action(IncomeCurrentReportController.ACTION_Copy)',
                 data: model,
                 dataType: 'json',
                 success: function (data, status, settings) {
+                    $(".olvy").css("display", "none");
                     if (data._HasError) {
                         Swal.fire({
                             title: '<span class="my-font">خطا</span>',
@@ -691,11 +684,12 @@
                         confirmButtonText: 'بستن',
                         confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                         buttonsStyling: false,
-                    }).then(function(result) {
+                    }).then(function (result) {
                         $('#CopyModal').modal('hide');
                     });
                 },
                 error: function (request, options, err) {
+                    $(".olvy").css("display", "none");
                     console.log(err);
                     alert('عملیات کپی با خطا مواجه شد.');
                 }
@@ -705,7 +699,6 @@
 
         function changePageSize() {
             let pageSize = $('#ddlPageSize').attr('value');
-            console.log(pageSize);
             $('#filterForm').submit();
         };
 

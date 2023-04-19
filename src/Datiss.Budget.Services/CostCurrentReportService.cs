@@ -190,16 +190,34 @@ namespace Datiss.Budget.Services
                     .Skip(filter.StartIndex)
                     .Take(filter.PageSize);
 
-            result.Items = await query.Include(x => x.FinanceYear)
+            result.Items = query.Include(x => x.FinanceYear)
                                         .Include(x => x.Organization)
                                         .Include(x => x.SectionType)
                                         .Include(x => x.UnitType)
                                         .Include(x => x.CostCenterType)
-                                        .Include(x=>x.UnitDetailType)
-                                        .Select(x => x.Adapt<CostCurrentReportDTO>())
-                                        .ToListAsync();
+                                        .Include(x => x.UnitDetailType)
+                                        .Select(x => new CostCurrentReportDTO()
+                                        {
+                                            Id = x.Id,
+                                            YearId = x.YearId,
+                                            Year = x.FinanceYear.Year,
+                                            OrganizationId = x.OrganizationId,
+                                            ApproveYear_1 = x.ApproveYear_1,
+                                            CostCenterTypeDisplay = x.CostCenterType.Title,
+                                            CostCenterTypeId = x.CostCenterTypeId,
+                                            ForcastY = x.ForcastY,
+                                            FunctionalBasicYear = x.FunctionalBasicYear,
+                                            FunctionalYear_1 = x.FunctionalYear_1,
+                                            OrganizationDisplay = x.Organization.Title,
+                                            SectionTypeDisplay = x.SectionType.Title,
+                                            SectionTypeId = x.SectionTypeId,
+                                            UnitDetailTypeDisplay = x.UnitDetailType.Title,
+                                            UnitDetailTypeId = x.UnitDetailTypeId,
+                                            UnitTypeDisplay = x.UnitType.Title,
+                                            UnitTypeId = x.UnitTypeId
+                                        }).ToList();
 
-            return await Task.FromResult(result);
+            return result;
         }
 
         public async Task<ValidationResult> CalculationAsync(int yearId, int organizationId)
@@ -212,12 +230,11 @@ namespace Datiss.Budget.Services
 
             try
             {
-
                 var result = await _uow.ExecuteScalar<ValidationResult>(
                                         "[dbo].[CostCurrentReport_Insert] @YearId, @OrganizationId",
                                         parameters: sqlParams.ToArray());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return ValidationResult.Failed(ServiceMessages.GeneralError);
             }
@@ -232,9 +249,8 @@ namespace Datiss.Budget.Services
                 throw new CopySameYearException();
             if (destYearId < sourceYearId)
                 throw new CopySameYearException();
-            ///////////////////////////////////////////////////////////////check
-            if (!await hasAnyDataAsync(sourceOrgId, sourceYearId))
-                throw new CopyOrgNullDataException();
+            if (await hasAnyDataAsync(sourceOrgId, destYearId))
+                throw new CopyDestYearHasDataException();
 
             var result = new List<CostCurrentReport>();
 
@@ -248,6 +264,7 @@ namespace Datiss.Budget.Services
                 {
                     item.Id = 0;
                     item.YearId = destYearId;
+                    item.ForcastY = 0;
                     var entity = item.Adapt<CostCurrentReport>();
 
                     result.Add(entity);
@@ -258,6 +275,7 @@ namespace Datiss.Budget.Services
 
             if (childrens.Any())
             {
+                childrens.ToList().ForEach(x => { x.ForcastY = 0; });
                 result.AddRange(childrens);
             }
 
@@ -300,15 +318,32 @@ namespace Datiss.Budget.Services
             var query = Query();
             query = await setFilter(query, filter);
             query = setOrder(query, filter.OrderBy, filter.OrderDesc);
-            var items = await query
-                                    .Include(x => x.FinanceYear)
-                                    .Include(x => x.Organization)
-                                    .Include(x => x.SectionType)
-                                    .Include(x => x.UnitType)
-                                    .Include(x => x.CostCenterType)
-                                    .Include(x => x.UnitDetailType)
-                                    .Select(x => x.Adapt<CostCurrentReportDTO>())
-                                    .ToListAsync();
+            var items = query.Include(x => x.FinanceYear)
+                            .Include(x => x.Organization)
+                            .Include(x => x.SectionType)
+                            .Include(x => x.UnitType)
+                            .Include(x => x.CostCenterType)
+                            .Include(x => x.UnitDetailType)
+                            .Select(x => new CostCurrentReportDTO()
+                            {
+                                Id = x.Id,
+                                YearId = x.YearId,
+                                Year = x.FinanceYear.Year,
+                                OrganizationId = x.OrganizationId,
+                                ApproveYear_1 = x.ApproveYear_1,
+                                CostCenterTypeDisplay = x.CostCenterType.Title,
+                                CostCenterTypeId = x.CostCenterTypeId,
+                                ForcastY = x.ForcastY,
+                                FunctionalBasicYear = x.FunctionalBasicYear,
+                                FunctionalYear_1 = x.FunctionalYear_1,
+                                OrganizationDisplay = x.Organization.Title,
+                                SectionTypeDisplay = x.SectionType.Title,
+                                SectionTypeId = x.SectionTypeId,
+                                UnitDetailTypeDisplay = x.UnitDetailType.Title,
+                                UnitDetailTypeId = x.UnitDetailTypeId,
+                                UnitTypeDisplay = x.UnitType.Title,
+                                UnitTypeId = x.UnitTypeId
+                            }).ToList();
 
             return items;
         }
@@ -414,6 +449,12 @@ namespace Datiss.Budget.Services
                     existOrgs.Add(item);
             }
 
+            foreach (var org in existOrgs)
+            {
+                if (await hasAnyDataAsync(org.Id, yearId))
+                    return ImportResult.Failed($"برای سازمان '{org.Title}' در سال '{year.Year}' داده وجود دارد!");
+            }
+
             rowIndex = 1;
 
             if (!continueIfAnyOrgMissing)
@@ -445,42 +486,39 @@ namespace Datiss.Budget.Services
                 rowIndex++;
             }
 
-            foreach (var record in records)
-            {
+            //foreach (var record in records)
+            //{
 
-                var entity = await checkLogicAsync(
-                    record.YearId,
-                    record.OrganizationId,
-                    record.UnitDetailTypeId,
-                    record.CostCenterTypeId);
-                if (entity == null)
-                {
-                    await _dbSet.AddAsync(record);
-                }
-                else
-                {
-                    entity.FunctionalBasicYear = record.FunctionalBasicYear;
-                    entity.FunctionalYear_1 = record.FunctionalYear_1;
-                    _dbSet.Update(entity);
-                }
+            //    var entity = await checkLogicAsync(
+            //        record.YearId,
+            //        record.OrganizationId,
+            //        record.UnitDetailTypeId,
+            //        record.CostCenterTypeId);
+            //    if (entity == null)
+            //    {
+            //        await _dbSet.AddAsync(record);
+            //    }
+            //    else
+            //    {
+            //        entity.FunctionalBasicYear = record.FunctionalBasicYear;
+            //        entity.FunctionalYear_1 = record.FunctionalYear_1;
+            //        _dbSet.Update(entity);
+            //    }
 
-            }
+            //}
 
 
             try
             {
+                await _dbSet.AddRangeAsync(records);
                 await _uow.SaveChangesAsync();
             }
             catch
             {
-                return ImportResult.Failed(
-                    string.Format(ServiceMessages.ImportExcelCalculationField)
-                    );
+                return ImportResult.Failed(string.Format(ServiceMessages.ImportExcelCalculationField));
             }
 
-            return ImportResult.Succeed(
-                string.Format(ServiceMessages.ImportExcelSuccess)
-                );
+            return ImportResult.Succeed(string.Format(ServiceMessages.ImportExcelSuccess));
         }
 
 
