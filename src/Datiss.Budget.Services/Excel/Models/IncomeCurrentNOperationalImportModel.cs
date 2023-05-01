@@ -22,7 +22,7 @@ namespace Datiss.Budget.Services.Excel.Models
         public int NOICTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
-        public int NOICPrice { get; set; }
+        public long NOICPrice { get; set; }
 
     }
 }
