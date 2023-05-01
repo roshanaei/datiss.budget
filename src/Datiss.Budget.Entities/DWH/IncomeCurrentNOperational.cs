@@ -15,7 +15,7 @@ namespace Datiss.Budget.Entities.DWH
 
         public int NOICTypeId { get; set; }
 
-        public int NOICPrice { get; set; }
+        public long NOICPrice { get; set; }
 
         #endregion
 

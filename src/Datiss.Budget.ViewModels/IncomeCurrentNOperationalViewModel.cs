@@ -21,7 +21,7 @@ namespace Datiss.Budget.ViewModels
 
         [Required(ErrorMessage = "*")]
         [Range(0, int.MaxValue, ErrorMessage = "لطفاً مبلغ را بصورت صحیح وارد نمایید.")]
-        public int NOICPrice { get; set; }
+        public long NOICPrice { get; set; }
 
         public IEnumerable<SelectListItem> NOICTypeSource { get; set; }
 
@@ -53,7 +53,7 @@ namespace Datiss.Budget.ViewModels
         public string OrganizationDisplay { get; set; }
         public int NOICTypeId { get; set; }
         public string NOICTypeDisplay { get; set; }
-        public int NOICPrice { get; set; }
+        public long NOICPrice { get; set; }
         public string NOICPriceDisplay => NOICPrice.ToString("N0");
     }
 
@@ -62,7 +62,7 @@ namespace Datiss.Budget.ViewModels
         public int? YearId { get; set; }
         public int? OrganizationId { get; set; }
         public int? NOICTypeId { get; set; }
-        public int? NOICPrice { get; set; }
+        public long? NOICPrice { get; set; }
 
         public IList<SelectListItem> YearSource { get; set; }
 
