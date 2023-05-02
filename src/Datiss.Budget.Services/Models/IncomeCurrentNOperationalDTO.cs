@@ -14,7 +14,7 @@ namespace Datiss.Budget.Services.Models
 
         public int NOICTypeId { get; set; }
 
-        public int NOICPrice { get; set; }
+        public long NOICPrice { get; set; }
 
         public string NOICTypeTitle { get; set; }
     }
@@ -34,7 +34,7 @@ namespace Datiss.Budget.Services.Models
         public string OrganizationDisplay { get; set; }
         public int NOICTypeId { get; set; }
         public string NOICTypeDisplay { get; set; }
-        public int NOICPrice { get; set; }
+        public long NOICPrice { get; set; }
     }
 
 }
