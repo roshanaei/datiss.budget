@@ -235,11 +235,24 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            await _costForcastWInvestmentReportService.CalculationAsync(
-                        model.YearId,
-                        model.OrganizationId);
+            try
+            {
+                await _costForcastWInvestmentReportService.CalculationAsync(
+                            model.YearId,
+                            model.OrganizationId);
 
-            return RedirectToAction("Index");
+                return Json(new
+                {
+                    hasError = false
+                });
+            }
+            catch (Exception)
+            {
+                return Json(new
+                {
+                    hasError = true
+                });
+            }
         }
 
         [HttpGet("[action]")]
@@ -384,7 +397,16 @@ namespace Datiss.Budget.Web.Controllers
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
             var sectionTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__WInvestmentReportType);
-            var costCenterTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CostCenterType);
+            var wasteCostCenterTypes = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__CostCenterType, "waste");
+            var allCostCenterTypes = await _constantService.GetByConstantKeyAsync(ConstantKeys.__CostCenterType);
+            var costCenterTypes = new List<DropDownItem>();
+            foreach (var item in allCostCenterTypes)
+            {
+                if (! wasteCostCenterTypes.Any(x => x.Id == item.Id))
+                {
+                    costCenterTypes.Add(item);
+                }
+            }
 
             var items = new List<CostForcastWInvestmentReportDTO>();
 
@@ -393,16 +415,16 @@ namespace Datiss.Budget.Web.Controllers
                 foreach (var center in costCenterTypes)
                 {
                     foreach (var sec in sectionTypes)
-                    {                       
-                            items.Add(new CostForcastWInvestmentReportDTO
-                            {
-                                OrganizationDisplay = org.Title,
-                                OrganizationId = org.Id,
-                                CostCenterTypeDisplay = center.Title,
-                                CostCenterTypeId = center.Id,
-                                SectionTypeDisplay = sec.Title,
-                                SectionTypeId = sec.Id,
-                            });
+                    {
+                        items.Add(new CostForcastWInvestmentReportDTO
+                        {
+                            OrganizationDisplay = org.Title,
+                            OrganizationId = org.Id,
+                            CostCenterTypeDisplay = center.Title,
+                            CostCenterTypeId = center.Id,
+                            SectionTypeDisplay = sec.Title,
+                            SectionTypeId = sec.Id,
+                        });
                     }
                 }
             }
