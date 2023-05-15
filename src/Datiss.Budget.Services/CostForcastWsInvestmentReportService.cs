@@ -375,7 +375,7 @@ namespace Datiss.Budget.Services
                                         x.Parent.ParentId == null &&
                                         x.Status == EntityStatus.Enabled);
 
-            var sectionTypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__WInvestmentReportType &&
+            var sectionTypes = _constSet.Where(x => x.Parent.ConstantKey == ConstantKeys.__WsInvestmentReportType &&
                                                     x.Parent.ParentId == null &&
                                                     x.Status == EntityStatus.Enabled);
 
