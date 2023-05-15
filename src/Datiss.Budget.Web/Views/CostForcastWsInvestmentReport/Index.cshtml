@@ -537,24 +537,57 @@
             model.yearId = $('#yearId').val();
             model.organizationId = $('#organizationId').val();
 
-            console.log(model);
+            $(".olvy").css("display", "block");
 
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action(CostForcastWsInvestmentReportController.ACTION_Calculation)',
                 data: model,
                 success: function (data, status, settings) {
-                    $('#divCalc').html('');
-                    $('#divCalc').html(data);
-                    $('#CalculationModal').modal('show');
-                    $('#CalculationModal').on('hidden.bs.modal', function () {
-                        $('#divCalc').html('');
-                        $('.modal-backdrop').remove();
-                    });
+                    $(".olvy").css("display", "none");
+                    if (data.hasError) {
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">عملیات ثبت پیش بینی با خطا مواجه شد.</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
+               Swal.fire({
+                        title: '<span class="my-font">عملیات موفق</span>',
+                        html: '<span class="my-font">عملیات ثبت پیش بینی با موفقیت انجام شد.</span>',
+                        type: 'success',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: true,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                        buttonsStyling: false,
+                    }).then(function (result) {
+                        document.location.href = '@Url.Action(CostForcastWsInvestmentReportController.ACTION_Index)';
+                    });                    
                 },
                 error: function (request, options, err) {
+                    $(".olvy").css("display", "none");
                     console.log(err);
-                    $('#divCalc').html('failed to load content.');
+
+                    Swal.fire({
+                        title: '<span class="my-font">خطا</span>',
+                        html: `<span class="my-font">خطای ارتباط با سرور</span>`,
+                        type: 'error',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: false,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                        buttonsStyling: false,
+                    });
                 }
             });
         });

@@ -235,11 +235,24 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            await _costForcastWsInvestmentReportService.CalculationAsync(
-                        model.YearId,
-                        model.OrganizationId);
+            try
+            {
+                await _costForcastWsInvestmentReportService.CalculationAsync(
+                            model.YearId,
+                            model.OrganizationId);
 
-            return RedirectToAction("Index");
+                return Json(new
+                {
+                    hasError = false
+                });
+            }
+            catch (Exception)
+            {
+                return Json(new
+                {
+                    hasError = true
+                });
+            }
         }
 
         [HttpGet("[action]")]
@@ -384,7 +397,7 @@ namespace Datiss.Budget.Web.Controllers
             var year = await _financeYearService.GetByIdAsync(yearId);
             var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
             var sectionTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__WsInvestmentReportType);
-            var costCenterTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__CostCenterType);
+            var costCenterTypes = await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__CostCenterType , "waste");
 
             var items = new List<CostForcastWsInvestmentReportDTO>();
 

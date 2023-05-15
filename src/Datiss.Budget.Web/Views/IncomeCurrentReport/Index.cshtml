@@ -521,7 +521,7 @@
                 processData: false,
                 contentType: false,
                 success: function (data, status, settings) {
-                    $(".olvy").css("display", "block");
+                    $(".olvy").css("display", "none");
 
                     if (data.hasError) {
                         Swal.fire({
@@ -597,7 +597,7 @@
                                                 document.location.href = '@Url.Action(IncomeCurrentReportController.ACTION_ImportExcel)';
                                             });
                                         }
-
+                                          
                                         if (data.ask) {
                                             alert('dont ask again');
                                         }
@@ -615,8 +615,8 @@
                             }
                         });
                     }
+
                     if (!data.hasError && !data.ask) {
-                        $(".olvy").css("display", "none");
                         Swal.fire({
                             title: '<span class="my-font">عملیات موفق</span>',
                             html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
