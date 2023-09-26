@@ -336,12 +336,6 @@ namespace Datiss.Budget.Services
                         string.Format(ServiceMessages.ImportExcelInvalidUserType, rowIndex + 2, rec.SectionTypeId)
                         );
                 }
-                if (org.Type != Enum.OrganizationType.City && org.Type != Enum.OrganizationType.Village)
-                {
-                    return ImportResult.Failed(
-                        string.Format(ServiceMessages.ImportExcelNotAllowedOrg, org.Title, rowIndex + 2)
-                        );
-                }
 
                 rowIndex++;
             }

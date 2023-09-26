@@ -33,5 +33,7 @@ namespace Datiss.Budget.Services.Contracts
 
         Task<PagedResult<OrganizationDTO>> GetListAsync(OrganizationFilterDTO filter);
 
+        Task<IEnumerable<Organization>> GetAllOrgAsync(int? orgId);
+
     }
 }
