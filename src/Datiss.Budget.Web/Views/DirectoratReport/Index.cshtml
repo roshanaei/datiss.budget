@@ -1,5 +1,7 @@
 ﻿@model DirectoratReportIndexViewModel
-@{ ViewData["Title"] = "گزارش هیٔت مدیره"; }
+@{
+    ViewData["Title"] = "گزارش هیٔت مدیره";
+}
 
 <!--Title-->
 <div class="row">
@@ -237,18 +239,15 @@
     <partial name="_loadingBar" />
 
     <div id="divCopy">
-
     </div>
 
     <partial name="_excelModal" model="new ImportExcelViewModel()" />
 
     <div id="divCreate">
-
     </div>
 
 
     <div id="divCalc">
-
     </div>
 
     <partial name="_tableScript" />
@@ -263,7 +262,7 @@
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
     {
         <script type="text/javascript">
-            showingColmuns = '@Model.Filter.Columns' ;
+            showingColmuns = '@Model.Filter.Columns';
         </script>
     }
 
@@ -338,7 +337,7 @@
                 cancelButtonText: 'انصراف',
                 confirmButtonText: 'حذف اطلاعات!',
                 confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
-                cancelButtonClass:  'btn btn-outline-secondary mr-1 my-font',
+                cancelButtonClass: 'btn btn-outline-secondary mr-1 my-font',
                 buttonsStyling: false,
             }).then(function (result) {
                 if (result.value) {
@@ -353,9 +352,9 @@
                         url: deleteUrl,
                         type: 'POST',
                         data: params,
-                        success: function(data, status, settings) {
+                        success: function (data, status, settings) {
                             console.log(status);
-                            if(data.hasError) {
+                            if (data.hasError) {
                                 Swal.fire({
                                     title: '<span class="my-font">خطا</span>',
                                     html: `<span class="my-font">${data.message}</span>`,
@@ -380,11 +379,11 @@
                                 confirmButtonText: 'بستن',
                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                 buttonsStyling: false,
-                            }).then(function(result) {
+                            }).then(function (result) {
                                 document.location.href = '@Url.Action(DirectoratReportController.ACTION_Index, new { page = 1 })';
                             });
                         },
-                        error: function(request, option, err) {
+                        error: function (request, option, err) {
                             if (request.status == 401 || request.status == 403) {
                                 ShowPermissionErorr();
                                 return;
@@ -450,7 +449,7 @@
             $(this).prop('disabled', false);
         });
 
-        $(document).on('click', '.openCopy', function() {
+        $(document).on('click', '.openCopy', function () {
             $.ajax({
                 type: 'GET',
                 url: '@Url.Action(DirectoratReportController.ACTION_Copy)',
@@ -479,34 +478,61 @@
             });
         });
 
-        $(document).on('click', '.calculation-button', function() {
+        $(document).on('click', '.calculation-button', function () {
             let model = {};
             model.yearId = $('#yearId').val();
             model.organizationId = $('#organizationId').val();
 
-            console.log(model);
+            $(".olvy").css("display", "block");
 
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action(DirectoratReportController.ACTION_Calculation)',
                 data: model,
                 success: function (data, status, settings) {
-                    $('#divCalc').html('');
-                    $('#divCalc').html(data);
-                    $('#CalculationModal').modal('show');
-                    $('#CalculationModal').on('hidden.bs.modal', function () {
-                        $('#divCalc').html('');
-                        $('.modal-backdrop').remove();
+                    $(".olvy").css("display", "none");
+                    if (data.hasError) {
+                        console.log(data.message);
+                        Swal.fire({
+                            title: '<span class="my-font">خطا</span>',
+                            html: `<span class="my-font">در انجام این عملیات خطایی رخ داده است!</span>`,
+                            type: 'error',
+                            confirmButtonColor: '#2F8BE6',
+                            animation: false,
+                            customClass: 'animated flipInX',
+                            confirmButtonText: 'بستن',
+                            confirmButtonClass: 'btn btn-outline-danger mr-1 my-font',
+                            buttonsStyling: false,
+                        });
+                        return;
+                    }
+                    Swal.fire({
+                        title: '<span class="my-font">عملیات موفق</span>',
+                        html: '<span class="my-font">عملیات ثبت پیش بینی اطلاعات با موفقیت انجام شد.</span>',
+                        type: 'success',
+                        confirmButtonColor: '#2F8BE6',
+                        animation: true,
+                        customClass: 'animated flipInX',
+                        confirmButtonText: 'بستن',
+                        confirmButtonClass: 'btn btn-secondary mr-1 my-font',
+                        buttonsStyling: false,
+                    }).then(function (result) {
+                        document.location.href = '@Url.Action(CostCurrentReportController.ACTION_Index)';
                     });
                 },
                 error: function (request, options, err) {
+                    $(".olvy").css("display", "none");
                     console.log(err);
-                    $('#divCalc').html('failed to load content.');
+                    if (request.status == 401 || request.status == 403) {
+                        ShowPermissionErorr();
+                        return;
+                    }
+                    ShowCommonErorr();
                 }
             });
         });
 
-        $(document).on('click', '#btnDoImportExcel', function() {
+        $(document).on('click', '#btnDoImportExcel', function () {
             var fdata = new FormData();
             var fileInput = $('#ExcelFile')[0];
             var file = fileInput.files[0];
@@ -557,7 +583,7 @@
                             buttonsStyling: false,
                         }).then(function (result) {
 
-                            if(result.value) {
+                            if (result.value) {
                                 fdata.append('ContinueIfAnyOrgMissing', true);
                                 console.log(fdata);
 
@@ -569,7 +595,7 @@
                                     data: fdata,
                                     processData: false,
                                     contentType: false,
-                                    success: function(data, status, settings) {
+                                    success: function (data, status, settings) {
                                         if (data.hasError) {
                                             $(".olvy").css("display", "none");
                                             Swal.fire({
@@ -588,7 +614,7 @@
 
                                         if (!data.hasError) {
                                             $(".olvy").css("display", "none");
-                                          Swal.fire({
+                                            Swal.fire({
                                                 title: '<span class="my-font">عملیات موفق</span>',
                                                 html: '<span class="my-font">عملیات ورود اطلاعات با موفقیت انجام شد.</span>',
                                                 type: 'success',
@@ -598,16 +624,16 @@
                                                 confirmButtonText: 'بستن',
                                                 confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                                                 buttonsStyling: false,
-                                          }).then(function (result) {
+                                            }).then(function (result) {
                                                 document.location.href = '@Url.Action(DirectoratReportController.ACTION_Index)';
                                             });
                                         }
 
-                                        if(data.ask) {
+                                        if (data.ask) {
                                             alert('dont ask again');
                                         }
                                     },
-                                    error: function(request, options, err) {
+                                    error: function (request, options, err) {
                                         console.log(err);
                                     }
                                 });
@@ -688,7 +714,7 @@
                         confirmButtonText: 'بستن',
                         confirmButtonClass: 'btn btn-secondary mr-1 my-font',
                         buttonsStyling: false,
-                    }).then(function(result) {
+                    }).then(function (result) {
                         $('#CopyModal').modal('hide');
                     });
                 },

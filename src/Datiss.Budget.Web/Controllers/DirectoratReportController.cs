@@ -237,11 +237,27 @@ namespace Datiss.Budget.Web.Controllers
         {
             model.CheckArgumentIsNull(nameof(model));
 
-            await _directoratReportService.CalculationAsync(
-                        model.YearId,
-                        model.OrganizationId);
+            try
+            {
+                await _directoratReportService.CalculationAsync(
+                            model.YearId,
+                            model.OrganizationId);
 
-            return RedirectToAction("Index");
+
+                return Json(new
+                {
+                    hasError = false,
+                    message = "",
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ex.Message,
+                });
+            }
         }
 
 
@@ -377,15 +393,15 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> GetExcelTemplate(int yearId, int? orgId)
         {
             var year = await _financeYearService.GetByIdAsync(yearId);
-            var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
+            //var organizations = await _organizationService.GetWithChildrenAsync(orgId, input: true);
             var sectionTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__DirectorateReportType);
-            var unitTypes = await _constantService.GetDataByKeyAsync(ConstantKeys.__MeasurementType);
 
+            var orgSource = await _organizationService.GetAllOrgAsync(orgId);
 
 
             var items = new List<DirectoratReportDTO>();
 
-            foreach (var org in organizations)
+            foreach (var org in orgSource)
             {
                 foreach (var sec in sectionTypes)
                 {

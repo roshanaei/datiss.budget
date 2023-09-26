@@ -268,6 +268,17 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
+        public async Task<IEnumerable<Organization>> GetAllOrgAsync(int? orgId)
+            => orgId.HasValue
+                ? (await getWithChildrenAsync(orgId.Value, false, false, null))
+                    .OrderBy(x => x.DisplayOrder)
+                    .ThenBy(x => x.RowOrder)
+                    .ToList()
+                : (await getByParnetIdAsync(orgId, false, false, null))
+                    .OrderBy(x => x.DisplayOrder)
+                    .ThenBy(x => x.RowOrder)
+                    .ToList();
+
         #region Private Helper Methods
 
         private IQueryable<Organization> setFilter(IQueryable<Organization> query, OrganizationFilterDTO filter)
