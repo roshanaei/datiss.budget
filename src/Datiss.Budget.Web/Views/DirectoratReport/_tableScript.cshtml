@@ -15,8 +15,7 @@
         $('#divOutput_SectionType_' + id);
         $('#divOutput_FunctionalYear_1_' + id).hide();
         $('#divOutput_FunctionalBasicYear_' + id).hide();
-        $('#divOutput_ApproveYear_1_' + id);
-        $('#divOutput_ForcastY_' + id);
+        $('#divOutput_ApproveYear_1_' + id)
         $('#divOutput_ForcastFunctionalPercent_' + id);
         $('#divOutput_ForcastBudgetPercent_' + id);
 
@@ -25,6 +24,11 @@
         $('#divInput_Org_' + id).show();
         $('#divInput_FunctionalYear_1_' + id).show();
         $('#divInput_FunctionalBasicYear_' + id).show();
+
+         // if($('#spanSectionType_' + id).html().trim() == 'آبونمان آب'||$('#spanSectionType_' + id).html().trim() == 'فروش آب خانگی') {
+        //    $('#divOutput_ForcastY_' + id).hide();
+       //    $('#divInput_ForcastY_' + id).show();
+      //  }
 
 
         $('#btnEdit_' + id).hide();
@@ -46,6 +50,7 @@
         $('#divInput_Org_' + id).hide();
         $('#divInput_FunctionalYear_1_' + id).hide();
         $('#divInput_FunctionalBasicYear_' + id).hide();
+        $('#divInput_ForcastY_' + id).hide();
 
         //Reverting to OriginalData
         if (rowData != null) {
@@ -58,6 +63,7 @@
         $('#divOutput_Org_' + id).show();
         $('#divOutput_FunctionalYear_1_' + id).show();
         $('#divOutput_FunctionalBasicYear_' + id).show();
+        $('#divOutput_ForcastY_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -118,7 +124,7 @@
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanFunctionalYear_1_' + id).text(data.functionalYear_1);
                 $('#spanFunctionalBasicYear_' + id).text(data.functionalBasicYear);
-
+                $('#spanForcastY_' + id).text(model.forcastY);
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
