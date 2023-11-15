@@ -27,6 +27,10 @@
         $('#divInput_Org_' + id).show();
         $('#divInput_FunctionalYear_1_' + id).show();
         $('#divInput_FunctionalBasicYear_' + id).show();
+        
+        if($('#spanSectionType_' + id).html().trim() == 'دریافت وام و تسهیلات' || $('#spanSectionType_' + id).html().trim() == 'انبار مواد و مصالح سرمایه ای' || $('#spanSectionType_' + id).html().trim() == 'فروش اموال و دارایی های مازاد') {
+            $('#divOutput_ForcastY_' + id).hide();
+          $('#divInput_ForcastY_' + id).show();
 
 
         $('#btnEdit_' + id).hide();
