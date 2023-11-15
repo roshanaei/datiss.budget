@@ -5,15 +5,9 @@
             <tr>
                 <th>سال</th>
                 <th>سازمان</th>
-                <th>آحاد مشترکین آب</th>
-                <th>درآمد جاری</th>
-                <th>ضریب تسهیم درآمد جاری</th>
-                <th>درصد سهام شهرداری</th>
-                <th>درآمد سرمایه ای</th>
-                <th>ضریب تسهیم درآمد سرمایه ای</th>
-                <th>آحاد مشترک فاضلاب</th>
-                <th>درآمد جاری فاضلاب</th>
-                <th>ضریب تسهیم درآمد جاری فاضلاب</th>
+                <th>ضریب تسهیم هزینه اداری</th>
+                <th>ضریب تسهیم هزینه فاضلاب</th>
+                <th>ضریب تسهیم سایر هزینه ها</th>
                 <th style="min-width:195px">مدیریت</th>
             </tr>
         </thead>
@@ -71,43 +65,11 @@
                     </div>
                 </td>
                 <td>
-                    <div id="divInput_SPSHahrdari_">
-                        <input class="form-control input-keyup" id="inputSPSHahrdari_" type="number" min="0" />
-                    </div>
-                    <div id="divOutput_SPSHahrdari_" style="display: none">
-                        <span id="spanSPSHahrdari_"> </span>
-                    </div>
-                </td>
-                <td>
-                    <div id="divInput_IncomeForcast_">
-                        <input class="form-control input-keyup" id="inputIncomeForcast_" type="number" min="0" />
-                    </div>
-                    <div id="divOutput_IncomeForcast_" style="display: none">
-                        <span id="spanIncomeForcast_"> </span>
-                    </div>
-                </td>
-                <td>
                     <div id="divInput_IncomeForcastsharing_">
                         <input class="form-control input-keyup" id="inputIncomeForcastsharing_" type="number" min="0" />
                     </div>
                     <div id="divOutput_IncomeForcastsharing_" style="display: none">
                         <span id="spanIncomeForcastsharing_"> </span>
-                    </div>
-                </td>
-                <td>
-                    <div id="divInput_WsUnit_">
-                        <input class="form-control input-keyup" id="inputWsUnit_" type="number" min="0" />
-                    </div>
-                    <div id="divOutput_WsUnit_" style="display: none">
-                        <span id="spanWsUnit_"> </span>
-                    </div>
-                </td>
-                <td>
-                    <div id="divInput_IncomeCurrentWs_">
-                        <input class="form-control input-keyup" id="inputIncomeCurrentWs_" type="number" min="0" />
-                    </div>
-                    <div id="divOutput_IncomeCurrentWs_" style="display: none">
-                        <span id="spanIncomeCurrentWs_"> </span>
                     </div>
                 </td>
                 <td>
@@ -176,67 +138,19 @@
                         </div>
                     </td>
                     <td>
-                        <div id="divInput_WUnit_@item.Id" style="display: none">
-                            <input class="form-control" id="inputWUnit_@item.Id" value="@item.WUnit" type="number" />
-                        </div>
-                        <div id="divOutput_WUnit_@item.Id">
-                            <span id="spanWUnit_@item.Id">@item.WUnitDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_IncomeCurrentW_@item.Id" style="display: none">
-                            <input class="form-control" id="inputIncomeCurrentW_@item.Id" value="@item.IncomeCurrentW" type="number" />
-                        </div>
-                        <div id="divOutput_IncomeCurrentW_@item.Id">
-                            <span id="spanIncomeCurrentW_@item.Id">@item.IncomeCurrentWDisplay </span>
-                        </div>
-                    </td>
-                    <td>
                         <div id="divInput_IncomeCurrentWSharingCoff_@item.Id" style="display: none">
                             <input class="form-control" id="inputIncomeCurrentWSharingCoff_@item.Id" value="@item.IncomeCurrentWSharingCoff" type="number" />
                         </div>
                         <div id="divOutput_IncomeCurrentWSharingCoff_@item.Id">
                             <span id="spanIncomeCurrentWSharingCoff_@item.Id">@item.IncomeCurrentWSharingCoffDisplay </span>
                         </div>
-                    </td>
-                    <td>
-                        <div id="divInput_SPSHahrdari_@item.Id" style="display: none">
-                            <input class="form-control" id="inputSPSHahrdari_@item.Id" value="@item.SPSHahrdari" type="number" />
-                        </div>
-                        <div id="divOutput_SPSHahrdari_@item.Id">
-                            <span id="spanSPSHahrdari_@item.Id">@item.SPSHahrdariDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_IncomeForcast_@item.Id" style="display: none">
-                            <input class="form-control" id="inputIncomeForcast_@item.Id" value="@item.IncomeForcast" type="number" />
-                        </div>
-                        <div id="divOutput_IncomeForcast_@item.Id">
-                            <span id="spanIncomeForcast_@item.Id">@item.IncomeForcastDisplay </span>
-                        </div>
-                    </td>
+                    </td>>
                     <td>
                         <div id="divInput_IncomeForcastsharing_@item.Id" style="display: none">
                             <input class="form-control" id="inputIncomeForcastsharing_@item.Id" value="@item.IncomeForcastsharing" type="number" />
                         </div>
                         <div id="divOutput_IncomeForcastsharing_@item.Id">
                             <span id="spanIncomeForcastsharing_@item.Id">@item.IncomeForcastsharingDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_WsUnit_@item.Id" style="display: none">
-                            <input class="form-control" id="inputWsUnit_@item.Id" value="@item.WsUnit" type="number" />
-                        </div>
-                        <div id="divOutput_WsUnit_@item.Id">
-                            <span id="spanWsUnit_@item.Id">@item.WsUnitDisplay </span>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="divInput_IncomeCurrentWs_@item.Id" style="display: none">
-                            <input class="form-control" id="inputIncomeCurrentWs_@item.Id" value="@item.IncomeCurrentWs" type="number" />
-                        </div>
-                        <div id="divOutput_IncomeCurrentWs_@item.Id">
-                            <span id="spanIncomeCurrentWs_@item.Id">@item.IncomeCurrentWsDisplay </span>
                         </div>
                     </td>
                     <td>

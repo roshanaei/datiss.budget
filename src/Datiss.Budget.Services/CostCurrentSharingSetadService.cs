@@ -74,14 +74,8 @@ namespace Datiss.Budget.Services
             {
                 YearId = model.YearId,
                 OrganizationId = model.OrganizationId,
-                WUnit = model.WUnit,
-                IncomeCurrentW = model.IncomeCurrentW,
                 IncomeCurrentWSharingCoff = model.IncomeCurrentWSharingCoff,
-                WsUnit = model.WsUnit,
-                IncomeCurrentWs = model.IncomeCurrentWs,
                 IncomeCurrentWsSharingCoff = model.IncomeCurrentWsSharingCoff,
-                IncomeForcast = model.IncomeForcast,
-                SPSHahrdari = model.SPSHahrdari,
                 IncomeForcastsharing = model.IncomeForcastsharing
             };
 
@@ -105,14 +99,8 @@ namespace Datiss.Budget.Services
                     var result = entity.Adapt<CostCurrentSharingSetadDTO>();
                     result.OrganizationDisplay = organizationDisplay;
                     result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-                    result.WUnit = entity.WUnit;
-                    result.IncomeCurrentW = entity.IncomeCurrentW;
                     result.IncomeCurrentWSharingCoff = entity.IncomeCurrentWSharingCoff;
-                    result.WsUnit = entity.WsUnit;
-                    result.IncomeCurrentWs = entity.IncomeCurrentWs;
                     result.IncomeCurrentWsSharingCoff = entity.IncomeCurrentWsSharingCoff;
-                    result.IncomeForcast = entity.IncomeForcast;
-                    result.SPSHahrdari = entity.SPSHahrdari;
                     result.IncomeForcastsharing = entity.IncomeForcastsharing;
 
                     return ValidationResult<CostCurrentSharingSetadDTO>.Success(result);
@@ -141,14 +129,8 @@ namespace Datiss.Budget.Services
                     var entity = await _dbSet.FindAsync(model.Id);
                     entity.OrganizationId = model.OrganizationId;
                     entity.YearId = model.YearId;
-                    entity.WUnit = model.WUnit;
-                    entity.IncomeCurrentW = model.IncomeCurrentW;
                     entity.IncomeCurrentWSharingCoff = model.IncomeCurrentWSharingCoff;
-                    entity.WsUnit = model.WsUnit;
-                    entity.IncomeCurrentWs = model.IncomeCurrentWs;
                     entity.IncomeCurrentWsSharingCoff = model.IncomeCurrentWsSharingCoff;
-                    entity.IncomeForcast = model.IncomeForcast;
-                    entity.SPSHahrdari = model.SPSHahrdari;
                     entity.IncomeForcastsharing = model.IncomeForcastsharing;
 
                     try
@@ -298,14 +280,8 @@ namespace Datiss.Budget.Services
                                         Id = x.Id,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        WUnit = x.WUnit,
-                                        IncomeCurrentW = x.IncomeCurrentW,
                                         IncomeCurrentWSharingCoff = x.IncomeCurrentWSharingCoff,
-                                        WsUnit = x.WsUnit,
-                                        IncomeCurrentWs = x.IncomeCurrentWs,
                                         IncomeCurrentWsSharingCoff = x.IncomeCurrentWsSharingCoff,
-                                        IncomeForcast = x.IncomeForcast,
-                                        SPSHahrdari = x.SPSHahrdari,
                                         IncomeForcastsharing = x.IncomeForcastsharing,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
@@ -345,14 +321,8 @@ namespace Datiss.Budget.Services
                     {
                         OrganizationId = item.OrganizationId,
                         YearId = destYearId,
-                        WUnit = item.WUnit,
-                        IncomeCurrentW = item.IncomeCurrentW,
                         IncomeCurrentWSharingCoff = item.IncomeCurrentWSharingCoff,
-                        WsUnit = item.WsUnit,
-                        IncomeCurrentWs = item.IncomeCurrentWs,
                         IncomeCurrentWsSharingCoff = item.IncomeCurrentWsSharingCoff,
-                        IncomeForcast = item.IncomeForcast,
-                        SPSHahrdari = item.SPSHahrdari,
                         IncomeForcastsharing = item.IncomeForcastsharing,
                     };
                     result.Add(entity);
@@ -518,14 +488,8 @@ namespace Datiss.Budget.Services
                                         Id = x.Id,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        WUnit = x.WUnit,
-                                        IncomeCurrentW = x.IncomeCurrentW,
                                         IncomeCurrentWSharingCoff = x.IncomeCurrentWSharingCoff,
-                                        WsUnit = x.WsUnit,
-                                        IncomeCurrentWs = x.IncomeCurrentWs,
                                         IncomeCurrentWsSharingCoff = x.IncomeCurrentWsSharingCoff,
-                                        IncomeForcast = x.IncomeForcast,
-                                        SPSHahrdari = x.SPSHahrdari,
                                         IncomeForcastsharing = x.IncomeForcastsharing,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
@@ -552,14 +516,8 @@ namespace Datiss.Budget.Services
                                         Id = x.Id,
                                         OrganizationDisplay = x.Organization.Title,
                                         OrganizationId = x.OrganizationId,
-                                        WUnit = x.WUnit,
-                                        IncomeCurrentW = x.IncomeCurrentW,
                                         IncomeCurrentWSharingCoff = x.IncomeCurrentWSharingCoff,
-                                        WsUnit = x.WsUnit,
-                                        IncomeCurrentWs = x.IncomeCurrentWs,
                                         IncomeCurrentWsSharingCoff = x.IncomeCurrentWsSharingCoff,
-                                        IncomeForcast = x.IncomeForcast,
-                                        SPSHahrdari = x.SPSHahrdari,
                                         IncomeForcastsharing = x.IncomeForcastsharing,
                                         Year = x.FinanceYear.Year,
                                         YearId = x.YearId
@@ -670,14 +628,8 @@ namespace Datiss.Budget.Services
                     {
                         OrganizationId = item.OrganizationId,
                         YearId = targetYearId,
-                        WUnit = item.WUnit,
-                        IncomeCurrentW = item.IncomeCurrentW,
                         IncomeCurrentWSharingCoff = item.IncomeCurrentWSharingCoff,
-                        WsUnit = item.WsUnit,
-                        IncomeCurrentWs = item.IncomeCurrentWs,
                         IncomeCurrentWsSharingCoff = item.IncomeCurrentWsSharingCoff,
-                        IncomeForcast = item.IncomeForcast,
-                        SPSHahrdari = item.SPSHahrdari,
                         IncomeForcastsharing = item.IncomeForcastsharing,
                     };
 

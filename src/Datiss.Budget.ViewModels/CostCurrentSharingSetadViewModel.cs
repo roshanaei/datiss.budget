@@ -12,21 +12,9 @@ namespace Datiss.Budget.ViewModels
         public int OrganizationId { get; set; }
         public string OrganizationDisplay { get; set; }
 
-        public int WUnit { get; set; }
-
-        public long IncomeCurrentW { get; set; }
-
         public decimal IncomeCurrentWSharingCoff { get; set; }
 
-        public int WsUnit { get; set; }
-
-        public long IncomeCurrentWs { get; set; }
-
         public decimal IncomeCurrentWsSharingCoff { get; set; }
-
-        public long IncomeForcast { get; set; }
-
-        public decimal SPSHahrdari { get; set; }
 
         public decimal IncomeForcastsharing { get; set; }
 
@@ -46,29 +34,11 @@ namespace Datiss.Budget.ViewModels
         public int OrganizationId { get; set; }
         public string OrganizationDisplay { get; set; }
 
-        public int WUnit { get; set; }
-        public string WUnitDisplay => WUnit.ToString("N0");
-
-        public long IncomeCurrentW { get; set; }
-        public string IncomeCurrentWDisplay => IncomeCurrentW.ToString("N0");
-
         public decimal IncomeCurrentWSharingCoff { get; set; }
         public string IncomeCurrentWSharingCoffDisplay => IncomeCurrentWSharingCoff.ToString("N2");
 
-        public int WsUnit { get; set; }
-        public string WsUnitDisplay => WsUnit.ToString("N0");
-
-        public long IncomeCurrentWs { get; set; }
-        public string IncomeCurrentWsDisplay => IncomeCurrentWs.ToString("N0");
-
         public decimal IncomeCurrentWsSharingCoff { get; set; }
         public string IncomeCurrentWsSharingCoffDisplay => IncomeCurrentWsSharingCoff.ToString("N2");
-
-        public long IncomeForcast { get; set; }
-        public string IncomeForcastDisplay => IncomeForcast.ToString("N0");
-
-        public decimal SPSHahrdari { get; set; }
-        public string SPSHahrdariDisplay => SPSHahrdari.ToString("N2");
 
         public decimal IncomeForcastsharing { get; set; }
         public string IncomeForcastsharingDisplay => IncomeForcastsharing.ToString("N2");
