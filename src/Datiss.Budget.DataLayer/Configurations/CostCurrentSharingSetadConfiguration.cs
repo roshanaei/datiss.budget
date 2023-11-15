@@ -16,8 +16,6 @@ namespace Datiss.Budget.DataLayer.Mappings
 
             builder.Property(x => x.IncomeCurrentWsSharingCoff).HasColumnType("decimal(18,6)");
 
-            builder.Property(x => x.SPSHahrdari).HasColumnType("decimal(18,6)");
-
             builder.Property(x => x.IncomeForcastsharing).HasColumnType("decimal(18,6)");
 
 
