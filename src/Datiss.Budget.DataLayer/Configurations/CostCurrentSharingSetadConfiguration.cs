@@ -19,7 +19,6 @@ namespace Datiss.Budget.DataLayer.Mappings
             builder.Property(x => x.IncomeForcastsharing).HasColumnType("decimal(18,6)");
 
 
-
             builder.HasOne(x => x.FinanceYear)
                     .WithMany(x => x.CostCurrentSharingSetad)
                     .HasForeignKey(x => x.YearId)
