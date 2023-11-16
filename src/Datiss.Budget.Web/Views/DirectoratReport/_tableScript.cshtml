@@ -25,14 +25,10 @@
         $('#divInput_FunctionalYear_1_' + id).show();
         $('#divInput_FunctionalBasicYear_' + id).show();
 
-
-                //ToDo Erfan Correct
-
-          if($('#spanSectionType_' + id).html().trim() == ' جذب نیروی انسانی'||$('#spanSectionType_' + id).html().trim() == ' ریزش نیروی انسانی') {
+        if($('#spanSectionType_' + id).html().trim() == 'جذب نیروی انسانی'||$('#spanSectionType_' + id).html().trim() == 'ریزش نیروی انسانی') {
             $('#divOutput_ForcastY_' + id).hide();
            $('#divInput_ForcastY_' + id).show();
         }
-
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -95,8 +91,6 @@
         model.forcastY = $('#inputForcastY_' + id).val();
         model.forcastFunctionalPercent = $('#inputForcastFunctionalPercent_' + id).val();
         model.forcastBudgetPercent = $('#inputForcastBudgetPercent_' + id).val();
-
-        console.log(model);
 
         $.ajax({
             url: '@Url.Action(DirectoratReportController.ACTION_Edit)',
