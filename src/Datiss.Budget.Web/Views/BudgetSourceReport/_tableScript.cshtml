@@ -27,13 +27,12 @@
         $('#divInput_Org_' + id).show();
         $('#divInput_FunctionalYear_1_' + id).show();
         $('#divInput_FunctionalBasicYear_' + id).show();
-        
-        //ToDo Erfan
 
-        if($('#spanSectionType_' + id).html().trim() == 'دریافت وام و تسهیلات' || $('#spanSectionType_' + id).html().trim() == 'انبار مواد و مصالح سرمایه ای' || $('#spanSectionType_' + id).html().trim() == 'فروش اموال و دارایی های مازاد') {
+
+        if ($('#spanSectionType_' + id).html().trim() == 'دریافت وام و تسهیلات' || $('#spanSectionType_' + id).html().trim() == 'انبار مواد و مصالح سرمایه ای' || $('#spanSectionType_' + id).html().trim() == 'فروش اموال و دارایی های مازاد') {
             $('#divOutput_ForcastY_' + id).hide();
-          $('#divInput_ForcastY_' + id).show();
-
+            $('#divInput_ForcastY_' + id).show();
+        }
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -54,6 +53,7 @@
         $('#divInput_Org_' + id).hide();
         $('#divInput_FunctionalYear_1_' + id).hide();
         $('#divInput_FunctionalBasicYear_' + id).hide();
+        $('#divInput_ForcastY_' + id).hide();
 
         //Reverting to OriginalData
         if (rowData != null) {
@@ -66,6 +66,7 @@
         $('#divOutput_Org_' + id).show();
         $('#divOutput_FunctionalYear_1_' + id).show();
         $('#divOutput_FunctionalBasicYear_' + id).show();
+        $('#divOutput_ForcastY_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -97,7 +98,7 @@
         model.forcastFunctionalPercent = $('#inputForcastFunctionalPercent_' + id).val();
         model.forcastBudgetPercent = $('#inputForcastBudgetPercent_' + id).val();
 
-        console.log(model);
+        //console.log(model);
 
         $.ajax({
             url: '@Url.Action(WasteSalesSplitController.ACTION_Edit)',
@@ -128,7 +129,7 @@
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanFunctionalYear_1_' + id).text(data.functionalYear_1);
                 $('#spanFunctionalBasicYear_' + id).text(data.functionalBasicYear);
-
+                $('#spanForcastY_' + id).text(model.forcastY);
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
