@@ -28,6 +28,14 @@
         $('#divInput_FunctionalYear_1_' + id).show();
         $('#divInput_FunctionalBasicYear_' + id).show();
 
+        //ToDo Erfan
+
+         if($('#spanSectionType_' + id).html().trim() == 'پرداخت مزایای پایان خدمت کارکنان' || $('#spanSectionType_' + id).html().trim() == 'حصه جاری و پرداخت وام های بلند مدت') {
+            $('#divOutput_ForcastY_' + id).hide();
+          $('#divInput_ForcastY_' + id).show();
+         
+
+
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();

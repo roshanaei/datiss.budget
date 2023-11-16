@@ -22,6 +22,11 @@
         $('#divInput_FunctionalYear_1_' + id).show();
         $('#divInput_FunctionalBasicYear_' + id).show();
 
+          if($('#spanSectionType_' + id).html().trim() == 'یارانه دریافتی از دولت') {
+            $('#divOutput_ForcastY_' + id).hide();
+          $('#divInput_ForcastY_' + id).show();
+       }
+
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
