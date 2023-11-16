@@ -236,12 +236,28 @@ namespace Datiss.Budget.Web.Controllers
         public async Task<IActionResult> Calculation(CalculationInputViewModel model)
         {
             model.CheckArgumentIsNull(nameof(model));
-
-            await _budgetSourceReportService.CalculationAsync(
+            try
+            {
+                await _budgetSourceReportService.CalculationAsync(
                         model.YearId,
                         model.OrganizationId);
 
-            return RedirectToAction("Index");
+                return Json(new
+                {
+                    hasError = false,
+                    message = "",
+                });
+            }
+            catch(Exception ex)
+            {
+                return Json(new
+                {
+                    hasError = true,
+                    message = ex.Message,
+                });
+            }
+
+            //return RedirectToAction("Index");
         }
 
 

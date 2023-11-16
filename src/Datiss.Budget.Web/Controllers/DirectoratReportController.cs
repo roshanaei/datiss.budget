@@ -108,7 +108,7 @@ namespace Datiss.Budget.Web.Controllers
             int maxYear = yearSource.Max(x => x.Id);
             int numberYear = Convert.ToInt32(yearSource.Max(x => x.Title));
 
-            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(true))
+            var inputOrgSource = (await _organizationService.GetDropDownDataAsync(false))
                 .Adapt<List<DropDownItemViewModel>>();
 
             filter.YearId = maxYear;
