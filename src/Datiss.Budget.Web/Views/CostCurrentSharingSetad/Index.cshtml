@@ -129,10 +129,10 @@
                                                         <input type="checkbox"
                                                                class="custom-control-input"
                                                                checked
-                                                               name="col-5"
-                                                               id="col-5" />
+                                                               name="col-3"
+                                                               id="col-3" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-5"><span>ضریب تسهیم هزینه اداری</span></label>
+                                                               for="col-3"><span>ضریب تسهیم هزینه اداری</span></label>
                                                     </div>
                                                 </div>
 
@@ -141,10 +141,10 @@
                                                         <input type="checkbox"
                                                                class="custom-control-input"
                                                                checked
-                                                               name="col-8"
-                                                               id="col-8" />
+                                                               name="col-4"
+                                                               id="col-4" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-8"><span>ضریب تسهیم هزینه فاضلاب</span></label>
+                                                               for="col-4"><span>ضریب تسهیم هزینه فاضلاب</span></label>
                                                     </div>
                                                 </div>
                                                 <div class="dropdown-item">
@@ -152,10 +152,10 @@
                                                         <input type="checkbox"
                                                                class="custom-control-input"
                                                                checked
-                                                               name="col-11"
-                                                               id="col-11" />
+                                                               name="col-5"
+                                                               id="col-5" />
                                                         <label class="custom-control-label my-font"
-                                                               for="col-11"><span>ضریب تسهیم سایر هزینه ها</span></label>
+                                                               for="col-5"><span>ضریب تسهیم سایر هزینه ها</span></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -217,10 +217,10 @@
 <partial name="_tableScript" />
 
 <script type="text/javascript">
-    let allColumns = '1,2,3,4,5,6,7,8,9,10,11';
+    let allColumns = '1,2,3,4,5';
     let columnIndices = allColumns.split(',');
     console.log(columnIndices);
-    let showingColmuns = "1,2,3,4,,5,6,7,8,9,10,11,";
+    let showingColmuns = "1,2,3,4,,5,";
 </script>
 
     @if (Model.Filter.Columns.IsNotNullOrEmpty())
@@ -385,10 +385,6 @@
         resetDataColumns()
         let id = $(this).data('id');
 
-        let input1 = document.getElementById('inputWUnit_' + id);
-        let input2 = document.getElementById('inputIncomeCurrentW_' + id);
-
-        let input3 = document.getElementById('inputSPSHahrdari_' + id);
         let input4 = document.getElementById('inputIncomeForcastsharing_' + id);
 
         let btnSaveEdit = document.getElementById('btnSaveEdit_' + id);
