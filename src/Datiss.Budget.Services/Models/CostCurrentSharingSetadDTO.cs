@@ -6,21 +6,9 @@
 
         public int OrganizationId { get; set; }
 
-        public int WUnit { get; set; }
-
-        public long IncomeCurrentW { get; set; }
-
         public decimal IncomeCurrentWSharingCoff { get; set; }
 
-        public int WsUnit { get; set; }
-
-        public long IncomeCurrentWs { get; set; }
-
         public decimal IncomeCurrentWsSharingCoff { get; set; }
-
-        public long IncomeForcast { get; set; }
-
-        public decimal SPSHahrdari { get; set; }
 
         public decimal IncomeForcastsharing { get; set; }
     }
@@ -42,21 +30,9 @@
 
         public string OrganizationDisplay { get; set; }
 
-        public int WUnit { get; set; }
-
-        public long IncomeCurrentW { get; set; }
-
         public decimal IncomeCurrentWSharingCoff { get; set; }
 
-        public int WsUnit { get; set; }
-
-        public long IncomeCurrentWs { get; set; }
-
         public decimal IncomeCurrentWsSharingCoff { get; set; }
-
-        public long IncomeForcast { get; set; }
-
-        public decimal SPSHahrdari { get; set; }
 
         public decimal IncomeForcastsharing { get; set; }
     }
