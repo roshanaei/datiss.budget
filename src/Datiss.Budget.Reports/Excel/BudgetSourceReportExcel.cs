@@ -27,10 +27,6 @@ namespace Datiss.Budget.Reports.Excel
             sheet.Cell(1, 5).Value = "عملکرد سال پایه";
             sheet.Cell(1, 6).Value = "عملکرد سال ماقبل";
             sheet.Cell(1, 7).Value = "مصوب سال ماقبل";
-            sheet.Cell(1, 8).Value = "درصد دریافت";
-            sheet.Cell(1, 8).Value = "مبلغ";
-            sheet.Cell(1, 8).Value = "درصد رشد پیش بینی به عملکرد";
-            sheet.Cell(1, 8).Value = "درصد رشد پیش بینی به بودجه";
 
             var totalcount = items.Count();
 
@@ -49,15 +45,6 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
                 sheet.Cell(row, 7).Value = item.ApproveYear_1;
                 sheet.Cell(row, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                sheet.Cell(row, 8).Value = item.ReceiptPercent;
-                sheet.Cell(row, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                sheet.Cell(row, 9).Value = item.Fee;
-                sheet.Cell(row, 9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                sheet.Cell(row, 10).Value = item.ForcastFunctionalPercent;
-                sheet.Cell(row, 10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-                sheet.Cell(row, 11).Value = item.ForcastBudgetPercent;
-                sheet.Cell(row, 11).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
-
                 row++;
             }
             var range = sheet.Range(1, 1, row - 1, 11);

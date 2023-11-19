@@ -147,14 +147,8 @@ namespace Datiss.Budget.Services
                     {
                         OrganizationId = model.OrganizationId,
                         YearId = model.YearId,
-                        WUnit = model.WUnit,
-                        IncomeCurrentW = model.IncomeCurrentW,
                         IncomeCurrentWSharingCoff = model.IncomeCurrentWSharingCoff,
-                        WsUnit = model.WsUnit,
-                        IncomeCurrentWs = model.IncomeCurrentWs,
                         IncomeCurrentWsSharingCoff = model.IncomeCurrentWsSharingCoff,
-                        IncomeForcast = model.IncomeForcast,
-                        SPSHahrdari = model.SPSHahrdari,
                         IncomeForcastsharing = model.IncomeForcastsharing,
                         OrganizationDisplay = organizationDisplay,
                         Year = (await _yearSet.FindAsync(model.YearId)).Year
