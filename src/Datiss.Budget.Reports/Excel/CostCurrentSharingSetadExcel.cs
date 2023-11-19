@@ -20,9 +20,9 @@ namespace Datiss.Budget.Reports.Excel
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "سال";
             sheet.Cell(1, 2).Value = "سازمان";
-            sheet.Cell(1, 5).Value = "ضریب تسهیم درآمد جاری";
-            sheet.Cell(1, 8).Value = "ضریب تسهیم درآمد سرمایه ای";
-            sheet.Cell(1, 11).Value = "ضریب تسهیم درآمد جاری فاضلاب";
+            sheet.Cell(1, 3).Value = "ضریب تسهیم درآمد جاری";
+            sheet.Cell(1, 4).Value = "ضریب تسهیم درآمد سرمایه ای";
+            sheet.Cell(1, 5).Value = "ضریب تسهیم درآمد جاری فاضلاب";
 
             var totalCount = items.Count();
             int row = 2;
