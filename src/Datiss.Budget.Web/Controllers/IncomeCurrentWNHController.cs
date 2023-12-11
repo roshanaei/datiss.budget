@@ -248,7 +248,7 @@ namespace Datiss.Budget.Web.Controllers
                     });
                 }
             }
-            catch (ImportExcelFileFormatInvalidException)
+            catch (ImportExcelFileFormatInvalidException ex)
             {
                 return Json(new
                 {
@@ -256,7 +256,7 @@ namespace Datiss.Budget.Web.Controllers
                     message = ViewMessages.ImportExcelFileFormatInvalid
                 });
             }
-            catch (ImportExcelFileSizeInvalidException)
+            catch (ImportExcelFileSizeInvalidException ex)
             {
                 return Json(new
                 {
