@@ -120,12 +120,30 @@ namespace Datiss.Budget.Reports.Excel
 
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
-            sheet.Range(1, 1, 1, 4).Merge();
+            sheet.Range(1, 1, 1, 20).Merge();
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
             sheet.Cell(2, 2).Value = "کد سازمان";
             sheet.Cell(2, 3).Value = "کاربری";
             sheet.Cell(2, 4).Value = "کد کاربری";
+
+            sheet.Cell(2, 5).Value = "تعداد مشترک";
+            sheet.Cell(2, 6).Value = "آحاد مشترک";
+            sheet.Cell(2, 7).Value = "متوسط مصرف ماهیانه";
+            sheet.Cell(2, 8).Value = "مصرف آب";
+            //sheet.Cell(2, 8).Value = "ظرفیت قراردادی";
+            sheet.Cell(2, 9).Value = "مصرف مازاد";
+            sheet.Cell(2, 10).Value = "قیمت هر کاربری";
+            sheet.Cell(2, 11).Value = "درآمد آب بها";
+            sheet.Cell(2, 12).Value = "درآمد آب بها مازاد بر ظرفیت";
+            sheet.Cell(2, 13).Value = "درآمد آب بها فصلی";
+            sheet.Cell(2, 14).Value = "قیمت آب تبصره 3";
+            sheet.Cell(2, 15).Value = "درآمد تبصره 3 آب بها";
+            sheet.Cell(2, 16).Value = "درآمد آبونمان";
+            sheet.Cell(2, 17).Value = "درآمد کل آب بها";
+            sheet.Cell(2, 18).Value = "درآمد تبصره 2 آب بها";
+            sheet.Cell(2, 19).Value = "حجم دفع";
+            sheet.Cell(2, 20).Value = "تفاوت حجم مصرف آب و دفع فاضلاب";
 
             var totalCount = items.Count();
             int row = 3;
@@ -136,11 +154,64 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 2).Value = item.OrganizationId;
                 sheet.Cell(row, 3).Value = item.UserTypeDisplay;
                 sheet.Cell(row, 4).Value = item.UserTypeId;
+                sheet.Cell(row, 5).Value = item.NumberUser;
+                sheet.Cell(row, 6).Value = item.UnitUser;
+                sheet.Cell(row, 7).Value = item.AvgConsumeUser;
+                sheet.Cell(row, 8).Value = item.ConsumptionUser;
+                sheet.Cell(row, 9).Value = item.ExcessConsumption;
+                sheet.Cell(row, 10).Value = item.Cost;
+                sheet.Cell(row, 11).Value = item.Income;
+                sheet.Cell(row, 12).Value = item.ExcessIncome;
+                sheet.Cell(row, 13).Value = item.SeasonalIncome;
+                sheet.Cell(row, 14).Value = item.Note3Price;
+                sheet.Cell(row, 15).Value = item.Note3Income;
+                sheet.Cell(row, 16).Value = item.SubscriptionIncome;
+                sheet.Cell(row, 17).Value = item.TotalIncome;
+                sheet.Cell(row, 18).Value = item.Note2Income;
+                sheet.Cell(row, 19).Value = item.WasteVolume;
+                sheet.Cell(row, 20).Value = item.Diff_ConsWsVolume;
+
+
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(2, 1, row - 1, 4);
-            range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+            var range = sheet.Range(2, 1, row - 1, 20);
+            range.Column(4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
+
+            range.Column(5).Style.NumberFormat.Format = "#,##0";
+            range.Column(5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(6).Style.NumberFormat.Format = "#,##0";
+            range.Column(6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(7).Style.NumberFormat.Format = "#,##0";
+            range.Column(7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+            range.Column(8).Style.NumberFormat.Format = "#,##0";
+            range.Column(8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(9).Style.NumberFormat.Format = "#,##0";
+            range.Column(9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(10).Style.NumberFormat.Format = "#,##0";
+            range.Column(10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(11).Style.NumberFormat.Format = "#,##0";
+            range.Column(11).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(12).Style.NumberFormat.Format = "#,##0";
+            range.Column(12).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(13).Style.NumberFormat.Format = "#,##0";
+            range.Column(13).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(14).Style.NumberFormat.Format = "#,##0";
+            range.Column(14).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(15).Style.NumberFormat.Format = "#,##0";
+            range.Column(15).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(16).Style.NumberFormat.Format = "#,##0";
+            range.Column(16).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(17).Style.NumberFormat.Format = "#,##0";
+            range.Column(17).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(18).Style.NumberFormat.Format = "#,##0";
+            range.Column(18).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(19).Style.NumberFormat.Format = "#,##0";
+            range.Column(19).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            range.Column(20).Style.NumberFormat.Format = "#,##0";
+            range.Column(20).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
             var table = range.CreateTable($"{_sheetName}_Table");
             table.Theme = XLTableTheme.TableStyleMedium16;
             sheet.Columns().AdjustToContents();
