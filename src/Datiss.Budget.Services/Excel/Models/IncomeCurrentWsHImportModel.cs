@@ -40,30 +40,30 @@ namespace Datiss.Budget.Services.Excel.Models
         public int ConsumptionUser { get; set; }
 
         [Column(MappingDirections.Both, Letter = "K")]
-        public int Cost { get; set; }
+        public long Cost { get; set; }
 
         [Column(MappingDirections.Both, Letter = "L")]
-        public int Income { get; set; }
+        public long Income { get; set; }
 
         [Column(MappingDirections.Both, Letter = "M")]
-        public int SubscriptionIncome { get; set; }
+        public long SubscriptionIncome { get; set; }
 
         [Column(MappingDirections.Both, Letter = "N")]
-        public int Note3Price { get; set; }
+        public long Note3Price { get; set; }
 
         [Column(MappingDirections.Both, Letter = "O")]
-        public int Note3Income { get; set; }
+        public long Note3Income { get; set; }
 
         [Column(MappingDirections.Both, Letter = "P")]
-        public int SeasonalIncome { get; set; }
+        public long SeasonalIncome { get; set; }
 
         [Column(MappingDirections.Both, Letter = "Q")]
-        public int TIncome { get; set; }
+        public long TIncome { get; set; }
 
         [Column(MappingDirections.Both, Letter = "R")]
-        public int Note7Price { get; set; }
+        public long Note7Price { get; set; }
 
         [Column(MappingDirections.Both, Letter = "S")]
-        public int Note7Income { get; set; }
+        public long Note7Income { get; set; }
     }
 }
