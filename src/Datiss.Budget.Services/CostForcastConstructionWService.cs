@@ -412,11 +412,11 @@ namespace Datiss.Budget.Services
         public async Task<ImportResult> ImportExcelAsync(IFormFile fileInfo, int yearId, bool continueIfAnyOrgMissing = false)
         {
             var data = await _excelService.ImportAsync<CostForcastConstructionWImportModel>
-                (fileInfo, sheetIndex: 0, minRowNum: 25);
+                (fileInfo, sheetIndex: 0, minRowNum: 35);
 
             var records = data.Adapt<List<CostForcastConstructionW>>();
 
-            int rowIndex = 26;
+            int rowIndex = 36;
 
             var watertypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                    x.Parent.ConstantKey == ConstantKeys.__WaterInvestorsType);
@@ -533,7 +533,7 @@ namespace Datiss.Budget.Services
                     existOrgs.Add(item);
             }
 
-            rowIndex = 26;
+            rowIndex = 36;
 
             if (!continueIfAnyOrgMissing)
             {

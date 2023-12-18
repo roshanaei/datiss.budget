@@ -178,29 +178,29 @@ namespace Datiss.Budget.Reports.Excel
                 sheet.Cell(row, 14).Style.Fill.SetBackgroundColor(XLColor.WhiteSmoke);
                 row++;
             }
-            sheet.Range(1, 1, 23, 14);
+            sheet.Range(1, 1, 33, 14);
             
-            sheet.Cell(24, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
+            sheet.Cell(34, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
             //sheet.Range(23, 1, 24, 15).Merge();
 
-            sheet.Cell(25, 1).Value = "عنوان سازمان";
-            sheet.Cell(25, 2).Value = "کد سازمان";
-            sheet.Cell(25, 3).Value = "شرح پروژه های عمرانی";
-            sheet.Cell(25, 4).Value = "کد هزینه سرمایه ای";
-            sheet.Cell(25, 5).Value = "کد مرکز هزینه";
-            sheet.Cell(25, 6).Value = "کد حوزه بهره بردار در ستاد";
-            sheet.Cell(25, 7).Value = "درصد پیشرفت فیزیکی";
-            sheet.Cell(25, 8).Value = "هزینه انجام شده (هزار ریال)";
-            sheet.Cell(25, 9).Value = "کد واحد";
-            sheet.Cell(25, 10).Value = "قیمت واحد(هزار ریال)";
-            sheet.Cell(25, 11).Value = "مقدار";
-            sheet.Cell(25, 12).Value = "(هزار ریال)کل هزینه اجرایی پروژه";
-            sheet.Cell(25, 13).Value = "کد محل تامین اعتبار";
-            sheet.Cell(25, 14).Value = "کد بهره برداری";
-            sheet.Cell(25, 15).Value = "کد سر فصل کلی در بودجه";
+            sheet.Cell(35, 1).Value = "عنوان سازمان";
+            sheet.Cell(35, 2).Value = "کد سازمان";
+            sheet.Cell(35, 3).Value = "شرح پروژه های عمرانی";
+            sheet.Cell(35, 4).Value = "کد هزینه سرمایه ای";
+            sheet.Cell(35, 5).Value = "کد مرکز هزینه";
+            sheet.Cell(35, 6).Value = "کد حوزه بهره بردار در ستاد";
+            sheet.Cell(35, 7).Value = "درصد پیشرفت فیزیکی";
+            sheet.Cell(35, 8).Value = "هزینه انجام شده (هزار ریال)";
+            sheet.Cell(35, 9).Value = "کد واحد";
+            sheet.Cell(35, 10).Value = "قیمت واحد(هزار ریال)";
+            sheet.Cell(35, 11).Value = "مقدار";
+            sheet.Cell(35, 12).Value = "(هزار ریال)کل هزینه اجرایی پروژه";
+            sheet.Cell(35, 13).Value = "کد محل تامین اعتبار";
+            sheet.Cell(35, 14).Value = "کد بهره برداری";
+            sheet.Cell(35, 15).Value = "کد سر فصل کلی در بودجه";
 
             var totalCount = model.Items.Count();
-            row = 26;
+            row = 36;
             for (int i = 0; i < totalCount; i++)
             {
                 var item = model.Items.ElementAt(i);
@@ -209,7 +209,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++; //for keeping index in table records
             }
 
-            var range = sheet.Range(25, 1, row-1 , 15);
+            var range = sheet.Range(35, 1, row-1 , 15);
             //range.Column(4).Style.NumberFormat.Format = "#,##0";
             //range.Column(3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other
