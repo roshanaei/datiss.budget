@@ -250,7 +250,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
-            var tubeTypeSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType,ConstantKeys.__CIRWaste))
+            var tubeTypeSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType, ConstantKeys.__CIRWaste))
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
@@ -569,10 +569,13 @@ namespace Datiss.Budget.Web.Controllers
             var diameterPipeTypeSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__WasteTubeType))
                 .Adapt<IList<DropDownItemViewModel>>();
 
+            var tubeTypeSource = new List<DropDownItemViewModel>();
 
-            var tubeTypeSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType,ConstantKeys.__CIRWaste))
-                .Adapt<IList<DropDownItemViewModel>>();
+            tubeTypeSource.AddRange((await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType, ConstantKeys.__CIRWaste))
+                .Adapt<IList<DropDownItemViewModel>>());
 
+            tubeTypeSource.AddRange((await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType, ConstantKeys.__CIRWater))
+                            .Adapt<IList<DropDownItemViewModel>>());
 
             var creditSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CreditType))
                 .Adapt<IList<DropDownItemViewModel>>();
@@ -582,7 +585,7 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IList<DropDownItemViewModel>>();
 
             var suggestedBudgetTopicSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__SuggestedBudgetTopicType,
-                                            ConstantKeys.__ExtensionYes.Replace(".",""))).Adapt<IList<DropDownItemViewModel>>();
+                                            ConstantKeys.__ExtensionYes.Replace(".", ""))).Adapt<IList<DropDownItemViewModel>>();
             var extensionNoSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__FinanceSubjectType,
                                             ConstantKeys.__ExtensionNo)).Adapt<IList<DropDownItemViewModel>>();
             foreach (var item in extensionNoSource)
