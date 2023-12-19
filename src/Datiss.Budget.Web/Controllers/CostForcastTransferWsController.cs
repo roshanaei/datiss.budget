@@ -147,8 +147,13 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
-            var tubeTypeSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType, ConstantKeys.__CIRWaste))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            var tubeTypeSource = new List<DropDownItemViewModel>();
+
+            tubeTypeSource.AddRange((await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType, ConstantKeys.__CIRWaste))
+                .Adapt<IList<DropDownItemViewModel>>());
+
+            tubeTypeSource.AddRange((await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType, ConstantKeys.__CIRWater))
+                            .Adapt<IList<DropDownItemViewModel>>());
 
 
             var creditSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CreditType))
@@ -250,8 +255,13 @@ namespace Datiss.Budget.Web.Controllers
                 .Adapt<IEnumerable<DropDownItemViewModel>>();
 
 
-            var tubeTypeSource = (await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType, ConstantKeys.__CIRWaste))
-                .Adapt<IEnumerable<DropDownItemViewModel>>();
+            var tubeTypeSource = new List<DropDownItemViewModel>();
+
+            tubeTypeSource.AddRange((await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType, ConstantKeys.__CIRWaste))
+                .Adapt<IList<DropDownItemViewModel>>());
+
+            tubeTypeSource.AddRange((await _constantService.GetRecordsByKeyAsynce(ConstantKeys.__TubeType, ConstantKeys.__CIRWater))
+                            .Adapt<IList<DropDownItemViewModel>>());
 
 
             var creditSource = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__CreditType))
