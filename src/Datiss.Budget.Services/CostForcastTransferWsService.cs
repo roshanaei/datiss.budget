@@ -415,7 +415,9 @@ namespace Datiss.Budget.Services
 
             var tubetypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                                  x.Parent.ConstantKey == ConstantKeys.__TubeType &&
-                                                 x.ConstantKey.Contains(ConstantKeys.__CIRWaste));
+                                                 x.ConstantKey.Contains(ConstantKeys.__CIRWaste)||
+                                                  x.ConstantKey.Contains(ConstantKeys.__CIRWater));
+
 
             var wastetubetypes = _constSet.Where(x => x.Status != EntityStatus.Deleted &&
                                        x.Parent.ConstantKey == ConstantKeys.__WasteTubeType);
