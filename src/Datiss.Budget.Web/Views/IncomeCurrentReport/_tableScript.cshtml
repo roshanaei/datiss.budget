@@ -26,6 +26,11 @@
         $('#divInput_FunctionalYear_1_' + id).show();
         $('#divInput_FunctionalBasicYear_' + id).show();
 
+        if ($('#spanUnitType_' + id).html().trim() == 'محصولات فرعی تصفیه فاضلاب') {
+            $('#divOutput_ForcastY_' + id).hide();
+            $('#divInput_ForcastY_' + id).show();
+        }
+
 
         $('#btnEdit_' + id).hide();
         $('#btnDelete_' + id).hide();
@@ -46,6 +51,7 @@
         $('#divInput_Org_' + id).hide();
         $('#divInput_FunctionalYear_1_' + id).hide();
         $('#divInput_FunctionalBasicYear_' + id).hide();
+        $('#divInput_ForcastY_' + id).hide();
 
         //Reverting to OriginalData
         if (rowData != null) {
@@ -58,6 +64,7 @@
         $('#divOutput_Org_' + id).show();
         $('#divOutput_FunctionalYear_1_' + id).show();
         $('#divOutput_FunctionalBasicYear_' + id).show();
+        $('#divOutput_ForcastY_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -87,7 +94,6 @@
         model.approveYear_1 = $('#inputApproveYear_1_' + id).val();
         model.forcastY = $('#inputForcastY_' + id).val();
 
-        console.log(model);
 
         $.ajax({
             url: '@Url.Action(WasteSalesSplitController.ACTION_Edit)',
@@ -118,7 +124,7 @@
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanFunctionalYear_1_' + id).text(data.functionalYear_1);
                 $('#spanFunctionalBasicYear_' + id).text(data.functionalBasicYear);
-
+                $('#spanForcastY_' + id).text(model.forcastY);
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
 
