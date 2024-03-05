@@ -29,8 +29,8 @@
     <PackageReference Include="Mapster" Version="7.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.7" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
+    <!--<PackageReference Include="Serilog" Version="2.10.0" />-->
+    <!--<PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />-->
     <PackageReference Include="Stimulsoft.Reports.Web.NetCore" Version="2021.3.6" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
