@@ -1,5 +1,14 @@
 ﻿@{
     var pageTitle = ViewData["Title"] ?? "سیستم جامع بودجه داتیس";
+
+    var userClaims = User.Claims;
+    List<string> result = new List<string>();
+    foreach (var claim in userClaims)
+    {
+        string claimValue = claim.Value.ToString();
+        result.Add(claimValue);
+    }
+    string[] finalResult = result.ToArray();
 }
 <!DOCTYPE html>
 <html>
