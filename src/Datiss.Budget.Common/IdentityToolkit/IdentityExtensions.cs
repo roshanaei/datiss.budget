@@ -95,6 +95,20 @@ namespace Datiss.Budget.Common.IdentityToolkit
 
         public static string GetOrganizationTitle(this IIdentity identity)
             => identity?.GetUserClaimValue(BudgetClaimTypes.OrganizationTitle);
-                    
+
+        public static bool HasListPermission(this IIdentity? identity, string claimType)
+        {
+            try
+            {
+                var identity1 = identity as ClaimsIdentity;
+                var claim = identity1?.FindFirstValue(claimType);
+                return claim != null ? claim.Contains("list") : false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
     }
 }
