@@ -86,7 +86,7 @@ namespace Datiss.Budget.Services
                     entity.YearId = model.YearId;
                     entity.SectionTypeId = model.SectionTypeId;
                     entity.UnitTypeId = model.UnitTypeId;
-                    entity.Activity = model.Activity;
+                    entity.Activity = model.Activity ?? entity.Activity;
                     entity.FunctionalBasicYear = model.FunctionalBasicYear;
                     entity.FunctionalYear_1 = model.FunctionalYear_1;
                     entity.ForcastY = model.ForcastY;
@@ -111,7 +111,7 @@ namespace Datiss.Budget.Services
                         SectionTypeDisplay = model.SectionTypeTitle,
                         UnitTypeId = model.UnitTypeId,
                         UnitTypeDisplay = model.UnitTypeTitle,
-                        Activity = model.Activity,
+                        Activity = entity.Activity,
                         FunctionalBasicYear = model.FunctionalBasicYear,
                         FunctionalYear_1 = model.FunctionalYear_1,
                         ApproveYear_1 = model.ApproveYear_1,

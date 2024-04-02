@@ -1,4 +1,11 @@
 ﻿@using Datiss.Budget.Enum
+@using System.Security.Claims;
+@inject IApplicationRoleManager roleManager
+
+@{
+    var isAdmin = roleManager.IsCurrentUserInRole("Admin");
+}
+
 <!-- main menu-->
 <!--.main-menu(class="#{menuColor} #{menuOpenType}", class=(menuShadow == true ? 'menu-shadow' : ''))-->
 <div class="app-sidebar menu-fixed" data-background-color="purple-bliss" data-image="../assets/img/sidebar-bg/01.jpg" data-scroll-to-active="true">
@@ -29,7 +36,7 @@
             <div class="nav-container">
                 <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
                     <!-- مدیریت  سامانه-->
-                    <li class="has-sub nav-item ">
+                    <li class="has-sub nav-item">
                         <a class="CollapseBase" href="#">
                             <div>
                                 <i class="ft-help-circle"></i>
@@ -37,42 +44,57 @@
                             </div>
                         </a>
                         <ul class="menu-content" id="CollapseBase" parent="CollapseBase">
-                            <li class="nav-item">
-                                <a asp-area="@AreaConstants.AdminArea" asp-controller="@FinanceYearController.Name" asp-action="@FinanceYearController.ACTION_Index">
-                                    <i class="ft-refresh-cw"></i>
-                                    <span data-i18n="سال" class="menu-title my-font"> سال </span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-area="@AreaConstants.AdminArea" asp-controller="@OrganizationController.Name" asp-action="@OrganizationController.ACTION_Index">
-                                    <i class="ft-refresh-cw"></i>
-                                    <span data-i18n="سازمان" class="menu-title my-font"> سازمان </span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-area="@AreaConstants.AdminArea" asp-controller="@ConstantController.Name" asp-action="@ConstantController.ACTION_Index">
-                                    <i class="ft-refresh-cw"></i>
-                                    <span data-i18n="ثابت ها" class="menu-title my-font"> ثابت ها </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a asp-area="@AreaConstants.AdminArea"
-                                   asp-controller="@ReportsController.Name"
-                                   asp-action="@ReportsController.ACTION_Index">
-                                    <i class="ft-refresh-cw"></i>
-                                    <span data-i18n="مدیریت گزارشات" class="menu-title my-font"> گزارشات </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a asp-area="@AreaConstants.AdminArea"
-                                   asp-controller="Designer"
-                                   asp-action="Index">
-                                    <i class="ft-refresh-cw"></i>
-                                    <span data-i18n="ساخت گزارشات" class="menu-title my-font">
-                                        گزارش ساز
-                                    </span>
-                                </a>
-                            </li>
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(FinanceYearController.Name)))
+                            {
+                                <li class="nav-item">
+                                    <a class="menu-item" asp-area="@AreaConstants.AdminArea" asp-controller="@FinanceYearController.Name" asp-action="@FinanceYearController.ACTION_Index">
+                                        <i class="ft-refresh-cw"></i>
+                                        <span data-i18n="سال" class="menu-title my-font"> سال </span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(OrganizationController.Name)))
+                            {
+                                <li class="nav-item">
+                                    <a class="menu-item" asp-area="@AreaConstants.AdminArea" asp-controller="@OrganizationController.Name" asp-action="@OrganizationController.ACTION_Index">
+                                        <i class="ft-refresh-cw"></i>
+                                        <span data-i18n="سازمان" class="menu-title my-font"> سازمان </span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(ConstantController.Name)))
+                            {
+                                <li class="nav-item">
+                                    <a class="menu-item" asp-area="@AreaConstants.AdminArea" asp-controller="@ConstantController.Name" asp-action="@ConstantController.ACTION_Index">
+                                        <i class="ft-refresh-cw"></i>
+                                        <span data-i18n="ثابت ها" class="menu-title my-font"> ثابت ها </span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(ReportsController.Name)))
+                            {
+                                <li>
+                                    <a class="menu-item" asp-area="@AreaConstants.AdminArea"
+                                       asp-controller="@ReportsController.Name"
+                                       asp-action="@ReportsController.ACTION_Index">
+                                        <i class="ft-refresh-cw"></i>
+                                        <span data-i18n="مدیریت گزارشات" class="menu-title my-font"> گزارشات </span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission("Designer")))
+                            {
+                                <li>
+                                    <a class="menu-item" asp-area="@AreaConstants.AdminArea"
+                                       asp-controller="Designer"
+                                       asp-action="Index">
+                                        <i class="ft-refresh-cw"></i>
+                                        <span data-i18n="ساخت گزارشات" class="menu-title my-font">
+                                            گزارش ساز
+                                        </span>
+                                    </a>
+                                </li>
+                            }
                         </ul>
                     </li>
                     <!-- مدیریت کاربران-->
@@ -84,28 +106,32 @@
                             </div>
                         </a>
                         <ul class="menu-content" id="CollapseAccount" parent="CollapseAccount">
-
-                            <li class="">
-                                <a class="menu-item"
-                                   asp-area="@AreaConstants.AdminArea"
-                                   asp-controller="@UsersController.Name"
-                                   asp-action="@UsersController.ACTION_Index">
-                                    <i class="ft-arrow-right submenu-icon"></i>
-                                    <span class="menu-item" data-i18n="کاربران"> کاربران</span>
-                                </a>
-                            </li>
-
-                            <li class="">
-                                <a class="menu-item"
-                                   asp-area="@AreaConstants.AdminArea"
-                                   asp-controller="@RolesController.Name"
-                                   asp-action="@RolesController.ACTION_Index">
-                                    <i class="ft-arrow-right submenu-icon"></i>
-                                    <span class="menu-item" data-i18n="دسترسی ها">
-                                        نقش های کاربری
-                                    </span>
-                                </a>
-                            </li>
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(UsersController.Name)))
+                            {
+                                <li class="">
+                                    <a class="menu-item"
+                                       asp-area="@AreaConstants.AdminArea"
+                                       asp-controller="@UsersController.Name"
+                                       asp-action="@UsersController.ACTION_Index">
+                                        <i class="ft-arrow-right submenu-icon"></i>
+                                        <span class="menu-item" data-i18n="کاربران"> کاربران</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(RolesController.Name)))
+                            {
+                                <li class="">
+                                    <a class="menu-item"
+                                       asp-area="@AreaConstants.AdminArea"
+                                       asp-controller="@RolesController.Name"
+                                       asp-action="@RolesController.ACTION_Index">
+                                        <i class="ft-arrow-right submenu-icon"></i>
+                                        <span class="menu-item" data-i18n="دسترسی ها">
+                                            نقش های کاربری
+                                        </span>
+                                    </a>
+                                </li>
+                            }
                         </ul>
                     </li>
                     <!--  پیش بینی بودجه-->
@@ -116,6 +142,7 @@
                                 <span data-i18n="" class="menu-title">پیش بینی بودجه</span>
                             </div>
                         </a>
+
                         <!--درآمد سرمایه ای-->
                         <ul class="has-sub" id="CapitalIncome" parent="CollapseForcastManagment">
                             <li class="has-sub">
@@ -124,67 +151,102 @@
                                     <span data-i18n="درآمد سرمایه ای" class="menu-title my-font">درآمد سرمایه ای</span>
                                 </a>
                                 <ul class="menu-content" id="CapitalIncome" parent="CollapseForcastManagment">
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@BranchFeeAmountController.Name" asp-action="@BranchFeeAmountController.ACTION_Index">
-                                            <span data-i18n="مبلغ حق انشعاب" class="menu-item my-font-light">مبلغ حق انشعاب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@WaterInstallFeeController.Name" asp-action="@WaterInstallFeeController.ACTION_Index">
-                                            <span data-i18n="تعرفه نصب انشعاب آب" class="menu-item my-font-light"> تعرفه نصب انشعاب آب </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@WasteInstallFeeController.Name" asp-action="@WasteInstallFeeController.ACTION_Index">
-                                            <span data-i18n="تعرفه نصب انشعاب فاضلاب" class="menu-item my-font-light"> تعرفه نصب انشعاب فاضلاب </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@NHCoController.Name" asp-action="@NHCoController.ACTION_Index">
-                                            <span data-i18n="مشارکت سرمایه ای غیر خانگی" class="menu-item my-font-light">مشارکت سرمایه ای غیر خانگی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@BranchingRateIncreaseController.Name" asp-action="@BranchingRateIncreaseController.ACTION_Index">
-                                            <span data-i18n="ضریب افزایش حق انشعاب" class="menu-item my-font-light">ضریب افزایش حق انشعاب</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@UserTypeAverageCapacityForcastController.Name" asp-action="@UserTypeAverageCapacityForcastController.ACTION_Index">
-                                            <span data-i18n="متوسط ظرفیت قراردادی غیرخانگی" class="menu-item my-font-light">متوسط ظرفیت قراردادی غیرخانگی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@WaterSalesSplitController.Name" asp-action="@WaterSalesSplitController.ACTION_Index">
-                                            <span data-i18n=" فروش انشعاب آب" class="menu-item my-font-light"> فروش انشعاب آب </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@WasteSalesSplitController.Name" asp-action="@WasteSalesSplitController.ACTION_Index">
-                                            <span data-i18n=" فروش انشعاب فاضلاب" class="menu-item my-font-light"> فروش انشعاب فاضلاب </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@IncomeForcastController.Name" asp-action="@IncomeForcastController.ACTION_Index">
-                                            <span data-i18n="درآمدهای سرمایه ای آب" class="menu-item my-font-light">درآمدهای سرمایه ای آب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@IncomeForcastWsController.Name" asp-action="@IncomeForcastWsController.ACTION_Index">
-                                            <span data-i18n="درآمدهای سرمایه ای فاضلاب" class="menu-item my-font-light">درآمدهای سرمایه ای فاضلاب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@IncomeForcastOtherController.Name" asp-action="@IncomeForcastOtherController.ACTION_Index">
-                                            <span data-i18n="سایر درآمدهای سرمایه ای" class="menu-item my-font-light">سایر درآمدهای سرمایه ای</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@BudgetSourceReportController.Name" asp-action="@BudgetSourceReportController.ACTION_Index">
-                                            <span data-i18n="گزارش منابع " class="menu-item my-font-light">گزارش منابع</span>
-                                        </a>
-                                    </li>
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(BranchFeeAmountController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@BranchFeeAmountController.Name" asp-action="@BranchFeeAmountController.ACTION_Index">
+                                                <span data-i18n="مبلغ حق انشعاب" class="menu-item my-font-light">مبلغ حق انشعاب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(WaterInstallFeeController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@WaterInstallFeeController.Name" asp-action="@WaterInstallFeeController.ACTION_Index">
+                                                <span data-i18n="تعرفه نصب انشعاب آب" class="menu-item my-font-light"> تعرفه نصب انشعاب آب </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(WasteInstallFeeController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@WasteInstallFeeController.Name" asp-action="@WasteInstallFeeController.ACTION_Index">
+                                                <span data-i18n="تعرفه نصب انشعاب فاضلاب" class="menu-item my-font-light"> تعرفه نصب انشعاب فاضلاب </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(NHCoController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@NHCoController.Name" asp-action="@NHCoController.ACTION_Index">
+                                                <span data-i18n="مشارکت سرمایه ای غیر خانگی" class="menu-item my-font-light">مشارکت سرمایه ای غیر خانگی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(BranchingRateIncreaseController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@BranchingRateIncreaseController.Name" asp-action="@BranchingRateIncreaseController.ACTION_Index">
+                                                <span data-i18n="ضریب افزایش حق انشعاب" class="menu-item my-font-light">ضریب افزایش حق انشعاب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(UserTypeAverageCapacityForcastController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@UserTypeAverageCapacityForcastController.Name" asp-action="@UserTypeAverageCapacityForcastController.ACTION_Index">
+                                                <span data-i18n="متوسط ظرفیت قراردادی غیرخانگی" class="menu-item my-font-light">متوسط ظرفیت قراردادی غیرخانگی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(WaterSalesSplitController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@WaterSalesSplitController.Name" asp-action="@WaterSalesSplitController.ACTION_Index">
+                                                <span data-i18n=" فروش انشعاب آب" class="menu-item my-font-light"> فروش انشعاب آب </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(WasteSalesSplitController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@WasteSalesSplitController.Name" asp-action="@WasteSalesSplitController.ACTION_Index">
+                                                <span data-i18n=" فروش انشعاب فاضلاب" class="menu-item my-font-light"> فروش انشعاب فاضلاب </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeForcastController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@IncomeForcastController.Name" asp-action="@IncomeForcastController.ACTION_Index">
+                                                <span data-i18n="درآمدهای سرمایه ای آب" class="menu-item my-font-light">درآمدهای سرمایه ای آب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeForcastWsController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@IncomeForcastWsController.Name" asp-action="@IncomeForcastWsController.ACTION_Index">
+                                                <span data-i18n="درآمدهای سرمایه ای فاضلاب" class="menu-item my-font-light">درآمدهای سرمایه ای فاضلاب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeForcastOtherController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@IncomeForcastOtherController.Name" asp-action="@IncomeForcastOtherController.ACTION_Index">
+                                                <span data-i18n="سایر درآمدهای سرمایه ای" class="menu-item my-font-light">سایر درآمدهای سرمایه ای</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(BudgetSourceReportController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@BudgetSourceReportController.Name" asp-action="@BudgetSourceReportController.ACTION_Index">
+                                                <span data-i18n="گزارش منابع " class="menu-item my-font-light">گزارش منابع</span>
+                                            </a>
+                                        </li>
+                                    }
                                 </ul>
                             </li>
                         </ul>
@@ -197,91 +259,139 @@
                                     <span data-i18n="درآمد جاری" class="menu-title my-font">درآمد جاری</span>
                                 </a>
                                 <ul class="menu-content" id="CapitalCost" parent="CollapseForcastManagment">
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CofficientController.Name" asp-action="@CofficientController.ACTION_Index" asp-route-group="@CofficientsGroup.CurrentIncome">
-                                            <span data-i18n="ضرایب" class="menu-item my-font-light">ضرایب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@IncomeCurrentCofficientController.Name" asp-action="@IncomeCurrentCofficientController.ACTION_Index">
-                                            <span data-i18n="ضرایب درآمد جاری" class="menu-item my-font-light">ضرایب درآمد جاری</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@FeeCityController.Name" asp-action="@FeeCityController.ACTION_Index">
-                                            <span data-i18n="ضریب قیمت شهری" class="menu-item my-font-light">ضریب قیمت شهری</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@SubscriptionController.Name" asp-action="@SubscriptionController.ACTION_Index">
-                                            <span data-i18n="آبونمان" class="menu-item my-font-light">آبونمان</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@UserTypeAverageCapacityCurrentController.Name" asp-action="@UserTypeAverageCapacityCurrentController.ACTION_Index">
-                                            <span data-i18n="متوسط ظرفیت قراردادی غیرخانگی" class="menu-item my-font-light">متوسط ظرفیت قراردادی غیرخانگی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@WWsFeeController.Name" asp-action="@WWsFeeController.ACTION_Index">
-                                            <span data-i18n="تعرفه آب و خدمات دفع فاضلاب" class="menu-item my-font-light">تعرفه آب و خدمات دفع فاضلاب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@ConsumeForcastController.Name" asp-action="@ConsumeForcastController.ACTION_Index">
-                                            <span data-i18n="حجم مصرف آب" class="menu-item my-font-light">حجم مصرف آب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@ConsumeForcastWsController.Name" asp-action="@ConsumeForcastWsController.ACTION_Index">
-                                            <span data-i18n="حجم دفع فاضلاب" class="menu-item my-font-light">حجم دفع فاضلاب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@IncomeCurrentWHController.Name" asp-action="@IncomeCurrentWHController.ACTION_Index">
-                                            <span data-i18n="درآمد آب بهای مسکونی" class="menu-item my-font-light">درآمد آب بهای مسکونی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@IncomeCurrentWNHController.Name" asp-action="@IncomeCurrentWNHController.ACTION_Index">
-                                            <span data-i18n="درآمد آب بهای غیر مسکونی" class="menu-item my-font-light">درآمد آب بهای غیر مسکونی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@IncomeCurrentWsHController.Name" asp-action="@IncomeCurrentWsHController.ACTION_Index">
-                                            <span data-i18n="درآمد فاضلاب بها مسکونی" class="menu-item my-font-light">درآمد فاضلاب بها مسکونی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@IncomeCurrentWsNHController.Name" asp-action="@IncomeCurrentWsNHController.ACTION_Index">
-                                            <span data-i18n="درآمد فاضلاب بها غیر مسکونی" class="menu-item my-font-light">درآمد فاضلاب بها غیر مسکونی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#">
-                                            <span data-i18n="سایر درآمدهای جاری" class="menu-item my-font-light">سایر درآمدهای جاری</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@IncomeCurrentOperationalController.Name" asp-action="@IncomeCurrentOperationalController.ACTION_Index">
-                                            <span data-i18n="درآمد عملیاتی" class="menu-item my-font-light">درآمد عملیاتی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@IncomeCurrentNOperationalController.Name" asp-action="@IncomeCurrentNOperationalController.ACTION_Index">
-                                            <span data-i18n="درآمد غیر عملیاتی" class="menu-item my-font-light">درآمد غیر عملیاتی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@IncomeCurrentReportController.Name" asp-action="@IncomeCurrentReportController.ACTION_Index">
-                                            <span data-i18n="گزارش درآمد جاری" class="menu-item my-font-light">گزارش درآمد جاری</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@SalesSplitTotalController.Name" asp-action="@SalesSplitTotalController.ACTION_Index">
-                                            <span data-i18n="گزارش عملکرد فروش انشعاب" class="menu-item my-font-light">گزارش عملکرد فروش انشعاب</span>
-                                        </a>
-                                    </li>
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CofficientController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CofficientController.Name" asp-action="@CofficientController.ACTION_Index" asp-route-group="@CofficientsGroup.CurrentIncome">
+                                                <span data-i18n="ضرایب" class="menu-item my-font-light">ضرایب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeCurrentCofficientController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@IncomeCurrentCofficientController.Name" asp-action="@IncomeCurrentCofficientController.ACTION_Index">
+                                                <span data-i18n="ضرایب درآمد جاری" class="menu-item my-font-light">ضرایب درآمد جاری</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(FeeCityController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@FeeCityController.Name" asp-action="@FeeCityController.ACTION_Index">
+                                                <span data-i18n="ضریب قیمت شهری" class="menu-item my-font-light">ضریب قیمت شهری</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(SubscriptionController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@SubscriptionController.Name" asp-action="@SubscriptionController.ACTION_Index">
+                                                <span data-i18n="آبونمان" class="menu-item my-font-light">آبونمان</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(UserTypeAverageCapacityCurrentController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@UserTypeAverageCapacityCurrentController.Name" asp-action="@UserTypeAverageCapacityCurrentController.ACTION_Index">
+                                                <span data-i18n="متوسط ظرفیت قراردادی غیرخانگی" class="menu-item my-font-light">متوسط ظرفیت قراردادی غیرخانگی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(WWsFeeController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@WWsFeeController.Name" asp-action="@WWsFeeController.ACTION_Index">
+                                                <span data-i18n="تعرفه آب و خدمات دفع فاضلاب" class="menu-item my-font-light">تعرفه آب و خدمات دفع فاضلاب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(ConsumeForcastController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@ConsumeForcastController.Name" asp-action="@ConsumeForcastController.ACTION_Index">
+                                                <span data-i18n="حجم مصرف آب" class="menu-item my-font-light">حجم مصرف آب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(ConsumeForcastWsController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@ConsumeForcastWsController.Name" asp-action="@ConsumeForcastWsController.ACTION_Index">
+                                                <span data-i18n="حجم دفع فاضلاب" class="menu-item my-font-light">حجم دفع فاضلاب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeCurrentWHController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@IncomeCurrentWHController.Name" asp-action="@IncomeCurrentWHController.ACTION_Index">
+                                                <span data-i18n="درآمد آب بهای مسکونی" class="menu-item my-font-light">درآمد آب بهای مسکونی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeCurrentWNHController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@IncomeCurrentWNHController.Name" asp-action="@IncomeCurrentWNHController.ACTION_Index">
+                                                <span data-i18n="درآمد آب بهای غیر مسکونی" class="menu-item my-font-light">درآمد آب بهای غیر مسکونی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeCurrentWsHController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@IncomeCurrentWsHController.Name" asp-action="@IncomeCurrentWsHController.ACTION_Index">
+                                                <span data-i18n="درآمد فاضلاب بها مسکونی" class="menu-item my-font-light">درآمد فاضلاب بها مسکونی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeCurrentWsNHController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@IncomeCurrentWsNHController.Name" asp-action="@IncomeCurrentWsNHController.ACTION_Index">
+                                                <span data-i18n="درآمد فاضلاب بها غیر مسکونی" class="menu-item my-font-light">درآمد فاضلاب بها غیر مسکونی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @*                                    <li class="nav-item">
+                                    <a href="#">
+                                    <span data-i18n="سایر درآمدهای جاری" class="menu-item my-font-light">سایر درآمدهای جاری</span>
+                                    </a>
+                                    </li>*@
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeCurrentOperationalController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@IncomeCurrentOperationalController.Name" asp-action="@IncomeCurrentOperationalController.ACTION_Index">
+                                                <span data-i18n="درآمد عملیاتی" class="menu-item my-font-light">درآمد عملیاتی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeCurrentNOperationalController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@IncomeCurrentNOperationalController.Name" asp-action="@IncomeCurrentNOperationalController.ACTION_Index">
+                                                <span data-i18n="درآمد غیر عملیاتی" class="menu-item my-font-light">درآمد غیر عملیاتی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeCurrentReportController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@IncomeCurrentReportController.Name" asp-action="@IncomeCurrentReportController.ACTION_Index">
+                                                <span data-i18n="گزارش درآمد جاری" class="menu-item my-font-light">گزارش درآمد جاری</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(SalesSplitTotalController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@SalesSplitTotalController.Name" asp-action="@SalesSplitTotalController.ACTION_Index">
+                                                <span data-i18n="گزارش عملکرد فروش انشعاب" class="menu-item my-font-light">گزارش عملکرد فروش انشعاب</span>
+                                            </a>
+                                        </li>
+                                    }
                                 </ul>
                             </li>
                         </ul>
@@ -294,88 +404,131 @@
                                     <span data-i18n="هزینه سرمایه ای" class="menu-title my-font">هزینه سرمایه ای</span>
                                 </a>
                                 <ul class="menu-content" id="CurrentIncome" parent="CollapseForcastManagment">
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CofficientController.Name" asp-action="@CofficientController.ACTION_Index" asp-route-group="@CofficientsGroup.ForcastCost">
-                                            <span data-i18n="ضرایب" class="menu-item my-font-light">ضرایب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostForcastPipingWController.Name" asp-action="@CostForcastPipingWController.ACTION_Index">
-                                            <span data-i18n="هزینه لوله گذاری شبکه توزیع آب" class="menu-item my-font-light">هزینه لوله گذاری شبکه توزیع آب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostForcastPipingWsController.Name" asp-action="@CostForcastPipingWsController.ACTION_Index">
-                                            <span data-i18n="هزینه لوله گذاری شبکه توزیع فاضلاب" class="menu-item my-font-light">هزینه لوله گذاری شبکه توزیع فاضلاب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostForcastFinanceController.Name" asp-action="@CostForcastFinanceController.ACTION_Index">
-                                            <span data-i18n="دارایی ها" class="menu-item my-font-light">دارایی ها</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostForcastBuyDescriptionController.Name" asp-action="@CostForcastBuyDescriptionController.ACTION_Index">
-                                            <span data-i18n="شرح خریدهای سرمایه ای" class="menu-item my-font-light">شرح خریدهای سرمایه ای</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostForcastBuyController.Name" asp-action="@CostForcastBuyController.ACTION_Index">
-                                            <span data-i18n="خریدهای سرمایه ای" class="menu-item my-font-light">خریدهای سرمایه ای</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostForcastTransferWController.Name" asp-action="@CostForcastTransferWController.ACTION_Index">
-                                            <span data-i18n="اصلاح و توسعه شبکه آب" class="menu-item my-font-light">اصلاح و توسعه شبکه آب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostForcastTransferWsController.Name" asp-action="@CostForcastTransferWsController.ACTION_Index">
-                                            <span data-i18n="اصلاح و توسعه شبکه فاضلاب" class="menu-item my-font-light">اصلاح و توسعه شبکه فاضلاب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostForcastConstructionWController.Name" asp-action="@CostForcastConstructionWController.ACTION_Index">
-                                            <span data-i18n="اهداف عمرانی آب" class="menu-item my-font-light">اهداف عمرانی آب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostForcastConstructionWsController.Name" asp-action="@CostForcastConstructionWsController.ACTION_Index">
-                                            <span data-i18n="اهداف عمرانی فاضلاب" class="menu-item my-font-light">اهداف عمرانی فاضلاب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostForcastConsumptionReportController.Name" asp-action="@CostForcastConsumptionReportController.ACTION_Index">
-                                            <span data-i18n="گزارش مصارف" class="menu-item my-font-light">گزارش مصارف</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@TotalBudgetWReportController.Name" asp-action="@TotalBudgetWReportController.ACTION_Index">
-                                            <span data-i18n="گزارش اطلاعات کلی بودجه آب" class="menu-item my-font-light">گزارش کلی بودجه آب</span>
-                                        </a>
-                                    </li>
-                                     <li class="nav-item">
-                                        <a asp-area="" asp-controller="@TotalBudgetWsReportController.Name" asp-action="@TotalBudgetWsReportController.ACTION_Index">
-                                            <span data-i18n="گزارش اطلاعات کلی بودجه فاضلاب" class="menu-item my-font-light">گزارش کلی بودجه فاضلاب</span>
-                                        </a>
-                                    </li>
-                                     <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostForcastWInvestmentReportController.Name" asp-action="@CostForcastWInvestmentReportController.ACTION_Index">
-                                            <span data-i18n="گزارش اهداف سرمایه ای آب" class="menu-item my-font-light">گزارش اهداف سرمایه ای آب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostForcastWsInvestmentReportController.Name" asp-action="@CostForcastWsInvestmentReportController.ACTION_Index">
-                                            <span data-i18n="گزارش اهداف سرمایه ای فاضلاب" class="menu-item my-font-light">گزارش اهداف سرمایه ای فاضلاب</span>
-                                        </a>
-                                    </li>
-
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CofficientController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CofficientController.Name" asp-action="@CofficientController.ACTION_Index" asp-route-group="@CofficientsGroup.ForcastCost">
+                                                <span data-i18n="ضرایب" class="menu-item my-font-light">ضرایب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostForcastPipingWController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostForcastPipingWController.Name" asp-action="@CostForcastPipingWController.ACTION_Index">
+                                                <span data-i18n="هزینه لوله گذاری شبکه توزیع آب" class="menu-item my-font-light">هزینه لوله گذاری شبکه توزیع آب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostForcastPipingWsController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostForcastPipingWsController.Name" asp-action="@CostForcastPipingWsController.ACTION_Index">
+                                                <span data-i18n="هزینه لوله گذاری شبکه توزیع فاضلاب" class="menu-item my-font-light">هزینه لوله گذاری شبکه توزیع فاضلاب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostForcastFinanceController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostForcastFinanceController.Name" asp-action="@CostForcastFinanceController.ACTION_Index">
+                                                <span data-i18n="دارایی ها" class="menu-item my-font-light">دارایی ها</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostForcastBuyDescriptionController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostForcastBuyDescriptionController.Name" asp-action="@CostForcastBuyDescriptionController.ACTION_Index">
+                                                <span data-i18n="شرح خریدهای سرمایه ای" class="menu-item my-font-light">شرح خریدهای سرمایه ای</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostForcastBuyController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostForcastBuyController.Name" asp-action="@CostForcastBuyController.ACTION_Index">
+                                                <span data-i18n="خریدهای سرمایه ای" class="menu-item my-font-light">خریدهای سرمایه ای</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostForcastTransferWController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostForcastTransferWController.Name" asp-action="@CostForcastTransferWController.ACTION_Index">
+                                                <span data-i18n="اصلاح و توسعه شبکه آب" class="menu-item my-font-light">اصلاح و توسعه شبکه آب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostForcastTransferWsController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostForcastTransferWsController.Name" asp-action="@CostForcastTransferWsController.ACTION_Index">
+                                                <span data-i18n="اصلاح و توسعه شبکه فاضلاب" class="menu-item my-font-light">اصلاح و توسعه شبکه فاضلاب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostForcastConstructionWController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostForcastConstructionWController.Name" asp-action="@CostForcastConstructionWController.ACTION_Index">
+                                                <span data-i18n="اهداف عمرانی آب" class="menu-item my-font-light">اهداف عمرانی آب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostForcastConstructionWsController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostForcastConstructionWsController.Name" asp-action="@CostForcastConstructionWsController.ACTION_Index">
+                                                <span data-i18n="اهداف عمرانی فاضلاب" class="menu-item my-font-light">اهداف عمرانی فاضلاب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostForcastConsumptionReportController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostForcastConsumptionReportController.Name" asp-action="@CostForcastConsumptionReportController.ACTION_Index">
+                                                <span data-i18n="گزارش مصارف" class="menu-item my-font-light">گزارش مصارف</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(TotalBudgetWReportController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@TotalBudgetWReportController.Name" asp-action="@TotalBudgetWReportController.ACTION_Index">
+                                                <span data-i18n="گزارش اطلاعات کلی بودجه آب" class="menu-item my-font-light">گزارش کلی بودجه آب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(TotalBudgetWsReportController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@TotalBudgetWsReportController.Name" asp-action="@TotalBudgetWsReportController.ACTION_Index">
+                                                <span data-i18n="گزارش اطلاعات کلی بودجه فاضلاب" class="menu-item my-font-light">گزارش کلی بودجه فاضلاب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostForcastWInvestmentReportController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostForcastWInvestmentReportController.Name" asp-action="@CostForcastWInvestmentReportController.ACTION_Index">
+                                                <span data-i18n="گزارش اهداف سرمایه ای آب" class="menu-item my-font-light">گزارش اهداف سرمایه ای آب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostForcastWsInvestmentReportController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostForcastWsInvestmentReportController.Name" asp-action="@CostForcastWsInvestmentReportController.ACTION_Index">
+                                                <span data-i18n="گزارش اهداف سرمایه ای فاضلاب" class="menu-item my-font-light">گزارش اهداف سرمایه ای فاضلاب</span>
+                                            </a>
+                                        </li>
+                                    }
                                 </ul>
                             </li>
                         </ul>
                         <!--هزینه سرمایه ای -->
                         <!--هزینه جاری-->
-
                         <ul class="has-sub" id="CurrentCost" parent="CollapseForcastManagment">
                             <li class="has-sub">
                                 <a href="#">
@@ -383,129 +536,195 @@
                                     <span data-i18n="هزینه جاری" class="menu-title my-font"> هزینه جاری </span>
                                 </a>
                                 <ul class="menu-content" id="CurrentCost" parent="CollapseForcastManagment">
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CofficientController.Name" asp-action="@CofficientController.ACTION_Index" asp-route-group="@CofficientsGroup.CurrentCost">
-                                            <span data-i18n="ضرایب" class="menu-item my-font-light">ضرایب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentWaterSourceController.Name" asp-action="@CostCurrentWaterSourceController.ACTION_Index">
-                                            <span data-i18n="حجم تولید آب" class="menu-item my-font-light">پیش بینی تولید آب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentWaterSourcePriceController.Name" asp-action="@CostCurrentWaterSourcePriceController.ACTION_Index">
-                                            <span data-i18n="ضریب قیمت منابع تولید" class="menu-item my-font-light">قیمت خرید آب خام</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentConsumableController.Name" asp-action="@CostCurrentConsumableController.ACTION_Index">
-                                            <span data-i18n="مواد مصرفی تولید آب" class="menu-item my-font-light">مواد مصرفی تولید آب و فاضلاب</span>
-                                        </a>
-                                    </li>
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CofficientController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CofficientController.Name" asp-action="@CofficientController.ACTION_Index" asp-route-group="@CofficientsGroup.CurrentCost">
+                                                <span data-i18n="ضرایب" class="menu-item my-font-light">ضرایب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentWaterSourceController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentWaterSourceController.Name" asp-action="@CostCurrentWaterSourceController.ACTION_Index">
+                                                <span data-i18n="حجم تولید آب" class="menu-item my-font-light">پیش بینی تولید آب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentWaterSourcePriceController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentWaterSourcePriceController.Name" asp-action="@CostCurrentWaterSourcePriceController.ACTION_Index">
+                                                <span data-i18n="ضریب قیمت منابع تولید" class="menu-item my-font-light">قیمت خرید آب خام</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentConsumableController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentConsumableController.Name" asp-action="@CostCurrentConsumableController.ACTION_Index">
+                                                <span data-i18n="مواد مصرفی تولید آب" class="menu-item my-font-light">مواد مصرفی تولید آب و فاضلاب</span>
+                                            </a>
+                                        </li>
+                                    }
                                     @*                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="" asp-action="">
-                                        <span data-i18n="مواد مصرفی تولید فاضلاب" class="menu-item my-font-light">مواد مصرفی تولید فاضلاب</span>
-                                        </a>
-                                        </li>*@
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentPMDepController.Name" asp-action="@CostCurrentPMDepController.ACTION_Index">
-                                            <span data-i18n="هزینه استهلاک و تعمیر و نگهداری" class="menu-item my-font-light">هزینه استهلاک و تعمیر و نگهداری</span>
-                                        </a>
-                                    </li>
-                                     <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentOtherCofficientController.Name" asp-action="@CostCurrentOtherCofficientController.ACTION_Index">
-                                            <span data-i18n="ضریب سایر هزینه ها " class="menu-item my-font-light">ضریب سایر هزینه ها</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentOtherController.Name" asp-action="@CostCurrentOtherController.ACTION_Index">
-                                            <span data-i18n="سایر هزینه ها" class="menu-item my-font-light">سایر هزینه ها</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentBankFeeController.Name" asp-action="@CostCurrentBankFeeController.ACTION_Index">
-                                            <span data-i18n="هزینه کارمزد بانکی" class="menu-item my-font-light">هزینه کارمزد بانکی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentEPaymentController.Name" asp-action="@CostCurrentEPaymentController.ACTION_Index">
-                                            <span data-i18n="نفوذ پرداخت الکترونیکی" class="menu-item my-font-light">نفوذ پرداخت الکترونیکی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentRawMaterialController.Name" asp-action="@CostCurrentRawMaterialController.ACTION_Index">
-                                            <span data-i18n="هزینه خرید مواد اولیه" class="menu-item my-font-light">هزینه خرید مواد اولیه</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentContractualController.Name" asp-action="@CostCurrentContractualController.ACTION_Index">
-                                            <span data-i18n="هزینه خدمات قراردادی" class="menu-item my-font-light">هزینه خدمات قراردادی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentElectricityController.Name" asp-action="@CostCurrentElectricityController.ACTION_Index">
-                                            <span data-i18n="هزینه برق مصرفی" class="menu-item my-font-light">هزینه برق مصرفی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentPrescriptionBaseInfoController.Name" asp-action="@CostCurrentPrescriptionBaseInfoController.ACTION_Index">
-                                            <span data-i18n="پایه حکم" class="menu-item my-font-light">پایه حکم</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentPersonelController.Name" asp-action="@CostCurrentPersonelController.ACTION_Index">
-                                            <span data-i18n="حقوق و دستمزد" class="menu-item my-font-light">حقوق و دستمزد</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentNOController.Name" asp-action="@CostCurrentNOController.ACTION_Index">
-                                            <span data-i18n="هزینه و درآمد غیر عملیاتی" class="menu-item my-font-light">هزینه و درآمد غیر عملیاتی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentSharingSetadController.Name" asp-action="@CostCurrentSharingSetadController.ACTION_Index">
-                                            <span data-i18n="تسهیم هزینه بخش ستاد" class="menu-item my-font-light">تسهیم هزینه بخش ستاد</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentFinancingController.Name" asp-action="@CostCurrentFinancingController.ACTION_Index">
-                                            <span data-i18n="هزینه های تامین مالی" class="menu-item my-font-light">هزینه های تامین مالی</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentInstallationController.Name" asp-action="@CostCurrentInstallationController.ACTION_Index">
-                                            <span data-i18n="سایر هزینه های نصب انشعاب" class="menu-item my-font-light">سایر هزینه های نصب انشعاب</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentReportController.Name" asp-action="@CostCurrentReportController.ACTION_Index">
-                                            <span data-i18n="گزارش هزینه های جاری" class="menu-item my-font-light">گزارش هزینه های جاری</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@CostCurrentProfitLossReportController.Name" asp-action="@CostCurrentProfitLossReportController.ACTION_Index">
-                                            <span data-i18n="گزارش سود و زیان" class="menu-item my-font-light">گزارش سود و زیان </span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-area="" asp-controller="@DirectoratReportController.Name" asp-action="@DirectoratReportController.ACTION_Index">
-                                            <span data-i18n="گزارش هیئت مدیره" class="menu-item my-font-light">گزارش هیئت مدیره </span>
-                                        </a>
-                                    </li>
+                                    <a asp-area="" asp-controller="" asp-action="">
+                                    <span data-i18n="مواد مصرفی تولید فاضلاب" class="menu-item my-font-light">مواد مصرفی تولید فاضلاب</span>
+                                    </a>
+                                    </li>*@
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentPMDepController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentPMDepController.Name" asp-action="@CostCurrentPMDepController.ACTION_Index">
+                                                <span data-i18n="هزینه استهلاک و تعمیر و نگهداری" class="menu-item my-font-light">هزینه استهلاک و تعمیر و نگهداری</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentOtherCofficientController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentOtherCofficientController.Name" asp-action="@CostCurrentOtherCofficientController.ACTION_Index">
+                                                <span data-i18n="ضریب سایر هزینه ها " class="menu-item my-font-light">ضریب سایر هزینه ها</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentOtherController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentOtherController.Name" asp-action="@CostCurrentOtherController.ACTION_Index">
+                                                <span data-i18n="سایر هزینه ها" class="menu-item my-font-light">سایر هزینه ها</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentBankFeeController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentBankFeeController.Name" asp-action="@CostCurrentBankFeeController.ACTION_Index">
+                                                <span data-i18n="هزینه کارمزد بانکی" class="menu-item my-font-light">هزینه کارمزد بانکی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentEPaymentController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentEPaymentController.Name" asp-action="@CostCurrentEPaymentController.ACTION_Index">
+                                                <span data-i18n="نفوذ پرداخت الکترونیکی" class="menu-item my-font-light">نفوذ پرداخت الکترونیکی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentRawMaterialController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentRawMaterialController.Name" asp-action="@CostCurrentRawMaterialController.ACTION_Index">
+                                                <span data-i18n="هزینه خرید مواد اولیه" class="menu-item my-font-light">هزینه خرید مواد اولیه</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentContractualController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentContractualController.Name" asp-action="@CostCurrentContractualController.ACTION_Index">
+                                                <span data-i18n="هزینه خدمات قراردادی" class="menu-item my-font-light">هزینه خدمات قراردادی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentElectricityController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentElectricityController.Name" asp-action="@CostCurrentElectricityController.ACTION_Index">
+                                                <span data-i18n="هزینه برق مصرفی" class="menu-item my-font-light">هزینه برق مصرفی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentPrescriptionBaseInfoController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentPrescriptionBaseInfoController.Name" asp-action="@CostCurrentPrescriptionBaseInfoController.ACTION_Index">
+                                                <span data-i18n="پایه حکم" class="menu-item my-font-light">پایه حکم</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentPersonelController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentPersonelController.Name" asp-action="@CostCurrentPersonelController.ACTION_Index">
+                                                <span data-i18n="حقوق و دستمزد" class="menu-item my-font-light">حقوق و دستمزد</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentNOController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentNOController.Name" asp-action="@CostCurrentNOController.ACTION_Index">
+                                                <span data-i18n="هزینه و درآمد غیر عملیاتی" class="menu-item my-font-light">هزینه و درآمد غیر عملیاتی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentSharingSetadController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentSharingSetadController.Name" asp-action="@CostCurrentSharingSetadController.ACTION_Index">
+                                                <span data-i18n="تسهیم هزینه بخش ستاد" class="menu-item my-font-light">تسهیم هزینه بخش ستاد</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentFinancingController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentFinancingController.Name" asp-action="@CostCurrentFinancingController.ACTION_Index">
+                                                <span data-i18n="هزینه های تامین مالی" class="menu-item my-font-light">هزینه های تامین مالی</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentInstallationController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentInstallationController.Name" asp-action="@CostCurrentInstallationController.ACTION_Index">
+                                                <span data-i18n="سایر هزینه های نصب انشعاب" class="menu-item my-font-light">سایر هزینه های نصب انشعاب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentReportController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentReportController.Name" asp-action="@CostCurrentReportController.ACTION_Index">
+                                                <span data-i18n="گزارش هزینه های جاری" class="menu-item my-font-light">گزارش هزینه های جاری</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CostCurrentProfitLossReportController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CostCurrentProfitLossReportController.Name" asp-action="@CostCurrentProfitLossReportController.ACTION_Index">
+                                                <span data-i18n="گزارش سود و زیان" class="menu-item my-font-light">گزارش سود و زیان </span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(DirectoratReportController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@DirectoratReportController.Name" asp-action="@DirectoratReportController.ACTION_Index">
+                                                <span data-i18n="گزارش هیئت مدیره" class="menu-item my-font-light">گزارش هیئت مدیره </span>
+                                            </a>
+                                        </li>
+                                    }
                                 </ul>
                             </li>
                         </ul>
                         <!--هزینه جاری-->
 
                     </li>
-                    <!-- کنترل بودجه-->
-                    <li class="nav-item">
-                        <a href="#">
-                            <i class="ft-refresh-cw"></i>
-                            <span data-i18n="کنترل بودجه" class="menu-title my-font"> کنترل بودجه </span>
-                        </a>
-                    </li>
+                    @if (isAdmin)
+                    {
+                        <!-- کنترل بودجه-->
+                        <li class="nav-item noChild">
+                            <a href="#">
+                                <i class="ft-refresh-cw"></i>
+                                <span data-i18n="کنترل بودجه" class="menu-title my-font"> کنترل بودجه </span>
+                            </a>
+                        </li>
+                    }
                     <!--  ارزیابی بودجه-->
                     <li class="has-sub nav-item ">
                         <a href="#">
@@ -515,52 +734,73 @@
                             </div>
                         </a>
                         <ul class="menu-content" id="CollapseBase" parent="Base">
-                            <li class="nav-item">
-                                <a asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.CurrentIncome">
-                                    <i class="ft-arrow-left-circle"></i>
-                                    <span data-i18n="درآمدهای جاری" class="menu-title my-font">درآمدهای جاری</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.CurrentCost">
-                                    <i class="ft-arrow-left-circle"></i>
-                                    <span data-i18n="هزینه های جاری" class="menu-title my-font">هزینه های جاری</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.OtherCurrentCost">
-                                    <i class="ft-arrow-left-circle"></i>
-                                    <span data-i18n="سایر هزینه های جاری" class="menu-title my-font">سایر هزینه های جاری</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.ResourcesFunction">
-                                    <i class="ft-arrow-left-circle"></i>
-                                    <span data-i18n="عملکرد منابع وجوه" class="menu-title my-font">عملکرد منابع وجوه</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.ConsumptionFunction">
-                                    <i class="ft-arrow-left-circle"></i>
-                                    <span data-i18n="عملکرد مصارف وجوه" class="menu-title my-font">عملکرد مصارف وجوه</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.WTotalBudget">
-                                    <i class="ft-arrow-left-circle"></i>
-                                    <span data-i18n="اطلاعات کلی آب" class="menu-title my-font">اطلاعات کلی آب</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.WsTotalBudget">
-                                    <i class="ft-arrow-left-circle"></i>
-                                    <span data-i18n="اطلاعات کلی فاضلاب" class="menu-title my-font">اطلاعات کلی فاضلاب</span>
-                                </a>
-                            </li>
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(PerformanceEvaluationController.Name)))
+                            {
+                                <li class="nav-item">
+                                    <a class="menu-item" asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.CurrentIncome">
+                                        <i class="ft-arrow-left-circle"></i>
+                                        <span data-i18n="درآمدهای جاری" class="menu-title my-font">درآمدهای جاری</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(PerformanceEvaluationController.Name)))
+                            {
+                                <li class="nav-item">
+                                    <a class="menu-item" asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.CurrentCost">
+                                        <i class="ft-arrow-left-circle"></i>
+                                        <span data-i18n="هزینه های جاری" class="menu-title my-font">هزینه های جاری</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(PerformanceEvaluationController.Name)))
+                            {
+                                <li class="nav-item">
+                                    <a class="menu-item" class="menu-item" asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.OtherCurrentCost">
+                                        <i class="ft-arrow-left-circle"></i>
+                                        <span data-i18n="سایر هزینه های جاری" class="menu-title my-font">سایر هزینه های جاری</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(PerformanceEvaluationController.Name)))
+                            {
+                                <li class="nav-item">
+                                    <a class="menu-item" asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.ResourcesFunction">
+                                        <i class="ft-arrow-left-circle"></i>
+                                        <span data-i18n="عملکرد منابع وجوه" class="menu-title my-font">عملکرد منابع وجوه</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(PerformanceEvaluationController.Name)))
+                            {
+                                <li class="nav-item">
+                                    <a class="menu-item" asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.ConsumptionFunction">
+                                        <i class="ft-arrow-left-circle"></i>
+                                        <span data-i18n="عملکرد مصارف وجوه" class="menu-title my-font">عملکرد مصارف وجوه</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(PerformanceEvaluationController.Name)))
+                            {
+                                <li class="nav-item">
+                                    <a class="menu-item" asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.WTotalBudget">
+                                        <i class="ft-arrow-left-circle"></i>
+                                        <span data-i18n="اطلاعات کلی آب" class="menu-title my-font">اطلاعات کلی آب</span>
+                                    </a>
+                                </li>
+                            }
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(PerformanceEvaluationController.Name)))
+                            {
+                                <li class="nav-item">
+                                    <a class="menu-item" asp-area="" asp-controller="@PerformanceEvaluationController.Name" asp-action="@PerformanceEvaluationController.ACTION_Index" asp-route-tableName="@TablesName.WsTotalBudget">
+                                        <i class="ft-arrow-left-circle"></i>
+                                        <span data-i18n="اطلاعات کلی فاضلاب" class="menu-title my-font">اطلاعات کلی فاضلاب</span>
+                                    </a>
+                                </li>
+                            }
                         </ul>
                     </li>
                     <!--  گزارش-->
-                    <li class="nav-item">
+                    <li class="nav-item noChild">
                         <a asp-area="" asp-controller="Report" asp-action="Index">
                             <i class="ft-refresh-cw"></i>
                             <span data-i18n="گزارش" class="menu-title my-font"> گزارش </span>
@@ -573,13 +813,16 @@
                             <span data-i18n="تنظیمات نرم افزار" class="menu-title my-font">تنظیمات نرم افزار</span>
                         </a>
                         <ul class="menu-content" id="AppLogCollapse" parent="AppConfigCollapse">
-                            <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString()=="SystemLog" ? "active" : "")">
-                                <a class="menu-item" asp-area="@AreaConstants.IdentityArea" asp-controller="SystemLog" asp-action="Index">
-                                    <i class="ft-arrow-right submenu-icon"></i><span class="menu-item" data-i18n="گزارش رخ‌ دادهای سیستم">
-                                        گزارش رخ‌ دادهای سیستم
-                                    </span>
-                                </a>
-                            </li>
+                            @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission("SystemLog")))
+                            {
+                                <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString()=="SystemLog" ? "active" : "")">
+                                    <a class="menu-item" asp-area="@AreaConstants.IdentityArea" asp-controller="SystemLog" asp-action="Index">
+                                        <i class="ft-arrow-right submenu-icon"></i><span class="menu-item" data-i18n="گزارش رخ‌ دادهای سیستم">
+                                            گزارش رخ‌ دادهای سیستم
+                                        </span>
+                                    </a>
+                                </li>
+                            }
                         </ul>
                     </li>
                 </ul>
@@ -599,16 +842,26 @@
 
 <script type="text/javascript">
 
-      let url = window.location.href;
-
-      $('li a').each(function() {
-
-        if ($(this)[0].href === url) {
-
-          $(this).parent().addClass('active');
-
+    $('#main-menu-navigation li.nav-item').each(function () {
+        var element = $(this).find('.menu-item');
+        if (element.length < 1 && !$(this).hasClass('noChild')) {
+            $(this).remove();
         }
+    });
 
-      });
+    $('#main-menu-navigation ul.has-sub').each(function () {
+        var element = $(this).find('.menu-item');
+        if (element.length < 1) {
+            $(this).remove();
+        }
+    });
+
+    let url = window.location.href;
+
+    $('li a').each(function () {
+        if ($(this)[0].href === url) {
+            $(this).parent().addClass('active');
+        }
+    });
 
 </script>
