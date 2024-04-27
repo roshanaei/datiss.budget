@@ -104,7 +104,8 @@ namespace Datiss.Budget.Services.Identity
                 TwoFactorEnabled = false,
                 UserName = model.UserName,
                 OrganizationId = model.OrganizationId,
-                CreatedDateTime = _dateService.Now
+                CreatedDateTime = _dateService.Now,
+                EmailConfirmed = true
             };
 
             foreach (var roleId in model.SelectedRoles)

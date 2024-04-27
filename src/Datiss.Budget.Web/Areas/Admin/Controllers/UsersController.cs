@@ -118,9 +118,9 @@ namespace Datiss.Budget.Web.Admin.Controllers
                 return View(model);
             }
 
-            ValidationResult<UserResultDTO> result = null;
+            //ValidationResult<UserResultDTO> result = null;
             try {
-                result = await _userService.CreateAsync(model.Adapt<CreateUserDTO>());
+                var result = await _userService.CreateAsync(model.Adapt<CreateUserDTO>());
                 if (result.NotValid) {
                     model.AddError(result.Message);
                     return View(model);
@@ -129,7 +129,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
             catch (CreateUserException err) {
                 model.AddError(err.MyErrors);
             }
-            catch (Exception ex) {
+            catch (Exception) {
                 model.AddError(ViewMessages.SystemError);
             }
 
@@ -158,7 +158,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
             catch(NullReferenceException) {
                 return NotFound();
             }
-            var role = await _roleManager.GetAllCustomRolesAsync();
+            //var role = await _roleManager.GetAllCustomRolesAsync();
         }
 
 
@@ -169,7 +169,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
             {
                 await _userService.HardDeleteAsync(id);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Json(new
                 {
@@ -194,9 +194,9 @@ namespace Datiss.Budget.Web.Admin.Controllers
             data.Status = model.Enabled 
                 ? EntityStatus.Enabled 
                 : EntityStatus.Disbaled;
-            ValidationResult<UserResultDTO> result = null;
+            //ValidationResult<UserResultDTO> result = null;
             try {
-                result = await _userService.UpdateAsync(data);
+                var result = await _userService.UpdateAsync(data);
                 if(result.NotValid) {
                     model.SetOrganizationSource(await getOrganizationDropDownAsync(), model.OrganizationId);
                     model.SetPositionSource(await getPostionDropDownAsync(), model.PositionId);
@@ -209,7 +209,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
             {
                 model.AddError(err.MyErrors);
             }
-            catch(Exception ex) {
+            catch(Exception) {
                 model.AddError(ViewMessages.SystemError);
             }
 
@@ -237,7 +237,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
 
                 return PartialView("_setUserPassword", model);
             }
-            catch(Exception ex) 
+            catch(Exception) 
             {
                 return NotFound();
             }
@@ -259,7 +259,7 @@ namespace Datiss.Budget.Web.Admin.Controllers
                     message = ex.MyErrors
                 });
             }
-            catch(Exception ex) {
+            catch(Exception) {
                 return new JsonResult(new {
                     hasError = true,
                     message = ViewMessages.SystemError
