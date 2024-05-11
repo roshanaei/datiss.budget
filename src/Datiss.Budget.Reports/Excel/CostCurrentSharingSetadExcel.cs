@@ -20,9 +20,9 @@ namespace Datiss.Budget.Reports.Excel
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "سال";
             sheet.Cell(1, 2).Value = "سازمان";
-            sheet.Cell(1, 3).Value = "ضریب تسهیم درآمد جاری";
-            sheet.Cell(1, 4).Value = "ضریب تسهیم درآمد سرمایه ای";
-            sheet.Cell(1, 5).Value = "ضریب تسهیم درآمد جاری فاضلاب";
+            sheet.Cell(1, 3).Value = "ضریب تسهیم هزینه اداری";
+            sheet.Cell(1, 4).Value = "ضریب تسهیم هزینه فاضلاب";
+            sheet.Cell(1, 5).Value = "ضریب تسهیم سایر هزینه ها";
 
             var totalCount = items.Count();
             int row = 2;
@@ -66,7 +66,7 @@ namespace Datiss.Budget.Reports.Excel
 
             sheet.RightToLeft = true;
             sheet.Cell(1, 1).Value = "ورود اطلاعات برای سال مالی : " + year;
-            sheet.Range(1, 1, 1, 11).Merge();
+            sheet.Range(1, 1, 1, 5).Merge();
 
             sheet.Cell(2, 1).Value = "عنوان سازمان";
             sheet.Cell(2, 2).Value = "کد سازمان";
@@ -84,7 +84,7 @@ namespace Datiss.Budget.Reports.Excel
                 row++;
             }
 
-            var range = sheet.Range(2, 1, row - 1, 11);
+            var range = sheet.Range(2, 1, row - 1, 5);
 
             range.Column(1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Right;
             //Other

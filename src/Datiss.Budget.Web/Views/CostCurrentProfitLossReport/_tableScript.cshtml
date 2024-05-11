@@ -11,21 +11,18 @@
 
         //Hide output elements
         $('#divOutput_Org_' + id).hide();
-        $('#divOutput_SectionType_' + id);
         $('#divOutput_FunctionalYear_1_' + id).hide();
         $('#divOutput_FunctionalBasicYear_' + id).hide();
-        $('#divOutput_ApproveYear_1_' + id);
-        $('#divOutput_ForcastY_' + id);
 
         //show input elements
         $('#divInput_Org_' + id).show();
         $('#divInput_FunctionalYear_1_' + id).show();
         $('#divInput_FunctionalBasicYear_' + id).show();
 
-          if($('#spanSectionType_' + id).html().trim() == 'یارانه دریافتی از دولت') {
+        if ($('#spanSectionType_' + id).html().trim() == 'یارانه دریافتی از دولت') {
             $('#divOutput_ForcastY_' + id).hide();
-          $('#divInput_ForcastY_' + id).show();
-       }
+            $('#divInput_ForcastY_' + id).show();
+        }
 
 
         $('#btnEdit_' + id).hide();
@@ -33,9 +30,9 @@
         $('#btnSaveEdit_' + id).show();
         $('#btnCancelEdit_' + id).show();
 
-        rowData = {};
         rowData.functionalYear_1 = $('#inputFunctionalYear_1_' + id).val();
         rowData.functionalBasicYear = $('#inputFunctionalBasicYear_' + id).val();
+        rowData.forcastY = $('#inputForcastY_' + id).val();
     }
 
     function cancelEditRow(id) {
@@ -46,17 +43,20 @@
         $('#divInput_Org_' + id).hide();
         $('#divInput_FunctionalYear_1_' + id).hide();
         $('#divInput_FunctionalBasicYear_' + id).hide();
+        $('#divInput_ForcastY_' + id).hide();
 
         //Reverting to OriginalData
         if (rowData != null) {
             $('#inputFunctionalYear_1_' + id).val(rowData.functionalYear_1);
             $('#inputFunctionalBasicYear_' + id).val(rowData.functionalBasicYear);
+            $('#inputForcastY_' + id).val(rowData.forcastY);
         }
 
         //Show output elements
         $('#divOutput_Org_' + id).show();
         $('#divOutput_FunctionalYear_1_' + id).show();
         $('#divOutput_FunctionalBasicYear_' + id).show();
+        $('#divOutput_ForcastY_' + id).show();
 
         $('#btnEdit_' + id).show();
         $('#btnDelete_' + id).show();
@@ -105,14 +105,19 @@
                     return;
                 }
 
-                rowData = {};
                 rowData.organizationId = model.organizationId;
                 rowData.functionalYear_1 = model.functionalYear_1;
                 rowData.functionalBasicYear = model.functionalBasicYear;
+                rowData.forcastY = model.forcastY;
 
                 $('#hidOrgId_' + id).attr('value', model.organizationId);
                 $('#spanFunctionalYear_1_' + id).text(data.functionalYear_1);
                 $('#spanFunctionalBasicYear_' + id).text(data.functionalBasicYear);
+                $('#spanForcastY_' + id).text(data.forcastY);
+
+                $('#divInput_Org_' + id).show();
+                $('#divInput_FunctionalYear_1_' + id).show();
+                $('#divInput_FunctionalBasicYear_' + id).show();
 
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');

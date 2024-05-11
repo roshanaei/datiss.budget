@@ -78,45 +78,46 @@ namespace Datiss.Budget.Services
 
             try
             {
-                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.Id) != null)
+                if (await checkLogicAsync(model.YearId, model.OrganizationId, model.SectionTypeId, model.Id) != null)
                 {
-                    var entity = await _dbSet.FindAsync(model.Id);
-                    entity.OrganizationId = model.OrganizationId;
-                    entity.YearId = model.YearId;
-                    entity.SectionTypeId = model.SectionTypeId;
-                    entity.FunctionalBasicYear = model.FunctionalBasicYear;
-                    entity.FunctionalYear_1 = model.FunctionalYear_1;
-                    entity.ForcastY = model.ForcastY;
-                    entity.ApproveYear_1 = model.ApproveYear_1;
-
-                    try
-                    {
-                        await _uow.SaveChangesAsync();
-                    }
-                    catch
-                    {
-                        return ValidationResult<CostCurrentProfitLossReportDTO>.Failed(
-                            string.Format(ServiceMessages.ImportExcelCalculationField)
-                            );
-                    }
-                    var result = entity.Adapt<CostCurrentProfitLossReportDTO>();
-
-                    result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
-                    result.OrganizationDisplay = organizationDisplay;
-                    result.SectionTypeDisplay = model.SectionTypeTitle;
-
-                    return ValidationResult<CostCurrentProfitLossReportDTO>.Success(result);
+                    return ValidationResult<CostCurrentProfitLossReportDTO>.Failed(
+                        string.Format(ServiceMessages.Logic_TitleDuplicate,
+                        model.SectionTypeTitle, organizationDisplay)
+                        );
                 }
+
+                var entity = await _dbSet.FindAsync(model.Id);
+                entity.OrganizationId = model.OrganizationId;
+                entity.YearId = model.YearId;
+                entity.SectionTypeId = model.SectionTypeId;
+                entity.FunctionalBasicYear = model.FunctionalBasicYear;
+                entity.FunctionalYear_1 = model.FunctionalYear_1;
+                entity.ForcastY = model.ForcastY;
+                entity.ApproveYear_1 = model.ApproveYear_1;
+
+                try
+                {
+                    await _uow.SaveChangesAsync();
+                }
+                catch
+                {
+                    return ValidationResult<CostCurrentProfitLossReportDTO>.Failed(
+                        string.Format(ServiceMessages.ImportExcelCalculationField)
+                        );
+                }
+                var result = entity.Adapt<CostCurrentProfitLossReportDTO>();
+
+                result.Year = (await _yearSet.FindAsync(model.YearId)).Year;
+                result.OrganizationDisplay = organizationDisplay;
+                result.SectionTypeDisplay = model.SectionTypeTitle;
+
+                return ValidationResult<CostCurrentProfitLossReportDTO>.Success(result);
+
             }
             catch (DisbaledYearDataInputException)
             {
                 return ValidationResult<CostCurrentProfitLossReportDTO>.Failed(ServiceMessages.Logic_InputDisableYearData);
             }
-
-            return ValidationResult<CostCurrentProfitLossReportDTO>.Failed(
-                string.Format(ServiceMessages.Logic_TitleDuplicate,
-                model.SectionTypeTitle, organizationDisplay)
-                );
         }
 
         public async Task<OrganizationDeleteDataResult> HardDeleteAsync(int yearId, int organizationId)
@@ -256,7 +257,8 @@ namespace Datiss.Budget.Services
                 var entity = await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
-                    record.SectionTypeId);
+                    record.SectionTypeId,
+                    null);
                 if (entity == null)
                 {
                     await _dbSet.AddAsync(record);
@@ -403,7 +405,8 @@ namespace Datiss.Budget.Services
                 var entity = await checkLogicAsync(
                     record.YearId,
                     record.OrganizationId,
-                    record.SectionTypeId);
+                    record.SectionTypeId,
+                    null);
                 if (entity == null)
                 {
                     await _dbSet.AddAsync(record);
@@ -610,11 +613,18 @@ namespace Datiss.Budget.Services
         private async Task<CostCurrentProfitLossReport> checkLogicAsync(
              int yearId,
              int organizationId,
-             int sectionTypeId)
+             int sectionTypeId,
+             int? id)
         {
-            var entity = await _dbSet.SingleOrDefaultAsync(x => x.YearId == yearId &&
+            var query = _dbSet.Where(x => x.YearId == yearId &&
                                                              x.OrganizationId == organizationId &&
                                                              x.SectionTypeId == sectionTypeId);
+            if (id.HasValue)
+            {
+                query = query.Where(x => x.Id != id.Value);
+            }
+
+            var entity = await query.SingleOrDefaultAsync();
             if (entity == null)
             {
                 return null;
