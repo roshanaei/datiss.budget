@@ -89,11 +89,27 @@ namespace Datiss.Budget.Web.Admin.Controllers
             try {
                 var data = await _roleService.GetByIdAsync(id);
                 var model = data.Adapt<UpdateRoleViewModel>();
-                foreach (var claim in data.Claims) {
-                    model.SelectedClaims.Add(claim.ClaimType, claim.ClaimValue);
-                }
+
                 model.ClaimTypeSource = (await _claimTypeService.GetEnabledTypesAsync())
                     .Adapt<List<AppClaimTypeViewModel>>();
+
+                foreach (var claim in model.ClaimTypeSource)
+                {
+                    var existClaim = data.Claims.FirstOrDefault(x => x.ClaimType == claim.Name);
+                    if (existClaim == null)
+                    {
+                        model.SelectedClaims.Add(claim.Name, "");
+                    }
+                    else
+                    {
+                        model.SelectedClaims.Add(existClaim.ClaimType, existClaim.ClaimValue);
+                    }
+                }
+
+                //foreach (var claim in data.Claims) {
+                //    model.SelectedClaims.Add(claim.ClaimType, claim.ClaimValue);
+                //}
+
                 return View(model);
             }
             catch(Exception ex) {
