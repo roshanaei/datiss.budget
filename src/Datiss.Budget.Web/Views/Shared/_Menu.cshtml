@@ -215,22 +215,6 @@
                                             </a>
                                         </li>
                                     }
-                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeForcastController.Name)))
-                                    {
-                                        <li class="nav-item">
-                                            <a asp-area="" asp-controller="@IncomeForcastController.Name" asp-action="@IncomeForcastController.ACTION_Index">
-                                                <span data-i18n="درآمدهای سرمایه ای آب" class="menu-item my-font-light">درآمدهای سرمایه ای آب</span>
-                                            </a>
-                                        </li>
-                                    }
-                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeForcastWsController.Name)))
-                                    {
-                                        <li class="nav-item">
-                                            <a asp-area="" asp-controller="@IncomeForcastWsController.Name" asp-action="@IncomeForcastWsController.ACTION_Index">
-                                                <span data-i18n="درآمدهای سرمایه ای فاضلاب" class="menu-item my-font-light">درآمدهای سرمایه ای فاضلاب</span>
-                                            </a>
-                                        </li>
-                                    }
                                     @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeForcastOtherController.Name)))
                                     {
                                         <li class="nav-item">
@@ -239,11 +223,27 @@
                                             </a>
                                         </li>
                                     }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeForcastController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@IncomeForcastController.Name" asp-action="@IncomeForcastController.ACTION_Index">
+                                                <span data-i18n="محاسبه درآمد سرمایه‌ای آب" class="menu-item my-font-light">محاسبه درآمد سرمایه‌ای آب</span>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(IncomeForcastWsController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@IncomeForcastWsController.Name" asp-action="@IncomeForcastWsController.ACTION_Index">
+                                                <span data-i18n="محاسبه درآمد سرمایه‌ای فاضلاب" class="menu-item my-font-light">محاسبه درآمد سرمایه‌ای فاضلاب</span>
+                                            </a>
+                                        </li>
+                                    }
                                     @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(BudgetSourceReportController.Name)))
                                     {
                                         <li class="nav-item">
                                             <a asp-area="" asp-controller="@BudgetSourceReportController.Name" asp-action="@BudgetSourceReportController.ACTION_Index">
-                                                <span data-i18n="گزارش منابع " class="menu-item my-font-light">گزارش منابع</span>
+                                                <span data-i18n="منابع سرمایه‌ای " class="menu-item my-font-light">منابع سرمایه‌ای</span>
                                             </a>
                                         </li>
                                     }
@@ -380,7 +380,7 @@
                                     {
                                         <li class="nav-item">
                                             <a asp-area="" asp-controller="@IncomeCurrentReportController.Name" asp-action="@IncomeCurrentReportController.ACTION_Index">
-                                                <span data-i18n="گزارش درآمد جاری" class="menu-item my-font-light">گزارش درآمد جاری</span>
+                                                <span data-i18n="درآمد جاری" class="menu-item my-font-light">درآمد جاری</span>
                                             </a>
                                         </li>
                                     }
@@ -388,7 +388,7 @@
                                     {
                                         <li class="nav-item">
                                             <a asp-area="" asp-controller="@SalesSplitTotalController.Name" asp-action="@SalesSplitTotalController.ACTION_Index">
-                                                <span data-i18n="گزارش عملکرد فروش انشعاب" class="menu-item my-font-light">گزارش عملکرد فروش انشعاب</span>
+                                                <span data-i18n="عملکرد فروش انشعاب" class="menu-item my-font-light">عملکرد فروش انشعاب</span>
                                             </a>
                                         </li>
                                     }
@@ -488,7 +488,7 @@
                                     {
                                         <li class="nav-item">
                                             <a asp-area="" asp-controller="@CostForcastConsumptionReportController.Name" asp-action="@CostForcastConsumptionReportController.ACTION_Index">
-                                                <span data-i18n="گزارش مصارف" class="menu-item my-font-light">گزارش مصارف</span>
+                                                <span data-i18n="مصارف سرمایه‌ای" class="menu-item my-font-light">مصارف سرمایه‌ای</span>
                                             </a>
                                         </li>
                                     }
@@ -512,7 +512,7 @@
                                     {
                                         <li class="nav-item">
                                             <a asp-area="" asp-controller="@CostForcastWInvestmentReportController.Name" asp-action="@CostForcastWInvestmentReportController.ACTION_Index">
-                                                <span data-i18n="گزارش اهداف سرمایه ای آب" class="menu-item my-font-light">گزارش اهداف سرمایه ای آب</span>
+                                                <span data-i18n="اهداف سرمایه‌ای آب" class="menu-item my-font-light">اهداف سرمایه‌ای آب</span>
                                             </a>
                                         </li>
                                     }
@@ -520,7 +520,7 @@
                                     {
                                         <li class="nav-item">
                                             <a asp-area="" asp-controller="@CostForcastWsInvestmentReportController.Name" asp-action="@CostForcastWsInvestmentReportController.ACTION_Index">
-                                                <span data-i18n="گزارش اهداف سرمایه ای فاضلاب" class="menu-item my-font-light">گزارش اهداف سرمایه ای فاضلاب</span>
+                                                <span data-i18n="اهداف سرمایه‌ای فاضلاب" class="menu-item my-font-light">اهداف سرمایه‌ای فاضلاب</span>
                                             </a>
                                         </li>
                                     }
@@ -657,7 +657,7 @@
                                     {
                                         <li class="nav-item">
                                             <a asp-area="" asp-controller="@CostCurrentNOController.Name" asp-action="@CostCurrentNOController.ACTION_Index">
-                                                <span data-i18n="هزینه و درآمد غیر عملیاتی" class="menu-item my-font-light">هزینه و درآمد غیر عملیاتی</span>
+                                                <span data-i18n="هزینه غیرعملیاتی" class="menu-item my-font-light">هزینه غیرعملیاتی</span>
                                             </a>
                                         </li>
                                     }

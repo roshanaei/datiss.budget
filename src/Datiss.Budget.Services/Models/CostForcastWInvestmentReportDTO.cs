@@ -28,6 +28,7 @@
     {
         public int Id { get; set; }
         public int YearId { get; set; }
+        public string YearDisplay { get; set; }
         public int Year { get; set; }
         public int OrganizationId { get; set; }
         public string OrganizationDisplay { get; set; }

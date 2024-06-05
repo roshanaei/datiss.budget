@@ -219,6 +219,7 @@ namespace Datiss.Budget.Services
                                             Id = x.Id,
                                             YearId = x.YearId,
                                             Year = x.FinanceYear.Year,
+                                            YearDisplay = x.FinanceYear.Year.ToString(),
                                             OrganizationId = x.OrganizationId,
                                             OrganizationDisplay = x.Organization.Title,
                                             CostCenterTypeId = x.CostCenterTypeId,
