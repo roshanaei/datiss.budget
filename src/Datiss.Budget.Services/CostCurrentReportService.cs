@@ -646,6 +646,7 @@ namespace Datiss.Budget.Services
                 {
                     item.Id = 0;
                     item.YearId = targetYearId;
+                    item.ApproveYear_1 = item.ForcastY;
                     var entity = item.Adapt<CostCurrentReport>();
 
 
