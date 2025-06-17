@@ -32,6 +32,6 @@ namespace Datiss.Budget.Services.Excel.Models
         public int OIFCount { get; set; }
 
         [Column(MappingDirections.Both, Letter = "H")]
-        public int OIFPrice { get; set; }
+        public long OIFPrice { get; set; }
     }
 }
