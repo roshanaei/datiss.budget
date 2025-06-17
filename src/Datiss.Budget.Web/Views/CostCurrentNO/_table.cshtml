@@ -6,8 +6,6 @@
                 <th>سال</th>
                 <th>سازمان</th>
                 <th>عنوان</th>
-                <th>مبلغ پایه</th>
-                <th>مبلغ سال ماقبل</th>
                 <th>پیش بینی مبلغ</th>
                 <th>مدیریت</th>
 
@@ -52,7 +50,7 @@
                         <span id="spanCostCurrentNoType_"> </span>
                     </div>
                 </td>
-                <td>
+                @* <td>
                     <div id="divInput_BaseFee_">
                         <input class="form-control input-keyup default-input" id="inputBaseFee_" type="number" min="0" />
                     </div>
@@ -67,7 +65,7 @@
                     <div id="divOutput_LastYearFee_" style="display: none">
                         <span id="spanLastYearFee_"> </span>
                     </div>
-                </td>
+                </td> *@
                 <td>
                     <div id="divInput_ForcastFee_">
                         <input class="form-control input-keyup" id="inputForcastFee_" type="number" min="0" />
@@ -147,7 +145,7 @@
                             <span id="spanCostCurrentNoType_@item.Id">@item.CostCurrentNoTypeDisplay </span>
                         </div>
                     </td>
-                    <td>
+                    @* <td>
                         <div id="divInput_BaseFee_@item.Id" style="display: none">
                             <input class="form-control" id="inputBaseFee_@item.Id" value="@item.BaseFee" type="number" />
                         </div>
@@ -162,7 +160,7 @@
                         <div id="divOutput_LastYearFee_@item.Id">
                             <span id="spanLastYearFee_@item.Id">@item.LastYearFeeDisplay </span>
                         </div>
-                    </td>
+                    </td> *@
                     <td>
                         <div id="divInput_ForcastFee_@item.Id" style="display: none">
                             <input class="form-control" id="inputForcastFee_@item.Id" value="@item.ForcastFee" type="number" />

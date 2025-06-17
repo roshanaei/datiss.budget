@@ -15,16 +15,16 @@
         $('#divOutput_Year_' + id).hide();
         $('#divOutput_Org_' + id).hide();
         $('#divOutput_CostCurrentNoType_' + id).hide();
-        $('#divOutput_BaseFee_' + id).hide();
-        $('#divOutput_LastYearFee_' + id).hide();
+        // $('#divOutput_BaseFee_' + id).hide();
+        // $('#divOutput_LastYearFee_' + id).hide();
         $('#divOutput_ForcastFee_' + id).hide();
 
         //show input elements
         $('#divInput_Year_' + id).show();
         $('#divInput_Org_' + id).show();
         $('#divInput_CostCurrentNoType_' + id).show();
-        $('#divInput_BaseFee_' + id).show();
-        $('#divInput_LastYearFee_' + id).show();
+        // $('#divInput_BaseFee_' + id).show();
+        // $('#divInput_LastYearFee_' + id).show();
         $('#divInput_ForcastFee_' + id).show();
 
         $('#btnEdit_' + id).hide();
@@ -36,8 +36,8 @@
         rowData.yearId = $('#inputYear_' + id).val();
         rowData.organizationId = $('#inputOrg_' + id).val();
         rowData.costCurrentNoTypeId = $('#inputCostCurrentNoType_' + id).val();
-        rowData.baseFee = $('#inputBaseFee_' + id).val();
-        rowData.lastYearFee = $('#inputLastYearFee_' + id).val();
+        // rowData.baseFee = $('#inputBaseFee_' + id).val();
+        // rowData.lastYearFee = $('#inputLastYearFee_' + id).val();
         rowData.forcastFee = $('#inputForcastFee_' + id).val();
     }
 
@@ -49,8 +49,8 @@
         $('#divInput_Year_' + id).hide();
         $('#divInput_Org_' + id).hide();
         $('#divInput_CostCurrentNoType_' + id).hide();
-        $('#divInput_BaseFee_' + id).hide();
-        $('#divInput_LastYearFee_' + id).hide();
+        // $('#divInput_BaseFee_' + id).hide();
+        // $('#divInput_LastYearFee_' + id).hide();
         $('#divInput_ForcastFee_' + id).hide();
 
         //Reverting to OriginalData
@@ -60,8 +60,8 @@
             $('#inputYear_' + id).val(rowData.yearId);
             $('#inputOrg_' + id).val(rowData.organizationId);
             $('#inputCostCurrentNoType_' + id).val(rowData.costCurrentNoTypeId);
-            $('#inputBaseFee_' + id).val(rowData.baseFee);
-            $('#inputLastYearFee_' + id).val(rowData.lastYearFee);
+            // $('#inputBaseFee_' + id).val(rowData.baseFee);
+            // $('#inputLastYearFee_' + id).val(rowData.lastYearFee);
             $('#inputForcastFee_' + id).val(rowData.forcastFee);
         }
 
@@ -69,8 +69,8 @@
         $('#divOutput_Year_' + id).show();
         $('#divOutput_Org_' + id).show();
         $('#divOutput_CostCurrentNoType_' + id).show();
-        $('#divOutput_BaseFee_' + id).show();
-        $('#divOutput_LastYearFee_' + id).show();
+        // $('#divOutput_BaseFee_' + id).show();
+        // $('#divOutput_LastYearFee_' + id).show();
         $('#divOutput_ForcastFee_' + id).show();
 
         $('#btnEdit_' + id).show();
@@ -95,8 +95,8 @@
         model.yearId = $('#inputYear_' + id).val();
         model.organizationId = $('#inputOrg_' + id).val();
         model.costCurrentNoTypeId = $('#inputCostCurrentNoType_' + id).val();
-        model.baseFee = $('#inputBaseFee_' + id).val();
-        model.lastYearFee = $('#inputLastYearFee_' + id).val();
+        // model.baseFee = $('#inputBaseFee_' + id).val();
+        // model.lastYearFee = $('#inputLastYearFee_' + id).val();
         model.forcastFee = $('#inputForcastFee_' + id).val();
 
         $.ajax({
@@ -122,8 +122,8 @@
                 rowData.yearId = model.yearId;
                 rowData.organizationId = model.organizationId;
                 rowData.costCurrentNoTypeId = model.costCurrentNoTypeId;
-                rowData.baseFee = model.baseFee;
-                rowData.lastYearFee = model.lastYearFee;
+                // rowData.baseFee = model.baseFee;
+                // rowData.lastYearFee = model.lastYearFee;
                 rowData.forcastFee = model.forcastFee;
 
                 $('#hidYearId_' + id).attr('value', model.yearId);
@@ -131,8 +131,8 @@
                 $('#spanOrg_' + id).text(data.organizationDisplay);
                 $('#spanYear_' + id).text(data.year);
                 $('#spanCostCurrentNoType_' + id).text(data.costCurrentNoTypeDisplay);
-                $('#spanBaseFee_' + id).text(data.baseFee);
-                $('#spanLastYearFee_' + id).text(data.lastYearFee);
+                // $('#spanBaseFee_' + id).text(data.baseFee);
+                // $('#spanLastYearFee_' + id).text(data.lastYearFee);
                 $('#spanForcastFee_' + id).text(data.forcastFee);
 
                 $('#row_' + id).css('background-color', 'rgb(245 245 246)');
@@ -157,15 +157,15 @@
         model.yearId = $(e).find('#inputYear_').val();
         model.organizationId = $(e).find('#inputOrg_').val();
         model.costCurrentNoTypeId = $(e).find('#inputCostCurrentNoType_').val();
-        model.baseFee = $(e).find('#inputBaseFee_').val();
-        model.baseFee = $(e).find('#inputBaseFee_').val();
-        if (model.baseFee == "") {
-            model.baseFee = 0;
-        }
-        model.lastYearFee = $(e).find('#inputLastYearFee_').val();
-        if (model.lastYearFee == "") {
-            model.lastYearFee = 0;
-        }
+        // model.baseFee = $(e).find('#inputBaseFee_').val();
+        // model.baseFee = $(e).find('#inputBaseFee_').val();
+        // if (model.baseFee == "") {
+        //     model.baseFee = 0;
+        // }
+        // model.lastYearFee = $(e).find('#inputLastYearFee_').val();
+        // if (model.lastYearFee == "") {
+        //     model.lastYearFee = 0;
+        // }
         model.forcastFee = 0;
 
         console.log(model);
@@ -222,25 +222,25 @@
                 $('#spanCostCurrentNoType_' + data.id).text(data.costCurrentNoTypeDisplay);
                 $('#divOutput_CostCurrentNoType_' + data.id).show();
 
-                //BaseFee
-                $(e).find('#divInput_BaseFee_').attr('id', 'divInput_BaseFee_' + data.id);
-                $(e).find('#inputBaseFee_').attr('id', 'inputBaseFee_' + data.id);
-                $(e).find('#divOutput_BaseFee_').attr('id', 'divOutput_BaseFee_' + data.id);
-                $(e).find('#spanBaseFee_').attr('id', 'spanBaseFee_' + data.id);
+                // //BaseFee
+                // $(e).find('#divInput_BaseFee_').attr('id', 'divInput_BaseFee_' + data.id);
+                // $(e).find('#inputBaseFee_').attr('id', 'inputBaseFee_' + data.id);
+                // $(e).find('#divOutput_BaseFee_').attr('id', 'divOutput_BaseFee_' + data.id);
+                // $(e).find('#spanBaseFee_').attr('id', 'spanBaseFee_' + data.id);
 
-                $('#divInput_BaseFee_' + data.id).hide();
-                $('#spanBaseFee_' + data.id).text(data.baseFee);
-                $('#divOutput_BaseFee_' + data.id).show();
+                // $('#divInput_BaseFee_' + data.id).hide();
+                // $('#spanBaseFee_' + data.id).text(data.baseFee);
+                // $('#divOutput_BaseFee_' + data.id).show();
 
-                //LastYearFee
-                $(e).find('#divInput_LastYearFee_').attr('id', 'divInput_LastYearFee_' + data.id);
-                $(e).find('#inputLastYearFee_').attr('id', 'inputLastYearFee_' + data.id);
-                $(e).find('#divOutput_LastYearFee_').attr('id', 'divOutput_LastYearFee_' + data.id);
-                $(e).find('#spanLastYearFee_').attr('id', 'spanLastYearFee_' + data.id);
+                // //LastYearFee
+                // $(e).find('#divInput_LastYearFee_').attr('id', 'divInput_LastYearFee_' + data.id);
+                // $(e).find('#inputLastYearFee_').attr('id', 'inputLastYearFee_' + data.id);
+                // $(e).find('#divOutput_LastYearFee_').attr('id', 'divOutput_LastYearFee_' + data.id);
+                // $(e).find('#spanLastYearFee_').attr('id', 'spanLastYearFee_' + data.id);
 
-                $('#divInput_LastYearFee_' + data.id).hide();
-                $('#spanLastYearFee_' + data.id).text(data.lastYearFee);
-                $('#divOutput_LastYearFee_' + data.id).show();
+                // $('#divInput_LastYearFee_' + data.id).hide();
+                // $('#spanLastYearFee_' + data.id).text(data.lastYearFee);
+                // $('#divOutput_LastYearFee_' + data.id).show();
 
                 //ForcastFee
                 $(e).find('#divInput_ForcastFee_').attr('id', 'divInput_ForcastFee_' + data.id);

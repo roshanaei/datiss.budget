@@ -18,9 +18,7 @@ namespace Datiss.Budget.Services.Excel
         public int CostCurrentNoTypeId { get; set; }
 
         [Column(MappingDirections.Both, Letter = "E")]
-        public long BaseFee { get; set; }
+        public long ForcastFee { get; set; }
 
-        [Column(MappingDirections.Both, Letter = "F")]
-        public long LastYearFee { get; set; }
     }
 }
