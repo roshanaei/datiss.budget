@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Datiss.Budget.Enum;
 
 namespace Datiss.Budget.Services.Models
 {
-
-    public class ReportData
+    public class ReportData : IEquatable<ReportData>
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -16,6 +16,22 @@ namespace Datiss.Budget.Services.Models
         public byte[] FileData { get; set; }
         public string FilePath { get; set; }
         public IList<ReportParamDTO> Params { get; set; }
+
+        public bool Equals(ReportData other)
+        {
+            if (other == null) return false;
+            return this.Id == other.Id;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ReportData);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 
     public class CreateReportData
@@ -55,6 +71,14 @@ namespace Datiss.Budget.Services.Models
         public int? CategoryId { get; set; }
 
         public EntityStatus? Status { get; set; }
+        public int UserId { get; set; }
+    }
+
+    public class ReportRoleDTO
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool Selected { get; set; }
     }
 
 }

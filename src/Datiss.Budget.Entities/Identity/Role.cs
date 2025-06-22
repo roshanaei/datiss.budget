@@ -46,6 +46,8 @@ namespace Datiss.Budget.Entities.Identity
         public  ICollection<UserRole> Users { get; set; }
 
         public  ICollection<RoleClaim> Claims { get; set; }
+        public  ICollection<ReportRole> ReportRoles { get; set; }
+
         #endregion
     }
 }

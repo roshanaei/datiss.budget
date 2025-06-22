@@ -44,4 +44,22 @@ namespace Datiss.Budget.DataLayer.Mappings
 
         }
     }
+    
+    public class ReportRoleConfiguration : IEntityTypeConfiguration<ReportRole>
+    {
+        public void Configure(EntityTypeBuilder<ReportRole> builder) {
+            builder.ToTable("ReportRoles").HasKey(_ => _.Id);
+
+            builder.HasOne(_ => _.Report)
+                .WithMany(_ => _.ReportRoles)
+                .HasForeignKey(_ => _.ReportId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            builder.HasOne(_ => _.Role)
+                .WithMany(_ => _.ReportRoles)
+                .HasForeignKey(_ => _.RoleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+        }
+    }
 }

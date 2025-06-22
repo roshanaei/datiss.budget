@@ -37,17 +37,20 @@ namespace Datiss.Budget.Web.Admin.Controllers
         private readonly IConstantService _constantService;
         public ReportsController(
             IReportService reportService,
-            IConstantService constantService) {
+            IConstantService constantService)
+        {
             _reportService = reportService ?? throw new ArgumentNullException(nameof(reportService));
             _constantService = constantService ?? throw new ArgumentNullException(nameof(constantService));
         }
 
         [HttpGet("{page?}")]
-        public async Task<IActionResult> Index(int page = 1) {
+        public async Task<IActionResult> Index(int page = 1)
+        {
             var filter = new ReportFilterDTO();
             filter.PageSize = 100;
             var myfilter = TempData.Get<AdminReportFilterViewModel>(_indexFilterKey);
-            if(myfilter != null) {
+            if (myfilter != null)
+            {
                 filter = myfilter.Adapt<ReportFilterDTO>();
                 TempData.Put(_indexFilterKey, filter);
             }
@@ -66,7 +69,8 @@ namespace Datiss.Budget.Web.Admin.Controllers
         }
 
         [HttpPost("{page?}")]
-        public async Task<IActionResult> Index(AdminReportIndexViewModel model) {
+        public async Task<IActionResult> Index(AdminReportIndexViewModel model)
+        {
             model.CheckArgumentIsNull(nameof(model));
 
             var filter = model.Filter.Adapt<ReportFilterDTO>();
@@ -84,9 +88,10 @@ namespace Datiss.Budget.Web.Admin.Controllers
 
             return View(model);
         }
-        
+
         [HttpGet("create")]
-        public async Task<IActionResult> Create() {
+        public async Task<IActionResult> Create()
+        {
 
             var model = new CreateReportViewModel();
 
@@ -99,7 +104,8 @@ namespace Datiss.Budget.Web.Admin.Controllers
         }
 
         [HttpPost("create"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateReportViewModel model) {
+        public async Task<IActionResult> Create(CreateReportViewModel model)
+        {
             model.CheckArgumentIsNull(nameof(model));
 
             var categories = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ReportCategory))
@@ -107,18 +113,21 @@ namespace Datiss.Budget.Web.Admin.Controllers
 
 
             model.FixParams();
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 model.AddError(ViewMessages.ModelState);
                 return View(model);
             }
 
             var fileData = model.ReportFile.GetFormFileBytes();
-            if (fileData == null) {
+            if (fileData == null)
+            {
                 model.AddError(ViewMessages.Report_File_Req);
                 return View(model);
             }
 
-            if (!model.ReportFile.HasFileExtension(_reportExt)) {
+            if (!model.ReportFile.HasFileExtension(_reportExt))
+            {
                 model.AddError(ViewMessages.Report_Ext);
                 return View(model);
             }
@@ -127,16 +136,20 @@ namespace Datiss.Budget.Web.Admin.Controllers
 
             var data = model.Adapt<CreateReportData>();
             data.FileData = fileData;
-            try {
+            try
+            {
                 var result = await _reportService.CreateAsync(data);
-                if(result.NotValid) {
+                if (result.NotValid)
+                {
                     model.AddError(result.Message);
                 }
-                else {
+                else
+                {
                     return RedirectToAction(ACTION_Index);
                 }
             }
-            catch {
+            catch
+            {
                 model.AddError(ViewMessages.SystemError);
             }
 
@@ -147,31 +160,35 @@ namespace Datiss.Budget.Web.Admin.Controllers
         }
 
         [HttpGet("edit/{id}")]
-        public async Task<IActionResult> Edit(int id) {
-            try {
+        public async Task<IActionResult> Edit(int id)
+        {
+            try
+            {
                 var data = await _reportService.GetAsync(id);
                 var model = data.Adapt<UpdateReportViewModel>();
 
                 var categories = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ReportCategory))
                     .Adapt<IEnumerable<DropDownItemViewModel>>();
 
-                model.SetCatergorySource(categories,model.CategoryTypeId);
+                model.SetCatergorySource(categories, model.CategoryTypeId);
 
 
                 if (data.Status == EntityStatus.Enabled)
                     model.Enabled = true;
-                if(model.Params.Any())
+                if (model.Params.Any())
                     model.LoadParams();
 
                 return View(model);
             }
-            catch {
+            catch
+            {
                 return NotFound();
             }
         }
 
         [HttpPost("edit/{id}"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, UpdateReportViewModel model) {
+        public async Task<IActionResult> Edit(int id, UpdateReportViewModel model)
+        {
             model.CheckArgumentIsNull(nameof(model));
 
             var categories = (await _constantService.GetByConstantKeyAsync(ConstantKeys.__ReportCategory))
@@ -181,14 +198,17 @@ namespace Datiss.Budget.Web.Admin.Controllers
             model.SetCatergorySource(categories, model.CategoryTypeId);
 
             model.FixParams();
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 model.AddError(ViewMessages.ModelState);
                 return View(model);
             }
             byte[] fileData = null;
-            if(model.ReportFile.IsNotNullOrEmpty()) {
+            if (model.ReportFile.IsNotNullOrEmpty())
+            {
                 fileData = model.ReportFile.GetFormFileBytes();
-                if (!model.ReportFile.HasFileExtension(_reportExt)) {
+                if (!model.ReportFile.HasFileExtension(_reportExt))
+                {
                     model.AddError(ViewMessages.Report_Ext);
                     return View(model);
                 }
@@ -198,20 +218,24 @@ namespace Datiss.Budget.Web.Admin.Controllers
 
             var data = model.Adapt<UpdateReportData>();
             data.FileData = fileData;
-            data.Status = model.Enabled 
-                ? Enum.EntityStatus.Enabled 
+            data.Status = model.Enabled
+                ? Enum.EntityStatus.Enabled
                 : Enum.EntityStatus.Disbaled;
 
-            try {
+            try
+            {
                 var result = await _reportService.UpdateAsync(data);
-                if(result.NotValid) {
+                if (result.NotValid)
+                {
                     model.AddError(result.Message);
                 }
-                else {
+                else
+                {
                     return RedirectToAction(ACTION_Index);
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 model.AddError(ViewMessages.SystemError);
             }
 
@@ -219,19 +243,25 @@ namespace Datiss.Budget.Web.Admin.Controllers
         }
 
         [HttpPost("delete/{id}")]
-        public async Task<IActionResult> Delete(int id) {
-            try {
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
                 await _reportService.DeleteAsync(id);
 
-                return Json(new {
+                return Json(new
+                {
                     success = true
                 });
             }
-            catch(NullReferenceException) {
+            catch (NullReferenceException)
+            {
                 return NotFound();
             }
-            catch(Exception ex) {
-                return Json(new {
+            catch (Exception ex)
+            {
+                return Json(new
+                {
                     hasError = true,
                     message = ViewMessages.SystemError
                 });
@@ -248,6 +278,28 @@ namespace Datiss.Budget.Web.Admin.Controllers
 
             return File(report.FileData, "application/octet-stream", $"{report.Name}.mrt");
         }
+
+        [HttpGet("GetRolesForReport")]
+        public async Task<IActionResult> GetRolesForReport(int reportId)
+        {
+            var roles = await _reportService.GetRolesForReportAsync(reportId);
+            return Json(roles);
+        }
+
+        [HttpPost("UpdateRolesForReport")]
+        public async Task<IActionResult> UpdateRolesForReport(int reportId, List<int> RoleIds)
+        {
+            try
+            {
+                await _reportService.UpdateRolesForReportAsync(reportId, RoleIds ?? new List<int>());
+                return Json(new { hasError = false });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { hasError = true, message = "خطا در ثبت نقش‌ها" });
+            }
+        }
+
 
     }
 }

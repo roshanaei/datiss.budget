@@ -20,12 +20,16 @@ using System.IO;
 using Microsoft.AspNetCore.WebUtilities;
 using Stimulsoft.Report;
 using Datiss.Budget.Common;
+using Datiss.Budget.Common.IdentityToolkit;
+using DNTCommon.Web.Core;
 
-namespace Datiss.Budget.Web.Controllers {
+namespace Datiss.Budget.Web.Controllers
+{
 
     [Authorize]
     [Route("[controller]")]
-    public class ReportController : Controller {
+    public class ReportController : Controller
+    {
 
         public const string Name = "Report";
         public const string ACTION_Index = nameof(Index);
@@ -49,7 +53,8 @@ namespace Datiss.Budget.Web.Controllers {
             IOrganizationService organizationService,
             IFinanceYearService yearService,
             IConstantService constantService,
-            IWebHostEnvironment environment) {
+            IWebHostEnvironment environment)
+        {
             _host = host
                 ?? throw new ArgumentNullException(nameof(host));
             _reportEngine = reportEngine
@@ -75,13 +80,17 @@ namespace Datiss.Budget.Web.Controllers {
         }
 
         [HttpGet("{page?}")]
-        public async Task<IActionResult> Index(int page = 1) {
+        public async Task<IActionResult> Index(int page = 1)
+        {
             var filter = new ReportFilterDTO();
             var myfilter = TempData.Get<ReportFilterViewModel>(_indexFilterKey);
-            if (myfilter != null) {
+            if (myfilter != null)
+            {
                 filter = myfilter.Adapt<ReportFilterDTO>();
                 TempData.Put(_indexFilterKey, filter);
             }
+            var userId = User.Identity.GetUserId<int>();
+            filter.UserId = userId;
             filter.PageNumber = page;
             var result = await _reportService.GetUserListAsync(filter);
             var model = result.Adapt<ReportIndexViewModel>();
@@ -95,11 +104,15 @@ namespace Datiss.Budget.Web.Controllers {
         }
 
         [HttpPost("{page?}"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(ReportIndexViewModel model, int page = 1) {
+        public async Task<IActionResult> Index(ReportIndexViewModel model, int page = 1)
+        {
             model.CheckArgumentIsNull(nameof(model));
 
             var filter = model.Filter.Adapt<ReportFilterDTO>();
             TempData.Put(_indexFilterKey, filter);
+
+            var userId = User.Identity.GetUserId<int>();
+            filter.UserId = userId;
 
             var result = await _reportService.GetUserListAsync(filter);
             model = result.Adapt<ReportIndexViewModel>();
@@ -113,9 +126,13 @@ namespace Datiss.Budget.Web.Controllers {
         }
 
         [HttpGet("display/{id}")]
-        public async Task<IActionResult> Report(int id) {
-            try {
-                var report = await _reportService.GetAsync(id);
+        public async Task<IActionResult> Report(int id)
+        {
+            try
+            {
+                var userId = User.Identity.GetUserId<int>();
+                
+                var report = await _reportService.GetAsync(id, userId);
                 var model = new ReportDisplayViewModel
                 {
                     Report = report.Adapt<ReportViewModel>()
@@ -124,19 +141,22 @@ namespace Datiss.Budget.Web.Controllers {
 
                 return View(model);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return NotFound();
             }
         }
 
         [HttpPost("display/{id}")]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
-        public async Task<IActionResult> Report(int id, ReportDisplayViewModel model) {
+        public async Task<IActionResult> Report(int id, ReportDisplayViewModel model)
+        {
             model.CheckArgumentIsNull(nameof(model));
 
             var _params = new Dictionary<string, string>();
             var _form = Request.Form.ToList();
-            foreach(var f in _form) {
+            foreach (var f in _form)
+            {
                 _params.Add(f.Key, f.Value);
             }
             var queryStr = QueryHelpers.AddQueryString(Url.Action("View"), _params);
@@ -146,11 +166,14 @@ namespace Datiss.Budget.Web.Controllers {
 
         [HttpGet("view")]
         public IActionResult View() => PartialView("_view");
-        
+
         [Route("view/[action]")]
-        public async Task<IActionResult> GetReport() {
+        public async Task<IActionResult> GetReport()
+        {
+            var userId = User.Identity.GetUserId<int>();
+            
             int id = Convert.ToInt32(Request.Query["id"].ToString());
-            var report = await _reportService.GetAsync(id);
+            var report = await _reportService.GetAsync(id, userId);
 
             var _params = Request.QueryString.QueryStringToDictionary();
             var myreport = await getStiReportAsync(report, _params);
@@ -159,9 +182,12 @@ namespace Datiss.Budget.Web.Controllers {
         }
 
         [Route("view/[action]")]
-        public async Task<IActionResult> ExportReport() {
+        public async Task<IActionResult> ExportReport()
+        {
+            var userId = User.Identity.GetUserId<int>();
+            
             int id = Convert.ToInt32(Request.Query["id"].ToString());
-            var report = await _reportService.GetAsync(id);
+            var report = await _reportService.GetAsync(id, userId);
 
             var _params = Request.QueryString.QueryStringToDictionary();
             var myreport = await getStiReportAsync(report, _params);
@@ -170,9 +196,12 @@ namespace Datiss.Budget.Web.Controllers {
         }
 
         [Route("view/[action]")]
-        public async Task<IActionResult> PrintReport() {
+        public async Task<IActionResult> PrintReport()
+        {
+            var userId = User.Identity.GetUserId<int>();
+            
             int id = Convert.ToInt32(Request.Query["id"].ToString());
-            var report = await _reportService.GetAsync(id);
+            var report = await _reportService.GetAsync(id, userId);
 
             var _params = Request.QueryString.QueryStringToDictionary();
             var myreport = await getStiReportAsync(report, _params);
@@ -187,8 +216,9 @@ namespace Datiss.Budget.Web.Controllers {
         #region private helper methods
 
         private async Task<StiReport> getStiReportAsync(
-            ReportData model, 
-            Dictionary<string, string> parameters) {
+            ReportData model,
+            Dictionary<string, string> parameters)
+        {
 
             var data = new ReportViewData
             {
@@ -209,19 +239,22 @@ namespace Datiss.Budget.Web.Controllers {
             };
 
             var report = await _reportEngine.GenerateReportAsync(data);
-            
+
             return await Task.FromResult(report);
         }
 
-        private async Task addRelatedDataAsync(ReportDisplayViewModel model) {
+        private async Task addRelatedDataAsync(ReportDisplayViewModel model)
+        {
             model.CheckArgumentIsNull(nameof(model));
 
-            if(model.Report.Params.Any(_=> _.ParamType == ReportParamType.Year)) {
+            if (model.Report.Params.Any(_ => _.ParamType == ReportParamType.Year))
+            {
                 model.SetYearSource((await _yearService.GetDropDownDataAsync())
                     .Adapt<IEnumerable<DropDownItemViewModel>>());
             }
-            
-            if(model.Report.Params.Any(_=> _.ParamType == ReportParamType.Organization)) {
+
+            if (model.Report.Params.Any(_ => _.ParamType == ReportParamType.Organization))
+            {
                 model.SetOrganizationSource((await _organizationService.GetDropDownDataAsync())
                     .Adapt<IEnumerable<DropDownItemViewModel>>());
             }
@@ -247,19 +280,22 @@ namespace Datiss.Budget.Web.Controllers {
                     .Adapt<IEnumerable<DropDownItemViewModel>>());
             }
 
-            if (model.Report.Params.Any(_=> _.ParamType == ReportParamType.County)) {
+            if (model.Report.Params.Any(_ => _.ParamType == ReportParamType.County))
+            {
                 model.SetCountySource((await _organizationService
                     .GetDropDownDataAsync(input: false, OrganizationType.County))
                         .Adapt<IEnumerable<DropDownItemViewModel>>());
             }
 
-            if(model.Report.Params.Any(_=> _.ParamType == ReportParamType.City)) {
+            if (model.Report.Params.Any(_ => _.ParamType == ReportParamType.City))
+            {
                 model.SetCitySource((await _organizationService
                     .GetDropDownDataAsync(input: false, OrganizationType.City))
                         .Adapt<IEnumerable<DropDownItemViewModel>>());
             }
-           
-            if(model.Report.Params.Any(_=> _.ParamType == ReportParamType.Village)) {
+
+            if (model.Report.Params.Any(_ => _.ParamType == ReportParamType.Village))
+            {
                 model.SetVillageSource((await _organizationService
                     .GetDropDownDataAsync(input: false, OrganizationType.Village))
                         .Adapt<IEnumerable<DropDownItemViewModel>>());

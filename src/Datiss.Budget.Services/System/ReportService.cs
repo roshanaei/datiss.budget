@@ -14,6 +14,8 @@ using Datiss.Budget.Services.Contracts;
 using Datiss.Budget.Services.Models;
 using Mapster;
 using Datiss.Budget.Security;
+using Datiss.Budget.Entities.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Datiss.Budget.Services
 {
@@ -23,16 +25,20 @@ namespace Datiss.Budget.Services
         private readonly IUnitOfWork _uow;
         private readonly DbSet<Report> _dbSet;
         private readonly DbSet<Constant> _constSet;
+        private readonly DbSet<ReportRole> _reportRolde;
 
 
-        public ReportService(IUnitOfWork uow) {
+        public ReportService(IUnitOfWork uow)
+        {
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _dbSet = _uow.Set<Report>();
             _constSet = _uow.Set<Constant>();
+            _reportRolde = _uow.Set<ReportRole>();
         }
 
-        public async Task<ReportData> GetAsync(int id) {
-            var report = await _dbSet
+        public async Task<ReportData> GetAsync(int id)
+        {
+            Report report = await _dbSet
                 .Include(_ => _.Params)
                 .SingleOrDefaultAsync(x => x.Id == id);
 
@@ -41,7 +47,37 @@ namespace Datiss.Budget.Services
             return report.Adapt<ReportData>();
         }
 
-        public async Task<ReportData> GetAsync(string name) {
+        public async Task<ReportData> GetAsync(int id, int userId)
+        {
+            Report result;
+
+            var userRoleIds = await _uow.Set<UserRole>()
+                .Where(ur => ur.UserId == userId)
+                .Select(ur => ur.RoleId)
+                .ToListAsync();
+
+            if (!userRoleIds.Any())
+            {
+                id.CheckArgumentIsNull(nameof(result));
+            }
+
+            var query = from report in _dbSet
+                        join reportRole in _uow.Set<ReportRole>()
+                            on report.Id equals reportRole.ReportId
+                        where report.Status == EntityStatus.Enabled &&
+                              report.Id == id &&
+                              userRoleIds.Contains(reportRole.RoleId)
+                        select report;
+            query = query.Include(x => x.Params);
+            result = await query.FirstOrDefaultAsync();
+
+            result.CheckArgumentIsNull(nameof(result));
+
+            return result.Adapt<ReportData>();
+        }
+
+        public async Task<ReportData> GetAsync(string name)
+        {
             var report = await _dbSet
                .Include(_ => _.Params)
                .SingleOrDefaultAsync(x => x.Name.ToUpper() == name.ToUpper());
@@ -51,7 +87,8 @@ namespace Datiss.Budget.Services
             return report.Adapt<ReportData>();
         }
 
-        public async Task<PagedResult<ReportData>> GetAdminListAsync(ReportFilterDTO filter) {
+        public async Task<PagedResult<ReportData>> GetAdminListAsync(ReportFilterDTO filter)
+        {
             filter.CheckArgumentIsNull(nameof(filter));
 
             var result = new PagedResult<ReportData>
@@ -60,10 +97,11 @@ namespace Datiss.Budget.Services
                 PageNumber = filter.PageNumber
             };
 
-            var query = _dbSet.Include(_=>_.ReportCategory).Where(_ => _.Status != EntityStatus.Deleted);
+            var query = _dbSet.Include(_ => _.ReportCategory).Where(_ => _.Status != EntityStatus.Deleted);
 
             //set filter
-            if(filter.Search.IsNotNullOrEmpty()) {
+            if (filter.Search.IsNotNullOrEmpty())
+            {
                 filter.Search = filter.Search.ToUpper().CorrectYeKe();
                 query = query.Where(_ => _.Title.ToUpper().Contains(filter.Search) ||
                                         _.Name.ToUpper().Contains(filter.Search));
@@ -72,7 +110,7 @@ namespace Datiss.Budget.Services
             if (filter.CategoryId.HasValue)
                 query = query.Where(x => x.CategoryTypeId == filter.CategoryId.Value);
 
-            if (! string.IsNullOrWhiteSpace(filter.ReportTitle))
+            if (!string.IsNullOrWhiteSpace(filter.ReportTitle))
                 query = query.Where(_ => _.Title.ToUpper().Contains(filter.ReportTitle));
 
             if (filter.Status.HasValue)
@@ -94,40 +132,53 @@ namespace Datiss.Budget.Services
             return await Task.FromResult(result);
         }
 
-        public async Task<PagedResult<ReportData>> GetUserListAsync(ReportFilterDTO filter) {
+        public async Task<PagedResult<ReportData>> GetUserListAsync(ReportFilterDTO filter)
+        {
             filter.CheckArgumentIsNull(nameof(filter));
 
-            var result = new PagedResult<ReportData>
-            {
-                //PageSize = filter.PageSize,
-                //PageNumber = filter.PageNumber
-            };
+            var result = new PagedResult<ReportData>();
 
-            var query = _dbSet.Where(_ => _.Status == EntityStatus.Enabled);
-            //TODO: check access to the reports here
-            if (filter.Search.IsNotNullOrEmpty()) {
-                filter.Search = filter.Search.ToUpper().CorrectYeKe();
-                query = query.Where(_ => _.Title.ToUpper().Contains(filter.Search) ||
-                                        _.Name.ToUpper().Contains(filter.Search));
+            var userRoleIds = await _uow.Set<UserRole>()
+                .Where(ur => ur.UserId == filter.UserId)
+                .Select(ur => ur.RoleId)
+                .ToListAsync();
+
+            if (!userRoleIds.Any())
+            {
+                result.TotalCount = 0;
+                result.Items = new List<ReportData>();
+                return result;
             }
 
-            result.TotalCount = await query.CountAsync();
+            var query = from report in _dbSet
+                        join reportRole in _uow.Set<ReportRole>()
+                            on report.Id equals reportRole.ReportId
+                        where report.Status == EntityStatus.Enabled &&
+                              userRoleIds.Contains(reportRole.RoleId)
+                        select report;
+            if (filter.Search.IsNotNullOrEmpty())
+            {
+                filter.Search = filter.Search.ToUpper().CorrectYeKe();
+                query = query.Where(_ =>
+                    _.Title.ToUpper().Contains(filter.Search) ||
+                    _.Name.ToUpper().Contains(filter.Search));
+            }
 
-            //apply sorting
             query = setOrder(query, "id", desc: true);
-            //apply paging
-            //query = query
-            //    .Skip(filter.StartIndex)
-            //    .Take(filter.PageSize);
 
-            result.Items = await query.Include(_ => _.Params)
-                                      .Select(_ => _.Adapt<ReportData>())
-                                      .ToListAsync();
+            // query = query.Skip(filter.StartIndex).Take(filter.PageSize);
 
-            return await Task.FromResult(result);
+            result.Items = await query
+                .Include(r => r.Params)
+                .Select(r => r.Adapt<ReportData>())
+                .ToListAsync();
+
+            result.Items = result.Items.Distinct().ToList();
+            result.TotalCount = result.Items.Count();
+            return result;
         }
 
-        public async Task<ValidationResult<ReportData>> CreateAsync(CreateReportData model) 
+        public async Task<ValidationResult<ReportData>> CreateAsync(CreateReportData model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -137,7 +188,7 @@ namespace Datiss.Budget.Services
 
             if (await existByNameAsync(model.Name))
                 return ValidationResult<ReportData>.Failed(
-                    ValidationMode.Create, 
+                    ValidationMode.Create,
                     string.Format(ServiceMessages.ReportExistByName, model.Name));
 
             var report = new Report
@@ -151,7 +202,8 @@ namespace Datiss.Budget.Services
             };
 
 
-            foreach (var p in model.Params) {
+            foreach (var p in model.Params)
+            {
                 report.Params.Add(p.Adapt<ReportParam>());
             }
 
@@ -162,7 +214,7 @@ namespace Datiss.Budget.Services
                 .Success(report.Adapt<ReportData>(), ValidationMode.Create);
         }
 
-        public async Task<ValidationResult<ReportData>> UpdateAsync(UpdateReportData model) 
+        public async Task<ValidationResult<ReportData>> UpdateAsync(UpdateReportData model)
         {
             model.CheckArgumentIsNull(nameof(model));
 
@@ -170,9 +222,9 @@ namespace Datiss.Budget.Services
                                      .SingleOrDefaultAsync(_ => _.Id == model.Id);
             report.CheckReferenceIsNull(nameof(report));
 
-            if(checkMandatoryFieldsIsEmpty(model.Title, model.Name))
+            if (checkMandatoryFieldsIsEmpty(model.Title, model.Name))
                 return ValidationResult<ReportData>
-                     .Failed(ValidationMode.Update, ServiceMessages.MandatoryFields);                  
+                     .Failed(ValidationMode.Update, ServiceMessages.MandatoryFields);
 
             if (await existByNameAsync(model.Name, model.Id))
                 return ValidationResult<ReportData>.Failed(
@@ -184,15 +236,17 @@ namespace Datiss.Budget.Services
             report.Description = model.Description?.CorrectYeKe();
             report.Status = model.Status;
             report.CategoryTypeId = model.CategoryTypeId;
-            if(model.FileData != null && model.FileData.Length > 0) {
+            if (model.FileData != null && model.FileData.Length > 0)
+            {
                 report.FileData = model.FileData;
             }
 
             //Delete previous params
             _uow.RemoveRange(report.Params);
-            
+
             //Add new params
-            foreach (var p in model.Params) {
+            foreach (var p in model.Params)
+            {
                 report.Params.Add(p.Adapt<ReportParam>());
             }
 
@@ -200,11 +254,12 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
 
             return ValidationResult<ReportData>.Success(
-                report.Adapt<ReportData>(), 
+                report.Adapt<ReportData>(),
                 ValidationMode.Update);
         }
 
-        public async Task DeleteAsync(int id) {
+        public async Task DeleteAsync(int id)
+        {
             var report = await _dbSet.FindAsync(id);
             report.CheckReferenceIsNull(nameof(report));
 
@@ -212,27 +267,76 @@ namespace Datiss.Budget.Services
             await _uow.SaveChangesAsync();
         }
 
+        public async Task<List<ReportRoleDTO>> GetRolesForReportAsync(int reportId)
+        {
+            var allRoles = await _uow.Set<Role>().ToListAsync();
+
+            var assignedRoleIds = await _uow.Set<ReportRole>()
+                .Where(r => r.ReportId == reportId)
+                .Select(r => r.RoleId)
+                .ToListAsync();
+
+            var result = allRoles.Select(r => new ReportRoleDTO
+            {
+                Id = r.Id,
+                Name = r.Title, 
+                Selected = assignedRoleIds.Contains(r.Id)
+            }).ToList();
+
+            return result;
+        }
+
+        public async Task UpdateRolesForReportAsync(int reportId, List<int> roleIds)
+        {
+            try
+            {
+                var reportRoles = await _uow.Set<ReportRole>()
+                        .Where(r => r.ReportId == reportId)
+                        .ToListAsync();
+
+                _uow.Set<ReportRole>().RemoveRange(reportRoles);
+
+                foreach (var roleId in roleIds.Distinct())
+                {
+                    _uow.Set<ReportRole>().Add(new ReportRole
+                    {
+                        ReportId = reportId,
+                        RoleId = roleId,
+                    });
+                }
+
+                await _uow.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+
         #region private methods
 
         private bool checkMandatoryFieldsIsEmpty(string title, string name)
             => title.IsNullOrEmpty() || name.IsNullOrEmpty();
-        
+
         private async Task<bool> existByNameAsync(string name, int? reportId = null)
             => reportId.HasValue
-                ? await _dbSet.AnyAsync(_ => _.Name.ToUpper() == name.ToUpper().CorrectYeKe() && 
+                ? await _dbSet.AnyAsync(_ => _.Name.ToUpper() == name.ToUpper().CorrectYeKe() &&
                                                 _.Id != reportId)
                 : await _dbSet.AnyAsync(_ => _.Name.ToUpper() == name.ToUpper().CorrectYeKe());
 
         private IQueryable<Report> setOrder(
             IQueryable<Report> query,
             string orderBy = "id",
-            bool desc = false) 
+            bool desc = false)
         {
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "id";
 
             orderBy = orderBy.ToLower();
-            switch(orderBy) {
+            switch (orderBy)
+            {
                 case "title":
                     return desc
                         ? query.OrderByDescending(_ => _.Title)

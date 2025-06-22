@@ -37,9 +37,9 @@ namespace Datiss.Budget.Entities
         #region Navigations
 
         public ICollection<ReportParam> Params { get; set; }
+        public ICollection<ReportRole> ReportRoles { get; set; }
 
         public Constant ReportCategory { get; set; }
-
 
         #endregion
     }

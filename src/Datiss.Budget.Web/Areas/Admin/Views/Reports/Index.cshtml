@@ -1,210 +1,305 @@
 ﻿@model AdminReportIndexViewModel
 @{
-    ViewData["Title"] = "مدیریت گزارشات سیستم";
+	ViewData["Title"] = "مدیریت گزارشات سیستم";
 }
+
+<script src="~/js/plugin/jquery.js"></script>
+
 <!--Title-->
 <div class="row">
-    <div class="col-12">
-        <div class="content-header">
-            <span class="my-font-bold">@ViewData["Title"]</span>
-        </div>
-    </div>
+	<div class="col-12">
+		<div class="content-header">
+			<span class="my-font-bold">@ViewData["Title"]</span>
+		</div>
+	</div>
 </div>
+
 <section>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-content">
-                    <div class="card-body">
-                        <!--Filters-->
-                        <form method="post"
-                              id="filterForm"
-                              asp-controller="@ReportsController.Name"
-                              asp-action="@ReportsController.ACTION_Index"
-                              asp-antiforgery="true">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-content">
+					<div class="card-body">
+						<!--Filters-->
+						<form method="post"
+							  id="filterForm"
+							  asp-controller="@ReportsController.Name"
+							  asp-action="@ReportsController.ACTION_Index"
+							  asp-antiforgery="true">
 
-                            <div class="rowACJSB">
+							<div class="rowACJSB">
 
-                                <fieldset class="form-group mt-3">
-                                    <label class="my-font" style="margin-right:15px">
-                                        عنوان گزارش:
-                                        <input asp-for="Filter.ReportTitle"
-                                                class="form-control d-inline-block width-250" />
-                                    </label>
-                                    <label  class="my-font" style="margin-right:15px">
-                                        دسته بندی:
-                                        <select asp-for="Filter.CategoryId"
-                                                asp-items="Model.Filter.CategoryTypeSource"
-                                                class="form-control d-inline-block width-200">
-                                        </select>
-                                    </label>
-                                    <label class="my-font" style="margin-right:15px">
-                                        وضعیت:
-                                        <select asp-for="Filter.Status"
-                                                asp-items="Model.Filter.ReportStatusSource"
-                                                class="form-control d-inline-block width-150">
-                                        </select>
-                                    </label>
-                                </fieldset>
-                                <fieldset>
-                                    <div class="rowACJSB">
-                                        <button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
-                                            <i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
-                                        </button>
-                                        <fieldset>
-                                            <div class="rowACJE">
-                                                <a asp-action="Create" data-toggle="tooltip" data-placement="top" title="رکورد جدید" class="btn btn-success bg-light-success my-font">
-                                                    <i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i> تعریف گزارش جدید
-                                                </a>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </fieldset>
-                            </div>
+								<fieldset class="form-group mt-3">
+									<label class="my-font" style="margin-right:15px">
+										عنوان گزارش:
+										<input asp-for="Filter.ReportTitle"
+											   class="form-control d-inline-block width-250" />
+									</label>
+									<label class="my-font" style="margin-right:15px">
+										دسته بندی:
+										<select asp-for="Filter.CategoryId"
+												asp-items="Model.Filter.CategoryTypeSource"
+												class="form-control d-inline-block width-200">
+										</select>
+									</label>
+									<label class="my-font" style="margin-right:15px">
+										وضعیت:
+										<select asp-for="Filter.Status"
+												asp-items="Model.Filter.ReportStatusSource"
+												class="form-control d-inline-block width-150">
+										</select>
+									</label>
+								</fieldset>
+								<fieldset>
+									<div class="rowACJSB">
+										<button data-toggle="tooltip" data-placement="top" title="فیلتر" type="submit" name="btnFilter" class="btn btn-info bg-light-info  mr-1 my-font">
+											<i _ngcontent-dpj-c129="" class="fa fa-filter"></i>
+										</button>
+										<fieldset>
+											<div class="rowACJE">
+												<a asp-action="Create" data-toggle="tooltip" data-placement="top" title="رکورد جدید" class="btn btn-success bg-light-success my-font">
+													<i _ngcontent-dpj-c129="" class="fa fa-plus-square"></i> تعریف گزارش جدید
+												</a>
+											</div>
+										</fieldset>
+									</div>
+								</fieldset>
+							</div>
 
-                            <hr />
-                            <!--SearchBox-->
-                            <fieldset class="form-group position-relative has-icon-left">
-                                <input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
-                                <div class="form-control-position">
-                                    <i class="ft-search font-medium-4"></i>
-                                </div>
-                            </fieldset>
-                            <!--SearchBox-->
-                            <div class="rowACJSB">
-                                <div class="d-flex flex-row-reverse align-items-center">
+							<hr />
+							<!--SearchBox-->
+							<fieldset class="form-group position-relative has-icon-left">
+								<input asp-for="Filter.Search" id="ngx-filter-ref" type="text" placeholder="جستجو..." class="form-control-lg form-control d-inline-block my-custom-input my-font">
+								<div class="form-control-position">
+									<i class="ft-search font-medium-4"></i>
+								</div>
+							</fieldset>
+							<!--SearchBox-->
+							<div class="rowACJSB">
+								<div class="d-flex flex-row-reverse align-items-center">
 
-                                    <fieldset class="form-group" style="margin-right:20px">
-                                        <label class="my-font rowAC">
-                                            <span>نمایش</span>
+									<fieldset class="form-group" style="margin-right:20px">
+										<label class="my-font rowAC">
+											<span>نمایش</span>
 
-                                            <select asp-for="Filter.PageSize"
-                                                    style="margin-right:10px"
-                                                    class="form-control"
-                                                    onchange="changePageSize();"
-                                                    id="ddlPageSize">
-                                                <option>10</option>
-                                                <option>20</option>
-                                                <option>30</option>
-                                            </select>
-                                            <span style="margin-right:10px">رکورد</span>
+											<select asp-for="Filter.PageSize"
+													style="margin-right:10px"
+													class="form-control"
+													onchange="changePageSize();"
+													id="ddlPageSize">
+												<option>10</option>
+												<option>20</option>
+												<option>30</option>
+											</select>
+											<span style="margin-right:10px">رکورد</span>
 
-                                        </label>
+										</label>
 
-                                    </fieldset>
-                                </div>
-                            </div>
-                        </form>
+									</fieldset>
+								</div>
+							</div>
+						</form>
 
-                        <div class="table-responsive" style="padding-top: 20px;">
-                            <table style="width: 100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>عنوان</th>
-                                        <th>نام</th>
-                                        <th>دسته بندی</th>
-                                        <th>وضعیت</th>
-                                        <th>عملیات</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model.Items)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <span>@item.Title</span>
-                                            </td>
-                                            <td>
-                                                <span>@item.Name</span>
-                                            </td>
-                                            <td>
-                                                <span>@item.CategoryTypeDisplay</span>
-                                            </td>
-                                            <td>
-                                                <span>
-                                                    @item.StatusDisplay
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font"
-                                               asp-controller="@ReportsController.Name"
-                                               asp-action="@ReportsController.ACTION_Edit"
-                                               asp-route-id="@item.Id">
-                                                    <i class="fa ft-edit fa-1x"></i>
-                                                </a>
+						<div class="table-responsive" style="padding-top: 20px;">
+							<table style="width: 100%" id="my-table" class="table table-hover table-bordered m-0 my-font">
+								<thead class="thead-light">
+									<tr>
+										<th>عنوان</th>
+										<th>نام</th>
+										<th>دسته بندی</th>
+										<th>وضعیت</th>
+										<th>عملیات</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach (var item in Model.Items)
+									{
+										<tr>
+											<td>
+												<span>@item.Title</span>
+											</td>
+											<td>
+												<span>@item.Name</span>
+											</td>
+											<td>
+												<span>@item.CategoryTypeDisplay</span>
+											</td>
+											<td>
+												<span>
+													@item.StatusDisplay
+												</span>
+											</td>
+											<td>
+												<a id="btnEdit_@item.Id" data-id="@item.Id" class="edit-row btn bg-light-info btn-info mr-1 my-font"
+												   asp-controller="@ReportsController.Name"
+												   asp-action="@ReportsController.ACTION_Edit"
+												   asp-route-id="@item.Id">
+													<i class="fa ft-edit fa-1x"></i>
+												</a>
 
-                                                <a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
-                                                    <i class="fa ft-trash-2"></i>
-                                                </a>
+												<a id="btnDelete_@item.Id" data-id="@item.Id" class="delete-row btn btn-danger confirm-delete  bg-light-danger mr-1 my-font">
+													<i class="fa ft-trash-2"></i>
+												</a>
 
-                                                <a  asp-controller="@ReportsController.Name"
-                                                    asp-action="Download"
-                                                    asp-route-id="@item.Id" 
-                                                    class="btn btn-info bg-light-info mr-1 my-font">
-                                                    <i class="ft ft-download"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+												<a id="btnEditRoles_@item.Id" data-id="@item.Id" class="btn-edit-roles edit-row btn bg-light-info btn-info mr-1 my-font">
+													<i class="fa ft-users"></i>
+												</a>
 
-                            <div class="rowACJSB" style="margin-top: 20px">
-                                <!--Tools-->
+												<a asp-controller="@ReportsController.Name"
+												   asp-action="Download"
+												   asp-route-id="@item.Id"
+												   class="btn btn-info bg-light-info mr-1 my-font">
+													<i class="ft ft-download"></i>
+												</a>
+											</td>
+										</tr>
+									}
+								</tbody>
+							</table>
 
-                                <div class="rowAC">
-                                    <div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
-                                </div>
+							<div class="rowACJSB" style="margin-top: 20px">
+								<!--Tools-->
 
-                            </div>
+								<div class="rowAC">
+									<div class="my-font">کل رکوردها: <b class="font-medium-2">@Model.TotalCount</b></div>
+								</div>
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </section>
 
 @section footSection {
 
-    <script type="text/javascript">
+	<div>
+		<!-- Modal -->
+		<div class="modal fade text-left" style="" id="modal-edit-roles" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title my-font-bold">تعیین نقش‌های دسترسی به گزارش</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="بستن">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<form id="form-edit-roles">
+						<div class="modal-body">
+							<input type="hidden" name="ReportId" id="report-id" />
+							<div class="form-group">
+								<div id="roles-checkboxes" class="row"></div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary my-font" data-dismiss="modal">بستن</button>
+							<button type="button" class="btn btn-primary my-font" id="btn-save-roles">ثبت نقش‌ها</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
-        $(document).ready(function () {
-            $('.delete-row').click(function (e) {
-                e.preventDefault();
-                var id = $(this).data('id');
+	<script type="text/javascript">
 
-                confirmDelete()
-                    .then(function (res) {
-                        if (res.value) {
-                            deleteReport(id);
-                        }
-                    });
-            });
-        });
+		$(document).ready(function () {
+			$('.delete-row').click(function (e) {
+				e.preventDefault();
+				var id = $(this).data('id');
 
-        function deleteReport(id) {
-            $.ajax({
-                url: '@Url.Action(ReportsController.ACTION_Delete, ReportsController.Name)' + '/' + id,
-                type: 'POST',
-                success: function (data, status, setting) {
-                    if (data.hasError) {
-                        errorMsg(data.message);
-                    }
+				confirmDelete()
+					.then(function (res) {
+						if (res.value) {
+							deleteReport(id);
+						}
+					});
+			});
 
-                    document.location.href = '@Url.Action(ReportsController.ACTION_Index)';
+			$('.btn-edit-roles').click(function () {
+				var reportId = $(this).data('id');
+				$('#form-edit-roles #report-id').val(reportId);
 
-                    return;
-                },
-                error: function (request, option, err) {
-                    console.log(request);
-                    ShowCommonErorr();
-                }
-            });
-        }
+				$.ajax({
+					url: '@Url.Action("GetRolesForReport", "Reports")',
+					data: { reportId: reportId },
+					type: 'GET',
+					success: function (res) {
+						var container = $('#roles-checkboxes');
+						container.empty();
+						$.each(res, function (i, role) {
+						var checked = role.selected ? 'checked' : '';
+						container.append(`
+							<div class="col-6 col-md-4">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox"
+										value="${role.id}"
+										id="role_${role.id}"
+										name="RoleIds" ${checked}>
+								<label class="form-check-label my-font rowAC" for="role_${role.id}">
+								${role.name}
+								</label>
+							</div>
+							</div>`);
+						});
+						$('#modal-edit-roles').modal({
+							backdrop: true,
+							keyboard: true,
+							show: true
+						});
+					}
+				});
+			});
 
-    </script>
+			$('#modal-edit-roles').on('hidden.bs.modal', function () {
+			  $('.custom-backdrop').remove();
+			});
+
+			$('#btn-save-roles').click(function () {
+				var formData = $('#form-edit-roles').serialize();
+				$.ajax({
+					url: '@Url.Action("UpdateRolesForReport", "Reports")',
+					type: 'POST',
+					data: formData,
+					success: function (res) {
+					  if (res.hasError) {
+						errorMsg(res.message);
+					  } else {
+						successMsg("نقش‌ها با موفقیت ذخیره شدند.");
+						$('#modal-edit-roles').modal('hide');
+					  }
+					},
+					error: function () {
+					  ShowCommonErorr();
+					}
+				});
+			});
+		});
+
+		function deleteReport(id) {
+			$.ajax({
+				url: '@Url.Action(ReportsController.ACTION_Delete, ReportsController.Name)' + '/' + id,
+				type: 'POST',
+				success: function (data, status, setting) {
+					if (data.hasError) {
+						errorMsg(data.message);
+					}
+
+					document.location.href = '@Url.Action(ReportsController.ACTION_Index)';
+
+					return;
+				},
+				error: function (request, option, err) {
+					console.log(request);
+					ShowCommonErorr();
+				}
+			});
+		}
+
+	</script>
 
 }
