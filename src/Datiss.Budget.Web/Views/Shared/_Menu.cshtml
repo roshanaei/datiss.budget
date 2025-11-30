@@ -151,6 +151,14 @@
                                     <span data-i18n="درآمد سرمایه ای" class="menu-title my-font">درآمد سرمایه ای</span>
                                 </a>
                                 <ul class="menu-content" id="CapitalIncome" parent="CollapseForcastManagment">
+                                    @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(CofficientController.Name)))
+                                    {
+                                        <li class="nav-item">
+                                            <a asp-area="" asp-controller="@CofficientController.Name" asp-action="@CofficientController.ACTION_Index" asp-route-group="@CofficientsGroup.ForcastIncome">
+                                                <span data-i18n="ضرایب" class="menu-item my-font-light">ضرایب</span>
+                                            </a>
+                                        </li>
+                                    }
                                     @if (isAdmin || (User.Identity != null && User.Identity.HasListPermission(BranchFeeAmountController.Name)))
                                     {
                                         <li class="nav-item">
