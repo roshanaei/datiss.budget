@@ -132,6 +132,9 @@
   <data name="CofficientsGroup_ForcastCost" xml:space="preserve">
     <value>هزینه سرمایه ای</value>
   </data>
+  <data name="CofficientsGroup_ForcastIncome" xml:space="preserve">
+    <value>درآمد سرمایه ای</value>
+  </data>
   <data name="EntityStatus_Deleted" xml:space="preserve">
     <value>حذف شده</value>
   </data>

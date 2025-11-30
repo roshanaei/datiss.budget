@@ -48,6 +48,7 @@ namespace Datiss.Budget.ViewModels
                 CofficientsGroup.CurrentIncome => EnumText.CofficientsGroup_CurrentIncome,
                 CofficientsGroup.CurrentCost => EnumText.CofficientsGroup_CurrentCost,
                 CofficientsGroup.ForcastCost => EnumText.CofficientsGroup_ForcastCost,
+                CofficientsGroup.ForcastIncome => EnumText.CofficientsGroup_ForcastIncome,
                 _ => EnumText.Unknown
             };
 

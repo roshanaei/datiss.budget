@@ -106,6 +106,15 @@ namespace Datiss.Budget.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to درآمد سرمایه ای.
+        /// </summary>
+        public static string CofficientsGroup_ForcastIncome {
+            get {
+                return ResourceManager.GetString("CofficientsGroup_ForcastIncome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to حذف شده.
         /// </summary>
         public static string EntityStatus_Deleted {
