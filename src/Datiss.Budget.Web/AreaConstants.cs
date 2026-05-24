@@ -7,6 +7,7 @@
     {
         public const string ApiArea = "Api";
         public const string IdentityArea = "Identity";
+        
         public const string AdminArea = "Admin";
     }
 }
