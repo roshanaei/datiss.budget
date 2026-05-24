@@ -15,11 +15,14 @@ namespace Datiss.Budget.Entities
         {
             Childrens = new HashSet<Constant>();
             WaterInstallFees = new HashSet<WaterInstallFee>();
+            //test
+            
             UserPositions = new HashSet<User>();
             WasteInstallFees = new HashSet<WasteInstallFee>();
             WaterPipeDiameterSalessplit = new HashSet<WaterSalesSplit>();
             UserTypeIncomeCurrentCofficients = new HashSet<IncomeCurrentCofficient>();
             UsageLayerIncomeCurrentCofficients = new HashSet<IncomeCurrentCofficient>();
+            //.
             CostCurrentReportSection = new HashSet<CostCurrentReport>();
             CostCurrentReportUnit = new HashSet<CostCurrentReport>();
             CostCurrentReportUnitDetail = new HashSet<CostCurrentReport>();
