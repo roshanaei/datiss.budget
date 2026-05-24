@@ -6,6 +6,7 @@ namespace Datiss.Budget.Reports.Contracts {
     public interface IReportEngine {
 
         Task<ReportViewData> GetViewDataAsync(int reportId);
+        //..
 
         Task<StiReport> GenerateReportAsync(ReportViewData model);
     }
