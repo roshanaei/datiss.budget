@@ -8,5 +8,7 @@
     /// </summary>
     public interface IAuditableEntity
     {
+
+        
     }
 }
