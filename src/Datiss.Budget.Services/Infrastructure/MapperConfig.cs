@@ -136,6 +136,7 @@ namespace Datiss.Budget.Services.Infrastructure
             TypeAdapterConfig<CostCurrentPrescriptionBaseInfo, CostCurrentPrescriptionBaseInfoDTO>
                 .NewConfig()
                 .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0);
+            
 
             TypeAdapterConfig<CostForcastPipingW, CostForcastPipingWDTO>
                 .NewConfig()
@@ -150,6 +151,7 @@ namespace Datiss.Budget.Services.Infrastructure
                 .Map(d => d.DigTypeDisplay, s => s.DigType != null ? s.DigType.Title : null)
                 .Map(d => d.TubeTypeDisplay, s => s.TubeType != null ? s.TubeType.Title : null)
                 .Map(d => d.DiameterPipeTypeDisplay, s => s.DiameterPipeType != null ? s.DiameterPipeType.Title : null);
+            
 
 
             TypeAdapterConfig<CostForcastBuyDescription, CostForcastBuyDescriptionDTO>
@@ -164,6 +166,7 @@ namespace Datiss.Budget.Services.Infrastructure
                   .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
                   .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
                   .Map(d => d.SectionTypeDisplay, s => s.SectionType != null ? s.SectionType.Title : null);
+            
 
             TypeAdapterConfig<TotalBudgetWReport, TotalBudgetWReportDTO>
                   .NewConfig()
@@ -176,6 +179,7 @@ namespace Datiss.Budget.Services.Infrastructure
                   .Map(d => d.Year, s => s.FinanceYear != null ? s.FinanceYear.Year : 0)
                   .Map(d => d.OrganizationDisplay, s => s.Organization != null ? s.Organization.Title : null)
                   .Map(d => d.SectionTypeDisplay, s => s.SectionType != null ? s.SectionType.Title : null);
+            
 
             TypeAdapterConfig<DirectoratReport, DirectoratReportDTO>
                   .NewConfig()
