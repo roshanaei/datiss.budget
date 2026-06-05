@@ -13,6 +13,7 @@ namespace Datiss.Budget.DataLayer.Migrations
                 nullable: false,
                 oldClrType: typeof(int),
                 oldType: "int");
+                
 
             migrationBuilder.AlterColumn<long>(
                 name: "WInstallationCosts",
